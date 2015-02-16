@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+.env
+
+.idea/
+.idea/workspace.xml
+
+public/build/
+public/css/all.css
+public/js/

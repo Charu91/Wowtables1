@@ -1,0 +1,125 @@
+/* Sidebar customizations */
+
+html.fixed .header{
+    z-index: 2020 !important;
+}
+
+#sidebarRightClose{
+    padding: 10px;
+}
+
+#sidebarRightClose i {
+    font-size: 30px;
+}
+
+.breadcrumbs {
+    padding-right: 10px !important;
+}
+
+.page-header{
+    z-index: 2001 !important;
+}
+
+.inner-toolbar .nav-pills a {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+@media only screen and (min-width: 768px){
+    html.fixed .inner-menu .nano-content:after {
+        height: 0;
+    }
+}
+
+html, body, #editor {
+    margin: 0;
+    height: 100%;
+    color: #333;
+}
+
+textarea, #editor div {
+    display: inline-block;
+    width: 49%;
+    height: 500px;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+textarea {
+    border: none;
+    border-right: 1px solid #ccc;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    padding: 20px;
+}
+
+code {
+    color: #f66;
+}
+
+.select2-drop {
+    z-index: 9999999;
+}
+
+.modal.modal-fullscreen {
+    /* Maximize the main wrappers on the screen */
+    /* Make the parent wrapper of the modal box a full-width block */
+    /* Remove borders and effects on the content */
+    /**
+       * /!\ By using this feature, you force the header and footer to be placed
+       * in an absolute position. You must handle by yourself the margin of the
+       * content.
+       */
+}
+.modal.modal-fullscreen .modal-dialog,
+.modal.modal-fullscreen .modal-content {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.modal.modal-fullscreen .modal-dialog {
+    margin: 0;
+    width: 100%;
+}
+.modal.modal-fullscreen .modal-content {
+    border: none;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-box-shadow: inherit;
+    -moz-box-shadow: inherit;
+    -o-box-shadow: inherit;
+    box-shadow: inherit;
+}
+.modal.modal-fullscreen.force-fullscreen {
+    /* Remove the padding inside the body */
+}
+.modal.modal-fullscreen.force-fullscreen .modal-body {
+    padding: 0;
+    margin-top: 70px;
+}
+.modal.modal-fullscreen.force-fullscreen .modal-header,
+.modal.modal-fullscreen.force-fullscreen .modal-footer {
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+.modal.modal-fullscreen.force-fullscreen .modal-header {
+    top: 0;
+}
+.modal.modal-fullscreen.force-fullscreen .modal-footer {
+    bottom: 0;
+}
+
+
+td input[type="checkbox"] {
+    margin: 7px 0;
+    height: 60%;
+    width: 100%;
+}

@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: WowTables
+        psr4_prefix: WowTables
+        src_path: app

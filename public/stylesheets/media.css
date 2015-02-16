@@ -1,0 +1,11 @@
+.dropzone-block .panel-body, .dropzone-block .panel-body .media-dropzone {
+    height: 100%;
+}
+
+#mediaFilterSelect {
+    width: 300px;
+}
+
+#mediaPaginationBlock {
+    text-align: center;
+}
