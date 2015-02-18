@@ -5,6 +5,8 @@ use Session;
 use Log;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
+use Rhumsaa\Uuid\Uuid;
+use Illuminate\Contracts\Hashing\Hasher;
 
 class User {
 
@@ -61,16 +63,24 @@ class User {
      */
     protected $roles;
 
+    /**
+     * The Hasher Object
+     *
+     * @var object
+     */
+    protected $hasher;
+
 
     /**
      * The User Construct
      *
      * @param Authenticator $auth
      */
-    public function __construct( Auth $auth, Roles $roles )
+    public function __construct( Auth $auth, Roles $roles, Hasher $hasher )
     {
         $this->auth = $auth;
         $this->roles = $roles;
+        $this->hasher = $hasher;
 
         if($this->auth->check()){
             if(empty($this->full_name)){
@@ -346,6 +356,242 @@ class User {
         }
     }
 
+
+    public function mobileRegister(array $data)
+    {
+        DB::beginTransaction();
+
+        $email_exists = DB::table('users')->where('email', $data['email'])->count();
+
+        if (!$email_exists) {
+
+            $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
+
+            $userInsertId = DB::table('users')->insertGetId([
+                'email' => $data['email'],
+                'role_id' => $gourmetRoleId,
+                'password' => bcrypt($data['password']),
+                'location_id' => $data['location_id'],
+                'phone_number' => $data['phone_number']
+            ]);
+
+            if($userInsertId){
+                $access_token = Uuid::uuid1()->toString();
+                $access_token_expiry = time() + (180 * 24 * 60 * 60);
+
+                $query = '
+                    INSERT INTO user_devices (
+                      `device_id`,
+                      `user_id`,
+                      `access_token`,
+                      `access_token_expires`,
+                      `os_type`,
+                      `os_version`,
+                      `hardware`,
+                      `app_version`
+                    ) VALUES (?,?,?,FROM_UNIXTIME(?),?,?,?,?)
+                    ON DUPLICATE KEY UPDATE
+                      `user_id` = VALUES(user_id),
+                      `access_token` = VALUES(access_token),
+                      `access_token_expires` = VALUES(access_token_expires),
+                      `os_type` = VALUES(os_type),
+                      `os_version` = VALUES(os_version),
+                      `hardware` = VALUES(hardware),
+                      `app_version` = VALUES(app_version)
+                ';
+
+                $userDeviceInsert = DB::insert($query, [
+                    $data['device_id'],
+                    $userInsertId,
+                    $access_token,
+                    $access_token_expiry,
+                    $data['os_type'],
+                    $data['os_version'],
+                    $data['hardware'],
+                    $data['app_version']
+                ]);
+
+                if($userDeviceInsert){
+                    DB::commit();
+                    return [
+                        'code' => 200,
+                        'data' => [
+                            'access_token' => $access_token
+                        ]
+                    ];
+                }else{
+                    DB::rollBack();
+                    return [
+                        'code' => 500,
+                        'data' => [
+                            'action' => 'Insert the user device or update if exists',
+                            'message' => 'There was an issue processing your request. Please try again'
+                        ]
+                    ];
+                }
+            }else{
+                DB::rollBack();
+                return [
+                    'code' => 500,
+                    'data' => [
+                        'action' => 'Inserting the newly registered user to the DB',
+                        'message' => 'There was an issue processing your request. Please try again'
+                    ]
+                ];
+            }
+        } else {
+            DB::rollBack();
+            return [
+                'code' => 225,
+                'data' => [
+                    'action' => 'Check if email already is registered with WowTables',
+                    'message' => 'You are already registered with WowTables. Please sign in instead'
+                ]
+            ];
+        }
+    }
+
+    public function mobileLogin($email, $password, array $data)
+    {
+        DB::beginTransaction();
+
+        $hashedPassword = DB::table('users')->where('email', $email)->pluck('password');
+
+        if (!$hashedPassword) {
+            if($this->hasher->check($password, $hashedPassword)){
+                $access_token = Uuid::uuid1()->toString();
+                $access_token_expiry = time() + (360 * 24 * 60 * 60);
+
+                $query = '
+                    INSERT INTO user_devices (
+                      `device_id`,
+                      `user_id`,
+                      `access_token`,
+                      `access_token_expires`,
+                      `os_type`,
+                      `os_version`,
+                      `hardware`,
+                      `app_version`
+                    ) VALUES (?,?,?,FROM_UNIXTIME(?),?,?,?,?)
+                    ON DUPLICATE KEY UPDATE
+                      `user_id` = VALUES(user_id),
+                      `access_token` = VALUES(access_token),
+                      `access_token_expires` = VALUES(access_token_expires),
+                      `os_type` = VALUES(os_type),
+                      `os_version` = VALUES(os_version),
+                      `hardware` = VALUES(hardware),
+                      `app_version` = VALUES(app_version)
+                ';
+
+                $userDeviceInsert = DB::insert($query, [
+                    $data['device_id'],
+                    $userInsertId,
+                    $access_token,
+                    $access_token_expiry,
+                    $data['os_type'],
+                    $data['os_version'],
+                    $data['hardware'],
+                    $data['app_version']
+                ]);
+
+                if($userDeviceInsert){
+                    DB::commit();
+                    return [ 'code' => 200 ];
+                }else{
+                    DB::rollBack();
+                    return [
+                        'code' => 500,
+                        'action' => 'Insert the user device or update if exists',
+                        'message' => 'There was an issue processing your request. Please try again'
+                    ];
+                }
+            }else{
+                DB::rollBack();
+                return [
+                    'code' => 227,
+                    'action' => 'Check if the email address and password match',
+                    'message' => 'There is an email password mismatch. Please check an try again'
+                ];
+            }
+        } else {
+            DB::rollBack();
+            return [
+                'code' => 226,
+                'action' => 'Check if email is registered with WowTables',
+                'message' => 'The email you are trying to signin from is not registered with us. Please register first'
+            ];
+        }
+    }
+
+    public function mobileFbLogin($token, $email, $fullname, array $data)
+    {
+        $query = '
+            SELECT
+                `id`,
+                IF(`fb_token` IS NOT NULL, 1, 0) AS `fb_token_exists`,
+                IF(`email` IS NOT NULL, 1, 0) AS `email_exists`,
+                `location_id`
+            FROM users
+            WHERE `fb_token` = ? OR `email` = ?
+        ';
+
+        $user = DB::select($query, [$token, $email]);
+
+        if(!$user){
+            $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
+
+            $user_id = DB::table('users')->insertGetId([
+                'email'     => $email,
+                'full_name' => $full_name,
+                'fb_token'  => $token,
+                'role_id'   => $gourmetRoleId
+            ]);
+
+
+        }else{
+            if($user[0]->fb_token_exists){
+                if($user[0]->location_id){
+                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
+
+                    if($location_slug){
+                        $retarr = ['status' => 'success', 'location' => $location_slug];
+                    }else{
+                        $retarr = ['status' => 'success', 'location' => false];
+                    }
+                }else{
+                    $retarr = ['status' => 'success', 'location' => false];
+                }
+            }else if($user[0]->email_exists){
+                DB::table('users')->where('id', $user[0]->id)->update([
+                    'fb_token' =>  $token,
+                    'full_name' => $full_name
+                ]);
+
+                if($user[0]->location_id){
+                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
+
+                    if($location_slug){
+                        $retarr = ['status' => 'success', 'location' => $location_slug];
+                    }else{
+                        $retarr = ['status' => 'success', 'location' => false];
+                    }
+                }else{
+                    $retarr = ['status' => 'success', 'location' => false];
+                }
+            }
+
+            if($this->auth->loginUsingId($user[0]->id)){
+                $this->role = 'Gourmet';
+
+                return $retarr;
+            }else{
+                return [
+                    'state' => 'failure',
+                    'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
+                ];
+            }
+        }
+    }
     /**
      *
      * Get whether the user can access a particular resource

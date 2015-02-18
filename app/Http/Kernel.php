@@ -24,7 +24,9 @@ class Kernel extends HttpKernel {
      *
      * @var array
      */
-    protected $apiMiddleware = [];
+    protected $apiMiddleware = [
+        'WowTables\Http\Middleware\ContentTypeJson'
+    ];
 
 	/**
 	 * The application's global HTTP middleware stack.

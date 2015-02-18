@@ -93,14 +93,15 @@
 
         });
 
-        $('body').delegate('.gallery-images','click',function(){
+        $('body').delegate('#gallery-images','click',function(){
 
             var gallery_images = new Array();
-            $('input[name="gallery_image[]"]').each(function () {
+            $('input[name="gallery_images[]"]').each(function () {
 
                 gallery_images.push(this.value)
 
             });
+            console.log(gallery_images)
         });
 
     });
