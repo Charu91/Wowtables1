@@ -8,6 +8,10 @@ use Illuminate\Auth\Authenticatable;
 use Rhumsaa\Uuid\Uuid;
 use Illuminate\Contracts\Hashing\Hasher;
 
+/**
+ * Class User
+ * @package WowTables\Http\Models
+ */
 class User {
 
     use Authenticatable;
@@ -195,33 +199,32 @@ class User {
     }
 
     /**
-     * Register a user to gourmetitup
+     * Register a user to wowtables
      *
+     * @param $full_name
      * @param $email
      * @param $password
-     * @param $location_id
+     * @return array
+     * @internal param $location_id
      */
-    public function register($email, $password, $location_id)
+    public function register($full_name,$email, $password)
     {
-        $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
+        $gourmetRoleId = DB::table('roles')->where('name', 'user')->pluck('id');
 
         $user_id = DB::table('users')->insertGetId([
+            'full_name' => $full_name,
             'email' => $email,
             'password' => bcrypt($password),
-            'location_id' => $location_id,
             'role_id' => $gourmetRoleId
         ]);
 
-        if($this->auth->loginUsingId($user_id)){
-            $this->role = 'Gourmet';
+        $user = $this->auth->loginUsingId($user_id);
 
-            $location_slug = DB::table('locations')->where('id', $location_id)->where('type', 'City')->pluck('slug');
-
-            if($location_slug){
-                return ['state' => 'success', 'location' => $location_slug];
-            }else{
-                return ['state' => 'success', 'location' => false];
-            }
+        if($user){
+            return [
+                'state' => 'success',
+                'user'  => $user
+            ];
         }else{
             return [
                 'state' => 'failure',
