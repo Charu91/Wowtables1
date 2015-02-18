@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "adc1c12b09709298ec6280370bf51cda",
+    "hash": "bb8014d80b2e6cdc5d2e5afaa400d1b5",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -668,50 +668,6 @@
                 "tokenizer"
             ],
             "time": "2015-01-26 23:07:39"
-        },
-        {
-            "name": "laravel/elixir",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/elixir.git",
-                "reference": "e1a8b0580c0f66b595a228eb2e34585f570eb771"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/elixir/zipball/e1a8b0580c0f66b595a228eb2e34585f570eb771",
-                "reference": "e1a8b0580c0f66b595a228eb2e34585f570eb771",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeffrey Way",
-                    "email": "jeffrey@laracasts.com"
-                },
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylorotwell@gmail.com"
-                }
-            ],
-            "time": "2014-10-14 17:59:08"
         },
         {
             "name": "laravel/framework",
@@ -3212,7 +3168,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "illuminate/html": 20,
-        "laravel/elixir": 20,
         "intervention/image": 20
     },
     "prefer-stable": false,
