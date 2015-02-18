@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="fixed sidebar-left-xs">
 	<head>
+        <meta name="robots" content="noindex,nofollow" />
         <title>{!! $title or 'WowTables' !!}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="_token" content="{!! $_token or 'null' !!}" />
