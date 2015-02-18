@@ -451,14 +451,18 @@ class User {
         }
     }
 
-    public function mobileLogin($email, $password, array $data)
+    public function mobileLogin(array $data)
     {
         DB::beginTransaction();
 
-        $hashedPassword = DB::table('users')->where('email', $email)->pluck('password');
+        $user = DB::table('users')
+                        ->select('password', 'id', 'location_id', 'phone_number')
+                        ->where('email', $data['email'])
+                        ->first();
 
-        if (!$hashedPassword) {
-            if($this->hasher->check($password, $hashedPassword)){
+        if ($user) {
+            if($this->hasher->check($data['password'], $user->password)){
+
                 $access_token = Uuid::uuid1()->toString();
                 $access_token_expiry = time() + (360 * 24 * 60 * 60);
 
@@ -485,7 +489,7 @@ class User {
 
                 $userDeviceInsert = DB::insert($query, [
                     $data['device_id'],
-                    $userInsertId,
+                    $user->id,
                     $access_token,
                     $access_token_expiry,
                     $data['os_type'],
@@ -495,101 +499,204 @@ class User {
                 ]);
 
                 if($userDeviceInsert){
+
+                    if(!empty($user->location_id)){
+                        $location_id = $user->location_id;
+                        $location_name = DB::table('locations')->where('id', $location_id)->pluck('name');
+
+                        if(!$location_name){
+                            $location_id = null;
+                            $location_name = null;
+                        }
+                    }else{
+                        $location_id = null;
+                        $location_name = null;
+
+                    }
+
                     DB::commit();
-                    return [ 'code' => 200 ];
+                    return [
+                        'code' => 200,
+                        'data' => [
+                            'access_token' => $access_token,
+                            'location_id' => $location_id,
+                            'location_name' => $location_name,
+                            'phone_number' => $user->phone_number
+                        ]
+                    ];
                 }else{
                     DB::rollBack();
                     return [
                         'code' => 500,
-                        'action' => 'Insert the user device or update if exists',
-                        'message' => 'There was an issue processing your request. Please try again'
+                        'data' => [
+                            'action' => 'Insert the user device or update if exists',
+                            'message' => 'There was an issue processing your request. Please try again'
+                        ]
+
                     ];
                 }
             }else{
                 DB::rollBack();
                 return [
                     'code' => 227,
-                    'action' => 'Check if the email address and password match',
-                    'message' => 'There is an email password mismatch. Please check an try again'
+                    'data' => [
+                        'action' => 'Check if the email address and password match',
+                        'message' => 'There is an email password mismatch. Please check an try again'
+                    ]
                 ];
             }
         } else {
             DB::rollBack();
             return [
                 'code' => 226,
-                'action' => 'Check if email is registered with WowTables',
-                'message' => 'The email you are trying to signin from is not registered with us. Please register first'
+                'data' => [
+                    'action' => 'Check if email is registered with WowTables',
+                    'message' => 'The email you are trying to signin from is not registered with us. Please register first'
+                ]
             ];
         }
     }
 
-    public function mobileFbLogin($token, $email, $fullname, array $data)
+    public function mobileFbLogin(array $data)
     {
+
+        DB::beginTransaction();
+
         $query = '
             SELECT
                 `id`,
                 IF(`fb_token` IS NOT NULL, 1, 0) AS `fb_token_exists`,
                 IF(`email` IS NOT NULL, 1, 0) AS `email_exists`,
-                `location_id`
+                `location_id`,
+                `phone_number`
             FROM users
             WHERE `fb_token` = ? OR `email` = ?
+            ORDER BY `fb_token`
         ';
 
-        $user = DB::select($query, [$token, $email]);
+        $userResult = DB::select($query, [$data['token'], $data['email']]);
 
-        if(!$user){
+        if(!$userResult) {
             $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
 
             $user_id = DB::table('users')->insertGetId([
-                'email'     => $email,
-                'full_name' => $full_name,
-                'fb_token'  => $token,
-                'role_id'   => $gourmetRoleId
+                'email' => $data['email'],
+                'full_name' => $data['full_name'],
+                'fb_token' => $data['token'],
+                'role_id' => $gourmetRoleId
             ]);
 
+            $location_id = null;
+            $phone_number = null;
 
         }else{
-            if($user[0]->fb_token_exists){
-                if($user[0]->location_id){
-                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
 
-                    if($location_slug){
-                        $retarr = ['status' => 'success', 'location' => $location_slug];
-                    }else{
-                        $retarr = ['status' => 'success', 'location' => false];
-                    }
-                }else{
-                    $retarr = ['status' => 'success', 'location' => false];
+            $fb_token_exists = false;
+            $email_exists = false;
+            $fb_user_id = $userResult[0]->id;
+            $email_user_id = $userResult[0]->id;
+            $fb_user_location_id = $userResult[0]->location_id;
+            $email_user_location_id = $userResult[0]->location_id;
+            $fb_user_phone_number = $userResult[0]->phone_number;
+            $email_user_phone_number = $userResult[0]->phone_number;
+
+            foreach($userResult as $user){
+                if($user->fb_token_exists){
+                    $fb_user_id = $user->id;
+                    $fb_token_exists = true;
+                    $fb_user_location_id = $user->location_id;
+                }else if($user->email_exists){
+                    $email_user_id = $user->id;
+                    $email_exists = true;
+                    $email_user_location_id = $user->location_id;
                 }
-            }else if($user[0]->email_exists){
-                DB::table('users')->where('id', $user[0]->id)->update([
-                    'fb_token' =>  $token,
-                    'full_name' => $full_name
+            }
+
+            if(!$fb_token_exists && $email_exists){
+                $user_id = $email_user_id;
+                $location_id = $email_user_location_id;
+                $phone_number = $email_user_phone_number;
+                DB::table('users')->where('email', $data['email'])->update([
+                    'fb_token' => $data['fb_token'],
+                    'full_name' => $data['full_name']
                 ]);
+            }
 
-                if($user[0]->location_id){
-                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
+            if(!isset($user_id)) $user_id = $fb_user_id;
+            if(!isset($location_id)) $location_id = $fb_user_location_id;
+            if(!isset($phone_number)) $phone_number = $fb_user_phone_number;
+        }
 
-                    if($location_slug){
-                        $retarr = ['status' => 'success', 'location' => $location_slug];
-                    }else{
-                        $retarr = ['status' => 'success', 'location' => false];
-                    }
-                }else{
-                    $retarr = ['status' => 'success', 'location' => false];
+        $access_token = Uuid::uuid1()->toString();
+        $access_token_expiry = time() + (360 * 24 * 60 * 60);
+
+        $query = '
+                    INSERT INTO user_devices (
+                      `device_id`,
+                      `user_id`,
+                      `access_token`,
+                      `access_token_expires`,
+                      `os_type`,
+                      `os_version`,
+                      `hardware`,
+                      `app_version`
+                    ) VALUES (?,?,?,FROM_UNIXTIME(?),?,?,?,?)
+                    ON DUPLICATE KEY UPDATE
+                      `user_id` = VALUES(user_id),
+                      `access_token` = VALUES(access_token),
+                      `access_token_expires` = VALUES(access_token_expires),
+                      `os_type` = VALUES(os_type),
+                      `os_version` = VALUES(os_version),
+                      `hardware` = VALUES(hardware),
+                      `app_version` = VALUES(app_version)
+                ';
+
+        $userDeviceInsert = DB::insert($query, [
+            $data['device_id'],
+            $user_id,
+            $access_token,
+            $access_token_expiry,
+            $data['os_type'],
+            $data['os_version'],
+            $data['hardware'],
+            $data['app_version']
+        ]);
+
+        if($userDeviceInsert){
+
+            if(!empty($location_id)){
+                $location_name = DB::table('locations')->where('id', $location_id)->pluck('name');
+
+                if(!$location_name){
+                    $location_id = null;
+                    $location_name = null;
                 }
-            }
-
-            if($this->auth->loginUsingId($user[0]->id)){
-                $this->role = 'Gourmet';
-
-                return $retarr;
             }else{
-                return [
-                    'state' => 'failure',
-                    'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
-                ];
+                $location_id = null;
+                $location_name = null;
+
             }
+
+            DB::commit();
+            return [
+                'code' => 200,
+                'data' => [
+                    'access_token' => $access_token,
+                    'location_id' => $location_id,
+                    'location_name' => $location_name,
+                    'phone_number' => $phone_number
+                ]
+            ];
+        }else{
+            DB::rollBack();
+            return [
+                'code' => 500,
+                'data' => [
+                    'action' => 'Insert the user device or update if exists',
+                    'message' => 'There was an issue processing your request. Please try again'
+                ]
+
+            ];
         }
     }
     /**
