@@ -25,8 +25,8 @@ Route::post('fb_login', [
 ]);
 
 Route::post('unlink', [
-    'uses' => 'Api\UserController@fb_login',
-    'as' => 'MobileUserFBLogin',
+    'uses' => 'Api\UserController@unlink',
+    'as' => 'MobileUserUnlink',
     'middleware' => ['mobile.access'],
     'where' => [],
     'domain' => env('API_URL')

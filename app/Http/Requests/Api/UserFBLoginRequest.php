@@ -22,8 +22,9 @@ class UserFBLoginRequest extends Request {
 	public function rules()
 	{
 		return [
-            'fb_token'      => 'required',
+            'token'         => 'required',
             'email'         => 'required|email',
+            'full_name'     => 'required',
             'device_id'     => 'required',
             'os_type'       => 'required|in:iOS,Android',
             'os_version'    => 'required',

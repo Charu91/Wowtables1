@@ -341,11 +341,12 @@ class Locations {
 
     public function getLocationsByType($type)
     {
-        return DB::table('locations')->where('type',$type)->lists('name','id');
+        return DB::table('locations')->where('type',$type)->where('visible', 1)->lists('name','id');
     }
 
     protected function getCount()
     {
          return DB::table('locations')->count();
     }
+
 } 

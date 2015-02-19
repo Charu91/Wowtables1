@@ -53,7 +53,7 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function login()
+	public function login(UserLoginRequest $userLoginRequest)
 	{
         $input = $this->request->all();
 
@@ -67,7 +67,7 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function fb_login()
+	public function fb_login(UserFBLoginRequest $userFBLoginRequest)
 	{
         $input = $this->request->all();
 
