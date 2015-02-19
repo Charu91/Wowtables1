@@ -61,7 +61,7 @@
                                 <a href="/admin/users/create">Create New</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/users/roles')? 'nav-active':'' }}">
-                                <a href="/admin/users/roles">Roles and Privileges</a>
+                                <a href="/admin/roles">Roles and Privileges</a>
                             </li>
                         </ul>
                     </li>

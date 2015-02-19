@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Models\Eloquent\User;
 
 /**
  * Class AdminUsersController
@@ -11,15 +12,17 @@ use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller {
 
-    /**
-     * The constructor Method
-     *
-     * @param Request $request
-     */
-    function __construct(Request $request)
+	/**
+	 * The constructor Method
+	 *
+	 * @param Request $request
+	 * @param User $user
+	 */
+    function __construct(Request $request,User $user)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
+		$this->user = $user;
     }
 
 	/**
@@ -30,7 +33,9 @@ class AdminUsersController extends Controller {
 	 */
 	public function index()
 	{
-		return view('admin.users.index');
+		$users = $this->user->with('role')->get();
+
+		return view('admin.users.index',['users' => $users]);
 	}
 
 	/**

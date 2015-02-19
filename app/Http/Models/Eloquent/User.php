@@ -1,4 +1,4 @@
-<?php namespace WowTables;
+<?php namespace WowTables\Http\Models\Eloquent;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -31,4 +31,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+	public function role()
+	{
+		return $this->hasOne('WowTables\Http\Models\Eloquent\Role', 'id', 'role_id')->withTimestamps();
+	}
 }
