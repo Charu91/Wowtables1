@@ -1,6 +1,26 @@
 @extends('templates.admin_layout')
 
 @section('content')
+
+	<header class="page-header">
+		<h2>Roles and Permissions</h2>
+		<div class="right-wrapper pull-right">
+			<ol class="breadcrumbs">
+				<li>
+					<a href="/admin/dashboard">
+						<i class="fa fa-home"></i>
+					</a>
+				</li>
+				<li>
+					<a href="/admin/users">
+						<i class="fa fa-users"></i>
+					</a>
+				</li>
+				<li><span>Roles and Permissions</span></li>
+			</ol>
+		</div>
+	</header>
+
 	<div class="row">
 		<div class="col-sm-6">
 			<section class="panel panel-featured panel-featured-primary">
