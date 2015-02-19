@@ -33,6 +33,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 	public function role()
 	{
-		return $this->hasOne('WowTables\Http\Models\Eloquent\Role', 'id', 'role_id')->withTimestamps();
+		return $this->hasOne('WowTables\Http\Models\Eloquent\Role', 'id', 'role_id');
 	}
 }
