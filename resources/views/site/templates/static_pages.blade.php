@@ -27,7 +27,11 @@
 <body>
         @include('site.partials.topnav')
 
-@yield('content')
+        <div class="container" style="margin-top:10px;max-width:700px;">
+            @include('site.partials.notifications')
+        </div>
+
+        @yield('content')
 
 <!-- Scripts -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

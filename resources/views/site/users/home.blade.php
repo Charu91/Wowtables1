@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <h1 class="title">Logged In Page!!!</h1>
+    <h1>Logged In Page!!!</h1>
 
 @endsection

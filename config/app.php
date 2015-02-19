@@ -138,6 +138,9 @@ return [
         'Illuminate\Html\HtmlServiceProvider',
         'Intervention\Image\ImageServiceProvider',
 
+		'Laracasts\Flash\FlashServiceProvider',
+
+
 		/*
 		 * Application Service Providers...
 		 */
@@ -197,7 +200,8 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
         'Form'		=> 'Illuminate\Html\FormFacade',
         'Html'		=> 'Illuminate\Html\HtmlFacade',
-        'Image'     => 'Intervention\Image\Facades\Image'
+        'Image'     => 'Intervention\Image\Facades\Image',
+		'Flash' 	=> 'Laracasts\Flash\Flash'
 	],
 
 ];
