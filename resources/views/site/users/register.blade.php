@@ -17,7 +17,7 @@
                     {!! Form::open(['route'=>'register_path']) !!}
                         <div class="form-group mb-lg">
                             <label>Name</label>
-                            <input type="text" class="form-control input-lg" name="name">
+                            <input type="text" class="form-control input-lg" name="full_name">
                         </div>
 
                         <div class="form-group mb-lg">
@@ -29,11 +29,11 @@
                             <div class="row">
                                 <div class="col-sm-6 mb-lg">
                                     <label>Password</label>
-                                    <input type="password" class="form-control input-lg" name="pwd">
+                                    <input type="password" class="form-control input-lg" name="password">
                                 </div>
                                 <div class="col-sm-6 mb-lg">
                                     <label>Password Confirmation</label>
-                                    <input type="password" class="form-control input-lg" name="pwd_confirm">
+                                    <input type="password" class="form-control input-lg" name="password_confirmation">
                                 </div>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="checkbox-custom checkbox-default">
-                                    <input type="checkbox" name="agreeterms" id="AgreeTerms">
+                                    <input type="checkbox" name="terms_of_use" id="AgreeTerms">
                                     <label for="AgreeTerms">I agree with <a href="#">terms of use</a></label>
                                 </div>
                             </div>
