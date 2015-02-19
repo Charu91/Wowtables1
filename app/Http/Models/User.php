@@ -621,7 +621,7 @@ class User {
                 $location_id = $email_user_location_id;
                 $phone_number = $email_user_phone_number;
                 DB::table('users')->where('email', $data['email'])->update([
-                    'fb_token' => $data['fb_token'],
+                    'fb_token' => $data['token'],
                     'full_name' => $data['full_name']
                 ]);
             }
