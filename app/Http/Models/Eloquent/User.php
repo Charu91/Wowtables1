@@ -35,4 +35,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		return $this->hasOne('WowTables\Http\Models\Eloquent\Role', 'id', 'role_id');
 	}
+
+	public function hasRole($name)
+	{
+		foreach($this->role as $role)
+		{
+			if($role->name == $name) return true;
+		}
+		return false;
+	}
+	public function assignRole($role)
+	{
+		$this->role()->attach($role);
+	}
+	public function removeRole($role)
+	{
+		$this->role()->detach($role);
+	}
 }
