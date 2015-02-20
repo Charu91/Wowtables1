@@ -22,7 +22,7 @@
 	</header>
 
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-5">
 			<section class="panel panel-featured panel-featured-primary">
 				<header class="panel-heading">
 					<h2 class="panel-title">
@@ -39,27 +39,27 @@
 						</tr>
 						</thead>
 						<tbody>
-							@foreach($roles as $role)
-								<tr>
-									<th>{!! $role->id !!}</th>
-									<th>{!! $role->name !!}</th>
-									<th>
-										<a href='javascript:void(0);' title='edit' data-role-id='{!! $role->id !!}'>
-											<i class='fa fa-edit'></i>
-										</a>
-										&nbsp;|&nbsp;
-										<a href='javascript:void(0);' title='edit' data-role-id='{!! $role->id !!}'>
-											<i class='fa fa-trash-o'></i>
-										</a>
-									</th>
-								</tr>
-							@endforeach
+						@foreach($roles as $role)
+							<tr>
+								<th>{!! $role->id !!}</th>
+								<th>{!! $role->name !!}</th>
+								<th>
+									<a href='javascript:void(0);' title='edit' data-role-id='{!! $role->id !!}'>
+										<i class='fa fa-edit'></i>
+									</a>
+									&nbsp;|&nbsp;
+									<a href='javascript:void(0);' title='edit' data-role-id='{!! $role->id !!}'>
+										<i class='fa fa-trash-o'></i>
+									</a>
+								</th>
+							</tr>
+						@endforeach
 						</tbody>
 					</table>
 				</div>
 			</section>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-7">
 			<section class="panel panel-featured panel-featured-danger">
 				<header class="panel-heading">
 					<h2 class="panel-title">

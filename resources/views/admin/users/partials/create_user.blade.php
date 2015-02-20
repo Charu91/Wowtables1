@@ -48,7 +48,7 @@
     <div class="col-sm-4">
         <div class="form-group">
             {!! Form::label('role','Role',['class'=>'control-label']) !!}
-            {!! Form::select('role',$roles,$user->role->id,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
+            {!! Form::select('role',$roles_list,$user->role->id,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
         </div>
     </div>
     <div class="col-sm-4">

@@ -24,7 +24,7 @@ class AdminComposer {
     public function compose(View $view){
         $view->with('uri', $this->request->path());
         $view->with('currentUser', $this->user);
-        $view->with('roles',Role::lists('name','id'));
+        $view->with('roles_list',Role::lists('name','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
     }
 }
