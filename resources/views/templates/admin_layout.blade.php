@@ -62,6 +62,8 @@
                 @include('partials.menus.sidebar_left')
 
                 <section role="main" class="content-body">
+                    @include('errors.errors')
+                    @include('errors.notifications')
                     @yield('content')
                 </section>
 

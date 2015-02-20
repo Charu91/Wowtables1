@@ -58,3 +58,10 @@ Route::delete('admin/users/{id}', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::resource('admin/user/attributes','UserAttributesController',[
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
