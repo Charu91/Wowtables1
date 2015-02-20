@@ -1,5 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
+use WowTables\Http\Models\Eloquent\Permission;
+use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,11 +17,12 @@ class AdminRolesController extends Controller {
      */
     protected $roles;
 
-    /**
-     * The constructor Method
-     *
-     * @param Request $request
-     */
+	/**
+	 * The constructor Method
+	 *
+	 * @param Request $request
+	 * @param Roles $roles
+	 */
     function __construct(Request $request, Roles $roles)
     {
         $this->middleware('admin.auth');
@@ -30,11 +33,17 @@ class AdminRolesController extends Controller {
 	/**
 	 * Display a listing of the resource.
 	 *
+	 * @param Role $role
+	 * @param Permission $permission
 	 * @return Response
 	 */
-	public function index()
+	public function index(Role $role,Permission $permission)
 	{
-        //$this->roles->fetchAll()
+		$roles = $role->all();
+
+		$permissions = $permission->with('role')->get();
+
+		return view('admin.users.roles_permissions',['roles'=>$roles,'permissions'=>$permissions]);
 	}
 
 	/**

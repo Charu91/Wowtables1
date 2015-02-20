@@ -25,6 +25,7 @@
 			<table class="table table-striped table-responsive mb-none" id="usersTable">
 				<thead>
 				<tr>
+					<th>User Id</th>
 					<th>Full Name</th>
 					<th>Email</th>
 					<th>Role</th>
@@ -32,7 +33,26 @@
 					<th>Action</th>
 				</tr>
 				</thead>
-				<tbody></tbody>
+				<tbody>
+					@foreach($users as $user)
+						<tr>
+							<th>{!! $user->id !!}</th>
+							<th>{!! $user->full_name !!}</th>
+							<th>{!! $user->email !!}</th>
+							<th>{!! $user->role->name !!}</th>
+							<th>{!! $user->status !!}</th>
+							<th>
+								<a href='javascript:void(0);' title='edit' data-user-id='{!! $user->id !!}'>
+									<i class='fa fa-edit'></i>
+								</a>
+								&nbsp;|&nbsp;
+								<a href='javascript:void(0);' title='edit' data-user-id='{!! $user->id !!}'>
+									<i class='fa fa-trash-o'></i>
+								</a>
+							</th>
+						</tr>
+					@endforeach
+				</tbody>
 			</table>
 		</div>
 	</section>

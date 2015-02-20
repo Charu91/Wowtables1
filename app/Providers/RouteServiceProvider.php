@@ -1,6 +1,7 @@
 <?php namespace WowTables\Providers;
 
 use Illuminate\Routing\Router;
+use File;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider {
@@ -37,7 +38,9 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		$router->group(['namespace' => $this->namespace], function($router)
 		{
-			require app_path('Http/routes.php');
+			foreach(File::allFiles(app_path().'/Http/Routes') as $route) {
+				require_once $route->getPathname();
+			}
 		});
 	}
 

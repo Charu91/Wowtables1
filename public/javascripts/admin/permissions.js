@@ -6,7 +6,7 @@
 
         var token = $("meta[name='_token']").attr('content');
 
-        $('#usersTable').DataTable();
+        $('#permissionsTable').DataTable();
 
     });
 })(jQuery);

@@ -20,8 +20,13 @@
                     <li>{!! link_to_route('login_path','Login') !!}</li>
                     <li>{!! link_to_route('register_path','Register') !!}</li>
                 @else
+
+                        <li class="dropdown">
+                            <a href="/admin/dashboard" class="">Admin Panel</a>
+                        </li>
+
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Karthik Rajan<span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Full Name<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li>{!! link_to_route('logout_path','Logout') !!}</li>
                         </ul>

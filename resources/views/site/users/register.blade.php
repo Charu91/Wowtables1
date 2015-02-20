@@ -14,9 +14,11 @@
                     <h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i>Sign up for WowTables!!! </h2>
                 </div>
                 <div class="panel-body">
+                    @include('site.partials.errors')
+
                     {!! Form::open(['route'=>'register_path']) !!}
                         <div class="form-group mb-lg">
-                            <label>Name</label>
+                            <label>Full Name</label>
                             <input type="text" class="form-control input-lg" name="full_name">
                         </div>
 

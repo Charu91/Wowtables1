@@ -13,9 +13,11 @@
                     <h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i>  Log in To WowTables!!! </h2>
                 </div>
                 <div class="panel-body">
+                    @include('site.partials.errors')
+
                     {!! Form::open(['route'=>'login_path']) !!}
                         <div class="form-group mb-lg">
-                            <label>Username</label>
+                            <label>Email Address</label>
                             <div class="input-group input-group-icon">
                                 <input type="text" class="form-control input-lg" name="email">
 									<span class="input-group-addon">
