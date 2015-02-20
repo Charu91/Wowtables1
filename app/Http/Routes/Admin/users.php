@@ -35,7 +35,7 @@ Route::get('admin/users/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/users/edit/{id}', [
+Route::get('admin/users/{id}/edit', [
     'uses' => 'AdminUsersController@edit',
     'as' => 'AdminUserEdit',
     'middleware' => [],
