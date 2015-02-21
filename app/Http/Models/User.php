@@ -456,8 +456,6 @@ class User {
 
     public function mobileLogin(array $data)
     {
-
-        dd($data);
         DB::beginTransaction();
 
         $user = DB::table('users')
