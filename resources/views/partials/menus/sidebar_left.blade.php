@@ -63,6 +63,9 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/users/roles')? 'nav-active':'' }}">
                                 <a href="/admin/roles">Roles and Privileges</a>
                             </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/users/attributes')? 'nav-active':'' }}">
+                                <a href="/admin/user/attributes">User Attributes</a>
+                            </li>
                         </ul>
                     </li>
 

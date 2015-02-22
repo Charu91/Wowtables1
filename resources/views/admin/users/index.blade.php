@@ -42,13 +42,9 @@
 							<th>{!! $user->role->name !!}</th>
 							<th>{!! $user->status !!}</th>
 							<th>
-								<a href='javascript:void(0);' title='edit' data-user-id='{!! $user->id !!}'>
-									<i class='fa fa-edit'></i>
-								</a>
+								{!! link_to_route('AdminUserEdit','Edit',$user->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary','data-user-id'=>$user->id]) !!}
 								&nbsp;|&nbsp;
-								<a href='javascript:void(0);' title='edit' data-user-id='{!! $user->id !!}'>
-									<i class='fa fa-trash-o'></i>
-								</a>
+								{!! link_to_route('AdminUserDelete','Delete',$user->id,['target'=>'_blank','class'=>'btn btn-xs btn-danger','data-user-id'=>$user->id]) !!}
 							</th>
 						</tr>
 					@endforeach

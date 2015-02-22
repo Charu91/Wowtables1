@@ -34,8 +34,8 @@
                     <div id="userbox" class="userbox">
                         <a href="#" data-toggle="dropdown">
                             <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-                                <span class="name">{{ $user->full_name }}</span>
-                                <span class="role">{{ $user->role }}</span>
+                                <span class="name">{{ $currentUser->full_name }}</span>
+                                <span class="role">{{ $currentUser->role }}</span>
                             </div>
                             <i class="fa custom-caret"></i>
                         </a>
@@ -62,6 +62,8 @@
                 @include('partials.menus.sidebar_left')
 
                 <section role="main" class="content-body">
+                    @include('errors.errors')
+                    @include('errors.notifications')
                     @yield('content')
                 </section>
 

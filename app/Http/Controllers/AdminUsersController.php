@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\User;
 
 /**
@@ -46,7 +47,10 @@ class AdminUsersController extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.users.create');
+		$user = new User();
+		$user->role = new Role();
+
+		return view('admin.users.create',['user'=>$user]);
 	}
 
 	/**
@@ -57,7 +61,7 @@ class AdminUsersController extends Controller {
 	 */
 	public function store()
 	{
-
+		dd($this->request->all());
 	}
 
 	/**
@@ -81,7 +85,9 @@ class AdminUsersController extends Controller {
 	 */
 	public function edit($id)
 	{
-        return view('admin.users.update');
+		$user = User::with('role')->find($id);
+
+        return view('admin.users.edit',['user'	=> $user]);
 	}
 
 	/**
@@ -93,7 +99,7 @@ class AdminUsersController extends Controller {
 	 */
 	public function update($id)
 	{
-		//
+		dd($this->request->all());
 	}
 
 	/**

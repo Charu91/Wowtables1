@@ -94,8 +94,8 @@ class User {
     }
 
     /**
-     *
      * Log a user
+     *
      * @param $email
      * @param $password
      * @param bool $remember
@@ -701,13 +701,12 @@ class User {
             ];
         }
     }
+
     /**
-     *
      * Get whether the user can access a particular resource
      *
      * @param $action
      * @param $resource
-     *
      * @return bool
      */
     public function can( $action, $resource )

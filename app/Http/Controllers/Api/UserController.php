@@ -23,13 +23,16 @@ class UserController extends Controller {
      * @var Object
      */
     protected $request;
+
     /**
      * The Constructor Method
      *
      * @param Request $request
      * @param User $user
      */
-    public function __construct(Request $request, User $user){
+    public function __construct(Request $request, User $user)
+    {
+
         $this->user = $user;
         $this->request = $request;
     }
@@ -75,15 +78,4 @@ class UserController extends Controller {
 
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
-
-    /**
-     * Unlink a logged in user from his device
-     *
-     * @return Response
-     */
-
-    public function unlink()
-    {
-
-    }
 }

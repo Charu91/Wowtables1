@@ -35,7 +35,7 @@ Route::get('admin/users/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/users/edit/{id}', [
+Route::get('admin/users/{id}/edit', [
     'uses' => 'AdminUsersController@edit',
     'as' => 'AdminUserEdit',
     'middleware' => [],
@@ -58,3 +58,10 @@ Route::delete('admin/users/{id}', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::resource('admin/user/attributes','UserAttributesController',[
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
