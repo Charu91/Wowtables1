@@ -2,8 +2,10 @@
 
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Role;
-use WowTables\Http\Models\Eloquent\User;
+//use WowTables\Http\Models\Eloquent\User;
+use WowTables\Http\Models\User;
 use WowTables\Core\Repositories\Users\UserRepository;
+use WowTables\Http\Requests\Admin\CreateUserRequest;
 
 /**
  * Class AdminUsersController
@@ -21,7 +23,7 @@ class AdminUsersController extends Controller {
 	 * @param User $user
 	 * @param UserRepository $userRepo
 	 */
-    function __construct(Request $request,User $user,UserRepository $userRepo)
+    function __construct(Request $request, User $user, UserRepository $userRepo)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
@@ -62,9 +64,21 @@ class AdminUsersController extends Controller {
 	 * @Post("/", as="AdminUserStore")
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateUserRequest $createUserRequest)
 	{
-		dd($this->request->all());
+        $userCreate = $this->user->create($this->request->all());
+
+        if($userCreate['status'] === 'success'){
+            return response()->json([
+                'status' => 'success'
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'failure',
+                'action' => $userCreate['action'],
+                'message' => $userCreate['message']
+            ], 400);
+        }
 	}
 
 	/**
@@ -76,7 +90,18 @@ class AdminUsersController extends Controller {
 	 */
 	public function show($id)
 	{
-		return view('admin.users.single');
+        $user = $this->user->fetch($id);
+
+        if($user['status'] === 'success'){
+            return 'Word!!';
+        }else{
+            return response()->json([
+                'status' => 'failure',
+                'action' => $userCreate['action'],
+                'message' => $userCreate['message']
+            ], 400);
+        }
+		//return view('admin.users.single');
 	}
 
 	/**
