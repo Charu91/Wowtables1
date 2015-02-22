@@ -8,5 +8,7 @@ class UserAttributes extends Model {
 
     protected $fillable = ['name','alias','type'];
 
+    protected $visible = ['alias'];
+
 
 }

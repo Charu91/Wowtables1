@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\User;
+use WowTables\Core\Repositories\Users\UserRepository;
 
 /**
  * Class AdminUsersController
@@ -18,12 +19,14 @@ class AdminUsersController extends Controller {
 	 *
 	 * @param Request $request
 	 * @param User $user
+	 * @param UserRepository $userRepo
 	 */
-    function __construct(Request $request,User $user)
+    function __construct(Request $request,User $user,UserRepository $userRepo)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
 		$this->user = $user;
+		$this->userRepo = $userRepo;
     }
 
 	/**
@@ -85,7 +88,9 @@ class AdminUsersController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$user = User::with('role')->find($id);
+		$user = $this->userRepo->getByUserId($id);
+
+		return response()->json($user);
 
         return view('admin.users.edit',['user'	=> $user]);
 	}

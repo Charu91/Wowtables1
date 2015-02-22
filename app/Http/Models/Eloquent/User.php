@@ -45,4 +45,44 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return false;
 	}
 
+	public function attributesBoolean()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesBoolean', 'user_id', 'id');
+	}
+
+	public function attributesDate()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesDate', 'user_id', 'id');
+	}
+
+	public function attributesInteger()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesInteger', 'user_id', 'id');
+	}
+
+	public function attributesFloat()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesFloat', 'user_id', 'id');
+	}
+
+	public function attributesText()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesText', 'user_id', 'id');
+	}
+
+	public function attributesVarChar()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesVarChar', 'user_id', 'id');
+	}
+
+	public function attributesSingleSelect()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesSingleSelect', 'user_id', 'id');
+	}
+
+	public function attributesMultiSelect()
+	{
+		return $this->hasMany('WowTables\Http\Models\Eloquent\UserAttributesMultiSelect', 'user_id', 'id');
+	}
+
 }
