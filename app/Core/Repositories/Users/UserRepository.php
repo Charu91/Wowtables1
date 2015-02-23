@@ -4,6 +4,8 @@ use WowTables\Http\Models\Eloquent\User;
 
 class UserRepository {
 
+    protected $attributes = [];
+
     public function getByUserId($id)
     {
         $userWithAttributes = User::with
@@ -19,69 +21,28 @@ class UserRepository {
                 'attributesMultiSelect'
             )->find($id);
 
-        foreach($userWithAttributes->attributesBoolean as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
+            $this->populateUserAttributes($userWithAttributes->attributesBoolean);
+            $this->populateUserAttributes($userWithAttributes->attributesInteger);
+            $this->populateUserAttributes($userWithAttributes->attributesFloat);
+            $this->populateUserAttributes($userWithAttributes->attributesDate);
+            $this->populateUserAttributes($userWithAttributes->attributesText);
+            $this->populateUserAttributes($userWithAttributes->attributesVarChar);
+            $this->populateUserAttributes($userWithAttributes->attributesSingleSelect);
+            $this->populateUserAttributes($userWithAttributes->attributesMultiSelect);
 
-            $boolean_attributes[$name] = $value;
+        return [ 'user' => User::find($id), 'attributes' => $this->attributes];
+    }
+
+    public function populateUserAttributes ( $userAttributes )
+    {
+
+        foreach($userAttributes as $attribute)
+        {
+            $name  = $attribute->attribute->alias;
+            $value = $attribute->attribute_value;
+
+            $this->attributes[$name] = $value;
         }
 
-        foreach($userWithAttributes->attributesInteger as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $integer_attributes[$name] = $value;
-        }
-        foreach($userWithAttributes->attributesFloat as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $float_attributes[$name] = $value;
-        }
-        foreach($userWithAttributes->attributesDate as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $date_attributes[$name] = $value;
-        }
-        foreach($userWithAttributes->attributesText as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $text_attributes[$name] = $value;
-        }
-        foreach($userWithAttributes->attributesVarChar as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $varchar_attributes[$name] = $value;
-        }
-        foreach($userWithAttributes->attributesSingleSelect as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $singleselect_attributes[$name] = $value;
-        }
-
-        foreach($userWithAttributes->attributesMultiSelect as $value)
-        {
-            $name  = $value->attribute->alias;
-            $value = $value->attribute_value;
-
-            $multiselect_attributes[$name] = $value;
-        }
-
-        return [
-            User::find($id),
-            $boolean_attributes,
-            $date_attributes
-        ];
     }
 }
