@@ -148,9 +148,12 @@ class AdminUsersController extends Controller {
      * @Delete("/", as="AdminUserDelete")
 	 * @return Response
 	 */
-	public function destroy()
+	public function destroy($id)
 	{
-		//
+		EloquentUser::destroy($id);
+
+		flash()->success('The User has been deleted successfully');
+
 	}
 
 }
