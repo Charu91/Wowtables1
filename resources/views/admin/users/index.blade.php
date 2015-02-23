@@ -43,7 +43,9 @@
 							<th>{!! $user->status !!}</th>
 							<th>
 								{!! link_to_route('AdminUserEdit','Edit',$user->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary','data-user-id'=>$user->id]) !!}
+
 								&nbsp;|&nbsp;
+
 								<a data-user-id="{!! $user->id !!}" class="btn btn-xs btn-danger delete-user-btn">Delete</a>
 							</th>
 						</tr>
