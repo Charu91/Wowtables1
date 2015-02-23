@@ -23,11 +23,3 @@ Route::post('fb_login', [
     'where' => [],
     'domain' => env('API_URL'),
 ]);
-
-Route::post('unlink', [
-    'uses' => 'Api\UserController@unlink',
-    'as' => 'MobileUserUnlink',
-    'middleware' => ['mobile.access'],
-    'where' => [],
-    'domain' => env('API_URL')
-]);

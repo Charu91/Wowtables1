@@ -1,7 +1,6 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
-use Session;
 use Log;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
@@ -15,6 +14,35 @@ use Illuminate\Contracts\Hashing\Hasher;
 class User {
 
     use Authenticatable;
+
+    /**
+     * The authenticator implementation.
+     *
+     * @var object
+     */
+    public $auth;
+    /**
+     *
+     * The role of the user
+     *
+     * @var string
+     */
+
+    public $role;
+    /**
+     * The full name of the user
+     *
+     * @var string
+     */
+
+    public $full_name;
+
+    /**
+     * The phone number of the user
+     *
+     * @var int
+     */
+    public $phone_number;
 
 	/**
 	 * The database table used by the model.
@@ -31,34 +59,11 @@ class User {
 	protected $hidden = ['password', 'remember_token'];
 
     /**
-     * The authenticator implementation.
-     *
-     * @var object
-     */
-    public $auth;
-
-    /**
-     *
-     * The role of the user
-     *
-     * @var string
-     */
-    public $role;
-
-    /**
      * The permissions granted to the user
      *
      * @var array
      */
-
     protected $permissions = [];
-
-    /**
-     * The full name of the user
-     *
-     * @var string
-     */
-    public $full_name;
 
     /**
      * Array of all the user roles available
@@ -73,6 +78,99 @@ class User {
      * @var object
      */
     protected $hasher;
+
+    /**
+     * The user model Object
+     *
+     * @var object
+     */
+    protected $user;
+
+    /**
+     * The attribute type to table mapping
+     *
+     * @var array
+     */
+    protected $typeTableAliasMap = [
+        'multi-select' => [
+            'table' => 'user_attributes_multiselect',
+            'so_table' => 'user_attributes_select_options',
+            'alias' => 'uam',
+            'ua_alias' => 'uauam',
+            'so_alias' => 'uamso',
+        ],
+
+        'single-select' => [
+            'table' => 'user_attributes_singleselect',
+            'so_table' => 'user_attributes_select_options',
+            'alias' => 'uas',
+            'ua_alias' => 'uauas',
+            'so_alias' => 'uasso',
+        ],
+
+        'datetime' => [
+            'table' => 'user_attributes_date',
+            'alias' => 'uad',
+            'ua_alias' => 'uauad'
+        ],
+
+        'boolean' => [
+            'table' => 'user_attributes_boolean',
+            'alias' => 'uab',
+            'ua_alias' => 'uauab'
+        ],
+
+        'float' => [
+            'table' => 'user_attributes_float',
+            'alias' => 'uaf',
+            'ua_alias' => 'uauaf'
+        ],
+
+        'integer' => [
+            'table' => 'user_attributes_integer',
+            'alias' => 'uai',
+            'ua_alias' => 'uauai'
+        ],
+
+        'text' => [
+            'table' => 'user_attributes_text',
+            'alias' => 'uat',
+            'ua_alias' => 'uauat'
+        ],
+
+        'varchar' => [
+            'table' => 'user_attributes_varchar',
+            'alias' => 'uav',
+            'ua_alias' => 'uauav'
+        ]
+    ];
+
+    /**
+     * The attributes applicable to the user
+     *
+     * @var array
+     */
+    protected $attributesMap = [
+        'date_of_birth' => [
+            'name' => 'Date Of Birth',
+            'type' => 'datetime',
+            'value' => 'single'
+        ],
+
+        'preferences' => [
+            'name' => 'Preferences',
+            'type' => 'multi-select',
+            'value' => 'multi',
+            'id_alias' => 'preference_id'
+        ],
+
+        'single_something' => [
+            'name' => 'Single Something',
+            'type' => 'single-select',
+            'value' => 'single',
+            'id_alias' => 'single_something_id'
+        ]
+    ];
 
 
     /**
@@ -94,8 +192,51 @@ class User {
     }
 
     /**
+     * Populate the basic user details
      *
+     * @param $user_id
+     *
+     * @return void
+     */
+    private function populateUserData($user_id)
+    {
+        $query = '
+            SELECT
+                u.`id`,
+                u.`full_name`,
+                u.`password`,
+                u.`old_password`,
+                r.`name` as `role`,
+                p.`action`,
+                p.`resource`
+            FROM users AS `u`
+            INNER JOIN roles AS `r` ON u.`role_id` = r.`id`
+            LEFT JOIN role_permissions AS `rp` ON rp.`role_id` = r.`id`
+            LEFT JOIN permissions AS `p` ON rp.`permission_id` = p.`id`
+            WHERE u.`id` = ?
+        ';
+
+        $user = $user = DB::select($query, [$user_id]);
+
+        if($user){
+            $this->role = $user[0]->role;
+            $this->full_name = $user[0]->full_name;
+            if($user[0]->action){
+                foreach($user as $userPermission){
+                    if(!isset($this->permissions[$userPermission->resource]))
+                        $this->permissions[$userPermission->resource] = [];
+
+                    $this->permissions[$userPermission->resource][] = $userPermission->action;
+                }
+            }
+        }else{
+            Log::error('Houston We have a problem!!');
+        }
+    }
+
+    /**
      * Log a user
+     *
      * @param $email
      * @param $password
      * @param bool $remember
@@ -359,7 +500,6 @@ class User {
         }
     }
 
-
     public function mobileRegister(array $data)
     {
         DB::beginTransaction();
@@ -456,8 +596,6 @@ class User {
 
     public function mobileLogin(array $data)
     {
-
-        dd($data);
         DB::beginTransaction();
 
         $user = DB::table('users')
@@ -703,13 +841,12 @@ class User {
             ];
         }
     }
+
     /**
-     *
      * Get whether the user can access a particular resource
      *
      * @param $action
      * @param $resource
-     *
      * @return bool
      */
     public function can( $action, $resource )
@@ -736,50 +873,96 @@ class User {
     /**
      * Create a different user if you have permission to do so
      *
-     * @param $email
-     * @param $password
-     * @param $location_id
-     * @param $role_id
-     *
+     * @param $data
      * @return array
      */
-    public function create($data)
+    public function create(array $data)
     {
-
         DB::beginTransaction();
 
         $userId = DB::table('users')->insertGetId([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'location_id' => $data['location_id'],
-            'role_id' => $data['role_id'],
-            'newsletter_frequency' => (isset($data['newsletter_frequency']))? $data['newsletter_frequency']:'Weekly'
+            'email'                 => $data['email'],
+            'password'              => bcrypt($data['password']),
+            'location_id'           => $data['location_id'],
+            'role_id'               => $data['role_id'],
+            'full_name'             => $data['full_name'],
+            'phone_number'          => ((isset($data['phone_number']))? $data['phone_number']: null),
+            'newsletter_frequency'  => ((isset($data['newsletter_frequency']))? $data['newsletter_frequency']:'Weekly')
         ]);
 
         if($userId){
-            if(!empty($data['attributes']) && is_array($data['attributes'])){
-                $insertArray = [];
-                foreach($data['attributes'] as $attribute => $value){
-                    if(!empty($value)) {
-                        if (is_array($value)) {
-                            $insertArray[] = ['user_id' => $userId, 'meta_key' => $attribute, 'meta_value' => json_encode($value)];
-                        } else {
-                            $insertArray[] = ['user_id' => $userId, 'meta_key' => $attribute, 'meta_value' => $value];
-                        }
-                    }
-                }
+            if(!empty($data['attributes'])){
+                $attributes = array_keys($data['attributes']);
 
-                if(count($insertArray)){
-                    if(DB::table('user_meta')->insert($insertArray)){
-                        return ['status'=> 'success'];
+                if(count($attributes)){
+                    $attributeIdMap = DB::table('user_attributes')->whereIn('alias', $attributes)->lists('id', 'alias');
+
+                    if($attributeIdMap){
+                        $attribute_inserts = [];
+
+                        foreach($data['attributes'] as $attribute => $value){
+                            if(!isset($attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']]))
+                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']] = [];
+
+                            if($this->attributesMap[$attribute]['type'] === 'single-select'){
+                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                    'user_id' => $userId,
+                                    'user_attributes_select_option_id' => $value
+                                ];
+                            }else if($this->attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
+                                if($this->attributesMap[$attribute]['type'] === 'multi-select'){
+                                    foreach ($value as $singleValue) {
+                                        $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                            'user_id' => $userId,
+                                            'user_attributes_select_option_id' => $singleValue
+                                        ];
+                                    }
+                                }else{
+                                    foreach ($value as $singleValue) {
+                                        $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                            'user_id' => $userId,
+                                            'user_attribute_id' => $attributeIdMap[$attribute],
+                                            'attribute_value' => $singleValue
+                                        ];
+                                    }
+                                }
+                            }else{
+                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                   'user_id' => $userId,
+                                   'user_attribute_id' => $attributeIdMap[$attribute],
+                                   'attribute_value' => $value
+                                ];
+                            }
+                        }
+
+                        $attributeInserts = true;
+
+                        foreach($attribute_inserts as $table => $insertData){
+                            $userAttrInsert = DB::table($table)->insert($insertData);
+
+                            if(!$userAttrInsert){
+                               $attributeInserts = false;
+                               break;
+                            }
+                        }
+
+                        if($attributeInserts){
+                            DB::commit();
+                            return ['status' => 'success'];
+                        }else{
+                            DB::rollBack();
+                            return [
+                               'status' => 'failure',
+                               'action' => 'Inserting the user attributes into the DB',
+                               'message' => 'The user could not be created. Please contact the sys admin'
+                            ];
+                        }
                     }else{
-                        DB::rollBack();
-                        return [
-                            'status' => 'failure',
-                            'action' => 'Inserting user meta information',
-                            'message' => 'The user could not be created. Please contact the sys admin'
-                        ];
+                        DB::commit();
+                        return ['status' => 'success'];
+
                     }
+
                 }else{
                     DB::commit();
                     return ['status' => 'success'];
@@ -798,6 +981,134 @@ class User {
         }
     }
 
+
+    public function fetch($user_id)
+    {
+        $query = 'SELECT u.`phone_number`';
+        $unique_attribute_types = [];
+
+        if(count($this->attributesMap)){
+            foreach($this->attributesMap as $attribute => $attData){
+                if(!in_array($attData['type'], $unique_attribute_types))
+                    $unique_attribute_types[] = $attData['type'];
+
+                if($attData['type'] === 'single-select' ||  $attData['type'] === 'multi-select'){
+                    $query .= "
+                        ,IF(
+                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
+                            null
+                        ) AS `{$attData['id_alias']}`,
+                        IF(
+                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
+                            null
+                        ) AS `{$attribute}`
+                    ";
+                }else{
+                    $query .= "
+                        ,IF(
+                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$this->typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
+                            null
+                        ) AS `{$attribute}`
+                    ";
+                }
+            }
+        }
+
+        $query .= ' FROM users AS `u` ';
+
+        if(count($unique_attribute_types)){
+            foreach($unique_attribute_types as $type){
+                if($type === 'single-select' || $type === 'multi-select'){
+                    $query .= "
+                        LEFT JOIN {$this->typeTableAliasMap[$type]['table']} AS `{$this->typeTableAliasMap[$type]['alias']}`
+                        ON u.`id` = {$this->typeTableAliasMap[$type]['alias']}.`user_id`
+                        LEFT JOIN {$this->typeTableAliasMap[$type]['so_table']} AS `{$this->typeTableAliasMap[$type]['so_alias']}`
+                        ON {$this->typeTableAliasMap[$type]['so_alias']}.id = {$this->typeTableAliasMap[$type]['alias']}.`user_attributes_select_option_id`
+                        LEFT JOIN user_attributes AS `{$this->typeTableAliasMap[$type]['ua_alias']}`
+                        ON `{$this->typeTableAliasMap[$type]['so_alias']}`.user_attribute_id = {$this->typeTableAliasMap[$type]['ua_alias']}.`id`
+                    ";
+                }else{
+                    $query .= "
+                        LEFT JOIN {$this->typeTableAliasMap[$type]['table']} AS `{$this->typeTableAliasMap[$type]['alias']}`
+                        ON u.`id` = {$this->typeTableAliasMap[$type]['alias']}.`user_id`
+                        LEFT JOIN user_attributes AS `{$this->typeTableAliasMap[$type]['ua_alias']}`
+                        ON `{$this->typeTableAliasMap[$type]['ua_alias']}`.id = {$this->typeTableAliasMap[$type]['alias']}.`user_attribute_id`
+                    ";
+                }
+            }
+        }
+
+        $query .= ' WHERE u.`id` = ?';
+
+        $userResult = DB::select($query, [$user_id]);
+
+
+        if($userResult){
+
+
+            $user = new \stdClass();
+            $user->attributes = new \stdClass();
+
+
+            foreach($userResult as $index => $result){
+                foreach($result as $key => $property){
+
+                    if($key === 'phone_number'){
+                        $user->phone_number = $property;
+                    }else if(isset($this->attributesMap[$key])){
+
+                        if($this->attributesMap[$key]['value'] === 'single'){
+                            if($this->attributesMap[$key]['type'] === 'single-select'){
+                                if(!isset($user->attributes->$key)){
+                                    $select_id = $this->attributesMap[$key]['id_alias'];
+                                    $user->attributes->$key = [
+                                        $result->$select_id => $property
+                                    ];
+                                }
+
+
+                            }else{
+                                if(!isset($user->attributes->$key))
+                                    $user->attributes->$key = $property;
+                            }
+                        }else{
+
+                            if($this->attributesMap[$key]['type'] === 'multi-select'){
+                                if(!isset($user->attributes->$key))
+                                    $user->attributes->$key = [];
+
+                                if(!in_array($property, $user->attributes->$key)){
+                                    $select_id = $this->attributesMap[$key]['id_alias'];
+                                    $user->attributes->$key[$result->$select_id] = $property;
+                                }
+                            }else{
+                                if(!isset($user->attributes->$key))
+                                    $user->attributes->$key = [];
+                                /*
+                                if(!in_array($property, $user->attributes->$key))
+                                    $user->attributes->$key[] = $property;
+                                */
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            dd($user);
+        }else{
+            return [
+                'status' => 'failure',
+                'action' => 'Fetch the user and all his attributes',
+                'message' => 'Cound not find the user. He may no longer be in the system'
+            ];
+        }
+    }
+
     /**
      * Log the user out
      *
@@ -807,49 +1118,5 @@ class User {
         $this->auth->logout();
 
         return ['status' => 'success'];
-    }
-
-
-    /**
-     * Populate the basic user details
-     *
-     * @param $user_id
-     *
-     * @return void
-     */
-    private function populateUserData($user_id)
-    {
-        $query = '
-            SELECT
-                u.`id`,
-                u.`full_name`,
-                u.`password`,
-                u.`old_password`,
-                r.`name` as `role`,
-                p.`action`,
-                p.`resource`
-            FROM users AS `u`
-            INNER JOIN roles AS `r` ON u.`role_id` = r.`id`
-            LEFT JOIN role_permissions AS `rp` ON rp.`role_id` = r.`id`
-            LEFT JOIN permissions AS `p` ON rp.`permission_id` = p.`id`
-            WHERE u.`id` = ?
-        ';
-
-        $user = $user = DB::select($query, [$user_id]);
-
-        if($user){
-            $this->role = $user[0]->role;
-            $this->full_name = $user[0]->full_name;
-            if($user[0]->action){
-                foreach($user as $userPermission){
-                    if(!isset($this->permissions[$userPermission->resource]))
-                        $this->permissions[$userPermission->resource] = [];
-
-                    $this->permissions[$userPermission->resource][] = $userPermission->action;
-                }
-            }
-        }else{
-            Log::error('Houston We have a problem!!');
-        }
     }
 }

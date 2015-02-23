@@ -16,7 +16,7 @@ class Kernel extends HttpKernel {
         'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
         'Illuminate\Session\Middleware\StartSession',
         'Illuminate\View\Middleware\ShareErrorsFromSession',
-        'WowTables\Http\Middleware\VerifyCsrfToken',
+        //'WowTables\Http\Middleware\VerifyCsrfToken',
     ];
 
     /**
@@ -45,7 +45,8 @@ class Kernel extends HttpKernel {
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'WowTables\Http\Middleware\RedirectIfAuthenticated',
         'admin.auth' => 'WowTables\Http\Middleware\AdminAuthenticate',
-        'redirect.admin.auth' => 'WowTables\Http\Middleware\RedirectAdminIfAuthenticated'
+        'redirect.admin.auth' => 'WowTables\Http\Middleware\RedirectAdminIfAuthenticated',
+        'mobile.app.access' => 'WowTables\Http\Middleware\CheckMobileAccess'
 	];
 
     /**

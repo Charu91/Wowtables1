@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 Route::get('admin/users', [
     'uses' => 'AdminUsersController@index',
     'as' => 'AdminUsers',
