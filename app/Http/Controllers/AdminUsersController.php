@@ -54,10 +54,7 @@ class AdminUsersController extends Controller {
 	 */
 	public function create()
 	{
-		$user = new EloquentUser();
-		$user->role = new Role();
-
-		return view('admin.users.create',['user'=>$user]);
+		return view('admin.users.create');
 	}
 
 	/**
@@ -71,10 +68,19 @@ class AdminUsersController extends Controller {
         $userCreate = $this->user->create($this->request->all());
 
         if($userCreate['status'] === 'success'){
-            return response()->json([
-                'status' => 'success'
-            ], 200);
-        }else{
+
+			if($createUserRequest->ajax())
+			{
+				return response()->json([
+					'status' => 'success'
+				], 200);
+			}
+
+			flash()->success('User has been successfully created!');
+
+			return redirect()->route('AdminUsers');
+
+		}else{
             return response()->json([
                 'status' => 'failure',
                 'action' => $userCreate['action'],
@@ -119,7 +125,7 @@ class AdminUsersController extends Controller {
 	{
 		$user = $this->userRepo->getByUserId($id);
 
-		return response()->json($user);
+		//return response()->json($user);
 
         return view('admin.users.edit',['user'	=> $user]);
 	}

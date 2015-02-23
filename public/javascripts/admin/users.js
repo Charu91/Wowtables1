@@ -8,5 +8,10 @@
 
         $('#usersTable').DataTable();
 
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+
     });
 })(jQuery);
