@@ -92,11 +92,11 @@ class AdminUsersController extends Controller {
 	 */
 	public function show($id)
 	{
-        $user = $this->user->fetch($id);
+        $user = $this->userRepo->getByUserId($id);
 
 		return response()->json($user);
 
-        if($user['status'] === 'success'){
+        /*if($user['status'] === 'success'){
             return 'Word!!';
         }else{
             return response()->json([
@@ -105,7 +105,7 @@ class AdminUsersController extends Controller {
                 'message' => $userCreate['message']
             ], 400);
         }
-		//return view('admin.users.single');
+		return view('admin.users.single');*/
 	}
 
 	/**
