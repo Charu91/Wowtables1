@@ -11,8 +11,8 @@
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('seo_keywords','SEO Keywords',['class'=>'col-sm-3 control-label']) !!}
+    {!! Form::label('seo_meta_keywords','SEO Keywords',['class'=>'col-sm-3 control-label']) !!}
     <div class="col-sm-6">
-        {!! Form::select('seo_keywords',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+        {!! Form::select('seo_meta_keywords',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
     </div>
 </div>

@@ -106,6 +106,20 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/pages') !== false)? 'nav-expanded nav-active':''}}">
+                        <a>
+                            <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                            <span>Static Pages</span>
+                        </a>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admin/pages')? 'nav-active':'' }}">
+                                <a href="/admin/pages">View All</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/pages/create')? 'nav-active':'' }}">
+                                <a href="/admin/pages/create">Create New</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/settings') !== false)? 'nav-expanded nav-active':''}}">
                         <a>
                             <i class="fa fa-gears" aria-hidden="true"></i>

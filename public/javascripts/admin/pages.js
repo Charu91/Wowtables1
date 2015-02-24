@@ -5,24 +5,17 @@
     $(document).on('ready', function(){
 
         var   token = $("meta[name='_token']").attr('content')
-            , $deleteUserBtn = $('.delete-user-btn');
+            , $deletePageBtn = $('.delete-page-btn');
 
-        $('#usersTable').DataTable();
+        $deletePageBtn.on('click',function(){
 
-        $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true
-        });
+            var id = $(this).data('page-id');
 
-        $deleteUserBtn.on('click',function(){
-
-            var id = $(this).data('user-id');
-
-            if(confirm('Are you sure you want to delete user with id '+id+'?'))
+            if(confirm('Are you sure you want to delete page with id '+id+'?'))
             {
                 $.ajax({
                     method: 'DELETE',
-                    url: '/admin/users/' + id,
+                    url: '/admin/pages/' + id,
                     headers: {
                         'X-XSRF-TOKEN': token
                     }

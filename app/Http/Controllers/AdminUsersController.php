@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Role;
-//use WowTables\Http\Models\Eloquent\User;
+use WowTables\Http\Models\Eloquent\User as EloquentUser;
 use WowTables\Http\Models\User;
 use WowTables\Core\Repositories\Users\UserRepository;
 use WowTables\Http\Requests\Admin\CreateUserRequest;
@@ -22,12 +22,14 @@ class AdminUsersController extends Controller {
 	 * @param Request $request
 	 * @param User $user
 	 * @param UserRepository $userRepo
+	 * @param EloquentUser $eloquentUser
 	 */
-    function __construct(Request $request, User $user, UserRepository $userRepo)
+    function __construct(Request $request, User $user, UserRepository $userRepo,EloquentUser $eloquentUser)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
 		$this->user = $user;
+		$this->eloquentUser = $eloquentUser;
 		$this->userRepo = $userRepo;
     }
 
@@ -39,7 +41,7 @@ class AdminUsersController extends Controller {
 	 */
 	public function index()
 	{
-		$users = $this->user->with('role')->get();
+		$users = $this->eloquentUser->with('role')->get();
 
 		return view('admin.users.index',['users' => $users]);
 	}
@@ -52,10 +54,7 @@ class AdminUsersController extends Controller {
 	 */
 	public function create()
 	{
-		$user = new User();
-		$user->role = new Role();
-
-		return view('admin.users.create',['user'=>$user]);
+		return view('admin.users.create');
 	}
 
 	/**
@@ -69,10 +68,19 @@ class AdminUsersController extends Controller {
         $userCreate = $this->user->create($this->request->all());
 
         if($userCreate['status'] === 'success'){
-            return response()->json([
-                'status' => 'success'
-            ], 200);
-        }else{
+
+			if($createUserRequest->ajax())
+			{
+				return response()->json([
+					'status' => 'success'
+				], 200);
+			}
+
+			flash()->success('User has been successfully created!');
+
+			return redirect()->route('AdminUsers');
+
+		}else{
             return response()->json([
                 'status' => 'failure',
                 'action' => $userCreate['action'],
@@ -91,6 +99,8 @@ class AdminUsersController extends Controller {
 	public function show($id)
 	{
         $user = $this->user->fetch($id);
+
+		//return response()->json($user);
 
         if($user['status'] === 'success'){
             return 'Word!!';
@@ -115,7 +125,7 @@ class AdminUsersController extends Controller {
 	{
 		$user = $this->userRepo->getByUserId($id);
 
-		return response()->json($user);
+		//return response()->json($user);
 
         return view('admin.users.edit',['user'	=> $user]);
 	}
@@ -138,9 +148,12 @@ class AdminUsersController extends Controller {
      * @Delete("/", as="AdminUserDelete")
 	 * @return Response
 	 */
-	public function destroy()
+	public function destroy($id)
 	{
-		//
+		EloquentUser::destroy($id);
+
+		flash()->success('The User has been deleted successfully');
+
 	}
 
 }
