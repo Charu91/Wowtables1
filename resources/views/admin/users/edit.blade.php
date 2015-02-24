@@ -82,11 +82,18 @@
 					@endif
 				</div>
 			@endforeach
+			<div id="addUserAttributeHolder"></div>
 		</div>
+		<footer class="panel-footer">
+			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
+		</footer>
 	</section>
 	@endif
 
 	{!! Form::submit('Update User',['class'=>'btn btn-primary']) !!}
 	{!! Form::close() !!}
 	</section>
+
+	@include('modals.add_user_attribute')
+
 @stop

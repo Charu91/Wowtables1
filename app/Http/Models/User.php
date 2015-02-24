@@ -157,6 +157,12 @@ class User {
             'value' => 'single'
         ],
 
+        'gender' => [
+            'name' => 'Gender',
+            'type' => 'varchar',
+            'value' => 'single'
+        ],
+
         'preferences' => [
             'name' => 'Preferences',
             'type' => 'multi-select',
