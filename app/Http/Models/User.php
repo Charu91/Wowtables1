@@ -186,7 +186,7 @@ class User {
 
         if($this->auth->check()){
             if(empty($this->full_name)){
-                $this->populateUserData($this->auth->user()->id);
+                $this->populateUserData();
             }
         }
     }
@@ -198,7 +198,7 @@ class User {
      *
      * @return void
      */
-    private function populateUserData($user_id)
+    private function populateUserData()
     {
         $query = '
             SELECT
@@ -216,7 +216,7 @@ class User {
             WHERE u.`id` = ?
         ';
 
-        $user = $user = DB::select($query, [$user_id]);
+        $user = $user = DB::select($query, [$this->auth->user()->id]);
 
         if($user){
             $this->role = $user[0]->role;
@@ -1048,7 +1048,6 @@ class User {
 
         if($userResult){
 
-
             $user = new \stdClass();
             $user->attributes = new \stdClass();
 
@@ -1080,6 +1079,7 @@ class User {
                                 if(!isset($user->attributes->$key))
                                     $user->attributes->$key = [];
 
+
                                 if(!in_array($property, $user->attributes->$key)){
                                     $select_id = $this->attributesMap[$key]['id_alias'];
                                     $user->attributes->$key[$result->$select_id] = $property;
@@ -1098,8 +1098,6 @@ class User {
                     }
                 }
             }
-
-            dd($user);
         }else{
             return [
                 'status' => 'failure',
