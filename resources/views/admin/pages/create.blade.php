@@ -2,7 +2,7 @@
 
 @section('content')
 	<header class="page-header">
-		<h2>Create New User</h2>
+		<h2>Create New Page</h2>
 		<div class="right-wrapper pull-right">
 			<ol class="breadcrumbs">
 				<li>
@@ -11,11 +11,11 @@
 					</a>
 				</li>
 				<li>
-					<a href="/admin/users">
-						Users
+					<a href="/admin/pages">
+						Pages
 					</a>
 				</li>
-				<li><span>Add New User</span></li>
+				<li><span>Add New Page</span></li>
 			</ol>
 		</div>
 	</header>
@@ -58,7 +58,7 @@
 	</section>
 
 
-	{!! Form::submit('Add User',['class'=>'btn btn-primary']) !!}
+	{!! Form::submit('Add Page',['class'=>'btn btn-primary']) !!}
 
 	{!! Form::close() !!}
 @stop

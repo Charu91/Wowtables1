@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{!! $title or 'WowTables!!' !!}</title>
     <meta name="title" content="{!! $seo_title or 'WowTables' !!}">
-    <meta name="description" content="{!! $seo_description or 'WowTables' !!}">
-    <meta name="keywords" content="{!! $seo_keywords or 'WowTables' !!}">
+    <meta name="description" content="{!! $seo_meta_description or 'WowTables' !!}">
+    <meta name="keywords" content="{!! $seo_meta_keywords or 'WowTables' !!}">
 
     {!! Html::style('fonts.googleapis.com/css?family=Lato:100') !!}
     {!! Html::style('vendor/font-awesome/css/font-awesome.css') !!}

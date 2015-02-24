@@ -16,6 +16,6 @@ class Page extends Model {
      *
      * @var array
      */
-    protected $gaurded = ['id'];
+    protected $guarded = ['id'];
 
 }

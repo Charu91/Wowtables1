@@ -2,7 +2,7 @@
 
 @section('content')
 	<header class="page-header">
-		<h2>Users</h2>
+		<h2>Edit Page</h2>
 		<div class="right-wrapper pull-right">
 			<ol class="breadcrumbs">
 				<li>
@@ -11,11 +11,11 @@
 					</a>
 				</li>
 				<li>
-					<a href="/admin/users">
-						Users
+					<a href="/admin/pages">
+						Pages
 					</a>
 				</li>
-				<li><span>Add New User</span></li>
+				<li><span>Edit Page</span></li>
 			</ol>
 		</div>
 	</header>
