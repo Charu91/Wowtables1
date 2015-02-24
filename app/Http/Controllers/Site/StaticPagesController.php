@@ -19,7 +19,7 @@ class StaticPagesController extends Controller {
 
 	public function show($slug)
 	{
-		$page = Page::where('slug',$slug)->first();
+		$page = Page::where('slug',$slug)->where('status','Active')->first();
 
 		if( $page != null )
 		{

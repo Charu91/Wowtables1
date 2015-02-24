@@ -1,8 +1,8 @@
 <?php namespace WowTables\Http\Controllers;
 
-use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Page;
 use WowTables\Http\Requests\CreatePageRequest;
+use WowTables\Http\Requests\UpdatePageRequest;
 
 /**
  * Class AdminController
@@ -13,11 +13,6 @@ use WowTables\Http\Requests\CreatePageRequest;
 
 class AdminPagesController extends Controller {
 
-
-    function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
 
     public function index()
     {
@@ -35,17 +30,18 @@ class AdminPagesController extends Controller {
     {
 
         Page::create([
-            'title' => $this->request->get('title'),
-            'slug' => $this->request->get('slug'),
-            'main_content' => $this->request->get('main_content'),
-            'seo_title' => $this->request->get('seo_title'),
-            'seo_meta_description' => $this->request->get('seo_meta_description'),
-            'seo_meta_keywords' => $this->request->get('seo_meta_keywords'),
+            'title' => $request->get('title'),
+            'slug' => $request->get('slug'),
+            'main_content' => $request->get('main_content'),
+            'seo_title' => $request->get('seo_title'),
+            'seo_meta_description' => $request->get('seo_meta_description'),
+            'seo_meta_keywords' => $request->get('seo_meta_keywords'),
+            'status' => $request->get('status')
         ]);
 
         flash()->success('The Page has been successfully created!');
 
-        return redirect()->back();
+        return redirect()->route('AdminPages');
 
     }
 
@@ -64,9 +60,22 @@ class AdminPagesController extends Controller {
         return view('admin.pages.edit',['page'=>$page]);
     }
 
-    public function update($id)
+    public function update($id,UpdatePageRequest $request)
     {
-        dd($this->request->all());
+        $page = Page::find($id);
+
+        $page->title = $request->get('title');
+        $page->slug = $request->get('slug');
+        $page->main_content = $request->get('main_content');
+        $page->seo_title = $request->get('seo_title');
+        $page->seo_meta_description = $request->get('seo_meta_description');
+        $page->seo_meta_keywords = $request->get('seo_meta_keywords');
+        $page->status = $request->get('status');
+        $page->save();
+
+        flash()->success('The Page has been updated Successfully!');
+
+        return redirect()->route('AdminPages');
     }
 
     public function destroy($id)
