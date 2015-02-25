@@ -88,6 +88,18 @@
 			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
 		</footer>
 	</section>
+	@else
+	<section class="panel">
+		<header class="panel-heading">
+			<h2 class="panel-title">User's Attributes</h2>
+		</header>
+		<div class="panel-body">
+			<div id="addUserAttributeHolder"></div>
+		</div>
+		<footer class="panel-footer">
+			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
+		</footer>
+	</section>
 	@endif
 
 	{!! Form::submit('Update User',['class'=>'btn btn-primary']) !!}

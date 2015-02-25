@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Events\Site\NewUserWasRegistered;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\User as EloquentUser;
 use WowTables\Http\Models\User;
@@ -68,6 +69,8 @@ class AdminUsersController extends Controller {
         $userCreate = $this->user->create($this->request->all());
 
         if($userCreate['status'] === 'success'){
+
+			event(new NewUserWasRegistered($this->request->get('email'),$this->request->get('full_name')));
 
 			if($createUserRequest->ajax())
 			{
