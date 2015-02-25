@@ -6,54 +6,7 @@
 
         var token  = $("meta[name='_token']").attr('content');
 
-        $('#restaurantsTable').DataTable({
-            lengthChange: false,
-            processing: true,
-            serverSide: true,
-            ajax: '/admin/locations',
-            columns: [
-                {
-                    name: 'location',
-                    sortable: true
-                },
-                {
-                    name: 'slug',
-                    sortable: false
-                },
-                {
-                    name: 'location_type',
-                    sortable: true
-                },
-                {
-                    name: 'parent',
-                    sortable: false
-                },
-                {
-                    name: 'actions',
-                    sortable: false
-                }
-            ]
-        });
-
-        $('#addNewRestaurantForm').submit(function(e){
-            e.preventDefault();
-            var input = {};
-            $('#addNewRestaurantForm :input').each(function() {
-                input[this.name] = $(this).val();
-            });
-
-            $.ajax({
-                url: '/admin/restaurants',
-                method: 'Post',
-                data: {
-                    data: input
-                }
-            }).done(function(data){
-                console.log(data);
-            }).fail(function(jqXHR){
-                console.log(jqXHR);
-            });
-        });
+        $('#restaurantsTable').DataTable();
 
         $('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();
@@ -108,6 +61,25 @@
             }
         });
 
+        $( "#addNewRestaurantForm" ).validate({
+            ignore: [],
+            highlight: function( label ) {
+                $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function( label ) {
+                $(label).closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function( error, element ) {
+                var placement = element.closest('.input-group');
+                if (!placement.get(0)) {
+                    placement = element;
+                }
+                if (error.text() !== '') {
+                    placement.after(error);
+                }
+            }
+        });
 
     });
 })(jQuery);

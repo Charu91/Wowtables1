@@ -34,7 +34,7 @@ Route::get('admin/restaurants/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/restaurants/edit/{id}', [
+Route::get('admin/restaurants/{id}/edit', [
     'uses' => 'AdminRestaurantsController@edit',
     'as' => 'AdminRestaurantEdit',
     'middleware' => [],
@@ -55,5 +55,11 @@ Route::delete('admin/restaurants/{id}', [
     'as' => 'AdminRestaurantsDelete',
     'middleware' => [],
     'where' => ['id' => '\d+'],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::resource('admin/restaurant/attributes','VendorAttributesController',[
+    'middleware' => [],
+    'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);

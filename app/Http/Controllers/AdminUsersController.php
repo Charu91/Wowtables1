@@ -128,8 +128,6 @@ class AdminUsersController extends Controller {
 	{
 		$user = $this->userRepo->getByUserId($id);
 
-		//return response()->json($user);
-
         return view('admin.users.edit',['user'	=> $user]);
 	}
 

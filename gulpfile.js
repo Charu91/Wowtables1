@@ -85,6 +85,7 @@ elixir(function(mix) {
             "javascripts/admin/locations.js",
             "javascripts/admin/users.js",
             "javascripts/admin/user_attributes.js",
+            "javascripts/admin/vendor_attributes.js",
             "javascripts/admin/roles.js",
             "javascripts/admin/pages.js",
             "javascripts/admin/permissions.js",

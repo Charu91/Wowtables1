@@ -21,7 +21,7 @@
 	"autoload": {
 		"classmap": [
 			"database",
-		  	"app/Core/Mailers"
+		  	"app/Core"
 		],
 		"psr-4": {
 			"WowTables\\": "app/"

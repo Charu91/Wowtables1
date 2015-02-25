@@ -1,7 +1,5 @@
 <?php namespace WowTables\Http\Controllers;
 
-use WowTables\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\UserAttributes;
 use WowTables\Http\Requests\CreateUserAttributeRequest;
