@@ -2,6 +2,7 @@
 
 use WowTables\Http\Controllers\Controller;
 use App;
+use Cookie;
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Page;
 
@@ -9,7 +10,13 @@ class StaticPagesController extends Controller {
 
 	public function home()
 	{
-		return view('site.pages.home');
+		if(Cookie::get('inform_rebranding') == null)
+		{
+			return response()->view('site.pages.home')->withCookie(cookie('inform_rebranding', true, 1440));
+		}
+		else{
+			return response()->view('site.pages.home');
+    	}
 	}
 
 	public function loggedInHome()

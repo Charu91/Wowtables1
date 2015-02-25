@@ -11,7 +11,7 @@
     <meta name="description" content="{!! $seo_meta_description or 'WowTables' !!}">
     <meta name="keywords" content="{!! $seo_meta_keywords or 'WowTables' !!}">
 
-    {!! Html::style('fonts.googleapis.com/css?family=Lato:100') !!}
+    {!! Html::style('https://fonts.googleapis.com/css?family=Lato:100') !!}
     {!! Html::style('vendor/font-awesome/css/font-awesome.css') !!}
     {!! Html::style( elixir("css/all.css") ) !!}
     {!! Html::script('vendor/modernizr/modernizr.js') !!}
@@ -33,8 +33,21 @@
 
         @yield('content')
 
+        @if( $inform_rebranding == false )
+            @include('modals.inform_rebranding')
+        @endif
+
 <!-- Scripts -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+@if( $inform_rebranding == false )
+    <script>
+        $(document).on('ready', function(){
+            $('#informRebranding').modal('show');
+        });
+    </script>
+@endif
+
 </body>
 </html>

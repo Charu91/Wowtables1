@@ -13,6 +13,7 @@ class ViewServiceProvider extends ServiceProvider {
 	public function boot(ViewFactory $view)
 	{
         $view->composer('admin/*', 'WowTables\Http\ViewComposers\AdminComposer');
+		$view->composer('*', 'WowTables\Http\ViewComposers\SiteComposer');
 	}
 
 	/**
