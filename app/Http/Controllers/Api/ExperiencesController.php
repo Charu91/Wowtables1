@@ -22,6 +22,13 @@ class ExperiencesController extends Controller {
     protected $request;
 
     /**
+     * The Single Product Object
+     *
+     * @var object
+     */
+    protected $product;
+
+    /**
      * @param Request $request
      */
     public function __construct(Request $request, Products $products)
@@ -29,6 +36,7 @@ class ExperiencesController extends Controller {
         $this->middleware('mobile.app.access');
 
         $this->products = $products;
+        $this->product = $product;
         $this->request = $request;
     }
 
@@ -54,18 +62,9 @@ class ExperiencesController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
-	}
+		$experience = $this->product->fetch($id);
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+        return response()->json($experience['data'], $experience['code']);
 	}
 
 }

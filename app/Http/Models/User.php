@@ -2,6 +2,8 @@
 
 use DB;
 use Log;
+use Mail;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
 use Rhumsaa\Uuid\Uuid;
@@ -86,109 +88,18 @@ class User {
      */
     protected $user;
 
-    /**
-     * The attribute type to table mapping
-     *
-     * @var array
-     */
-    protected $typeTableAliasMap = [
-        'multi-select' => [
-            'table' => 'user_attributes_multiselect',
-            'so_table' => 'user_attributes_select_options',
-            'alias' => 'uam',
-            'ua_alias' => 'uauam',
-            'so_alias' => 'uamso',
-        ],
-
-        'single-select' => [
-            'table' => 'user_attributes_singleselect',
-            'so_table' => 'user_attributes_select_options',
-            'alias' => 'uas',
-            'ua_alias' => 'uauas',
-            'so_alias' => 'uasso',
-        ],
-
-        'datetime' => [
-            'table' => 'user_attributes_date',
-            'alias' => 'uad',
-            'ua_alias' => 'uauad'
-        ],
-
-        'boolean' => [
-            'table' => 'user_attributes_boolean',
-            'alias' => 'uab',
-            'ua_alias' => 'uauab'
-        ],
-
-        'float' => [
-            'table' => 'user_attributes_float',
-            'alias' => 'uaf',
-            'ua_alias' => 'uauaf'
-        ],
-
-        'integer' => [
-            'table' => 'user_attributes_integer',
-            'alias' => 'uai',
-            'ua_alias' => 'uauai'
-        ],
-
-        'text' => [
-            'table' => 'user_attributes_text',
-            'alias' => 'uat',
-            'ua_alias' => 'uauat'
-        ],
-
-        'varchar' => [
-            'table' => 'user_attributes_varchar',
-            'alias' => 'uav',
-            'ua_alias' => 'uauav'
-        ]
-    ];
-
-    /**
-     * The attributes applicable to the user
-     *
-     * @var array
-     */
-    protected $attributesMap = [
-        'date_of_birth' => [
-            'name' => 'Date Of Birth',
-            'type' => 'datetime',
-            'value' => 'single'
-        ],
-
-        'gender' => [
-            'name' => 'Gender',
-            'type' => 'varchar',
-            'value' => 'single'
-        ],
-
-        'preferences' => [
-            'name' => 'Preferences',
-            'type' => 'multi-select',
-            'value' => 'multi',
-            'id_alias' => 'preference_id'
-        ],
-
-        'single_something' => [
-            'name' => 'Single Something',
-            'type' => 'single-select',
-            'value' => 'single',
-            'id_alias' => 'single_something_id'
-        ]
-    ];
-
 
     /**
      * The User Construct
      *
      * @param Authenticator $auth
      */
-    public function __construct( Auth $auth, Roles $roles, Hasher $hasher )
+    public function __construct( Auth $auth, Roles $roles, Hasher $hasher, Config $config )
     {
         $this->auth = $auth;
         $this->roles = $roles;
         $this->hasher = $hasher;
+        $this->config = $config;
 
         if($this->auth->check()){
             if(empty($this->full_name)){
@@ -904,28 +815,29 @@ class User {
                     $attributeIdMap = DB::table('user_attributes')->whereIn('alias', $attributes)->lists('id', 'alias');
 
                     if($attributeIdMap){
+                        $attributesMap = $this->config->get('user_attributes.attributesMap');
                         $attribute_inserts = [];
 
                         foreach($data['attributes'] as $attribute => $value){
-                            if(!isset($attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']]))
-                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']] = [];
+                            if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
 
-                            if($this->attributesMap[$attribute]['type'] === 'single-select'){
-                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                            if($attributesMap[$attribute]['type'] === 'single-select'){
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                     'user_id' => $userId,
                                     'user_attributes_select_option_id' => $value
                                 ];
-                            }else if($this->attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                                if($this->attributesMap[$attribute]['type'] === 'multi-select'){
+                            }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
+                                if($attributesMap[$attribute]['type'] === 'multi-select'){
                                     foreach ($value as $singleValue) {
-                                        $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                             'user_id' => $userId,
                                             'user_attributes_select_option_id' => $singleValue
                                         ];
                                     }
                                 }else{
                                     foreach ($value as $singleValue) {
-                                        $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                             'user_id' => $userId,
                                             'user_attribute_id' => $attributeIdMap[$attribute],
                                             'attribute_value' => $singleValue
@@ -933,7 +845,7 @@ class User {
                                     }
                                 }
                             }else{
-                                $attribute_inserts[$this->typeTableAliasMap[$this->attributesMap[$attribute]['type']]['table']][] = [
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                    'user_id' => $userId,
                                    'user_attribute_id' => $attributeIdMap[$attribute],
                                    'attribute_value' => $value
@@ -990,32 +902,35 @@ class User {
 
     public function fetch($user_id)
     {
+        $attributesMap = $this->config->get('user_attributes.attributesMap');
+        $typeTableAliasMap = $this->config->get('user_attributes.typeTableAliasMap');
+        
         $query = 'SELECT u.`phone_number`';
         $unique_attribute_types = [];
 
-        if(count($this->attributesMap)){
-            foreach($this->attributesMap as $attribute => $attData){
+        if(count($attributesMap)){
+            foreach($attributesMap as $attribute => $attData){
                 if(!in_array($attData['type'], $unique_attribute_types))
                     $unique_attribute_types[] = $attData['type'];
 
                 if($attData['type'] === 'single-select' ||  $attData['type'] === 'multi-select'){
                     $query .= "
                         ,IF(
-                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
                             null
                         ) AS `{$attData['id_alias']}`,
                         IF(
-                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
                             null
                         ) AS `{$attribute}`
                     ";
                 }else{
                     $query .= "
                         ,IF(
-                            {$this->typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$this->typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
                             null
                         ) AS `{$attribute}`
                     ";
@@ -1029,19 +944,19 @@ class User {
             foreach($unique_attribute_types as $type){
                 if($type === 'single-select' || $type === 'multi-select'){
                     $query .= "
-                        LEFT JOIN {$this->typeTableAliasMap[$type]['table']} AS `{$this->typeTableAliasMap[$type]['alias']}`
-                        ON u.`id` = {$this->typeTableAliasMap[$type]['alias']}.`user_id`
-                        LEFT JOIN {$this->typeTableAliasMap[$type]['so_table']} AS `{$this->typeTableAliasMap[$type]['so_alias']}`
-                        ON {$this->typeTableAliasMap[$type]['so_alias']}.id = {$this->typeTableAliasMap[$type]['alias']}.`user_attributes_select_option_id`
-                        LEFT JOIN user_attributes AS `{$this->typeTableAliasMap[$type]['ua_alias']}`
-                        ON `{$this->typeTableAliasMap[$type]['so_alias']}`.user_attribute_id = {$this->typeTableAliasMap[$type]['ua_alias']}.`id`
+                        LEFT JOIN {$typeTableAliasMap[$type]['table']} AS `{$typeTableAliasMap[$type]['alias']}`
+                        ON u.`id` = {$typeTableAliasMap[$type]['alias']}.`user_id`
+                        LEFT JOIN {$typeTableAliasMap[$type]['so_table']} AS `{$typeTableAliasMap[$type]['so_alias']}`
+                        ON {$typeTableAliasMap[$type]['so_alias']}.id = {$typeTableAliasMap[$type]['alias']}.`user_attributes_select_option_id`
+                        LEFT JOIN user_attributes AS `{$typeTableAliasMap[$type]['ua_alias']}`
+                        ON `{$typeTableAliasMap[$type]['so_alias']}`.user_attribute_id = {$typeTableAliasMap[$type]['ua_alias']}.`id`
                     ";
                 }else{
                     $query .= "
-                        LEFT JOIN {$this->typeTableAliasMap[$type]['table']} AS `{$this->typeTableAliasMap[$type]['alias']}`
-                        ON u.`id` = {$this->typeTableAliasMap[$type]['alias']}.`user_id`
-                        LEFT JOIN user_attributes AS `{$this->typeTableAliasMap[$type]['ua_alias']}`
-                        ON `{$this->typeTableAliasMap[$type]['ua_alias']}`.id = {$this->typeTableAliasMap[$type]['alias']}.`user_attribute_id`
+                        LEFT JOIN {$typeTableAliasMap[$type]['table']} AS `{$typeTableAliasMap[$type]['alias']}`
+                        ON u.`id` = {$typeTableAliasMap[$type]['alias']}.`user_id`
+                        LEFT JOIN user_attributes AS `{$typeTableAliasMap[$type]['ua_alias']}`
+                        ON `{$typeTableAliasMap[$type]['ua_alias']}`.id = {$typeTableAliasMap[$type]['alias']}.`user_attribute_id`
                     ";
                 }
             }
@@ -1063,12 +978,12 @@ class User {
 
                     if($key === 'phone_number'){
                         $user->phone_number = $property;
-                    }else if(isset($this->attributesMap[$key])){
+                    }else if(isset($attributesMap[$key])){
 
-                        if($this->attributesMap[$key]['value'] === 'single'){
-                            if($this->attributesMap[$key]['type'] === 'single-select'){
+                        if($attributesMap[$key]['value'] === 'single'){
+                            if($attributesMap[$key]['type'] === 'single-select'){
                                 if(!isset($user->attributes->$key)){
-                                    $select_id = $this->attributesMap[$key]['id_alias'];
+                                    $select_id = $attributesMap[$key]['id_alias'];
                                     $user->attributes->$key = [
                                         $result->$select_id => $property
                                     ];
@@ -1081,13 +996,13 @@ class User {
                             }
                         }else{
 
-                            if($this->attributesMap[$key]['type'] === 'multi-select'){
+                            if($attributesMap[$key]['type'] === 'multi-select'){
                                 if(!isset($user->attributes->$key))
                                     $user->attributes->$key = [];
 
 
                                 if(!in_array($property, $user->attributes->$key)){
-                                    $select_id = $this->attributesMap[$key]['id_alias'];
+                                    $select_id = $attributesMap[$key]['id_alias'];
                                     $user->attributes->$key[$result->$select_id] = $property;
                                 }
                             }else{

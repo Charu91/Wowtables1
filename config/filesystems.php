@@ -52,7 +52,7 @@ return [
             'driver' => 's3',
             'key'    => env('AWS_API_KEY', 'AKIAJIA3EFFTMK7KJRKQ'),
             'secret' => env('AWS_SECRET_KEY','Jl7AIdEi/dHy3Q2B6vDKfHnuhMiFQAzmK54KLgJs'),
-            'region' => env('AWS_REGION','your-region'),
+            'region' => env('AWS_REGION','eu-west-1'),
             'bucket' => 'wowtables',
         ],
 

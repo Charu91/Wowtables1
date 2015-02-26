@@ -1,7 +1,5 @@
 <?php
 
-
-
 Route::get('admin/restaurants/locations/', [
     'uses' => 'AdminRestaurantLocationsController@index',
     'as' => 'AdminGetRestaurants',
