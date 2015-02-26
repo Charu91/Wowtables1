@@ -1,36 +1,32 @@
 <?php namespace WowTables\Http\Controllers;
 
+use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Models\Schedules;
-use WowTables\Http\Requests;
-use WowTables\Http\Controllers\Controller;
-
-use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\Request;
+use WowTables\Http\Requests\CreateRestaurantLocationRequest;
 
 class AdminRestaurantLocationsController extends Controller {
 
-    /**
-     * The constructor Method
-     *
-     * @param Request $request
-     */
-    function __construct(Request $request)
+	/**
+	 * The constructor Method
+	 *
+	 * @param RestaurantLocationsRepository $repository
+	 */
+    function __construct(RestaurantLocationsRepository $repository)
     {
         $this->middleware('admin.auth');
-        $this->request = $request;
+		$this->repository = $repository;
     }
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param Encrypter $encrypter
-	 * @return Response
-	 */
-	public function index(Encrypter $encrypter)
-	{
-		$token = $encrypter->encrypt(csrf_token());
 
-		return view('admin.restaurants.locations',['_token' => $token]);
+	/**
+	 * @return \Illuminate\View\View
+     */
+	public function index()
+	{
+		$RestaurantLocations = $this->repository->getAll();
+
+		return view('admin.restaurants.locations.index',['RestaurantLocations' => $RestaurantLocations]);
 	}
 
 	/**
@@ -40,7 +36,7 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		return view('admin.restaurants.locations.create');
 	}
 
 	/**
@@ -48,9 +44,9 @@ class AdminRestaurantLocationsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateRestaurantLocationRequest $request)
 	{
-		//
+		dd($request->all());
 	}
 
 	/**
@@ -72,7 +68,9 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+		$RestaurantLocation = $this->repository->getByRestaurantLocationId($id);
+
+		return response()->json($RestaurantLocation);
 	}
 
 	/**
@@ -107,37 +105,43 @@ class AdminRestaurantLocationsController extends Controller {
 
 		if($fetchSchedules['status'] === 'success') {
 
-			$breakfast = [];
-			$lunch = [];
-			$dinner = [];
-
-			foreach ( $fetchSchedules['schedules'] as $schedule )
-			{
-				if ( $schedule['slot_type'] == 'Breakfast' )
-				{
-					$breakfast [] = $schedule;
-				}
-				if ( $schedule['slot_type'] == 'Lunch' )
-				{
-					$lunch [] = $schedule;
-				}
-				if ( $schedule['slot_type'] == 'Dinner' )
-				{
-					$dinner [] = $schedule;
-				}
-			}
-
-			$data = [
-				'breakfast' => $breakfast,
-				'lunch'		=> $lunch,
-				'dinner'	=> $dinner
-			];
+			$data = $this->formatSchedules($fetchSchedules);
 
 			return view('admin.restaurants.schedules_table', $data);
 
 		} else {
 			return response('Something went wrong', 400);
 		}
+	}
+
+	/**
+	 * @param $fetchSchedules
+	 * @return array
+	 */
+	public function formatSchedules($fetchSchedules)
+	{
+		$breakfast = [];
+		$lunch = [];
+		$dinner = [];
+
+		foreach ($fetchSchedules['schedules'] as $schedule) {
+			if ($schedule['slot_type'] == 'Breakfast') {
+				$breakfast [] = $schedule;
+			}
+			if ($schedule['slot_type'] == 'Lunch') {
+				$lunch [] = $schedule;
+			}
+			if ($schedule['slot_type'] == 'Dinner') {
+				$dinner [] = $schedule;
+			}
+		}
+
+		$data = [
+			'breakfast' => $breakfast,
+			'lunch' => $lunch,
+			'dinner' => $dinner
+		];
+		return $data;
 	}
 
 }

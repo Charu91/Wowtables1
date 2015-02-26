@@ -1,18 +1,9 @@
 <?php namespace WowTables\Http\Requests;
 
-use WowTables\Http\Requests\Request;
 use WowTables\Http\Models\User;
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 
 class CreateRestaurantLocationRequest extends Request {
 
-    /**
-     * The route to redirect to if validation fails.
-     *
-     * @var string
-     */
-    protected $redirectRoute;
 
     /**
      * The property to hold the user object
@@ -39,7 +30,7 @@ class CreateRestaurantLocationRequest extends Request {
 	public function rules()
 	{
 		return [
-			//
+
 		];
 	}
 
@@ -50,35 +41,7 @@ class CreateRestaurantLocationRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return false;
+		return $this->user->can('create', 'restaurant');
 	}
-
-    /**
-     * Get the proper failed validation response for the request.
-     *
-     * @param  array  $errors
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function response(array $errors)
-    {
-        if ($this->ajax())
-        {
-            return new JsonResponse($errors, 422);
-        }
-
-        return $this->redirector->to($this->getRedirectUrl())
-            ->withInput($this->except($this->dontFlash))
-            ->withErrors($errors, $this->errorBag);
-    }
-
-    /**
-     * Get the response for a forbidden operation.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function forbiddenResponse()
-    {
-        return new Response('Forbidden', 403);
-    }
 
 }

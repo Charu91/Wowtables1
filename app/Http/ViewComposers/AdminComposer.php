@@ -6,6 +6,7 @@ use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\UserAttributes;
 use WowTables\Http\Models\Eloquent\Vendors\VendorAttributes;
+use WowTables\Http\Models\Eloquent\Vendors\Vendor;
 use WowTables\Http\Models\User;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Auth;
@@ -30,7 +31,9 @@ class AdminComposer {
         $view->with('roles_list',Role::lists('name','id'));
         $view->with('user_attributes_list',UserAttributes::lists('name','alias'));
         $view->with('restaurant_attributes_list',VendorAttributes::lists('name','alias'));
+        $view->with('restaurants_list',Vendor::wherehas('vendorType', function($q){$q->where('type','Restaurants');})->lists('name','id'));
         $view->with('locations_list',Location::where('Type','City')->lists('name','id'));
+        $view->with('locations_area_list',Location::where('Type','Area')->lists('name','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
     }
 }

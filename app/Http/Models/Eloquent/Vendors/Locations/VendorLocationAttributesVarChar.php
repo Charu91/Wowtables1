@@ -1,11 +1,11 @@
-<?php namespace WowTables\Http\Models\Eloquent\Vendors;
+<?php namespace WowTables\Http\Models\Eloquent\Vendors\Locations;
 
 use Illuminate\Database\Eloquent\Model;
 
 
-class VendorAttributesVarChar extends Model {
+class VendorLocationAttributesVarChar extends Model {
 
-    protected $table = 'vendor_attributes_varchar';
+    protected $table = 'vendor_location_attributes_varchar';
 
     protected $fillable = ['attribute_value'];
 

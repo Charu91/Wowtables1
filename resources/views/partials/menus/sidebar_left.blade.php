@@ -102,7 +102,10 @@
                                 <a href="/admin/restaurants/create">Create New</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/restaurants/locations')? 'nav-active':'' }}">
-                                <a href="/admin/restaurants/locations">Create Restaurant Location</a>
+                                <a href="/admin/restaurants/locations">Restaurant Locations</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/restaurants/locations/create')? 'nav-active':'' }}">
+                                <a href="/admin/restaurants/locations/create">Create Restaurant Location</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/restaurant/attributes')? 'nav-active':'' }}">
                                 <a href="/admin/restaurant/attributes">Restaurant Attributes</a>
