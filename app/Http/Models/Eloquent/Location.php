@@ -18,4 +18,6 @@ class Location extends Model {
      */
     protected $guarded = ['id'];
 
+    protected $visible = ['name'];
+
 }

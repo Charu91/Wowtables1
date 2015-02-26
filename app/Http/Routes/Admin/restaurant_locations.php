@@ -2,7 +2,7 @@
 
 Route::get('admin/restaurants/locations/', [
     'uses' => 'AdminRestaurantLocationsController@index',
-    'as' => 'AdminGetRestaurants',
+    'as' => 'AdminRestaurantLocations',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
@@ -18,7 +18,7 @@ Route::get('admin/restaurants/locations/available_time_slots', [
 
 Route::get('admin/restaurants/locations/create', [
     'uses' => 'AdminRestaurantLocationsController@create',
-    'as' => 'AdminRestaurantCreate',
+    'as' => 'AdminRestaurantLocationsCreate',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
@@ -34,7 +34,7 @@ Route::post('admin/restaurants/locations/', [
 
 Route::get('admin/restaurants/locations/{id}', [
     'uses' => 'AdminRestaurantLocationsController@show',
-    'as' => 'AdminRestaurantShow',
+    'as' => 'AdminRestaurantLocationsShow',
     'middleware' => [],
     'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
@@ -42,7 +42,7 @@ Route::get('admin/restaurants/locations/{id}', [
 
 Route::get('admin/restaurants/locations/edit/{id}', [
     'uses' => 'AdminRestaurantLocationsController@edit',
-    'as' => 'AdminRestaurantEdit',
+    'as' => 'AdminRestaurantLocationsEdit',
     'middleware' => [],
     'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
@@ -50,7 +50,7 @@ Route::get('admin/restaurants/locations/edit/{id}', [
 
 Route::put('admin/restaurants/locations/{id}', [
     'uses' => 'AdminRestaurantLocationsController@update',
-    'as' => 'AdminRestaurantUpdate',
+    'as' => 'AdminRestaurantLocationsUpdate',
     'middleware' => [],
     'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
@@ -58,7 +58,7 @@ Route::put('admin/restaurants/locations/{id}', [
 
 Route::delete('admin/restaurants/locations/{id}', [
     'uses' => 'AdminRestaurantLocationsController@destroy',
-    'as' => 'AdminRestaurantsDelete',
+    'as' => 'AdminRestaurantLocationsDelete',
     'middleware' => [],
     'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),

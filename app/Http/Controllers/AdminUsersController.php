@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Events\Site\NewUserWasRegistered;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\User as EloquentUser;
 use WowTables\Http\Models\User;
@@ -69,6 +70,8 @@ class AdminUsersController extends Controller {
 
         if($userCreate['status'] === 'success'){
 
+			event(new NewUserWasRegistered($this->request->get('email'),$this->request->get('full_name')));
+
 			if($createUserRequest->ajax())
 			{
 				return response()->json([
@@ -124,8 +127,6 @@ class AdminUsersController extends Controller {
 	public function edit($id)
 	{
 		$user = $this->userRepo->getByUserId($id);
-
-		//return response()->json($user);
 
         return view('admin.users.edit',['user'	=> $user]);
 	}

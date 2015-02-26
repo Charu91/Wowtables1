@@ -65,8 +65,21 @@
 		</div>
 	</section>
 
+	<section  class="panel">
+		<header class="panel-heading">
+			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
+			<h2 class="panel-title pull-right">User's Attributes</h2>
+		</header>
+		<div class="panel-body">
+			<div id="addRestaurantAttributesHolder"></div>
+		</div>
+	</section>
+
 
 	{!! Form::submit('Add User',['class'=>'btn btn-primary']) !!}
 
 	{!! Form::close() !!}
+
+	@include('modals.add_user_attribute')
+
 @stop

@@ -1,8 +1,8 @@
 <?php namespace WowTables\Http\Controllers;
 
+use WowTables\Core\Repositories\Restaurants\RestaurantRepository;
 use WowTables\Http\Requests\CreateRestaurantRequest;
-use WowTables\Http\Models\Restaurants;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 /**
  * Class AdminRestaurantsController
@@ -13,15 +13,17 @@ use Illuminate\Support\Facades\Request;
 
 class AdminRestaurantsController extends Controller {
 
-    /**
-     * The constructor Method
-     *
-     * @param Request $request
-     */
-    function __construct(Request $request)
+	/**
+	 * The constructor Method
+	 *
+	 * @param Request $request
+	 * @param RestaurantRepository $repo
+	 */
+    function __construct(Request $request,RestaurantRepository $repo)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
+		$this->repo = $repo;
     }
 
 	/**
@@ -32,7 +34,9 @@ class AdminRestaurantsController extends Controller {
 	 */
 	public function index()
 	{
-		return view('admin.restaurants.index');
+		$restaurants = $this->repo->getAll();
+
+		return view('admin.restaurants.index',['restaurants'=>$restaurants]);
 	}
 
 	/**
@@ -43,7 +47,7 @@ class AdminRestaurantsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.restaurants.add_update');
+		return view('admin.restaurants.create');
 	}
 
 	/**
@@ -80,7 +84,9 @@ class AdminRestaurantsController extends Controller {
 	 */
 	public function edit($id)
 	{
-		return view('admin.restaurants.add_update');
+		$restaurant = $this->repo->getByRestaurantId($id);
+
+		return view('admin.restaurants.edit',['restaurant'=>$restaurant]);
 	}
 
 	/**
@@ -92,7 +98,7 @@ class AdminRestaurantsController extends Controller {
 	 */
 	public function update($id)
 	{
-		//
+		dd($this->request->all());
 	}
 
 	/**
