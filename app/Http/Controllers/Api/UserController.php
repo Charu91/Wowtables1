@@ -32,6 +32,7 @@ class UserController extends Controller {
      */
     public function __construct(Request $request, User $user)
     {
+        $this->middleware('mobile.app.access', ['only' => ['set_location_id_phone']]);
 
         $this->user = $user;
         $this->request = $request;
@@ -78,4 +79,27 @@ class UserController extends Controller {
 
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
+
+    public function set_location_id_phone()
+    {
+        $input = $this->request->all();
+
+        if(!isset($input['location_id']) && !isset($input['phone_number'])){
+            response()->json([
+                'action' => 'Check for the phone number and the location input',
+                'message' => 'Check for validation errors in the input'
+            ], 422);
+        }else{
+
+            $updateUser = $this->user->updateLocationAndPhone(
+                $input['user_id'],
+                [
+                    'phone_number' => $input['phone_number'],
+                    'location_id' => $input['location_id']
+                ]
+            );
+
+            return response()->json($updateUser['data'], $updateUser['code']);
+        }
+    }
 }

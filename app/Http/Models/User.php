@@ -1043,7 +1043,7 @@ class User {
         if(count($userUpdate)){
             DB::table('users')->where('id', $user_id)->update($userUpdate);
 
-            return ['code' => 200, 'data' => []];
+            return ['code' => 200, 'data' => new \stdClass()];
         }else{
             return [
                 'code' => 422,

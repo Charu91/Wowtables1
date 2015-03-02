@@ -23,3 +23,11 @@ Route::post('fb_login', [
     'where' => [],
     'domain' => env('API_URL'),
 ]);
+
+Route::put('set_phone_location', [
+    'uses' => 'Api\UserController@set_location_id_phone',
+    'as' => 'MobileUserSetLocationPhone',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('API_URL'),
+]);

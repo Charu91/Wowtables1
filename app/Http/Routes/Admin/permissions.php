@@ -1,5 +1,5 @@
 <?php
-
+/*
 Route::get('admin/permissions',[
 'uses' => 'AdminPermissionsController@index',
 'as' => 'AdminPermissions',
@@ -39,3 +39,4 @@ Route::delete('admin/permissions/{id}', [
 'where' => [],
 'domain' => env('WEBSITE_URL'),
 ]);
+*/
