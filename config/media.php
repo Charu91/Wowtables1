@@ -19,14 +19,14 @@ return [
             'width' => 450
         ],
 
-        'cover' => [
-            'height' => 450,
-            'width' => 450
+        'listing' => [
+            'height' => 200,
+            'width' => 300
         ],
 
         'gallery' => [
-            'height' => 450,
-            'width' => 450
+            'height' => 600,
+            'width' => 400
         ]
     ]
 ];

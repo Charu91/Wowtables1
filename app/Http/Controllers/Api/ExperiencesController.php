@@ -1,5 +1,6 @@
 <?php namespace WowTables\Http\Controllers\Api;
 
+use WowTables\Http\Models\Product;
 use WowTables\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Products;
@@ -31,7 +32,7 @@ class ExperiencesController extends Controller {
     /**
      * @param Request $request
      */
-    public function __construct(Request $request, Products $products)
+    public function __construct(Request $request, Products $products, Product $product)
     {
         $this->middleware('mobile.app.access');
 

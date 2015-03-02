@@ -816,6 +816,7 @@ class User {
 
                     if($attributeIdMap){
                         $attributesMap = $this->config->get('user_attributes.attributesMap');
+                        $typeTableAliasMap = $this->config->get('user_attributes.typeTableAliasMap');
                         $attribute_inserts = [];
 
                         foreach($data['attributes'] as $attribute => $value){
@@ -1024,6 +1025,32 @@ class User {
                 'status' => 'failure',
                 'action' => 'Fetch the user and all his attributes',
                 'message' => 'Cound not find the user. He may no longer be in the system'
+            ];
+        }
+    }
+
+    public function updateLocationAndPhone($user_id, $data){
+        $userUpdate = [];
+
+        if(isset($data['phone_number'])){
+            $userUpdate['phone_number'] = $data['phone_number'];
+        }
+
+        if(isset($data['location_id'])){
+            $userUpdate['location_id'] = $data['location_id'];
+        }
+
+        if(count($userUpdate)){
+            DB::table('users')->where('id', $user_id)->update($userUpdate);
+
+            return ['code' => 200, 'data' => []];
+        }else{
+            return [
+                'code' => 422,
+                'data' => [
+                    'action' => 'Checking if the field values were sent',
+                    'message' => 'There were some validation errors in your request. Please check the values and try again'
+                ]
             ];
         }
     }

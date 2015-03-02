@@ -50,8 +50,8 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key'    => env('AWS_API_KEY', 'AKIAJIA3EFFTMK7KJRKQ'),
-            'secret' => env('AWS_SECRET_KEY','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'),
+            'key'    => env('AWS_API_KEY', 'AKIAJ7VD2GCKRNYVDENA'),
+            'secret' => env('AWS_SECRET_KEY','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'),
             'region' => env('AWS_REGION','eu-west-1'),
             'bucket' => 'wowtables',
         ],
