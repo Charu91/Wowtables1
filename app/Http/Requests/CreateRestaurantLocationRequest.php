@@ -1,26 +1,8 @@
 <?php namespace WowTables\Http\Requests;
 
-use WowTables\Http\Models\User;
 
 class CreateRestaurantLocationRequest extends Request {
 
-
-    /**
-     * The property to hold the user object
-     *
-     * @var Object
-     */
-    protected $user;
-
-    /**
-     * The constructor method
-     *
-     * @param User $user
-     */
-    public function __constructor(User $user)
-    {
-        $this->user = $user;
-    }
 
 	/**
 	 * Get the validation rules that apply to the request.
@@ -30,6 +12,44 @@ class CreateRestaurantLocationRequest extends Request {
 	public function rules()
 	{
 		return [
+			'vendor_id' => 'required|numeric',
+			'location_id' => 'required|numeric',
+			'title' => 'required',
+			'slug'  => 'required|unique:vendor_locations',
+			'status' => 'required|in:active,inactive',
+			'short_description' => 'required',
+			'description' => 'required',
+			'seo_title' => 'required',
+			'seo_meta_description' => 'required',
+			'seo_meta_keywords' => 'required',
+			'main_image' => 'required|numeric',
+			'listing_image' => 'required|numeric',
+			'gallery_images' => 'required|array',
+			'min_people_per_reservation' => 'required|numeric',
+			'max_people_per_reservation' => 'required|numeric',
+			'max_reservation_per_time_slot' => 'required|numeric',
+			'max_reservation_per_day' => 'required|numeric',
+			'min_reservation_time_buffer' => 'required|numeric',
+			'max_reservation_time_buffer' => 'required|numeric',
+			'schedules' => 'required|array',
+			'allow_alacarte_reservation' => 'required',
+			'alacarte_terms_conditions' => 'required',
+			'address' => 'required',
+			'city' => 'required|numeric',
+			'state' => 'required|numeric',
+			'country' => 'required|numeric',
+			'pin_code' => 'required|numeric',
+			'latitude' => 'required',
+			'longitude' => 'required',
+			'driving_locations' => 'required',
+			'location_map' => 'required|array',
+			'cuisine' => 'required|numeric',
+			'collections' => 'array',
+			'commision_per_reservation' => 'required|numeric',
+			'prepayment' => 'required',
+			'reward_points_per_reservation' => 'required|numeric',
+			'publish_date' => 'required',
+			'publish_time' => 'required',
 
 		];
 	}
@@ -41,7 +61,7 @@ class CreateRestaurantLocationRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return $this->user->can('create', 'restaurant');
+		return true;
 	}
 
 }

@@ -54,7 +54,31 @@
             <div id="basic_details" class="tab-pane active mt-lg">
                 @include('partials.forms.select_restaurant')
                 @include('partials.forms.select_restaurant_locations')
-                @include('partials.forms.basic_details')
+                <div class="form-group">
+                    {!! Form::label('name','Experience Name',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('slug','Slug',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('short_description','Short Description',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('short_description',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('description','Description',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('description',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                    </div>
+                </div>
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 @include('partials.forms.seo_details')
@@ -165,7 +189,12 @@
                         {!! Form::textarea('terms_conditions',null,['rows'=>'5','class'=>'form-control','id'=>'terms_conditions','required'=>'']) !!}
                     </div>
                 </div>
-                @include('partials.forms.status')
+                <div class="form-group">
+                    {!! Form::label('satus','Status',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::select('status',[''=>'','Published'=>'Published','Draft'=>'Draft'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

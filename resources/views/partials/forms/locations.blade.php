@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('pin_code','Pin No',['class'=>'col-sm-2 control-label']) !!}
+                    {!! Form::label('pin_code','Pin Code',['class'=>'col-sm-2 control-label']) !!}
                     <div class="col-sm-10">
                         {!! Form::select('pin_code',[''=>'','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
@@ -69,7 +69,7 @@
                 <div class="form-group">
                     {!! Form::label('location_map','Related Locations',['class'=>'col-sm-2 control-label']) !!}
                     <div class="col-sm-10">
-                        {!! Form::select('location_map',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+                        {!! Form::select('location_map[]',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="panel-footer">

@@ -8,7 +8,7 @@
 
         $('#restaurantsTable').DataTable();
 
-        $('#addNewRestaurantLocationForm').submit(function(e){
+        /*$('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();
             var input = {};
             $('#addNewRestaurantLocationForm :input').each(function() {
@@ -59,7 +59,7 @@
                     placement.after(error);
                 }
             }
-        });
+        });*/
 
         $( "#addNewRestaurantForm" ).validate({
             ignore: [],

@@ -25,14 +25,34 @@
             <table class="table table-striped table-responsive mb-none" id="experiencesTable">
                 <thead>
                 <tr>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Type</th>
                     <th>Status</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
                     <th>Action</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                @foreach($experiences as $experience)
+                    <tr>
+                        <th>{!! $experience->id !!}</th>
+                        <th>{!! $experience->name !!}</th>
+                        <th>{!! $experience->slug !!}</th>
+                        <th>{!! $experience->type !!}</th>
+                        <th>{!! $experience->status !!}</th>
+                        <th>{!! $experience->created_at->format('d-m-Y') !!}</th>
+                        <th>{!! $experience->updated_at->format('d-m-Y') !!}</th>
+                        <th>
+                            {!! link_to_route('AdminExperienceEdit','Edit',$experience->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']) !!}
+                            &nbsp;|&nbsp;
+                            <a data-experience-id="{!! $experience->id !!}" class="btn btn-xs btn-danger delete-experience">Delete</a>
+                        </th>
+                    </tr>
+                @endforeach
+                </tbody>
             </table>
         </div>
     </section>

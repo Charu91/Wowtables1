@@ -47,7 +47,11 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function store(CreateRestaurantLocationRequest $request)
 	{
-		dd($request->all());
+		$this->dispatchFrom('WowTables\Commands\Admin\CreateRestaurantLocationCommand', $request);
+
+		flash()->success('Restaurant Location has been successfully created!!!');
+
+		return redirect()->route('AdminRestaurantLocations');
 	}
 
 	/**

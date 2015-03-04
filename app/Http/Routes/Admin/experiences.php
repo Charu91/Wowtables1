@@ -35,7 +35,7 @@ Route::get('admin/experiences/{id}', [
 
 Route::get('admin/experiences/edit/{id}', [
     'uses' => 'AdminExperiencesController@edit',
-    'as' => 'AdminExperinceEdit',
+    'as' => 'AdminExperienceEdit',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
