@@ -10,10 +10,11 @@ class RestaurantLocationsRepository {
 
     public function getAll()
     {
-        return VendorLocation::wherehas('vendorType', function($q)
+        return VendorLocation::all();
+        /*return VendorLocation::wherehas('vendorType', function($q)
         {
             $q->where('type','Restaurants');
-        })->get();
+        })->get()*/;
     }
 
     public function getByRestaurantLocationId($id)
@@ -54,5 +55,10 @@ class RestaurantLocationsRepository {
             $this->attributes[$name] = $value;
         }
 
+    }
+
+    public function add(VendorLocation $vendorLocation)
+    {
+        $vendorLocation->save();
     }
 }

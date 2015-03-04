@@ -1,7 +1,8 @@
 <?php namespace WowTables\Http\Controllers;
 
-use WowTables\Http\Requests\testFormRequest;
 use Illuminate\Http\Request;
+use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
+use WowTables\Http\Requests\CreateExperienceRequest;
 
 /**
  * Class AdminExperiencesController
@@ -12,15 +13,17 @@ use Illuminate\Http\Request;
 
 class AdminExperiencesController extends Controller {
 
-    /**
-     * The constructor Method
-     *
-     * @param Request $request
-     */
-	function __construct(Request $request)
+	/**
+	 * The constructor Method
+	 *
+	 * @param Request $request
+	 * @param ExperiencesRepository $repository
+	 */
+	function __construct(Request $request,ExperiencesRepository $repository)
 	{
         $this->middleware('admin.auth');
         $this->request = $request;
+		$this->repository = $repository;
 	}
 
 	/**
@@ -31,7 +34,9 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function index()
 	{
-		return view('admin.experiences.index');
+		$experiences = $this->repository->getAll();
+
+		return view('admin.experiences.index',['experiences'=>$experiences]);
 	}
 
 	/**
@@ -47,15 +52,18 @@ class AdminExperiencesController extends Controller {
 
 	/**
 	 * Store a newly created resource in storage.
-     *
+	 *
 	 * @Post("/", as="AdminExperienceStore")
+	 * @param CreateExperienceRequest $request
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateExperienceRequest $request)
 	{
-		$input = $this->request->all();
+		$this->dispatchFrom('WowTables\Commands\Admin\CreateExperienceCommand', $request, ['type'=>'simple']);
 
-		dd($input);
+		flash()->success('Restaurant Location has been successfully created!!!');
+
+		return redirect()->route('AdminExperiences');
 	}
 
 	/**

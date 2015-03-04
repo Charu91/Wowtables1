@@ -40,7 +40,7 @@ Route::get('admin/restaurants/locations/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/restaurants/locations/edit/{id}', [
+Route::get('admin/restaurants/locations/{id}/edit', [
     'uses' => 'AdminRestaurantLocationsController@edit',
     'as' => 'AdminRestaurantLocationsEdit',
     'middleware' => [],

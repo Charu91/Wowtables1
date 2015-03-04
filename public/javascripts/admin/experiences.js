@@ -19,34 +19,7 @@
             , $addonTax = $('#addonTax')
             , $addonInfo = $('#addonInfo');
 
-        $('#experiencesTable').DataTable({
-            lengthChange: false,
-            processing: true,
-            serverSide: true,
-            ajax: '/admin/locations',
-            columns: [
-                {
-                    name: 'location',
-                    sortable: true
-                },
-                {
-                    name: 'slug',
-                    sortable: false
-                },
-                {
-                    name: 'location_type',
-                    sortable: true
-                },
-                {
-                    name: 'parent',
-                    sortable: false
-                },
-                {
-                    name: 'actions',
-                    sortable: false
-                }
-            ]
-        });
+        $('#experiencesTable').DataTable();
 
         $addNewExperienceAddonBtn.on('click', function () {
             $experienceAddonForm.show();
@@ -156,7 +129,7 @@
             $addNewExperienceAddonBtn.show();
         });
 
-        $('#addNewExperienceForm').submit(function(e){
+        /*$('#addNewExperienceForm').submit(function(e){
             e.preventDefault();
             var input = {};
             $('#addNewExperienceForm :input').each(function() {
@@ -207,7 +180,7 @@
                     placement.after(error);
                 }
             }
-        });
+        });*/
 
     });
 })(jQuery);
