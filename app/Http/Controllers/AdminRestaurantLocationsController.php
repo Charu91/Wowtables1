@@ -42,6 +42,7 @@ class AdminRestaurantLocationsController extends Controller {
 	/**
 	 * Store a newly created resource in storage.
 	 *
+	 * @param CreateRestaurantLocationRequest $request
 	 * @return Response
 	 */
 	public function store(CreateRestaurantLocationRequest $request)
@@ -68,9 +69,9 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$RestaurantLocation = $this->repository->getByRestaurantLocationId($id);
+		$restaurant = $this->repository->getByRestaurantLocationId($id);
 
-		return response()->json($RestaurantLocation);
+		return view('admin.restaurants.locations.edit',['restaurant'=>$restaurant]);
 	}
 
 	/**
