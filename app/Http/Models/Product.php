@@ -284,21 +284,25 @@ Please Add Dessert to your 5 course menu and make sure that you do not leave uns
                                     'items' => [
                                         [
                                             'title' => 'Hand Crafted Ice Cream',
+                                            'tags'  => ['Veg'],
                                             'description' => 'Paan or dolce de leche'
                                         ],
 
                                         [
                                             'title' => 'White Chocolate and Grand Mariner Cheese Cake',
+                                            'tags'  => ['Veg'],
                                             'description' => 'Baked Philadelphia cheese cake with an elegant blend of grand mariner and white chocolate truffle'
                                         ],
 
                                         [
                                             'title' => 'Banoffee Pie',
+                                            'tags'  => ['Veg'],
                                             'description' => 'Soft pastry base with a blend of banana and toffee, garnished with swirls of whipped cream'
                                         ],
 
                                         [
-                                            'title' => 'Chocolate Brownie'
+                                            'title' => 'Chocolate Brownie',
+                                            'tags'  => ['Non-Veg']
                                         ]
                                     ]
                                 ]

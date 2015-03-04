@@ -92,7 +92,7 @@ class UserController extends Controller {
         }else{
 
             $updateUser = $this->user->updateLocationAndPhone(
-                $input['user_id'],
+                $input['user']->user_id,
                 [
                     'phone_number' => $input['phone_number'],
                     'location_id' => $input['location_id']
