@@ -38,9 +38,6 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
 - The above displayed Gourmet Points are available only for reservations made online.</li>
 <li>
 - Guests need to pre-order (ask the server for the items in each course at the beginning of the meal).</li>
-<li>- Can be redeemed with a GourmetItUp Gift Card
-<a href="http://gourmetitup.com/gift-cards" target="_blank" data-original-title="Click here to find out more about GourmetItUp Gift Cards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://gourmetitup.com/images/question_icon_small_display.png"></a>
-</li>
 </ul>',
                     'prepayment_mandatory' => false,
                     'prepayment_allowed' => true,
@@ -86,16 +83,19 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Hed Krob',
+                                            'tags' => ['Veg'],
                                             'description' => 'Garlic flavored fresh corn, glass noodles and spinach with sesame oil'
                                         ],
 
                                         [
                                             'title' => 'Sichuan Corn Curd',
+                                            'tags' => ['Veg'],
                                             'description' => 'Wok fried crisp mushrooms tossed with black pepper sauce and coriander'
                                         ],
 
                                         [
                                             'title' => 'Cristal Vegetable Dim Sum',
+                                            'tags' => ['Veg'],
                                             'description' => 'Fresh corn blend cooked with sichuan pepper oil and bean sauce'
                                         ]
                                     ]
@@ -108,11 +108,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Spicy Veg. Bean Curd Soup',
+                                            'tags' => ['Veg', 'Specials'],
                                             'description' => 'Mildly spiced braised vegetables, tofu, and celery soup'
                                         ],
 
                                         [
                                             'title' => 'Ipoh Sar Ho Fan',
+                                            'tags' => ['Veg'],
                                             'description' => 'Veg soup with bok choi and rice sticks topped with crisp garlic'
                                         ],
                                     ]
@@ -125,11 +127,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Shanghai Clay Pot',
+                                            'tags' => ['Veg'],
                                             'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
                                         ],
 
                                         [
                                             'title' => 'Gaeng Kiew Wan Phak',
+                                            'tags' => ['Veg', 'Specials'],
                                             'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
                                         ],
                                     ]
@@ -142,11 +146,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Burnt Garlic and Spring Onion Fried Rice',
+                                            'tags' => ['Veg'],
                                             'description' => 'Vegetable fried rice with crisp garlic and spring onions'
                                         ],
 
                                         [
                                             'title' => 'Khao Phad Kaprow Potato',
+                                            'tags' => ['Veg'],
                                             'description' => 'A Thai fried rice with garlic, bird chili, sweet basil'
                                         ],
                                     ]
@@ -165,16 +171,19 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Hed Krob',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Garlic flavored fresh corn, glass noodles and spinach with sesame oil'
                                         ],
 
                                         [
                                             'title' => 'Sichuan Corn Curd',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Wok fried crisp mushrooms tossed with black pepper sauce and coriander'
                                         ],
 
                                         [
                                             'title' => 'Cristal Vegetable Dim Sum',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Fresh corn blend cooked with sichuan pepper oil and bean sauce'
                                         ]
                                     ]
@@ -187,11 +196,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Spicy Veg. Bean Curd Soup',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Mildly spiced braised vegetables, tofu, and celery soup'
                                         ],
 
                                         [
                                             'title' => 'Ipoh Sar Ho Fan',
+                                            'tags' => ['Non-Veg','Specials'],
                                             'description' => 'Veg soup with bok choi and rice sticks topped with crisp garlic'
                                         ],
                                     ]
@@ -204,11 +215,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Shanghai Clay Pot',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
                                         ],
 
                                         [
                                             'title' => 'Gaeng Kiew Wan Phak',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
                                         ],
                                     ]
@@ -221,11 +234,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     'items' => [
                                         [
                                             'title' => 'Burnt Garlic and Spring Onion Fried Rice',
+                                            'tags' => ['Non-Veg','Specials'],
                                             'description' => 'Vegetable fried rice with crisp garlic and spring onions'
                                         ],
 
                                         [
                                             'title' => 'Khao Phad Kaprow Potato',
+                                            'tags' => ['Non-Veg'],
                                             'description' => 'A Thai fried rice with garlic, bird chili, sweet basil'
                                         ],
                                     ]
@@ -295,7 +310,7 @@ Please Add Dessert to your 5 course menu and make sure that you do not leave uns
                         'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/thaiPlace.jpg',
                         'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/thaipalce2.jpg',
                         'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/thaiplace1.jpg',
-                        'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/thaiplace3.jpg',
+                        'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/thaiplace3.jpg'
                     ],
 
                     'locations' => [
@@ -354,9 +369,6 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
 - The above displayed Gourmet Points are available only for reservations made online.</li>
 <li>
 - Guests need to pre-order (ask the server for the items in each course at the beginning of the meal).</li>
-<li>- Can be redeemed with a GourmetItUp Gift Card
-<a href="http://gourmetitup.com/gift-cards" target="_blank" data-original-title="Click here to find out more about GourmetItUp Gift Cards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://gourmetitup.com/images/question_icon_small_display.png"></a>
-</li>
 </ul>',
                     'prepayment_mandatory' => false,
                     'prepayment_allowed' => false,
@@ -377,16 +389,19 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 'items' => [
                                     [
                                         'title' => 'Hed Krob',
+                                        'tags'  => ['Veg', 'Specials'],
                                         'description' => 'Garlic flavored fresh corn, glass noodles and spinach with sesame oil'
                                     ],
 
                                     [
                                         'title' => 'Sichuan Corn Curd',
+                                        'tags'  => ['Non-Veg'],
                                         'description' => 'Wok fried crisp mushrooms tossed with black pepper sauce and coriander'
                                     ],
 
                                     [
                                         'title' => 'Cristal Vegetable Dim Sum',
+                                        'tags'  => ['Veg'],
                                         'description' => 'Fresh corn blend cooked with sichuan pepper oil and bean sauce'
                                     ]
                                 ]
@@ -398,12 +413,14 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
 
                                 'items' => [
                                     [
-                                        'title' => 'Spicy Veg. Bean Curd Soup',
+                                        'title' => 'Spicy Chicken Bean Curd Soup',
+                                        'tags'  => ['Non-Veg'],
                                         'description' => 'Mildly spiced braised vegetables, tofu, and celery soup'
                                     ],
 
                                     [
                                         'title' => 'Ipoh Sar Ho Fan',
+                                        'tags'  => ['Veg'],
                                         'description' => 'Veg soup with bok choi and rice sticks topped with crisp garlic'
                                     ],
                                 ]
@@ -416,11 +433,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 'items' => [
                                     [
                                         'title' => 'Shanghai Clay Pot',
+                                        'tags'  => ['Veg'],
                                         'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
                                     ],
 
                                     [
                                         'title' => 'Gaeng Kiew Wan Phak',
+                                        'tags'  => ['Non-Veg', 'Specials'],
                                         'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
                                     ],
                                 ]
@@ -433,11 +452,13 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 'items' => [
                                     [
                                         'title' => 'Burnt Garlic and Spring Onion Fried Rice',
+                                        'tags'  => ['Veg'],
                                         'description' => 'Vegetable fried rice with crisp garlic and spring onions'
                                     ],
 
                                     [
                                         'title' => 'Khao Phad Kaprow Potato',
+                                        'tags'  => ['Veg'],
                                         'description' => 'A Thai fried rice with garlic, bird chili, sweet basil'
                                     ],
                                 ]
@@ -501,9 +522,6 @@ and leave you wondering why.
 - The above displayed Gourmet Points are available only for reservations made online.</li>
 <li>
 - Guests need to pre-order (ask the server for the items in each course at the beginning of the meal).</li>
-<li>- Can be redeemed with a GourmetItUp Gift Card
-<a href="http://gourmetitup.com/gift-cards" target="_blank" data-original-title="Click here to find out more about GourmetItUp Gift Cards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://gourmetitup.com/images/question_icon_small_display.png"></a>
-</li>
 </ul>',
                     'prepayment_mandatory' => true,
                     'event_date' => '2015-03-21',
