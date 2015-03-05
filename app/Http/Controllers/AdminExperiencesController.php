@@ -59,7 +59,7 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function store(CreateExperienceRequest $request)
 	{
-		$this->dispatchFrom('WowTables\Commands\Admin\CreateExperienceCommand', $request, ['type'=>'simple']);
+		$this->dispatchFrom('WowTables\Commands\Admin\CreateExperienceCommand', $request);
 
 		flash()->success('Restaurant Location has been successfully created!!!');
 

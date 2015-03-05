@@ -190,9 +190,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('satus','Status',['class'=>'col-sm-3 control-label']) !!}
+                    {!! Form::label('status','Status',['class'=>'col-sm-3 control-label']) !!}
                     <div class="col-sm-6">
-                        {!! Form::select('status',[''=>'','Published'=>'Published','Draft'=>'Draft'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::hidden('product_type_id','1') !!}
+                        {!! Form::select('status',[''=>'','Publish'=>'Published','Draft'=>'Draft'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
             </div>
