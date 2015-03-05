@@ -1,7 +1,8 @@
 <?php namespace WowTables\Http\Controllers;
 
 use WowTables\Core\Repositories\Restaurants\RestaurantRepository;
-use WowTables\Http\Requests\CreateRestaurantRequest;
+use WowTables\Http\Requests\Admin\CreateRestaurantRequest;
+use WowTables\Http\Models\Restaurant;
 use Illuminate\Http\Request;
 
 /**
@@ -12,6 +13,13 @@ use Illuminate\Http\Request;
  */
 
 class AdminRestaurantsController extends Controller {
+
+    /**
+     * The Single Restaurant Object
+     *
+     * @var object
+     */
+    protected $restaurant;
 
 	/**
 	 * The constructor Method
@@ -56,11 +64,22 @@ class AdminRestaurantsController extends Controller {
      * @Post("/", as="AdminRestaurantStore")
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateRestaurantRequest $createRestaurantRequest)
 	{
 		$input = $this->request->all();
 
-		dd($input);
+        $createRestaurant = $this->restaurant->create($input);
+
+        if($createRestaurant['status'] === 'success'){
+            return response()->json([''], 200);
+        }else{
+            return response()->json([
+                'action' => $createRestaurant['action'],
+                'message' => $createRestaurant['message']
+            ], 400);
+        }
+
+
 	}
 
 	/**

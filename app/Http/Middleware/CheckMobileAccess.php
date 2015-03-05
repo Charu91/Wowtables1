@@ -29,19 +29,32 @@ class CheckMobileAccess {
             ], 422);
         }
 
-        $userId = DB::table('user_devices')->where([
-            'access_token' => $input['access_token'],
-            'device_id' => $input['device_id']
-        ])->pluck('user_id');
+        $user = DB::table('user_devices')
+                    ->join('users', 'users.id','=','user_devices.user_id')
+                    ->leftJoin('locations', 'users.location_id','=','locations.id')
+                    ->where([
+                        'access_token'  => $input['access_token'],
+                        'device_id'     => $input['device_id']
+                    ])->first(['user_id','location_id', 'locations.name as location','phone_number', 'full_name']);
 
-        if(!$userId){
+        if(!$user){
             return response()->json([
                 'action' => 'Checking the device id and access token combo in the database',
-                'message' => 'Log the user out as the device is not registered in the system'
+                'message' => 'Log the user out as the device or user is not registered in the system'
             ], 480);
         }else{
-            $request->request->add(['user_id' => $userId]);
-            return $next($request);
+            if(!$user->location_id || !$user->phone_number){
+                return response()->json([
+                    'action' => 'Check if location and phone number has been set',
+                    'message' => 'The location and phone number needs to be set before proceeding further'
+                ], 225);
+            }else{
+                $request->request->add(['user' => $user]);
+                return $next($request);
+            }
+
+
+
         }
 
 
