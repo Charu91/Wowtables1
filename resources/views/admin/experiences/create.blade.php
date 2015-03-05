@@ -38,13 +38,19 @@
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
             </li>
             <li>
-                <a href="#limits_tab" data-toggle="tab" class="text-center">Reservation Limits</a>
+                <a href="#limits_tab" data-toggle="tab" class="text-center">Limits</a>
             </li>
             <li>
                 <a href="#pricing_details" data-toggle="tab" class="text-center">Pricing</a>
             </li>
             <li>
                 <a href="#addon_details" data-toggle="tab" class="text-center">Addons</a>
+            </li>
+            <li>
+                <a href="#variant_details" data-toggle="tab" class="text-center">Variants</a>
+            </li>
+            <li>
+                <a href="#menu_details" data-toggle="tab" class="text-center">Menu</a>
             </li>
             <li>
                 <a href="#miscellaneous_tab" data-toggle="tab" class="text-center">Miscellaneous</a>
@@ -169,6 +175,78 @@
                     </div>
                 </div>
                 @include('partials.forms.experience_addon')
+            </div>
+            <div id="variant_details" class="tab-pane mt-lg">
+                <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <a class="btn btn-primary" id="addNewVariantBtn" >Add New Variant</a>
+                    </div>
+                </div>
+                <div id="experienceVariantForm">
+                    <div class="form-group">
+                        {!! Form::label('','Variant Title',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('',null,['class'=>'form-control','id'=>'VariantTitle']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('variant_price_before_tax','Variant Price Before Tax',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('',null,['class'=>'form-control','id'=>'VariantPriceBeforeTax']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('','Variant Price After Tax',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('',null,['class'=>'form-control','id'=>'VariantPriceAfterTax']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('','Variant Tax',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('',null,['class'=>'form-control','id'=>'VariantTax']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('','Variant Info',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::textarea('',null,['class'=>'form-control','rows'=>'3','id'=>'VariantInfo']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <div class="row">
+                                <a class="btn btn-primary" id="addExperienceVariantBtn" >Add Variant</a>
+                                <a class="btn btn-primary" id="cancelUpdateExperienceVariantBtn" >Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @include('partials.forms.experience_variant')
+            </div>
+            <div id="menu_details" class="tab-pane mt-lg">
+                <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <a class="btn btn-primary" id="addNewExperienceMenuBtn" >Add New Menu Section</a>
+                    </div>
+                </div>
+                <div id="experienceMenuForm">
+                    <div class="form-group">
+                        {!! Form::label('','Menu Section Title',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('',null,['class'=>'form-control','id'=>'menuTitle']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <div class="row">
+                                <a class="btn btn-primary" id="addExperienceAddonBtn" >Add Addon</a>
+                                <a class="btn btn-primary" id="cancelUpdateExperienceAddonBtn" >Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @include('partials.forms.experience_menu')
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">
