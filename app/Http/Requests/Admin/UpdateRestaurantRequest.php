@@ -3,7 +3,7 @@
 use WowTables\Http\Requests\Request;
 use WowTables\Http\Models\User;
 
-class CreateRestaurantRequest extends Request {
+class UpdateRestaurantRequest extends Request {
 
     /**
      * The user model object
@@ -29,34 +29,36 @@ class CreateRestaurantRequest extends Request {
      */
     public function authorize()
     {
-        return $this->user->can('create', 'restaurant');
+        return $this->user->can('update', 'restaurant');
     }
 
-	/**
-	 * Get the validation rules that apply to the request.
-	 *
-	 * @return array
-	 */
-	public function rules()
-	{
-		$rules = [];
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $rules = [];
+
+        $id = $this->route()->getParameter('id');
 
         $rules['name'] = 'required';
-        $rules['slug'] = 'required|unique:vendors,slug';
+        $rules['slug'] = 'required|unique:vendors,slug,'.$id;
         $rules['status'] = 'required|in:Publish,Draft';
 
         if($this->get('status') === 'Publish'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
-            $rules['publish_time'] = 'date_format:H:i:s'; //HH:MM:SS
+            $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|nonemptyarray';
+            $rules['attributes.seo_meta_keywords'] = 'required|array';
         }
 
         return $rules;
-	}
+    }
 
     /**
      * Get the proper failed validation response for the request.

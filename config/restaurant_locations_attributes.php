@@ -159,11 +159,6 @@ return [
             'value' => 'single'
         ],
 
-        'allow_cancellations' => [
-            'name' => 'Allow Cancellations',
-            'type' => 'boolean',
-            'value' => 'single'
-        ],
 
         'reward_points_per_reservation' => [
             'name' => 'Reward Points Per Reservation',

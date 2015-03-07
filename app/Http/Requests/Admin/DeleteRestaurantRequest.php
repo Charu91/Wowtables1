@@ -3,7 +3,7 @@
 use WowTables\Http\Requests\Request;
 use WowTables\Http\Models\User;
 
-class CreateRestaurantRequest extends Request {
+class DeleteRestaurantRequest extends Request {
 
     /**
      * The user model object
@@ -29,34 +29,18 @@ class CreateRestaurantRequest extends Request {
      */
     public function authorize()
     {
-        return $this->user->can('create', 'restaurant');
+        return $this->user->can('delete', 'restaurant');
     }
 
-	/**
-	 * Get the validation rules that apply to the request.
-	 *
-	 * @return array
-	 */
-	public function rules()
-	{
-		$rules = [];
-
-        $rules['name'] = 'required';
-        $rules['slug'] = 'required|unique:vendors,slug';
-        $rules['status'] = 'required|in:Publish,Draft';
-
-        if($this->get('status') === 'Publish'){
-            $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
-            $rules['publish_time'] = 'date_format:H:i:s'; //HH:MM:SS
-            $rules['attributes.restaurant_info'] = 'required';
-            $rules['attributes.short_description'] = 'required';
-            $rules['attributes.seo_title'] = 'required';
-            $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|nonemptyarray';
-        }
-
-        return $rules;
-	}
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [];
+    }
 
     /**
      * Get the proper failed validation response for the request.
@@ -66,6 +50,7 @@ class CreateRestaurantRequest extends Request {
      */
     public function response(array $errors)
     {
+
         if ($this->ajax())
         {
             return response()->json($errors, 422);

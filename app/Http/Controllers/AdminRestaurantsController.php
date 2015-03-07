@@ -2,6 +2,8 @@
 
 use WowTables\Core\Repositories\Restaurants\RestaurantRepository;
 use WowTables\Http\Requests\Admin\CreateRestaurantRequest;
+use WowTables\Http\Requests\Admin\UpdateRestaurantRequest;
+use WowTables\Http\Requests\Admin\DeleteRestaurantRequest;
 use WowTables\Http\Models\Restaurant;
 use Illuminate\Http\Request;
 
@@ -9,7 +11,6 @@ use Illuminate\Http\Request;
  * Class AdminRestaurantsController
  * @package WowTables\Http\Controllers
  *
- * @Controller(prefix="/admin/restaurants")
  */
 
 class AdminRestaurantsController extends Controller {
@@ -27,17 +28,18 @@ class AdminRestaurantsController extends Controller {
 	 * @param Request $request
 	 * @param RestaurantRepository $repo
 	 */
-    function __construct(Request $request,RestaurantRepository $repo)
+    function __construct(Request $request, RestaurantRepository $repo, Restaurant $restaurant)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
 		$this->repo = $repo;
+
+        $this->restaurant = $restaurant;
     }
 
 	/**
 	 * Display a listing of the resource.
 	 *
-     * @Get("/", as="AdminGetRestaurants")
 	 * @return Response
 	 */
 	public function index()
@@ -50,7 +52,6 @@ class AdminRestaurantsController extends Controller {
 	/**
 	 * Show the form for creating a new resource.
 	 *
-     * @Get("/create", as="AdminRestaurantCreate")
 	 * @return Response
 	 */
 	public function create()
@@ -61,7 +62,6 @@ class AdminRestaurantsController extends Controller {
 	/**
 	 * Store a newly created resource in storage.
 	 *
-     * @Post("/", as="AdminRestaurantStore")
 	 * @return Response
 	 */
 	public function store(CreateRestaurantRequest $createRestaurantRequest)
@@ -71,7 +71,7 @@ class AdminRestaurantsController extends Controller {
         $createRestaurant = $this->restaurant->create($input);
 
         if($createRestaurant['status'] === 'success'){
-            return response()->json([''], 200);
+            return response()->json(['status' => 'success'], 200);
         }else{
             return response()->json([
                 'action' => $createRestaurant['action'],
@@ -85,7 +85,6 @@ class AdminRestaurantsController extends Controller {
 	/**
 	 * Display the specified resource.
 	 *
-     * @Get("/{id}", as="AdminRestaurantShow")
 	 * @param  int  $id
 	 * @return Response
 	 */
@@ -97,7 +96,6 @@ class AdminRestaurantsController extends Controller {
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-     * @Get("/edit/{id}", as="AdminRestaurantEdit")
 	 * @param  int  $id
 	 * @return Response
 	 */
@@ -105,30 +103,48 @@ class AdminRestaurantsController extends Controller {
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
 
-		return view('admin.restaurants.edit',['restaurant'=>$restaurant]);
+		return view('admin.restaurants.edit', ['restaurant' => $restaurant]);
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 *
-     * @Put("/{id}", as="AdminRestaurantUpdate")
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, UpdateRestaurantRequest $updateRestaurantRequest)
 	{
-		dd($this->request->all());
+        $input = $this->request->all();
+
+        $updateRestaurant = $this->restaurant->update($id, $input);
+
+        if($updateRestaurant['status'] === 'success'){
+            return response()->json(['status' => 'success'], 200);
+        }else{
+            return response()->json([
+                'action' => $updateRestaurant['action'],
+                'message' => $updateRestaurant['message']
+            ], 400);
+        }
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-     * @Delete("/", as="AdminRestaurantsDelete")
 	 * @return Response
 	 */
-	public function destroy()
+	public function destroy($id, DeleteRestaurantRequest $deleteRestaurantRequest)
 	{
-		//
+		$deleteRestaurant = $this->restaurant->delete($id);
+
+        if($deleteRestaurant['status'] === 'success'){
+            return response()->json(['status' => 'success'], 200);
+        }else{
+            return response()->json([
+                'action' => $deleteRestaurant['action'],
+                'message' => $deleteRestaurant['message']
+            ], 400);
+        }
 	}
 
 }

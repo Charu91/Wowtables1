@@ -150,7 +150,7 @@ return [
 		'WowTables\Providers\EventServiceProvider',
 		'WowTables\Providers\RouteServiceProvider',
         'WowTables\Providers\ViewServiceProvider',
-
+        'WowTables\Providers\ValidatorServiceProvider'
 	],
 
 	/*
