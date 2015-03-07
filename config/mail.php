@@ -54,7 +54,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'concierge@gourmetitup.com', 'name' => 'Wowtables'],
+	'from' => ['address' => 'concierge@wowtables.com', 'name' => 'Wowtables'],
 
 	/*
 	|--------------------------------------------------------------------------
