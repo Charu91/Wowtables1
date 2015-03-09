@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div id="alacarte_peak_tab" class="tab-pane mt-lg">
-                Comming Soon.
+                Coming Soon.
             </div>
             <div id="location_details" class="tab-pane mt-lg">
                 @include('partials.forms.locations')
