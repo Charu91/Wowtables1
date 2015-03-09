@@ -76,42 +76,6 @@ class ValidatorServiceProvider extends ServiceProvider {
             }
         });
 
-        $this->app['validator']->extend('blockdatesarray', function ($attribute, $value, $parameters)
-        {
-            if(!is_array($value) || !count($value)){
-                return false;
-            }else{
-                $valid_date = true;
-                foreach($values as $v){
-                    if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$v)) {
-                        $valid_date = false;
-                        break;
-                    }
-                }
-
-                if(!$valid_date) return false;
-                else return true;
-            }
-        });
-
-        $this->app['validator']->extend('blockdatesarray', function ($attribute, $value, $parameters)
-        {
-            if(!is_array($value) || !count($value)){
-                return false;
-            }else{
-                $valid_date = true;
-                foreach($values as $v){
-                    if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$v)) {
-                        $valid_date = false;
-                        break;
-                    }
-                }
-
-                if(!$valid_date) return false;
-                else return true;
-            }
-        });
-
         $this->app['validator']->extend('restaurant', function ($attribute, $value, $parameters)
         {
             $restaurant_exists = DB::table('vendors')

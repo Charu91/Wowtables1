@@ -53,6 +53,8 @@ class CreateRestaurantRequest extends Request {
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
             $rules['attributes.seo_meta_keywords'] = 'required|nonemptyarray';
+        }else{
+            $rules['attributes.seo_meta_keywords'] = 'nonemptyarray';
         }
 
         return $rules;

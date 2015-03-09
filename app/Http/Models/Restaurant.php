@@ -66,8 +66,6 @@ class Restaurant extends Vendor{
                 'message' => 'Could not create the Restaurant. Contact the system admin'
             ];
         }
-
-
     }
 
     public function update($restaurant_id, $data)
@@ -156,6 +154,7 @@ class Restaurant extends Vendor{
                                 ->join('vendor_type_attributes_map as vtam', 'vtam.vendor_attribute_id','=','va.id')
                                 ->join('vendor_types as vt','vt.id','=','vtam.vendor_type_id')
                                 ->whereIn('alias', $attributeAliases)
+                                ->where('vtam.attribute_for','Vendor')
                                 ->select('va.id as attribute_id', 'alias')
                                 ->lists('attribute_id', 'alias');
 

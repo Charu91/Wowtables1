@@ -93,7 +93,7 @@ return [
             'value' => 'single'
         ],
 
-        'seo_meta_desciption' => [
+        'seo_meta_description' => [
             'name' => 'Meta Description',
             'type' => 'text',
             'value' => 'single'

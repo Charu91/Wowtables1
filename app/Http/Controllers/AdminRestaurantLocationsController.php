@@ -3,19 +3,27 @@
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Models\Schedules;
 use Illuminate\Http\Request;
-use WowTables\Http\Requests\CreateRestaurantLocationRequest;
+use WowTables\Http\Requests\Admin\CreateRestaurantLocationRequest;
+use WowTables\Http\Models\RestaurantLocation;
 
 class AdminRestaurantLocationsController extends Controller {
 
+
+    protected $restaurantLocation;
+
+    protected $request;
 	/**
 	 * The constructor Method
 	 *
 	 * @param RestaurantLocationsRepository $repository
 	 */
-    function __construct(RestaurantLocationsRepository $repository)
+    function __construct(RestaurantLocationsRepository $repository, RestaurantLocation $restaurantLocation, Request $request)
     {
         $this->middleware('admin.auth');
 		$this->repository = $repository;
+
+        $this->request = $request;
+        $this->restaurantLocation = $restaurantLocation;
     }
 
 
@@ -47,11 +55,26 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function store(CreateRestaurantLocationRequest $request)
 	{
+        $input = $this->request->all();
+
+        $restaurantLocationCreate = $this->restaurantLocation->create($input);
+
+        if($restaurantLocationCreate['status'] === 'success'){
+            return response()->json(['status' => 'success'], 200);
+        }else{
+            return response()->json([
+                'action' => $restaurantLocationCreate['action'],
+                'message' => $restaurantLocationCreate['message']
+            ], 400);
+        }
+
+        /*
 		$this->dispatchFrom('WowTables\Commands\Admin\CreateRestaurantLocationCommand', $request);
 
 		flash()->success('Restaurant Location has been successfully created!!!');
 
 		return redirect()->route('AdminRestaurantLocations');
+        */
 	}
 
 	/**
