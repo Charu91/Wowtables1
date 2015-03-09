@@ -46,7 +46,7 @@
                         <th>
                             {!! link_to_route('AdminRestaurantEdit','Edit',$restaurant->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']) !!}
                             &nbsp;|&nbsp;
-                            <a data-restaurant-id="{!! $restaurant->id !!}" class="btn btn-xs btn-danger delete-restaurant">Delete</a>
+                            <a data-restaurant-id="{!! $restaurant->id !!}" class="btn btn-xs btn-danger delete-restaurant-btn">Delete</a>
                         </th>
                     </tr>
                 @endforeach

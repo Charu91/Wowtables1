@@ -71,8 +71,12 @@ class AdminRestaurantsController extends Controller {
         $createRestaurant = $this->restaurant->create($input);
 
         if($createRestaurant['status'] === 'success'){
-            return response()->json(['status' => 'success'], 200);
-        }else{
+			if($this->request->ajax()) {
+				return response()->json(['status' => 'success'], 200);
+			}
+			flash()->success('The restaurant has been successfully created.');
+			return redirect()->route('AdminGetRestaurants');
+		}else{
             return response()->json([
                 'action' => $createRestaurant['action'],
                 'message' => $createRestaurant['message']
@@ -138,7 +142,11 @@ class AdminRestaurantsController extends Controller {
 		$deleteRestaurant = $this->restaurant->delete($id);
 
         if($deleteRestaurant['status'] === 'success'){
-            return response()->json(['status' => 'success'], 200);
+			if($this->request->ajax()) {
+				return response()->json(['status' => 'success'], 200);
+			}
+			flash()->success('The restaurant has been successfully deleted.');
+			return redirect()->route('AdminGetRestaurants');
         }else{
             return response()->json([
                 'action' => $deleteRestaurant['action'],
