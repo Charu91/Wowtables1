@@ -18,7 +18,7 @@
         </div>
     </header>
 
-    {!! Form::open(['route'=>'AdminRestaurantLocationsUpdate','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+    {!! Form::open(['route'=>['AdminRestaurantLocationsUpdate',$restaurant['RestaurantLocation']->id],'class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -49,19 +49,19 @@
                 <div class="form-group">
                     {!! Form::label('restaurant_id','Select Restaurant',['class'=>'col-sm-3 control-label']) !!}
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_id',$restaurants_list,$restaurant['RestaurantLocation']->location->id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('restaurant_id',$restaurants_list,$restaurant['RestaurantLocation']->vendor->id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     {!! Form::label('location_id','Locality',['class'=>'col-sm-3 control-label']) !!}
                     <div class="col-sm-6">
-                        {!! Form::select('location_id',$locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('location_id',$locations_list,$restaurant['RestaurantLocation']->location->id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     {!! Form::label('slug','Slug',['class'=>'col-sm-3 control-label']) !!}
                     <div class="col-sm-6">
-                        {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
+                        {!! Form::text('slug',$restaurant['RestaurantLocation']->slug,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -156,23 +156,20 @@
             <h2 class="panel-title">Publish Actions</h2>
         </header>
         <div class="panel-body">
-            <div class="col-sm-2">
-                <a class="btn btn-block btn-primary">Save Draft</a>
-            </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-5">
                 {!! Form::label('publish_date','Date',['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantLocationDatePicker']) !!}
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-5">
                 {!! Form::label('publish_time','Time',['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::text('publish_time',null,['class'=>'form-control','id'=>'restaurantLocationTimePicker']) !!}
                 </div>
             </div>
             <div class="col-sm-2">
-                {!! Form::submit('Publish',['class'=>'btn btn-block btn-success']) !!}
+                {!! Form::submit('Save',['class'=>'btn btn-block btn-success']) !!}
             </div>
         </div>
     </section>

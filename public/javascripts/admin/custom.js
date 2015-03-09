@@ -94,7 +94,7 @@ $(document).ready(function(){
     });
 
     $('.redactor-text').redactor({
-        minHeight: 300
+        minHeight: 150
     });
 
     $('#terms_conditions').redactor({

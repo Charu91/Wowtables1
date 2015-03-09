@@ -26,49 +26,49 @@
         </header>
         <div class="panel-body">
             <div class="form-group">
-                {!! Form::label('name','Restaurant Name',['class'=>'col-sm-3 control-label']) !!}
+                <label for="name" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Name <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('slug','Slug',['class'=>'col-sm-3 control-label']) !!}
+                <label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('attributes[seo_title]','SEO Title',['class'=>'col-sm-3 control-label']) !!}
+                <label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('attributes[seo_meta_description]','SEO Meta Description',['class'=>'col-sm-3 control-label']) !!}
+                <label for="attributes[seo_meta_description]" class="col-sm-3 col-sm-offset-1 control-label">SEO Meta Description <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('attributes[seo_meta_keywords]','SEO Keywords',['class'=>'col-sm-3 control-label']) !!}
+                <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('attributes[restaurant_info]','Restaurant Info',['class'=>'col-sm-3 control-label']) !!}
+                <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('attributes[short_description]','Short Description',['class'=>'col-sm-3 control-label']) !!}
+                <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Short Description <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('status','Status',['class'=>'col-sm-3 control-label']) !!}
+                <label for="status" class="col-sm-3 col-sm-offset-1 control-label">Status <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::select('status',['Draft'=>'Draft','Published'=>'Publish'],'Draft',['class'=>'form-control','required'=>'']) !!}
                 </div>
@@ -95,19 +95,19 @@
                 <a class="btn btn-block btn-primary">Save Draft</a>
             </div>
             <div class="form-group col-md-4">
-                {!! Form::label('publish_date','Date',['class'=>'col-sm-4 control-label']) !!}
+                <label for="publish_date" class="col-sm-4 control-label">Date <span class="required">*</span></label>
                 <div class="col-sm-8">
                     {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantDatePicker']) !!}
                 </div>
             </div>
             <div class="form-group col-md-4">
-                {!! Form::label('publish_time','Time',['class'=>'col-sm-4 control-label']) !!}
+                <label for="publish_time" class="col-sm-4 control-label">Time <span class="required">*</span></label>
                 <div class="col-sm-8">
                     {!! Form::text('publish_time',null,['class'=>'form-control','id'=>'restaurantTimePicker']) !!}
                 </div>
             </div>
             <div class="col-sm-2">
-                {!! Form::submit('Publish',['class'=>'btn btn-block btn-success']) !!}
+                {!! Form::submit('Publish',['class'=>'btn btn-block btn-primary']) !!}
             </div>
         </div>
     </section>

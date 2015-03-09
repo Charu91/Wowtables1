@@ -55,7 +55,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['attributes.restaurant_info'] = 'required';
-            $rules['attributes.short_description'] = 'required';
+            $rules['attributes.short_description'] = '';
             $rules['attributes.terms_and_conditions'] = 'required';
             $rules['attributes.menu_picks'] = 'required';
             $rules['attributes.expert_tips'] = 'required';
@@ -77,7 +77,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['tags'] = 'tagarray';
             $rules['schedules'] = 'required|schedulearray';
         }else{
-            $rules['attributes.seo_meta_keywords'] = 'nonemptyarray';
+            $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';
             $rules['attributes.max_reservations_per_time_slot'] = 'integer';

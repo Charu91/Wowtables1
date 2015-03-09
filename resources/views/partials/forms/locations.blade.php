@@ -1,11 +1,11 @@
                 <div class="form-group">
-                    {!! Form::label('address[address]','Address',['class'=>'col-sm-3 control-label']) !!}
+                    <label for="address[address]" class="col-sm-3 control-label">Address <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::textarea('address[address]',null,['rows'=>'3','class'=>'form-control populate','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('address[pin_code]','Pin Code',['class'=>'col-sm-3 control-label']) !!}
+                    <label for="address[pin_code]" class="col-sm-3 control-label">Pin Code <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('address[pin_code]',null,['class'=>'form-control']) !!}
                     </div>

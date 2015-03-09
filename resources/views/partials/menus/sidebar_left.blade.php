@@ -107,9 +107,6 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/restaurants/locations/create')? 'nav-active':'' }}">
                                 <a href="/admin/restaurants/locations/create">Create Restaurant Location</a>
                             </li>
-                            <li class="{{ (isset($uri) && $uri === 'admin/restaurant/attributes')? 'nav-active':'' }}">
-                                <a href="/admin/restaurant/attributes">Restaurant Attributes</a>
-                            </li>
                         </ul>
                     </li>
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/pages') !== false)? 'nav-expanded nav-active':''}}">
@@ -136,7 +133,10 @@
                                 <a href="javascript:void(0)">General</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/settings/locations')? 'nav-active':'' }}">
-                                <a href="/admin/settings/locations">Locations</a>
+                                <a href="/admin/settings/locations">Manage Locations</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/restaurant/attributes')? 'nav-active':'' }}">
+                                <a href="/admin/restaurant/attributes">Manage Restaurant Attributes</a>
                             </li>
                         </ul>
                     </li>
