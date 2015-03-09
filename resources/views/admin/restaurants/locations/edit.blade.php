@@ -2,109 +2,180 @@
 
 @section('content')
     <header class="page-header">
-        <h2>Restaurant Location</h2>
+        <h2>Edit Restaurant Location</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
-                    <a href="/admin/dashboard">
+                    <a href="#">
                         <i class="fa fa-home"></i>
                     </a>
                 </li>
-                <li>
-                    <a href="/admin/restaurants/locations">
-                        Restaurants Locations
-                    </a>
-                </li>
-                <li><span>Edit Restaurant Location</span></li>
+                <li><span>Restaurant Locations</span></li>
             </ol>
+
+            <a class="sidebar-right-toggle" data-open="sidebar-right">
+                <i class="fa fa-chevron-left"></i></a>
         </div>
     </header>
 
-    {!! Form::model($restaurant['RestaurantLocation'],['route' => ['AdminRestaurantLocationsUpdate',$restaurant['RestaurantLocation']['id']],'method'=>'PUT']) !!}
+    {!! Form::open(['route'=>'AdminRestaurantLocationsUpdate','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+
+    <div class="tabs tabs-primary">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active">
+                <a href="#basic_details" data-toggle="tab" class="text-center">Basic Details</a>
+            </li>
+            <li>
+                <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
+            </li>
+            <li>
+                <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
+            </li>
+            <li>
+                <a href="#schedule_tab" data-toggle="tab" class="text-center">Scheduling</a>
+            </li>
+            <li>
+                <a href="#alacarte_tab" data-toggle="tab" class="text-center">Alacarte</a>
+            </li>
+            <li>
+                <a href="#location_details" data-toggle="tab" class="text-center">Location</a>
+            </li>
+            <li>
+                <a href="#miscellaneous_tab" data-toggle="tab" class="text-center">Miscellaneous</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="basic_details" class="tab-pane active mt-lg">
+                <div class="form-group">
+                    {!! Form::label('restaurant_id','Select Restaurant',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::select('restaurant_id',$restaurants_list,$restaurant['RestaurantLocation']->location->id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('location_id','Locality',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::select('location_id',$locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('slug','Slug',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[restaurant_info]','Restaurant Info',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[short_description]','Short Description',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('status','Status',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::select('status',['Active'=>'Active','Inactive'=>'Inactive'],'Inactive',['class'=>'form-control']) !!}
+                    </div>
+                </div>
+            </div>
+            <div id="seo_details" class="tab-pane mt-lg">
+                <div class="form-group">
+                    {!! Form::label('attributes[seo_title]','SEO Title',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[seo_meta_description]','SEO Meta Description',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[seo_meta_keywords]','SEO Keywords',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
+                    </div>
+                </div>
+            </div>
+            <div id="media_tab" class="tab-pane mt-lg">
+                @include('partials.forms.add_media')
+            </div>
+            <div id="schedule_tab" class="tab-pane mt-lg">
+                @include('partials.forms.schedule_limits')
+                @include('partials.forms.schedules')
+            </div>
+            <div id="alacarte_tab" class="tab-pane mt-lg">
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1" checked="">
+                            <label  for="a_la_carte">Allow Alacarte Reservations</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[terms_and_conditions]','Terms & Conditions',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[terms_and_conditions]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
+                    </div>
+                </div>
+            </div>
+            <div id="location_details" class="tab-pane mt-lg">
+                @include('partials.forms.locations')
+            </div>
+            <div id="miscellaneous_tab" class="tab-pane mt-lg">
+                @include('partials.forms.cousines_collections')
+                @include('partials.forms.payment_details')
+                <div class="form-group">
+                    {!! Form::label('attributes[menu_picks]','Menu Picks',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[menu_picks]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('attributes[expert_tips]','Expert Tips',['class'=>'col-sm-3 control-label']) !!}
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[expert_tips]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
+                    </div>
+                </div>
+                <div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="panel">
         <header class="panel-heading">
-            <h2 class="panel-title">Edit User</h2>
+            <h2 class="panel-title">Publish Actions</h2>
         </header>
         <div class="panel-body">
-            <div class="form-group  col-lg-6">
-                {!! Form::label('full_name','Full Name',['class'=>'control-label']) !!}
-                {!! Form::text('full_name',null,['class'=>'form-control']) !!}
+            <div class="col-sm-2">
+                <a class="btn btn-block btn-primary">Save Draft</a>
             </div>
-            <div class="form-group  col-lg-6">
-                {!! Form::label('email','Email Address',['class'=>'control-label']) !!}
-                {!! Form::text('email',null,['class'=>'form-control']) !!}
+            <div class="form-group col-md-4">
+                {!! Form::label('publish_date','Date',['class'=>'col-sm-4 control-label']) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantLocationDatePicker']) !!}
+                </div>
             </div>
-            <div class="form-group  col-lg-6">
-                {!! Form::label('location','Location',['class'=>'control-label']) !!}
-                {!! Form::select('location_id',$locations_list,null,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
+            <div class="form-group col-md-4">
+                {!! Form::label('publish_time','Time',['class'=>'col-sm-4 control-label']) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('publish_time',null,['class'=>'form-control','id'=>'restaurantLocationTimePicker']) !!}
+                </div>
             </div>
-            <div class="form-group  col-lg-6">
-                {!! Form::label('phone_number','Phone Number',['class'=>'control-label']) !!}
-                {!! Form::text('phone_number',null,['class'=>'form-control']) !!}
-            </div>
-            <div class="form-group  col-lg-6">
-                {!! Form::label('role_id','Role',['class'=>'control-label']) !!}
-                {!! Form::select('role_id',$roles_list,null,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
-            </div>
-            <div class="form-group  col-lg-6">
-                {!! Form::label('newsletter_frequency','Email Preferences',['class'=>'control-label']) !!}
-                {!! Form::select('newsletter_frequency',['Daily'=>'Daily','Weekly'=>'Weekly','Never'=>'Never'],null,['class'=>'form-control']) !!}
+            <div class="col-sm-2">
+                {!! Form::submit('Publish',['class'=>'btn btn-block btn-success']) !!}
             </div>
         </div>
     </section>
 
-    @if( $restaurant['attributes'] )
-        <section class="panel">
-            <header class="panel-heading">
-                <h2 class="panel-title">User's Attributes</h2>
-            </header>
-            <div class="panel-body">
-                @foreach($restaurant['attributes'] as $name=>$value)
-                    <div class="form-group  col-lg-6">
-                        @if($value instanceof \Carbon\Carbon)
-                            {!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-                            {!! Form::text('attributes['.$name.']',\Carbon\Carbon::parse($value)->format('Y-m-d'),['class'=>'form-control datepicker']) !!}
-                        @endif
-                        @if(is_bool($value))
-                            <div class="checkbox-custom checkbox-primary">
-                                {!! Form::checkbox('attributes['.$name.']',$value,$value) !!}
-                                {!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-                            </div>
-                        @endif
-                        @if(is_integer($value) || is_int($value) || is_float($value) || is_string($value))
-                            {!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-                            {!! Form::text('attributes['.$name.']',$value,['class'=>'form-control']) !!}
-                        @endif
-                        @if(is_array($value))
-                            {!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-                            {!! Form::select('attributes['.$name.']',$value,$value,['class'=>'form-control', 'data-plugin-selectTwo'=>'','multiple'=>'']) !!}
-                        @endif
-                    </div>
-                @endforeach
-                <div id="addUserAttributeHolder"></div>
-            </div>
-            <footer class="panel-footer">
-                <a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
-            </footer>
-        </section>
-    @else
-        <section class="panel">
-            <header class="panel-heading">
-                <a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
-                <h2 class="panel-title pull-right">User's Attributes</h2>
-            </header>
-            <div class="panel-body">
-                <div id="addUserAttributeHolder"></div>
-            </div>
-        </section>
-
-    @endif
-
-    {!! Form::submit('Update User',['class'=>'btn btn-primary']) !!}
-    {!! Form::close() !!}
-    </section>
-
-    @include('modals.add_user_attribute')
-
+    {!! Form::close()  !!}
 @stop

@@ -12,13 +12,26 @@
             format: 'yyyy-mm-dd',
             startDate: '1d',
             todayHighlight: true,
-            autoclose: true,
+            autoclose: true
         });
 
         $('#restaurantTimePicker').timepicker({
             showSeconds: true,
             showMeridian: false
         });
+
+        $('#restaurantLocationDatePicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $('#restaurantLocationTimePicker').timepicker({
+            showSeconds: true,
+            showMeridian: false
+        });
+
 
         /*$('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();

@@ -93,7 +93,7 @@ $(document).ready(function(){
         minHeight: 300
     });
 
-    $('#alacarte_terms_conditions').redactor({
+    $('.redactor-text').redactor({
         minHeight: 300
     });
 

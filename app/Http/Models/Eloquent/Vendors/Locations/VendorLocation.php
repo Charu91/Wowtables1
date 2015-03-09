@@ -27,11 +27,6 @@ class VendorLocation extends Model {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Vendors\Vendor','vendor_id','id');
     }
 
-    public function vendorType()
-    {
-        return $this->hasManyThrough('WowTables\Http\Models\Eloquent\Vendors\VendorType','WowTables\Http\Models\Eloquent\Vendors\Vendor','vendor_type_id','id');
-    }
-
     public function location()
     {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Location','location_id','id');

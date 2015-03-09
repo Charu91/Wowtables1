@@ -60,7 +60,11 @@ class AdminRestaurantLocationsController extends Controller {
         $restaurantLocationCreate = $this->restaurantLocation->create($input);
 
         if($restaurantLocationCreate['status'] === 'success'){
-            return response()->json(['status' => 'success'], 200);
+			if($this->request->ajax()) {
+				return response()->json(['status' => 'success'], 200);
+			}
+			flash()->success('The restaurant location has been successfully created.');
+			return redirect()->route('AdminRestaurantLocations');
         }else{
             return response()->json([
                 'action' => $restaurantLocationCreate['action'],

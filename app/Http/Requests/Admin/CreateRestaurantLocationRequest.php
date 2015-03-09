@@ -44,9 +44,12 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['restaurant_id'] = 'required|integer|restaurant';
         $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality'; // Locality Id
         $rules['slug'] = 'required|unique:vendor_locations,slug';
-        $rules['a_la_carte'] = 'required|boolean';
+        $rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
-
+        $rules['media.listing_image'] = 'required|exists:media,id';
+        $rules['media.gallery_images'] = 'required|galleryarray';
+        $rules['address.latitude'] = 'required|numeric';
+        $rules['address.longitude'] = 'required|numeric';
 
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
@@ -58,7 +61,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.expert_tips'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|nonemptyarray';
+            $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['attributes.min_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_reservations_per_time_slot'] = 'required|integer';
@@ -70,12 +73,8 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
-            $rules['address.latitude'] = 'required|numeric';
-            $rules['address.longitude'] = 'required|numeric';
             $rules['curators'] = 'curatorarray';
             $rules['tags'] = 'tagarray';
-            $rules['media.listing_image'] = 'required|exists:media,id';
-            $rules['media.gallery_images'] = 'required|galleryarray';
             $rules['schedules'] = 'required|schedulearray';
         }else{
             $rules['attributes.seo_meta_keywords'] = 'nonemptyarray';

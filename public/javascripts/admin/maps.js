@@ -6,15 +6,15 @@
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
 
-            var $latitude = $('input[name="latitude"]');
+            var $latitude = $('input[name="address[latitude]"]');
             $latitude.focus();
 
         });
 
         $('body').delegate('.latLong','focus click keyup',function(){
 
-            var   $latitude = $('input[name="latitude"]').val()
-                , $longitude = $('input[name="longitude"]').val();
+            var   $latitude = $('input[name="address[latitude]"]').val()
+                , $longitude = $('input[name="address[longitude]"]').val();
 
             if ( $latitude == '' || $longitude == '' )
             {
@@ -28,7 +28,7 @@
                 lng: $longitude
             }).addMarker({
                 lat: $latitude,
-                lng: $longitude,
+                lng: $longitude
             });
 
 
@@ -38,8 +38,8 @@
 
             e.preventDefault();
 
-            var   $latitude = $('input[name="latitude"]')
-                , $longitude = $('input[name="longitude"]');
+            var   $latitude = $('input[name="address[latitude]"]')
+                , $longitude = $('input[name="address[longitude]"]');
 
             GMaps.geocode({
                 address: $('#location_search_val').val().trim(),

@@ -31,7 +31,7 @@
 
             $.ajax({
                 type: "GET",
-                url: 'http://wowtables.app/admin/restaurants/locations/available_time_slots',
+                url: '/admin/restaurants/locations/available_time_slots',
                 data : {
                     start_time: start_time,
                     end_time: end_time
