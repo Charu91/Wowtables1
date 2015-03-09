@@ -8,7 +8,7 @@
                     <div class="form-group">
                         <label for="start_time" class="col-sm-4 control-label">Start Time <span class="required">*</span></label>
                         <div class="col-sm-8">
-                            {!! Form::text('start_time','8:00',['class'=>'form-control','data-plugin-timepicker'=>'']) !!}
+                            {!! Form::text('start_time','8:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'start_time']) !!}
                         </div>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label for="end_time" class="col-sm-4 control-label">End Time <span class="required">*</span></label>
                         <div class="col-sm-8">
-                            {!! Form::text('end_time','22:00',['class'=>'form-control','data-plugin-timepicker'=>'']) !!}
+                            {!! Form::text('end_time','22:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'end_time']) !!}
                         </div>
                     </div>
                 </div>

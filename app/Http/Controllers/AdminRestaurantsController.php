@@ -142,11 +142,8 @@ class AdminRestaurantsController extends Controller {
 		$deleteRestaurant = $this->restaurant->delete($id);
 
         if($deleteRestaurant['status'] === 'success'){
-			if($this->request->ajax()) {
-				return response()->json(['status' => 'success'], 200);
-			}
 			flash()->success('The restaurant has been successfully deleted.');
-			return redirect()->route('AdminGetRestaurants');
+			return response()->json(['status' => 'success'], 200);
         }else{
             return response()->json([
                 'action' => $deleteRestaurant['action'],

@@ -170,7 +170,7 @@ class RestaurantLocation extends VendorLocation{
     public function delete($vendor_location_id)
     {
         if(DB::table('vendor_locations')->where('id', $vendor_location_id)->count()){
-            if(DB::table('vendvendor_locationsors')->delete($vendor_location_id)){
+            if(DB::table('vendor_locations')->delete($vendor_location_id)){
                 return ['status' => 'success'];
             }else{
                 return [

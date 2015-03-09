@@ -124,7 +124,17 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+		$deleteRestaurant = $this->restaurantLocation->delete($id);
+
+		if($deleteRestaurant['status'] === 'success'){
+			flash()->success('The restaurant has been successfully deleted.');
+			return response()->json(['status' => 'success'], 200);
+		}else{
+			return response()->json([
+				'action' => $deleteRestaurant['action'],
+				'message' => $deleteRestaurant['message']
+			], 400);
+		}
 	}
 
 

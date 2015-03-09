@@ -130,5 +130,29 @@
 
         });
 
+
+        var $deleteRestaurantLocationBtn = $('.delete-restaurant-location');
+
+        $deleteRestaurantLocationBtn.on('click',function(){
+
+            var id = $(this).data('restaurant-location-id');
+
+            if(confirm('Are you sure you want to delete restaurant location with id '+id+'?'))
+            {
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/admin/restaurants/locations/' + id,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function () {
+                    location.reload();
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+
+        });
+
     });
 })(jQuery);
