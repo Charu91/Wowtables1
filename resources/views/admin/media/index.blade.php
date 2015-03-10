@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			</menu>
-			<div class="inner-body mg-main">
+			<div class="inner-body mg-main" >
 			   @if ($mediaCount <= 0)
                 <em>No Media Available Yet!! Start uploading now!!</em>
 			   @else
@@ -69,7 +69,8 @@
 
 					</ul>
 				</div>
-				<div class="row mg-files" data-sort-destination data-sort-id="media-gallery">
+                <div id="mediaModalFiles">
+				<div  class="row mg-files" data-sort-destination data-sort-id="media-gallery">
 				    @if( !empty($images) )
                         @foreach($images as $image)
                         <div class="isotope-item document col-sm-6 col-md-4 col-lg-3">
@@ -116,42 +117,42 @@
                         <em>Could not find media matching the criteria that you entered</em>
 					@endif
 				</div>
-
-                <nav id="mediaPaginationBlock">
-                    <ul class="pagination">
-                        @if ($pages > 1)
-                        <li class="{{ ($pagenum == 1)? 'disabled': '' }}">
-                            <a href="{{ ($pagenum == 1)? 'javascript:void(0);': '/admin/media?'.http_build_query([ 'pagenum' => $pagenum - 1 ]) }}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                            @for($i = 1; $i <= $pages; $i++)
-                                <li class="{{ ($pagenum == $i)? 'active': '' }}">
-                                    <a href="{{ ($pagenum == $i)? 'javascript:void(0);': '/admin/media?'. http_build_query([ 'pagenum' => $i ]) }}">
-                                        {{$i}}
+                    <nav id="mediaPaginationBlock">
+                        <ul class="pagination">
+                            @if ($pages > 1)
+                                <li class="{{ ($pagenum == 1)? 'disabled': '' }}">
+                                    <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == 1)? '0': $pagenum - 1 }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
-                            @endfor
-                        <li class="{{ ($pagenum == $pages)? 'disabled': '' }}">
-                            <a href="/admin/media?{{ http_build_query([ 'pagenum' => $pagenum + 1 ]) }}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        @else
-                            <li class="disabled">
-                                <a href="javascript:void(0)" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="active"><a href="javascript:void(0)">1</a></li>
-                            <li class="disabled">
-                                <a href="javascript:void(0)" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-                </nav>
+                                @for($i = 1; $i <= $pages; $i++)
+                                    <li class="{{ ($pagenum == $i)? 'active': '' }}">
+                                        <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == $i)? '0': $i  }}">
+                                            {{$i}}
+                                        </a>
+                                    </li>
+                                @endfor
+                                <li class="{{ ($pagenum == $pages)? 'disabled': '' }}">
+                                    <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ $pagenum + 1  }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="disabled">
+                                    <a href="javascript:void(0)" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="active"><a href="javascript:void(0)">1</a></li>
+                                <li class="disabled">
+                                    <a href="javascript:void(0)" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </nav>
+                </div>
 				@endif
 			</div>
 		</div>

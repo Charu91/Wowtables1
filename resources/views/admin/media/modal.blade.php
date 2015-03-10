@@ -67,19 +67,19 @@
                                 <ul class="pagination">
                                     @if ($pages > 1)
                                         <li class="{{ ($pagenum == 1)? 'disabled': '' }}">
-                                            <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == 1)? '0': $pagenum - 1 }}" aria-label="Previous">
+                                            <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == 1)? '0': $pagenum - 1 }}" aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
                                         @for($i = 1; $i <= $pages; $i++)
                                             <li class="{{ ($pagenum == $i)? 'active': '' }}">
-                                                <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == $i)? '0': $i  }}">
+                                                <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == $i)? '0': $i  }}">
                                                     {{$i}}
                                                 </a>
                                             </li>
                                         @endfor
                                         <li class="{{ ($pagenum == $pages)? 'disabled': '' }}">
-                                            <a class="media-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ $pagenum + 1  }}" aria-label="Next">
+                                            <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ $pagenum + 1  }}" aria-label="Next">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>
                                         </li>
