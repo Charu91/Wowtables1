@@ -59,12 +59,17 @@ class RestaurantLocation extends VendorLocation{
 
                 if($AddressSaved['status'] !== 'success'){
                     $AddressSaved['message'] = 'Could not create the Restaurant Location Address. Contact the system admin';
-                    return $AttributesSaved;
+                    return $AddressSaved;
                 }
             }
 
             if(!empty($data['schedules'])){
-                $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules']);
+                if(isset($data['off_peak_schedules'])){
+                    $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules'], $data['off_peak_schedules']);
+                }else{
+                    $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules']);
+                }
+
 
                 if($schedulesSaved['status'] !== 'success'){
                     $schedulesSaved['message'] = 'Could not create the Restaurant Location Schedules. Contact the system admin';
@@ -140,6 +145,9 @@ class RestaurantLocation extends VendorLocation{
 
     public function update($vendor_location_id, $data)
     {
+
+        DB::beginTransaction();
+
         //delete all existing attributes
         $query = '
             DELETE vlab, vlad, vlaf, vlai, vlam, vlas, vlat, vlav,
@@ -151,8 +159,8 @@ class RestaurantLocation extends VendorLocation{
             LEFT JOIN vendor_location_attributes_integer AS `vlai` ON vlai.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_attributes_multiselect AS `vlam` ON vlam.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_attributes_singleselect AS `vlas` ON vlas.vendor_location_id = vl.`id`
-            LEFT JOIN vendor_location_attributes_text AS `vat` ON vlat.vendor_location_id = vl.`id`
-            LEFT JOIN vendor_location_attributes_varchar AS `vav` ON vlav.vendor_location_id = vl.`id`
+            LEFT JOIN vendor_location_attributes_text AS `vlat` ON vlat.vendor_location_id = vl.`id`
+            LEFT JOIN vendor_location_attributes_varchar AS `vlav` ON vlav.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_blocked_schedules AS `vlbls` ON vlbls.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_booking_schedules AS `vlbs` ON vlbs.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_booking_time_range_limits AS `vlbtrl` ON vlbtrl.vendor_location_id = vl.`id`
@@ -165,6 +173,105 @@ class RestaurantLocation extends VendorLocation{
         ';
 
         DB::delete($query, [$vendor_location_id]);
+
+        $vendorLocationUpdateData = [
+            'slug' => $data['slug'],
+            'location_id' => $data['location_id'],
+            'status' => $data['status']
+        ];
+
+        $restaurantUpdate = DB::table('vendor_locations')->where('id', $vendor_location_id)->update($vendorLocationUpdateData);
+
+
+        if(!empty($data['attributes'])){
+            $AttributesSaved = $this->saveAttributes($vendor_location_id, $data['attributes']);
+
+            if($AttributesSaved['status'] !== 'success'){
+                $AttributesSaved['message'] = 'Could not create the Restaurant Location Attributes. Contact the system admin';
+                return $AttributesSaved;
+            }
+        }
+
+        if(!empty($data['address'])){
+            $AddressSaved = $this->saveAddress($vendor_location_id, $data['location_id'], $data['address']);
+
+            if($AddressSaved['status'] !== 'success'){
+                $AddressSaved['message'] = 'Could not create the Restaurant Location Address. Contact the system admin';
+                return $AddressSaved;
+            }
+        }
+
+        if(!empty($data['schedules'])){
+            if(isset($data['off_peak_schedules'])){
+                $schedulesSaved = $this->saveSchedules($vendor_location_id ,$data['schedules'], $data['off_peak_schedules']);
+            }else{
+                $schedulesSaved = $this->saveSchedules($vendor_location_id ,$data['schedules']);
+            }
+
+
+            if($schedulesSaved['status'] !== 'success'){
+                $schedulesSaved['message'] = 'Could not create the Restaurant Location Schedules. Contact the system admin';
+                return $schedulesSaved;
+            }
+        }
+
+        if(!empty($data['media'])){
+            $mediaSaved = $this->saveMedia($vendor_location_id, $data['media']);
+
+            if($mediaSaved['status'] !== 'success'){
+                $mediaSaved['message'] = 'Could not create the Restaurant Location Media. Contact the system admin';
+                return $mediaSaved;
+            }
+        }
+
+        if(!empty($data['block_dates'])){
+            $blockSchedulesSaved = $this->saveBlockDates($vendor_location_id ,$data['block_dates']);
+
+            if($blockSchedulesSaved['status'] !== 'success'){
+                $blockSchedulesSaved['message'] = 'Could not create the Restaurant Location Block Schedules. Contact the system admin';
+                return $blockSchedulesSaved;
+            }
+        }
+
+        if(!empty($data['reset_time_range_limits'])){
+            $resetTimeRangeLimtsSaved = $this->saveTimeRangeLimits($vendor_location_id, $data['reset_time_range_limits']);
+
+            if($resetTimeRangeLimtsSaved['status'] !== 'success'){
+                $resetTimeRangeLimtsSaved['message'] = 'Could not create the Restaurant Location Time Range Limits. Contact the system admin';
+                return $resetTimeRangeLimtsSaved;
+            }
+        }
+
+        if(!empty($data['contacts'])){
+            $contactsSaved = $this->saveContacts($vendor_location_id, $data['contacts']);
+
+            if($contactsSaved['status'] !== 'success'){
+                $contactsSaved['message'] = 'Could not create the Restaurant Location Contacts. Contact the system admin';
+                return $contactsSaved;
+            }
+        }
+
+        if(!empty($data['tags'])){
+            $tagMapping = $this->mapTags($vendor_location_id, $data['tags']);
+
+            if($tagMapping['status'] !== 'success'){
+                $tagMapping['message'] = 'Could not map the Restaurant Location Tags. Contact the system admin';
+                return $tagMapping;
+            }
+        }
+
+        if(!empty($data['curators'])){
+            $curatorMapping = $this->mapCurators($vendor_location_id, $data['tags']);
+
+            if($curatorMapping['status'] !== 'success'){
+                $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
+                return $curatorMapping;
+            }
+        }
+
+        DB::commit();
+        return ['status' => 'success'];
+
     }
 
     public function delete($vendor_location_id)

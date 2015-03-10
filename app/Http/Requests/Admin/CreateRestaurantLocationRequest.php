@@ -72,6 +72,8 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.cuisines'] = 'required|cuisinesarray';
+            $rules['attributes.cuisines'] = 'required|cuisinesarray';
+            $rules['attributes.cuisines'] = 'required|cuisinesarray';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
             $rules['curators'] = 'curatorarray';
@@ -99,8 +101,11 @@ class CreateRestaurantLocationRequest extends Request {
         }
 
         $rules['off_peak_schedules'] = 'schedulearray';
+        $rules['attributes.off_peak_hour_discount'] = 'required_with:off_peak_schedules|numeric';
+        $rules['attributes.off_peak_hour_discount_min_covers'] = 'required_with:off_peak_schedules|integer';
 
         $rules['block_dates'] = 'array';
+
         if($this->has('block_dates') && is_array($this->get('block_dates'))){
             foreach($this->get('block_dates') as $key => $block_date){
                 $rules['block_dates'.$key] = 'date_format:Y-m-d';

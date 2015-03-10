@@ -176,6 +176,12 @@ return [
             'name' => 'Off Peak Hour Discount',
             'type' => 'float',
             'value' => 'single'
+        ],
+
+        'off_peak_hour_discount_min_covers' => [
+            'name' => 'Off Peak Hour Discount Minimum Covers',
+            'type' => 'integer',
+            'value' => 'single'
         ]
     ]
 ];
