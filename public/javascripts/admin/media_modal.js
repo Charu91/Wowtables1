@@ -104,5 +104,34 @@
             console.log(gallery_images)
         });
 
+
+        $('body').delegate('.media-modal-pagenum-btn','click',function(){
+
+            var pagenum = $(this).data('media-pagenum');
+            if(pagenum > 0) {
+                $.ajax({
+                    url: '/admin/media/?pagenum=' + pagenum + '&type=modal'
+                }).done(function (result) {
+                    $('#mediaModalFiles').html(result);
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+        });
+
+        $('body').delegate('.media-pagenum-btn','click',function(){
+
+            var pagenum = $(this).data('media-pagenum');
+            if(pagenum > 0) {
+                $.ajax({
+                    url: '/admin/media/?pagenum=' + pagenum
+                }).done(function (result) {
+                    $('#mediaModalFiles').html(result);
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+        });
+
     });
 })(jQuery);
