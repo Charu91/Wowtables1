@@ -42,7 +42,7 @@ class CreateRestaurantLocationRequest extends Request {
         $rules = [];
 
         $rules['restaurant_id'] = 'required|integer|restaurant';
-        $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality'; // Locality Id
+        $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality|unique:vendor_locations,location_id,NULL,restaurant_id,'.$this->get('restaurant_id'); // Locality Id
         $rules['slug'] = 'required|unique:vendor_locations,slug';
         $rules['a_la_carte'] = 'required|boolean';
         $rules['status'] = 'required|in:Active,Inactive';
