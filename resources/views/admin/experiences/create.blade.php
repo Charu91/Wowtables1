@@ -24,7 +24,7 @@
     </header>
 
 
-    {!! Form::open(['route'=>'AdminExperienceStore','class'=>'form-horizontal','novalidate'=>'novalidate','id'=>'addNewExperienceForm']) !!}
+    {!! Form::open(['route'=>'AdminExperienceStore','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -58,8 +58,18 @@
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
-                @include('partials.forms.select_restaurant')
-                @include('partials.forms.select_restaurant_locations')
+                <div class="form-group">
+                    <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('restaurant_id',$restaurants_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="restaurant_locations[]" class="col-sm-3 control-label">Select Restaurant Locations <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('restaurant_locations[]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                    </div>
+                </div>
                 <div class="form-group">
                     {!! Form::label('name','Experience Name',['class'=>'col-sm-3 control-label']) !!}
                     <div class="col-sm-6">
@@ -222,31 +232,21 @@
                         </div>
                     </div>
                 </div>
-                @include('partials.forms.experience_variant')
             </div>
             <div id="menu_details" class="tab-pane mt-lg">
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-1">
-                        <a class="btn btn-primary" id="addNewExperienceMenuBtn" >Add New Menu Section</a>
+                        <a id="expMenuBtn" data-target="#markdownmodal" data-toggle="modal" class="btn btn-primary">Create Experience Menu</a>
                     </div>
                 </div>
-                <div id="experienceMenuForm">
+                <div id="experienceMenuHolder">
                     <div class="form-group">
-                        {!! Form::label('','Menu Section Title',['class'=>'col-sm-3 control-label']) !!}
-                        <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'menuTitle']) !!}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-6 col-sm-offset-3">
-                            <div class="row">
-                                <a class="btn btn-primary" id="addExperienceAddonBtn" >Add Addon</a>
-                                <a class="btn btn-primary" id="cancelUpdateExperienceAddonBtn" >Cancel</a>
-                            </div>
+                        <label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
+                        <div class="col-sm-8">
+                            {!! Form::textarea('attributes[menu]',null,['rows'=>'30','class'=>'form-control','required'=>'','id'=>'expMenu']) !!}
                         </div>
                     </div>
                 </div>
-                @include('partials.forms.experience_menu')
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">

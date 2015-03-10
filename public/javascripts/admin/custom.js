@@ -97,6 +97,7 @@ $(document).ready(function(){
         minHeight: 150
     });
 
+
     $('#terms_conditions').redactor({
         minHeight: 150
     });
