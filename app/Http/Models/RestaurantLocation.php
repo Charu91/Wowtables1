@@ -478,14 +478,15 @@ class RestaurantLocation extends VendorLocation{
         }
     }
 
-    protected function saveSchedules($vendor_location_id, $schedules)
+    protected function saveSchedules($vendor_location_id, $schedules, $off_peak_schedules = null)
     {
         $schedules_insert_map = [];
 
         foreach($schedules as $schedule){
             $schedules_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
-                'schedule_id' => $schedule
+                'schedule_id' => $schedule,
+                'off_peak_schedule' => (is_array($off_peak_schedules) && in_array($schedule, $off_peak_schedules)) ? 1 : 0
             ];
         }
 

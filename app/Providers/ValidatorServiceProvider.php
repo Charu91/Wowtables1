@@ -88,6 +88,25 @@ class ValidatorServiceProvider extends ServiceProvider {
 
             return true;
         });
+
+        $this->app['validator']->extend('cuisinesarray', function ($attribute, $value, $parameters)
+        {
+            if(!is_array($value) || !count($value)){
+                return false;
+            }else{
+                $cusinesIdCount = DB::table('vendor_attributes as va')
+                                        ->join('vendor_attributes_select_options as vao', 'vao.vendor_attribute_id', '=', 'va.id')
+                                        ->whereIn('vao.id', $value)
+                                        ->where('va.alias', 'cuisines')
+                                        ->count();
+
+                if(count($value) === $cusinesIdCount){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 	}
 
 	/**

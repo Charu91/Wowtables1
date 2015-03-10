@@ -42,7 +42,7 @@ class CreateRestaurantLocationRequest extends Request {
         $rules = [];
 
         $rules['restaurant_id'] = 'required|integer|restaurant';
-        $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality|unique:vendor_locations,location_id,NULL,restaurant_id,'.$this->get('restaurant_id'); // Locality Id
+        $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality|unique:vendor_locations,location_id,NULL,id,vendor_id,'.$this->get('restaurant_id'); // Locality Id
         $rules['slug'] = 'required|unique:vendor_locations,slug';
         $rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
@@ -71,6 +71,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.commission_per_cover'] = 'required|numeric';
             $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
+            $rules['attributes.cuisines'] = 'required|cuisinesarray';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
             $rules['curators'] = 'curatorarray';
@@ -94,7 +95,10 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['media.listing_image'] = 'exists:media,id';
             $rules['media.gallery_images'] = 'galleryarray';
             $rules['schedules'] = 'schedulearray';
+            $rules['attributes.cuisines'] = 'cuisinesarray';
         }
+
+        $rules['off_peak_schedules'] = 'schedulearray';
 
         $rules['block_dates'] = 'array';
         if($this->has('block_dates') && is_array($this->get('block_dates'))){

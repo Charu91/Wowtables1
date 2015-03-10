@@ -88,7 +88,7 @@ return [
         ],
 
         'seo_title' => [
-            'name' => 'Title',
+            'name' => 'SEO Title',
             'type' => 'varchar',
             'value' => 'single'
         ],
@@ -130,7 +130,7 @@ return [
         ],
 
         'max_people_per_day' => [
-            'name' => 'Minimum People Per Day',
+            'name' => 'Maximum People Per Day',
             'type' => 'integer',
             'value' => 'single'
         ],
@@ -159,7 +159,6 @@ return [
             'value' => 'single'
         ],
 
-
         'reward_points_per_reservation' => [
             'name' => 'Reward Points Per Reservation',
             'type' => 'integer',
@@ -171,6 +170,12 @@ return [
             'type' => 'multi-select',
             'value' => 'multi',
             'id_alias' => 'cusisine_id'
+        ],
+
+        'off_peak_hour_discount' => [
+            'name' => 'Off Peak Hour Discount',
+            'type' => 'float',
+            'value' => 'single'
         ]
     ]
 ];

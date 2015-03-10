@@ -131,16 +131,7 @@ class Media {
 
             foreach($images as $image){
                 if(!$image->resized_file){
-                    $image->resized_file = $this->resizeAndSavetoDatabase([
-                       'media_id'   => $image->media_id,
-                       'media_file' => $image->file,
-                       'width'      => $filters['width'],
-                       'height'     => $filters['height']
-                    ]);
-
-                    if(!$image->resized_file){
-                        unset($image);
-                    }
+                    unset($image);
                 }
             }
 
@@ -448,7 +439,7 @@ class Media {
 
         if($terms){
             $autofillOptions = [];
-            foreach($term as $term){
+            foreach($terms as $term){
                 $autofillOptions[] = ['id' => $term->term, 'text' => $term->term];
             }
         }else{
