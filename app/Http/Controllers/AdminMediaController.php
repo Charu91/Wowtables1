@@ -52,6 +52,19 @@ class AdminMediaController extends Controller {
         ]);
 
         if($allMedia['count'] > 0) {
+            if($this->request->ajax()){
+                return view(
+                    'admin.media.ajax',
+                    [
+                        'mediaCount' => $allMedia['count'],
+                        'images' => $allMedia['images'],
+                        'pages' => $allMedia['pages'],
+                        'pagenum' => $allMedia['pagenum'],
+                        'search' => empty($input['search'])? '' : $input['search'],
+                        's3_url' => $this->config->get('media.base_s3_url')
+                    ]
+                );
+            }
             return view(
                 'admin.media.index',
                 [

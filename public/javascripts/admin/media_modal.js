@@ -104,5 +104,20 @@
             console.log(gallery_images)
         });
 
+
+        $('body').delegate('.media-pagenum-btn','click',function(){
+
+            var pagenum = $(this).data('media-pagenum');
+
+            $.ajax({
+                url: '/admin/media/?pagenum='+pagenum
+                }).done( function ( result ) {
+                $('#mediaModalFiles').html(result);
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
     });
 })(jQuery);
