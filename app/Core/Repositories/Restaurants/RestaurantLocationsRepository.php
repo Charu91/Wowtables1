@@ -10,11 +10,10 @@ class RestaurantLocationsRepository {
 
     public function getAll()
     {
-        return VendorLocation::all();
-        /*return VendorLocation::wherehas('vendorType', function($q)
+        return VendorLocation::wherehas('vendor.vendorType', function($q)
         {
             $q->where('type','Restaurants');
-        })->get()*/;
+        })->get();
     }
 
     public function getByRestaurantLocationId($id)
@@ -28,7 +27,7 @@ class RestaurantLocationsRepository {
             'attributesVarChar',
             'attributesSingleSelect',
             'attributesMultiSelect'
-        )->findOrFail($id)->wherehas('vendorType',function($q) {
+        )->findOrFail($id)->wherehas('vendor.vendorType',function($q) {
             $q->where('type','Restaurants');
         })->first();
 

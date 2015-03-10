@@ -8,6 +8,31 @@
 
         $('#restaurantsTable').DataTable();
 
+        $('#restaurantDatePicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $('#restaurantTimePicker').timepicker({
+            showSeconds: true,
+            showMeridian: false
+        });
+
+        $('#restaurantLocationDatePicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $('#restaurantLocationTimePicker').timepicker({
+            showSeconds: true,
+            showMeridian: false
+        });
+
+
         /*$('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();
             var input = {};
@@ -59,7 +84,7 @@
                     placement.after(error);
                 }
             }
-        });*/
+        });
 
         $( "#addNewRestaurantForm" ).validate({
             ignore: [],
@@ -79,6 +104,54 @@
                     placement.after(error);
                 }
             }
+        });*/
+
+
+        var $deleteRestaurantBtn = $('.delete-restaurant-btn');
+
+        $deleteRestaurantBtn.on('click',function(){
+
+            var id = $(this).data('restaurant-id');
+
+            if(confirm('Are you sure you want to delete restaurant with id '+id+'?'))
+            {
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/admin/restaurants/' + id,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function () {
+                    location.reload();
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+
+        });
+
+
+        var $deleteRestaurantLocationBtn = $('.delete-restaurant-location');
+
+        $deleteRestaurantLocationBtn.on('click',function(){
+
+            var id = $(this).data('restaurant-location-id');
+
+            if(confirm('Are you sure you want to delete restaurant location with id '+id+'?'))
+            {
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/admin/restaurants/locations/' + id,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function () {
+                    location.reload();
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+
         });
 
     });

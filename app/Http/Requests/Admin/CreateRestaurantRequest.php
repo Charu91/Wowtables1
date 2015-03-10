@@ -43,7 +43,7 @@ class CreateRestaurantRequest extends Request {
 
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:vendors,slug';
-        $rules['status'] = 'required|in:Publish,Draft';
+        $rules['status'] = 'required|in:Published,Draft';
 
         if($this->get('status') === 'Publish'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
@@ -52,9 +52,9 @@ class CreateRestaurantRequest extends Request {
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|nonemptyarray';
+            $rules['attributes.seo_meta_keywords'] = 'required';
         }else{
-            $rules['attributes.seo_meta_keywords'] = 'nonemptyarray';
+            $rules['attributes.seo_meta_keywords'] = '';
         }
 
         return $rules;

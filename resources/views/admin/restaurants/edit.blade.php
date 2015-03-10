@@ -37,17 +37,46 @@
                     {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
                 </div>
             </div>
-
+            <div class="form-group">
+                {!! Form::label('attributes[seo_title]','SEO Title',['class'=>'col-sm-3 control-label']) !!}
+                <div class="col-sm-6">
+                    {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('attributes[seo_meta_description]','SEO Meta Description',['class'=>'col-sm-3 control-label']) !!}
+                <div class="col-sm-6">
+                    {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('attributes[seo_meta_keywords]','SEO Keywords',['class'=>'col-sm-3 control-label']) !!}
+                <div class="col-sm-6">
+                    {!! Form::select('attributes[seo_meta_keywords]',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('attributes[restaurant_info]','Restaurant Info',['class'=>'col-sm-3 control-label']) !!}
+                <div class="col-sm-6">
+                    {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('attributes[short_description]','Short Description',['class'=>'col-sm-3 control-label']) !!}
+                <div class="col-sm-6">
+                    {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
+                </div>
+            </div>
             <div class="form-group">
                 {!! Form::label('status','Status',['class'=>'col-sm-3 control-label']) !!}
                 <div class="col-sm-6">
-                    {!! Form::select('status',['Draft'=>'Draft','Published'=>'Published'],$restaurant['restaurant']['status'],['class'=>'form-control','required'=>'']) !!}
+                    {!! Form::select('status',['Draft'=>'Draft','Publish'=>'Publish'],'Draft',['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
         </div>
     </section>
 
-    <section  class="panel">
+    <!--<section  class="panel">
         <header class="panel-heading">
             <a class="btn btn-primary" id="addNewRestaurantAttributeBtn">Add New Attribute</a>
             <h2 class="panel-title pull-right">Restaurant Attributes</h2>
@@ -57,7 +86,7 @@
                 <div id="addRestaurantAttributesHolder"></div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <section class="panel">
         <header class="panel-heading">

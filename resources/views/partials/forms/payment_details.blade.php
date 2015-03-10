@@ -1,18 +1,20 @@
 <div class="form-group">
-    {!! Form::label('commission_per_reservation','Commission / Booking',['class'=>'col-sm-3 control-label']) !!}
-    <div class="col-sm-6">
-        {!! Form::text('commision_per_reservation',null,['class'=>'form-control','required'=>'']) !!}
+    <div class="col-sm-9 col-sm-offset-3">
+        <div class="checkbox-custom checkbox-primary">
+            <input type="checkbox" name="attributes[allow_gift_card_redemptions]" id="attributes[allow_gift_card_redemptions]" value="1" checked="">
+            <label  for="attributes[allow_gift_card_redemptions]">Allow Gift Card Redemptions <span class="required">*</span></label>
+        </div>
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('prepayment','Prepaymet Option',['class'=>'col-sm-3 control-label']) !!}
+    <label for="attributes[commission_per_cover]" class="col-sm-3 control-label">Commission per Cover <span class="required">*</span></label>
     <div class="col-sm-6">
-        {!! Form::select('prepayment',[''=>'',true=>'Yes',false=>'No'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+        {!! Form::text('attributes[commission_per_cover]',null,['class'=>'form-control','required'=>'']) !!}
     </div>
 </div>
 <div class="form-group">
-    {!! Form::label('reward_points_per_reservation','Reward Points / Reservation',['class'=>'col-sm-3 control-label']) !!}
+    <label for="attributes[reward_points_per_reservation]" class="col-sm-3 control-label">Reward Points per Reservation <span class="required">*</span></label>
     <div class="col-sm-6">
-        {!! Form::text('reward_points_per_reservation',null,['class'=>'form-control','required'=>'']) !!}
+        {!! Form::text('attributes[reward_points_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
     </div>
 </div>
