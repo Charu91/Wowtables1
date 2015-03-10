@@ -4,6 +4,8 @@ use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Models\Schedules;
 use Illuminate\Http\Request;
 use WowTables\Http\Requests\Admin\CreateRestaurantLocationRequest;
+use WowTables\Http\Requests\Admin\UpdateRestaurantLocationRequest;
+use WowTables\Http\Requests\Admin\DeleteRestaurantLocationRequest;
 use WowTables\Http\Models\RestaurantLocation;
 
 class AdminRestaurantLocationsController extends Controller {
@@ -111,9 +113,24 @@ class AdminRestaurantLocationsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, UpdateRestaurantLocationRequest $updateRestaurantLocationRequest)
 	{
-		//
+        $input = $this->request->all();
+
+        $restaurantLocationUpdate = $this->restaurantLocation->update($id, $input);
+
+        if($restaurantLocationUpdate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The restaurant location has been successfully updated.');
+            return redirect()->route('AdminRestaurantLocations');
+        }else{
+            return response()->json([
+                'action' => $restaurantLocationUpdate['action'],
+                'message' => $restaurantLocationUpdate['message']
+            ], 400);
+        }
 	}
 
 	/**
@@ -122,7 +139,7 @@ class AdminRestaurantLocationsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, DeleteRestaurantLocationRequest $deleteRestaurantLocationRequest)
 	{
 		$deleteRestaurant = $this->restaurantLocation->delete($id);
 
