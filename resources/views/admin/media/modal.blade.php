@@ -1,4 +1,3 @@
-
 <div style="z-index: 999999" class="modal fade modal-fullscreen force-fullscreen" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -35,10 +34,7 @@
                                             <section class="panel">
                                                 <div style="padding:6px;" class="panel-body bg-primary">
                                                     <p class="small">{{ str_limit($image->name, 5) }}<small class="pull-right">{{$image->created_date}}</small></p>
-                                                    <img alt="{{ $image->alt }}" title="{{ $image->title }}" src="{!! $s3_url.$image->resized_file !!}" class="img-thumbnail img-responsive" >
-                                                    <input name="media[]" class="mt-xs  multiple_checkbox" type="checkbox" id="media_{{$image->media_id}}" value="{{$image->media_id}}">
-                                                    <label for="media_{{$image->media_id}}">SELECT</label>
-                                                    <div class="btn-group pull-right">
+                                                    <div style="margin-top: -5px;" class="btn-group mb-xs pull-right">
                                                         <button data-toggle="dropdown" class="mt-xs btn btn-xs btn-danger dropdown-toggle" type="button"><span class="caret"></span></button>
                                                         <ul role="menu" style="min-width: 60px;" class="dropdown-menu ">
                                                             <li class="small">
@@ -53,6 +49,10 @@
                                                             </li>
                                                         </ul>
                                                     </div>
+                                                    <input name="media[]" class="mt-xs  multiple_checkbox" type="checkbox" id="media_{{$image->media_id}}" value="{{$image->media_id}}">
+                                                    <label for="media_{{$image->media_id}}">
+                                                        <img style="cursor: pointer;" alt="{{ $image->alt }}" title="{{ $image->title }}" src="{!! $s3_url.$image->resized_file !!}" class="img-thumbnail img-responsive modal-select-img" >
+                                                    </label>
                                                 </div>
                                             </section>
                                         </div>

@@ -267,7 +267,7 @@ class User {
      */
     public function register($full_name,$email, $password)
     {
-        $gourmetRoleId = DB::table('roles')->where('name', 'user')->pluck('id');
+        $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
 
         $user_id = DB::table('users')->insertGetId([
             'full_name' => $full_name,
