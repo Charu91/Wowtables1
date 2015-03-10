@@ -123,3 +123,7 @@ td input[type="checkbox"] {
     height: 60%;
     width: 100%;
 }
+
+#mediaModalFiles input[type=checkbox]:checked + label img{
+    opacity: 0.5;
+}
