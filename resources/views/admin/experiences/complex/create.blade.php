@@ -2,7 +2,7 @@
 
 @section('content')
     <header class="page-header">
-        <h2>Create Experience</h2>
+        <h2>Create Complex Experience</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
@@ -15,7 +15,7 @@
                         Experiences
                     </a>
                 </li>
-                <li><span>Create Experience</span></li>
+                <li><span>Create Complex Experience</span></li>
             </ol>
 
             <a class="sidebar-right-toggle" data-open="sidebar-right">
@@ -24,7 +24,7 @@
     </header>
 
 
-    {!! Form::open(['route'=>'AdminExperienceStore','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+    {!! Form::open(['route'=>'admin.experience.complex.store','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -35,9 +35,6 @@
                 <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
-                <a href="#limits_tab" data-toggle="tab" class="text-center">Limits</a>
-            </li>
-            <li>
                 <a href="#pricing_details" data-toggle="tab" class="text-center">Pricing</a>
             </li>
             <li>
@@ -45,6 +42,9 @@
             </li>
             <li>
                 <a href="#menu_details" data-toggle="tab" class="text-center">Menu Details</a>
+            </li>
+            <li>
+                <a href="#variations_details" data-toggle="tab" class="text-center">Variations Details</a>
             </li>
             <li>
                 <a href="#miscellaneous_tab" data-toggle="tab" class="text-center">Miscellaneous</a>
@@ -104,24 +104,6 @@
             <div id="seo_details" class="tab-pane mt-lg">
                 @include('partials.forms.seo_details')
             </div>
-            <div id="limits_tab" class="tab-pane mt-lg">
-                @include('partials.forms.schedule_limits')
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="panel">
-                            <div class="form-group">
-                                <label for="attributes[minimum_people_increments_per_reservation]" class="col-sm-6 control-label">
-                                    Min People Increments / Reservation
-                                    <span class="required">*</span>
-                                </label>
-                                <div class="col-sm-6">
-                                    {!! Form::text('attributes[minimum_people_increments_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div id="pricing_details" class="tab-pane mt-lg">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
@@ -143,24 +125,6 @@
                     <label for="attributes[reward_points_per_reservation]" class="col-sm-3 control-label">Reward Points per Reservation <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('attributes[reward_points_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="price_before_tax" class="col-sm-3 control-label">Price Before Tax <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::text('price_before_tax',null,['class'=>'form-control','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="tax" class="col-sm-3 control-label">Tax <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::text('tax',null,['class'=>'form-control','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="price_after_tax" class="col-sm-3 control-label">Price After Tax <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::text('price_after_tax',null,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
             </div>
@@ -246,6 +210,11 @@
                         </div>
                     </div>
                 </section>
+            </div>
+            <div id="variations_details" class="tab-pane mt-lg">
+
+                Coming Soon.
+
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\UserAttributes;
+use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use WowTables\Http\Models\Eloquent\Vendors\VendorAttributes;
 use WowTables\Http\Models\Eloquent\Vendors\Vendor;
 use WowTables\Http\Models\User;
@@ -32,6 +33,7 @@ class AdminComposer {
         $view->with('user_attributes_list',UserAttributes::lists('name','alias'));
         $view->with('restaurant_attributes_list',VendorAttributes::lists('name','alias'));
         $view->with('restaurants_list',Vendor::wherehas('vendorType', function($q){$q->where('type','Restaurants');})->lists('name','id'));
+        $view->with('restaurant_locations_list',VendorLocation::wherehas('vendor.vendorType', function($q){$q->where('type','Restaurants');})->lists('slug','id'));
         $view->with('locations_list',Location::where('Type','Locality')->lists('name','id'));
         $view->with('locations_area_list',Location::where('Type','Area')->lists('name','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
