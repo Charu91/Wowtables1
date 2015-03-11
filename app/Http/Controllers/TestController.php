@@ -6,6 +6,7 @@ use WowTables\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Schedules;
 use Illuminate\Contracts\Filesystem\Cloud;
+use WowTables\Http\Models\RestaurantLocation;
 
 class TestController extends Controller {
 
@@ -14,11 +15,10 @@ class TestController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index(Schedules $schedules, Cloud $cloud)
+	public function index(Schedules $schedules, RestaurantLocation $restaurantLocation)
 	{
-        dd($cloud->put('file.txt', 'Word!!'));
+        $restaurantLocation->fetch(21, []);
 
-        return 'Hello World!!';
         /*
         $fetchSchedules = $schedules->fetchAll();
 

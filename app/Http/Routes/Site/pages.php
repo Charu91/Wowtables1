@@ -24,3 +24,11 @@ Route::get('/pages/{slug}', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('/test', [
+    'uses' => 'TestController@index',
+    'as' => 'TestingPage',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
