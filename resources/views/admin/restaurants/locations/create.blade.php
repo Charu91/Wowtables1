@@ -108,7 +108,18 @@
                     </div>
                 </div>
                 @include('partials.forms.payment_details')
-                @include('partials.forms.cousines_collections')
+                <div class="form-group">
+                    <label for="cuisines" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks <span class="required">*</span></label>
                     <div class="col-sm-6">

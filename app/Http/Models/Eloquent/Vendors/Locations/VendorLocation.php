@@ -72,6 +72,11 @@ class VendorLocation extends Model {
         return $this->hasMany('WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationAttributesMultiSelect', 'vendor_location_id', 'id');
     }
 
+    public function schedules()
+    {
+        return $this->hasMany('WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationBookingSchedule', 'vendor_location_id', 'id');
+    }
+
     public function add($vendor_id, $location_id, $title, $slug, $status, $short_description, $description, $seo_title, $seo_meta_description, $seo_meta_keywords, $main_image, $listing_image, $gallery_images, $min_people_per_reservation, $max_people_per_reservation, $max_reservation_per_time_slot, $max_reservation_per_day, $min_reservation_time_buffer, $max_reservation_time_buffer, $schedules, $allow_alacarte_reservation, $alacarte_terms_conditions, $address, $city, $state, $country, $pin_code, $latitude, $longitude, $driving_locations, $location_map, $cuisine, $collections, $commision_per_reservation, $prepayment, $reward_points_per_reservation, $publish_date, $publish_time)
     {
         $vendorLocation = new static(compact('vendor_id', 'location_id','slug','status'));

@@ -43,7 +43,7 @@ class CreateRestaurantRequest extends Request {
 
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:vendors,slug';
-        $rules['status'] = 'required|in:Published,Draft';
+        $rules['status'] = 'required|in:Publish,Draft';
 
         if($this->get('status') === 'Publish'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
