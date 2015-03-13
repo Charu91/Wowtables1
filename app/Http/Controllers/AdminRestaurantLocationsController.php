@@ -104,10 +104,17 @@ class AdminRestaurantLocationsController extends Controller {
 	{
 		$restaurant = $this->repository->getByRestaurantLocationId($id);
 		$data = $this->formatSchedules($restaurant);
+
 		$breakfast = $data['breakfast'];
 		$lunch = $data['lunch'];
 		$dinner = $data['dinner'];
-		return view('admin.restaurants.locations.edit',['restaurant'=>$restaurant,'breakfast'=>$breakfast,'lunch'=>$lunch,'dinner'=>$dinner]);
+
+		return view('admin.restaurants.locations.edit',[
+					'restaurant'=>$restaurant,
+					'breakfast'=>$breakfast,
+					'lunch'=>$lunch,
+					'dinner'=>$dinner
+		]);
 	}
 
 	/**

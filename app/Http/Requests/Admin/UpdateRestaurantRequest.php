@@ -51,10 +51,10 @@ class UpdateRestaurantRequest extends Request {
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['attributes.restaurant_info'] = 'required';
-            $rules['attributes.short_description'] = 'required';
-            $rules['attributes.seo_title'] = 'required';
-            $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required';
+            $rules['attributes.short_description'] = '';
+            $rules['attributes.seo_title'] = '';
+            $rules['attributes.seo_meta_description'] = '';
+            $rules['attributes.seo_meta_keywords'] = '';
         }
 
         return $rules;

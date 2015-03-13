@@ -107,11 +107,15 @@ class AdminRestaurantsController extends Controller {
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
 
-		$publish = explode(' ',$restaurant['restaurant']['publish_time']);
-		$publish_date = $publish[0];
-		$publish_time = $publish[1];
+		if ( $restaurant['restaurant']['status'] == 'Publish' ) {
+			$publish = explode(' ',$restaurant['restaurant']['publish_time']);
+			$publish_date = $publish[0];
+			$publish_time = $publish[1];
 
-		return view('admin.restaurants.edit', ['restaurant' => $restaurant,'publish_date'=>$publish_date,'publish_time'=>$publish_time]);
+			return view('admin.restaurants.edit', ['restaurant' => $restaurant,'publish_date'=>$publish_date,'publish_time'=>$publish_time]);
+		}
+
+		return view('admin.restaurants.edit', ['restaurant' => $restaurant,'publish_date'=>date('Y-m-d'),'publish_time'=>time()]);
 	}
 
 	/**

@@ -20,65 +20,59 @@
 
     {!! Form::open(['route'=>'AdminRestaurantStore','novalidate'=>'novalidate']) !!}
 
-    <section  class="panel">
-        <header class="panel-heading">
-            <h2 class="panel-title">Restaurant Details</h2>
-        </header>
-        <div class="panel-body">
-            <div class="form-group">
-                <label for="name" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Name <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
+    <div class="tabs tabs-primary">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active">
+                <a href="#basic_details" data-toggle="tab" class="text-center">Restaurant Basic Details</a>
+            </li>
+            <li>
+                <a href="#seo_details" data-toggle="tab" class="text-center">Search Engine Optimization</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="basic_details" class="tab-pane active mt-lg">
+                <div class="form-group">
+                    <label for="name" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Name <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Brand Info <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
+            <div id="seo_details" class="tab-pane mt-lg">
+                <div class="form-group">
+                    <label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title </label>
+                    <div class="col-sm-6">
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                <div class="form-group">
+                    <label for="attributes[seo_meta_description]" class="col-sm-3 col-sm-offset-1 control-label">SEO Meta Description </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="attributes[seo_meta_description]" class="col-sm-3 col-sm-offset-1 control-label">SEO Meta Description <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Short Description <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                <div class="form-group">
+                    <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords </label>
+                    <div class="col-sm-6">
+                        {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!--<section  class="panel">
-        <header class="panel-heading">
-            <a class="btn btn-primary" id="addNewRestaurantAttributeBtn">Add New Attribute</a>
-            <h2 class="panel-title pull-right">Restaurant Attributes</h2>
-        </header>
-        <div class="panel-body">
-            <div id="addRestaurantAttributesHolder"></div>
-        </div>
-    </section>-->
 
     <section class="panel">
         <header class="panel-heading">
