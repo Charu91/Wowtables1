@@ -434,19 +434,60 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 'heading' => 'MAIN COURSE',
                                 'choice' => 'choose any one',
 
-                                'items' => [
+                                'sub-menus' => [
                                     [
-                                        'title' => 'Shanghai Clay Pot',
-                                        'tags'  => ['Veg'],
-                                        'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
+                                        'heading' => 'Pizzas',
+                                        'items' => [
+                                            [
+                                                'title' => 'Shanghai Clay Pot',
+                                                'tags'  => ['Veg'],
+                                                'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
+                                            ],
+
+                                            [
+                                                'title' => 'Gaeng Kiew Wan Phak',
+                                                'tags'  => ['Non-Veg', 'Specials'],
+                                                'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
+                                            ],
+                                        ]
                                     ],
 
                                     [
-                                        'title' => 'Gaeng Kiew Wan Phak',
-                                        'tags'  => ['Non-Veg', 'Specials'],
-                                        'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
+                                        'heading' => 'Pastas',
+                                        'items' => [
+                                            [
+                                                'title' => 'Shanghai Clay Pot',
+                                                'tags'  => ['Veg'],
+                                                'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
+                                            ],
+
+                                            [
+                                                'title' => 'Gaeng Kiew Wan Phak',
+                                                'tags'  => ['Non-Veg', 'Specials'],
+                                                'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
+                                            ],
+                                        ]
                                     ],
+
+                                    [
+                                        'heading' => 'Sandwiches',
+                                        'description' => 'Best Sandwiches in town',
+                                        'items' => [
+                                            [
+                                                'title' => 'Shanghai Clay Pot',
+                                                'tags'  => ['Veg'],
+                                                'description' => 'Exotic vegetables with dried bean curd and chilli bean sauce'
+                                            ],
+
+                                            [
+                                                'title' => 'Gaeng Kiew Wan Phak',
+                                                'tags'  => ['Non-Veg', 'Specials'],
+                                                'description' => 'Fresh vegetables & bean curd with Thai pea eggplant in sweet basil flavoured Thai green curry'
+                                            ],
+                                        ]
+                                    ]
                                 ]
+
                             ],
 
                             [
