@@ -70,45 +70,44 @@
                 @include('partials.forms.schedules')
             </div>
             <div id="block_dates" class="tab-pane mt-lg">
-
-            <section class="panel">
-                <header class="panel-heading">
-                    <h2 class="panel-title">Block Dates</h2>
-                </header>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="publish_date" class="col-sm-4 control-label">Date <span class="required">*</span></label>
-                                <div class="col-sm-8">
-                                    {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantLocationDatePicker']) !!}
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h2 class="panel-title">Block Dates</h2>
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="publish_date" class="col-sm-4 control-label">Date <span class="required">*</span></label>
+                                    <div class="col-sm-8">
+                                        {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantLocationDatePicker']) !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="start_time" class="col-sm-4 control-label">From <span class="required">*</span></label>
-                                <div class="col-sm-8">
-                                    {!! Form::text('start_time','8:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'start_time']) !!}
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="start_time" class="col-sm-4 control-label">From <span class="required">*</span></label>
+                                    <div class="col-sm-8">
+                                        {!! Form::text('start_time','8:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'start_time']) !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <label for="end_time" class="col-sm-4 control-label">To <span class="required">*</span></label>
-                                <div class="col-sm-8">
-                                    {!! Form::text('end_time','22:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'end_time']) !!}
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="end_time" class="col-sm-4 control-label">To <span class="required">*</span></label>
+                                    <div class="col-sm-8">
+                                        {!! Form::text('end_time','22:00',['class'=>'form-control','data-plugin-timepicker'=>'','id'=>'end_time']) !!}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group">
-                                <a id="" class="btn btn-primary">Add Another</a>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <a id="" class="btn btn-primary">Add Another</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
             </div>
             <div id="time_range" class="tab-pane mt-lg">
                 Coming Soon.

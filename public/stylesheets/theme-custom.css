@@ -58,6 +58,57 @@ textarea {
     padding: 20px;
 }
 
+html, body, #menuPicksEditor {
+    margin: 0;
+    height: 100%;
+    color: #333;
+}
+
+textarea, #menuPicksEditor div {
+    display: inline-block;
+    width: 49%;
+    height: 500px;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+html, body, #expertTipsEditor {
+    margin: 0;
+    height: 100%;
+    color: #333;
+}
+
+textarea, #expertTipsEditor div {
+    display: inline-block;
+    width: 49%;
+    height: 500px;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+html, body, #termsConditionsEditor {
+    margin: 0;
+    height: 100%;
+    color: #333;
+}
+
+textarea, #termsConditionsEditor div {
+    display: inline-block;
+    width: 49%;
+    height: 500px;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
 code {
     color: #f66;
 }
@@ -118,7 +169,7 @@ code {
 }
 
 
-td input[type="checkbox"] {
+/*td input[type="checkbox"] {
     margin: 7px 0;
     height: 60%;
     width: 100%;

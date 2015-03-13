@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Maximum Reservation Per Time Slot <span class="required">*</span></label>
+                <label for="attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Default Max Tables Per Time Slot </label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[max_reservations_per_time_slot]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
@@ -24,19 +24,19 @@
     <div class="col-lg-6">
         <div class="panel">
             <div class="form-group">
-                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Maximum Reservation Per Day <span class="required">*</span></label>
+                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Minimum Reservation Time Buffer <span class="required">*</span></label>
+                <label for="attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Min Advance Reservation Time (hrs) </label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[minimum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Maximum Reservation Time Buffer <span class="required">*</span></label>
+                <label for="attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Max Advance Reservation Time (hrs) </label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[maximum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>

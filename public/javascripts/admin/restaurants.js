@@ -32,6 +32,18 @@
             showMeridian: false
         });
 
+        $('.block-date-picker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $('.block-time-picker').timepicker({
+            showSeconds: true,
+            showMeridian: false,
+            defaultTime: false
+        });
 
         /*$('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();
@@ -51,7 +63,7 @@
             }).fail(function(jqXHR){
                 console.log(jqXHR);
             });
-        });*/
+        });
 
         $( "#addNewRestaurantLocationForm" ).validate({
             rules: {
@@ -86,7 +98,7 @@
             }
         })
 
-        /*$( "#addNewRestaurantForm" ).validate({
+        $( "#addNewRestaurantForm" ).validate({
             ignore: [],
             highlight: function( label ) {
                 $(label).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -151,6 +163,117 @@
                     console.log(jqXHR);
                 });
             }
+
+        });
+
+        $('.select-restaurant,.select-location').on('change',function(){
+            var   $selectRestaurant = $('.select-restaurant')
+                , $selectLocation = $('.select-location')
+                , $generateSlug   = $('.generate-slug');
+
+
+            var   restaurant = $('.select-restaurant option:selected').text().toLowerCase().replace(/\s/g, '-')
+                , location   = $('.select-location option:selected').text().toLowerCase().replace(/\s/g, '-');
+
+            var slug = '';
+            if(location == "select-location" || restaurant == "select-restaurant"){
+                slug = '';
+            }
+            else{
+                slug = restaurant+'-'+location;
+            }
+            $generateSlug.val(slug);
+        });
+
+        $('#menuPicksHolder').hide();
+
+        $('#insertMenuPicks').on('click',function(){
+            var menu = $('#menuPicksText').val();
+            $('#menuPicksModal').modal('hide');
+            $('#menuPicksHolder').show();
+            $('#menuPicks').val(menu);
+            $('#menuPicksBtn').hide();
+        });
+
+        $('#expertTipsHolder').hide();
+
+        $('#insertExpertTips').on('click',function(){
+            var menu = $('#expertTipsText').val();
+            $('#expertTipsModal').modal('hide');
+            $('#expertTipsHolder').show();
+            $('#expertTips').val(menu);
+            $('#expertTipsBtn').hide();
+        });
+
+        $('#termsConditionsHolder').hide();
+
+        $('#insertTermsConditions').on('click',function(){
+            var menu = $('#termsConditionsText').val();
+            $('#termsConditionsModal').modal('hide');
+            $('#termsConditionsHolder').show();
+            $('#termsConditions').val(menu);
+            $('#termsConditionsBtn').hide();
+        });
+
+        $('#addNewBlockDateBtn').on('click',function(){
+
+            var template =  '<div class="col-lg-4 mb-sm block-date-div"><div class="col-lg-10">'+
+                '<div class="form-group">'+
+                '<label for="block_dates[]" class="col-sm-4 control-label">Dates </label>'+
+                '<div class="col-sm-8">'+
+                '<input type="text" name="block_dates[]" class="form-control block-date-picker" >'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="col-lg-2">'+
+                '<div class="form-group">'+
+                '<a class="btn btn-danger delete-block-date-div"><i class="fa fa-times"></i></a>'+
+                '</div>'+
+                '</div></div>' ;
+
+            $('.block-date-div:last').after(template);
+
+            $('.block-date-picker:last').datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: '1d',
+                todayHighlight: true,
+                autoclose: true
+            });
+
+        });
+
+        $('body').delegate('.delete-block-date-div','click',function(){
+
+            $(this).closest('.block-date-div').remove();
+
+        });
+
+        $('#addNewBlockTimeRangeBtn').on('click',function(){
+
+            var template =  '<tr><td><input type="text" value="8:00" name="reset_time_range_limits[from_time][]" class="form-control block-time-picker"></td>'+
+                '<td><input type="text" value="22:00" name="reset_time_range_limits[to_time][]" class="form-control block-time-picker"></td>'+
+                '<td><select name="reset_time_range_limits[limit_by][]" class="form-control"><option selected="selected" value="Day">Day</option><option value="Date">Date</option></select></td>'+
+                '<td><input type="text" name="reset_time_range_limits[max_covers_limit][]" class="form-control"></td>'+
+                '<td><a class="btn btn-danger delete-block-time-range">Remove</a></td></tr>';
+
+            $('#blockTimeRangeTable tr:last').after(template);
+
+            $('.block-time-picker:last').timepicker({
+                showSeconds: true,
+                showMeridian: false,
+                defaultTime: false
+            });
+        });
+
+        $('body').delegate('.delete-block-time-range','click',function(){
+
+            $(this).closest('tr').remove();
+
+        });
+
+        $('body').delegate('.clear-block-time-range','click',function(){
+
+            $(this).closest('tr').remove();
 
         });
 

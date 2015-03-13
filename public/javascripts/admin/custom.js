@@ -82,6 +82,35 @@ $(document).ready(function(){
         }
     });
 
+    new Vue({
+        el: '#menuPicksEditor',
+        data: {
+            input: '##Start Typing Here'
+        },
+        filters: {
+            marked: marked
+        }
+    });
+
+    new Vue({
+        el: '#expertTipsEditor',
+        data: {
+            input: '##Start Typing Here'
+        },
+        filters: {
+            marked: marked
+        }
+    });
+
+    new Vue({
+        el: '#termsConditionsEditor',
+        data: {
+            input: '##Start Typing Here'
+        },
+        filters: {
+            marked: marked
+        }
+    });
 
     $('#title').on('click',function(){
         $('#title').slugIt({
