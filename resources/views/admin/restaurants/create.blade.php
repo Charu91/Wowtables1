@@ -56,21 +56,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
-                <div class="col-sm-6">
-                    {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Short Description <span class="required">*</span></label>
                 <div class="col-sm-6">
                     {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                <label for="status" class="col-sm-3 col-sm-offset-1 control-label">Status <span class="required">*</span></label>
+                <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
                 <div class="col-sm-6">
-                    {!! Form::select('status',['Draft'=>'Draft','Published'=>'Publish'],'Draft',['class'=>'form-control','required'=>'']) !!}
+                    {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
                 </div>
             </div>
         </div>
@@ -91,23 +85,31 @@
             <h2 class="panel-title">Publish Actions</h2>
         </header>
         <div class="panel-body">
-            <div class="col-sm-2">
-                <a class="btn btn-block btn-primary">Save Draft</a>
-            </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="publish_date" class="col-sm-4 control-label">Date <span class="required">*</span></label>
                 <div class="col-sm-8">
                     {!! Form::text('publish_date',date('Y-m-d'),['class'=>'form-control','id'=>'restaurantDatePicker']) !!}
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
                 <label for="publish_time" class="col-sm-4 control-label">Time <span class="required">*</span></label>
                 <div class="col-sm-8">
                     {!! Form::text('publish_time',null,['class'=>'form-control','id'=>'restaurantTimePicker']) !!}
                 </div>
             </div>
+            <div class="form-group col-md-4">
+                <label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
+                <div class="radio-custom radio-success radio-inline">
+                    <input type="radio" id="Publish" name="status" value="Publish">
+                    <label for="Publish">Publish</label>
+                </div>
+                <div class="radio-custom radio-danger radio-inline">
+                    <input type="radio" id="Draft" name="status" value="Draft" checked="checked">
+                    <label for="Draft">Draft</label>
+                </div>
+            </div>
             <div class="col-sm-2">
-                {!! Form::submit('Publish',['class'=>'btn btn-block btn-primary']) !!}
+                {!! Form::submit('Save',['class'=>'btn btn-block btn-primary']) !!}
             </div>
         </div>
     </section>

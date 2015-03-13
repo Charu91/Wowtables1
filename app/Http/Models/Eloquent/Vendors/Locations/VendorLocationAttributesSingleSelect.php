@@ -9,15 +9,11 @@ class VendorLocationAttributesSingleSelect extends Model {
 
     protected $fillable = [];
 
-    protected $with = ['attribute','selectOptions'];
+    protected $with = ['attribute'];
 
     public function attribute()
     {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Vendors\VendorAttributes', 'vendor_attribute_id', 'id');
     }
 
-    public function selectOptions()
-    {
-        return $this->hasOne('WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationAttributesSelectOptions', 'id', 'vendor_locations_attributes_select_option_id');
-    }
 }

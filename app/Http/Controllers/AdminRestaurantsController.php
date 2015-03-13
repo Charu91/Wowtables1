@@ -107,7 +107,11 @@ class AdminRestaurantsController extends Controller {
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
 
-		return view('admin.restaurants.edit', ['restaurant' => $restaurant]);
+		$publish = explode(' ',$restaurant['restaurant']['publish_time']);
+		$publish_date = $publish[0];
+		$publish_time = $publish[1];
+
+		return view('admin.restaurants.edit', ['restaurant' => $restaurant,'publish_date'=>$publish_date,'publish_time'=>$publish_time]);
 	}
 
 	/**
@@ -123,7 +127,11 @@ class AdminRestaurantsController extends Controller {
         $updateRestaurant = $this->restaurant->update($id, $input);
 
         if($updateRestaurant['status'] === 'success'){
-            return response()->json(['status' => 'success'], 200);
+			if($this->request->ajax()) {
+				return response()->json(['status' => 'success'], 200);
+			}
+			flash()->success('The restaurant has been successfully edited.');
+			return redirect()->route('AdminGetRestaurants');
         }else{
             return response()->json([
                 'action' => $updateRestaurant['action'],

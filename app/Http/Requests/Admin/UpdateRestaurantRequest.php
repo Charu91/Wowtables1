@@ -54,7 +54,7 @@ class UpdateRestaurantRequest extends Request {
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|array';
+            $rules['attributes.seo_meta_keywords'] = 'required';
         }
 
         return $rules;

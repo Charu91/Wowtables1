@@ -72,8 +72,6 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.cuisines'] = 'required|cuisinesarray';
-            $rules['attributes.cuisines'] = 'required|cuisinesarray';
-            $rules['attributes.cuisines'] = 'required|cuisinesarray';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
             $rules['curators'] = 'curatorarray';

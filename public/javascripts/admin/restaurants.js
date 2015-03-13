@@ -51,7 +51,7 @@
             }).fail(function(jqXHR){
                 console.log(jqXHR);
             });
-        });
+        });*/
 
         $( "#addNewRestaurantLocationForm" ).validate({
             rules: {
@@ -84,9 +84,9 @@
                     placement.after(error);
                 }
             }
-        });
+        })
 
-        $( "#addNewRestaurantForm" ).validate({
+        /*$( "#addNewRestaurantForm" ).validate({
             ignore: [],
             highlight: function( label ) {
                 $(label).closest('.form-group').removeClass('has-success').addClass('has-error');

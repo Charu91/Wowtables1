@@ -26,11 +26,23 @@
                             <span>Experiences</span>
                         </a>
                         <ul class="nav nav-children">
-                            <li class="{{ (isset($uri) && $uri === 'admin/experiences')? 'nav-active':'' }}">
-                                <a href="/admin/experiences">View All</a>
-                            </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experiences/create')? 'nav-active':'' }}">
-                                <a href="/admin/experiences/create">Add New</a>
+                                <a href="/admin/experiences/create">Create Simple Experience</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/experience/variants')? 'nav-active':'' }}">
+                                <a href="/admin/experience/variants">Experience Variants</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/experience/complex/create')? 'nav-active':'' }}">
+                                <a href="/admin/experience/complex/create">Create Complex Experience</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/experience/locations/create')? 'nav-active':'' }}">
+                                <a href="/admin/experience/locations/create">Create Experience Location</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/experiences')? 'nav-active':'' }}">
+                                <a href="/admin/experiences">View Experiences</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/experience/locations')? 'nav-active':'' }}">
+                                <a href="/admin/experience/locations">View Experience Locations</a>
                             </li>
                         </ul>
                     </li>

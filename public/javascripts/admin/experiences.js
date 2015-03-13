@@ -4,6 +4,26 @@
 
     $(document).on('ready', function(){
 
+        $('#simpleExperienceDatePicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
+        $('#simpleExperienceTimePicker').timepicker({
+            showSeconds: true,
+            showMeridian: false
+        });
+
+        $("#experienceIncludes").redactor({
+            minHeight: 300
+        });
+
+        $("#experienceInfo").redactor({
+            minHeight: 300
+        });
+
         var   token = $("meta[name='_token']").attr('content')
             , $addNewExperienceAddonBtn = $('#addNewExperienceAddonBtn')
             , $experienceAddonForm = $('#experienceAddonForm')

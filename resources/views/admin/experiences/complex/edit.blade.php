@@ -2,7 +2,7 @@
 
 @section('content')
     <header class="page-header">
-        <h2>Create Restaurant Location</h2>
+        <h2>Edit Complex Experience</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
@@ -10,7 +10,7 @@
                         <i class="fa fa-home"></i>
                     </a>
                 </li>
-                <li><span>Restaurant Locations</span></li>
+                <li><span>Complex Experience</span></li>
             </ol>
 
             <a class="sidebar-right-toggle" data-open="sidebar-right">
@@ -18,7 +18,7 @@
         </div>
     </header>
 
-{!! Form::open(['route'=>'AdminRestaurantLocationsStore','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+    {!! Form::open(['route'=>['admin.experience.complex.update',1],'class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -43,13 +43,16 @@
             <li>
                 <a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>
             </li>
+            <li>
+                <a href="#block_schedules_tab" data-toggle="tab" class="text-center">Block Schedules</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
                 <div class="form-group">
                     <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_id',$restaurants_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                        {!! Form::select('restaurant_id',$restaurants_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,23 +106,12 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
                             <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1" checked="">
-                            <label for="a_la_carte">Allow Alacarte Reservations <span class="required">*</span></label>
+                            <label  for="a_la_carte">Allow Alacarte Reservations <span class="required">*</span></label>
                         </div>
                     </div>
                 </div>
                 @include('partials.forms.payment_details')
-                <div class="form-group">
-                    <label for="cuisines" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
-                    </div>
-                </div>
+                @include('partials.forms.cousines_collections')
                 <div class="form-group">
                     <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks <span class="required">*</span></label>
                     <div class="col-sm-6">
@@ -144,6 +136,9 @@
             </div>
             <div id="location_details" class="tab-pane mt-lg">
                 @include('partials.forms.locations')
+            </div>
+            <div id="block_schedules_tab" class="tab-pane mt-lg">
+                Coming Soon.
             </div>
         </div>
     </div>
@@ -172,7 +167,7 @@
                     <label for="Active">Active</label>
                 </div>
                 <div class="radio-custom radio-danger radio-inline">
-                    <input type="radio" id="Inactive" name="status" value="Inactive" checked="checked">
+                    <input type="radio" id="Inactive" name="status" value="Inactive">
                     <label for="Inactive">Inactive</label>
                 </div>
             </div>
@@ -182,5 +177,5 @@
         </div>
     </section>
 
-{!! Form::close()  !!}
+    {!! Form::close()  !!}
 @stop
