@@ -145,18 +145,27 @@
                     <div class="panel-body">
                         <table id="blockTimeRangeTable"  class="table table-bordered mb-none">
                             <tr>
+                                <th>Limit By</th>
+                                <th>Select Day/Date</th>
+                                <th>Full Day</th>
                                 <th>From Time</th>
                                 <th>To Time</th>
-                                <th>Limit By</th>
                                 <th>Max Covers Limit</th>
                                 <th>Action</th>
                             </tr>
                             <tbody>
                             <tr>
-                                <td>{!! Form::text('reset_time_range_limits[from_time][]',null,['class'=>'form-control block-time-picker']) !!}</td>
-                                <td>{!! Form::text('reset_time_range_limits[to_time][]',null,['class'=>'form-control block-time-picker']) !!}</td>
-                                <td>{!! Form::select('reset_time_range_limits[limit_by][]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control']) !!}</td>
-                                <td>{!! Form::text('reset_time_range_limits[max_covers_limit][]',null,['class'=>'form-control']) !!}</td>
+                                <td>{!! Form::select('reset_time_range_limits[limit_by][]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control time-range-limit-by']) !!}</td>
+                                <td>
+                                    {!! Form::select('reset_time_range_limits[day][]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
+                                    {!! Form::text('reset_time_range_limits[date][]',null,['class'=>'form-control block-date-picker block-time-range-date-picker']) !!}
+                                </td>
+                                <td>
+                                    {!! Form::checkbox('',null,false,['class'=>'form-control full-time-range-picker']) !!}
+                                </td>
+                                <td>{!! Form::text('reset_time_range_limits[from_time][]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
+                                <td>{!! Form::text('reset_time_range_limits[to_time][]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
+                                <td>{!! Form::text('reset_time_range_limits[max_covers_limit][]',null,['size'=>'2','class'=>'form-control']) !!}</td>
                                 <td>
                                     <a class="btn btn-danger delete-block-time-range">Remove</a>
                                 </td>
