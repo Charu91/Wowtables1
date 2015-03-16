@@ -128,9 +128,17 @@
                                 <div class="col-lg-10">
                                     <div class="form-group">
                                         <label for="publish_date" class="col-sm-4 control-label">Dates </label>
-                                        <div class="col-sm-8">
-                                            {!! Form::text('block_dates[]',null,['class'=>'form-control block-date-picker']) !!}
-                                        </div>
+                                            @if( Input::old('block_dates') )
+                                                @foreach(Input::old('block_dates') as $key => $block_date)
+                                                <div class="col-sm-8">
+                                                    {!! Form::text('block_dates['.$key.']',$block_date,['class'=>'form-control block-date-picker']) !!}
+                                                </div>
+                                                @endforeach
+                                            @else
+                                                <div class="col-sm-8">
+                                                    {!! Form::text('block_dates[]',null,['class'=>'form-control block-date-picker']) !!}
+                                                </div>
+                                            @endif
                                     </div>
                                 </div>
                             </div>
@@ -154,22 +162,53 @@
                                 <th>Action</th>
                             </tr>
                             <tbody>
-                            <tr>
-                                <td>{!! Form::select('reset_time_range_limits[limit_by][]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control time-range-limit-by']) !!}</td>
-                                <td>
-                                    {!! Form::select('reset_time_range_limits[day][]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
-                                    {!! Form::text('reset_time_range_limits[date][]',null,['class'=>'form-control block-date-picker block-time-range-date-picker']) !!}
-                                </td>
-                                <td>
-                                    {!! Form::checkbox('',null,false,['class'=>'form-control full-time-range-picker']) !!}
-                                </td>
-                                <td>{!! Form::text('reset_time_range_limits[from_time][]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
-                                <td>{!! Form::text('reset_time_range_limits[to_time][]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
-                                <td>{!! Form::text('reset_time_range_limits[max_covers_limit][]',null,['size'=>'2','class'=>'form-control']) !!}</td>
-                                <td>
-                                    <a class="btn btn-danger delete-block-time-range">Remove</a>
-                                </td>
-                            </tr>
+                                @if( Input::old('reset_time_range_limits') )
+                                    {{--*/ /*$limits=[];$block_time_range=[];*/ /*--}}
+
+                                    @foreach(Input::old('reset_time_range_limits') as $key => $time_range)
+                                        {{--*/
+                                                foreach( Input::old('reset_time_range_limits.'.$key) as $subkey => $value){
+                                                        $limits[$subkey][$key] = $value;
+                                                }
+                                        /*--}}
+                                    @endforeach
+                                    {{--*/ dd($limits); /*--}}
+                                    @foreach($block_time_range as $key => $block_time)
+                                    <tr>
+                                        <td>{!! Form::select('reset_time_range_limits[limit_by]['.$key.']',['Day'=>'Day','Date'=>'Date'],null,['class'=>'form-control time-range-limit-by']) !!}</td>
+                                        <td>
+                                            {!! Form::select('reset_time_range_limits[day]['.$key.']',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],null,['class'=>'form-control block-time-range-day-picker']) !!}
+                                            {!! Form::text('reset_time_range_limits[date]['.$key.']',null,['class'=>'form-control block-date-picker block-time-range-date-picker']) !!}
+                                        </td>
+                                        <td>
+                                            {!! Form::checkbox('',null,false,['class'=>'form-control full-time-range-picker']) !!}
+                                        </td>
+                                        <td>{!! Form::text('reset_time_range_limits[from_time]['.$key.']',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
+                                        <td>{!! Form::text('reset_time_range_limits[to_time]['.$key.']',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
+                                        <td>{!! Form::text('reset_time_range_limits[max_covers_limit]['.$key.']',null,['size'=>'2','class'=>'form-control']) !!}</td>
+                                        <td>
+                                            <a class="btn btn-danger delete-block-time-range">Remove</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td>{!! Form::select('reset_time_range_limits[limit_by][]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control time-range-limit-by']) !!}</td>
+                                        <td>
+                                            {!! Form::select('reset_time_range_limits[day][]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
+                                            {!! Form::text('reset_time_range_limits[date][]',null,['class'=>'form-control block-date-picker block-time-range-date-picker']) !!}
+                                        </td>
+                                        <td>
+                                            {!! Form::checkbox('',null,false,['class'=>'form-control full-time-range-picker']) !!}
+                                        </td>
+                                        <td>{!! Form::text('reset_time_range_limits[from_time][]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
+                                        <td>{!! Form::text('reset_time_range_limits[to_time][]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
+                                        <td>{!! Form::text('reset_time_range_limits[max_covers_limit][]',null,['size'=>'2','class'=>'form-control']) !!}</td>
+                                        <td>
+                                            <a class="btn btn-danger delete-block-time-range">Remove</a>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>

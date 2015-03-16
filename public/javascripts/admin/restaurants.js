@@ -317,7 +317,7 @@
         });
 
         $('body').delegate('.full-time-range-picker','change',function(){
-            
+
             $(this).findNext('.block-from-time-picker').val('');
             $(this).findNext('.block-to-time-picker').val('');
             $(this).findNext('.block-from-time-picker').timepicker({
