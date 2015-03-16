@@ -152,6 +152,17 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/promotions') !== false)? 'nav-expanded nav-active':''}}">
+                        <a>
+                            <i class="fa fa-gears" aria-hidden="true"></i>
+                            <span>Promotions</span>
+                        </a>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admin/promotions/flags')? 'nav-active':'' }}">
+                                <a href="/admin/promotions/flags">Flags</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
 
