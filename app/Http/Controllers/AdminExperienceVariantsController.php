@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Requests\Admin\CreateExperienceVariantRequest;
 
 /**
  * Class AdminExperiencesController
@@ -28,7 +29,7 @@ class AdminExperienceVariantsController extends Controller {
     {
         $variants = [];
 
-        return view('admin.experiences.variants.index',['variants'=>$variants]);
+        return view('admin.experiences.variants.index', ['variants' => $variants] );
     }
 
     /**
@@ -44,7 +45,7 @@ class AdminExperienceVariantsController extends Controller {
      * Store a newly created resource in storage.
      *
      */
-    public function store()
+    public function store(CreateExperienceVariantRequest $createExperienceVariantRequest)
     {
         dd($this->request->all());
     }

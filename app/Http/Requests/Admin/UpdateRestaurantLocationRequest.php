@@ -2,6 +2,7 @@
 
 use WowTables\Http\Requests\Request;
 use WowTables\Http\Models\User;
+use DB;
 
 class UpdateRestaurantLocationRequest extends Request {
 
@@ -50,12 +51,11 @@ class UpdateRestaurantLocationRequest extends Request {
         $rules['status'] = 'required|in:Active,Inactive';
         $rules['media.listing_image'] = 'required|exists:media,id';
         $rules['media.gallery_images'] = 'required|galleryarray';
-        $rules['address.latitude'] = 'required|numeric';
-        $rules['address.longitude'] = 'required|numeric';
 
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
+            $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
             $rules['attributes.terms_and_conditions'] = 'required';
@@ -66,60 +66,66 @@ class UpdateRestaurantLocationRequest extends Request {
             $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['attributes.min_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_people_per_reservation'] = 'required|integer';
-            $rules['attributes.max_reservations_per_time_slot'] = 'required|integer';
             $rules['attributes.max_reservations_per_day'] = 'required|integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.commission_per_cover'] = 'required|numeric';
             $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
-            $rules['attributes.cuisines'] = 'required|cuisinesarray';
-            $rules['attributes.cuisines'] = 'required|cuisinesarray';
-            $rules['attributes.cuisines'] = 'required|cuisinesarray';
+            $rules['attributes.cuisines'] = 'required|vendorcuisinesarray';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
-            $rules['curators'] = 'curatorarray';
-            $rules['tags'] = 'tagarray';
-            $rules['schedules'] = 'required|schedulearray';
+            $rules['address.latitude'] = 'required|numeric';
+            $rules['address.longitude'] = 'required|numeric';
+
+            $rules['schedules'] = 'required|array';
+
         }else{
+            $rules['pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';
-            $rules['attributes.max_reservations_per_time_slot'] = 'integer';
             $rules['attributes.max_people_per_day'] = 'integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'integer';
             $rules['attributes.commission_per_cover'] = 'numeric';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
+            $rules['attributes.cuisines'] = 'vendorcuisinesarray';
             $rules['address.latitude'] = 'numeric';
             $rules['address.longitude'] = 'numeric';
-            $rules['curators'] = 'curatorarray';
-            $rules['tags'] = 'tagarray';
-            $rules['media.listing_image'] = 'exists:media,id';
-            $rules['media.gallery_images'] = 'galleryarray';
-            $rules['schedules'] = 'schedulearray';
-            $rules['attributes.cuisines'] = 'cuisinesarray';
+
+            $rules['schedules'] = 'array';
+
+
         }
 
-        $rules['off_peak_schedules'] = 'schedulearray';
-        $rules['attributes.off_peak_hour_discount'] = 'required_with:off_peak_schedules|numeric';
-        $rules['attributes.off_peak_hour_discount_min_covers'] = 'required_with:off_peak_schedules|integer';
+        if($this->has('schedules') && is_array($this->get('schedules'))){
+            $schedule_ids = DB::table('schedules')->lists('id');
+            foreach($this->get('schedules') as $key => $schedule){
+                $rules['schedules.'.$key.'.id'] = 'required_with:schedules, in'.implode(',',$schedule_ids);
+                $rules['schedules.'.$key.'.off_peak'] ='required_with:schedules|boolean';
+                $rules['schedules.'.$key.'.max_reservations'] = 'required_with:schedules|integer';
+            }
+        }
+
+        $rules['attributes.off_peak_hour_discount_min_covers'] = 'integer';
 
         $rules['block_dates'] = 'array';
 
         if($this->has('block_dates') && is_array($this->get('block_dates'))){
             foreach($this->get('block_dates') as $key => $block_date){
-                $rules['block_dates'.$key] = 'date_format:Y-m-d';
+                $rules['block_dates.'.$key] = 'date_format:Y-m-d';
             }
         }
+
         $rules['reset_time_range_limits'] = 'array';
 
         if($this->has('reset_time_range_limits') && is_array($this->get('reset_time_range_limits'))){
             foreach($this->get('reset_time_range_limits') as $key => $range){
                 $rules['reset_time_range_limits.'.$key.'.from_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
                 $rules['reset_time_range_limits.'.$key.'.to_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
-                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day.Date';
+                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day,Date';
                 $rules['reset_time_range_limits.'.$key.'.max_covers_limit'] = 'required_with:reset_time_range_limits|integer';
                 if(isset($range['limit_by'])){
                     if($range['limit_by'] === 'Day'){
@@ -140,6 +146,9 @@ class UpdateRestaurantLocationRequest extends Request {
 
             }
         }
+
+        $rules['curators'] = 'curatorarray';
+        $rules['tags'] = 'tagarray';
 
         return $rules;
     }

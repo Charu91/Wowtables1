@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Requests\Admin\CreateComplexExperienceRequest;
 
 /**
  * Class AdminExperiencesController
@@ -45,7 +46,7 @@ class AdminComplexExperiencesController extends Controller {
      * Store a newly created resource in storage.
      *
      */
-    public function store()
+    public function store(CreateComplexExperienceRequest $createComplexExperienceRequest)
     {
         dd($this->request->all());
     }

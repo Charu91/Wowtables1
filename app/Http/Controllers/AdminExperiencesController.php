@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
-use WowTables\Http\Requests\CreateExperienceRequest;
+use WowTables\Http\Requests\Admin\CreateSimpleExperienceRequest;
 
 /**
  * Class AdminExperiencesController
@@ -36,7 +36,7 @@ class AdminExperiencesController extends Controller {
 	{
 		$experiences = $this->repository->getAll();
 
-		return view('admin.experiences.index',['experiences'=>$experiences]);
+		return view('admin.experiences.index', ['experiences' => $experiences]);
 	}
 
 	/**
@@ -57,13 +57,15 @@ class AdminExperiencesController extends Controller {
 	 * @param CreateExperienceRequest $request
 	 * @return Response
 	 */
-	public function store(CreateExperienceRequest $request)
+	public function store(CreateSimpleExperienceRequest $request)
 	{
+        /*
 		$this->dispatchFrom('WowTables\Commands\Admin\CreateExperienceCommand', $request);
 
 		flash()->success('Restaurant Location has been successfully created!!!');
 
 		return redirect()->route('AdminExperiences');
+        */
 	}
 
 	/**

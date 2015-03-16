@@ -50,6 +50,19 @@ class ValidatorServiceProvider extends ServiceProvider {
             }
         });
 
+        $this->app['validator']->extend('flagarray', function ($attribute, $value, $parameters)
+        {
+            if(!is_array($value) || !count($value)){
+                return false;
+            }else{
+                if(count($value) === DB::table('flags')->whereIn('id', $value)->count()){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+
         $this->app['validator']->extend('galleryarray', function ($attribute, $value, $parameters)
         {
             if(!is_array($value) || !count($value)){
@@ -89,7 +102,7 @@ class ValidatorServiceProvider extends ServiceProvider {
             return true;
         });
 
-        $this->app['validator']->extend('cuisinesarray', function ($attribute, $value, $parameters)
+        $this->app['validator']->extend('vendorcuisinesarray', function ($attribute, $value, $parameters)
         {
             if(!is_array($value) || !count($value)){
                 return false;
@@ -99,6 +112,25 @@ class ValidatorServiceProvider extends ServiceProvider {
                                         ->whereIn('vao.id', $value)
                                         ->where('va.alias', 'cuisines')
                                         ->count();
+
+                if(count($value) === $cusinesIdCount){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+
+        $this->app['validator']->extend('productcuisinesarray', function ($attribute, $value, $parameters)
+        {
+            if(!is_array($value) || !count($value)){
+                return false;
+            }else{
+                $cusinesIdCount = DB::table('product_attributes as pa')
+                    ->join('product_attributes_select_options as paso', 'paso.product_attribute_id', '=', 'pa.id')
+                    ->whereIn('paso.id', $value)
+                    ->where('pa.alias', 'cuisines')
+                    ->count();
 
                 if(count($value) === $cusinesIdCount){
                     return true;

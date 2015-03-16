@@ -105,48 +105,6 @@ return [
             'value' => 'multi'
         ],
 
-        'min_people_per_reservation' => [
-            'name' => 'Minimum People Per Reservation',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'max_people_per_reservation' => [
-            'name' => 'Maximum People Per Reservation',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'min_people_increments_per_reservation' => [
-            'name' => 'Minimum People Increments Per Reservation',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'max_reservations_per_time_slot' => [
-            'name' => 'Maximum People Per Time Slot',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'max_people_per_day' => [
-            'name' => 'Minimum People Per Day',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'minimum_reservation_time_buffer' => [
-            'name' => 'Minimum Reservation Time Buffer',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
-        'maximum_reservation_time_buffer' => [
-            'name' => 'Maximum Reservation Time Buffer',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
         'allow_gift_card_redemptions' => [
             'name' => 'Allow Gift Card Redemptions',
             'type' => 'boolean',
@@ -168,12 +126,6 @@ return [
 
         'prepayment_allowed' => [
             'name' => 'Prepayment Allowed',
-            'type' => 'boolean',
-            'value' => 'single'
-        ],
-
-        'prepayment_mandatory' => [
-            'name' => 'Prepayment Mandatory',
             'type' => 'boolean',
             'value' => 'single'
         ]
