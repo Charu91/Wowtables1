@@ -298,19 +298,6 @@ class Experience extends Product{
                         }
                     }
                 }
-
-                if(!empty($data['media']['gallery'])){
-                    //$mediaFiles = DB::table('media')->whereIn('id', $data['media']['gallery'])->lists('filename', 'id');
-
-                    if($mediaFiles){
-                        $gallerysize =  $this->config->get('media.sizes.gallery');
-
-                        foreach($media_files as $media){
-
-                        }
-                    }
-
-                }
             }
 
             if(!empty($data['tags'])){
@@ -388,6 +375,106 @@ class Experience extends Product{
     }
 
     public function delete($id){
+
+    }
+
+    protected function saveAttributes($productId, $attributes){
+        $attributeAliases = array_keys($data['attributes']);
+
+        // Fetch the Experience Attributes Id
+        $attributeIdMapResults = DB::table('product_attributes AS pa')
+            ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
+            ->where('ptam.product_type_id', $productTypeId)
+            ->whereIn('pa.alias', $attributeAliases)
+            ->select('pa.id', 'pa.alias')
+            ->get();
+
+        if($attributeIdMapResults) {
+            $attributeIdMap = [];
+
+            foreach ($attributeIdMapResults as $result) {
+                $attributeIdMap[$result->alias] = $result->id;
+            }
+        }
+
+        // Insert the Experiences Attributes
+        if(!empty($data['attributes']) && count($attributeIdMap)){
+            if(count($attributes)){
+                $attributesMap = $this->config->get('experience_attributes.attributesMap');
+                $typeTableAliasMap = $this->config->get('experience_attributes.typeTableAliasMap');
+                $attribute_inserts = [];
+
+                foreach($data['attributes'] as $attribute => $value){
+                    if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
+                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
+
+                    if($attributesMap[$attribute]['type'] === 'single-select'){
+                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                            'product_id' => $experienceId,
+                            'product_attributes_select_option_id' => $value
+                        ];
+                    }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
+                        if($attributesMap[$attribute]['type'] === 'multi-select'){
+                            foreach ($value as $singleValue) {
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $experienceId,
+                                    'product_attributes_select_option_id' => $singleValue
+                                ];
+                            }
+                        }else{
+                            foreach ($value as $singleValue) {
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $experienceId,
+                                    'product_attribute_id' => $attributeIdMap[$attribute],
+                                    'attribute_value' => $singleValue
+                                ];
+                            }
+                        }
+                    }else{
+                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                            'product_id' => $experienceId,
+                            'product_attribute_id' => $attributeIdMap[$attribute],
+                            'attribute_value' => $value
+                        ];
+                    }
+                }
+
+                $attributeInserts = true;
+
+                foreach($attribute_inserts as $table => $insertData){
+                    $productAttrInsert = DB::table($table)->insert($insertData);
+
+                    if(!$productAttrInsert){
+                        $attributeInserts = false;
+                        break;
+                    }
+                }
+
+                if(!$attributeInserts){
+                    DB::rollBack();
+                    return [
+                        'status' => 'failure',
+                        'action' => 'Inserting the product attributes into the DB',
+                        'message' => 'The product could not be created. Please contact the sys admin'
+                    ];
+                }
+            }
+        }
+    }
+
+    protected function saveMedia($productId, $media){
+
+    }
+
+    protected function savePricing($product_id, $pricing){
+
+    }
+
+    protected function mapTags($product_id, $tags){
+
+    }
+
+    protected function mapCurators($product_id, $curators){
 
     }
 }

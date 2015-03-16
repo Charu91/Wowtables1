@@ -73,12 +73,12 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                     'menus' => [
                         '5-course-pan-asian-affair-veg' => [
                             'title' => '5 COURSE EXPERIENCE',
-                            'sub_title' => 'This experience is paired with a glass of house wine or a cocktail',
+                            'description' => 'This experience is paired with a glass of house wine or a cocktail',
 
                             'menu' => [
                                 [
-                                    'heading' => 'APPETIZER',
-                                    'choice' => 'choose any one',
+                                    'title' => 'APPETIZER',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -102,8 +102,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'SOUP',
-                                    'choice' => 'choose any one',
+                                    'title' => 'SOUP',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -121,8 +121,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'MAIN COURSE',
-                                    'choice' => 'choose any one',
+                                    'title' => 'MAIN COURSE',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -140,8 +140,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'STAPLE',
-                                    'choice' => 'choose any one',
+                                    'title' => 'STAPLE',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -161,12 +161,12 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                         ],
                         '5-course-pan-asian-affair-non-veg' => [
                             'title' => '5 COURSE EXPERIENCE',
-                            'sub_title' => 'This experience is paired with a glass of house wine or a cocktail',
+                            'description' => 'This experience is paired with a glass of house wine or a cocktail',
 
                             'menu' => [
                                 [
-                                    'heading' => 'APPETIZER',
-                                    'choice' => 'choose any one',
+                                    'title' => 'APPETIZER',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -190,8 +190,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'SOUP',
-                                    'choice' => 'choose any one',
+                                    'title' => 'SOUP',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -209,8 +209,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'MAIN COURSE',
-                                    'choice' => 'choose any one',
+                                    'title' => 'MAIN COURSE',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -228,8 +228,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                 ],
 
                                 [
-                                    'heading' => 'STAPLE',
-                                    'choice' => 'choose any one',
+                                    'title' => 'STAPLE',
+                                    'description' => 'choose any one',
 
                                     'items' => [
                                         [
@@ -275,10 +275,10 @@ Please Add Dessert to your 5 course menu and make sure that you do not leave uns
 
                             'menu' => [
                                 'title' => '5 COURSE EXPERIENCE',
-                                'sub_title' => 'This experience is paired with a glass of house wine or a cocktail',
+                                'description' => 'This experience is paired with a glass of house wine or a cocktail',
 
                                 'menu' => [
-                                    'heading' => 'Desserts',
+                                    'title' => 'Desserts',
                                     'description' => 'choose any one',
 
                                     'items' => [
@@ -383,12 +383,12 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
 
                     'menu' => [
                         'title' => '5 COURSE EXPERIENCE',
-                        'sub_title' => 'This experience is paired with a glass of house wine or a cocktail',
+                        'description' => 'This experience is paired with a glass of house wine or a cocktail',
 
                         'menu' => [
                             [
-                                'heading' => 'APPETIZER',
-                                'choice' => 'choose any one',
+                                'title' => 'APPETIZER',
+                                'description' => 'choose any one',
 
                                 'items' => [
                                     [
@@ -412,8 +412,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                             ],
 
                             [
-                                'heading' => 'SOUP',
-                                'choice' => 'choose any one',
+                                'title' => 'SOUP',
+                                'description' => 'choose any one',
 
                                 'items' => [
                                     [
@@ -431,12 +431,12 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                             ],
 
                             [
-                                'heading' => 'MAIN COURSE',
-                                'choice' => 'choose any one',
+                                'title' => 'MAIN COURSE',
+                                'description' => 'choose any one',
 
-                                'sub-menus' => [
+                                'submenus' => [
                                     [
-                                        'heading' => 'Pizzas',
+                                        'title' => 'Pizzas',
                                         'items' => [
                                             [
                                                 'title' => 'Shanghai Clay Pot',
@@ -453,7 +453,7 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     ],
 
                                     [
-                                        'heading' => 'Pastas',
+                                        'title' => 'Pastas',
                                         'items' => [
                                             [
                                                 'title' => 'Shanghai Clay Pot',
@@ -470,7 +470,7 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                                     ],
 
                                     [
-                                        'heading' => 'Sandwiches',
+                                        'title' => 'Sandwiches',
                                         'description' => 'Best Sandwiches in town',
                                         'items' => [
                                             [
@@ -491,8 +491,8 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                             ],
 
                             [
-                                'heading' => 'STAPLE',
-                                'choice' => 'choose any one',
+                                'title' => 'STAPLE',
+                                'description' => 'choose any one',
 
                                 'items' => [
                                     [

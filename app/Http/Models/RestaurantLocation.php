@@ -42,6 +42,10 @@ class RestaurantLocation extends VendorLocation{
             'status' => $data['status']
         ];
 
+        if(!empty($data['pricing_level'])){
+            $vendorLocationInsertData['pricing_level'] = $data['pricing_level'];
+        }
+
         $restaurantLocationId = DB::table('vendor_locations')->insertGetId($vendorLocationInsertData);
 
         if($restaurantLocationId){
@@ -64,12 +68,7 @@ class RestaurantLocation extends VendorLocation{
             }
 
             if(!empty($data['schedules'])){
-                if(isset($data['off_peak_schedules'])){
-                    $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules'], $data['off_peak_schedules']);
-                }else{
-                    $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules']);
-                }
-
+                $schedulesSaved = $this->saveSchedules($restaurantLocationId ,$data['schedules']);
 
                 if($schedulesSaved['status'] !== 'success'){
                     $schedulesSaved['message'] = 'Could not create the Restaurant Location Schedules. Contact the system admin';
@@ -648,15 +647,16 @@ class RestaurantLocation extends VendorLocation{
         }
     }
 
-    protected function saveSchedules($vendor_location_id, $schedules, $off_peak_schedules = null)
+    protected function saveSchedules($vendor_location_id, $schedules)
     {
         $schedules_insert_map = [];
 
         foreach($schedules as $schedule){
             $schedules_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
-                'schedule_id' => $schedule,
-                'off_peak_schedule' => (is_array($off_peak_schedules) && in_array($schedule, $off_peak_schedules)) ? 1 : 0
+                'schedule_id' => $schedule['id'],
+                'off_peak_schedule' => $schedule['off_peak'],
+                'max_reservations' => $schedule['max_reservations']
             ];
         }
 
@@ -706,20 +706,22 @@ class RestaurantLocation extends VendorLocation{
         foreach($time_range_limits as $time_range_limit){
             if($time_range_limit['limit_by'] === 'Date'){
                 if(strtotime($time_range_limit['date']) > strtotime('midnight')){
-                    $time_range_limit_insert_map = [
+                    $time_range_limit_insert_map[] = [
                         'vendor_location_id' => $vendor_location_id,
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
                         'max_covers_limit' => $time_range_limit['max_covers_limit'],
-                        'date' => $time_range_limit['date']
+                        'date' => $time_range_limit['date'],
+                        'day' => null
                     ];
                 }
             }else{
-                $time_range_limit_insert_map = [
+                $time_range_limit_insert_map[] = [
                     'vendor_location_id' => $vendor_location_id,
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
                     'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                    'date' => null,
                     'day' => $time_range_limit['day']
                 ];
             }

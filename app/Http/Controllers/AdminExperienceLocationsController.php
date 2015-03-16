@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Requests\Admin\CreateExperienceLocationRequest;
 
 /**
  * Class AdminExperiencesController
@@ -44,7 +45,7 @@ class AdminExperienceLocationsController extends Controller {
      * Store a newly created resource in storage.
      *
      */
-    public function store()
+    public function store(CreateExperienceLocationRequest $createExperienceLocationRequest)
     {
         dd($this->request->all());
     }

@@ -16,6 +16,7 @@ elixir(function(mix) {
         .styles([
             "vendor/bootstrap/css/bootstrap.css",
             "vendor/magnific-popup/magnific-popup.css",
+            "vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css",
             "vendor/bootstrap-datepicker/css/datepicker3.css",
             "vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css",
             "vendor/select2/select2.css",
@@ -55,6 +56,7 @@ elixir(function(mix) {
             "vendor/bootstrap-multiselect/bootstrap-multiselect.js",
             "vendor/jquery-validation/jquery.validate.min.js",
             "vendor/bootstrap-datepicker/js/bootstrap-datepicker.js",
+            "vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js",
             "vendor/jquery-maskedinput/jquery.maskedinput.js",
             "vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js",
             "vendor/pnotify/pnotify.custom.js",
@@ -94,7 +96,8 @@ elixir(function(mix) {
             "javascripts/admin/schedules.js",
             "javascripts/admin/events.js",
             "javascripts/admin/media_modal.js",
-            "javascripts/admin/maps.js"
+            "javascripts/admin/maps.js",
+            "javascripts/admin/promotions.js"
         ], "public/js", "public")
 
         .version(["css/all.css","js/all.js"])
@@ -102,6 +105,7 @@ elixir(function(mix) {
         .copy("public/vendor/jquery-datatables/media/images","public/build/images/")
         .copy("public/vendor/select2","public/build/css/")
         .copy("public/vendor/dropzone/images","public/build/images/")
+        .copy("public/vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/","public/build/img/bootstrap-colorpicker/")
 
     ;
 });

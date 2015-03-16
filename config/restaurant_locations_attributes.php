@@ -123,12 +123,6 @@ return [
             'value' => 'single'
         ],
 
-        'max_reservations_per_time_slot' => [
-            'name' => 'Maximum People Per Time Slot',
-            'type' => 'integer',
-            'value' => 'single'
-        ],
-
         'max_people_per_day' => [
             'name' => 'Maximum People Per Day',
             'type' => 'integer',
