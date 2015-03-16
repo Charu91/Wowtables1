@@ -39,6 +39,13 @@
             autoclose: true
         });
 
+        $('.block-time-range-date-picker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
         $('.block-from-time-picker').timepicker({
             showSeconds: true,
             showMeridian: false,
@@ -255,16 +262,18 @@
 
         });
 
-        $('#addNewBlockTimeRangeBtn').on('click',function(){
+        var block_times = $('input[name="reset_time_range_limits[]"]').size() + 1;
 
-            var template =  '<tr><td><select name="reset_time_range_limits[limit_by][]" class="form-control time-range-limit-by"><option selected="selected" value="Day">Day</option><option value="Date">Date</option></select></td>'+
-                            '<td><select name="reset_time_range_limits[day][]" class="form-control block-time-range-day-picker"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select>'+
-                            '<input type="text" name="reset_time_range_limits[date][]" class="form-control block-date-picker block-time-range-date-picker"></td>'+
-                            '<td><input type="checkbox" class="form-control full-time-range-picker" name=""></td>'+
-                            '<td><input size="2" type="text" name="reset_time_range_limits[from_time][]" class="form-control block-from-time-picker"></td>'+
-                            '<td><input size="2" type="text" name="reset_time_range_limits[to_time][]" class="form-control block-to-time-picker"></td>'+
-                            '<td><input size="2" type="text" name="reset_time_range_limits[max_covers_limit][]" class="form-control"></td>'+
-                            '<td><a class="btn btn-danger delete-block-time-range">Remove</a></td></tr>';
+        $('body').delegate('#addNewBlockTimeRangeBtn','click',function(){
+
+            var template =  '<tr><td><select name="reset_time_range_limits['+block_times+'][limit_by]" class="form-control time-range-limit-by"><option selected="selected" value="Day">Day</option><option value="Date">Date</option></select></td>'+
+                '<td><select name="reset_time_range_limits['+block_times+'][day]" class="form-control block-time-range-day-picker"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select>'+
+                '<input type="text" name="reset_time_range_limits['+block_times+'][date]" class="form-control block-time-range-date-picker"></td>'+
+                '<td><input type="checkbox" class="form-control full-time-range-picker" name=""></td>'+
+                '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][from_time]" class="form-control block-from-time-picker"></td>'+
+                '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][to_time]" class="form-control block-to-time-picker"></td>'+
+                '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][max_covers_limit]" class="form-control"></td>'+
+                '<td><a class="btn btn-danger delete-block-time-range">Remove</a></td></tr>';
 
             $('#blockTimeRangeTable tr:last').after(template);
             $('.block-time-range-date-picker:last').hide();
@@ -278,28 +287,26 @@
                 showMeridian: false,
                 defaultTime: false
             });
+
+            block_times++;
         });
 
         $('body').delegate('.delete-block-time-range','click',function(){
 
             $(this).closest('tr').remove();
 
+            block_times--;
         });
 
-        $('body').delegate('.clear-block-time-range','click',function(){
-
-            $(this).closest('tr').remove();
-
-        });
-
-        $('.block-time-range-date-picker').hide();
 
         $('body').delegate('.time-range-limit-by','change',function(){
 
             var limit_by = $(this).val();
             if(limit_by == 'Date')
             {
+                $(this).findNext('.block-time-range-day-picker').prop('disabled', true);
                 $(this).findNext('.block-time-range-day-picker').hide();
+                $(this).findNext('.block-time-range-date-picker').prop('disabled', false);
                 $(this).findNext('.block-time-range-date-picker').show();
                 $(this).findNext('.block-time-range-date-picker').datepicker({
                     format: 'yyyy-mm-dd',
@@ -309,6 +316,8 @@
                 });
             } else {
 
+                $(this).findNext('.block-time-range-day-picker').prop('disabled', false);
+                $(this).findNext('.block-time-range-date-picker').prop('disabled', true);
                 $(this).findNext('.block-time-range-date-picker').hide();
                 $(this).findNext('.block-time-range-day-picker').show();
 
@@ -328,8 +337,8 @@
                 showSeconds: true,
                 showMeridian: false
             });
-            $(this).findNext('.block-from-time-picker').prop('disabled', false);
-            $(this).findNext('.block-to-time-picker').prop('disabled', false);
+            $(this).findNext('.block-from-time-picker').prop('readonly', false);
+            $(this).findNext('.block-to-time-picker').prop('readonly', false);
 
             if($(this).is(':checked')) {
                 $(this).findNext('.block-from-time-picker').val('00:00:00');
@@ -342,11 +351,32 @@
                     showSeconds: true,
                     showMeridian: false
                 });
-                $(this).findNext('.block-from-time-picker').prop('disabled', true);
-                $(this).findNext('.block-to-time-picker').prop('disabled', true);
+                $(this).findNext('.block-from-time-picker').prop('readonly', true);
+                $(this).findNext('.block-to-time-picker').prop('readonly', true);
             }
 
 
+        });
+
+        var contact_times = $('input[name="contacts[]"]').size() + 1;
+
+        $('body').delegate('#addNewContactsBtn','click',function(){
+
+            var addContactTemplate =  '<tr><td><input type="text" name="contacts['+contact_times+'][name]" class="form-control restaurant-contact-name"></td>'+
+                '<td><input type="text" name="contacts['+contact_times+'][designation]" class="form-control restaurant-contact-designation"></td>'+
+                '<td><input type="text" name="contacts['+contact_times+'][phone_number]" class="form-control restaurant-contact-name"></td>'+
+                '<td><a class="btn btn-danger delete-restaurant-contact">Remove</a></td></tr>';
+
+            $('#restaurantContactsTable tr:last').after(addContactTemplate);
+
+            contact_times++;
+        });
+
+        $('body').delegate('.delete-restaurant-contact','click',function(){
+
+            $(this).closest('tr').remove();
+
+            contact_times--;
         });
 
     });

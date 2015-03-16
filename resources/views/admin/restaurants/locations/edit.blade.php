@@ -68,7 +68,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Restaurant Info <span class="required">*</span></label>
+                    <label for="attributes[descriptive_title]" class="col-sm-3 control-label">Descriptive Title <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[short_description]',$restaurant['attributes']['short_description'],['rows'=>'5','class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Location Info <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::textarea('attributes[restaurant_info]',$restaurant['attributes']['restaurant_info'],['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
                     </div>
@@ -276,14 +282,6 @@
                         <div class="checkbox-custom checkbox-primary">
                             <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1">
                             <label  for="a_la_carte">Allow Alacarte Reservations <span class="required">*</span></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="attributes[allow_gift_card_redemptions]" id="attributes[allow_gift_card_redemptions]" value="1" @if($restaurant['attributes']['allow_gift_card_redemptions'] == true) checked="checked" @else @endif>
-                            <label  for="attributes[allow_gift_card_redemptions]">Allow Gift Card Redemptions <span class="required">*</span></label>
                         </div>
                     </div>
                 </div>

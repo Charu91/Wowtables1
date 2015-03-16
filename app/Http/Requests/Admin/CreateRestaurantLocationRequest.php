@@ -69,7 +69,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.commission_per_cover'] = 'required|numeric';
-            $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
+            $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.cuisines'] = 'required|cuisinesarray';
             $rules['address.address'] = 'required';
@@ -115,7 +115,7 @@ class CreateRestaurantLocationRequest extends Request {
             foreach($this->get('reset_time_range_limits') as $key => $range){
                 $rules['reset_time_range_limits.'.$key.'.from_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
                 $rules['reset_time_range_limits.'.$key.'.to_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
-                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day.Date';
+                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day,Date';
                 $rules['reset_time_range_limits.'.$key.'.max_covers_limit'] = 'required_with:reset_time_range_limits|integer';
                 if(isset($range['limit_by'])){
                     if($range['limit_by'] === 'Day'){
