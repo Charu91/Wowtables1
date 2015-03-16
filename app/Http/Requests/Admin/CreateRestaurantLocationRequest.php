@@ -159,7 +159,6 @@ class CreateRestaurantLocationRequest extends Request {
      */
     public function response(array $errors)
     {
-        dd($errors);
         if ($this->ajax())
         {
             return response()->json($errors, 422);

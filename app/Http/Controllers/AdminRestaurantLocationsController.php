@@ -189,27 +189,17 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function formatSchedules($fetchSchedules)
 	{
-		$breakfast = [];
-		$lunch = [];
-		$dinner = [];
+		$schedules = [];
 
 		foreach ($fetchSchedules['schedules'] as $schedule) {
-			if ($schedule['slot_type'] == 'Breakfast') {
-				$breakfast [] = $schedule;
-			}
-			if ($schedule['slot_type'] == 'Lunch') {
-				$lunch [] = $schedule;
-			}
-			if ($schedule['slot_type'] == 'Dinner') {
-				$dinner [] = $schedule;
-			}
+
+			$schedules [] = $schedule;
 		}
 
 		$data = [
-			'breakfast' => $breakfast,
-			'lunch' => $lunch,
-			'dinner' => $dinner
+			'schedules' => $schedules,
 		];
+
 		return $data;
 	}
 
