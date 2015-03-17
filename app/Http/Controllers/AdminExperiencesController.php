@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Requests\Admin\CreateSimpleExperienceRequest;
+use WowTables\Http\Requests\Admin\UpdateSimpleExperienceRequest;
+use WowTables\Http\Requests\Admin\DeleteSimpleExperienceRequest;
+use WowTables\Http\Models\SimpleExperience;
 
 /**
  * Class AdminExperiencesController
@@ -13,17 +16,21 @@ use WowTables\Http\Requests\Admin\CreateSimpleExperienceRequest;
 
 class AdminExperiencesController extends Controller {
 
+
+    protected $simpleExperience;
+
 	/**
 	 * The constructor Method
 	 *
 	 * @param Request $request
 	 * @param ExperiencesRepository $repository
 	 */
-	function __construct(Request $request,ExperiencesRepository $repository)
+	function __construct(Request $request,ExperiencesRepository $repository, SimpleExperience $simpleExperience)
 	{
         $this->middleware('admin.auth');
         $this->request = $request;
 		$this->repository = $repository;
+        $this->simpleExperience = $simpleExperience;
 	}
 
 	/**
@@ -59,13 +66,22 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function store(CreateSimpleExperienceRequest $request)
 	{
-        /*
-		$this->dispatchFrom('WowTables\Commands\Admin\CreateExperienceCommand', $request);
+        $input = $this->request->all();
 
-		flash()->success('Restaurant Location has been successfully created!!!');
+        $simpleExperienceCreate = $this->simpleExperience->create($input);
 
-		return redirect()->route('AdminExperiences');
-        */
+        if($simpleExperienceCreate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The Simple Experieince has been successfully created.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $simpleExperienceCreate['action'],
+                'message' => $simpleExperienceCreate['message']
+            ], 400);
+        }
 	}
 
 	/**
@@ -99,9 +115,24 @@ class AdminExperiencesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, UpdateSimpleExperienceRequest $updateSimpleExperienceRequest)
 	{
-		//
+        $input = $this->request->all();
+
+        $simpleExperienceUpdate = $this->simpleExperience->update($id, $input);
+
+        if($simpleExperienceUpdate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The Simple Experieince has been successfully updated.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $simpleExperienceUpdate['action'],
+                'message' => $simpleExperienceUpdate['message']
+            ], 400);
+        }
 	}
 
 	/**
@@ -110,9 +141,22 @@ class AdminExperiencesController extends Controller {
      * @Delete("/", as="AdminExperienceDelete")
 	 * @return Response
 	 */
-	public function destroy()
+	public function destroy($id, DeleteSimpleExperienceRequest $deleteSimpleExperienceRequest)
 	{
-		//
+		$simpleExperienceDelete = $this->simpleExperience->delete($id);
+
+        if($simpleExperienceDelete['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The Simple Experieince has been successfully deleted.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $simpleExperienceDelete['action'],
+                'message' => $simpleExperienceDelete['message']
+            ], 400);
+        }
 	}
 
 }
