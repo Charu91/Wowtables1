@@ -28,11 +28,12 @@ class RestaurantLocationsRepository {
             'attributesText',
             'attributesVarChar',
             'attributesSingleSelect',
-            'attributesMultiSelect'
+            'attributesMultiSelect',
+            'schedules'
         )->findOrFail($id)->wherehas('vendor.vendorType',function($q) {
             $q->where('type','Restaurants');
         })->first();
-
+        //dd(array_flatten($vendorLocationWithAttributes->schedules->toArray()));
         $this->populateVendorAttributes($vendorLocationWithAttributes->attributesBoolean);
         $this->populateVendorAttributes($vendorLocationWithAttributes->attributesInteger);
         $this->populateVendorAttributes($vendorLocationWithAttributes->attributesFloat);

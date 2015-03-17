@@ -35,6 +35,9 @@
                 <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
+                <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
+            </li>
+            <li>
                 <a href="#pricing_details" data-toggle="tab" class="text-center">Pricing</a>
             </li>
             <li>
@@ -49,18 +52,6 @@
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
-                <div class="form-group">
-                    <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="restaurant_locations[]" class="col-sm-3 control-label">Select Restaurant Locations <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('restaurant_locations[]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
-                    </div>
-                </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Experience Name <span class="required">*</span></label>
                     <div class="col-sm-6">
@@ -101,6 +92,9 @@
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 @include('partials.forms.seo_details')
+            </div>
+            <div id="media_tab" class="tab-pane mt-lg">
+                @include('partials.forms.add_media')
             </div>
             <div id="pricing_details" class="tab-pane mt-lg">
                 <div class="form-group">
@@ -267,11 +261,11 @@
             <div class="form-group col-md-4">
                 <label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
                 <div class="radio-custom radio-success radio-inline">
-                    <input type="radio" id="Active" name="status" value="Active">
+                    <input type="radio" id="Publish" name="status" value="Publish">
                     <label for="Publish">Publish</label>
                 </div>
                 <div class="radio-custom radio-danger radio-inline">
-                    <input type="radio" id="Inactive" name="status" value="Inactive" checked="checked">
+                    <input type="radio" id="Draft" name="status" value="Draft" checked="checked">
                     <label for="Draft">Draft</label>
                 </div>
             </div>
