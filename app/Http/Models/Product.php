@@ -337,6 +337,18 @@ Please Add Dessert to your 5 course menu and make sure that you do not leave uns
                             'latitude' => '19.139852',
                             'longitude' => '72.833438'
                         ],
+                    ],
+
+                    'flags' => [
+                        [
+                            'name' => '#loveThyGourmet',
+                            'color' => 'Green'
+                        ],
+
+                        [
+                            'name' => '#ValentineSpecial',
+                            'color' => 'Red'
+                        ],
                     ]
                 ]
             ];
@@ -528,6 +540,18 @@ SKKY – a Pan-Asian Rooftop Resto lounge will entrance you with its open air am
                             'latitude' => '19.139852',
                             'longitude' => '72.833438'
                         ],
+                    ],
+
+                    'flags' => [
+                        [
+                            'name' => '#loveThyGourmet',
+                            'color' => 'Green'
+                        ],
+
+                        [
+                            'name' => '#ValentineSpecial',
+                            'color' => 'Red'
+                        ],
                     ]
                 ]
             ];
@@ -602,6 +626,18 @@ and leave you wondering why.
                                 'post_tax_price' => 1100
                             ]
                         ]
+                    ],
+
+                    'flags' => [
+                        [
+                            'name' => '#loveThyGourmet',
+                            'color' => 'Green'
+                        ],
+
+                        [
+                            'name' => '#ValentineSpecial',
+                            'color' => 'Red'
+                        ],
                     ]
                 ]
             ];
