@@ -4,6 +4,8 @@ use DB;
 use Image;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Cloud;
+use Illuminate\Foundation\Application;
+use WowTables\Http\Models\ExperienceAddons;
 
 class Experience extends Product{
 
@@ -29,9 +31,14 @@ class Experience extends Product{
 
     protected $cloud;
 
-    public function __construct(Config $config, Cloud $cloud){
+    protected $app;
+
+    public function __construct(Config $config, Cloud $cloud, Application $application){
         $this->config = $config;
         $this->cloud = $cloud;
+        $this->app = $application;
+
+        //dd($this->app->make('ExperienceAddons'));
     }
 
     public function create($data){
@@ -140,10 +147,10 @@ class Experience extends Product{
                     'price' => isset($data['price']) ? $data['price'] : null,
                     'tax' => isset($data['tax'])? $data['tax'] : null,
                     'post_tax_price' => isset($data['post_tax_price'])? $data['post_tax_price'] : null,
-                    'commission' => isset($data['commission'])? $data['commission'] : null
+                    'commission' => isset($data['commission'])? $data['commission'] : null,
                 ];
 
-                if(isset($data['post_tax_price'])){
+                if(isset($data['commission_on'])){
                     $pricing_insert_data['commission_on'] = $data['commission_on'];
                 }
 
@@ -243,115 +250,21 @@ class Experience extends Product{
             }
 
             if(!empty($data['media'])){
-                $image_base_url = $this->config->get('media.base_s3_url');
 
-                if(!empty($data['media']['listing'])){
-                    $listing_filename = DB::table('media')->where('id', $data['media']['listing'])->pluck('file');
-                    $listsize =  $this->config->get('media.sizes.listing');
-
-                    if($listing_filename){
-                        $listImage = Image::make($image_base_url.$listing_filename)->fit($listsize['width'], $listsize['height'])->encode();
-
-                        if($listImage){
-                            $fileInfo = new \SplFileInfo($listing_filename);
-                            $fileExtension = $fileInfo->getExtension();
-
-                            $this->cloud->put($listing_filename.'_'.$listsize['width'].'x'.$listsize['height'].'.'.$fileExtension, $listImage);
-
-                            $resizedMediaInsert = DB::table('media_resized')->insert([
-                                'file'      => $listing_filename.'.'.$fileExtension,
-                                'width'     => $listsize['width'],
-                                'height'    => $listsize['height'],
-                                'media_id'  => $data['media']['listing']
-                            ]);
-
-                            if($resizedMediaInsert){
-                                $experienceMediaMapping = DB::table('product_media_map')->insert([
-                                    'product_id' => $experienceId,
-                                    'media_type' => 'listing',
-                                    'media_id' => $data['media']['listing']
-                                ]);
-
-                                if(!$experienceMediaMapping){
-                                    DB::rollBack();
-                                    return [
-                                        'status' => 'failure',
-                                        'action' => 'Inserting the experience listing image into the DB',
-                                        'message' => 'The product could not be created. Please contact the sys admin'
-                                    ];
-                                }
-                            }else{
-                                DB::rollBack();
-                                return [
-                                    'status' => 'failure',
-                                    'action' => 'Inserting the experience listing image into the DB',
-                                    'message' => 'The product could not be created. Please contact the sys admin'
-                                ];
-                            }
-                        }else{
-                            DB::rollBack();
-                            return [
-                                'status' => 'failure',
-                                'action' => 'Inserting the experience listing image into the DB',
-                                'message' => 'The product could not be created. Please contact the sys admin'
-                            ];
-                        }
-                    }
-                }
             }
 
             if(!empty($data['tags'])){
-                $query = 'INSERT IGNORE INTO tags (`name`) VALUES (';
-                $insertValues = [];
 
-                foreach($data['tags'] as $tag){
-                    $insertValues[] = '?';
-                }
-
-                $query .= implode(', ', $insertValues);
-
-                $query .= ')';
-
-                DB::insert($query, $data['tags']);
-
-                $mediaTagIds = DB::table('tags')->whereIn('name', $data['tags'])->lists('id');
-
-                $tagInserts = [];
-
-                foreach($mediaTagIds as $tagID){
-                    $tagInserts[] = ['product_id' => $experienceId, 'tag_id' => $tagID];
-                }
-
-                $tagInsert = DB::table('product_tag_map')->insert($tagInserts);
-
-                if(!$tagInsert){
-                    DB::rollBack();
-                    return [
-                        'status' => 'failure',
-                        'action' => 'Inserting the experience tags into the DB',
-                        'message' => 'The product could not be created. Please contact the sys admin'
-                    ];
-                }
             }
 
             if(!empty($data['curators'])){
-                $curatorInserts = [];
 
-                foreach($data['curators'] as $curator){
-                    $curatorInserts[] = ['product_id' => $experienceId, 'curator_id' => $curator];
-                }
-
-                $curatorInsert = DB::table('product_tag_map')->insert($curatorInserts);
-
-                if(!$curatorInsert){
-                    DB::rollBack();
-                    return [
-                        'status' => 'failure',
-                        'action' => 'Inserting the experience tags into the DB',
-                        'message' => 'The product could not be created. Please contact the sys admin'
-                    ];
-                }
             }
+
+            if(!empty($data['flags'])){
+
+            }
+
         }else{
             DB::rollBack();
             return [
@@ -379,91 +292,160 @@ class Experience extends Product{
     }
 
     protected function saveAttributes($productId, $attributes){
-        $attributeAliases = array_keys($data['attributes']);
 
-        // Fetch the Experience Attributes Id
-        $attributeIdMapResults = DB::table('product_attributes AS pa')
-            ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
-            ->where('ptam.product_type_id', $productTypeId)
-            ->whereIn('pa.alias', $attributeAliases)
-            ->select('pa.id', 'pa.alias')
-            ->get();
-
-        if($attributeIdMapResults) {
-            $attributeIdMap = [];
-
-            foreach ($attributeIdMapResults as $result) {
-                $attributeIdMap[$result->alias] = $result->id;
-            }
-        }
-
-        // Insert the Experiences Attributes
-        if(!empty($data['attributes']) && count($attributeIdMap)){
-            if(count($attributes)){
-                $attributesMap = $this->config->get('experience_attributes.attributesMap');
-                $typeTableAliasMap = $this->config->get('experience_attributes.typeTableAliasMap');
-                $attribute_inserts = [];
-
-                foreach($data['attributes'] as $attribute => $value){
-                    if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
-                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
-
-                    if($attributesMap[$attribute]['type'] === 'single-select'){
-                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                            'product_id' => $experienceId,
-                            'product_attributes_select_option_id' => $value
-                        ];
-                    }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                        if($attributesMap[$attribute]['type'] === 'multi-select'){
-                            foreach ($value as $singleValue) {
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'product_id' => $experienceId,
-                                    'product_attributes_select_option_id' => $singleValue
-                                ];
-                            }
-                        }else{
-                            foreach ($value as $singleValue) {
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'product_id' => $experienceId,
-                                    'product_attribute_id' => $attributeIdMap[$attribute],
-                                    'attribute_value' => $singleValue
-                                ];
-                            }
-                        }
-                    }else{
-                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                            'product_id' => $experienceId,
-                            'product_attribute_id' => $attributeIdMap[$attribute],
-                            'attribute_value' => $value
-                        ];
-                    }
-                }
-
-                $attributeInserts = true;
-
-                foreach($attribute_inserts as $table => $insertData){
-                    $productAttrInsert = DB::table($table)->insert($insertData);
-
-                    if(!$productAttrInsert){
-                        $attributeInserts = false;
-                        break;
-                    }
-                }
-
-                if(!$attributeInserts){
-                    DB::rollBack();
-                    return [
-                        'status' => 'failure',
-                        'action' => 'Inserting the product attributes into the DB',
-                        'message' => 'The product could not be created. Please contact the sys admin'
-                    ];
-                }
-            }
-        }
     }
 
     protected function saveMedia($productId, $media){
+        $mediaSizes = $this->config->get('media.sizes');
+        $uploads_dir = $this->config->get('media.base_path');
+        $media_resized_insert_map = [];
+        $media_insert_map = [];
 
+        if(isset($media['listing_image'])){
+            $listing_image = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select('m.id', 'm.file', 'mr.file as resized_file' , 'mr.height', 'mr.width')
+                ->where('m.id', $media['listing_image'])
+                ->first();
+
+            $resized_image = true;
+            if(!$listing_image->resized_file){
+                $resized_image = false;
+            }else{
+                if($listing_image->width != $mediaSizes['listing']['width']
+                    || $listing_image->height != $mediaSizes['listing']['height']){
+                    $resized_image = false;
+                }
+            }
+
+            if(!$resized_image){
+                $listing_file = $listing_image->file;
+                $fileInfo = new \SplFileInfo($listing_file);
+                $fileExtension = $fileInfo->getExtension();
+                $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
+                $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['listing']['width'].'x'.$mediaSizes['listing']['height'].'.'.$fileExtension;
+
+                $listing_image_upload = $this->cloud->put(
+                    $uploads_dir.$listing_resized_imagename,
+                    Image::make($this->cloud->get($uploads_dir.$listing_file))->fit(
+                        $mediaSizes['listing']['width'],
+                        $mediaSizes['listing']['height']
+                    )->encode()
+                );
+
+                if(!$listing_image_upload){
+                    DB::rollBack();
+                    return [
+                        'status' => 'failure',
+                        'action' => 'Saving the Restaurant Location listing Media into the Cloud'
+                    ];
+                }else{
+                    $media_resized_insert_map[] = [
+                        'media_id' => $listing_image->id,
+                        'file' => $listing_resized_imagename,
+                        'height' => $mediaSizes['listing']['height'],
+                        'width' => $mediaSizes['listing']['width']
+                    ];
+                }
+
+
+                $media_insert_map[] = [
+                    'vendor_location_id' => $productId,
+                    'media_type' => 'listing',
+                    'media_id' => $media['listing_image'],
+                    'order' => 0
+                ];
+            }
+        }
+
+        if(isset($media['gallery_images'])){
+            $galleryfiles = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select(
+                    'm.id',
+                    'm.file',
+                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['gallery']['height'].' && mr.width = '.$mediaSizes['gallery']['width'].', true, false)) as resized_exists'))
+                ->whereIn('m.id', $media['gallery_images'])
+                ->groupBy('m.id')
+                ->get();
+
+            $gallery_cloud_uploads = true;
+
+            foreach($galleryfiles as $image){
+                if(!$image->resized_exists) {
+                    $gallery_file = $image->file;
+                    $fileInfo = new \SplFileInfo($gallery_file);
+                    $fileExtension = $fileInfo->getExtension();
+                    $gallery_filename = $fileInfo->getBasename('.' . $fileExtension);
+                    $gallery_resized_imagename = $gallery_filename.'_'.$mediaSizes['gallery']['width'].'x'.$mediaSizes['gallery']['height'].'.'. $fileExtension;
+
+
+
+                    $listing_image_upload = $this->cloud->put(
+                        $uploads_dir . $gallery_resized_imagename,
+                        Image::make($this->cloud->get($uploads_dir . $gallery_file))->fit(
+                            $mediaSizes['gallery']['width'],
+                            $mediaSizes['gallery']['height']
+                        )->encode()
+                    );
+
+                    if (!$listing_image_upload) {
+                        $gallery_cloud_uploads = false;
+                        break;
+                    } else {
+                        $media_resized_insert_map[] = [
+                            'media_id' => $image->id,
+                            'file' => $gallery_resized_imagename,
+                            'height' => $mediaSizes['gallery']['height'],
+                            'width' => $mediaSizes['gallery']['width']
+                        ];
+                    }
+                }
+
+                $media_insert_map[] = [
+                    'vendor_location_id' => $productId,
+                    'media_type' => 'gallery',
+                    'media_id' => $image->id,
+                    'order' => array_search($image->id, $media['gallery_images'])
+                ];
+            }
+
+            if(!$gallery_cloud_uploads){
+                DB::rollBack();
+                return [
+                    'status' => 'failure',
+                    'action' => 'Saving the Restaurant Location gallery Media into the Cloud'
+                ];
+            }
+        }
+
+        if(count($media_resized_insert_map)){
+            $mediaResizeInsert = DB::table('media_resized')->insert($media_resized_insert_map);
+
+            if(!$mediaResizeInsert){
+                DB::rollBack();
+                return [
+                    'status' => 'failure',
+                    'action' => 'Saving the Restaurant Location listing Media into the DB'
+                ];
+            }
+        }
+
+        if(count($media_insert_map)){
+            $mediaMapInsert = DB::table('product_media_map')->insert($media_insert_map);
+
+            if(!$mediaMapInsert){
+                DB::rollBack();
+                return [
+                    'status' => 'failure',
+                    'action' => 'Saving the Restaurant Location Media into the DB'
+                ];
+            }else{
+                return ['status' => 'success'];
+            }
+        }else{
+            return ['status' => 'success'];
+        }
     }
 
     protected function savePricing($product_id, $pricing){
@@ -475,6 +457,10 @@ class Experience extends Product{
     }
 
     protected function mapCurators($product_id, $curators){
+
+    }
+
+    protected function mapFlags($product_id, $flags){
 
     }
 }

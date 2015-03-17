@@ -56,7 +56,6 @@ class CreateExperienceLocationRequest extends Request {
             $schedule_ids = DB::table('schedules')->lists('id');
             foreach($this->get('schedules') as $key => $schedule){
                 $rules['schedules'.$key.'id'] = 'required_with:schedules, in'.implode(',',$schedule_ids);
-                $rules['schedules'.$key.'off_peak'] ='required_with:schedules|boolean';
                 $rules['schedules'.$key.'max_reservations'] = 'required_with:schedules|integer';
             }
         }

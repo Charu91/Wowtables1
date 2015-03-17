@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <footer class="panel-footer">
-                        <button id="saveLocation" class="btn btn-danger" data-loading-text="Saving..." autocomplete="off">
+                        <button id="saveLocation" data-role="button" class="btn btn-danger" data-loading-text="Saving..." autocomplete="off">
                             Save
                         </button>
                         <button id="resetLocationForm" class="btn btn-success">
