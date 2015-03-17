@@ -4,6 +4,7 @@ use DB;
 use Image;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Cloud;
+use Symfony\Component\DomCrawler\Crawler;
 
 class Experience extends Product{
 
@@ -102,11 +103,20 @@ class Experience extends Product{
                                 }
                             }
                         }else{
-                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                'product_id' => $productId,
-                                'product_attribute_id' => $attributeIdMap[$attribute],
-                                'attribute_value' => $value
-                            ];
+                            if($attribute === 'menu'){
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $productId,
+                                    'product_attribute_id' => $attributeIdMap[$attribute],
+                                    'attribute_value' => $this->parseMenu($value)
+                                ];
+                            }else{
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $productId,
+                                    'product_attribute_id' => $attributeIdMap[$attribute],
+                                    'attribute_value' => $value
+                                ];
+                            }
+
                         }
                     }
                 }
@@ -380,5 +390,153 @@ class Experience extends Product{
                 'action' => 'Inserting the Product Curators into the DB'
             ];
         }
+    }
+
+    protected function parseMenu($menu){
+
+        $crawler = new Crawler($menu);
+
+        $menu = [];
+
+        $menu['title'] = $crawler->filter('h1')->text();
+        if( $crawler->filter('h1 + p > em')->count()){
+            $menu['description'] = $crawler->filter('h1 + p > em')->text();
+        }
+
+        $n = 0; $o = 0; $p = 0;
+        $current_item = '';
+
+        $crawler->filter('h1')->siblings()->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p, &$current_item){
+
+            if($node->nodeName() === 'h2'){
+                if(!isset($menu['menu'])) $menu['menu'] = [];
+                ++$n;
+                $menu['menu'][$n] = [];
+                $menu['menu'][$n]['heading'] = $node->text();
+
+
+                $current_item = 'menu-heading';
+            }
+
+            if($node->nodeName() === 'h3'){
+
+                ++$o;
+                $menu['menu'][$n]['sub-menu'][$o] = [];
+                $menu['menu'][$n]['sub-menu'][$o]['heading'] = $node->text();
+
+                $current_item = 'submenu-heading';
+            }
+
+            if($node->nodeName() === 'h4'){
+                ++$p;
+
+                if($current_item === 'menu-heading' || $current_item === 'menu-heading-item'){
+                    if(!isset($menu['menu'][$n]['items'])) $menu['menu'][$n]['items'] = [];
+                    if(!isset($menu['menu'][$n]['items'][$p])) $menu['menu'][$n]['items'][$p] = [];
+                    $menu['menu'][$n]['items'][$p]['title'] = $node->text();
+                    $current_item = 'menu-heading-item';
+                }else if($current_item === 'submenu-heading' || $current_item === 'submenu-heading-item') {
+                    if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'])) $menu['menu'][$n]['sub-menu'][$o]['items'] = [];
+                    if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'][$p])) $menu['menu'][$n]['sub-menu'][$o]['items'][$p] = [];
+                    $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['title'] = $node->text();
+                    $current_item = 'submenu-heading-item';
+                }
+
+
+            }
+
+            if($node->nodeName() === 'p' && $node->children()->eq(0)->nodeName() === 'em'){
+                if(isset($menu['menu'])){
+                    if($current_item === 'menu-heading'){
+                        $menu['menu'][$n]['description'] = $node->text();
+                    }else if($current_item === 'submenu-heading'){
+                        $menu['menu'][$n]['sub-menu'][$o]['description'] = $node->text();
+                    }else if($current_item === 'menu-heading-item'){
+                        $menu['menu'][$n]['items'][$p]['description'] = $node->text();
+                    }else if($current_item === 'submenu-heading-item'){
+                        $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['description'] = $node->text();
+                    }
+                }
+            }
+
+            if($node->nodeName() === 'p' && $node->children()->eq(0)->nodeName() === 'strong'){
+                if(isset($menu['menu'])){
+                    if($current_item === 'menu-heading-item'){
+                        $node->children()->filter('strong')->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p){
+                            if(!isset($menu['menu'][$n]['items'][$p]['tags'])) $menu['menu'][$n]['items'][$p]['tags'] = [];
+                            $menu['menu'][$n]['items'][$p]['tags'][] = $node->text();
+                        });
+                    }else if($current_item === 'submenu-heading-item'){
+                        $node->children()->filter('strong')->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p){
+                            if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'])) $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'] = [];
+                            $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'][] = $node->text();
+                        });
+                    }
+                }
+            }
+        });
+
+        $newMenu = [];
+
+        $newMenu['title'] = $menu['title'];
+        if(isset($newMenu['description'])){
+            $newMenu['description'] = $menu['description'];
+        }
+
+        $newMenu['menu'] = [];
+
+        foreach($menu['menu'] as $mm){
+            $current_menu = [];
+
+            $current_menu['heading'] = $mm['heading'];
+            if(isset($mm['description'])){
+                $current_menu['description'] = $mm['description'];
+            }
+
+            if(isset($mm['items'])){
+                foreach($mm['items'] as $item){
+                    $itemArray = [];
+
+                    $itemArray['title'] = $item['title'];
+                    if(isset($item['tags'])) $itemArray['tags'] = $item['tags'];
+                    if(isset($item['description'])) $itemArray['description'] = $item['description'];
+
+                    if(!isset($current_menu['items'])){
+                        $current_menu['items'] = [];
+                    }
+
+                    $current_menu['items'][] = $itemArray;
+                }
+            }else if(isset($mm['sub-menu'])){
+
+                foreach($mm['sub-menu'] as $mmm){
+                    $submenu = [];
+                    if(!isset($current_menu['sub-menu'])) $current_menu['sub-menu'] = [];
+
+                    $submenu['heading'] = $mmm['heading'];
+                    if(isset($mmm['description'])) $submenu['description'] = $mmm['description'];
+
+                    foreach($mmm['items'] as $item){
+                        $itemArray = [];
+
+                        $itemArray['title'] = $item['title'];
+                        if(isset($item['tags'])) $itemArray['tags'] = $item['tags'];
+                        if(isset($item['description'])) $itemArray['description'] = $item['description'];
+
+                        if(!isset($submenu['items'])){
+                            $submenu['items'] = [];
+                        }
+
+                        $submenu['items'][] = $itemArray;
+                    }
+
+                    $current_menu['sub-menu'][] = $submenu;
+                }
+            }
+
+            $newMenu['menu'][] = $current_menu;
+        }
+
+        return json_encode($newMenu);
     }
 }

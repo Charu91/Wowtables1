@@ -206,10 +206,11 @@ HTML;
             }else if(isset($mm['sub-menu'])){
 
                 foreach($mm['sub-menu'] as $mmm){
+                    $submenu = [];
                     if(!isset($current_menu['sub-menu'])) $current_menu['sub-menu'] = [];
 
-                    $current_menu['sub-menu'][]['heading'] = $mmm['heading'];
-                    if(isset($mmm['description'])) $current_menu['sub-menu']['description'] = $mmm['description'];
+                    $submenu['heading'] = $mmm['heading'];
+                    if(isset($mmm['description'])) $submenu['description'] = $mmm['description'];
 
                     foreach($mmm['items'] as $item){
                         $itemArray = [];
@@ -218,12 +219,14 @@ HTML;
                         if(isset($item['tags'])) $itemArray['tags'] = $item['tags'];
                         if(isset($item['description'])) $itemArray['description'] = $item['description'];
 
-                        if(!isset($current_menu['sub-menu']['items'])){
-                            $current_menu['sub-menu']['items'] = [];
+                        if(!isset($submenu['items'])){
+                            $submenu['items'] = [];
                         }
 
-                        $current_menu['sub-menu']['items'][] = $itemArray;
+                        $submenu['items'][] = $itemArray;
                     }
+
+                    $current_menu['sub-menu'][] = $submenu;
                 }
 
 
