@@ -35,9 +35,6 @@
                 <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
-                <a href="#limits_tab" data-toggle="tab" class="text-center">Limits</a>
-            </li>
-            <li>
                 <a href="#pricing_details" data-toggle="tab" class="text-center">Pricing</a>
             </li>
             <li>
@@ -52,12 +49,18 @@
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
-                <!--<div class="form-group">
+                <div class="form-group">
+                    <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="restaurant_locations[]" class="col-sm-3 control-label">Select Restaurant Locations <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::select('restaurant_locations[]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
                     </div>
-                </div>-->
+                </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Experience Name <span class="required">*</span></label>
                     <div class="col-sm-6">
@@ -70,12 +73,7 @@
                         {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
                     </div>
                 </div>
-                <!--<div class="form-group">
-                    <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
-                    </div>
-                </div>-->
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="experience_info">Experience Info <span class="required">*</span></label>
                     <div class="col-sm-6">
@@ -103,24 +101,6 @@
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 @include('partials.forms.seo_details')
-            </div>
-            <div id="limits_tab" class="tab-pane mt-lg">
-                @include('partials.forms.schedule_limits')
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="panel">
-                            <div class="form-group">
-                                <label for="attributes[minimum_people_increments_per_reservation]" class="col-sm-6 control-label">
-                                    Min People Increments / Reservation
-                                    <span class="required">*</span>
-                                </label>
-                                <div class="col-sm-6">
-                                    {!! Form::text('attributes[minimum_people_increments_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div id="pricing_details" class="tab-pane mt-lg">
                 <div class="form-group">
@@ -151,12 +131,12 @@
                         {!! Form::text('price_before_tax',null,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="tax" class="col-sm-3 control-label">Tax <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('tax',null,['class'=>'form-control','required'=>'']) !!}
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group">
                     <label for="price_after_tax" class="col-sm-3 control-label">Price After Tax <span class="required">*</span></label>
                     <div class="col-sm-6">
@@ -168,7 +148,6 @@
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-1">
                         <a class="btn btn-primary" id="addNewExperienceAddonBtn" >Add New Addon </a>
-                        &nbsp;&nbsp;&nbsp;<span class="required">*</span>
                     </div>
                 </div>
                 <div id="experienceAddonForm">
@@ -190,16 +169,21 @@
                             {!! Form::text('',null,['class'=>'form-control','id'=>'addonPriceAfterTax']) !!}
                         </div>
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
-                        <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
-                        </div>
-                    </div>
+                    <!--<div class="form-group">
+                         {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
+                         <div class="col-sm-6">
+                             {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
+                         </div>-->
                     <div class="form-group">
                         {!! Form::label('','Addon Info',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
                             {!! Form::textarea('',null,['class'=>'form-control','rows'=>'3','id'=>'addonInfo']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('addon_menu','Addon Menu',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::textarea('addon_menu',null,['class'=>'form-control','rows'=>'5']) !!}
                         </div>
                     </div>
                     <div class="form-group">
@@ -227,25 +211,6 @@
                         </div>
                     </div>
                 </div>
-                <section class="panel">
-                    <header class="panel-heading">
-                        <h2 class="panel-title">Guest Curator</h2>
-                    </header>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
-                            <div class="col-sm-6">
-                                {!! Form::select('curator',[''=>'','1'=>'Manoj','2'=>'Satheesh'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="curator_tips" class="col-sm-3 control-label">Curator Tips <span class="required">*</span></label>
-                            <div class="col-sm-6">
-                                {!! Form::textarea('curator_tips',null,['class'=>'form-control redactor-text','required'=>'']) !!}
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">
@@ -264,6 +229,18 @@
                     <label for="tags" class="col-sm-3 control-label">Tags <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::select('tags',['1'=>'Popular','2'=>'Featured'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('curator',[''=>'','1'=>'Manoj','2'=>'Satheesh'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="curator_tips" class="col-sm-3 control-label">Curator Tips <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('curator_tips',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
             </div>

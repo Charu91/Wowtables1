@@ -68,7 +68,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.commission_per_cover'] = 'required|numeric';
-            $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
+            $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.cuisines'] = 'required|vendorcuisinesarray';
             $rules['address.address'] = 'required';
@@ -159,7 +159,6 @@ class CreateRestaurantLocationRequest extends Request {
      */
     public function response(array $errors)
     {
-        dd($errors);
         if ($this->ajax())
         {
             return response()->json($errors, 422);

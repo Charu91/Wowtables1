@@ -175,7 +175,10 @@ class AdminRestaurantLocationsController extends Controller {
 		if($fetchSchedules['status'] === 'success') {
 
 			$data = $this->formatSchedules($fetchSchedules);
-
+			if ( $request->has('type') && $request->get('type') == 'experience' )
+			{
+				return view('admin.experiences.locations.schedules_table', $data);
+			}
 			return view('admin.restaurants.schedules_table', $data);
 
 		} else {
@@ -189,27 +192,17 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function formatSchedules($fetchSchedules)
 	{
-		$breakfast = [];
-		$lunch = [];
-		$dinner = [];
+		$schedules = [];
 
 		foreach ($fetchSchedules['schedules'] as $schedule) {
-			if ($schedule['slot_type'] == 'Breakfast') {
-				$breakfast [] = $schedule;
-			}
-			if ($schedule['slot_type'] == 'Lunch') {
-				$lunch [] = $schedule;
-			}
-			if ($schedule['slot_type'] == 'Dinner') {
-				$dinner [] = $schedule;
-			}
+
+			$schedules [] = $schedule;
 		}
 
 		$data = [
-			'breakfast' => $breakfast,
-			'lunch' => $lunch,
-			'dinner' => $dinner
+			'schedules' => $schedules,
 		];
+
 		return $data;
 	}
 

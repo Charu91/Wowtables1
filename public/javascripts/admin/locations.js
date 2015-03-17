@@ -134,8 +134,9 @@
         });
 
         $('#saveLocation').on('click', function(){
+
             var $this = $(this)
-              , $btn = $this.button('loading');
+            //  , $btn = $this.button('loading');
 
             $.ajax({
                 url: '/admin/locations',
@@ -152,15 +153,14 @@
             }).done(function(data){
                 if(data.status === 'success'){
                     oTable.ajax.reload();
-                    resetLocationForm();
-                    $('#loginFormBlock').prepend('Word!!');
+                    resetLocationForm()
                 }else{
-
+                    alert('There was a problem saving the location')
                 }
-                $btn.button('reset');
+                //$btn.button('reset');
             }).fail(function(jqXHR){
                 console.log(jqXHR);
-                $btn.button('reset');
+                //$btn.button('reset');
             });
         });
 
@@ -168,9 +168,6 @@
             resetLocationForm();
         });
 
-        function alertBox(type, text){
-            //$('<div />').text(text).
-        }
 
         function resetLocationForm(){
             locationNameInput.val('');
