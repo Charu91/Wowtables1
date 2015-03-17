@@ -62,3 +62,9 @@ Route::resource('admin/user/attributes','UserAttributesController',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::resource('admin/user/curators','AdminCuratorsController',[
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+

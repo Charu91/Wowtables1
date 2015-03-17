@@ -97,7 +97,8 @@ elixir(function(mix) {
             "javascripts/admin/events.js",
             "javascripts/admin/media_modal.js",
             "javascripts/admin/maps.js",
-            "javascripts/admin/promotions.js"
+            "javascripts/admin/promotions.js",
+            "javascripts/admin/curator.js"
         ], "public/js", "public")
 
         .version(["css/all.css","js/all.js"])

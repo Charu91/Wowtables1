@@ -13,6 +13,7 @@ use WowTables\Http\Models\User;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Auth;
 use DB;
+use Config;
 
 class AdminComposer {
 
@@ -37,8 +38,11 @@ class AdminComposer {
         $view->with('restaurants_list',array_add(DB::table('vendors')->lists('name','id'),'0','Select Restaurant'));
         $view->with('restaurant_locations_list',VendorLocation::wherehas('vendor.vendorType', function($q){$q->where('type','Restaurants');})->lists('slug','id'));
         $view->with('locations_list',array_add(Location::where('Type','Locality')->lists('name','id'),'0','Select Location'));
+        $view->with('cities_list',Location::where('Type','City')->lists('name','id'));
         $view->with('locations_area_list',Location::where('Type','Area')->lists('name','id'));
         $view->with('cuisines',VendorAttributesSelectOptions::wherehas('attribute', function($q){$q->where('alias','cuisines');})->lists('option','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
+        $view->with('media_url',Config::get('media.base_s3_url'));
+
     }
 }
