@@ -72,20 +72,31 @@ $(document).ready(function(){
     });
 
 
+    var markdownTemplate =  '### Menu Title ' + '\n' +
+        '**The Main Title Description**'+ '\n' +
+        '#### Section ( Appetizers,Dessert,etc )'+ '\n' +
+        '##### Sub Menu'+ '\n' +
+        '_The Appetizer Description_'+ '\n' +
+        '###### Item Title'+ '\n' +
+        '**veg**,**non-veg**,**specials**'+ '\n' +
+        '_Item Description_';
+
+
     new Vue({
         el: '#editor',
         data: {
-            input: '##Start Typing Here'
+            input: markdownTemplate
         },
         filters: {
             marked: marked
         }
     });
 
+
     new Vue({
         el: '#menuPicksEditor',
         data: {
-            input: '##Start Typing Here'
+            input: markdownTemplate
         },
         filters: {
             marked: marked
@@ -95,7 +106,7 @@ $(document).ready(function(){
     new Vue({
         el: '#expertTipsEditor',
         data: {
-            input: '##Start Typing Here'
+            input: markdownTemplate
         },
         filters: {
             marked: marked
@@ -105,7 +116,7 @@ $(document).ready(function(){
     new Vue({
         el: '#termsConditionsEditor',
         data: {
-            input: '##Start Typing Here'
+            input: markdownTemplate
         },
         filters: {
             marked: marked

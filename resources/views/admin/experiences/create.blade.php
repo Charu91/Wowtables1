@@ -168,12 +168,12 @@
                         <div class="col-sm-6">
                             {!! Form::text('',null,['class'=>'form-control','id'=>'addonPriceAfterTax']) !!}
                         </div>
-                   <!--<div class="form-group">
-                        {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
-                        <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
-                        </div>
-                    </div>--->
+                    </div>
+                    <!--<div class="form-group">
+                         {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
+                         <div class="col-sm-6">
+                             {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
+                         </div>-->
                     <div class="form-group">
                         {!! Form::label('','Addon Info',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
