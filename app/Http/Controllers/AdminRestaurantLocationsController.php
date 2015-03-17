@@ -175,7 +175,10 @@ class AdminRestaurantLocationsController extends Controller {
 		if($fetchSchedules['status'] === 'success') {
 
 			$data = $this->formatSchedules($fetchSchedules);
-
+			if ( $request->has('type') && $request->get('type') == 'experience' )
+			{
+				return view('admin.experiences.locations.schedules_table', $data);
+			}
 			return view('admin.restaurants.schedules_table', $data);
 
 		} else {

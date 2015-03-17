@@ -29,21 +29,45 @@
             var  start_time = $('#start_time').val()
                 , end_time = $('#end_time').val();
 
-            $.ajax({
-                method: 'GET',
-                url: '/admin/restaurants/locations/available_time_slots',
-                data : {
-                    start_time: start_time,
-                    end_time: end_time
-                },
-                headers: {
-                    'X-XSRF-TOKEN': token
-                }
-            }).done(function (data) {
-                $("#schedules_table").html(data)
-            }).fail(function (jqXHR) {
-                console.log(jqXHR);
-            });
+            if ( $(this).data('schedule-type') == 'experience' )
+            {
+                $.ajax({
+                    method: 'GET',
+                    url: '/admin/restaurants/locations/available_time_slots',
+                    data : {
+                        start_time: start_time,
+                        end_time: end_time,
+                        type: 'experience'
+                    },
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function (data) {
+                    $("#schedules_table").html(data)
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+
+            } else {
+
+                $.ajax({
+                    method: 'GET',
+                    url: '/admin/restaurants/locations/available_time_slots',
+                    data : {
+                        start_time: start_time,
+                        end_time: end_time
+                    },
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function (data) {
+                    $("#schedules_table").html(data)
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+
+            }
+
 
         });
 
