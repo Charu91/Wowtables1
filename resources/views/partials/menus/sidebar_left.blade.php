@@ -72,6 +72,9 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/users/create')? 'nav-active':'' }}">
                                 <a href="/admin/users/create">Create New</a>
                             </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/user/curators')? 'nav-active':'' }}">
+                                <a href="/admin/user/curators">Create User Curators</a>
+                            </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/users/roles')? 'nav-active':'' }}">
                                 <a href="/admin/roles">Roles and Privileges</a>
                             </li>
@@ -83,7 +86,7 @@
 
                     <li class="nav {{ (isset($uri) && $uri === 'admin/media')? 'nav-active':'' }}">
                         <a href="/admin/media">
-                            <i class="fa fa-copy" aria-hidden="true"></i>
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
                             <span>Media Gallery</span>
                         </a>
                     </li>
@@ -123,7 +126,7 @@
                     </li>
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/pages') !== false)? 'nav-expanded nav-active':''}}">
                         <a>
-                            <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                            <i class="fa fa-copy" aria-hidden="true"></i>
                             <span>Static Pages</span>
                         </a>
                         <ul class="nav nav-children">
@@ -154,7 +157,7 @@
                     </li>
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/promotions') !== false)? 'nav-expanded nav-active':''}}">
                         <a>
-                            <i class="fa fa-gears" aria-hidden="true"></i>
+                            <i class="fa fa-columns" aria-hidden="true"></i>
                             <span>Promotions</span>
                         </a>
                         <ul class="nav nav-children">

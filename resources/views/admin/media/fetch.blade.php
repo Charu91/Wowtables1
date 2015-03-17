@@ -15,4 +15,9 @@
             <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
         </div>
     @endforeach
+@elseif ( $media_type == 'single-media-image' )
+    @foreach ( $media as $asset )
+        {!! Form::hidden('media_id',$asset['id']) !!}
+        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+    @endforeach
 @endif
