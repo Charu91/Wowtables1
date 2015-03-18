@@ -139,7 +139,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
 
 		'Laracasts\Flash\FlashServiceProvider',
-
+		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
 
 		/*
 		 * Application Service Providers...

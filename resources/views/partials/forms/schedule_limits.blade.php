@@ -24,9 +24,9 @@
     <div class="col-lg-6">
         <div class="panel">
             <div class="form-group">
-                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
+                <label for="attributes[max_people_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
                 <div class="col-sm-6">
-                    {!! Form::text('attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
+                    {!! Form::text('attributes[max_people_per_day]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
