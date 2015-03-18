@@ -1,6 +1,6 @@
 <section class="panel">
     <header class="panel-heading">
-        <h2 class="panel-title">Add Edit</h2>
+        <h2 class="panel-title">Edit</h2>
     </header>
         {!! Form::model($flag,['route'=>['admin.promotions.flags.update',$flag->id],'method'=>'PUT','novalidate'=>'novalidate']) !!}
     <div class="panel-body">

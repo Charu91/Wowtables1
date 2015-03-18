@@ -7,7 +7,8 @@
         var   token = $("meta[name='_token']").attr('content')
             , $editFlagHolder = $('#editFlagHolder')
             , $editFlagBtn = $('.edit-flag-btn')
-            , $deleteFlagBtn = $('.delete-flag-btn');
+            , $deleteFlagBtn = $('.delete-flag-btn')
+            , $deleteCollectionBtn = $('.delete-collection-btn');
 
         $editFlagBtn.on('click',function(){
 
@@ -38,6 +39,27 @@
                 $.ajax({
                     method: 'DELETE',
                     url: '/admin/promotions/flags/' + id,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function () {
+                    location.reload();
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+
+        });
+
+        $deleteCollectionBtn.on('click',function(){
+
+            var id = $(this).data('collection-id');
+
+            if(confirm('Are you sure you want to delete collection with id '+id+'?'))
+            {
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/admin/promotions/collections/' + id,
                     headers: {
                         'X-XSRF-TOKEN': token
                     }
