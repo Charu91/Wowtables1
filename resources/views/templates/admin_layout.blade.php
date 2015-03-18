@@ -75,6 +75,7 @@
         </section>
 
         @include('modals.all')
+        @include('partials.js.variables')
 
         {!! Html::script('http://maps.google.com/maps/api/js?sensor=false') !!}
 

@@ -2,6 +2,8 @@
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Laracasts\Utilities\JavaScript\JavaScriptFacade;
+use WowTables\Http\Models\Eloquent\Curator;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\UserAttributes;
@@ -35,14 +37,40 @@ class AdminComposer {
         $view->with('roles_list',Role::lists('name','id'));
         $view->with('user_attributes_list',UserAttributes::lists('name','alias'));
         $view->with('restaurant_attributes_list',VendorAttributes::lists('name','alias'));
-        $view->with('restaurants_list',array_add(DB::table('vendors')->lists('name','id'),'0','Select Restaurant'));
         $view->with('restaurant_locations_list',VendorLocation::wherehas('vendor.vendorType', function($q){$q->where('type','Restaurants');})->lists('slug','id'));
-        $view->with('locations_list',array_add(Location::where('Type','Locality')->lists('name','id'),'0','Select Location'));
         $view->with('cities_list',Location::where('Type','City')->lists('name','id'));
         $view->with('locations_area_list',Location::where('Type','Area')->lists('name','id'));
         $view->with('cuisines',VendorAttributesSelectOptions::wherehas('attribute', function($q){$q->where('alias','cuisines');})->lists('option','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
         $view->with('media_url',Config::get('media.base_s3_url'));
+
+        $curators_list = Curator::all()->lists('name','id');
+        $curatorsList = [];
+        foreach($curators_list as $key => $value)
+        {
+            $curatorsList[] = [ 'id' => $key , 'text' => $value];
+        }
+
+        $restaurants_list = DB::table('vendors')->lists('name','id');
+        $restaurantsList = [];
+        foreach($restaurants_list as $key => $value)
+        {
+            $restaurantsList[] = [ 'id' => $key , 'text' => $value];
+        }
+
+        $localities_list = Location::where('Type','Locality')->lists('name','id');
+        $localitiesList = [];
+        foreach($localities_list as $key => $value)
+        {
+            $localitiesList[] = [ 'id' => $key , 'text' => $value];
+        }
+
+
+        JavaScriptFacade::put([
+           'curatorsList' =>  $curatorsList,
+           'restaurantsList' => $restaurantsList,
+           'localitiesList' => $localitiesList
+        ]);
 
     }
 }

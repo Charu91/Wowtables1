@@ -190,5 +190,22 @@ $(document).ready(function(){
         return $([]);
     }
 
+
+    $('.curators-select-box').select2({
+        'placeholder': 'Select Value',
+         data: curatorsList
+    });
+
+    $('.restaurants-select-box').select2({
+        'placeholder': 'Select Value',
+        data: restaurantsList
+    });
+
+    $('.localities-select-box').select2({
+        'placeholder': 'Select Value',
+        data: localitiesList
+    });
+
+
 });
 

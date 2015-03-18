@@ -56,21 +56,22 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
-            $rules['attributes.terms_and_conditions'] = 'required';
-            $rules['attributes.menu_picks'] = 'required';
-            $rules['attributes.expert_tips'] = 'required';
-            $rules['attributes.seo_title'] = 'required';
-            $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required';
+            $rules['attributes.terms_and_conditions'] = '';
+            $rules['attributes.menu_picks'] = '';
+            $rules['attributes.expert_tips'] = '';
+            $rules['attributes.seo_title'] = '';
+            $rules['attributes.seo_meta_description'] = '';
+            $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_reservations_per_day'] = 'required|integer';
-            $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
-            $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
+            $rules['attributes.max_reservations_per_time_slot'] = 'integer';
+            $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
+            $rules['attributes.maximum_reservation_time_buffer'] = 'integer';
             $rules['attributes.commission_per_cover'] = 'required|numeric';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
-            $rules['attributes.cuisines'] = 'required|vendorcuisinesarray';
+            $rules['attributes.cuisines'] = 'vendorcuisinesarray';
             $rules['address.address'] = 'required';
             $rules['address.pin_code'] = 'required';
             $rules['address.latitude'] = 'required|numeric';
@@ -108,6 +109,7 @@ class CreateRestaurantLocationRequest extends Request {
         }
 
         $rules['attributes.off_peak_hour_discount_min_covers'] = 'integer';
+        $rules['attributes.max_reservations_per_time_slot'] = 'integer';
 
         $rules['block_dates'] = 'array';
 
@@ -146,6 +148,9 @@ class CreateRestaurantLocationRequest extends Request {
         }
 
         $rules['curators'] = 'curatorarray';
+        if($this->has('curators') && !is_null($this->get('curators'))){
+            $rules['curator_tips'] ='required_with:curators';
+        }
         $rules['tags'] = 'tagarray';
 
         return $rules;

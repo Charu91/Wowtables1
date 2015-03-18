@@ -186,8 +186,8 @@
                 , $generateSlug   = $('.generate-slug');
 
 
-            var   restaurant = $('.select-restaurant option:selected').text().toLowerCase().replace(/\s/g, '-')
-                , location   = $('.select-location option:selected').text().toLowerCase().replace(/\s/g, '-');
+            var   restaurant = $('.select-restaurant').select2('data').text.toLowerCase().replace(/\s/g, '-')
+                , location   = $('.select-location').select2('data').text.toLowerCase().replace(/\s/g, '-');
 
             var slug = '';
             if(location == "select-location" || restaurant == "select-restaurant"){
@@ -378,6 +378,7 @@
 
             contact_times--;
         });
+
 
     });
 })(jQuery);
