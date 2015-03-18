@@ -296,70 +296,7 @@ class RestaurantLocation extends VendorLocation{
 
     public function fetch($vendor_location_id)
     {
-        $attributesMap = $this->config->get('restaurant_locations_attributes.attributesMap');
-        $typeTableAliasMap = $this->config->get('restaurant_locations_attributes.typeTableAliasMap');
 
-        $query = 'SELECT vl.`name`, vl.`slug`';
-        $unique_attribute_types = [];
-
-        if(count($attributesMap)){
-            foreach($attributesMap as $attribute => $attData){
-                if(!in_array($attData['type'], $unique_attribute_types))
-                    $unique_attribute_types[] = $attData['type'];
-
-                if($attData['type'] === 'single-select' ||  $attData['type'] === 'multi-select'){
-                    $query .= "
-                        ,IF(
-                            {$typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
-                            null
-                        ) AS `{$attData['id_alias']}`,
-                        IF(
-                            {$typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
-                            null
-                        ) AS `{$attribute}`
-                    ";
-                }else{
-                    $query .= "
-                        ,IF(
-                            {$typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
-                            null
-                        ) AS `{$attribute}`
-                    ";
-                }
-            }
-        }
-
-        $query .= ' FROM vendor_locations AS `vl` ';
-
-        if(count($unique_attribute_types)){
-            foreach($unique_attribute_types as $type){
-                if($type === 'single-select' || $type === 'multi-select'){
-                    $query .= "
-                        LEFT JOIN {$typeTableAliasMap[$type]['table']} AS `{$typeTableAliasMap[$type]['alias']}`
-                        ON vl.`id` = {$typeTableAliasMap[$type]['alias']}.`vendor_location_id`
-                        LEFT JOIN {$typeTableAliasMap[$type]['so_table']} AS `{$typeTableAliasMap[$type]['so_alias']}`
-                        ON {$typeTableAliasMap[$type]['so_alias']}.id = {$typeTableAliasMap[$type]['alias']}.`vendor_attributes_select_option_id`
-                        LEFT JOIN vendor_attributes AS `{$typeTableAliasMap[$type]['va_alias']}`
-                        ON `{$typeTableAliasMap[$type]['so_alias']}`.vendor_attribute_id = {$typeTableAliasMap[$type]['va_alias']}.`id`
-                    ";
-                }else{
-                    $query .= "
-                        LEFT JOIN {$typeTableAliasMap[$type]['table']} AS `{$typeTableAliasMap[$type]['alias']}`
-                        ON vl.`id` = {$typeTableAliasMap[$type]['alias']}.`vendor_location_id`
-                        LEFT JOIN vendor_attributes AS `{$typeTableAliasMap[$type]['va_alias']}`
-                        ON `{$typeTableAliasMap[$type]['va_alias']}`.id = {$typeTableAliasMap[$type]['alias']}.`vendor_location_id`
-                    ";
-                }
-            }
-        }
-
-        $query .= ' WHERE vl.`id` = ?';
-        dd($query);
-
-        $userResult = DB::select($query, [$vendor_location_id]);
     }
 
     public function fetchBySlug($slug, array $filters)

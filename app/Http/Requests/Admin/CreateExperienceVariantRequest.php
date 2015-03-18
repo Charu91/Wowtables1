@@ -44,11 +44,14 @@ class CreateExperienceVariantRequest extends Request {
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:products,slug';
         $rules['attributes.short_description'] = 'required';
+        $rules['attributes.menu'] = 'required';
+        $rules['attributes.menu_markdown'] = 'required';
         $rules['pricing.price'] = 'required|numeric';
         $rules['pricing.post_tax_price'] = 'required|numeric';
         $rules['pricing.tax'] = 'required|numeric';
         $rules['pricing.commission_per_cover'] = 'required|numeric';
         $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
+
 
         return $rules;
     }

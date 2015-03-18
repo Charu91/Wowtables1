@@ -57,11 +57,14 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.terms_and_conditions'] = 'required';
             $rules['attributes.menu'] = 'required';
+            $rules['attributes.menu_markdown'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
             $rules['attributes.seo_meta_keywords'] = 'required|array';
             $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
+            $rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
+            $rules['attributes.curator_tip'] = 'required';
             $rules['attributes.cuisines'] = 'required|productcuisinesarray';
 
             $rules['pricing.price'] = 'required|numeric';
@@ -70,6 +73,7 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['pricing.commission_per_cover'] = 'required|numeric';
             $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
         } else {
+            $rules['attributes.prepayment_allowed'] = 'boolean';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
             $rules['attributes.cuisines'] = 'productcuisinesarray';
@@ -85,11 +89,13 @@ class CreateSimpleExperienceRequest extends Request {
 
         if($this->has('addons') && is_array($this->get('addons'))){
             foreach($this->get('addons') as $key => $addon){
-                $rules['addons.'.$key.'title'] = 'required_with:addons';
-                $rules['addons.'.$key.'price'] = 'required_with:addons|numeric';
-                $rules['addons.'.$key.'tax'] = 'required_with:addons|numeric';
-                $rules['addons.'.$key.'post_tax_price'] = 'required_with:addons|numeric';
-                $rules['addons.'.$key.'short_description'] = 'required_with:addons';
+                $rules['addons.'.$key.'.name'] = 'required_with:addons';
+                $rules['addons.'.$key.'.price'] = 'required_with:addons|numeric';
+                $rules['addons.'.$key.'.tax'] = 'required_with:addons|numeric';
+                $rules['addons.'.$key.'.post_tax_price'] = 'required_with:addons|numeric';
+                $rules['addons.'.$key.'.commission_per_cover'] = 'required|numeric';
+                $rules['addons.'.$key.'.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
+                $rules['addons.'.$key.'.experience_info'] = 'required_with:addons';
             }
         }
 
