@@ -277,7 +277,7 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[price_indicator]',['Select'=>'Select','0'=>'Low','1'=>'Medium','2'=>'High'],null,['class'=>'form-control']) !!}
+                        {!! Form::select('attributes[pricing_level]',['Select'=>'Select','Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <!--

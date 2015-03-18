@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
+use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationBookingSchedule;
 use WowTables\Http\Models\Schedules;
 use Illuminate\Http\Request;
 use WowTables\Http\Requests\Admin\CreateRestaurantLocationRequest;
@@ -19,11 +20,11 @@ class AdminRestaurantLocationsController extends Controller {
 	 *
 	 * @param RestaurantLocationsRepository $repository
 	 */
-    function __construct(RestaurantLocationsRepository $repository, RestaurantLocation $restaurantLocation, Request $request)
+    function __construct(RestaurantLocationsRepository $repository, RestaurantLocation $restaurantLocation, Request $request,Schedules $schedules)
     {
         $this->middleware('admin.auth');
 		$this->repository = $repository;
-
+		$this->schedules = $schedules;
         $this->request = $request;
         $this->restaurantLocation = $restaurantLocation;
     }
@@ -74,13 +75,6 @@ class AdminRestaurantLocationsController extends Controller {
             ], 400);
         }
 
-        /*
-		$this->dispatchFrom('WowTables\Commands\Admin\CreateRestaurantLocationCommand', $request);
-
-		flash()->success('Restaurant Location has been successfully created!!!');
-
-		return redirect()->route('AdminRestaurantLocations');
-        */
 	}
 
 	/**
@@ -103,17 +97,18 @@ class AdminRestaurantLocationsController extends Controller {
 	public function edit($id)
 	{
 		$restaurant = $this->repository->getByRestaurantLocationId($id);
-		$data = $this->formatSchedules($restaurant);
 
-		$breakfast = $data['breakfast'];
-		$lunch = $data['lunch'];
-		$dinner = $data['dinner'];
+		$availableSchedules = $this->formatSchedules($this->schedules->available_time_slots('8:00','22:00'))['schedules'];
+
+		$restaurantSchedules = VendorLocationBookingSchedule::where('vendor_location_id',$id)->lists('off_peak_schedule','schedule_id');
+
+		$schedules = array_keys($restaurantSchedules);
 
 		return view('admin.restaurants.locations.edit',[
 					'restaurant'=>$restaurant,
-					'breakfast'=>$breakfast,
-					'lunch'=>$lunch,
-					'dinner'=>$dinner
+					'schedules'=>$schedules,
+					'availableSchedules' => $availableSchedules,
+					'restaurantSchedules' => $restaurantSchedules
 		]);
 	}
 

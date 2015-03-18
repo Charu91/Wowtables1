@@ -53,7 +53,7 @@ class CreateRestaurantLocationRequest extends Request {
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
-            $rules['pricing_level'] = 'required|in:Low,Medium,High';
+            $rules['attributes.pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
             $rules['attributes.terms_and_conditions'] = 'required';
@@ -79,7 +79,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['schedules'] = 'required|array';
 
         }else{
-            $rules['pricing_level'] = 'in:Low,Medium,High';
+            $rules['attributes.pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';

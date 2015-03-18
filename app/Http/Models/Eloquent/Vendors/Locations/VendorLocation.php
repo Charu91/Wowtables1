@@ -20,7 +20,7 @@ class VendorLocation extends Model {
 
     protected $hidden = ['vendor_id','location_id'];
 
-    protected $with = ['vendor','location'];
+    protected $with = ['vendor','location','schedules'];
 
     public function vendor()
     {

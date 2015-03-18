@@ -4,7 +4,7 @@ return [
 
     'typeTableAliasMap' => [
         'multi-select' => [
-            'table' => 'product_location_attributes_multiselect',
+            'table' => 'product_attributes_multiselect',
             'so_table' => 'product_attributes_select_options',
             'alias' => 'pam',
             'pa_alias' => 'pavam',
@@ -12,7 +12,7 @@ return [
         ],
 
         'single-select' => [
-            'table' => 'product_location_attributes_singleselect',
+            'table' => 'product_attributes_singleselect',
             'so_table' => 'product_attributes_select_options',
             'alias' => 'pas',
             'pa_alias' => 'pavas',
@@ -20,37 +20,37 @@ return [
         ],
 
         'datetime' => [
-            'table' => 'product_location_attributes_date',
+            'table' => 'product_attributes_date',
             'alias' => 'pad',
             'pa_alias' => 'pavad'
         ],
 
         'boolean' => [
-            'table' => 'product_location_attributes_boolean',
+            'table' => 'product_attributes_boolean',
             'alias' => 'pab',
             'pa_alias' => 'pavab'
         ],
 
         'float' => [
-            'table' => 'product_location_attributes_float',
+            'table' => 'product_attributes_float',
             'alias' => 'paf',
             'pa_alias' => 'pavaf'
         ],
 
         'integer' => [
-            'table' => 'product_location_attributes_integer',
+            'table' => 'product_attributes_integer',
             'alias' => 'pai',
             'pa_alias' => 'pavai'
         ],
 
         'text' => [
-            'table' => 'product_location_attributes_text',
+            'table' => 'product_attributes_text',
             'alias' => 'pat',
             'pa_alias' => 'pavat'
         ],
 
         'varchar' => [
-            'table' => 'product_location_attributes_varchar',
+            'table' => 'product_attributes_varchar',
             'alias' => 'pav',
             'pa_alias' => 'pavav'
         ]
@@ -87,20 +87,26 @@ return [
             'value' => 'single'
         ],
 
+        'menu_markdown' => [
+            'name' => 'Menu Markdown',
+            'type' => 'text',
+            'value' => 'single'
+        ],
+
         'seo_title' => [
-            'name' => 'Title',
+            'name' => 'SEO Title',
             'type' => 'varchar',
             'value' => 'single'
         ],
 
         'seo_meta_desciption' => [
-            'name' => 'Meta Description',
+            'name' => 'SEO Meta Description',
             'type' => 'text',
             'value' => 'single'
         ],
 
         'seo_meta_keywords' => [
-            'name' => 'Meta Keywords',
+            'name' => 'SEO Meta Keywords',
             'type' => 'varchar',
             'value' => 'multi'
         ],
@@ -127,6 +133,12 @@ return [
         'prepayment_allowed' => [
             'name' => 'Prepayment Allowed',
             'type' => 'boolean',
+            'value' => 'single'
+        ],
+
+        'curator_tip' => [
+            'name' => 'Curator Tip',
+            'type' => 'text',
             'value' => 'single'
         ]
     ]

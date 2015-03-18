@@ -4,8 +4,7 @@ use DB;
 use Image;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Cloud;
-use Illuminate\Foundation\Application;
-use WowTables\Http\Models\ExperienceAddons;
+use Symfony\Component\DomCrawler\Crawler;
 
 class Experience extends Product{
 
@@ -33,266 +32,122 @@ class Experience extends Product{
 
     protected $app;
 
-    public function __construct(Config $config, Cloud $cloud, Application $application){
+    public function __construct(Config $config, Cloud $cloud){
         $this->config = $config;
         $this->cloud = $cloud;
-        $this->app = $application;
-
-        //dd($this->app->make('ExperienceAddons'));
     }
 
-    public function create($data){
-        DB::beginTransaction();
+    public function delete($experience_id)
+    {
+        if(DB::table('products')->where('id', $experience_id)->count()){
+            if(DB::table('products')->delete($experience_id)){
+                return ['status' => 'success'];
+            }else{
+                return [
+                    'status' => 'failure',
+                    'action' => 'Delete the Experience using the id',
+                    'message' => 'There was a problem while deleting the Experience. Please check if the restaurant still exists or contact the system admin'
+                ];
+            }
+        }else{
+            return [
+                'status' => 'failure',
+                'action' => 'Check if Experience exists based on the id',
+                'message' => 'Could not find the Experiecne you are trying to delete. Try again or contact the sys admin'
+            ];
+        }
+    }
 
-        $productTypeId = DB::table('product_types')->where('slug', 'experiences')->pluck('id');
+    protected function saveAttributes($productId, $productTypeId, $attributes)
+    {
+        $attributeAliases = array_keys($attributes);
 
-        // Insert the experience Itself
-        $experienceId = DB::table('products')->insertGetId([
-            'product_type_id' => $productTypeId,
-            'name' => $data['name'],
-            'slug' => $data['slug'],
-            'status' => $data['status'],
-            'type' => $data['$type'],
-            'visible' => $data['visible'],
-            'publish_time' => $data['publish_time']
-        ]);
-
-        if($experienceId){
-            $attributes = array_keys($data['attributes']);
-
-            // Fetch the Experience Attributes Id
-            $attributeIdMapResults = DB::table('product_attributes AS pa')
+        if(count($attributeAliases)){
+            $attributeIdMap = $attributeIdMap =  DB::table('product_attributes AS pa')
                 ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
                 ->where('ptam.product_type_id', $productTypeId)
-                ->whereIn('pa.alias', $attributes)
-                ->select('pa.id', 'pa.alias')
-                ->get();
+                ->whereIn('pa.alias', $attributeAliases)
+                ->select('pa.id as attribute_id', 'pa.alias')
+                ->lists('attribute_id', 'alias');
 
-            if($attributeIdMapResults) {
-                $attributeIdMap = [];
+            if($attributeIdMap){
+                $attributesMap = $this->config->get('experience_attributes.attributesMap');
+                $typeTableAliasMap = $this->config->get('experience_attributes.typeTableAliasMap');
+                $attribute_inserts = [];
 
-                foreach ($attributeIdMapResults as $result) {
-                    $attributeIdMap[$result->alias] = $result->id;
-                }
-            }
-
-            // Insert the Experiences Attributes
-            if(!empty($data['attributes']) && count($attributeIdMap)){
-                if(count($attributes)){
-                    $attributesMap = $this->config->get('experience_attributes.attributesMap');
-                    $typeTableAliasMap = $this->config->get('experience_attributes.typeTableAliasMap');
-                    $attribute_inserts = [];
-
-                    foreach($data['attributes'] as $attribute => $value){
+                foreach($attributes as $attribute => $value){
+                    if(isset($attributeIdMap[$attribute])){
                         if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
 
                         if($attributesMap[$attribute]['type'] === 'single-select'){
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                'product_id' => $experienceId,
+                                'product_id' => $productId,
                                 'product_attributes_select_option_id' => $value
                             ];
                         }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
                             if($attributesMap[$attribute]['type'] === 'multi-select'){
                                 foreach ($value as $singleValue) {
                                     $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $experienceId,
+                                        'product_id' => $productId,
                                         'product_attributes_select_option_id' => $singleValue
                                     ];
                                 }
                             }else{
                                 foreach ($value as $singleValue) {
                                     $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $experienceId,
+                                        'product_id' => $productId,
                                         'product_attribute_id' => $attributeIdMap[$attribute],
                                         'attribute_value' => $singleValue
                                     ];
                                 }
                             }
                         }else{
-                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                'product_id' => $experienceId,
-                                'product_attribute_id' => $attributeIdMap[$attribute],
-                                'attribute_value' => $value
-                            ];
-                        }
-                    }
-
-                    $attributeInserts = true;
-
-                    foreach($attribute_inserts as $table => $insertData){
-                        $productAttrInsert = DB::table($table)->insert($insertData);
-
-                        if(!$productAttrInsert){
-                            $attributeInserts = false;
-                            break;
-                        }
-                    }
-
-                    if(!$attributeInserts){
-                        DB::rollBack();
-                        return [
-                            'status' => 'failure',
-                            'action' => 'Inserting the product attributes into the DB',
-                            'message' => 'The product could not be created. Please contact the sys admin'
-                        ];
-                    }
-                }
-            }
-
-            // Insert the Experience Pricing
-            if(!empty($data['pricing'])){
-                $pricing_insert_data = [
-                    'product_id' => $experienceId,
-                    'price' => isset($data['price']) ? $data['price'] : null,
-                    'tax' => isset($data['tax'])? $data['tax'] : null,
-                    'post_tax_price' => isset($data['post_tax_price'])? $data['post_tax_price'] : null,
-                    'commission' => isset($data['commission'])? $data['commission'] : null,
-                ];
-
-                if(isset($data['commission_on'])){
-                    $pricing_insert_data['commission_on'] = $data['commission_on'];
-                }
-
-                $pricingInsert = DB::table('product_pricing')->insert($pricing_insert_data);
-
-                if(!$pricingInsert){
-                    DB::rollBack();
-                    return [
-                        'status' => 'failure',
-                        'action' => 'Inserting the product pricing into the DB',
-                        'message' => 'The product could not be created. Please contact the sys admin'
-                    ];
-                }
-            }
-
-            // Fetch the Experience Attributes Id for menu and experience Info
-            $attributeIdMapResults = DB::table('product_attributes AS pa')
-                ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
-                ->where('ptam.product_type_id', $productTypeId)
-                ->whereIn('pa.alias', ['menu', 'experience_info'])
-                ->select('pa.id', 'pa.alias')
-                ->get();
-
-            if($attributeIdMapResults) {
-                $attributeIdMap = [];
-
-                foreach ($attributeIdMapResults as $result) {
-                    $attributeIdMap[$result->alias] = $result->id;
-                }
-            }
-
-            if(!empty($data['addons']) && count($attributeIdMap)){
-                $addonInserts = true;
-
-                foreach($data['addons'] as $addon){
-                    $addonId = DB::table('products')->insertGetId([
-                        'name' => $addon['name'],
-                        'type' => 'addon',
-                        'visible' => 1,
-                        'status' => 'Publish',
-                        'product_type_id' => $productTypeId,
-                        'product_parent_id' => $experienceId
-                    ]);
-
-                    $addon_pricing_insert_data = [
-                        'product_id' => $experienceId,
-                        'price' => isset($addon['price']) ? $addon['price'] : null,
-                        'tax' => isset($addon['tax'])? $addon['tax'] : null,
-                        'post_tax_price' => isset($addon['post_tax_price'])? $addon['post_tax_price'] : null,
-                        'commission' => isset($addon['commission'])? $addon['commission'] : null
-                    ];
-
-                    if(isset($addon['post_tax_price'])){
-                        $addon_pricing_insert_data['commission_on'] = $addon['commission_on'];
-                    }
-
-                    if($addonId){
-                        $AddonPriceInsert = DB::table('product_pricing')->insert($addon_pricing_insert_data);
-
-                        if(!$AddonPriceInsert){
-                            $addonInserts = false;
-                            break;
-                        }
-
-                        $addon_attributes = [];
-
-                        if($addon['menu']){
-                            $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['menu']];
-                        }
-
-                        if($addon['experience_info']){
-                            $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['experience_info']];
-                        }
-
-                        if(count($addon_attributes)){
-                            $addonAttributesInsert = DB::table('product_attributes_text')->insert($addon_attributes);
-
-                            if(!$addonAttributesInsert){
-                                $addonInserts = false;
-                                break;
+                            if($attribute === 'menu'){
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $productId,
+                                    'product_attribute_id' => $attributeIdMap[$attribute],
+                                    'attribute_value' => $this->parseMenu($value)
+                                ];
+                            }else{
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $productId,
+                                    'product_attribute_id' => $attributeIdMap[$attribute],
+                                    'attribute_value' => $value
+                                ];
                             }
+
                         }
-                    }else{
-                        $addonInserts = false;
+                    }
+                }
+
+                $attributeInserts = true;
+
+                foreach($attribute_inserts as $table => $insertData){
+                    $productAttrInsert = DB::table($table)->insert($insertData);
+
+                    if(!$productAttrInsert){
+                        $attributeInserts = false;
                         break;
                     }
                 }
 
-                if(!$addonInserts){
+                if($attributeInserts){
+                    return ['status' => 'success'];
+                }else{
                     DB::rollBack();
                     return [
                         'status' => 'failure',
-                        'action' => 'Inserting the experience addon into the DB',
-                        'message' => 'The product could not be created. Please contact the sys admin'
+                        'action' => 'Inserting the Restaurant Location attributes into the DB'
                     ];
                 }
-            }
-
-            if(!empty($data['media'])){
-
-            }
-
-            if(!empty($data['tags'])){
-
-            }
-
-            if(!empty($data['curators'])){
-
-            }
-
-            if(!empty($data['flags'])){
-
+            }else{
+                return ['status' => 'success'];
             }
 
         }else{
-            DB::rollBack();
-            return [
-                'status' => 'failure',
-                'action' => 'Inserting the experience into the DB',
-                'message' => 'The product could not be created. Please contact the sys admin'
-            ];
+            return ['status' => 'success'];
         }
-    }
-
-    public function update($id, $data){
-
-    }
-
-    public function fetch($id){
-
-    }
-
-    public function fetchBySlug($slug){
-
-    }
-
-    public function delete($id){
-
-    }
-
-    protected function saveAttributes($productId, $attributes){
-
     }
 
     protected function saveMedia($productId, $media){
@@ -350,7 +205,7 @@ class Experience extends Product{
 
 
                 $media_insert_map[] = [
-                    'vendor_location_id' => $productId,
+                    'product_id' => $productId,
                     'media_type' => 'listing',
                     'media_id' => $media['listing_image'],
                     'order' => 0
@@ -403,7 +258,7 @@ class Experience extends Product{
                 }
 
                 $media_insert_map[] = [
-                    'vendor_location_id' => $productId,
+                    'product_id' => $productId,
                     'media_type' => 'gallery',
                     'media_id' => $image->id,
                     'order' => array_search($image->id, $media['gallery_images'])
@@ -448,19 +303,240 @@ class Experience extends Product{
         }
     }
 
-    protected function savePricing($product_id, $pricing){
+    protected function savePricing($productId, $pricing){
+        $pricing_insert_data = [
+            'product_id' => $productId,
+            'price' => isset($data['price']) ? $data['price'] : null,
+            'tax' => isset($data['tax'])? $data['tax'] : null,
+            'post_tax_price' => isset($data['post_tax_price'])? $data['post_tax_price'] : null,
+            'commission' => isset($data['commission'])? $data['commission'] : null,
+        ];
 
+        if(isset($data['commission_on'])){
+            $pricing_insert_data['commission_on'] = $data['commission_on'];
+        }
+
+        $pricingInsert = DB::table('product_pricing')->insert($pricing_insert_data);
+
+        if($pricingInsert){
+            return ['status' => 'success'];
+        }else{
+            DB::rollBack();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the product pricing into the DB'
+            ];
+        }
     }
 
-    protected function mapTags($product_id, $tags){
+    protected function mapTags($productId, $tags){
+        $tag_insert_map = [];
 
+        foreach($tags as $tag){
+            $tag_insert_map[] = [
+                'product_id' => $productId,
+                'tag_id' => $tag
+            ];
+        }
+
+        if(DB::table('product_tag_map')->insert($tag_insert_map)){
+            return ['status' => 'success'];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the Product Tags into the DB'
+            ];
+        }
     }
 
-    protected function mapCurators($product_id, $curators){
+    protected function mapCurators($productId, $curators){
+        $curator_insert_map = [];
 
+        foreach($curators as $curator){
+            $curator_insert_map[] = [
+                'product_id' => $productId,
+                'curator_id' => $curator
+            ];
+        }
+
+        if(DB::table('product_curator_map')->insert($curator_insert_map)){
+            return ['status' => 'success'];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the Product Curators into the DB'
+            ];
+        }
     }
 
-    protected function mapFlags($product_id, $flags){
+    protected function mapFlags($productId, $flags){
+        $flags_insert_map = [];
 
+        foreach($flags as $flag){
+            $flags_insert_map[] = [
+                'product_id' => $productId,
+                'flag_id' => $flag
+            ];
+        }
+
+        if(DB::table('product_flag_map')->insert($flags_insert_map)){
+            return ['status' => 'success'];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the Product Curators into the DB'
+            ];
+        }
+    }
+
+    protected function parseMenu($menu){
+
+        $crawler = new Crawler($menu);
+
+        $menu = [];
+
+        $menu['title'] = $crawler->filter('h1')->text();
+        if( $crawler->filter('h1 + p > em')->count()){
+            $menu['description'] = $crawler->filter('h1 + p > em')->text();
+        }
+
+        $n = 0; $o = 0; $p = 0;
+        $current_item = '';
+
+        $crawler->filter('h1')->siblings()->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p, &$current_item){
+
+            if($node->nodeName() === 'h2'){
+                if(!isset($menu['menu'])) $menu['menu'] = [];
+                ++$n;
+                $menu['menu'][$n] = [];
+                $menu['menu'][$n]['heading'] = $node->text();
+
+
+                $current_item = 'menu-heading';
+            }
+
+            if($node->nodeName() === 'h3'){
+
+                ++$o;
+                $menu['menu'][$n]['sub-menu'][$o] = [];
+                $menu['menu'][$n]['sub-menu'][$o]['heading'] = $node->text();
+
+                $current_item = 'submenu-heading';
+            }
+
+            if($node->nodeName() === 'h4'){
+                ++$p;
+
+                if($current_item === 'menu-heading' || $current_item === 'menu-heading-item'){
+                    if(!isset($menu['menu'][$n]['items'])) $menu['menu'][$n]['items'] = [];
+                    if(!isset($menu['menu'][$n]['items'][$p])) $menu['menu'][$n]['items'][$p] = [];
+                    $menu['menu'][$n]['items'][$p]['title'] = $node->text();
+                    $current_item = 'menu-heading-item';
+                }else if($current_item === 'submenu-heading' || $current_item === 'submenu-heading-item') {
+                    if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'])) $menu['menu'][$n]['sub-menu'][$o]['items'] = [];
+                    if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'][$p])) $menu['menu'][$n]['sub-menu'][$o]['items'][$p] = [];
+                    $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['title'] = $node->text();
+                    $current_item = 'submenu-heading-item';
+                }
+
+
+            }
+
+            if($node->nodeName() === 'p' && $node->children()->eq(0)->nodeName() === 'em'){
+                if(isset($menu['menu'])){
+                    if($current_item === 'menu-heading'){
+                        $menu['menu'][$n]['description'] = $node->text();
+                    }else if($current_item === 'submenu-heading'){
+                        $menu['menu'][$n]['sub-menu'][$o]['description'] = $node->text();
+                    }else if($current_item === 'menu-heading-item'){
+                        $menu['menu'][$n]['items'][$p]['description'] = $node->text();
+                    }else if($current_item === 'submenu-heading-item'){
+                        $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['description'] = $node->text();
+                    }
+                }
+            }
+
+            if($node->nodeName() === 'p' && $node->children()->eq(0)->nodeName() === 'strong'){
+                if(isset($menu['menu'])){
+                    if($current_item === 'menu-heading-item'){
+                        $node->children()->filter('strong')->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p){
+                            if(!isset($menu['menu'][$n]['items'][$p]['tags'])) $menu['menu'][$n]['items'][$p]['tags'] = [];
+                            $menu['menu'][$n]['items'][$p]['tags'][] = $node->text();
+                        });
+                    }else if($current_item === 'submenu-heading-item'){
+                        $node->children()->filter('strong')->each(function(Crawler $node, $i) use (&$menu, &$n, &$o, &$p){
+                            if(!isset($menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'])) $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'] = [];
+                            $menu['menu'][$n]['sub-menu'][$o]['items'][$p]['tags'][] = $node->text();
+                        });
+                    }
+                }
+            }
+        });
+
+        $newMenu = [];
+
+        $newMenu['title'] = $menu['title'];
+        if(isset($newMenu['description'])){
+            $newMenu['description'] = $menu['description'];
+        }
+
+        $newMenu['menu'] = [];
+
+        foreach($menu['menu'] as $mm){
+            $current_menu = [];
+
+            $current_menu['heading'] = $mm['heading'];
+            if(isset($mm['description'])){
+                $current_menu['description'] = $mm['description'];
+            }
+
+            if(isset($mm['items'])){
+                foreach($mm['items'] as $item){
+                    $itemArray = [];
+
+                    $itemArray['title'] = $item['title'];
+                    if(isset($item['tags'])) $itemArray['tags'] = $item['tags'];
+                    if(isset($item['description'])) $itemArray['description'] = $item['description'];
+
+                    if(!isset($current_menu['items'])){
+                        $current_menu['items'] = [];
+                    }
+
+                    $current_menu['items'][] = $itemArray;
+                }
+            }else if(isset($mm['sub-menu'])){
+
+                foreach($mm['sub-menu'] as $mmm){
+                    $submenu = [];
+                    if(!isset($current_menu['sub-menu'])) $current_menu['sub-menu'] = [];
+
+                    $submenu['heading'] = $mmm['heading'];
+                    if(isset($mmm['description'])) $submenu['description'] = $mmm['description'];
+
+                    foreach($mmm['items'] as $item){
+                        $itemArray = [];
+
+                        $itemArray['title'] = $item['title'];
+                        if(isset($item['tags'])) $itemArray['tags'] = $item['tags'];
+                        if(isset($item['description'])) $itemArray['description'] = $item['description'];
+
+                        if(!isset($submenu['items'])){
+                            $submenu['items'] = [];
+                        }
+
+                        $submenu['items'][] = $itemArray;
+                    }
+
+                    $current_menu['sub-menu'][] = $submenu;
+                }
+            }
+
+            $newMenu['menu'][] = $current_menu;
+        }
+
+        return json_encode($newMenu);
     }
 }

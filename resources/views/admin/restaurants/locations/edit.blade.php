@@ -17,8 +17,8 @@
                 <i class="fa fa-chevron-left"></i></a>
         </div>
     </header>
+    {!! Form::model($restaurant['RestaurantLocation'],['route'=>['AdminRestaurantLocationsUpdate',$restaurant['RestaurantLocation']->id],'method'=>'PUT','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
-    {!! Form::open(['route'=>['AdminRestaurantLocationsUpdate',$restaurant['RestaurantLocation']->id],'class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -150,10 +150,11 @@
                         </div>
                     </div>
                 </div>
-                @if( ! empty($breakfast) )
+
+                @if( ! empty($availableSchedules) )
                     <section class="panel">
                         <header class="panel-heading">
-                            <h2 class="panel-title">Breakfast</h2>
+                            <h2 class="panel-title">All Schedules</h2>
                         </header>
                         <div  class="panel-body">
                             <div class="table-responsive">
@@ -172,17 +173,212 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($breakfast as $slot)
+                                    @foreach($availableSchedules as $key => $slot)
                                         <tr>
-                                            <td> <a id="selectrow" class="btn btn-xs btn-success select-all">Select All</a> | <a class="btn btn-xs btn-danger select-none">None</a> </td>
-                                            <td>{{ $slot['time'] }}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['mon']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['tue']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['wed']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['thu']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['fri']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sat']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sun']['schedule_id'],true) !!}</td>
+                                            <td>
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><a id="selectrow" class="btn btn-xs btn-success select-all">Select All</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a class="btn btn-xs btn-danger select-none">Deselect</a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>{{ $slot['time'] }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['mon']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['mon']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['tue']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['tue']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['wed']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['wed']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['thu']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['thu']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['fri']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['fri']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['sat']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['sat']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td style="padding:0;">
+                                                <table  class="table table-bordered mb-none">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Sch</td>
+                                                        @if( in_array($slot['sun']['schedule_id'],$schedules) )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Max T</td>
+                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Off Peak</td>
+                                                        @if( array_get($restaurantSchedules,$slot['sun']['schedule_id']) == 1 )
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],true)!!}</td>
+                                                        @else
+                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],false)!!}</td>
+                                                        @endif
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -192,89 +388,6 @@
                     </section>
                 @endif
 
-                @if( ! empty($lunch) )
-                    <section class="panel">
-                        <header class="panel-heading">
-                            <h2 class="panel-title">Lunch</h2>
-                        </header>
-                        <div  class="panel-body">
-                            <div class="table-responsive">
-                                <table  class="table table-bordered mb-none">
-                                    <thead>
-                                    <tr>
-                                        <th>Action</th>
-                                        <th>Time</th>
-                                        <th>Monday</th>
-                                        <th>Tuesday</th>
-                                        <th>Wednesday</th>
-                                        <th>Thursday</th>
-                                        <th>Friday</th>
-                                        <th>Saturday</th>
-                                        <th>Sunday</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($lunch as $slot)
-                                        <tr>
-                                            <td> <a class="btn btn-xs btn-success select-all">Select All</a> | <a class="btn btn-xs btn-danger select-none">None</a> </td>
-                                            <td>{{ $slot['time'] }}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['mon']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['tue']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['wed']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['thu']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['fri']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sat']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sun']['schedule_id'],true) !!}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-                @endif
-
-                @if( ! empty($dinner) )
-                    <section class="panel">
-                        <header class="panel-heading">
-                            <h2 class="panel-title">Dinner</h2>
-                        </header>
-                        <div  class="panel-body">
-                            <div class="table-responsive">
-                                <table  class="table table-bordered mb-none">
-                                    <thead>
-                                    <tr>
-                                        <th>Action</th>
-                                        <th>Time</th>
-                                        <th>Monday</th>
-                                        <th>Tuesday</th>
-                                        <th>Wednesday</th>
-                                        <th>Thursday</th>
-                                        <th>Friday</th>
-                                        <th>Saturday</th>
-                                        <th>Sunday</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($dinner as $slot)
-                                        <tr>
-                                            <td> <a class="btn btn-xs btn-success select-all">Select All</a> | <a class="btn btn-xs btn-danger select-none">None</a> </td>
-                                            <td>{{ $slot['time'] }}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['mon']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['tue']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['wed']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['thu']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['fri']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sat']['schedule_id'],true) !!}</td>
-                                            <td style="padding:0;">{!! Form::checkbox('schedules[]',$slot['sun']['schedule_id'],true) !!}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </section>
-                @endif
             </div>
             <div id="alacarte_tab" class="tab-pane mt-lg">
                 <div class="form-group">
