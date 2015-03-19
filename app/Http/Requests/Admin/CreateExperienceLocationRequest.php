@@ -46,11 +46,23 @@ class CreateExperienceLocationRequest extends Request {
         $rules['restaurant_location_id'] = 'required|integer|exists:restaurant_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
         $rules['status'] = 'required|in:Active,Inactive';
 
-        $rules['limits.min_people_per_reservation'] = 'required|integer';
-        $rules['limits.max_people_per_reservation'] = 'required|integer';
-        $rules['limits.max_reservations_per_day'] = 'required|integer';
-        $rules['limits.minimum_reservation_time_buffer'] = 'required|integer';
-        $rules['limits.maximum_reservation_time_buffer'] = 'required|integer';
+        if($this->has('status') && $this->get('status') === 'Active'){
+            $rules['limits.min_people_per_reservation'] = 'required|integer';
+            $rules['limits.max_people_per_reservation'] = 'required|integer';
+            $rules['limits.max_reservations_per_day'] = 'required|integer';
+            $rules['limits.minimum_reservation_time_buffer'] = 'required|integer';
+            $rules['limits.maximum_reservation_time_buffer'] = 'required|integer';
+
+            $rules['schedules'] = 'required|array';
+        }else{
+            $rules['limits.min_people_per_reservation'] = 'integer';
+            $rules['limits.max_people_per_reservation'] = 'integer';
+            $rules['limits.max_reservations_per_day'] = 'integer';
+            $rules['limits.minimum_reservation_time_buffer'] = 'integer';
+            $rules['limits.maximum_reservation_time_buffer'] = 'integer';
+
+            $rules['schedules'] = 'array';
+        }
 
         if($this->has('schedules') && is_array($this->get('schedules'))){
             $schedule_ids = DB::table('schedules')->lists('id');

@@ -51,6 +51,8 @@ class CreateExperienceVariantRequest extends Request {
         $rules['pricing.tax'] = 'required|numeric';
         $rules['pricing.commission_per_cover'] = 'required|numeric';
         $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
+        $rules['mapping.complex_product_id'] = 'required|exists:products,id,type,complex';
+        $rules['mapping.variant_option_id'] = 'required|exists:product_variant_options,id';
 
 
         return $rules;

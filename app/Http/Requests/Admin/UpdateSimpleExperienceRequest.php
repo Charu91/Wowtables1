@@ -46,8 +46,7 @@ class UpdateSimpleExperienceRequest extends Request {
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:products,slug,'.$experience_id;
         $rules['status'] = 'required|in:Publish,Draft';
-        $rules['media.listing_image'] = 'required|exists:media,id';
-        $rules['media.gallery_images'] = 'required|galleryarray';
+
 
         if ($this->has('status') && $this->get('status') === 'Publish') {
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
@@ -73,6 +72,9 @@ class UpdateSimpleExperienceRequest extends Request {
             $rules['pricing.tax'] = 'required|numeric';
             $rules['pricing.commission_per_cover'] = 'required|numeric';
             $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
+
+            $rules['media.listing_image'] = 'required|exists:media,id';
+            $rules['media.gallery_images'] = 'required|galleryarray';
         } else {
             $rules['attributes.prepayment_allowed'] = 'boolean';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
@@ -84,6 +86,9 @@ class UpdateSimpleExperienceRequest extends Request {
             $rules['pricing.tax'] = 'numeric';
             $rules['pricing.commission_per_cover'] = 'numeric';
             $rules['pricing.commission_on'] = 'in:Pre-Tax,Post-Tax';
+
+            $rules['media.listing_image'] = 'exists:media,id';
+            $rules['media.gallery_images'] = 'galleryarray';
         }
 
         $rules['addons'] = 'array';

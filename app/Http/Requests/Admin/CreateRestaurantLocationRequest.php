@@ -47,8 +47,6 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['slug'] = 'required|unique:vendor_locations,slug';
         $rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
-        $rules['media.listing_image'] = 'required|exists:media,id';
-        $rules['media.gallery_images'] = 'required|galleryarray';
 
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
@@ -78,6 +76,9 @@ class CreateRestaurantLocationRequest extends Request {
 
             $rules['schedules'] = 'required|array';
 
+            $rules['media.listing_image'] = 'required|exists:media,id';
+            $rules['media.gallery_images'] = 'required|galleryarray';
+
         }else{
             $rules['attributes.pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = '';
@@ -95,7 +96,8 @@ class CreateRestaurantLocationRequest extends Request {
 
             $rules['schedules'] = 'array';
 
-
+            $rules['media.listing_image'] = 'exists:media,id';
+            $rules['media.gallery_images'] = 'galleryarray';
         }
 
         if($this->has('schedules') && is_array($this->get('schedules'))){
@@ -141,6 +143,7 @@ class CreateRestaurantLocationRequest extends Request {
                 $rules['contacts.'.$key.'.name'] = 'required_with:contacts';
                 $rules['contacts.'.$key.'.designation'] = 'required_with:contacts';
                 $rules['contacts.'.$key.'.phone_number'] = 'required_with:contacts|numeric';
+                $rules['contacts.'.$key.'.email'] = 'required_with:contacts|email';
 
             }
         }

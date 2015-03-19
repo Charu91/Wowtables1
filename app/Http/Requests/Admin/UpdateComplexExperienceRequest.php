@@ -57,8 +57,6 @@ class UpdateComplexExperienceRequest extends Request {
             $rules['attributes.experience_includes'] = 'required';
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.terms_and_conditions'] = 'required';
-            $rules['attributes.menu'] = 'required';
-            $rules['attributes.menu_markdown'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
             $rules['attributes.seo_meta_keywords'] = 'required|array';
