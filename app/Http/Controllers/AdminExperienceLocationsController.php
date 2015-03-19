@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use WowTables\Http\Requests\Admin\CreateExperienceLocationRequest;
+use WowTables\Http\Requests\Admin\UpdateExperienceLocationRequest;
+use WowTables\Http\Requests\Admin\DeleteExperienceLocationRequest;
+use WowTables\Http\Models\ExperienceLocation;
 
 /**
  * Class AdminExperiencesController
@@ -9,15 +12,20 @@ use WowTables\Http\Requests\Admin\CreateExperienceLocationRequest;
 
 class AdminExperienceLocationsController extends Controller {
 
+
+    protected $experienceLocation;
+
     /**
      * The constructor Method
      *
      * @param Request $request
      */
-    function __construct(Request $request)
+    function __construct(Request $request, ExperienceLocation $experienceLocation)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
+
+        $this->experienceLocation = $experienceLocation;
     }
 
     /**
@@ -47,7 +55,23 @@ class AdminExperienceLocationsController extends Controller {
      */
     public function store(CreateExperienceLocationRequest $createExperienceLocationRequest)
     {
-        dd($this->request->all());
+        $input = $this->request->all();
+
+        $experienceLocationCreate = $this->experienceLocation->create($input);
+
+        if($experienceLocationCreate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+
+            flash()->success('The Experience Location has been successfully created.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $experienceLocationCreate['action'],
+                'message' => $experienceLocationCreate['message']
+            ], 400);
+        }
     }
 
     /**
@@ -75,18 +99,48 @@ class AdminExperienceLocationsController extends Controller {
      *
      * @return Response
      */
-    public function update($id)
+    public function update($id, UpdateExperienceLocationRequest $updateExperienceLocationRequest)
     {
-        dd($this->request->all());
+        $input = $this->request->all();
+
+        $experienceLocationUpdate = $this->experienceLocation->update($id, $input);
+
+        if($experienceLocationUpdate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+
+            flash()->success('The Experience Location has been successfully updated.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $experienceLocationUpdate['action'],
+                'message' => $experienceLocationUpdate['message']
+            ], 400);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      */
-    public function destroy()
+    public function destroy($id, DeleteExperienceLocationRequest $deleteExperienceLocationRequest)
     {
-        //
+        $experienceLocationDelete = $this->experienceLocation->delete($id);
+
+        if($experienceLocationDelete['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+
+            flash()->success('The Experience Location has been successfully deleted.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $experienceLocationDelete['action'],
+                'message' => $experienceLocationDelete['message']
+            ], 400);
+        }
     }
 
 }

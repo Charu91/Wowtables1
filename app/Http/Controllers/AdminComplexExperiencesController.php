@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use WowTables\Http\Requests\Admin\CreateComplexExperienceRequest;
+use WowTables\Http\Requests\Admin\UpdateComplexExperienceRequest;
+use WowTables\Http\Requests\Admin\DeleteComplexExperienceRequest;
+use WowTables\Http\Models\ComplexExperience;
 
 /**
  * Class AdminExperiencesController
@@ -10,15 +13,18 @@ use WowTables\Http\Requests\Admin\CreateComplexExperienceRequest;
 
 class AdminComplexExperiencesController extends Controller {
 
+    protected $complexExperience;
+
     /**
      * The constructor Method
      *
      * @param Request $request
      */
-    function __construct(Request $request)
+    function __construct(Request $request, ComplexExperience $complexExperience)
     {
         $this->middleware('admin.auth');
         $this->request = $request;
+        $this->complexExperience = $complexExperience;
     }
 
     /**
@@ -30,7 +36,7 @@ class AdminComplexExperiencesController extends Controller {
     {
         $experiences = [];
 
-        return view('admin.experiences.complex.index',['experiences'=>$experiences]);
+        return view('admin.experiences.complex.index',['experiences'=> $experiences]);
     }
 
     /**
@@ -48,7 +54,23 @@ class AdminComplexExperiencesController extends Controller {
      */
     public function store(CreateComplexExperienceRequest $createComplexExperienceRequest)
     {
-        dd($this->request->all());
+        $input = $this->request->all();
+
+        $complexExperienceCreate = $this->complexExperience->create($input);
+
+        if($complexExperienceCreate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+
+            flash()->success('The Complex Experieince has been successfully created.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $complexExperienceCreate['action'],
+                'message' => $complexExperienceCreate['message']
+            ], 400);
+        }
     }
 
     /**
@@ -79,9 +101,24 @@ class AdminComplexExperiencesController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update($id)
+    public function update($id, UpdateComplexExperienceRequest $updateComplexExperienceRequest)
     {
-        //
+        $input = $this->request->all();
+
+        $complexExperienceUpdate = $this->complexExperience->update($id, $input);
+
+        if($complexExperienceUpdate['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The Complex Experieince has been successfully updated.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $complexExperienceUpdate['action'],
+                'message' => $complexExperienceUpdate['message']
+            ], 400);
+        }
     }
 
     /**
@@ -89,9 +126,22 @@ class AdminComplexExperiencesController extends Controller {
      *
      * @return Response
      */
-    public function destroy()
+    public function destroy($id, DeleteComplexExperienceRequest $deleteComplexExperienceRequest)
     {
-        //
+        $complexExperienceDelete = $this->complexExperience->delete($id);
+
+        if($complexExperienceDelete['status'] === 'success'){
+            if($this->request->ajax()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            flash()->success('The Complex Experieince has been successfully deleted.');
+            return redirect()->route('AdminExperiences');
+        }else{
+            return response()->json([
+                'action' => $complexExperienceDelete['action'],
+                'message' => $complexExperienceDelete['message']
+            ], 400);
+        }
     }
 
 }

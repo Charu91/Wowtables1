@@ -63,6 +63,9 @@ class CreateComplexExperienceRequest extends Request {
             $rules['attributes.curator_tip'] = 'required';
             $rules['attributes.cuisines'] = 'required|productcuisinesarray';
 
+            $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
+            $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
+
             $rules['media.listing_image'] = 'required|exists:media,id';
             $rules['media.gallery_images'] = 'required|galleryarray';
         } else {
@@ -70,6 +73,9 @@ class CreateComplexExperienceRequest extends Request {
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
             $rules['attributes.cuisines'] = 'productcuisinesarray';
+
+            $rules['attributes.start_date'] = 'date_format:Y-m-d';
+            $rules['attributes.end_date'] = 'date_format:Y-m-d';
 
             $rules['media.listing_image'] = 'exists:media,id';
             $rules['media.gallery_images'] = 'galleryarray';

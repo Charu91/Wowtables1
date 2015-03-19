@@ -52,6 +52,7 @@ class CreateExperienceLocationRequest extends Request {
             $rules['limits.max_reservations_per_day'] = 'required|integer';
             $rules['limits.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['limits.maximum_reservation_time_buffer'] = 'required|integer';
+            $rules['limits.min_people_increments'] = 'required|integer';
 
             $rules['schedules'] = 'required|array';
         }else{
@@ -60,6 +61,7 @@ class CreateExperienceLocationRequest extends Request {
             $rules['limits.max_reservations_per_day'] = 'integer';
             $rules['limits.minimum_reservation_time_buffer'] = 'integer';
             $rules['limits.maximum_reservation_time_buffer'] = 'integer';
+            $rules['limits.min_people_increments'] = 'integer';
 
             $rules['schedules'] = 'array';
         }
