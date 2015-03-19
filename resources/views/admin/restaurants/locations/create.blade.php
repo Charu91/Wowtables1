@@ -52,13 +52,13 @@
                 <div class="form-group">
                     <label for="restaurant_id" class="col-sm-3 control-label ">Select Restaurant <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_id',$restaurants_list,'0',['class'=>'form-control populate select-restaurant','data-plugin-selectTwo'=>'']) !!}
+                        {!! Form::text('restaurant_id',null,['class'=>'form-control populate restaurants-select-box select-restaurant']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="location_id" class="col-sm-3 control-label ">Select Locality <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('location_id',$locations_list,'0',['class'=>'form-control populate select-location','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::text('location_id',null,['class'=>'form-control populate localities-select-box select-location']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -82,19 +82,19 @@
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 <div class="form-group">
-                    <label for="attributes[seo_title]" class="col-sm-3 control-label">SEO Title <span class="required">*</span></label>
+                    <label for="attributes[seo_title]" class="col-sm-3 control-label">SEO Title </label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attributes[seo_meta_description]" class="col-sm-3 control-label">SEO Meta Description <span class="required">*</span></label>
+                    <label for="attributes[seo_meta_description]" class="col-sm-3 control-label">SEO Meta Description </label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attributes[seo_meta_keywords]" class="col-sm-3 control-label">SEO Keywords <span class="required">*</span></label>
+                    <label for="attributes[seo_meta_keywords]" class="col-sm-3 control-label">SEO Keywords </label>
                     <div class="col-sm-6">
                         {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                     </div>
@@ -109,9 +109,9 @@
                     <div class="col-lg-6">
                         <div class="panel">
                             <div class="form-group">
-                                <label for="attributes[min_covers_per_table_off_peak]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
+                                <label for="attributes[off_peak_hour_discount_min_covers]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[min_covers_per_table_off_peak]',null,['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('attributes[off_peak_hour_discount_min_covers]',null,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>
@@ -122,8 +122,7 @@
             <div id="block_dates" class="tab-pane mt-lg">
                 <section class="panel">
                     <header class="panel-heading">
-                        <a id="addNewBlockDateBtn" class="btn btn-primary">Add Another</a>
-                        <h2 class="panel-title pull-right">Block Dates</h2>
+                        <h2 class="panel-title">Block Dates</h2>
                     </header>
                     <div class="panel-body">
                         <div class="row">
@@ -138,35 +137,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if($key == 0)
-                                    @else
                                     <div class="col-lg-2">
                                         <div class="form-group">
                                             <a class="btn btn-danger delete-block-date-div"><i class="fa fa-times"></i></a>
                                         </div>
                                     </div>
-                                    @endif
                                 </div>
                                 @endforeach
+                                    <div class="block-date-div"></div>
                             @else
-                                <div class="col-lg-4 mb-sm block-date-div">
-                                    <div class="col-lg-10">
-                                        <div class="form-group">
-                                            <label for="publish_date" class="col-sm-4 control-label">Dates </label>
-                                            <div class="col-sm-8">
-                                                {!! Form::text('block_dates[]',null,['class'=>'form-control block-date-picker']) !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="block-date-div"></div>
                             @endif
+                        </div>
+                        <div class="panel-footer">
+                            <a id="addNewBlockDateBtn" class="btn btn-primary">Add Block Date</a>
                         </div>
                     </div>
                 </section>
                 <section class="panel">
                     <header class="panel-heading">
-                        <a id="addNewBlockTimeRangeBtn" class="btn mb-xs btn-primary">Add Another</a>
-                        <h2 class="panel-title pull-right">Time Range Limits</h2>
+                        <h2 class="panel-title">Time Range Limits</h2>
                     </header>
                     <div class="panel-body">
                         <table id="blockTimeRangeTable"  class="table table-bordered mb-none">
@@ -213,7 +203,7 @@
                                         </tr>
                                     @endforeach
                                 @else
-                                    <tr>
+                                    <!--<tr>
                                         <td>{!! Form::select('reset_time_range_limits[0][limit_by]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control time-range-limit-by']) !!}</td>
                                         <td>
                                             {!! Form::select('reset_time_range_limits[0][day]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
@@ -228,10 +218,13 @@
                                         <td>
                                             <a class="btn btn-danger delete-block-time-range">Remove</a>
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                 @endif
                             </tbody>
                         </table>
+                        <div class="panel-footer">
+                            <a id="addNewBlockTimeRangeBtn" class="btn mb-xs btn-primary">Add Time Range Limits</a>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -257,27 +250,40 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="cuisines" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::select('attributes[flags]',[''=>'','1'=>'New','2'=>'Valentines Special'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[pricing_level]',['Select'=>'Select','Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
+                        {!! Form::select('attributes[pricing_level]',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cuisines" class="col-sm-3 control-label">Cuisines </label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="collections" class="col-sm-3 control-label">Collections </label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="flags" class="col-sm-3 control-label">Flags </label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[flags]',[''=>'','1'=>'New','2'=>'Valentines Special'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                    </div>
+                </div>
+                {{--*/ //var_dump($curators_list); /*--}}
+                <div class="form-group">
+                    <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
+                    <div class="col-sm-6">
+                        {!! Form::text('curators',null,['class'=>'form-control populate curators-select-box']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('curator_tips',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <!--
@@ -301,42 +307,21 @@
                 </div>
                 ------->
                 <div class="form-group">
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <a id="menuPicksBtn" data-target="#menuPicksModal" data-toggle="modal" class="btn btn-primary">Create Menu Picks</a>
-                    </div>
-                </div>
-                <div id="menuPicksHolder">
-                    <div class="form-group">
-                        <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks </label>
-                        <div class="col-sm-6">
-                            {!! Form::textarea('attributes[menu_picks]',null,['rows'=>'5','class'=>'form-control','required'=>'','id'=>'menuPicks']) !!}
-                        </div>
+                    <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[menu_picks]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <a id="expertTipsBtn" data-target="#expertTipsModal" data-toggle="modal" class="btn btn-primary">Create Expert Tips</a>
-                    </div>
-                </div>
-                <div id="expertTipsHolder">
-                    <div class="form-group">
-                        <label for="attributes[expert_tips]" class="col-sm-3 control-label">Expert Tips </label>
-                        <div class="col-sm-6">
-                            {!! Form::textarea('attributes[expert_tips]',null,['rows'=>'5','class'=>'form-control','required'=>'','id'=>'expertTips']) !!}
-                        </div>
+                    <label for="attributes[expert_tips]" class="col-sm-3 control-label">Expert Tips </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[expert_tips]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <a id="termsConditionsBtn" data-target="#termsConditionsModal" data-toggle="modal" class="btn btn-primary">Create Terms & Conditions</a>
-                    </div>
-                </div>
-                <div id="termsConditionsHolder">
-                    <div class="form-group">
-                        <label for="attributes[terms_and_conditions]" class="col-sm-3 control-label">Terms & Conditions </label>
-                        <div class="col-sm-6">
-                            {!! Form::textarea('attributes[terms_and_conditions]',null,['rows'=>'5','class'=>'form-control','required'=>'','id'=>'termsConditions']) !!}
-                        </div>
+                    <label for="attributes[terms_and_conditions]" class="col-sm-3 control-label">Terms & Conditions </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[terms_and_conditions]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
             </div>
@@ -346,8 +331,7 @@
             <div id="contact_details" class="tab-pane mt-lg">
                 <section class="panel">
                     <header class="panel-heading">
-                        <a id="addNewContactsBtn" class="btn mb-xs btn-primary">Add Another</a>
-                        <h2 class="panel-title pull-right">Restaurant Contacts</h2>
+                        <h2 class="panel-title">Restaurant Contacts</h2>
                     </header>
                     <div class="panel-body">
                         <table id="restaurantContactsTable"  class="table table-bordered mb-none">
@@ -370,17 +354,20 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <tr>
+                                <!--<tr>
                                     <td>{!! Form::text('contacts[0][name]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
                                     <td>{!! Form::text('contacts[0][designation]',null,['class'=>'form-control restaurant-contact-designation']) !!}</td>
                                     <td>{!! Form::text('contacts[0][phone_number]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
                                     <td>
                                         <a class="btn btn-danger delete-restaurant-contact">Remove</a>
                                     </td>
-                                </tr>
+                                </tr>-->
                             @endif
                             </tbody>
                         </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a id="addNewContactsBtn" class="btn mb-xs btn-primary">Add Another Contact</a>
                     </div>
                 </section>
             </div>

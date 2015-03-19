@@ -413,7 +413,7 @@
                 <div class="form-group">
                     <label for="cuisine" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines]',$cuisines,$restaurant['attributes']['cuisines'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}
+                        {!! Form::select('attributes[cuisines]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">

@@ -9,15 +9,34 @@
         <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
     @endforeach
 @elseif( $media_type == 'gallery_image' )
-    @foreach ( $media as $asset )
-        <div class="gallery-images">
-            {!! Form::hidden('media[gallery_images][]',$asset['id']) !!}
-            <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+    <section class="panel col-lg-8">
+        <div class="panel-body">
+        <h4 class="text-primary text-center">Drag the images to sort</h4>
+            <ul class="list-inline" id="sortable">
+                @foreach ( $media as $asset )
+                     <li style="cursor:move;">
+                        {!! Form::hidden('media[gallery_images][]',$asset['id']) !!}
+                        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+                     </li>
+                    <!--<div class="gallery-images">
+                        {!! Form::hidden('media[gallery_images][]',$asset['id']) !!}
+                        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+                    </div>-->
+                @endforeach
+            </ul>
         </div>
-    @endforeach
+    </section>
+
 @elseif ( $media_type == 'single-media-image' )
     @foreach ( $media as $asset )
         {!! Form::hidden('media_id',$asset['id']) !!}
         <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
     @endforeach
 @endif
+<script type="text/javascript">
+  $(function() {
+     $( "#sortable" ).sortable();
+     $( "#sortable" ).disableSelection();
+ });
+</script>
+

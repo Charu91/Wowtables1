@@ -164,6 +164,9 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/promotions/flags')? 'nav-active':'' }}">
                                 <a href="/admin/promotions/flags">Flags</a>
                             </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/collections')? 'nav-active':'' }}">
+                                <a href="/admin/promotions/collections">Collections</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

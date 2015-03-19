@@ -38,7 +38,9 @@
                                 <table  class="table table-bordered mb-none">
                                     <tbody>
                                     <tr>
-                                        <td>{{ $slot['time'] }}</td>
+                                        <td>{{ $slot['time'] }}
+                                            {!! Form::hidden('schedule_times[]',$slot['time'])  !!}
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -48,15 +50,17 @@
                                     <tbody>
                                         <tr>
                                             <td>Sch</td>
-                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],true) !!}</td>
+                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],true) !!}</td>
                                         </tr>
+                                        {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][time]',$slot['time']) !!}
+                                        {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][day]','mon') !!}
                                         <tr>
                                             <td>Max T</td>
-                                            <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                            <td>{!! Form::text('schedules['.$slot['mon']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                         </tr>
                                         <tr>
                                             <td>Off Peak</td>
-                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -66,15 +70,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][day]','tue') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['tue']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -84,15 +90,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][day]','wed') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['wed']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -102,15 +110,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][day]','thu') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['thu']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -120,15 +130,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][day]','fri') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['fri']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -138,15 +150,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][day]','sat') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['sat']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -156,15 +170,17 @@
                                     <tbody>
                                     <tr>
                                         <td>Sch</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],true) !!}</td>
                                     </tr>
+                                    {!! Form::hidden('schedules['.$slot['sun']['schedule_id'].'][time]',$slot['time']) !!}
+                                    {!! Form::hidden('schedules['.$slot['sun']['schedule_id'].'][day]','sun') !!}
                                     <tr>
                                         <td>Max T</td>
-                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
+                                        <td>{!! Form::text('schedules['.$slot['sun']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
                                     </tr>
                                     <tr>
                                         <td>Off Peak</td>
-                                        <td>{!! Form::checkbox('schedules['.$key.'][off_peak]','1',true) !!}</td>
+                                        <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                     </tr>
                                     </tbody>
                                 </table>
