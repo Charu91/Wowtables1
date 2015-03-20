@@ -52,7 +52,7 @@
             }
 
         });
-
+   
         $deleteCollectionBtn.on('click',function(){
 
             var id = $(this).data('collection-id');
