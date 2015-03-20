@@ -99,7 +99,7 @@ elixir(function(mix) {
             "javascripts/admin/maps.js",
             "javascripts/admin/promotions.js",
             "javascripts/admin/curator.js"
-        ], "public/js", "public")
+        ], "public/js", "public") 
 
         .version(["css/all.css","js/all.js"])
 
