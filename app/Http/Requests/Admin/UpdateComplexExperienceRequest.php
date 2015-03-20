@@ -46,8 +46,7 @@ class UpdateComplexExperienceRequest extends Request {
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:products,slug,'.$experience_id;
         $rules['status'] = 'required|in:Publish,Draft';
-        $rules['media.listing_image'] = 'required|exists:media,id';
-        $rules['media.gallery_images'] = 'required|galleryarray';
+
 
         if ($this->has('status') && $this->get('status') === 'Publish') {
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
@@ -57,8 +56,6 @@ class UpdateComplexExperienceRequest extends Request {
             $rules['attributes.experience_includes'] = 'required';
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.terms_and_conditions'] = 'required';
-            $rules['attributes.menu'] = 'required';
-            $rules['attributes.menu_markdown'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
             $rules['attributes.seo_meta_keywords'] = 'required|array';
@@ -67,11 +64,23 @@ class UpdateComplexExperienceRequest extends Request {
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.curator_tip'] = 'required';
             $rules['attributes.cuisines'] = 'required|productcuisinesarray';
+
+            $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
+            $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
+
+            $rules['media.listing_image'] = 'required|exists:media,id';
+            $rules['media.gallery_images'] = 'required|galleryarray';
         } else {
             $rules['attributes.prepayment_allowed'] = 'boolean';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
             $rules['attributes.cuisines'] = 'productcuisinesarray';
+
+            $rules['attributes.start_date'] = 'date_format:Y-m-d';
+            $rules['attributes.end_date'] = 'date_format:Y-m-d';
+
+            $rules['media.listing_image'] = 'exists:media,id';
+            $rules['media.gallery_images'] = 'galleryarray';
         }
 
         $rules['addons'] = 'array';

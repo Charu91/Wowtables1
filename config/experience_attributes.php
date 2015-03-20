@@ -140,6 +140,18 @@ return [
             'name' => 'Curator Tip',
             'type' => 'text',
             'value' => 'single'
+        ],
+
+        'start_date' => [
+            'name' => 'Start Date',
+            'type' => 'datetime',
+            'value' => 'single'
+        ],
+
+        'end_date' => [
+            'name' => 'end_date',
+            'type' => 'datetime',
+            'value' => 'single'
         ]
     ]
 ];

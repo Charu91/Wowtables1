@@ -689,6 +689,7 @@ class RestaurantLocation extends VendorLocation{
                 'name' => $contact['name'],
                 'designation' => $contact['designation'],
                 'phone_number' => $contact['phone_number'],
+                'email' => $contact['email']
             ];
         }
 
