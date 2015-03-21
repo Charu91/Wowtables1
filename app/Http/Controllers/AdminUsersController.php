@@ -2,11 +2,13 @@
 
 use Illuminate\Http\Request;
 use WowTables\Events\Site\NewUserWasRegistered;
+use WowTables\Http\Models\Eloquent\Reward;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\User as EloquentUser;
 use WowTables\Http\Models\User;
 use WowTables\Core\Repositories\Users\UserRepository;
 use WowTables\Http\Requests\Admin\CreateUserRequest;
+use WowTables\Http\Requests\CreateRewardRequest;
 
 /**
  * Class AdminUsersController
@@ -156,5 +158,46 @@ class AdminUsersController extends Controller {
 		flash()->success('The User has been deleted successfully');
 
 	}
+
+    public function create_reward($id)
+    {
+        $users = \WowTables\Http\Models\Eloquent\User::find($id);
+
+        $rewards = $this->user->get_all_records($id);
+        return view('admin.users.rewards',['user_id'=>$id,'rewards'=>$rewards,'users'=>$users]);
+    }
+
+    public function store_rewards(CreateRewardRequest $request)
+    {
+        $reward = new Reward();
+        $users = \WowTables\Http\Models\Eloquent\User::find($this->request->get('user_id'));
+
+        $reward->user_id = $this->request->get('user_id');
+        if($this->request->get('status') == "add_points"){
+            $reward->points_earned = $this->request->get('points');
+            $reward->points_redeemed = 0;
+            $reward->points_removed = 0;
+            $users->total_points = $users->total_points + $this->request->get('points');
+        } else if($this->request->get('status') == "redeem_points"){
+            $reward->points_earned = 0;
+            $reward->points_removed = 0;
+            $reward->points_redeemed = $this->request->get('points');;
+            $users->total_points = $users->total_points - $this->request->get('points');
+        } else if($this->request->get('status') == "remove_points"){
+            $reward->points_earned = 0;
+            $reward->points_redeemed = 0;
+            $reward->points_removed = $this->request->get('points');;
+            $users->total_points = $users->total_points - $this->request->get('points');
+        }
+
+        $reward->description = $this->request->get('short_description');
+
+        $reward->save();
+        $users->save();
+
+        flash()->success('The Reward has been created successfully');
+
+        return redirect('admin/users');
+    }
 
 }

@@ -47,6 +47,8 @@
 								&nbsp;|&nbsp;
 
 								<a data-user-id="{!! $user->id !!}" class="btn btn-xs btn-danger delete-user-btn">Delete</a>
+								&nbsp;|&nbsp;
+								<a href="/admin/users/{!! $user->id !!}/create_reward" data-user-id="{!! $user->id !!}" class="btn btn-xs btn-primary">Rewards</a>
 							</th>
 						</tr>
 					@endforeach
