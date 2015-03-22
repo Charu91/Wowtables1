@@ -32,3 +32,11 @@ Route::get('/test', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('/test/queue', [
+    'uses' => 'TestController@queue',
+    'as' => 'TestingPage',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);

@@ -4,6 +4,8 @@ use DB;
 use Image;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Cloud;
+use Illuminate\Contracts\Queue\Queue;
+use WowTables\Commands\ImageResizeSendToCloud;
 
 class RestaurantLocation extends VendorLocation{
 
@@ -25,10 +27,13 @@ class RestaurantLocation extends VendorLocation{
 
     protected $cloud;
 
-    public function __construct(Config $config, Cloud $cloud)
+    protected $queue;
+
+    public function __construct(Config $config, Cloud $cloud, Queue $queue)
     {
         $this->config = $config;
         $this->cloud = $cloud;
+        $this->queue = $queue;
     }
 
     public function create(array $data)
@@ -179,7 +184,7 @@ class RestaurantLocation extends VendorLocation{
             'status' => $data['status']
         ];
 
-        $restaurantUpdate = DB::table('vendor_locations')->where('id', $vendor_location_id)->update($vendorLocationUpdateData);
+        DB::table('vendor_locations')->where('id', $vendor_location_id)->update($vendorLocationUpdateData);
 
 
         if(!empty($data['attributes'])){
@@ -434,64 +439,44 @@ class RestaurantLocation extends VendorLocation{
     {
         $mediaSizes = $this->config->get('media.sizes');
         $uploads_dir = $this->config->get('media.base_path');
-        $media_resized_insert_map = [];
         $media_insert_map = [];
 
         if(isset($media['listing_image'])){
             $listing_image = DB::table('media as m')
                                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
-                                ->select('m.id', 'm.file', 'mr.file as resized_file' , 'mr.height', 'mr.width')
+                                ->select(
+                                    'm.id',
+                                    'm.file',
+                                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['listing']['height'].' && mr.width = '.$mediaSizes['listing']['width'].', true, false)) as resized_exists')
+                                )
                                 ->where('m.id', $media['listing_image'])
                                 ->first();
 
-            $resized_image = true;
-            if(!$listing_image->resized_file){
-                $resized_image = false;
-            }else{
-                if($listing_image->width != $mediaSizes['listing']['width']
-                    || $listing_image->height != $mediaSizes['listing']['height']){
-                    $resized_image = false;
-                }
-            }
 
-            if(!$resized_image){
+            if(!$listing_image->resized_exists){
                 $listing_file = $listing_image->file;
                 $fileInfo = new \SplFileInfo($listing_file);
                 $fileExtension = $fileInfo->getExtension();
                 $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
                 $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['listing']['width'].'x'.$mediaSizes['listing']['height'].'.'.$fileExtension;
 
-                $listing_image_upload = $this->cloud->put(
-                    $uploads_dir.$listing_resized_imagename,
-                    Image::make($this->cloud->get($uploads_dir.$listing_file))->fit(
-                        $mediaSizes['listing']['width'],
-                        $mediaSizes['listing']['height']
-                    )->encode()
-                );
+                $this->queue->push(new ImageResizeSendToCloud(
+                    $listing_image->id,
+                    $uploads_dir,
+                    $listing_resized_imagename,
+                    $uploads_dir.$listing_file,
+                    $mediaSizes['listing']['width'],
+                    $mediaSizes['listing']['height']
+                ));
 
-                if(!$listing_image_upload){
-                    DB::rollBack();
-                    return [
-                        'status' => 'failure',
-                        'action' => 'Saving the Restaurant Location listing Media into the Cloud'
-                    ];
-                }else{
-                    $media_resized_insert_map[] = [
-                        'media_id' => $listing_image->id,
-                        'file' => $listing_resized_imagename,
-                        'height' => $mediaSizes['listing']['height'],
-                        'width' => $mediaSizes['listing']['width']
-                    ];
-                }
-
-
-                $media_insert_map[] = [
-                    'vendor_location_id' => $vendor_location_id,
-                    'media_type' => 'listing',
-                    'media_id' => $media['listing_image'],
-                    'order' => 0
-                ];
             }
+
+            $media_insert_map[] = [
+                'vendor_location_id' => $vendor_location_id,
+                'media_type' => 'listing',
+                'media_id' => $media['listing_image'],
+                'order' => 0
+            ];
         }
 
         if(isset($media['gallery_images'])){
@@ -505,8 +490,6 @@ class RestaurantLocation extends VendorLocation{
                                 ->groupBy('m.id')
                                 ->get();
 
-            $gallery_cloud_uploads = true;
-
             foreach($galleryfiles as $image){
                 if(!$image->resized_exists) {
                     $gallery_file = $image->file;
@@ -515,27 +498,14 @@ class RestaurantLocation extends VendorLocation{
                     $gallery_filename = $fileInfo->getBasename('.' . $fileExtension);
                     $gallery_resized_imagename = $gallery_filename.'_'.$mediaSizes['gallery']['width'].'x'.$mediaSizes['gallery']['height'].'.'. $fileExtension;
 
-
-
-                    $listing_image_upload = $this->cloud->put(
-                        $uploads_dir . $gallery_resized_imagename,
-                        Image::make($this->cloud->get($uploads_dir . $gallery_file))->fit(
-                            $mediaSizes['gallery']['width'],
-                            $mediaSizes['gallery']['height']
-                        )->encode()
-                    );
-
-                    if (!$listing_image_upload) {
-                        $gallery_cloud_uploads = false;
-                        break;
-                    } else {
-                        $media_resized_insert_map[] = [
-                            'media_id' => $image->id,
-                            'file' => $gallery_resized_imagename,
-                            'height' => $mediaSizes['gallery']['height'],
-                            'width' => $mediaSizes['gallery']['width']
-                        ];
-                    }
+                    $this->queue->push(new ImageResizeSendToCloud(
+                        $image->id,
+                        $uploads_dir,
+                        $gallery_resized_imagename,
+                        $uploads_dir . $gallery_file,
+                        $mediaSizes['gallery']['width'],
+                        $mediaSizes['gallery']['height']
+                    ));
                 }
 
                 $media_insert_map[] = [
@@ -543,26 +513,6 @@ class RestaurantLocation extends VendorLocation{
                     'media_type' => 'gallery',
                     'media_id' => $image->id,
                     'order' => array_search($image->id, $media['gallery_images'])
-                ];
-            }
-
-            if(!$gallery_cloud_uploads){
-                DB::rollBack();
-                return [
-                    'status' => 'failure',
-                    'action' => 'Saving the Restaurant Location gallery Media into the Cloud'
-                ];
-            }
-        }
-
-        if(count($media_resized_insert_map)){
-            $mediaResizeInsert = DB::table('media_resized')->insert($media_resized_insert_map);
-
-            if(!$mediaResizeInsert){
-                DB::rollBack();
-                return [
-                    'status' => 'failure',
-                    'action' => 'Saving the Restaurant Location listing Media into the DB'
                 ];
             }
         }
