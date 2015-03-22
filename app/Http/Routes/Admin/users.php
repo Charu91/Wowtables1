@@ -24,6 +24,16 @@ Route::post('admin/users', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('admin/users/store_rewards', [
+    'uses' => 'AdminUsersController@store_rewards',
+    'as' => 'AdminUserStoreReward',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+
 Route::get('admin/users/{id}', [
     'uses' => 'AdminUsersController@show',
     'as' => 'AdminUsersShow',
@@ -35,6 +45,14 @@ Route::get('admin/users/{id}', [
 Route::get('admin/users/{id}/edit', [
     'uses' => 'AdminUsersController@edit',
     'as' => 'AdminUserEdit',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/users/{id}/create_reward', [
+    'uses' => 'AdminUsersController@create_reward',
+    'as' => 'AdminUserCreateReward',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),

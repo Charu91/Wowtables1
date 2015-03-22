@@ -40,7 +40,7 @@
 			</div>
 			<div class="form-group  col-lg-6">
 				{!! Form::label('location','Location',['class'=>'control-label']) !!}
-				{!! Form::select('location_id',$locations_list,null,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
+				{!! Form::select('location_id',$cities_list,null,['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
 			</div>
 			<div class="form-group  col-lg-6">
 				{!! Form::label('phone_number','Phone Number',['class'=>'control-label']) !!}

@@ -1065,4 +1065,9 @@ class User {
 
         return ['status' => 'success'];
     }
+
+    public function get_all_records($id){
+        $rewards = DB::table('rewards_details')->where('user_id', $id);
+        return $rewards->get();
+    }
 }

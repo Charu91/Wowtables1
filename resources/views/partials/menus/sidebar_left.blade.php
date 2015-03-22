@@ -164,8 +164,14 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/promotions/flags')? 'nav-active':'' }}">
                                 <a href="/admin/promotions/flags">Flags</a>
                             </li>
-                            <li class="{{ (isset($uri) && $uri === 'admin/collections')? 'nav-active':'' }}">
+                            <li class="{{ (isset($uri) && $uri === 'admin/promotions/collections')? 'nav-active':'' }}">
                                 <a href="/admin/promotions/collections">Collections</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/promotions/listpage_sidebar')? 'nav-active':'' }}">
+                                <a href="/admin/promotions/listpage_sidebar">Listpage Sidebar</a>
+                            </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/promotions/email_footer_promotions')? 'nav-active':'' }}">
+                                <a href="/admin/promotions/email_footer_promotions">Email Footer Promotions</a>
                             </li>
                         </ul>
                     </li>
