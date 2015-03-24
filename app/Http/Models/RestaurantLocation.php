@@ -29,11 +29,18 @@ class RestaurantLocation extends VendorLocation{
 
     protected $queue;
 
+    protected $attributesMap;
+
+    protected $typeTableAliasMap;
+
     public function __construct(Config $config, Cloud $cloud, Queue $queue)
     {
         $this->config = $config;
         $this->cloud = $cloud;
         $this->queue = $queue;
+
+        $this->attributesMap = $config->get('restaurant_locations_attributes.attributesMap');
+        $this->typeTableAliasMap = $config->get('restaurant_locations_attributes.typeTableAliasMap');
     }
 
     public function create(array $data)
@@ -44,7 +51,8 @@ class RestaurantLocation extends VendorLocation{
             'vendor_id' => $data['restaurant_id'],
             'slug' => $data['slug'],
             'location_id' => $data['location_id'],
-            'status' => $data['status']
+            'status' => $data['status'],
+            'a_la_carte' => $data['a_la_carte']
         ];
 
         if(!empty($data['pricing_level'])){
@@ -301,10 +309,136 @@ class RestaurantLocation extends VendorLocation{
 
     public function fetch($vendor_location_id)
     {
+        $query = 'SELECT u.`phone_number`';
+        $unique_attribute_types = [];
 
+        if(count($attributesMap)){
+            foreach($attributesMap as $attribute => $attData){
+                if(!in_array($attData['type'], $unique_attribute_types))
+                    $unique_attribute_types[] = $attData['type'];
+
+                if($attData['type'] === 'single-select' ||  $attData['type'] === 'multi-select'){
+                    $query .= "
+                        ,IF(
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
+                            null
+                        ) AS `{$attData['id_alias']}`,
+                        IF(
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
+                            null
+                        ) AS `{$attribute}`
+                    ";
+                }else{
+                    $query .= "
+                        ,IF(
+                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
+                            {$typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
+                            null
+                        ) AS `{$attribute}`
+                    ";
+                }
+            }
+        }
     }
 
     public function fetchBySlug($slug, array $filters)
+    {
+
+    }
+
+    public function fetchBasicsAndSingleAttributes($vendor_location_id)
+    {
+
+        $selectCols = [
+            'v.name AS restaurant',
+            'l.name AS locality',
+            'la.name AS area',
+            'lc.name AS city',
+            'ls.name AS state',
+            'lco.name AS country',
+            DB::raw(('COUNT(vlr.id) AS total_reviews')),
+            DB::raw('If(count(vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating')
+        ];
+
+        $select = DB::table('vendor_locations AS vl')
+            ->join('vendors AS v', 'v.id', '=', 'vl.vendor_id')
+            ->join('vendor_location_address AS va', 'vl.id', '=', 'va.vendor_location_id')
+            ->join('locations AS l', 'vl.location_id', '=', 'l.id')
+            ->join('locations AS la', 'va.area_id', '=', 'la.id')
+            ->join('locations AS lc', 'va.city_id', '=', 'lc.id')
+            ->join('locations AS ls', 'va.state_id', '=', 'ls.id')
+            ->join('locations AS lco', 'va.country_id', '=', 'lco.id')
+            ->join('vendor_location_reviews AS vlr', 'vlr.vendor_location_id', '=', 'vl.id')
+            ->where('vl.id', $vendor_location_id)
+            ->where('vl.status', 'Active')
+            ->where('v.status', 'Publish')
+            ->where('v.publish_time', '<', DB::raw('NOW()'))
+            ->groupBy('vl.id');
+
+        $unique_attribute_types = [];
+
+        if(count($this->attributesMap)){
+            $multiAttrs = [];
+
+            foreach($this->attributesMap as $attribute => $attData){
+                if(!in_array($attData['type'], $unique_attribute_types))
+                    $unique_attribute_types[] = $attData['type'];
+
+                if($attData['value'] === 'single'){
+                        if($attData['type'] = 'single-select'){
+                            $selectCols[] = DB::raw(
+                                "MAX(IF(
+                                    {$this->typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
+                                    {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
+                                    null
+                                )) AS `{$attribute}`"
+                            );
+                        }else{
+                            DB::raw(
+                                "MAX(IF(
+                                    {$this->typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
+                                    {$this->typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
+                                    null
+                                )) AS `{$attribute}`"
+                            );
+                        }
+                }else{
+                    $multiAttrs[] = ['type' => $attData['type'], 'attribute' => $attribute];
+                }
+            }
+        }
+
+        dd($select->select($selectCols)->get(), DB::getQueryLog());
+    }
+
+    protected function fetchMultiAttributes($vendor_location_id, $mutiAttrs)
+    {
+
+    }
+
+    protected function fetchTagsAndFlags()
+    {
+
+    }
+
+    protected function fetchOtherLocations()
+    {
+
+    }
+
+    protected function fetchScheduleAndBlockDates()
+    {
+
+    }
+
+    protected function fetchTimeSlotsByDate()
+    {
+
+    }
+
+    protected function fetchLimitsByDateAndTime()
     {
 
     }

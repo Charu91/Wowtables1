@@ -45,13 +45,13 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['restaurant_id'] = 'required|integer|restaurant';
         $rules['location_id'] = 'required|integer|exists:locations,id,type,Locality|unique:vendor_locations,location_id,NULL,id,vendor_id,'.$this->get('restaurant_id'); // Locality Id
         $rules['slug'] = 'required|unique:vendor_locations,slug';
-        $rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
 
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
-            $rules['attributes.pricing_level'] = 'required|in:Low,Medium,High';
+            $rules['a_la_carte'] = 'required|boolean';
+            $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
             $rules['attributes.terms_and_conditions'] = '';
@@ -81,7 +81,8 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['media.gallery_images'] = 'required|galleryarray';
 
         }else{
-            $rules['attributes.pricing_level'] = 'in:Low,Medium,High';
+            $rules['a_la_carte'] = 'boolean';
+            $rules['pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';

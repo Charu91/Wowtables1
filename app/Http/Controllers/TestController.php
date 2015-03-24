@@ -242,8 +242,12 @@ HTML;
 
 	}
 
-	public function queue(Queue $queue){
-        $queue->push(new ImageResizeSendToCloud());
+	public function queue(RestaurantLocation $loc){
+
+        $loc->fetchBasicsAndSingleAttributes(7);
+        //dd($loc);
+        //dd($loc->fetchTimings());
+        //$queue->push(new ImageResizeSendToCloud());
     }
 
 }
