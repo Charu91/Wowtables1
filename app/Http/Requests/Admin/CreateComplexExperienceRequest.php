@@ -61,7 +61,8 @@ class CreateComplexExperienceRequest extends Request {
             $rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.curator_tip'] = 'required';
-            $rules['attributes.cuisines'] = 'required|productcuisinesarray';
+            //$rules['attributes.cuisines'] = 'required|productcuisinesarray';
+            $rules['attributes.cuisines'] = 'required';
 
             $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
             $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
@@ -72,7 +73,8 @@ class CreateComplexExperienceRequest extends Request {
             $rules['attributes.prepayment_allowed'] = 'boolean';
             $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
-            $rules['attributes.cuisines'] = 'productcuisinesarray';
+            //$rules['attributes.cuisines'] = 'productcuisinesarray';
+            $rules['attributes.cuisines'] = 'required';
 
             $rules['attributes.start_date'] = 'date_format:Y-m-d';
             $rules['attributes.end_date'] = 'date_format:Y-m-d';
@@ -91,7 +93,8 @@ class CreateComplexExperienceRequest extends Request {
                 $rules['addons.'.$key.'.post_tax_price'] = 'required_with:addons|numeric';
                 $rules['addons.'.$key.'.commission_per_cover'] = 'required|numeric';
                 $rules['addons.'.$key.'.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
-                $rules['addons.'.$key.'.experience_info'] = 'required_with:addons';
+                $rules['addons.'.$key.'.short_description'] = 'required_with:addons';
+                $rules['addons.'.$key.'.addonsMenu'] = 'required_with:addons';
             }
         }
 

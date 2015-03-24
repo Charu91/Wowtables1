@@ -11,6 +11,13 @@
             autoclose: true
         });
 
+        $('.addDatepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '1d',
+            todayHighlight: true,
+            autoclose: true
+        });
+
         $('#simpleExperienceTimePicker').timepicker({
             showSeconds: true,
             showMeridian: false
@@ -34,10 +41,13 @@
             , $updateExperienceAddonBtn = $("#updateExperienceAddonBtn")
             , $cancelUpdateExperienceAddonBtn = $("#cancelUpdateExperienceAddonBtn")
             , $addonTitle = $('#addonTitle')
-            , $addonPriceBeforeTax = $('#addonPriceBeforeTax')
+            , $addonPriceBeforeTax = $('#addonPrice')
             , $addonPriceAfterTax = $('#addonPriceAfterTax')
-            , $addonTax = $('#addonTax')
-            , $addonInfo = $('#addonInfo');
+            , $addonTax = $('#addon_tax')
+            , $addonCommissionPerCover = $('#addon_commission_per_cover')
+            , $addonCommissionOn = $('#addonCommissionOn')
+            , $addonShortDescription = $('#addonShortDescription')
+            , $addonsMenu = $('#addonsMenu')
 
         $('#experiencesTable').DataTable();
 
@@ -54,14 +64,17 @@
 
         $experienceAddonBtn.on('click',function() {
 
-            if ( $addonTitle.val() != '' || $addonPriceBeforeTax.val() != '' || $addonPriceAfterTax.val() != '' || $addonTax.val() != '' || $addonInfo.val() != '' )
+            if ( $addonTitle.val() != '' || $addonPriceBeforeTax.val() != '' || $addonPriceAfterTax.val() != '' || $addonShortDescription.val() != '' )
             {
                 $experienceAddons.push({
                     addonTitle: $addonTitle.val(),
                     addonPriceBeforeTax: $addonPriceBeforeTax.val(),
                     addonPriceAfterTax: $addonPriceAfterTax.val(),
                     addonTax: $addonTax.val(),
-                    addonInfo: $addonInfo.val()
+                    addonCommissionPerCover: $addonCommissionPerCover.val(),
+                    addonCommissionOn: $addonCommissionOn.val(),
+                    addonsMenu: $addonsMenu.val(),
+                    addonDescription: $addonShortDescription.val()
                 });
 
                 emptyAddonForm();
@@ -76,25 +89,32 @@
                     tablebody +=
                         '<tr id="'+key+'">' +
                         '<td>' + key + '</td>' +
-                        '<td id="addonTitle_'+key+'">' + value.addonTitle + '</td>' +
+                        '<td id="addonTitle_'+key+'">' + value.addonTitle + ' </td>' +
                         '<td id="addonPriceBeforeTax_'+key+'">' + value.addonPriceBeforeTax + '</td>' +
                         '<td id="addonPriceAfterTax_'+key+'">' + value.addonPriceAfterTax + '</td>' +
-                        '<td id="addonTax_'+key+'">' + value.addonTax + '</td>' +
-                        '<td id="addonInfo_'+key+'">' + value.addonInfo + '</td>' +
+                        '<td id="addonTax_'+key+'">' + value.addonDescription + '</td>' +
                         '<td>' +
                         '<a class="edit-addon-btn" data-addon-row-id="' + key + '" href="javascript:void(0);">' +
                         '<i class="fa fa-edit"></i></a>&nbsp;|&nbsp;' +
                         '<a class="delete-addon-btn" data-addon-row-id="' + key + '" href="javascript:void(0);">' +
                         '<i class="fa fa-trash-o"></i></a>' +
                         '</td>' +
-                        '</tr>' +
-                        '<input id="addonInput_'+key+'" type="hidden" name="addons[]" value="'+
+                        '<input type="hidden" name="addons['+key+'][name]" value="'+value.addonTitle+'" />'+
+                        '<input type="hidden" name="addons['+key+'][price]" value="'+value.addonPriceBeforeTax+'" />'+
+                        '<input type="hidden" name="addons['+key+'][tax]" value="'+value.addonTax+'" />'+
+                        '<input type="hidden" name="addons['+key+'][post_tax_price]" value="'+value.addonPriceAfterTax+'" />'+
+                        '<input type="hidden" name="addons['+key+'][commission_per_cover]" value="'+value.addonCommissionPerCover+'" />'+
+                        '<input type="hidden" name="addons['+key+'][commission_on]" value="'+value.addonCommissionOn+'" />'+
+                        '<input type="hidden" name="addons['+key+'][short_description]" value="'+value.addonDescription+'" />'+
+                        '<input type="hidden" name="addons['+key+'][addonsMenu]" value="'+value.addonsMenu+'" />'+
+                        '</tr>'
+                        /*'<input id="addonInput_'+key+'" type="hidden" name="addons[]" value="'+
                             value.addonTitle +','+
                             value.addonPriceBeforeTax+','+
                             value.addonPriceAfterTax+','+
                             value.addonPriceBeforeTax+','+
                             value.addonInfo+
-                        '">'
+                        '">'*/
                 });
 
                 $("#experienceAddonsTable tbody").html(tablebody);
@@ -115,8 +135,7 @@
             $addonTitle.val( $('#addonTitle_'+id).text() );
             $addonPriceBeforeTax.val( $('#addonPriceBeforeTax_'+id).text() );
             $addonPriceAfterTax.val( $('#addonPriceAfterTax_'+id).text() );
-            $addonTax.val( $('#addonTax_'+id).text() );
-            $addonInfo.val( $('#addonInfo_'+id).text() );
+            $addonShortDescription.val( $('#addonTax_'+id).text() );
             $experienceAddonBtn.text('Update');
             $cancelUpdateExperienceAddonBtn.show();
             $experienceAddonForm.show();
@@ -136,8 +155,8 @@
             $addonTitle.val('');
             $addonPriceBeforeTax.val('');
             $addonPriceAfterTax.val('');
-            $addonTax.val('');
-            $addonInfo.val('');
+            $addonShortDescription.val('');
+            //$addonInfo.val('');
         }
 
         $('body').delegate('#cancelUpdateExperienceAddonBtn','click',function () {
@@ -150,14 +169,26 @@
         });
 
         $('#experienceMenuHolder').hide();
+        $('#addonsMenuHolder').hide();
 
         $('#insertExperienceMenu').on('click',function(){
             var menu = $('#expMenuText').val();
             $('#markdownmodal').modal('hide');
             $('#experienceMenuHolder').show();
             $('#expMenu').val(menu);
+            $('#expMarkdownMenu').val(menu);
             $('#expMenuBtn').hide();
         });
+
+        $('#insertAddonsMenu').on('click',function(){
+            var menu = $('#addonsMenuText').val();
+            $('#addonsMarkdownModal').modal('hide');
+            $('#addonsMenuHolder').show();
+            $('#addonsMenu').val(menu);
+            $('#expMarkdownMenu').val(menu);
+            $('#addOnsMenuBtn').hide();
+        });
+
 
         /*$('#addNewExperienceForm').submit(function(e){
             e.preventDefault();
