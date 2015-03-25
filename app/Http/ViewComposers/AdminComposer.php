@@ -3,7 +3,9 @@
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Laracasts\Utilities\JavaScript\JavaScriptFacade;
+use WowTables\Http\Models\Eloquent\Collection;
 use WowTables\Http\Models\Eloquent\Curator;
+use WowTables\Http\Models\Eloquent\Flag;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\UserAttributes;
@@ -43,6 +45,9 @@ class AdminComposer {
         $view->with('cuisines',VendorAttributesSelectOptions::wherehas('attribute', function($q){$q->where('alias','cuisines');})->lists('option','id'));
         $view->with('_token', $this->encrypter->encrypt(csrf_token()));
         $view->with('media_url',Config::get('media.base_s3_url'));
+        $view->with('curator_list',Curator::lists('name','id'));
+        $view->with('tags_list',Collection::lists('name','id'));
+        $view->with('flags_list',Flag::lists('name','id'));
 
         $curators_list = Curator::all()->lists('name','id');
         $curatorsList = [];

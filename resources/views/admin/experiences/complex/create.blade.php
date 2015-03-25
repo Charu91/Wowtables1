@@ -35,14 +35,17 @@
                 <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
+                <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
+            </li>
+            <li>
                 <a href="#pricing_details" data-toggle="tab" class="text-center">Pricing</a>
             </li>
             <li>
                 <a href="#addon_details" data-toggle="tab" class="text-center">Addons</a>
             </li>
-            <li>
+            <!--<li>
                 <a href="#variations_details" data-toggle="tab" class="text-center">Variations Details</a>
-            </li>
+            </li>-->
             <li>
                 <a href="#miscellaneous_tab" data-toggle="tab" class="text-center">Miscellaneous</a>
             </li>
@@ -76,37 +79,57 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="experience_info">Experience Info <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('experience_info',null,['rows'=>'10','class'=>'form-control','id'=>'experienceInfo','required'=>'']) !!}
+                        {!! Form::textarea('attributes[experience_info]',null,['rows'=>'10','class'=>'form-control','id'=>'experienceInfo','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="experience_includes">Experience Includes <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('experience_includes',null,['rows'=>'10','class'=>'form-control','id'=>'experienceIncludes','required'=>'']) !!}
+                        {!! Form::textarea('attributes[experience_includes]',null,['rows'=>'10','class'=>'form-control','id'=>'experienceIncludes','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="short_description">Short Description <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('short_description',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
+                        {!! Form::textarea('attributes[short_description]',null,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="terms_and_conditions">Terms & Conditions <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('terms_and_conditions',null,['rows'=>'5','class'=>'form-control','id'=>'terms_conditions','required'=>'']) !!}
+                        {!! Form::textarea('attributes[terms_and_conditions]',null,['rows'=>'5','class'=>'form-control','id'=>'terms_conditions','required'=>'']) !!}
                     </div>
                 </div>
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
-                @include('partials.forms.seo_details')
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="attributes[seo_title]">SEO Title <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="attributes[seo_meta_description]">SEO Meta Description <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="attributes[seo_meta_keywords]">SEO Keywords <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[seo_meta_keywords][]',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+                    </div>
+                </div>
+            </div>
+            <div id="media_tab" class="tab-pane mt-lg">
+                @include('partials.forms.add_media')
             </div>
             <div id="pricing_details" class="tab-pane mt-lg">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="attributes[allow_prepayment]" id="attributes[allow_prepayment]" value="1" checked="">
-                            <label  for="attributes[allow_prepayment]">Allow Prepayment <span class="required">*</span></label>
+                            <input type="checkbox" name="attributes[prepayment_allowed]" id="attributes[allow_prepayment]" value="1" checked="">
+                            <label  for="attributes[prepayment_allowed]">Allow Prepayment <span class="required">*</span></label>
                         </div>
                     </div>
                 </div>
@@ -133,40 +156,71 @@
                 </div>
                 <div id="experienceAddonForm">
                     <div class="form-group">
-                        {!! Form::label('','Addon Title',['class'=>'col-sm-3 control-label']) !!}
+                        {!! Form::label('addon_title','Addon Title',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonTitle']) !!}
+                            {!! Form::text('addon_title',null,['class'=>'form-control','id'=>'addonTitle']) !!}
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('addon_price_before_tax','Addon Price Before Tax',['class'=>'col-sm-3 control-label']) !!}
+                        {!! Form::label('addon_price_before_tax','Addon Price',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonPriceBeforeTax']) !!}
+                            {!! Form::text('addon_price_before_tax',null,['class'=>'form-control','id'=>'addonPrice']) !!}
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('','Addon Price After Tax',['class'=>'col-sm-3 control-label']) !!}
+                        {!! Form::label('addon_tax','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonPriceAfterTax']) !!}
+                            {!! Form::text('addon_tax',null,['class'=>'form-control','id'=>'addon_tax']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('addon_post_tax_price','Addon Post Tax Price',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('addon_post_tax_price',null,['class'=>'form-control','id'=>'addonPriceAfterTax']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addon_commission_per_cover" class="col-sm-3 control-label">Addon Commissions Per Cover<span class="required">*</span></label>
+                        <div class="col-sm-6">
+                            {!! Form::text('addon_commission_per_cover]',null,['class'=>'form-control','required'=>'','id'=>'addon_commission_per_cover']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addon_commission_on]" class="col-sm-3 control-label">Addon Commission On <span class="required">*</span></label>
+                        <div class="col-sm-6">
+                            {!! Form::select('addon_commission_on',[''=>'Select Value','Pre-Tax'=>'Pre-Tax','Post-Tax'=>'Post-Tax'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','id'=>'addonCommissionOn']) !!}
                         </div>
                     </div>
                     <!--<div class="form-group">
-                        {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
-                        <div class="col-sm-6">
-                            {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
-                        </div>
-                    </div>-->
+                         {!! Form::label('','Addon Tax',['class'=>'col-sm-3 control-label']) !!}
+                         <div class="col-sm-6">
+                             {!! Form::text('',null,['class'=>'form-control','id'=>'addonTax']) !!}
+                         </div>-->
                     <div class="form-group">
-                        {!! Form::label('','Addon Info',['class'=>'col-sm-3 control-label']) !!}
+                        {!! Form::label('addon_short_description','Addon Short Description',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
-                            {!! Form::textarea('',null,['class'=>'form-control','rows'=>'3','id'=>'addonInfo']) !!}
+                            {!! Form::textarea('addon_short_description',null,['class'=>'form-control','rows'=>'3','id'=>'addonShortDescription']) !!}
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('addon_menu','Addon Menu',['class'=>'col-sm-3 control-label']) !!}
+                        {!! Form::label('addons_menu','Addon Menu',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
-                            {!! Form::textarea('addon_menu',null,['class'=>'form-control','rows'=>'5']) !!}
+                            {!! Form::textarea('addons_menu',null,['rows'=>'8','class'=>'form-control','required'=>'','id'=>'addonsMenu']) !!}
                         </div>
+                        <!--<div class="col-sm-6">
+                            <a id="expMenuBtn" data-target="#markdownmodal" data-toggle="modal" class="btn btn-primary">Create Experience Menu</a>
+                        </div>
+                        <div id="addonsMenuHolder">
+                            <label for="attributes[menu]" class="col-sm-2 control-label">Addons Menu <span class="required">*</span></label>
+                            <div class="col-sm-6">
+                                {!! Form::textarea('addons_menu',null,['rows'=>'30','class'=>'form-control','required'=>'','id'=>'addonsMenu']) !!}
+                            </div>
+                        </div>-->
+                        <!--<div class="col-sm-6">
+                        {!! Form::label('addon_menu','Addon Menu',['class'=>'col-sm-3 control-label']) !!}
+
+                            {!! Form::textarea('addon_menu',null,['class'=>'form-control','rows'=>'5']) !!}
+                        </div>-->
                     </div>
                     <div class="form-group">
                         <div class="col-sm-6 col-sm-offset-3">
@@ -179,40 +233,52 @@
                 </div>
                 @include('partials.forms.experience_addon')
             </div>
-            <div id="variations_details" class="tab-pane mt-lg">
+            <!--<div id="variations_details" class="tab-pane mt-lg">
 
                 Coming Soon.
 
-            </div>
+            </div>-->
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">
-                    <label for="cuisines" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
+                    <label for="attributes[start_date]" class="col-sm-3 control-label">Start Date <span class="required">*</span></label>
+                    <div class="col-sm-2">
+                        {!! Form::text('attributes[start_date]','',['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[end_date]" class="col-sm-3 control-label">End Date <span class="required">*</span></label>
+                    <div class="col-sm-2">
+                        {!! Form::text('attributes[end_date]','',['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[cuisine][]" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('cuisine',[''=>'','1'=>'Italian','2'=>'French'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('flags',[''=>'','1'=>'New','2'=>'Valentines Special'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('flags[]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="tags" class="col-sm-3 control-label">Tags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('tags',['1'=>'Popular','2'=>'Featured'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
+                        {!! Form::select('tags[]',$tags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('curator',[''=>'','1'=>'Manoj','2'=>'Satheesh'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('curators[]',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="curator_tips" class="col-sm-3 control-label">Curator Tips <span class="required">*</span></label>
+                    <label for="attributes[curator_tip]" class="col-sm-3 control-label">Curator Tips <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('curator_tips',null,['class'=>'form-control redactor-text','required'=>'']) !!}
+                        {!! Form::textarea('attributes[curator_tip]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
             </div>
@@ -239,11 +305,11 @@
             <div class="form-group col-md-4">
                 <label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
                 <div class="radio-custom radio-success radio-inline">
-                    <input type="radio" id="Active" name="status" value="Active">
+                    <input type="radio" id="Active" name="status" value="Publish">
                     <label for="Publish">Publish</label>
                 </div>
                 <div class="radio-custom radio-danger radio-inline">
-                    <input type="radio" id="Inactive" name="status" value="Inactive" checked="checked">
+                    <input type="radio" id="Inactive" name="status" value="Draft" checked="checked">
                     <label for="Draft">Draft</label>
                 </div>
             </div>

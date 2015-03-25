@@ -5,10 +5,9 @@
             <tr>
                 <th>S.No</th>
                 <th>Addon title</th>
-                <th>Price Before Tax</th>
-                <th>Price After Tax</th>
-                <th>Addon Tax</th>
-                <th>Addon Info</th>
+                <th>Price</th>
+                <th>Post Tax Price</th>
+                <th>Addon Short Description</th>
                 <th>Action</th>
             </tr>
             </thead>

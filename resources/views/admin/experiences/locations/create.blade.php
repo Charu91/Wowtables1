@@ -37,13 +37,13 @@
                 <div class="form-group">
                     <label for="experience_id" class="col-sm-3 control-label">Select Experience <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('experience_id',$restaurants_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                        {!! Form::text('experience_id',null,['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="location_id" class="col-sm-3 control-label">Select Restaurant Location <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('location_id',$locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::text('location_id',null,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
             </div>
