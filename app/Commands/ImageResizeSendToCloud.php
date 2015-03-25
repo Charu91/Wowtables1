@@ -39,6 +39,7 @@ class ImageResizeSendToCloud extends Command implements SelfHandling, ShouldBeQu
 	 */
 	public function handle(Cloud $cloud)
 	{
+
         $listing_image_upload = $cloud->put(
             $this->uplodadsDir.$this->resizedImageName,
             Image::make($cloud->get($this->imgFilePath))->fit(

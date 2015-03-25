@@ -13,13 +13,34 @@ class RestaurantLocation extends VendorLocation{
 
     public $slug;
 
-    public $attributes;
+    public $attributes = [];
 
-    public $location;
+    public $address = [
+        'address' => '',
+        'pin_code' => '',
+        'latitude' => '',
+        'longitude' => '',
+        'locality_id' => '',
+        'locality' => '',
+        'area_id' => '',
+        'area' => '',
+        'city_id' => '',
+        'city' => '',
+        'state_id' => '',
+        'state' => '',
+        'country_id' => '',
+        'country' => ''
+    ];
+
+    public $feast;
 
     public $schedules;
 
     public $block_dates;
+
+    public $total_reviews;
+
+    public $average_rating;
 
     public $time_range_limits;
 
@@ -309,38 +330,7 @@ class RestaurantLocation extends VendorLocation{
 
     public function fetch($vendor_location_id)
     {
-        $query = 'SELECT u.`phone_number`';
-        $unique_attribute_types = [];
 
-        if(count($attributesMap)){
-            foreach($attributesMap as $attribute => $attData){
-                if(!in_array($attData['type'], $unique_attribute_types))
-                    $unique_attribute_types[] = $attData['type'];
-
-                if($attData['type'] === 'single-select' ||  $attData['type'] === 'multi-select'){
-                    $query .= "
-                        ,IF(
-                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`id`,
-                            null
-                        ) AS `{$attData['id_alias']}`,
-                        IF(
-                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
-                            null
-                        ) AS `{$attribute}`
-                    ";
-                }else{
-                    $query .= "
-                        ,IF(
-                            {$typeTableAliasMap[$attData['type']]['ua_alias']}.`alias` = '{$attribute}',
-                            {$typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
-                            null
-                        ) AS `{$attribute}`
-                    ";
-                }
-            }
-        }
     }
 
     public function fetchBySlug($slug, array $filters)
@@ -352,14 +342,25 @@ class RestaurantLocation extends VendorLocation{
     {
 
         $selectCols = [
+            'vl.slug',
             'v.name AS restaurant',
+            'vl.location_id AS locality_id',
             'l.name AS locality',
+            'va.address as address',
+            'va.pin_code',
+            'va.latitude',
+            'va.longitude',
             'la.name AS area',
+            'la.id AS area_id',
             'lc.name AS city',
+            'lc.id AS city_id',
             'ls.name AS state',
+            'ls.id AS state_id',
             'lco.name AS country',
-            DB::raw(('COUNT(vlr.id) AS total_reviews')),
-            DB::raw('If(count(vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating')
+            'lco.id AS country_id',
+            DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
+            DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS average_rating'),
+            DB::raw('MAX(vlbs.off_peak_schedule) AS feast')
         ];
 
         $select = DB::table('vendor_locations AS vl')
@@ -370,7 +371,11 @@ class RestaurantLocation extends VendorLocation{
             ->join('locations AS lc', 'va.city_id', '=', 'lc.id')
             ->join('locations AS ls', 'va.state_id', '=', 'ls.id')
             ->join('locations AS lco', 'va.country_id', '=', 'lco.id')
-            ->join('vendor_location_reviews AS vlr', 'vlr.vendor_location_id', '=', 'vl.id')
+            ->join('vendor_location_booking_schedules AS vlbs', 'vlbs.vendor_location_id', '=', 'vl.id')
+            ->leftJoin('vendor_location_reviews AS vlr',function($join){
+                $join->on('vlr.vendor_location_id', '=', 'vl.id')
+                    ->on('vlr.status', '=', DB::raw('"Approved"'));
+            })
             ->where('vl.id', $vendor_location_id)
             ->where('vl.status', 'Active')
             ->where('v.status', 'Publish')
@@ -380,40 +385,64 @@ class RestaurantLocation extends VendorLocation{
         $unique_attribute_types = [];
 
         if(count($this->attributesMap)){
-            $multiAttrs = [];
+            $singleSelectMultiAttrs = [];
 
             foreach($this->attributesMap as $attribute => $attData){
                 if(!in_array($attData['type'], $unique_attribute_types))
                     $unique_attribute_types[] = $attData['type'];
 
-                if($attData['value'] === 'single'){
-                        if($attData['type'] = 'single-select'){
-                            $selectCols[] = DB::raw(
-                                "MAX(IF(
-                                    {$this->typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
-                                    {$this->typeTableAliasMap[$attData['type']]['so_alias']}.`option`,
-                                    null
-                                )) AS `{$attribute}`"
-                            );
-                        }else{
-                            DB::raw(
-                                "MAX(IF(
-                                    {$this->typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
-                                    {$this->typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
-                                    null
-                                )) AS `{$attribute}`"
-                            );
-                        }
+                if($attData['value'] === 'single' && $attData['type'] !== 'single-select'){
+                    $selectCols[] = DB::raw(
+                        "MAX(IF(
+                            {$this->typeTableAliasMap[$attData['type']]['va_alias']}.`alias` = '{$attribute}',
+                            {$this->typeTableAliasMap[$attData['type']]['alias']}.`attribute_value`,
+                            null
+                        )) AS `{$attribute}`"
+                    );
                 }else{
-                    $multiAttrs[] = ['type' => $attData['type'], 'attribute' => $attribute];
+                    $singleSelectMultiAttrs[] = ['type' => $attData['type'], 'attribute' => $attribute];
+                }
+            }
+
+            foreach($unique_attribute_types as $type){
+                if($type !== 'single-select' && $type !== 'multi-select'){
+                    $select->leftJoin(
+                        "{$this->typeTableAliasMap[$type]['table']} AS {$this->typeTableAliasMap[$type]['alias']}",
+                        'vl.id', '=', "{$this->typeTableAliasMap[$type]['alias']}.vendor_location_id"
+                    );
+
+                    $select->leftJoin(
+                        "vendor_attributes AS {$this->typeTableAliasMap[$type]['va_alias']}",
+                        "{$this->typeTableAliasMap[$type]['va_alias']}.id", '=', "{$this->typeTableAliasMap[$type]['alias']}.vendor_attribute_id"
+                    );
                 }
             }
         }
 
-        dd($select->select($selectCols)->get(), DB::getQueryLog());
+        $restaurantBasics = $select->select($selectCols)->first();
+
+        foreach($restaurantBasics as $key => $value){
+            if($value){
+                if(isset($this->attributesMap[$key])){
+                    $this->attributes[$key] = $value;
+                }else if(isset($this->address[$key])){
+                    $this->address[$key] = $value;
+                }else if(property_exists($this, $key)){
+                    $this->$key = $value;
+                }
+            }
+        }
     }
 
-    protected function fetchMultiAttributes($vendor_location_id, $mutiAttrs)
+    protected function fetchSingleOptionsAndMultiAttributes($vendor_location_id, $mutiAttrs)
+    {
+        DB::table('vendor_locations AS vl')
+            ->where('vl.id', $vendor_location_id);
+
+        $selectCols = [];
+    }
+
+    protected function fetchMedia()
     {
 
     }
@@ -585,7 +614,6 @@ class RestaurantLocation extends VendorLocation{
                                 )
                                 ->where('m.id', $media['listing_image'])
                                 ->first();
-
 
             if(!$listing_image->resized_exists){
                 $listing_file = $listing_image->file;
