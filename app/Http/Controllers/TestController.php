@@ -242,7 +242,7 @@ HTML;
 
 	}
 
-	public function queue(RestaurantLocation $loc){
+	public function queue(RestaurantLocation $loc, Request $request){
 
         $loc->fetchBasicsAndSingleAttributes(7);
         //dd($loc);

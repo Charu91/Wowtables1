@@ -48,8 +48,6 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['status'] = 'required|in:Active,Inactive';
 
         if($this->has('status') && $this->get('status') === 'Active'){
-            $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
-            $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['a_la_carte'] = 'required|boolean';
             $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
@@ -62,6 +60,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_people_per_reservation'] = 'required|integer';
+            $rules['attributes.min_people_increments_per_reservation'] = 'required|integer';
             $rules['attributes.max_reservations_per_day'] = 'required|integer';
             $rules['attributes.max_reservations_per_time_slot'] = 'integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
@@ -83,10 +82,11 @@ class CreateRestaurantLocationRequest extends Request {
         }else{
             $rules['a_la_carte'] = 'boolean';
             $rules['pricing_level'] = 'in:Low,Medium,High';
-            $rules['attributes.seo_meta_keywords'] = '';
+            $rules['attributes.seo_meta_keywords'] = 'array';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_day'] = 'integer';
+            $rules['attributes.min_people_increments_per_reservation'] = 'integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'integer';
             $rules['attributes.commission_per_cover'] = 'numeric';
@@ -155,7 +155,10 @@ class CreateRestaurantLocationRequest extends Request {
         if($this->has('curators') && !is_null($this->get('curators'))){
             $rules['curator_tips'] ='required_with:curators';
         }
+
         $rules['tags'] = 'tagarray';
+        $rules['flags'] = 'flagarray';
+
 
         return $rules;
     }

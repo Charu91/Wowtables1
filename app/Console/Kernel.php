@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'WowTables\Console\Commands\Inspire',
+        'WowTables\Console\Commands\createthem'
 	];
 
 	/**

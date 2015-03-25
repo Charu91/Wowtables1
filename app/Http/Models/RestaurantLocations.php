@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use DB;
-use WowTables\Http\Models\Eloquent\Products\Product;
 
 class RestaurantLocations extends VendorLocations{
 
@@ -36,8 +35,25 @@ class RestaurantLocations extends VendorLocations{
 
     public $sort_options = ['Latest','Popular'];
 
-    public function fetchListings(array $filters, $items_per_page = 10, $sort_by = 'Latest', $pagenum = null ){
+    public function fetchAll($data){
+        $params = [$data['filters']];
 
+        if(isset($data['items_per_page'])){
+            $params[] = $data['items_per_page'];
+        }
+
+        if(isset($data['sort_by'])){
+            $params[] = $data['sort_by'];
+        }
+
+        if(isset($data['pagenum'])){
+            $params[] = $data['pagenum'];
+        }
+
+        call_user_func_array([$this, 'fetchListings'], $params);
+    }
+
+    public function fetchListings(array $filters, $items_per_page = 10, $sort_by = 'Latest', $pagenum = null ){
         if(!$pagenum) $pagenum = 1;
 
         $offset = ($pagenum - 1) * $items_per_page;
@@ -51,7 +67,8 @@ class RestaurantLocations extends VendorLocations{
             ->join('locations AS lc', 'lc.id', '=', 'vladd.city_id')
             ->join('vendor_locations_media_map AS vmm', function($join){
                 $join->on('vmm.vendor_location_id', '=', 'vl.id')
-                    ->on('vmm.order','=', DB::raw('0'));
+                    ->on('vmm.order','=', DB::raw('0'))
+                    ->on('vmm.media_type', '=', DB::raw('"gallery"'));
             })
             ->join('media_resized AS mr', function($join){
                 $join->on('vmm.media_id', '=', 'mr.media_id')
@@ -93,7 +110,7 @@ class RestaurantLocations extends VendorLocations{
             ->where('vt.type', DB::raw('"Restaurants"'))
             ->where('v.status', DB::raw('"Publish"'))
             ->where('v.publish_time', '<', DB::raw('NOW()'))
-            ->where('lc.id', $filters['city'])
+            ->where('lc.id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
             ->groupBy('vl.id')
             ->skip($offset)->take($items_per_page);
@@ -135,13 +152,21 @@ class RestaurantLocations extends VendorLocations{
             $this->filters['tags']['time'] = $filters['time'];
         }
 
+        if($sort_by === 'Popular'){
+            $select->orderBy('vl.id', 'asc');
+        }else if($sort_by === 'Latest'){
+            $select->orderBy('v.publish_time', 'desc');
+        }else{
+            $select->orderBy('v.publish_time', 'desc');
+        }
+
         $this->listing = $select->get();
 
         $totalCountResult = DB::select('SELECT FOUND_ROWS() AS total_count');
-
+        //dd($totalCountResult);
         if($totalCountResult){
             $this->total_count = $totalCountResult[0]->total_count;
-            $this->total_pages = ceil($this->total_count/$items_per_page);
+            $this->total_pages = (int)ceil($this->total_count/$items_per_page);
 
             $this->fetchFilters($filters);
             $this->fetchMaxDate();
@@ -179,7 +204,7 @@ class RestaurantLocations extends VendorLocations{
             ->where('vt.type', '=', DB::raw('"Restaurants"'))
             ->where('v.status', '=', DB::raw('"Publish"'))
             ->where('v.publish_time', '<', DB::raw('NOW()'))
-            ->where('lc.id', $filters['city'])
+            ->where('lc.id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
             ->groupBy('vltm.tag_id');
 
@@ -235,7 +260,7 @@ class RestaurantLocations extends VendorLocations{
             ->where('vt.type', '=', DB::raw('"Restaurants"'))
             ->where('v.status', '=', DB::raw('"Publish"'))
             ->where('v.publish_time', '<', DB::raw('NOW()'))
-            ->where('lc.id', $filters['city'])
+            ->where('lc.id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
             ->groupBy('vladd.area_id');
 
@@ -287,7 +312,7 @@ class RestaurantLocations extends VendorLocations{
             ->where('vt.type', '=', DB::raw('"Restaurants"'))
             ->where('v.status', '=', DB::raw('"Publish"'))
             ->where('v.publish_time', '<', DB::raw('NOW()'))
-            ->where('lc.id', $filters['city'])
+            ->where('lc.id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
             ->groupBy('vlam.vendor_attributes_select_option_id');
 

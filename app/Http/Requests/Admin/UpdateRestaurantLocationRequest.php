@@ -49,12 +49,9 @@ class UpdateRestaurantLocationRequest extends Request {
         $rules['slug'] = 'required|unique:vendor_locations,slug,'.$id;
         $rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
-        $rules['media.listing_image'] = 'required|exists:media,id';
-        $rules['media.gallery_images'] = 'required|galleryarray';
+
 
         if($this->has('status') && $this->get('status') === 'Active'){
-            $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
-            $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
@@ -66,6 +63,7 @@ class UpdateRestaurantLocationRequest extends Request {
             $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['attributes.min_people_per_reservation'] = 'required|integer';
             $rules['attributes.max_people_per_reservation'] = 'required|integer';
+            $rules['attributes.min_people_increments_per_reservation'] = 'required|integer';
             $rules['attributes.max_reservations_per_day'] = 'required|integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
@@ -80,11 +78,15 @@ class UpdateRestaurantLocationRequest extends Request {
 
             $rules['schedules'] = 'required|array';
 
+            $rules['media.listing_image'] = 'required|exists:media,id';
+            $rules['media.gallery_images'] = 'required|galleryarray';
+
         }else{
             $rules['pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = '';
             $rules['attributes.min_people_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_reservation'] = 'integer';
+            $rules['attributes.min_people_increments_per_reservation'] = 'integer';
             $rules['attributes.max_people_per_day'] = 'integer';
             $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
             $rules['attributes.maximum_reservation_time_buffer'] = 'integer';
@@ -97,7 +99,8 @@ class UpdateRestaurantLocationRequest extends Request {
 
             $rules['schedules'] = 'array';
 
-
+            $rules['media.listing_image'] = 'exists:media,id';
+            $rules['media.gallery_images'] = 'galleryarray';
         }
 
         if($this->has('schedules') && is_array($this->get('schedules'))){
