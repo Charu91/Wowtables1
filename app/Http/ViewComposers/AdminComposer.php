@@ -49,6 +49,11 @@ class AdminComposer {
         $view->with('tags_list',Collection::lists('name','id'));
         $view->with('flags_list',Flag::lists('name','id'));
 
+        $variant_lists = DB::table('product_variant_options')->lists('variation_name','id');
+        $view->with('variant_list',$variant_lists);
+        $complex_experience_list = DB::table('products')->where('type', "complex")->lists('name','id');
+        $view->with('complex_experience_list',$complex_experience_list);
+
         $curators_list = Curator::all()->lists('name','id');
         $curatorsList = [];
         foreach($curators_list as $key => $value)
