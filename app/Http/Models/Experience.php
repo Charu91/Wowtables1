@@ -110,8 +110,8 @@ class Experience extends Product{
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                     'product_id' => $productId,
                                     'product_attribute_id' => $attributeIdMap[$attribute],
-                                    //'attribute_value' => $this->parseMenu($value)
-                                    'attribute_value' => $value
+                                    'attribute_value' => $this->parseMenu($value)
+                                    //'attribute_value' => $value
                                 ];
                             }else{
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
