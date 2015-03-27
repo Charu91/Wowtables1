@@ -44,6 +44,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Short Description <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[short_description]',null,['rows'=>'7','class'=>'form-control','id'=>'short_description','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Brand Info <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
@@ -66,7 +72,7 @@
                 <div class="form-group">
                     <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords </label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
+                        {!! Form::text('attributes[seo_meta_keywords][]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                     </div>
                 </div>
             </div>

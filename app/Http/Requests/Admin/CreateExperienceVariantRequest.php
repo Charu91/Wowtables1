@@ -43,9 +43,9 @@ class CreateExperienceVariantRequest extends Request {
 
         $rules['name'] = 'required';
         $rules['slug'] = 'required|unique:products,slug';
-        $rules['visibility'] = 'required|boolean';
+        //$rules['visibility'] = 'required|boolean';
 
-        if($this->has('visibility') && $this->get('visibility')){
+        //if($this->has('visibility') && $this->get('visibility')){
             $rules['attributes.short_description'] = 'required';
             $rules['attributes.menu'] = 'required';
             $rules['attributes.menu_markdown'] = 'required';
@@ -56,7 +56,7 @@ class CreateExperienceVariantRequest extends Request {
             $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
             $rules['mapping.complex_product_id'] = 'required|exists:products,id,type,complex';
             $rules['mapping.variant_option_id'] = 'required_with:complex_product_id|exists:product_variant_options,id';
-        }else{
+        /*}else{
             $rules['pricing.price'] = 'numeric';
             $rules['pricing.post_tax_price'] = 'numeric';
             $rules['pricing.tax'] = 'numeric';
@@ -64,7 +64,7 @@ class CreateExperienceVariantRequest extends Request {
             $rules['pricing.commission_on'] = 'in:Pre-Tax,Post-Tax';
             $rules['mapping.complex_product_id'] = 'exists:products,id,type,complex';
             $rules['mapping.variant_option_id'] = 'required_with:complex_product_id|exists:product_variant_options,id';
-        }
+        }*/
 
         return $rules;
     }

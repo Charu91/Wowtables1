@@ -111,6 +111,7 @@ class Experience extends Product{
                                     'product_id' => $productId,
                                     'product_attribute_id' => $attributeIdMap[$attribute],
                                     'attribute_value' => $this->parseMenu($value)
+                                    //'attribute_value' => $value
                                 ];
                             }else{
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [

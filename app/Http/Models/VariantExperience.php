@@ -153,4 +153,9 @@ class VariantExperience extends Experience {
             ];
         }
     }
+
+    public function getAllVariantList(){
+        $variants = DB::table('product_variant_options');
+        return $variants->get();
+    }
 } 
