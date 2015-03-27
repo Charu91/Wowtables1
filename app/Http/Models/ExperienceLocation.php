@@ -222,7 +222,7 @@ class ExperienceLocation {
                         'product_vendor_location_id' => $product_vendor_location_id,
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
-                        'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                        'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -232,7 +232,7 @@ class ExperienceLocation {
                     'product_vendor_location_id' => $product_vendor_location_id,
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
-                    'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                    'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];

@@ -65,7 +65,7 @@ return [
 
         'short_description' => [
             'name' => 'Short Description',
-            'type' => 'varchar',
+            'type' => 'text',
             'value' => 'single'
         ],
 

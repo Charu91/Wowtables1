@@ -155,12 +155,21 @@ class RestaurantLocation extends VendorLocation{
                 }
             }
 
-            if(!empty($data['curators'])){
-                $curatorMapping = $this->mapCurators($restaurantLocationId, $data['tags']);
+            if(!empty($data['curator'])){
+                $curatorMapping = $this->mapCurator($restaurantLocationId, $data['curator']);
 
                 if($curatorMapping['status'] !== 'success'){
                     $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
                     return $curatorMapping;
+                }
+            }
+
+            if(!empty($data['flags'])){
+                $flagMapping = $this->mapFlags($restaurantLocationId, $data['flags']);
+
+                if($flagMapping['status'] !== 'success'){
+                    $flagMapping['message'] = 'Could not map the Vendor Location Flags. Contact the system admin';
+                    return $flagMapping;
                 }
             }
 
@@ -293,12 +302,21 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['curators'])){
-            $curatorMapping = $this->mapCurators($vendor_location_id, $data['tags']);
+        if(!empty($data['curator'])){
+            $curatorMapping = $this->mapCurator($vendor_location_id, $data['curator']);
 
             if($curatorMapping['status'] !== 'success'){
                 $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
                 return $curatorMapping;
+            }
+        }
+
+        if(!empty($data['flags'])){
+            $flagMapping = $this->mapFlags($vendor_location_id, $data['flags']);
+
+            if($flagMapping['status'] !== 'success'){
+                $flagMapping['message'] = 'Could not map the Vendor Location Flags. Contact the system admin';
+                return $flagMapping;
             }
         }
 
@@ -759,7 +777,7 @@ class RestaurantLocation extends VendorLocation{
                         'vendor_location_id' => $vendor_location_id,
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
-                        'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                        'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -769,7 +787,7 @@ class RestaurantLocation extends VendorLocation{
                     'vendor_location_id' => $vendor_location_id,
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
-                    'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                    'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];
@@ -838,16 +856,14 @@ class RestaurantLocation extends VendorLocation{
         }
     }
 
-    protected function mapCurators($vendor_location_id, $curators)
+    protected function mapCurator($vendor_location_id, $curator)
     {
-        $curator_insert_map = [];
+        $curator_insert_map = [
+            'vendor_location_id' => $vendor_location_id,
+            'curator_id' => $curator['id'],
+            'curator_tips' => $curator['tips']
+        ];
 
-        foreach($curators as $curator){
-            $curator_insert_map[] = [
-                'vendor_location_id' => $vendor_location_id,
-                'curator_id' => $curator
-            ];
-        }
 
         if(DB::table('vendor_locations_curator_map')->insert($curator_insert_map)){
             return ['status' => 'success'];
@@ -855,7 +871,28 @@ class RestaurantLocation extends VendorLocation{
             DB::rollback();
             return [
                 'status' => 'failure',
-                'action' => 'Inserting the Restaurant Location Contacts into the DB'
+                'action' => 'Inserting the Restaurant Location Curator into the DB'
+            ];
+        }
+    }
+
+    protected function mapFlags($vendor_location_id, $flags){
+        $flags_insert_map = [];
+
+        foreach($flags as $flag){
+            $flags_insert_map[] = [
+                'vendor_location_id' => $vendor_location_id,
+                'flag_id' => $flag
+            ];
+        }
+
+        if(DB::table('vendor_locations_flags_map')->insert($flags_insert_map)){
+            return ['status' => 'success'];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the Product Curators into the DB'
             ];
         }
     }

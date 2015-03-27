@@ -63,8 +63,8 @@ class ComplexExperience extends Experience {
                 }
             }
 
-            if(!empty($data['curators'])){
-                $curatorMapping = $this->mapCurators($experienceId, $data['tags']);
+            if(!empty($data['curator'])){
+                $curatorMapping = $this->mapCurator($experienceId, $data['curator']);
 
                 if($curatorMapping['status'] !== 'success'){
                     $curatorMapping['message'] = 'Could not map the Complex Experience curators. Contact the system admin';
@@ -169,8 +169,8 @@ class ComplexExperience extends Experience {
             }
         }
 
-        if(!empty($data['curators'])){
-            $curatorMapping = $this->mapCurators($experienceId, $data['tags']);
+        if(!empty($data['curator'])){
+            $curatorMapping = $this->mapCurator($experienceId, $data['curator']);
 
             if($curatorMapping['status'] !== 'success'){
                 $curatorMapping['message'] = 'Could not map the Complex Experience curators. Contact the system admin';

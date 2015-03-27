@@ -1,8 +1,6 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Filesystem\Cloud;
 
 class ExperienceAddons extends Experience{
 
@@ -17,7 +15,7 @@ class ExperienceAddons extends Experience{
         $attributeIdMap = DB::table('product_attributes AS pa')
             ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
             ->where('ptam.product_type_id', $productTypeId)
-            ->whereIn('pa.alias', ['menu', 'menu_markdown', 'experience_info'])
+            ->whereIn('pa.alias', ['menu', 'menu_markdown', 'short_description'])
             ->select('pa.id as attribute_id', 'pa.alias')
             ->lists('attribute_id', 'alias');
 
@@ -57,8 +55,8 @@ class ExperienceAddons extends Experience{
                     $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu_markdown'], 'attribute_value' => $addon['menu_markdown']];
                 }
 
-                if(isset($addon['experience_info'])){
-                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['experience_info'], 'attribute_value' => $addon['experience_info']];
+                if(isset($addon['short_description'])){
+                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['short_description'], 'attribute_value' => $addon['short_description']];
                 }
             }else{
                 $addonInserts = false;

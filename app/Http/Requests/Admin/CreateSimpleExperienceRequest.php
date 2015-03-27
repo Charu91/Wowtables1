@@ -63,8 +63,7 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             $rules['attributes.curator_tip'] = 'required';
-            //$rules['attributes.cuisines'] = 'required|productcuisinesarray';
-            $rules['attributes.cuisines'] = 'required';
+            $rules['attributes.cuisines'] = 'required|productcuisinesarray';
             $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
             $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
 
@@ -106,12 +105,15 @@ class CreateSimpleExperienceRequest extends Request {
                 $rules['addons.'.$key.'.commission_per_cover'] = 'required|numeric';
                 $rules['addons.'.$key.'.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
                 $rules['addons.'.$key.'.short_description'] = 'required_with:addons';
-                $rules['addons.'.$key.'.addonsMenu'] = 'required_with:addons';
+                //$rules['addons.'.$key.'.addonsMenu'] = 'required_with:addons';
             }
         }
 
 
-        $rules['curators'] = 'curatorarray';
+        $rules['curator'] = 'array';
+        $rules['curator.id'] = 'required_with:curator|exists:curators,id';
+        $rules['curator.tips'] ='required_with:curator.id';
+
         $rules['tags'] = 'tagarray';
         $rules['flags'] = 'flagarray';
 

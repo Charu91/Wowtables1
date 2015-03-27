@@ -93,12 +93,15 @@ class UpdateComplexExperienceRequest extends Request {
                 $rules['addons.'.$key.'.post_tax_price'] = 'required_with:addons|numeric';
                 $rules['addons.'.$key.'.commission_per_cover'] = 'required|numeric';
                 $rules['addons.'.$key.'.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
-                $rules['addons.'.$key.'.experience_info'] = 'required_with:addons';
+                $rules['addons.'.$key.'.short_description'] = 'required_with:addons';
             }
         }
 
 
-        $rules['curators'] = 'curatorarray';
+        $rules['curator'] = 'array';
+        $rules['curator.id'] = 'required_with:curator|exists:curators,id';
+        $rules['curator.tips'] ='required_with:curator.id';
+
         $rules['tags'] = 'tagarray';
         $rules['flags'] = 'flagarray';
 

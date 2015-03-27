@@ -298,15 +298,14 @@ class Experience extends Product{
         }
     }
 
-    protected function mapCurators($productId, $curators){
-        $curator_insert_map = [];
+    protected function mapCurator($productId, $curator)
+    {
+        $curator_insert_map = [
+            'product_id' => $productId,
+            'curator_id' => $curator['id'],
+            'curator_tips' => $curator['tips']
+        ];
 
-        foreach($curators as $curator){
-            $curator_insert_map[] = [
-                'product_id' => $productId,
-                'curator_id' => $curator
-            ];
-        }
 
         if(DB::table('product_curator_map')->insert($curator_insert_map)){
             return ['status' => 'success'];
@@ -314,7 +313,7 @@ class Experience extends Product{
             DB::rollback();
             return [
                 'status' => 'failure',
-                'action' => 'Inserting the Product Curators into the DB'
+                'action' => 'Inserting the Experience Curator'
             ];
         }
     }
