@@ -19,6 +19,12 @@
                     {!! Form::text('attributes[max_reservations_per_time_slot]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
+            <div class="form-group">
+                <label for="attributes[min_people_increments_per_reservation]" class="col-sm-6 control-label">Min People Increments Per Reservation <span class="required">*</span></label>
+                <div class="col-sm-6">
+                    {!! Form::text('attributes[min_people_increments_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-lg-6">
@@ -39,6 +45,12 @@
                 <label for="attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Max Advance Reservation Time (hrs) </label>
                 <div class="col-sm-6">
                     {!! Form::text('attributes[maximum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Reservations per day <span class="required">*</span></label>
+                <div class="col-sm-6">
+                    {!! Form::text('attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
         </div>
