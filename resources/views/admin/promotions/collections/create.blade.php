@@ -77,7 +77,7 @@
                 <label for="available">Available</label>
             </div>
             <div class="radio-custom radio-danger radio-inline mt-none">
-                <input type="radio" name="status" value="Discontinued" >
+                <input type="radio" name="status" value="discontinued" >
                 <label for="discontinued">Discontinued</label>
             </div>
         </div>

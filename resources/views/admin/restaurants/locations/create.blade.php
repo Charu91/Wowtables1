@@ -264,7 +264,7 @@
                 <div class="form-group">
                     <label for="collections" class="col-sm-3 control-label">Collections </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                        {!! Form::select('attributes[collections][]',$tags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
