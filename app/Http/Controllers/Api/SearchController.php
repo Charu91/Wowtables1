@@ -27,7 +27,7 @@ use WowTables\Http\Models\Search;
 	 * @return	json
 	 * @since	1.0.0
 	 */
-	public function search(Request $request) {
+	public function searchExperience(Request $request) {
 		//array to store information submitted by the user
 		$arrSubmittedData = array();
 		
@@ -41,7 +41,7 @@ use WowTables\Http\Models\Search;
 		$arrSubmittedData['arrTags'] = $request->input('tags');
 		
 		#reading the information from the DB
-		$searchResult = $this->search->find($arrSubmittedData);
+		$searchResult = $this->search->findMatchingExperience($arrSubmittedData);
 		
 		return response()->json($searchResult,200);
 		
