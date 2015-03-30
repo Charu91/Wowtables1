@@ -111,18 +111,23 @@ class Search {
 		$experinceResult = DB::table('products')
 							->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
 							->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
-							->join(DB::raw('product_attributes as pa'),'pa.id','=','product_attributes_varchar.product_attribute_id')
-							->join(DB::raw('product_attributes_select_options as paso'),'paso.product_attribute_id','=','pa.id')
+							->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
+							->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
+							->join(DB::raw('product_attributes as pa1'),'pa1.id','=','product_attributes_varchar.product_attribute_id')
+							->join(DB::raw('product_attributes as pa2'),'pa2.id','=','product_attributes_text.product_attribute_id')
+							->join(DB::raw('product_attributes as pa3'),'pa3.id','=','paso.product_attribute_id')							
 							->join(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
 							->join('media','media.id','=','pmm.media_id')
 							->join(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
 							->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
 							->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
-							->join(DB::raw('locations','locations.id','=','vl.location_id'))
-							->leftjJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
+							->join('locations','locations.id','=','vl.location_id')
+							->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 							->leftJoin('tags','tags.id','=','ptm.tag_id')
-							->where('pa.alias','=','short_description')
-							->orWhere('pa.alias','=','experience_info')
+							->where('pvl.status','Active')
+							->where('pa1.alias','short_description')
+							->orWhere('pa2.alias','experience_info')
+							->orWhere('pa3.alias','cuisines')
 							->whereIn('locations.name',$arrData['arrLocation'])
 							->whereIn('tags.name',$arrData['arrTags'])
 							->whereIn('paso.option',$arrData['arrCuisine'])
@@ -160,7 +165,7 @@ class Search {
 									'averageRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 									'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 								);
-			}			
+			}
 		}
 		
 		return $arrData;
@@ -178,9 +183,9 @@ class Search {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	private public function findRatingByProduct($arrProduct){
+	private function findRatingByProduct($arrProduct){
 		$queryResult = DB::table('product_reviews')
-					->whereIN('product_id',$arrVendor)
+					->whereIN('product_id',$arrProduct)
 					->groupBy('product_id')
 					->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings,product_id'))
 					->get();
