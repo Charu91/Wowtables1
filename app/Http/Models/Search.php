@@ -96,6 +96,108 @@ class Search {
 		}		
 		return $arrRating;					
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the detail of the experience matching passed criteria.
+	 * 
+	 * @access	public
+	 * @param	$arrData
+	 * @since	1.0.0
+	 * @version	1.0.0
+	 */
+	public function findMatchingExperience($arrData) {
+		$experinceResult = DB::table('products')
+							->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
+							->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
+							->join(DB::raw('product_attributes as pa'),'pa.id','=','product_attributes_varchar.product_attribute_id')
+							->join(DB::raw('product_attributes_select_options as paso'),'paso.product_attribute_id','=','pa.id')
+							->join(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
+							->join('media','media.id','=','pmm.media_id')
+							->join(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
+							->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
+							->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
+							->join(DB::raw('locations','locations.id','=','vl.location_id'))
+							->leftjJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
+							->leftJoin('tags','tags.id','=','ptm.tag_id')
+							->where('pa.alias','=','short_description')
+							->orWhere('pa.alias','=','experience_info')
+							->whereIn('locations.name',$arrData['arrLocation'])
+							->whereIn('tags.name',$arrData['arrTags'])
+							->whereIn('paso.option',$arrData['arrCuisine'])
+							->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']))
+							->select(DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
+											pp.price, media.file as image'))
+							->get();
+							
+		//array to store the product ids
+		$arrProduct = array();
+		//array to store final result
+		$arrData = array();
+		
+		$arrData['resultCount'] = 0;
+		
+		#query executed successfully
+		if($experinceResult) {
+			#initializing the total number of matching rows returned
+			$arrData['resultCount'] = count($experinceResult);
+			
+			#initializing the array of products
+			foreach($experience as $row) {
+				$arrProduct[] = $row->id;
+			}
+			#reading the product ratings detail
+			$arrRatings = $this->findRatingByProduct($arrExperience);
+			
+			foreach($experience as $row) {
+				$arrData[] = array(
+									'id' => $row->id,
+									'title' => $row->title,
+									'description' => substr(strip_tags($row->description),0,20),
+									'price' => $row->price,
+									'image' => $row->image,
+									'averageRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+									'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+								);
+			}			
+		}
+		
+		return $arrData;
+	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the ratings of the product matching the vendors
+	 * in the passed array.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	array 	$arrProduct
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	private public function findRatingByProduct($arrProduct){
+		$queryResult = DB::table('product_reviews')
+					->whereIN('product_id',$arrVendor)
+					->groupBy('product_id')
+					->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings,product_id'))
+					->get();
+		//array to store the result
+		$arrRating = array();
+		
+		//reading the results
+		foreach($queryResult as $row) {
+			$arrRating[$row->product_id] = array(
+											'averageRating' => $row->avg_rating,
+											'totalRating' => $total_ratings
+											);
+		}		
+		return $arrRating;
+	}
+	
+	
 }
 //end of class Search
 //end of file WowTables\Http\Models\E
