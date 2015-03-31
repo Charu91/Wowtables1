@@ -156,15 +156,15 @@ class Search {
 			$arrRatings = $this->findRatingByProduct($arrExperience);
 			
 			foreach($experience as $row) {
-				$arrData[] = array(
-									'id' => $row->id,
-									'title' => $row->title,
-									'description' => substr(strip_tags($row->description),0,20),
-									'price' => $row->price,
-									'image' => $row->image,
-									'averageRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
-									'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
-								);
+				$arrData['dataCount'][] = array(
+											'id' => $row->id,
+											'title' => $row->title,
+											'description' => substr(strip_tags($row->description),0,20),
+											'price' => $row->price,
+											'image' => $row->image,
+											'averageRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+											'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+										);
 			}
 		}
 		
