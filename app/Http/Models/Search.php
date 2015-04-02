@@ -1,6 +1,11 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
+
+use WowTables\Http\Models\Eloquent\Tag;
+use WowTables\Http\Models\Eloquent\Location; 
+
+
 /**
  * Model class Search.
  * 
@@ -133,15 +138,16 @@ class Search {
 							->whereIn('paso.option',$arrData['arrCuisine'])
 							->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']))
 							->select(DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
-											pp.price, media.file as image'))
+											pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image'))
 							->get();
-							
+						
 		//array to store the product ids
 		$arrProduct = array();
 		//array to store final result
 		$arrData = array();
 		
 		$arrData['resultCount'] = 0;
+		$arrData['experiences'] = array();
 		
 		#query executed successfully
 		if($experinceResult) {
@@ -156,14 +162,18 @@ class Search {
 			$arrRatings = $this->findRatingByProduct($arrExperience);
 			
 			foreach($experience as $row) {
-				$arrData['dataCount'][] = array(
+				$arrData['experiences'][] = array(
 											'id' => $row->id,
-											'title' => $row->title,
-											'description' => substr(strip_tags($row->description),0,20),
-											'price' => $row->price,
-											'image' => $row->image,
-											'averageRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
-											'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+											'type' => 'experience',
+											'name' => $row->title,
+											'description' => $row->description,
+											'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
+											'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
+											'price_type' => $row->price_type,
+											'variable' => $row->is_variable,
+											'image' => Config::get('constants.IMAGE_URL').$row->image,
+											'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+											'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 										);
 			}
 		}
@@ -202,7 +212,50 @@ class Search {
 		return $arrRating;
 	}
 	
+	//-----------------------------------------------------------------
 	
+	/**
+	 * Initializes the value for filters to be used 
+	 * in the experience search filter.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	array 	$arrSubmittedData
+	 * @since	1.0.0
+	 */
+	public static function getExperienceSearchFilter($arrSubmittedData) {
+		//array to store filter information	
+		$arrFilters['filters'] = array();
+		
+		#setting up the location filter information
+		$arrFilters['filters']['locations'] = Location::formatLocationFilters($arrSubmittedData['arrLocation']);
+		
+		#setting up the tag filter information
+		$arrFilters['filters']['tags'] = Tag::formatTagFilters($arrSubmittedData['arrTags']);
+		
+		#setting up the date filter information
+		$arrFilters['filters']['date'] = array(
+												"name" => 'Date',
+												"type" => 'single'
+											);
+		
+		#setting up the time filter information
+		$arrFilters['filters']['time'] = array(
+												"name" => 'Time',
+												"type" => 'single'
+											);
+		
+		#setting up the price filter
+		$arrFilters['filters']['price_range'] = array(
+													"name" => "Price Range",
+													"type" => "single",
+													"options" => array(
+																	"min" => $arrSubmittedData['minPrice'],
+																	"max" => $arrSubmittedData['maxPrice']
+																)
+												);
+		return $arrFilters;
+	}	
 }
 //end of class Search
 //end of file WowTables\Http\Models\E
