@@ -14,6 +14,8 @@ class Tag extends Model {
 	 */
 	protected $guarded = array('id');
 	
+	//-----------------------------------------------------------------
+	
 	/**
 	 * 
 	 */
@@ -31,6 +33,37 @@ class Tag extends Model {
 		}
 		
 		return $arrData;		 
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns formatted array containing the tags for filtering.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	array 	$arrTags
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function formatTagFilters($arrTags) {
+		//array to store the tag filters
+		$arrTagFilter = array();
+		
+		$arrTagFilter['name'] = 'Tags';
+		$arrTagFilter['type'] = 'multi';
+		
+		$dbResult = Self::whereIn('name',$arrTags)->select('id','name')->get();
+		
+		if($dbResult) {
+			foreach($dbResult as $row) {
+				$arrTagFilter['options'][] = array(
+												'id' => $row->id,
+												'name' => $row->name
+											);
+			}
+		}
+		return $arrTagFilter;
 	}
 }
 //end of class Tag
