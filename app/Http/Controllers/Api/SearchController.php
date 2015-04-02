@@ -4,14 +4,34 @@ use Illuminate\Http\Request;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Search;
 
+
 /**
+ * Controller class SearchController.
  * 
+ * @version		1.0.0
+ * @since		1.0.0
+ * @author		Parth Shukla <shuklaparth@hotmail.com>
  */
  class SearchController extends Controller {
  	
+	/**
+	 * Instance of search model.
+	 * 
+	 * @var		object
+	 * @access	protected
+	 * @since	1.0.0
+	 */
 	protected $search;
 	
+	//-----------------------------------------------------------------
 	
+	/**
+	 * Default constructor.
+	 * 
+	 * @access	public
+	 * @param	object	$search
+	 * @since	1.0.0
+	 */
 	public function __construct(Search $search) {
 		$this->search = $search;
 	}
@@ -29,7 +49,7 @@ use WowTables\Http\Models\Search;
 	 */
 	public function searchExperience(Request $request) {
 		//array to store information submitted by the user
-		$arrSubmittedData = array();
+		$arrSubmittedData = array();		
 		
 		#reading the information submitted by the user
 		$arrSubmittedData['time'] = $request->input('bookingTime');
@@ -40,10 +60,18 @@ use WowTables\Http\Models\Search;
 		$arrSubmittedData['arrCuisine'] = $request->input('cuisine');
 		$arrSubmittedData['arrTags'] = $request->input('tags');
 		
-		#reading the information from the DB
-		$searchResult = $this->search->findMatchingExperience($arrSubmittedData);
+		//reading the matching experiences details from the DB
+		$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
-		return response()->json($searchResult,200);
+		//setting up the filters
+		$searchFilters = $this->search->getExperienceSearchFilter($arrSubmittedData);
+		
+		//setting up the array to be formatted as json
+		$arrResult['resultCount'] = $searchResult['resultCount'];
+		$arrResult['experiences'] = $searchResult['experiences'];
+		$arrResult['filters'] = $searchFilters['filters'];
+		
+		return response()->json($arrResult,200);
 		
 	}
  }
