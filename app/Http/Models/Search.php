@@ -1,7 +1,7 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
-
+use Config;
 use WowTables\Http\Models\Eloquent\Tag;
 use WowTables\Http\Models\Eloquent\Location; 
 
