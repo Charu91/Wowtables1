@@ -92,6 +92,15 @@ class RestaurantLocation extends VendorLocation{
                 }
             }
 
+            if(!empty($data['location_attributes'])){
+                $LocationAttributesSaved = $this->saveLocationAttributes($restaurantLocationId, $data['location_attributes']);
+
+                if($LocationAttributesSaved['status'] !== 'success'){
+                    $LocationAttributesSaved['message'] = 'Could not create the Restaurant Location Attributes. Contact the system admin';
+                    return $LocationAttributesSaved;
+                }
+            }
+
             if(!empty($data['address'])){
                 $AddressSaved = $this->saveAddress($restaurantLocationId, $data['location_id'], $data['address']);
 
@@ -612,6 +621,33 @@ class RestaurantLocation extends VendorLocation{
             return [
                 'status' => 'failure',
                 'action' => 'Fetching the restaurant locations properties'
+            ];
+        }
+    }
+
+    protected function saveLocationAttributes($vendor_location_id, $location_attributes)
+    {
+        $location_attributes_insert = [
+            'vendor_location_id' => $vendor_location_id,
+            'min_people_per_reservation' => $location_attributes['min_people_per_reservation'],
+            'max_people_per_reservation' => $location_attributes['max_people_per_reservation'],
+            'max_reservations_per_time_slot' => $location_attributes['max_reservations_per_time_slot'],
+            'max_reservations_per_day' => $location_attributes['max_reservations_per_day'],
+            'off_peak_hour_discount_min_covers' => $location_attributes['off_peak_hour_discount_min_covers'],
+            'max_people_per_day' => $location_attributes['max_people_per_day'],
+            'minimum_reservation_time_buffer' => $location_attributes['minimum_reservation_time_buffer'],
+            'maximum_reservation_time_buffer' => $location_attributes['maximum_reservation_time_buffer'],
+            'min_people_increments' => $location_attributes['min_people_increments_per_reservation']
+        ];
+
+
+        if(DB::table('vendor_locations_limits')->insert($location_attributes_insert)){
+            return ['status' => 'success'];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Inserting the Restaurant Location Limits into the DB'
             ];
         }
     }

@@ -48,6 +48,8 @@ class AdminComposer {
         $view->with('curator_list',Curator::lists('name','id'));
         $view->with('tags_list',Collection::lists('name','id'));
         $view->with('flags_list',Flag::lists('name','id'));
+        $view->with('restaurants_list',DB::table('vendors')->lists('name','id'));
+        $view->with('locations_list',Location::where('Type','Locality')->lists('name','id'));
 
         $variant_lists = DB::table('product_variant_options')->lists('variation_name','id');
         $view->with('variant_list',$variant_lists);

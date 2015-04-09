@@ -47,6 +47,7 @@
                 <a href="#block_schedules_tab" data-toggle="tab" class="text-center">Block Schedules</a>
             </li>
         </ul>
+
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
                 <div class="form-group">
@@ -108,21 +109,33 @@
                     <div class="col-lg-6">
                         <div class="panel">
                             <div class="form-group">
-                                <label for="attributes[min_people_per_reservation]" class="col-sm-6 control-label">Minimum People Per Reservation <span class="required">*</span></label>
+                                <label for="location_attributes[min_people_per_reservation]" class="col-sm-6 control-label">Minimum People Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[min_people_per_reservation]',$restaurant['attributes']['min_people_per_reservation'],['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[min_people_per_reservation]',$restaurantLocationLimits->min_people_per_reservation,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="attributes[max_people_per_reservation]" class="col-sm-6 control-label">Maximum People Per Reservation <span class="required">*</span></label>
+                                <label for="location_attributes[max_people_per_reservation]" class="col-sm-6 control-label">Maximum People Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[max_people_per_reservation]',$restaurant['attributes']['max_people_per_reservation'],['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[max_people_per_reservation]',$restaurantLocationLimits->max_people_per_reservation,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Maximum Reservation Per Time Slot <span class="required">*</span></label>
+                                <label for="location_attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Default Max Tables Per Time Slot </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[max_reservations_per_time_slot]',$restaurant['attributes']['max_reservations_per_time_slot'],['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[max_reservations_per_time_slot]',$restaurantLocationLimits->max_reservations_per_time_slot,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Reservations per day <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[max_reservations_per_day]',$restaurantLocationLimits->max_reservations_per_day,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[off_peak_hour_discount_min_covers]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[off_peak_hour_discount_min_covers]',$restaurantLocationLimits->off_peak_hour_discount_min_covers,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>
@@ -130,21 +143,27 @@
                     <div class="col-lg-6">
                         <div class="panel">
                             <div class="form-group">
-                                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Maximum Reservation Per Day <span class="required">*</span></label>
+                                <label for="location_attributes[max_people_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[max_people_per_day]',$restaurantLocationLimits->max_people_per_day,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Minimum Reservation Time Buffer <span class="required">*</span></label>
+                                <label for="location_attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Min Advance Reservation Time (hrs) </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[minimum_reservation_time_buffer]',$restaurant['attributes']['minimum_reservation_time_buffer'],['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[minimum_reservation_time_buffer]',$restaurantLocationLimits->minimum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Maximum Reservation Time Buffer <span class="required">*</span></label>
+                                <label for="location_attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Max Advance Reservation Time (hrs) </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[maximum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[maximum_reservation_time_buffer]',$restaurantLocationLimits->maximum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[min_people_increments_per_reservation]" class="col-sm-6 control-label">Min People Increments Per Reservation <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[min_people_increments_per_reservation]',$restaurantLocationLimits->min_people_increments,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>

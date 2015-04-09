@@ -58,6 +58,7 @@ class AdminRestaurantLocationsController extends Controller {
 	 */
 	public function store(CreateRestaurantLocationRequest $request)
 	{
+        //dd($request);
         $input = $this->request->all();
 
         $restaurantLocationCreate = $this->restaurantLocation->create($input);
@@ -98,14 +99,19 @@ class AdminRestaurantLocationsController extends Controller {
 	{
 		$restaurant = $this->repository->getByRestaurantLocationId($id);
 
+        $vendorLocationLimits = $this->repository->populateVendorLocationLimits($id);
+
 		$availableSchedules = $this->formatSchedules($this->schedules->available_time_slots('8:00','22:00'))['schedules'];
 
 		$restaurantSchedules = VendorLocationBookingSchedule::where('vendor_location_id',$id)->lists('off_peak_schedule','schedule_id');
 
 		$schedules = array_keys($restaurantSchedules);
 
+        //echo "<pre>"; print_r($restaurant); die;
+
 		return view('admin.restaurants.locations.edit',[
 					'restaurant'=>$restaurant,
+					'restaurantLocationLimits'=>$vendorLocationLimits[0],
 					'schedules'=>$schedules,
 					'availableSchedules' => $availableSchedules,
 					'restaurantSchedules' => $restaurantSchedules

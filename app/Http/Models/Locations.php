@@ -1,5 +1,6 @@
 <?php namespace WowTables\Http\Models;
 
+use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use DB;
 
 class Locations {
@@ -348,5 +349,31 @@ class Locations {
     {
          return DB::table('locations')->count();
     }
-
-} 
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns all the location of a Vendor matching
+	 * the passed id.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	integer	$vendorID
+	 * @return	array
+	 * @since	v1.0.0
+	 */
+	public static function getVendorLocation($vendorID) {
+		//array to contain the list of locations
+		$arrLocation = array();
+		
+		foreach(VendorLocation::with('location')->where('vendor_id','=',$vendorID)->get() as $vendorLocation) {
+			$arrLocation[] = array(
+									'name' => $vendorLocation->location->name,
+									'slug' => $vendorLocation->slug 
+								);
+		}
+		
+		return $arrLocation;
+	}
+}
+//end of class Locations.php
