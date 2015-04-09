@@ -116,6 +116,23 @@ class RestaurantLocationsRepository {
 
     }
 
+    public function populateVendorLocationLimits ( $vendor_location_id )
+    {
+        /*$vendorLocationLimitsDetails = '
+                    SELECT *
+                    FROM vendor_locations_limits
+                    WHERE vendor_location_id = ?
+        ';
+
+        $vendorLocationLimitsResults = DB::select($vendorLocationLimitsDetails,[$vendor_location_id]);
+
+        return ['VendorLocationLimits' => $vendorLocationLimitsResults];*/
+
+        $vendor_location_details = DB::table('vendor_locations_limits')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_details->get();
+
+    }
+
     public function add(VendorLocation $vendorLocation)
     {
         $vendorLocation->save();

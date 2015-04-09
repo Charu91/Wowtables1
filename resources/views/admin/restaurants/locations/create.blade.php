@@ -104,14 +104,65 @@
                 @include('partials.forms.add_media')
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
-                @include('partials.forms.schedule_limits')
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="panel">
                             <div class="form-group">
-                                <label for="attributes[off_peak_hour_discount_min_covers]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
+                                <label for="location_attributes[min_people_per_reservation]" class="col-sm-6 control-label">Minimum People Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('attributes[off_peak_hour_discount_min_covers]',null,['class'=>'form-control','required'=>'']) !!}
+                                    {!! Form::text('location_attributes[min_people_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[max_people_per_reservation]" class="col-sm-6 control-label">Maximum People Per Reservation <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[max_people_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Default Max Tables Per Time Slot </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[max_reservations_per_time_slot]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Reservations per day <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[off_peak_hour_discount_min_covers]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[off_peak_hour_discount_min_covers]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel">
+                            <div class="form-group">
+                                <label for="location_attributes[max_people_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[max_people_per_day]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Min Advance Reservation Time (hrs) </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[minimum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Max Advance Reservation Time (hrs) </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[maximum_reservation_time_buffer]',null,['class'=>'form-control','required'=>'']) !!}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location_attributes[min_people_increments_per_reservation]" class="col-sm-6 control-label">Min People Increments Per Reservation <span class="required">*</span></label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('location_attributes[min_people_increments_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>
@@ -252,7 +303,7 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[pricing_level]',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
+                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -264,7 +315,7 @@
                 <div class="form-group">
                     <label for="collections" class="col-sm-3 control-label">Collections </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[collections][]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                        {!! Form::select('attributes[collections][]',$tags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">

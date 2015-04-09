@@ -19,6 +19,12 @@
                     {!! Form::text('attributes[max_reservations_per_time_slot]',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
+            <div class="form-group">
+                <label for="attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Reservations per day <span class="required">*</span></label>
+                <div class="col-sm-6">
+                    {!! Form::text('attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-lg-6">
