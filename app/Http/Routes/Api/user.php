@@ -1,6 +1,6 @@
 <?php
 
-Route::post('login', [
+Route::post('api/login', [
     'uses' => 'Api\UserController@login',
     'as' => 'MobileUserLogin',
     'middleware' => [],
@@ -8,7 +8,7 @@ Route::post('login', [
     'domain' => env('API_URL'),
 ]);
 
-Route::post('register', [
+Route::post('api/register', [
     'uses' => 'Api\UserController@register',
     'as' => 'MobileUserRegister',
     'middleware' => [],
@@ -16,7 +16,7 @@ Route::post('register', [
     'domain' => env('API_URL'),
 ]);
 
-Route::post('fb_login', [
+Route::post('api/fb_login', [
     'uses' => 'Api\UserController@fb_login',
     'as' => 'MobileUserFBLogin',
     'middleware' => [],
@@ -24,7 +24,7 @@ Route::post('fb_login', [
     'domain' => env('API_URL'),
 ]);
 
-Route::put('set_phone_location', [
+Route::put('api/set_phone_location', [
     'uses' => 'Api\UserController@set_location_id_phone',
     'as' => 'MobileUserSetLocationPhone',
     'middleware' => [],
