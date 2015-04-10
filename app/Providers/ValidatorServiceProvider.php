@@ -48,6 +48,19 @@ class ValidatorServiceProvider extends ServiceProvider {
             }
         });
 
+        $this->app['validator']->extend('flagarray', function ($attribute, $value, $parameters)
+        {
+            if(!is_array($value) || !count($value)){
+                return false;
+            }else{
+                if(count($value) === DB::table('flags')->whereIn('id', $value)->count()){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+
 
         $this->app['validator']->extend('galleryarray', function ($attribute, $value, $parameters)
         {

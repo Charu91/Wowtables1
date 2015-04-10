@@ -173,9 +173,11 @@
 
         $('#insertExperienceMenu').on('click',function(){
             var menu = $('#expMenuText').val();
+            var htmlmenu = $('.container').html();
+            //console.log("menu == "+menu+"<br/> htmlmenu = "+htmlmenu); return false;
             $('#markdownmodal').modal('hide');
             $('#experienceMenuHolder').show();
-            $('#expMenu').val(menu);
+            $('#expMenu').val(htmlmenu);
             $('#expMarkdownMenu').val(menu);
             $('#expMenuBtn').hide();
         });
