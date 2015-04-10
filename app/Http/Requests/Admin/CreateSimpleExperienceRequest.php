@@ -59,10 +59,10 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_description'] = 'required';
             $rules['attributes.seo_meta_keywords'] = 'required|array';
-            $rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
-            $rules['attributes.prepayment_allowed'] = 'required|boolean';
+            //$rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
+            //$rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
-            $rules['attributes.curator_tip'] = 'required';
+            //$rules['attributes.curator_tip'] = 'required';
             $rules['attributes.cuisines'] = 'required|productcuisinesarray';
             $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
             $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
@@ -76,8 +76,8 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['media.listing_image'] = 'required|exists:media,id';
             $rules['media.gallery_images'] = 'required|galleryarray';
         } else {
-            $rules['attributes.prepayment_allowed'] = 'boolean';
-            $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
+            //$rules['attributes.prepayment_allowed'] = 'boolean';
+            //$rules['attributes.allow_gift_card_redemptions'] = 'boolean';
             $rules['attributes.reward_points_per_reservation'] = 'integer';
             $rules['attributes.cuisines'] = 'productcuisinesarray';
 
