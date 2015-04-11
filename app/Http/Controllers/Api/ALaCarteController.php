@@ -23,7 +23,7 @@ class ALaCarteController extends Controller {
 	 * @return	json
 	 * @since	1.0.0
 	 */
-	public function show($aLaCarteID) {
+	public function show( $aLaCarteID ) {
 		$arrALaCarte = ALaCarte::getALaCarteDetails($aLaCarteID);
 		
 		return response()->json($arrALaCarte,200);
