@@ -137,6 +137,17 @@
                             {!! Form::select('mapping[variant_option_id]',$variant_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                         </div>
                     </div>
+					<div class="form-group col-md-6">
+						<label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
+						<div class="radio-custom radio-success radio-inline">
+							<input type="radio" id="Publish" name="status" value="Publish">
+							<label for="Publish">Publish</label>
+						</div>
+						<div class="radio-custom radio-danger radio-inline">
+							<input type="radio" id="Draft" name="status" value="Draft" checked="checked">
+							<label for="Draft">Draft</label>
+						</div>
+					</div>
 				</div>
 				<footer class="panel-footer">
 					{!! Form::submit('Add Variant',['class'=>'btn btn-primary']) !!}

@@ -62,7 +62,7 @@ class AdminExperienceVariantsController extends Controller {
                 return response()->json(['status' => 'success'], 200);
             }
 
-            flash()->success('The Experieince Variant has been successfully created.');
+            flash()->success('The Experience Variant has been successfully created.');
             return redirect()->route('AdminExperiences');
         }else{
             return response()->json([
