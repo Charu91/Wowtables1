@@ -25,7 +25,7 @@ use Config;
 	 * @since	1.0.0
 	 * @version	1.0.0
 	 */
-	public static function getALaCarteDetails($aLaCarteID) {
+	public static function getALaCarteDetails( $aLaCarteID ) {
 		
 		//array to store the matching result
 		$arrData = array();
