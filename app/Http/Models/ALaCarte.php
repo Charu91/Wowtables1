@@ -25,7 +25,7 @@ use Config;
 	 * @since	1.0.0
 	 * @version	1.0.0
 	 */
-	public static function getALaCarteDetails($laCarteName) {
+	public static function getALaCarteDetails($aLaCarteID) {
 		
 		//array to store the matching result
 		$arrData = array();
@@ -51,7 +51,7 @@ use Config;
 						->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
 						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
-						->where('vl.slug',$laCarteName)
+						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('va1.alias','restaurant_info')
 						->where('va2.alias','short_description')
@@ -79,7 +79,7 @@ use Config;
 			//initializing the values for experience
 			if(Self::isExperienceAvailable($queryResult->vl_id)) {
 				$experienceAvailable = 'true';
-				$experienceURL = URL::to('/').'/experience/'.$laCarteName;
+				$experienceURL = URL::to('/').'/experience/'.$aLaCarteID;
 			}
 			else {
 				$experienceAvailable = 'false';
@@ -87,7 +87,7 @@ use Config;
 			}
 						
 			//formatting the array for the data
-			$arrData['data'] = array(
+			$arrData = array(
 									'type' => 'A-La-Carte Details',
 									'id' => $queryResult->vl_id,
 									'title' => $queryResult->title,
