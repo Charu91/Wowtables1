@@ -53,7 +53,7 @@ class AdminExperienceVariantsController extends Controller {
      */
     public function store(CreateExperienceVariantRequest $createExperienceVariantRequest)
     {
-        $input = $this->request->all();
+        $input = $this->request->all(); 
 
         $experienceVariantCreate = $this->variantExperience->create($input);
 
