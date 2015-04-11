@@ -173,6 +173,9 @@
                             <li class="{{ (isset($uri) && $uri === 'admin/promotions/email_footer_promotions')? 'nav-active':'' }}">
                                 <a href="/admin/promotions/email_footer_promotions">Email Footer Promotions</a>
                             </li>
+                            <li class="{{ (isset($uri) && $uri === 'admin/promotions/variant_type')? 'nav-active':'' }}">
+                                <a href="/admin/promotions/variant_type">Variant Type</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

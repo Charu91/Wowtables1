@@ -10,7 +10,9 @@
             , $deleteFlagBtn = $('.delete-flag-btn')
             , $deleteCollectionBtn = $('.delete-collection-btn')
             , $deleteSidebarBtn = $('.delete-sidebar-btn')
-            , $deleteEmailFooterPromotionBtn = $('.delete-efp-btn');
+            , $deleteEmailFooterPromotionBtn = $('.delete-efp-btn')
+            , $editVariantHolder = $('#editVariantTypeHolder')
+            , $editvariantBtn = $('.edit-variant-btn');
 
         $editFlagBtn.on('click',function(){
 
@@ -114,6 +116,26 @@
                 });
             }
 
+        });
+
+        $editvariantBtn.on('click',function(){
+
+            var id = $(this).data('variant-id');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/promotions/varianttype/' + id + '/edit'
+            }).done(function (editHTML) {
+                $editVariantHolder.html(editHTML);
+                $editVariantHolder.show();
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+        $('body').delegate('#cancelVariantEditBtn','click',function(){
+            $editVariantHolder.hide();
         });
 
     });

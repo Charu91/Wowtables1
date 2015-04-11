@@ -24,3 +24,9 @@ Route::resource('admin/promotions/email_footer_promotions','AdminEmailFooterProm
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::resource('admin/promotions/variant_type','AdminVariantTypeController',[
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
