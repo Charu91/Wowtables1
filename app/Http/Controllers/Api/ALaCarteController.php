@@ -22,7 +22,7 @@ class ALaCarteController extends Controller {
 	 * @param	string	$name
 	 * @return	json
 	 * @since	1.0.0
-	 */ 
+	 */
 	public function show( $aLaCarteID ) {
 		$arrALaCarte = ALaCarte::getALaCarteDetails($aLaCarteID);
 		

@@ -43,25 +43,25 @@ class CreateExperienceLocationRequest extends Request {
         $rules = [];
 
         $rules['experience_id'] = 'required|integer|exists:products,id';
-        $rules['restaurant_location_id'] = 'required|integer|exists:restaurant_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
+        $rules['restaurant_location_id'] = 'required|integer|exists:vendor_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
         $rules['status'] = 'required|in:Active,Inactive';
 
         if($this->has('status') && $this->get('status') === 'Active'){
-            $rules['limits.min_people_per_reservation'] = 'required|integer';
-            $rules['limits.max_people_per_reservation'] = 'required|integer';
-            $rules['limits.max_reservations_per_day'] = 'required|integer';
-            $rules['limits.minimum_reservation_time_buffer'] = 'required|integer';
-            $rules['limits.maximum_reservation_time_buffer'] = 'required|integer';
-            $rules['limits.min_people_increments'] = 'required|integer';
+            $rules['attributes.min_people_per_reservation'] = 'required|integer';
+            $rules['attributes.max_people_per_reservation'] = 'required|integer';
+            $rules['attributes.max_reservations_per_day'] = 'required|integer';
+            $rules['attributes.minimum_reservation_time_buffer'] = 'required|integer';
+            $rules['attributes.maximum_reservation_time_buffer'] = 'required|integer';
+            $rules['attributes.min_people_increments'] = 'required|integer';
 
             $rules['schedules'] = 'required|array';
         }else{
-            $rules['limits.min_people_per_reservation'] = 'integer';
-            $rules['limits.max_people_per_reservation'] = 'integer';
-            $rules['limits.max_reservations_per_day'] = 'integer';
-            $rules['limits.minimum_reservation_time_buffer'] = 'integer';
-            $rules['limits.maximum_reservation_time_buffer'] = 'integer';
-            $rules['limits.min_people_increments'] = 'integer';
+            $rules['attributes.min_people_per_reservation'] = 'integer';
+            $rules['attributes.max_people_per_reservation'] = 'integer';
+            $rules['attributes.max_reservations_per_day'] = 'integer';
+            $rules['attributes.minimum_reservation_time_buffer'] = 'integer';
+            $rules['attributes.maximum_reservation_time_buffer'] = 'integer';
+            $rules['attributes.min_people_increments'] = 'integer';
 
             $rules['schedules'] = 'array';
         }

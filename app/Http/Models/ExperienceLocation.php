@@ -11,16 +11,16 @@ class ExperienceLocation {
         $productVendorLocationInsertData = [
             'product_id' => $data['experience_id'],
             'vendor_location_id' => $data['restaurant_location_id'],
-            'slug' => $data['slug'],
-            'location_id' => $data['location_id'],
+            //'slug' => $data['slug'],
+            //'location_id' => $data['location_id'],
             'status' => $data['status']
         ];
 
         $productVendorLocationId = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
 
         if($productVendorLocationId){
-            if(!empty($data['limits'])){
-                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['limits']);
+            if(!empty($data['attributes'])){
+                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['attributes']);
 
                 if($AttributesSaved['status'] !== 'success'){
                     $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
@@ -93,7 +93,7 @@ class ExperienceLocation {
         $productVendorLocationId = DB::table('product_vendor_locations')->where('id', $productVendorLocationId)->update($productVendorLocationUpdateData);
 
         if(!empty($data['limits'])){
-            $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['limits']);
+            $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['attributes']);
 
             if($AttributesSaved['status'] !== 'success'){
                 $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
@@ -167,7 +167,7 @@ class ExperienceLocation {
             $schedules_insert_map[] = [
                 'product_vendor_location_id' => $product_vendor_location_id,
                 'schedule_id' => $schedule['id'],
-                'off_peak_schedule' => $schedule['off_peak'],
+                //'off_peak_schedule' => $schedule['off_peak'],
                 'max_reservations' => $schedule['max_reservations']
             ];
         }
@@ -222,7 +222,8 @@ class ExperienceLocation {
                         'product_vendor_location_id' => $product_vendor_location_id,
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
-                        'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                        //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                        'max_covers_limit' => $time_range_limit['max_covers_limit'],
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -232,7 +233,8 @@ class ExperienceLocation {
                     'product_vendor_location_id' => $product_vendor_location_id,
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
-                    'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                    //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                    'max_covers_limit' => $time_range_limit['max_covers_limit'],
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];
@@ -254,33 +256,42 @@ class ExperienceLocation {
         }
     }
 
-    protected function saveReservationLimits($product_vendor_location_id, $limits)
-    {
+    protected function saveReservationLimits($product_vendor_location_id, $attributes)
+    {   //dd($attributes);
         $limitData = [];
 
-        if(isset($limits['min_people_per_reservation'])){
-            $limitData['min_people_per_reservation'] = $limits['min_people_per_reservation'];
+        if(isset($attributes['min_people_per_reservation'])){
+            $limitData['min_people_per_reservation'] = $attributes['min_people_per_reservation'];
         }
 
-        if(isset($limits['max_people_per_reservation'])){
-            $limitData['max_people_per_reservation'] = $limits['max_people_per_reservation'];
+        if(isset($attributes['max_people_per_reservation'])){
+            $limitData['max_people_per_reservation'] = $attributes['max_people_per_reservation'];
         }
 
-        if(isset($limits['min_people_increments'])){
-            $limitData['min_people_increments'] = $limits['min_people_increments'];
+        if(isset($attributes['max_reservations_per_time_slot'])){
+            $limitData['max_reservations_per_time_slot'] = $attributes['max_reservations_per_time_slot'];
         }
 
-        if(isset($limits['max_reservations_per_day'])){
-            $limitData['max_reservations_per_day'] = $limits['max_reservations_per_day'];
+        if(isset($attributes['min_people_increments_per_reservation'])){
+            $limitData['min_people_increments'] = $attributes['min_people_increments_per_reservation'];
         }
 
-        if(isset($limits['minimum_reservation_time_buffer'])){
-            $limitData['minimum_reservation_time_buffer'] = $limits['minimum_reservation_time_buffer'];
+        if(isset($attributes['max_people_per_day'])){
+            $limitData['max_people_per_day'] = $attributes['max_people_per_day'];
         }
 
-        if(isset($limits['maximum_reservation_time_buffer'])){
-            $limitData['maximum_reservation_time_buffer'] = $limits['maximum_reservation_time_buffer'];
+        if(isset($attributes['minimum_reservation_time_buffer'])){
+            $limitData['minimum_reservation_time_buffer'] = $attributes['minimum_reservation_time_buffer'];
         }
+
+        if(isset($attributes['maximum_reservation_time_buffer'])){
+            $limitData['maximum_reservation_time_buffer'] = $attributes['maximum_reservation_time_buffer'];
+        }
+
+        if(isset($attributes['max_reservations_per_day'])){
+            $limitData['max_reservations_per_day'] = $attributes['max_reservations_per_day'];
+        }
+
 
         if(count($limitData)){
             $limitData['product_vendor_location_id'] = $product_vendor_location_id;

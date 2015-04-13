@@ -74,3 +74,12 @@ Route::resource('admin/experience/locations','AdminExperienceLocationsController
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::post('admin/experience/locations/getVendorLocationsDetails',[
+    'uses' => 'AdminExperienceLocationsController@getVendorLocationsDetails',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+

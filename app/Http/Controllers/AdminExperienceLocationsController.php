@@ -53,10 +53,10 @@ class AdminExperienceLocationsController extends Controller {
      * Store a newly created resource in storage.
      *
      */
-    public function store(CreateExperienceLocationRequest $createExperienceLocationRequest)
-    {
+    public function store()
+    { //CreateExperienceLocationRequest $createExperienceLocationRequest
         $input = $this->request->all();
-
+        //dd($input);
         $experienceLocationCreate = $this->experienceLocation->create($input);
 
         if($experienceLocationCreate['status'] === 'success'){
@@ -65,7 +65,7 @@ class AdminExperienceLocationsController extends Controller {
             }
 
             flash()->success('The Experience Location has been successfully created.');
-            return redirect()->route('AdminExperiences');
+            return redirect('admin/experience/locations');
         }else{
             return response()->json([
                 'action' => $experienceLocationCreate['action'],
@@ -140,6 +140,19 @@ class AdminExperienceLocationsController extends Controller {
                 'action' => $experienceLocationDelete['action'],
                 'message' => $experienceLocationDelete['message']
             ], 400);
+        }
+    }
+
+    /**
+     *
+     *
+     */
+    public function getVendorLocationsDetails(){
+        if(Request::ajax())
+        {
+            //trying to grab value of textbox here; however it doesn't work
+            $userID = Input::post('vendor_id');
+            echo $userID;
         }
     }
 
