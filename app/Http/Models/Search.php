@@ -357,6 +357,17 @@ class Search {
 															);
 			}
 		}
+		
+		#getting all the tags from the database
+		$queryTags = DB::table('tags')->select('id','name')->get();
+		
+		#setting up the tags filter information
+		foreach ($queryTags as $row) {
+			$arrFilters['filters']['tags'][] = array(
+														"id" => $row->id,
+														"name" => $row->name
+													);
+		}
 							
 		
 		return $arrFilters;
