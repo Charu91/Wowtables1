@@ -12,6 +12,7 @@ class ComplexExperience extends Experience {
 
         $complexExperienceInsertData = [
             'product_type_id' => $productTypeId,
+            'vendor_id' => $data['restaurant_id'],
             'name' => $data['name'],
             'slug' => $data['slug'],
             'status' => $data['status'],

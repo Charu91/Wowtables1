@@ -191,6 +191,39 @@
             $('#addOnsMenuBtn').hide();
         });
 
+        $("#loc_exp").change(function(){
+           var curr_val = $(this).val();
+            /*$.ajax({
+                method: 'POST',
+                url: 'getVendorLocationsDetails',
+                type:'json',
+                data:{vendor_id:curr_val},
+                success: function(response){
+                    console.log('response == '+response);
+                }
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });*/
+
+            /* $.ajax({
+                url: 'getVendorLocationsDetails',
+                method: 'GET',
+                data: {
+                    vendor_id: curr_val
+                }
+            }).done(function(data){
+                locationSlugInput.val(data.slug);
+            }).fail(function(jqXHR){
+                console.log(jqXHR);
+            });
+            /*
+            .done(function (editHTML) {
+             $editFlagHolder.html(editHTML);
+             $editFlagHolder.show();
+             })
+             */
+        });
+
 
         /*$('#addNewExperienceForm').submit(function(e){
             e.preventDefault();

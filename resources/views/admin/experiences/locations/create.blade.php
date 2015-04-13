@@ -37,33 +37,18 @@
                 <div class="form-group">
                     <label for="experience_id" class="col-sm-3 control-label">Select Experience <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('experience_id',null,['class'=>'form-control']) !!}
+                        {!! Form::select('experience_id',$experiences_list,null,['id'=>'loc_exp','class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="location_id" class="col-sm-3 control-label">Select Restaurant Location <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('location_id',null,['class'=>'form-control','required'=>'']) !!}
+                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
                 @include('partials.forms.schedule_limits')
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="panel">
-                            <div class="form-group">
-                                <label for="attributes[minimum_people_increments_per_reservation]" class="col-sm-6 control-label">
-                                    Min People Increments / Reservation
-                                    <span class="required">*</span>
-                                </label>
-                                <div class="col-sm-6">
-                                    {!! Form::text('attributes[minimum_people_increments_per_reservation]',null,['class'=>'form-control','required'=>'']) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <section class="panel">
                     <header class="panel-heading">
                         <h2 class="panel-title">Timing</h2>

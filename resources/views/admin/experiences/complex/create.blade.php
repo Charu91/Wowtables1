@@ -55,15 +55,15 @@
                 <div class="form-group">
                     <label for="restaurant_id" class="col-sm-3 control-label">Select Restaurant <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('restaurant_id',$restaurants_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="restaurant_locations[]" class="col-sm-3 control-label">Select Restaurant Locations <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::select('restaurant_locations[]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Experience Name <span class="required">*</span></label>
                     <div class="col-sm-6">
