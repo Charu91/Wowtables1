@@ -223,7 +223,7 @@ class ExperienceLocation {
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
                         //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
-                        'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                        'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -234,7 +234,7 @@ class ExperienceLocation {
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
                     //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
-                    'max_covers_limit' => $time_range_limit['max_covers_limit'],
+                    'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];
