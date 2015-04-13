@@ -242,7 +242,7 @@ class ExperienceLocation {
         }
 
         if(count($time_range_limit_insert_map)){
-            if(DB::table('product_vendor_location_booking_time_range_limits')->insert($time_range_limit_insert_map)){
+            if(DB::table('product_vendor_location_booking_time_range_limits_old')->insert($time_range_limit_insert_map)){
                 return ['status' => 'success'];
             }else{
                 DB::rollback();
