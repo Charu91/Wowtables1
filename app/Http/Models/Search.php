@@ -112,7 +112,7 @@ class Search {
 	 * @since	1.0.0
 	 * @version	1.0.0
 	 */
-	public function findMatchingExperience($arrData) {
+	public function findMatchingExperience( $arrData ) {
 		$experienceQuery = DB::table('products')
 							->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
 							->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
