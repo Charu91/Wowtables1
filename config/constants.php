@@ -10,5 +10,7 @@
  */
  
  return [
- 	"IMAGE_URL" => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/'
+ 	"IMAGE_URL" => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/',
+ 	"VALIDATION_ERROR" => 400,
+ 	"SUCCESS" => 200
  ];
