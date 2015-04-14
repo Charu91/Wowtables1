@@ -20,7 +20,7 @@ use WowTables\Http\Models\Search;
 	 * @var		object
 	 * @access	protected
 	 * @since	1.0.0
-	 */
+	 */ 
 	protected $search;
 	
 	//-----------------------------------------------------------------
