@@ -144,7 +144,6 @@ class Search {
 		
 		//adding filter for cuisines if cuisines are present
 		if(isset($arrData['arrCuisine'])) {
-			$experienceQuery->select(DB::raw());
 			$experienceQuery->whereIn('paso.option',$arrData['arrCuisine']);
 		}
 		

@@ -56,20 +56,6 @@ use Config;
 		
 		$arrSubmittedData = $input['filters'];
 		
-		
-				
-		/*
-		#reading the information submitted by the user
-		$arrSubmittedData['time'] = $request->input('bookingTime');
-		$arrSubmittedData['day'] = $request->input('bookingDay');
-		$arrSubmittedData['minPrice'] = $request->input('minPrice');
-		$arrSubmittedData['maxPrice'] = $request->input('maxPrice');
-		$arrSubmittedData['arrLocation'] = $request->input('location');
-		$arrSubmittedData['arrCuisine'] = $request->input('cuisine');
-		$arrSubmittedData['arrTags'] = $request->input('tags');
-		$arrSubmittedData['city'] = $request->input('city');
-		*/
-		
 		//validating the input data
 		$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
 		
