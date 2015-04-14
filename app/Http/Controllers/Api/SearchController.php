@@ -20,7 +20,7 @@ use Config;
 	 * @var		object
 	 * @access	protected
 	 * @since	1.0.0
-	 */
+	 */ 
 	protected $search;
 	
 	//-----------------------------------------------------------------
