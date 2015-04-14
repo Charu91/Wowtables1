@@ -54,29 +54,38 @@ use Config;
 		//reading the input data
 		$input = $request->all();
 		
-		$arrSubmittedData = $input['filters'];
+		if(array_key_exists('filters', $input)) {
+			$arrSubmittedData = $input['filters'];
+			
+			//validating the input data
+			$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
+			
+			if($arrReturn['status'] == Config::get('constants.API_ERROR')) {
+				//validation failed
+				$arrResult['status'] = $arrReturn['status'];
+				$arrResult['error'] = $arrReturn['msg'];
+			
+			} else {
+				//reading the matching experiences details from the DB
+				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
-		//validating the input data
-		$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
+				//setting up the filters
+				$searchFilters = $this->search->getExperienceSearchFiltersTest($arrSubmittedData['city_id']);
 		
-		if($arrReturn['status'] == Config::get('constants.IMAGE_URL')) {
+				//setting up the array to be formatted as json
+				$arrResult['status'] = Config::get('constants.API_SUCCESS');
+				$arrResult['resultCount'] = $searchResult['resultCount'];
+				$arrResult['data'] = $searchResult['data'];
+				$arrResult['filters'] = $searchFilters['filters'];
+			}
+		}
+		else {
 			//validation failed
-			$arrResult['msg'] = $arrReturn['msg'];
-		} else {
-			//reading the matching experiences details from the DB
-			$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
+			$arrResult['status'] = Config::get('constants.API_ERROR');
+			$arrResult['error'] = 'Invalid Request';
+		}				
 		
-			//setting up the filters
-			$searchFilters = $this->search->getExperienceSearchFiltersTest($arrSubmittedData['city_id']);
-		
-			//setting up the array to be formatted as json
-			$arrResult['resultCount'] = $searchResult['resultCount'];
-			$arrResult['experiences'] = $searchResult['experiences'];
-			$arrResult['filters'] = $searchFilters['filters'];
-		}		
-		
-		return response()->json($arrResult,200);
-		
+		return response()->json($arrResult,200);		
 	}
  }
 //end of class SearchController
