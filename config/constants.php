@@ -11,6 +11,6 @@
  
  return [
  	"IMAGE_URL" => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/',
- 	"VALIDATION_ERROR" => 400,
- 	"SUCCESS" => 200
+ 	"API_ERROR" => 'FAIL',
+ 	"API_SUCCESS" => 'OK'
  ];
