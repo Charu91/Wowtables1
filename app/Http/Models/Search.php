@@ -128,6 +128,8 @@ class Search {
 							//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
 							//->join('locations','locations.id','=','vl.location_id')
 							->leftJoin(DB::raw('product_venue_address as pva'),'pva.product_id','=','products.id')
+							->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
+							->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 							//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 							//->leftJoin('tags','tags.id','=','ptm.tag_id')
 							//->where('pvl.status','Active')
@@ -135,11 +137,12 @@ class Search {
 							//->orWhere('pa2.alias','experience_info')
 							//->orWhere('pa3.alias','cuisines')
 							->where('pva.city_id',$arrData['city_id'])
-							->where('products.visible',1)							
+							->where('products.visible',1)
+							->whereIN('products.type',array('simple','complex'))							
 							->groupBy('products.id')
 							->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
-											pp.price, pp.price_type, 
-											pp.is_variable, pp.tax, pp.post_tax_price, media.file as image'));
+											pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
+											products.type as product_type, flags.name as flag_name'));
 							
 		
 		//adding filter for cuisines if cuisines are present
@@ -186,9 +189,9 @@ class Search {
 			$arrRatings = $this->findRatingByProduct($arrProduct);
 			
 			foreach($experienceResult as $row) {
-				$arrData['experiences'][] = array(
+				$arrData['data'][] = array(
 												'id' => $row->id,
-												'type' => 'experience',
+												'type' => $row->product_type,
 												'name' => $row->title,
 												'description' => $row->description,
 												'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
@@ -198,6 +201,7 @@ class Search {
 												'image' => (is_null($row->image))? '':Config::get('constants.IMAGE_URL').$row->image,
 												'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 												'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+												"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
 											);
 			}
 		}
@@ -302,8 +306,8 @@ class Search {
 		//array to store response to be sent back to client
 		$arrResponse = array();
 		if(!array_key_exists('city_id', $arrData) || empty($arrData['city_id'])) {
-			$arrResponse['status'] = Config::get('constants.IMAGE_URL');
-			$arrResponse['msg'] = "Invalid request";
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['msg'] = "City id is required.";
 		}		
 		else {
 			$arrResponse['status'] = 100;
