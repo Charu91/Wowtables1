@@ -7,7 +7,6 @@ class ExperienceLocation {
     public function create($data)
     {
         DB::beginTransaction();
-        //dd($data);
         $location_count = count($data['restaurant_location_id']);
 
         $productVendorLocationLastID = '';
