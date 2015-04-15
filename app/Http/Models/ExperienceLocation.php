@@ -185,7 +185,6 @@ class ExperienceLocation {
     protected function saveSchedules($product_vendor_location_id, $schedules)
     {
         $schedules_insert_map = [];
-        //echo "<pre>"; print_r($schedules);
         foreach($schedules as $schedule){
             if(isset($schedule['id']) && ($schedule['id'] != "" || $schedule['id'] != 0)){
                 $schedules_insert_map[] = [
