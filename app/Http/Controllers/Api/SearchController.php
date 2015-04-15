@@ -62,14 +62,12 @@ use Config;
 			//validating the input data
 			$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
 			
-			if($arrReturn['status'] == Config::get('constants.API_ERROR')) {
-				
+			if($arrReturn['status'] == Config::get('constants.API_ERROR')) {				
 				//validation failed
 				$arrResult['status'] = $arrReturn['status'];
 				$arrResult['error'] = $arrReturn['msg'];
 			
-			} else {
-				
+			} else {				
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
