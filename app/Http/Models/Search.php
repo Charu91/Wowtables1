@@ -210,7 +210,8 @@ class Search {
 												"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
 											);
 			}
-		}		
+		}
+		
 		return $arrData;
 	}
 
