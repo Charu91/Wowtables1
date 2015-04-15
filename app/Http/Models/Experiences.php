@@ -99,7 +99,7 @@ class Experiences {
 										'total_reviews' => $arrReviews['total_rating'],
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
-										'similar_option' => array()									
+										'similar_option' => array(),
 									);
 				
 				

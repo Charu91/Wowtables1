@@ -15,3 +15,5 @@ Route::get('experiences/{id}', [
     'where' => ['id' => '\d+'],
     'domain' => env('API_URL')
 ]);
+
+Route::resource('experience','Api\ExperiencesController@show');
