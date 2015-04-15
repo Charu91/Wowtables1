@@ -125,8 +125,58 @@ class Review {
 			}
 		}
 		return $arrReviewDetail;
-	} 
+	}
 	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the detail of the reviews given to 
+	 * a particular product.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	integer 	$productID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function readPoductReviews($productID) {
+		//query to read product reviews
+		$strQuery = DB::table(DB::raw('product_reviews as pr'))
+						->join('users','users.id','=', 'pr.user_id')
+						->where('pr.product_id',$productID)
+						->where('pr.status','approved')
+						->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings'),
+								'users.id','users.full_name','pr.review','pr.rating','pr.created_at')
+						->get();
+		
+		//array to store the result
+		$arrReviewDetail = array();
+		$arrReviewDetail['reviews'] = array();
+		
+		//initializing the results
+		if($strQuery) {
+			foreach($strQuery as $row) {
+				$arrReviewDetail['avg_rating'] = $row->avg_rating;
+				$arrReviewDetail['total_rating'] = $row->total_ratings;
+				if(!is_null($row->id)) {
+					$arrReviewDetail['reviews'][] = array(
+													'id' => $row->id,
+													'name' => $row->full_name,
+													'image' => $row->image,
+													'review' => $row->review,
+													'rating' => $row->rating,
+													'created_at' => $row->created_at
+												);
+				}				
+			}
+		}
+		else {
+				$arrReviewDetail['avg_rating'] = 0.00;
+				$arrReviewDetail['total_rating'] = 0.00;
+				$arrReviewDetail['reviews'][] = array();
+		}
+		return $arrReviewDetail;		
+	}	
 }
 //end of class Review
 //endo of file WowTables\Http\Models\Review.php
