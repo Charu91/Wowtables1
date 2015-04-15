@@ -10,5 +10,7 @@
  */
  
  return [
- 	"IMAGE_URL" => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/'
+ 	"IMAGE_URL" => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/',
+ 	"API_ERROR" => 'FAIL',
+ 	"API_SUCCESS" => 'OK'
  ];

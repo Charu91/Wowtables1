@@ -58,7 +58,7 @@ class AdminExperienceLocationsController extends Controller {
         $input = $this->request->all();
         //dd($input);
         $experienceLocationCreate = $this->experienceLocation->create($input);
-
+       //echo "<pre>"; print_r($experienceLocationCreate); die;
         if($experienceLocationCreate['status'] === 'success'){
             if($this->request->ajax()) {
                 return response()->json(['status' => 'success'], 200);

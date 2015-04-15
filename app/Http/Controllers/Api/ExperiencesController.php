@@ -5,6 +5,7 @@ use WowTables\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Products;
 use Illuminate\Http\Request;
+use WowTables\Http\Models\Experiences;
 
 class ExperiencesController extends Controller {
 
@@ -28,17 +29,29 @@ class ExperiencesController extends Controller {
      * @var object
      */
     protected $product;
+	
+	/**
+	 * The Single Experiences object
+	 * 
+	 * @var		object
+	 * @access	protected
+	 */
+	protected $experience;
+	
 
     /**
-     * @param Request $request
+     * Default Constructor
+	 * 
+	 * @param Request $request
      */
-    public function __construct(Request $request, Products $products, Product $product)
+    public function __construct(Request $request, Products $products, Product $product, Experiences $experience)
     {
-        $this->middleware('mobile.app.access');
+        //$this->middleware('mobile.app.access');
 
         $this->products = $products;
         $this->product = $product;
         $this->request = $request;
+		$this->experience = $experience;
     }
 
 	/**
@@ -61,11 +74,12 @@ class ExperiencesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
-	{
-		$experience = $this->product->fetch($id);
+	public function show($id) {
+		//die('Hello World');
+		$arrExperience['data'] = $this->experience->find($id);
+		$arrExperience['status'] = 'OK';
 
-        return response()->json($experience['data'], $experience['code']);
+        return response()->json($arrExperience);
 	}
 
 }

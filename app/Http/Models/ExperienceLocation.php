@@ -7,16 +7,37 @@ class ExperienceLocation {
     public function create($data)
     {
         DB::beginTransaction();
+        $location_count = count($data['restaurant_location_id']);
 
-        $productVendorLocationInsertData = [
-            'product_id' => $data['experience_id'],
-            'vendor_location_id' => $data['restaurant_location_id'],
-            //'slug' => $data['slug'],
-            //'location_id' => $data['location_id'],
-            'status' => $data['status']
-        ];
+        $productVendorLocationLastID = '';
+        if($location_count > 1){
+            foreach($data['restaurant_location_id'] as $key => $location_id){
+                $productVendorLocationInsertData = [
+                    'product_id' => $data['experience_id'],
+                    'vendor_location_id' => $location_id,
+                    'location_parent_id' => $productVendorLocationLastID,
+                    'status' => $data['status']
+                ];
 
-        $productVendorLocationId = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
+                $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
+            }
+
+
+        }else if($location_count == 1){
+            $productVendorLocationInsertData = [
+                'product_id' => $data['experience_id'],
+                'vendor_location_id' => $data['restaurant_location_id'][0],
+                'location_parent_id' => 0,
+                'status' => $data['status']
+            ];
+
+            $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
+        }
+
+
+        $productVendorLocationId = $productVendorLocationLastID;
+
+        //echo "last id == ".$productVendorLocationId; die;
 
         if($productVendorLocationId){
             if(!empty($data['attributes'])){
@@ -162,14 +183,16 @@ class ExperienceLocation {
     protected function saveSchedules($product_vendor_location_id, $schedules)
     {
         $schedules_insert_map = [];
-
         foreach($schedules as $schedule){
-            $schedules_insert_map[] = [
-                'product_vendor_location_id' => $product_vendor_location_id,
-                'schedule_id' => $schedule['id'],
-                //'off_peak_schedule' => $schedule['off_peak'],
-                'max_reservations' => $schedule['max_reservations']
-            ];
+            if(isset($schedule['id']) && ($schedule['id'] != "" || $schedule['id'] != 0)){
+                $schedules_insert_map[] = [
+                    'product_vendor_location_id' => $product_vendor_location_id,
+                    'schedule_id' => $schedule['id'],
+                    //'off_peak_schedule' => $schedule['off_peak'],
+                    'max_reservations' => $schedule['max_reservations']
+                ];
+            }
+
         }
 
         if(DB::table('product_vendor_location_booking_schedules')->insert($schedules_insert_map)){

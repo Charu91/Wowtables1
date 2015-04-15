@@ -12,7 +12,7 @@ use WowTables\Http\Models\Eloquent\Location;
  * @since		1.0.0
  * @version		1.0.0
  * @author		Parth Shukla <shuklaparth@hotmail.com>
- */
+ */ 
 class Search {
 	
 	/**
@@ -25,7 +25,8 @@ class Search {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function find($arrData){
+	public static function find( $arrData ){
+		
 		$vendors = DB::table('vendors')
 						->join('vendor_location','vendor_location.vendor_id','=','vendors.id')
 						->join('locations','locations.id','=', 'vendor_location.location_id')
@@ -49,12 +50,15 @@ class Search {
 						
 		//array to store the vendor ids
 		$arrVendor = array();
+		
 		//array to store final result
 		$arrData = array();
 		
 		if($vendors) {
 			foreach($vendors as $row) {
+								
 				$arrVendor[] = $row->id;
+								
 			}
 			#reading the vendor ratings detail
 			$arrRatings = $this->findRatingByVendors($arrVendor);
@@ -67,7 +71,9 @@ class Search {
 									'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 								);
 			}
-		}	
+		}
+		
+			
 	}
 	
 	//-----------------------------------------------------------------------------
@@ -112,7 +118,7 @@ class Search {
 	 * @since	1.0.0
 	 * @version	1.0.0
 	 */
-	public function findMatchingExperience($arrData) {
+	public function findMatchingExperience( $arrData ) {
 		$experienceQuery = DB::table('products')
 							->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
 							->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
@@ -128,22 +134,25 @@ class Search {
 							//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
 							//->join('locations','locations.id','=','vl.location_id')
 							->leftJoin(DB::raw('product_venue_address as pva'),'pva.product_id','=','products.id')
+							->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
+							->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 							//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 							//->leftJoin('tags','tags.id','=','ptm.tag_id')
 							//->where('pvl.status','Active')
 							//->where('pa1.alias','short_description')
 							//->orWhere('pa2.alias','experience_info')
 							//->orWhere('pa3.alias','cuisines')
-							->where('pva.city_id',$arrData['city_id'])							
+							->where('pva.city_id',$arrData['city_id'])
+							->where('products.visible',1)
+							->whereIN('products.type',array('simple','complex'))							
 							->groupBy('products.id')
 							->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
-											pp.price, pp.price_type, 
-											pp.is_variable, pp.tax, pp.post_tax_price, media.file as image'));
+											pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
+											products.type as product_type, flags.name as flag_name'));
 							
 		
 		//adding filter for cuisines if cuisines are present
 		if(isset($arrData['arrCuisine'])) {
-			$experienceQuery->select(DB::raw());
 			$experienceQuery->whereIn('paso.option',$arrData['arrCuisine']);
 		}
 		
@@ -186,19 +195,20 @@ class Search {
 			$arrRatings = $this->findRatingByProduct($arrProduct);
 			
 			foreach($experienceResult as $row) {
-				$arrData['experiences'][] = array(
-											'id' => $row->id,
-											'type' => 'experience',
-											'name' => $row->title,
-											'description' => $row->description,
-											'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
-											'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
-											'price_type' => $row->price_type,
-											'variable' => $row->is_variable,
-											'image' => Config::get('constants.IMAGE_URL').$row->image,
-											'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
-											'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
-										);
+				$arrData['data'][] = array(
+												'id' => $row->id,
+												'type' => $row->product_type,
+												'name' => $row->title,
+												'description' => $row->description,
+												'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
+												'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
+												'price_type' => $row->price_type,
+												'variable' => $row->is_variable,
+												'image' => (is_null($row->image))? '':Config::get('constants.IMAGE_URL').$row->image,
+												'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+												'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+												"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
+											);
 			}
 		}
 		
@@ -302,8 +312,8 @@ class Search {
 		//array to store response to be sent back to client
 		$arrResponse = array();
 		if(!array_key_exists('city_id', $arrData) || empty($arrData['city_id'])) {
-			$arrResponse['status'] = Config::get('constants.IMAGE_URL');
-			$arrResponse['msg'] = "Invalid request";
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['msg'] = "City id is required.";
 		}		
 		else {
 			$arrResponse['status'] = 100;
@@ -355,6 +365,17 @@ class Search {
 																"name" => $row->option
 															);
 			}
+		}
+		
+		#getting all the tags from the database
+		$queryTags = DB::table('tags')->select('id','name')->get();
+		
+		#setting up the tags filter information
+		foreach ($queryTags as $row) {
+			$arrFilters['filters']['tags'][] = array(
+														"id" => $row->id,
+														"name" => $row->name
+													);
 		}
 							
 		
