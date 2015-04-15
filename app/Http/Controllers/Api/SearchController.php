@@ -69,6 +69,7 @@ use Config;
 				$arrResult['error'] = $arrReturn['msg'];
 			
 			} else {
+				
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		

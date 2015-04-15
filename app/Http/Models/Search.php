@@ -50,6 +50,7 @@ class Search {
 						
 		//array to store the vendor ids
 		$arrVendor = array();
+		
 		//array to store final result
 		$arrData = array();
 		
