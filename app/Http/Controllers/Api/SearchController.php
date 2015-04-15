@@ -67,7 +67,8 @@ use Config;
 				$arrResult['status'] = $arrReturn['status'];
 				$arrResult['error'] = $arrReturn['msg'];
 			
-			} else {				
+			} else {
+							
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
@@ -79,6 +80,7 @@ use Config;
 				$arrResult['resultCount'] = $searchResult['resultCount'];
 				$arrResult['data'] = $searchResult['data'];
 				$arrResult['filters'] = $searchFilters['filters'];
+				
 			}
 		}
 		else {

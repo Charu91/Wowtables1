@@ -25,7 +25,7 @@ class Search {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function find($arrData){
+	public static function find( $arrData ){
 		
 		$vendors = DB::table('vendors')
 						->join('vendor_location','vendor_location.vendor_id','=','vendors.id')
