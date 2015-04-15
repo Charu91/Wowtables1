@@ -78,11 +78,9 @@ use Config;
 				$arrResult['resultCount'] = $searchResult['resultCount'];
 				$arrResult['data'] = $searchResult['data'];
 				$arrResult['filters'] = $searchFilters['filters'];
-				
 			}
 		}
-		else {
-			
+		else {			
 			
 			//validation failed
 			$arrResult['status'] = Config::get('constants.API_ERROR');
