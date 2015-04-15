@@ -48,6 +48,7 @@ use Config;
 	 * @since	1.0.0
 	 */
 	public function searchExperience( Request $request ) {
+		
 		//array to store information submitted by the user
 		$arrSubmittedData = array();
 		
