@@ -67,7 +67,9 @@ class Search {
 									'totalRating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 								);
 			}
-		}	
+		}
+		
+			
 	}
 	
 	//-----------------------------------------------------------------------------
