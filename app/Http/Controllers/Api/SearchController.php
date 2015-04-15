@@ -65,10 +65,8 @@ use Config;
 			if($arrReturn['status'] == Config::get('constants.API_ERROR')) {				
 				//validation failed
 				$arrResult['status'] = $arrReturn['status'];
-				$arrResult['error'] = $arrReturn['msg'];
-			
-			} else {
-							
+				$arrResult['error'] = $arrReturn['msg'];			
+			} else {							
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
