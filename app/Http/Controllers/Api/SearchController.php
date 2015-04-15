@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Search;
-
+use Config;
 
 /**
  * Controller class SearchController.
@@ -49,8 +49,16 @@ use WowTables\Http\Models\Search;
 	 */
 	public function searchExperience(Request $request) {
 		//array to store information submitted by the user
-		$arrSubmittedData = array();		
+		$arrSubmittedData = array();
 		
+		//reading the input data
+		$input = $request->all();
+		
+		$arrSubmittedData = $input['filters'];
+		
+		
+				
+		/*
 		#reading the information submitted by the user
 		$arrSubmittedData['time'] = $request->input('bookingTime');
 		$arrSubmittedData['day'] = $request->input('bookingDay');
@@ -59,17 +67,27 @@ use WowTables\Http\Models\Search;
 		$arrSubmittedData['arrLocation'] = $request->input('location');
 		$arrSubmittedData['arrCuisine'] = $request->input('cuisine');
 		$arrSubmittedData['arrTags'] = $request->input('tags');
+		$arrSubmittedData['city'] = $request->input('city');
+		*/
 		
-		//reading the matching experiences details from the DB
-		$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
+		//validating the input data
+		$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
 		
-		//setting up the filters
-		$searchFilters = $this->search->getExperienceSearchFilter($arrSubmittedData);
+		if($arrReturn['status'] == Config::get('constants.IMAGE_URL')) {
+			//validation failed
+			$arrResult['msg'] = $arrReturn['msg'];
+		} else {
+			//reading the matching experiences details from the DB
+			$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
 		
-		//setting up the array to be formatted as json
-		$arrResult['resultCount'] = $searchResult['resultCount'];
-		$arrResult['experiences'] = $searchResult['experiences'];
-		$arrResult['filters'] = $searchFilters['filters'];
+			//setting up the filters
+			$searchFilters = $this->search->getExperienceSearchFiltersTest($arrSubmittedData['city_id']);
+		
+			//setting up the array to be formatted as json
+			$arrResult['resultCount'] = $searchResult['resultCount'];
+			$arrResult['experiences'] = $searchResult['experiences'];
+			$arrResult['filters'] = $searchFilters['filters'];
+		}		
 		
 		return response()->json($arrResult,200);
 		
