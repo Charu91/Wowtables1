@@ -54,7 +54,9 @@ class Search {
 		
 		if($vendors) {
 			foreach($vendors as $row) {
+				
 				$arrVendor[] = $row->id;
+				
 			}
 			#reading the vendor ratings detail
 			$arrRatings = $this->findRatingByVendors($arrVendor);
