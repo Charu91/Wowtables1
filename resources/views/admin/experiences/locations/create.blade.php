@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label for="location_id" class="col-sm-3 control-label">Select Restaurant Location <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_location_id',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('restaurant_location_id[]',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
             </div>
