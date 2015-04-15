@@ -10,7 +10,6 @@ class ExperienceLocation {
         //dd($data);
         $location_count = count($data['restaurant_location_id']);
 
-        //echo "count == ".$location_count; die;
         $productVendorLocationLastID = '';
         if($location_count > 1){
             foreach($data['restaurant_location_id'] as $key => $location_id){
