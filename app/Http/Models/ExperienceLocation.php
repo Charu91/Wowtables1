@@ -8,7 +8,7 @@ class ExperienceLocation {
     {
         DB::beginTransaction();
         $location_count = count($data['restaurant_location_id']);
-    
+        
         $productVendorLocationLastID = '';
         if($location_count > 1){
             foreach($data['restaurant_location_id'] as $key => $location_id){
