@@ -173,14 +173,7 @@ class Review {
 		else {
 				$arrReviewDetail['avg_rating'] = 0.00;
 				$arrReviewDetail['total_rating'] = 0.00;
-				$arrReviewDetail['reviews'][] = array(
-													'id' => $row->id,
-													'name' => $row->full_name,
-													'image' => $row->image,
-													'review' => $row->review,
-													'rating' => $row->rating,
-													'created_at' => $row->created_at
-												);				
+				$arrReviewDetail['reviews'][] = array();				
 		}
 		return $arrReviewDetail;		
 	}	
