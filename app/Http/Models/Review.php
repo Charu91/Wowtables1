@@ -162,7 +162,7 @@ class Review {
 					$arrReviewDetail['reviews'][] = array(
 													'id' => $row->id,
 													'name' => $row->full_name,
-													'image' => $row->image,
+													'image' => "",
 													'review' => $row->review,
 													'rating' => $row->rating,
 													'created_at' => $row->created_at
