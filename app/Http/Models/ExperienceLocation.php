@@ -15,7 +15,7 @@ class ExperienceLocation {
                 $productVendorLocationInsertData = [
                     'product_id' => $data['experience_id'],
                     'vendor_location_id' => $location_id,
-                    'location_parent_id' => $productVendorLocationLastID,
+                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'status' => $data['status']
                 ];
 
