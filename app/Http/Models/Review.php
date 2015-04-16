@@ -167,13 +167,28 @@ class Review {
 													'rating' => $row->rating,
 													'created_at' => $row->created_at
 												);
-				}				
+				}
+				$arrReviewDetail['reviews'][] = array(
+													'id' => 1,
+													'name' => 'Sneha Sharma',
+													'image' => "",
+													'review' => "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.",
+													'rating' => 3,
+													'created_at' => "2015-04-16 13:03"
+												);
+				$arrReviewDetail['reviews'][] = array(
+													'id' => 2,
+													'name' => 'Tushar Joshi',
+													'image' => "",
+													'review' => "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.",
+													'rating' => 2,
+													'created_at' => "2015-04-15 16:30"
+												);				
 			}
 		}
 		else {
 				$arrReviewDetail['avg_rating'] = 0.00;
-				$arrReviewDetail['total_rating'] = 0.00;
-				$arrReviewDetail['reviews'][] = array();
+				$arrReviewDetail['total_rating'] = 0.00;				
 		}
 		return $arrReviewDetail;		
 	}	
