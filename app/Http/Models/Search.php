@@ -1,4 +1,4 @@
-	<?php namespace WowTables\Http\Models;
+<?php namespace WowTables\Http\Models;
 
 	use DB;
 	use Config;
