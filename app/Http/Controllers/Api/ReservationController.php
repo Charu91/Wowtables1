@@ -8,6 +8,7 @@ use WowTables\Http\Models\Reservation;
 use WowTables\Http\Models\Locations;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationLimit;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
+use WowTables\Http\Models\Schedules;
 
 /**
  * Controller class ReservationController
@@ -54,6 +55,8 @@ use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 	 * related to party size.
 	 * 
 	 * @access	public
+	 * @param	string	$type
+	 * @param	string	$id
 	 * @return	response
 	 * @since	1.0.0
 	 */
@@ -66,6 +69,39 @@ use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 		}
 		else if($type=='alacarte') {
 			$arrResponse['data'] = VendorLocationLimit::getVendorPeopleReservationLimit($id);
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else {
+			$arrResponse['msg'] = 'Invalid parameters';
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+		} 
+		
+		return response()->json($arrResponse,200);
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Handles request for displaying the schedule related
+	 * to a location.
+	 * 
+	 * @access	public
+	 * @param	string
+	 * @param	integer
+	 * @param	string		default NULL
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function getSchedule($type, $id, $day=NULL) {
+		//array to store response
+		$arrResponse = array();
+		
+		if($type=="experience") {
+			$arrResponse['data'] = Schedules::getExperienceLocationSchedule($id,$day);
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else if($type=='alacarte') {
+			$arrResponse['data'] = Schedules::getVendorLocationSchedule($id,$day);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
