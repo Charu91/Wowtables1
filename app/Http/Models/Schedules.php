@@ -108,4 +108,86 @@ class Schedules {
         }
     }
 
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns the schedule for a experience location.
+	 * 
+	 * @access	public
+	 * @param	integer	$productVendorLocationID
+	 * @param	string	$day
+	 * @since	1.0.0
+	 * @return	array
+	 * @author	Parth Shukla <parthshukla@ahex.co.in>
+	 */
+	public static function getExperienceLocationSchedule($productVendorLocationID, $day=NULL) {
+		if(is_null($day)) {
+			$day = strtolower(date("D"));
+		}	
+		
+		$schedules = DB::table('schedules')
+						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+						->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+						->where('schedules.day_short',$day)
+						->where('pvlbs.product_vendor_location_id', $productVendorLocationID)
+						->select('schedules.id','ts.time','ts.slot_type')
+						->get();
+						
+		#array to hold information
+		$arrData = array();
+		
+		if($schedules) {
+			foreach($schedules as $row) {
+				$arrData[] = array(
+									'schedule_id' => $row->id,
+									'time' => $row->time,
+									'slot_type' => $row->slot_type
+								);
+			}
+		}
+		return $arrData;
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns the schedule for a vendor location.
+	 * 
+	 * @access	public
+	 * @param	integer	$vendorLocationID
+	 * @param	string	$day
+	 * @since	1.0.0
+	 * @return	array
+	 * @author	Parth Shukla <parthshukla@ahex.co.in>
+	 */
+	public static function getVendorLocationSchedule($vendorLocationID, $day=NULL) {
+		if(is_null($day)) {
+			$day = strtolower(date("D"));
+		}	
+		
+		$schedules = DB::table('schedules')
+						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+						->join(DB::raw('vendor_location_booking_schedules as vlbs'),'vlbs.schedule_id','=','schedules.id')
+						->where('schedules.day_short',$day)
+						->where('vlbs.vendor_location_id', $vendorLocationID)
+						->select('schedules.id','ts.time','ts.slot_type')
+						->get();
+						
+		#array to hold information
+		$arrData = array();
+		
+		if($schedules) {
+			foreach($schedules as $row) {
+				$arrData[] = array(
+									'schedule_id' => $row->id,
+									'time' => $row->time,
+									'slot_type' => $row->slot_type
+								);
+			}
+		}
+		return $arrData;
+	}
+
 } 
+//end of class Schedules.php
+//end of file WowTables\Http\Models\Schedules.php
