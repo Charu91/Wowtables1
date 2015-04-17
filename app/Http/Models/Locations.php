@@ -375,5 +375,71 @@ class Locations {
 		
 		return $arrLocation;
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the vendor location ids for a product.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	integer	$productID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function getProductVendorLocation($productID) {
+		$queryResult = DB::table(DB::raw('product_vendor_locations as pvl'))
+						->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
+						->join('locations','locations.id','=','vla.area_id')
+						->where('pvl.product_id',$productID)
+						->select('pvl.vendor_location_id as id','locations.name as area','vla.latitude','vla.longitude')
+						->get();
+		//array to hold location details
+		$arrLocation = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {
+				$arrLocation[] = array(
+									'pvl_id' =>	$row->id,
+									'area' => $row->area,
+									'latitude' => $row->latitude,
+									'longitude' => $row->longitude
+								);
+			}
+		}		
+		return $arrLocation;
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the vendor location ids for a vendor.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	integer	$vendorID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function getVendorLocationDetails($vendorID) {
+		$queryResult = DB::table(DB::raw('vendor_locations as vl'))
+						->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
+						->join('locations','locations.id','=','vla.area_id')
+						->where('vl.vendor_id',$vendorID)
+						->select('vl.id','locations.name as area','vla.latitude','vla.longitude')
+						->get();
+		//array to hold location details
+		$arrLocation = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {
+				$arrLocation[] = array(
+									'vl_id' =>	$row->id,
+									'area' => $row->area,
+									'latitude' => $row->latitude,
+									'longitude' => $row->longitude
+								);
+			}
+		}		
+		return $arrLocation;
+	}
 }
 //end of class Locations.php
