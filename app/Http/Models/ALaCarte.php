@@ -269,41 +269,7 @@ use Config;
 		}
 		
 		return FALSE;
-	}
-	
-	//-----------------------------------------------------------------
-	
-	/**
-	 * Returns the other locations of the vendor.
-	 * 
-	 * @static	true
-	 * @access	public
-	 * @param	integer	$vendorID
-	 * @return	array
-	 * @since	1.0.0
-	 */
-	public static function getVendorLocations($vendorID) {
-		$queryResult = DB::table(DB::raw('vendor_locations as vl'))
-							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
-							->leftJoin('locations', 'locations.id','=','vla.area_id')
-							->select('vla.id','locations.name as area','vla.latitude','vla.longitude')
-							->where('vl.vendor_id',$vendorID)
-							->get();
-		
-		//array to hold location details
-		$arrLocation = array();
-		if($queryResult) {
-			foreach($queryResult as $row) {
-				$arrLocation[] = array(
-									'id'	=>	$row->id,
-									'area' => $row->area,
-									'latitude' => $row->latitude,
-									'longitude' => $row->longitude
-								);
-			}
-		}		
-		return $arrLocation;
-	}
+	}	
  }
 //end of class LaCarte
 //end of file WowTables\Http\Models\LaCarte.php
