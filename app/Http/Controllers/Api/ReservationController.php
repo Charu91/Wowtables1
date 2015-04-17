@@ -6,6 +6,8 @@ use Illuminate\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Reservation;
 use WowTables\Http\Models\Locations;
+use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationLimit;
+use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 
 /**
  * Controller class ReservationController
@@ -55,8 +57,23 @@ use WowTables\Http\Models\Locations;
 	 * @return	response
 	 * @since	1.0.0
 	 */
-	public function getPartySize() {
+	public function getPartySize($type,$id) {
+		//array to store response
+		$arrResponse = array();
+		if($type=="experience") {
+			$arrResponse['data'] = ProductVendorLocationLimit::getProductPeopleReservationLimit($id);
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else if($type=='alacarte') {
+			$arrResponse['data'] = VendorLocationLimit::getVendorPeopleReservationLimit($id);
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else {
+			$arrResponse['msg'] = 'Invalid parameters';
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+		} 
 		
+		return response()->json($arrResponse,200);
 	}
  }
 //end of class ReservationController
