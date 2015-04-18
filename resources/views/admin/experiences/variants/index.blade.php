@@ -2,7 +2,7 @@
 
 @section('content')
 	<header class="page-header">
-		<h2>Experience Variants</h2>
+		<h2>Complex Experience Variants</h2>
 		<div class="right-wrapper pull-right">
 			<ol class="breadcrumbs">
 				<li>
@@ -15,7 +15,7 @@
 						<i class="fa fa-home"></i>
 					</a>
 				</li>
-				<li><span>Experience Variants</span></li>
+				<li><span>Complex Experience Variants</span></li>
 			</ol>
 		</div>
 	</header>

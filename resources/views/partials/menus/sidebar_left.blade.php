@@ -30,19 +30,19 @@
                                 <a href="/admin/experiences/create">Create Simple Experience</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experience/variants')? 'nav-active':'' }}">
-                                <a href="/admin/experience/variants">Experience Variants</a>
+                                <a href="/admin/experience/variants">Complex Experience Variants</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experience/complex/create')? 'nav-active':'' }}">
                                 <a href="/admin/experience/complex/create">Create Complex Experience</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experience/locations/create')? 'nav-active':'' }}">
-                                <a href="/admin/experience/locations/create">Create Experience Location</a>
+                                <a href="/admin/experience/locations/create">Create Experience Scheduling</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experiences')? 'nav-active':'' }}">
                                 <a href="/admin/experiences">View Experiences</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/experience/locations')? 'nav-active':'' }}">
-                                <a href="/admin/experience/locations">View Experience Locations</a>
+                                <a href="/admin/experience/locations">View Experience Scheduling</a>
                             </li>
                         </ul>
                     </li>

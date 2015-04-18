@@ -2,7 +2,7 @@
 
 @section('content')
     <header class="page-header">
-        <h2>Create Experience Location</h2>
+        <h2>Create Experience Scheduling</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
@@ -10,7 +10,7 @@
                         <i class="fa fa-home"></i>
                     </a>
                 </li>
-                <li><span>Experience Locations</span></li>
+                <li><span>Experience Scheduling</span></li>
             </ol>
 
             <a class="sidebar-right-toggle" data-open="sidebar-right">
