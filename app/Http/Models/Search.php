@@ -1,4 +1,4 @@
-	<?php namespace WowTables\Http\Models;
+<?php namespace WowTables\Http\Models;
 
 	use DB;
 	use Config;
@@ -240,7 +240,7 @@
 			foreach($queryResult as $row) {
 				$arrRating[$row->product_id] = array(
 												'averageRating' => $row->avg_rating,
-												'totalRating' => $total_ratings
+												'totalRating' => $row->total_ratings
 												);
 			}
 			return $arrRating;

@@ -269,7 +269,7 @@ use Config;
 		}
 		
 		return FALSE;
-	}
+	}	
  }
 //end of class LaCarte
 //end of file WowTables\Http\Models\LaCarte.php

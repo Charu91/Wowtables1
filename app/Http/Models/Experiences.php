@@ -183,6 +183,22 @@ class Experiences {
 		}		
 		return $arrLocation;
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public static function getSimilarProductListing() {
+		$queryResult = DB::table('products')
+						->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
+						->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
+						->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
+						->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
+						->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
+						->where()
+						->where();
+	}
 }
 //end of class Experiences
 //end of file Experiences.php
