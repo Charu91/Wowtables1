@@ -51,11 +51,11 @@
                                         <!--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],true) !!}</td>-->
                                         <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
-                                        <!--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>-->
-                                        <td>{!! Form::text('schedules['.$slot['mon']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
+                                        {{--<!--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>-->--}}
+                                        {{--<td>{!! Form::text('schedules['.$slot['mon']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -67,11 +67,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['tue']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['tue']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -83,11 +83,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['wed']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['wed']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -99,11 +99,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['thu']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['thu']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -115,11 +115,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['fri']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['fri']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -131,11 +131,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['sat']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['sat']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
@@ -147,11 +147,11 @@
                                         {{--<td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],true) !!}</td>--}}
                                         <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],true) !!}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Max T</td>
+                                    {{--<tr>--}}
+                                        {{--<td>Max T</td>--}}
                                         {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
-                                        <td>{!! Form::text('schedules['.$slot['sun']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                        {{--<td>{!! Form::text('schedules['.$slot['sun']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                    {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </td>
