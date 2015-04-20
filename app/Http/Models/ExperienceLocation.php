@@ -189,7 +189,7 @@ class ExperienceLocation {
                     'product_vendor_location_id' => $product_vendor_location_id,
                     'schedule_id' => $schedule['id'],
                     //'off_peak_schedule' => $schedule['off_peak'],
-                    'max_reservations' => $schedule['max_reservations']
+                    //'max_reservations' => $schedule['max_reservations']
                 ];
             }
 
@@ -243,10 +243,12 @@ class ExperienceLocation {
                 if(strtotime($time_range_limit['date']) > strtotime('midnight')){
                     $time_range_limit_insert_map[] = [
                         'product_vendor_location_id' => $product_vendor_location_id,
+                        'limit_by' => $time_range_limit['limit_by'],
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
                         //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                         'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
+                        'max_tables_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -254,10 +256,12 @@ class ExperienceLocation {
             }else{
                 $time_range_limit_insert_map[] = [
                     'product_vendor_location_id' => $product_vendor_location_id,
+                    'limit_by' => $time_range_limit['limit_by'],
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
                     //'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
                     'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
+                    'max_tables_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];

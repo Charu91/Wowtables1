@@ -54,7 +54,7 @@ class AdminExperienceLocationsController extends Controller {
      *
      */
     public function store()
-    { //CreateExperienceLocationRequest $createExperienceLocationRequest
+    { //CreateExperienceLocationRequest $createExperienceLocationRequest (needs to be checked)
         $input = $this->request->all();
         //dd($input);
         $experienceLocationCreate = $this->experienceLocation->create($input);

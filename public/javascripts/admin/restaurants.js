@@ -273,6 +273,7 @@
                 '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][from_time]" class="form-control block-from-time-picker"></td>'+
                 '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][to_time]" class="form-control block-to-time-picker"></td>'+
                 '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][max_covers_limit]" class="form-control"></td>'+
+                '<td><input size="2" type="text" name="reset_time_range_limits['+block_times+'][max_tables_limit]" class="form-control"></td>'+
                 '<td><a class="btn btn-danger delete-block-time-range">Remove</a></td></tr>';
 
             $('#blockTimeRangeTable tr:last').after(template);

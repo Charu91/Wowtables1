@@ -2,7 +2,7 @@
 
 @section('content')
     <header class="page-header">
-        <h2>Create Experience Location</h2>
+        <h2>Create Experience Scheduling</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
@@ -10,7 +10,7 @@
                         <i class="fa fa-home"></i>
                     </a>
                 </li>
-                <li><span>Experience Locations</span></li>
+                <li><span>Experience Scheduling</span></li>
             </ol>
 
             <a class="sidebar-right-toggle" data-open="sidebar-right">
@@ -139,6 +139,7 @@
                                 <th>From Time</th>
                                 <th>To Time</th>
                                 <th>Max Covers Limit</th>
+                                <th>Max Tables Limit</th>
                                 <th>Action</th>
                             </tr>
                             <tbody>
@@ -187,6 +188,7 @@
                                     <td>{!! Form::text('reset_time_range_limits[0][from_time]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
                                     <td>{!! Form::text('reset_time_range_limits[0][to_time]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
                                     <td>{!! Form::text('reset_time_range_limits[0][max_covers_limit]',null,['size'=>'2','class'=>'form-control']) !!}</td>
+                                    <td>{!! Form::text('reset_time_range_limits[0][max_tables_limit]',null,['size'=>'2','class'=>'form-control']) !!}</td>
                                     <td>
                                         <a class="btn btn-danger delete-block-time-range">Remove</a>
                                     </td>
