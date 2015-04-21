@@ -28,3 +28,17 @@
         @endif
     </div>
 </div>
+
+<div class="mt-lg mb-lg ml-lg form-group">
+    <div class="col-md-3">
+        <span class="required">*</span>
+        <button data-media-select="1" data-gallery-position="3" data-media-type="mobile_listing_image" type="button" class="btn btn-success media-modal-btn" ><span class="fa fa-plus"></span>&nbsp;Mobile Listing Images (1)</button>
+    </div>
+    <div data-gallery-position="3" class="popup-gallery">
+        @if( Input::old('media.mobile_listing_image') )
+            {!! Form::hidden('media[mobile_listing_image]',null) !!}
+        @else
+            <input name="media[mobile_listing_image]" type="hidden" required>
+        @endif
+    </div>
+</div>

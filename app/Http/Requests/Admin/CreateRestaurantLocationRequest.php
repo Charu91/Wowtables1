@@ -74,7 +74,7 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['address.latitude'] = 'required|numeric';
             $rules['address.longitude'] = 'required|numeric';
 
-            $rules['schedules'] = 'required|array';
+            //$rules['schedules'] = 'required|array';
 
             $rules['media.listing_image'] = 'required|exists:media,id';
             $rules['media.gallery_images'] = 'required|galleryarray';
@@ -96,20 +96,20 @@ class CreateRestaurantLocationRequest extends Request {
             $rules['address.latitude'] = 'numeric';
             $rules['address.longitude'] = 'numeric';
 
-            $rules['schedules'] = 'array';
+            //$rules['schedules'] = 'array';
 
             $rules['media.listing_image'] = 'exists:media,id';
             $rules['media.gallery_images'] = 'galleryarray';
         }
 
-        if($this->has('schedules') && is_array($this->get('schedules'))){
+        /*if($this->has('schedules') && is_array($this->get('schedules'))){
             $schedule_ids = DB::table('schedules')->lists('id');
             foreach($this->get('schedules') as $key => $schedule){
                 $rules['schedules.'.$key.'.id'] = 'required_with:schedules, in'.implode(',',$schedule_ids);
                 $rules['schedules.'.$key.'.off_peak'] ='required_with:schedules|boolean';
                 $rules['schedules.'.$key.'.max_reservations'] = 'required_with:schedules|integer';
             }
-        }
+        }*/
 
         $rules['attributes.off_peak_hour_discount_min_covers'] = 'integer';
         $rules['attributes.max_reservations_per_time_slot'] = 'integer';
@@ -129,7 +129,7 @@ class CreateRestaurantLocationRequest extends Request {
                 $rules['reset_time_range_limits.'.$key.'.from_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
                 $rules['reset_time_range_limits.'.$key.'.to_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
                 $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day,Date';
-                $rules['reset_time_range_limits.'.$key.'.max_reservations_limit'] = 'required_with:reset_time_range_limits|integer';
+                //$rules['reset_time_range_limits.'.$key.'.max_reservations_limit'] = 'required_with:reset_time_range_limits|integer';
                 if(isset($range['limit_by'])){
                     if($range['limit_by'] === 'Day'){
                         $rules['reset_time_range_limits.'.$key.'.day'] = 'required_with:'.'reset_time_range_limits.'.$key.'.limit_by|in:mon,tue,wed,thu,fri,sat,sun';
