@@ -8,6 +8,7 @@ use WowTables\Http\Models\Reservation;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationLimit;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 use WowTables\Http\Models\Schedules;
+use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 
 
 /**
@@ -110,6 +111,18 @@ use WowTables\Http\Models\Schedules;
 		} 
 		
 		return response()->json($arrResponse,200);
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function reserveTable() {
+		//array to store response
+		$arrResponse = array();
+		
+		
 	}
  }
 //end of class ReservationController
