@@ -5,10 +5,11 @@ use Config;
 use Illuminate\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Reservation;
-use WowTables\Http\Models\Locations;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationLimit;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 use WowTables\Http\Models\Schedules;
+use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
+
 
 /**
  * Controller class ReservationController
@@ -32,11 +33,11 @@ use WowTables\Http\Models\Schedules;
 	public function getLocation($type,$id) {
 		$arrResponse = array();
 		if($type=="experience") {
-			$arrResponse['data'] = Locations::getProductVendorLocation($id);
+			$arrResponse['data'] = Reservation::getExperienceLocationAndLimit($id);#Locations::getProductVendorLocation($id);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else if($type=='alacarte') {
-			$arrResponse['data'] = Locations::getVendorLocationDetails($id);
+			$arrResponse['data'] = Reservation::getVendorLocationAndLimit($id);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
@@ -110,6 +111,18 @@ use WowTables\Http\Models\Schedules;
 		} 
 		
 		return response()->json($arrResponse,200);
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function reserveTable() {
+		//array to store response
+		$arrResponse = array();
+		
+		
 	}
  }
 //end of class ReservationController
