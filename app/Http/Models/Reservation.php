@@ -3,6 +3,8 @@
 use DB;
 use Config;
 
+use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockSchedule;
+use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBlockedSchedules;
 class Reservation {
 	
 	/**
@@ -25,18 +27,28 @@ class Reservation {
 									'vll.min_people_increments')
 						->get();
 		
-		#array to read the locations and limits
+		//array to read the locations and limits
 		$arrLocLmt = array();
+		
+		//array to keep all location id
+		$arrLocation = array();
+		
+		#reading the blocked dates
+		foreach($queryResult as $row){
+			$arrLocation[] = $row->id;
+		}
+		$arrBlockedDates = VendorLocationBlockedSchedules::getBlockedDate($arrLocation);
 		
 		foreach( $queryResult as $row ) {
 			$arrLocLmt[] = array(
 								'vl_id' => $row->id,
 								'area' => $row->area,
-								'min_people' => $row->min_people_per_reservation,
-								'max_people' => $row->max_people_per_reservation,
-								'increment' => $row->min_people_increments,
+								'min_people' => (is_null($row->min_people_per_reservation)) ? '':$row->min_people_per_reservation,
+								'max_people' => (is_null($row->max_people_per_reservation)) ? '':$row->max_people_per_reservation,
+								'increment' => (is_null($row->min_people_increments))? '':$row->min_people_increments,
 								'latitude' => $row->latitude,
-								'longitude' => $row->longitude
+								'longitude' => $row->longitude,
+								'blocked_dates' => (array_key_exists($row->id, $arrBlockedDates))?$arrBlockedDates[$row->id]:array(),
 							);
 		}
 		
@@ -68,19 +80,49 @@ class Reservation {
 		#array to read experiences and location limits
 		$arrLocLmt = array();
 		
+		//array to keep all location id
+		$arrLocation = array();
+		
+		#reading the blocked dates
+		foreach($queryResult as $row){
+			$arrLocation[] = $row->id;
+		}
+		$arrBlockedDates = ProductVendorLocationBlockSchedule::getBlockedDate($arrLocation);
+		
 		foreach( $queryResult as $row ) {
 			$arrLocLmt[] = array(
 								'vl_id' => $row->id,
 								'area' => $row->area,
-								'min_people' => $row->min_people_per_reservation,
-								'max_people' => $row->max_people_per_reservation,
-								'increment' => $row->min_people_increments,
+								'min_people' => (is_null($row->min_people_per_reservation)) ? '': $row->min_people_per_reservation,
+								'max_people' => (is_null($row->max_people_per_reservation)) ? '': $row->max_people_per_reservation,
+								'increment' => (is_null($row->min_people_increments)) ? '': $row->min_people_increments,
 								'latitude' => $row->latitude,
-								'longitude' => $row->longitude
+								'longitude' => $row->longitude,
+								'blocked_dates' => (array_key_exists($row->id, $arrBlockedDates))?$arrBlockedDates[$row->id]:array(),
 							);
 		}
 		
 		return $arrLocLmt; 
+	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Checks whether the passed date is 
+	 */
+	public static function checkDateAvailability($date) {
+		DB::table(DB::raw('product_vendor_location_block_schedules'))
+				->where(DB::raw('block_date',$date));
+			
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public static function addReservationDetails($data)  {
+		
 	}
 }
 //end of class Reservation
