@@ -27,7 +27,7 @@ class RestaurantRepository {
             'attributesSingleSelect',
             'attributesMultiSelect'
         )->findOrFail($id);
-            /*->wherehas('vendorType',function($q) {
+        /*->wherehas('vendorType',function($q) {
             $q->where('type','Restaurants');
         })->first();*/
 
