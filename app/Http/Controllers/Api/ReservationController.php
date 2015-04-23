@@ -150,11 +150,28 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 		
 		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
 			if(ReservationDetails::addReservationDetails($arrData)) {
-				$arrResponse['status'] = 'OK';
+				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 			}
 		}
 		
 		return response()->json($arrResponse,200);
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Handles requests for cancelling a reservation.
+	 * 
+	 * @access	public
+	 * @since	1.0.0
+	 * @return	response
+	 */
+	public function cancelReservation() {
+		$reservationID = $this->request->input('reservationID');
+		
+		$arrResponse = ReservationDetails::cancelReservation($reservationID);
+		
+		return response()->json($arrResponse,200);		
 	}
  }
 //end of class ReservationController
