@@ -2,13 +2,14 @@
 
 use Config;
 
-use Illuminate\Http\Requests;
+use Illuminate\Http\Request;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Reservation;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationLimit;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 use WowTables\Http\Models\Schedules;
 use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
+use WowTables\Http\Models\Eloquent\ReservationDetails;
 
 
 /**
@@ -19,6 +20,26 @@ use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
  * @author	Parth Shukla<parthshukla@ahex.co.in>
  */
  class ReservationController extends Controller {
+ 	
+	/**
+	 * Instance of Request class.
+	 * 
+	 * @var		Request
+	 * @access	protected
+	 * @since	1.0.0
+	 */
+	protected $request;
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function __construct(Request $request) {
+		$this->request = $request;
+	}
+	
+	//-----------------------------------------------------------------
  	
 	/**
 	 * Handles requests for displaying the locations
@@ -120,9 +141,20 @@ use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 	 */
 	public function reserveTable() {
 		//array to store response
-		$arrResponse = array();
+		#$arrResponse = array();
 		
+		//reading data input by the user
+		$arrData =  $this->request->all();
 		
+		$arrResponse = Reservation::validateReservationData($arrData);
+		
+		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+			if(ReservationDetails::addReservationDetails($arrData)) {
+				$arrResponse['status'] = 'OK';
+			}
+		}
+		
+		return response()->json($arrResponse,200);
 	}
  }
 //end of class ReservationController
