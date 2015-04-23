@@ -234,6 +234,82 @@ class Experience extends Product{
                 ];
             }
         }
+        /*mobile listing ios experience*/
+        if(isset($media['mobile_listing_image'])){
+            $listing_image = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select(
+                    'm.id',
+                    'm.file',
+                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['mobile_listing_ios_experience']['height'].' && mr.width = '.$mediaSizes['mobile_listing_ios_experience']['width'].', true, false)) as resized_exists')
+                )
+                ->where('m.id', $media['listing_image'])
+                ->first();
+
+
+            if(!$listing_image->resized_exists){
+                $listing_file = $listing_image->file;
+                $fileInfo = new \SplFileInfo($listing_file);
+                $fileExtension = $fileInfo->getExtension();
+                $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
+                $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['mobile_listing_ios_experience']['width'].'x'.$mediaSizes['mobile_listing_ios_experience']['height'].'.'.$fileExtension;
+
+                $this->queue->push(new ImageResizeSendToCloud(
+                    $listing_image->id,
+                    $uploads_dir,
+                    $listing_resized_imagename,
+                    $uploads_dir.$listing_file,
+                    $mediaSizes['mobile_listing_ios_experience']['width'],
+                    $mediaSizes['mobile_listing_ios_experience']['height']
+                ));
+
+            }
+
+            $media_insert_map[] = [
+                'product_id' => $productId,
+                'media_type' => 'mobile_listing_ios_experience',
+                'media_id' => $media['mobile_listing_image'],
+                'order' => 0
+            ];
+        }
+        /*mobile listing andriod experiences*/
+        if(isset($media['mobile_listing_image'])){
+            $listing_image = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select(
+                    'm.id',
+                    'm.file',
+                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['mobile_listing_andriod_experience']['height'].' && mr.width = '.$mediaSizes['mobile_listing_andriod_experience']['width'].', true, false)) as resized_exists')
+                )
+                ->where('m.id', $media['listing_image'])
+                ->first();
+
+
+            if(!$listing_image->resized_exists){
+                $listing_file = $listing_image->file;
+                $fileInfo = new \SplFileInfo($listing_file);
+                $fileExtension = $fileInfo->getExtension();
+                $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
+                $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['mobile_listing_andriod_experience']['width'].'x'.$mediaSizes['mobile_listing_andriod_experience']['height'].'.'.$fileExtension;
+
+                $this->queue->push(new ImageResizeSendToCloud(
+                    $listing_image->id,
+                    $uploads_dir,
+                    $listing_resized_imagename,
+                    $uploads_dir.$listing_file,
+                    $mediaSizes['mobile_listing_andriod_experience']['width'],
+                    $mediaSizes['mobile_listing_andriod_experience']['height']
+                ));
+
+            }
+
+            $media_insert_map[] = [
+                'product_id' => $productId,
+                'media_type' => 'mobile_listing_andriod_experience',
+                'media_id' => $media['mobile_listing_image'],
+                'order' => 0
+            ];
+        }
 
         if(count($media_insert_map)){
             $mediaMapInsert = DB::table('product_media_map')->insert($media_insert_map);

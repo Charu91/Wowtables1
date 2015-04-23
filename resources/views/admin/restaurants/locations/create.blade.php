@@ -218,7 +218,7 @@
                                 <th>From Time</th>
                                 <th>To Time</th>
                                 <th>Max Covers Limit</th>
-                                <th>Action</th>
+                                <th>Max Table Limit</th>
                             </tr>
                             <tbody>
                                 @if( Input::old('reset_time_range_limits') )

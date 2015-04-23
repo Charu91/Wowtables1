@@ -26,9 +26,10 @@ class RestaurantRepository {
             'attributesVarChar',
             'attributesSingleSelect',
             'attributesMultiSelect'
-        )->findOrFail($id)->wherehas('vendorType',function($q) {
+        )->findOrFail($id);
+        /*->wherehas('vendorType',function($q) {
             $q->where('type','Restaurants');
-        })->first();
+        })->first();*/
 
         $this->populateVendorAttributes($vendorWithAttributes->attributesBoolean);
         $this->populateVendorAttributes($vendorWithAttributes->attributesInteger);

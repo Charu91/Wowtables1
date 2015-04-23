@@ -8,6 +8,11 @@
         {!! Form::hidden('media[listing_image]',$asset['id']) !!}
         <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
     @endforeach
+@elseif( $media_type == 'mobile_listing_image' )
+    @foreach ( $media as $asset )
+        {!! Form::hidden('media[mobile_listing_image]',$asset['id']) !!}
+        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+    @endforeach
 @elseif( $media_type == 'gallery_image' )
     <section class="panel col-lg-8">
         <div class="panel-body">

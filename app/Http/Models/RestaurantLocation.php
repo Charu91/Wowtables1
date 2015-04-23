@@ -732,6 +732,82 @@ class RestaurantLocation extends VendorLocation{
                 ];
             }
         }
+        /*mobile listing ios alacarte*/
+        if(isset($media['mobile_listing_image'])){
+            $listing_image = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select(
+                    'm.id',
+                    'm.file',
+                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['mobile_listing_ios_alacarte']['height'].' && mr.width = '.$mediaSizes['mobile_listing_ios_alacarte']['width'].', true, false)) as resized_exists')
+                )
+                ->where('m.id', $media['listing_image'])
+                ->first();
+
+
+            if(!$listing_image->resized_exists){
+                $listing_file = $listing_image->file;
+                $fileInfo = new \SplFileInfo($listing_file);
+                $fileExtension = $fileInfo->getExtension();
+                $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
+                $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['mobile_listing_ios_alacarte']['width'].'x'.$mediaSizes['mobile_listing_ios_alacarte']['height'].'.'.$fileExtension;
+
+                $this->queue->push(new ImageResizeSendToCloud(
+                    $listing_image->id,
+                    $uploads_dir,
+                    $listing_resized_imagename,
+                    $uploads_dir.$listing_file,
+                    $mediaSizes['mobile_listing_ios_alacarte']['width'],
+                    $mediaSizes['mobile_listing_ios_alacarte']['height']
+                ));
+
+            }
+
+            $media_insert_map[] = [
+                'vendor_location_id' => $vendor_location_id,
+                'media_type' => 'mobile_listing_ios_alacarte',
+                'media_id' => $media['mobile_listing_image'],
+                'order' => 0
+            ];
+        }
+        /*mobile listing andriod alacarte*/
+        if(isset($media['mobile_listing_image'])){
+            $listing_image = DB::table('media as m')
+                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+                ->select(
+                    'm.id',
+                    'm.file',
+                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['mobile_listing_andriod_alacarte']['height'].' && mr.width = '.$mediaSizes['mobile_listing_andriod_alacarte']['width'].', true, false)) as resized_exists')
+                )
+                ->where('m.id', $media['listing_image'])
+                ->first();
+
+
+            if(!$listing_image->resized_exists){
+                $listing_file = $listing_image->file;
+                $fileInfo = new \SplFileInfo($listing_file);
+                $fileExtension = $fileInfo->getExtension();
+                $listing_filename = $fileInfo->getBasename('.'.$fileExtension);
+                $listing_resized_imagename = $listing_filename.'_'.$mediaSizes['mobile_listing_andriod_alacarte']['width'].'x'.$mediaSizes['mobile_listing_andriod_alacarte']['height'].'.'.$fileExtension;
+
+                $this->queue->push(new ImageResizeSendToCloud(
+                    $listing_image->id,
+                    $uploads_dir,
+                    $listing_resized_imagename,
+                    $uploads_dir.$listing_file,
+                    $mediaSizes['mobile_listing_andriod_alacarte']['width'],
+                    $mediaSizes['mobile_listing_andriod_alacarte']['height']
+                ));
+
+            }
+
+            $media_insert_map[] = [
+                'vendor_location_id' => $vendor_location_id,
+                'media_type' => 'mobile_listing_andriod_alacarte',
+                'media_id' => $media['mobile_listing_image'],
+                'order' => 0
+            ];
+        }
 
         if(count($media_insert_map)){
             $mediaMapInsert = DB::table('vendor_locations_media_map')->insert($media_insert_map);
@@ -755,12 +831,14 @@ class RestaurantLocation extends VendorLocation{
         $schedules_insert_map = [];
 
         foreach($schedules as $schedule){
-            $schedules_insert_map[] = [
-                'vendor_location_id' => $vendor_location_id,
-                'schedule_id' => $schedule['id'],
-                'off_peak_schedule' => $schedule['off_peak'],
-                'max_reservations' => $schedule['max_reservations']
-            ];
+            if(isset($schedule['id']) && ($schedule['id'] != "" || $schedule['id'] != 0)) {
+                $schedules_insert_map[] = [
+                    'vendor_location_id' => $vendor_location_id,
+                    'schedule_id' => $schedule['id'],
+                    'off_peak_schedule' => (isset($schedule['off_peak']) ? $schedule['off_peak'] : 0),
+                    //'max_reservations' => $schedule['max_reservations']
+                ];
+            }
         }
 
         if(DB::table('vendor_location_booking_schedules')->insert($schedules_insert_map)){
@@ -811,9 +889,11 @@ class RestaurantLocation extends VendorLocation{
                 if(strtotime($time_range_limit['date']) > strtotime('midnight')){
                     $time_range_limit_insert_map[] = [
                         'vendor_location_id' => $vendor_location_id,
+                        'limit_by' => $time_range_limit['limit_by'],
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
-                        'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                        'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
+                        'max_table_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -821,9 +901,11 @@ class RestaurantLocation extends VendorLocation{
             }else{
                 $time_range_limit_insert_map[] = [
                     'vendor_location_id' => $vendor_location_id,
+                    'limit_by' => $time_range_limit['limit_by'],
                     'start_time' => $time_range_limit['from_time'],
                     'end_time' => $time_range_limit['to_time'],
-                    'max_reservations_limit' => $time_range_limit['max_reservations_limit'],
+                    'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
+                    'max_tables_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
                     'date' => null,
                     'day' => $time_range_limit['day']
                 ];
