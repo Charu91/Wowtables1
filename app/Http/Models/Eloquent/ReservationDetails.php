@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Models\Eloquent;
 
 use DB;
+use Config;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -106,7 +107,42 @@ class ReservationDetails extends Model {
 			}
 		}
 		return $arrData;
-	}	
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Updates the status of the reservation to cancel.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	integer	$reservationID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function cancelReservation($reservationID) {
+		//array to hold response
+		$arrResponse = array();
+		
+		$queryResult = Self::where('id',$reservationID)
+							//->where('user_id', $userID)
+							->where('reservation_status','!=','cancel')
+							->first();
+		
+		if($queryResult) {
+			$reservation = Self::find($reservationID);
+			$reservation->reservation_status = 'cancel';
+			$reservation->save();
+			
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else {
+			$arrResponse['status'] = Config::get('constants.API_FAIL');
+			$arrResponse['msg'] = 'Sorry. No Such record exists.';
+		}
+		
+		return $arrResponse;
+	}
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
