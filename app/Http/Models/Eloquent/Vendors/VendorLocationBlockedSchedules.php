@@ -2,6 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use DB;
+/**
+ * 
+ */
 class VendorLocationBlockedSchedules extends Model {
 	/**
 	 * Table to be used by this model.
@@ -32,10 +36,10 @@ class VendorLocationBlockedSchedules extends Model {
 	 * @access	public
 	 * @since	1.0.0 
 	 */
-	public static function isDateBlocked($productVendorLocationID, $date) {
+	public static function isDateBlocked($vendorLocationID, $date) {
 		//query to check if current date is available
-		$queryResult = SELF::where(DB::raw('DATE(block_date'),'=',$date)
-						->where('vendor_location_id',$productVendorLocationID)
+		$queryResult = self::where(DB::raw('DATE(block_date)'),'=',$date)
+						->where('vendor_location_id',$vendorLocationID)
 						->get();
 		
 		if($queryResult && count($queryResult) > 0) {
