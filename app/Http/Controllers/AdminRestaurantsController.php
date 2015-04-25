@@ -106,6 +106,7 @@ class AdminRestaurantsController extends Controller {
 	public function edit($id)
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
+		echo "<pre>"; print_r($restaurant);
 
 		if ( $restaurant['restaurant']['status'] == 'Publish' ) {
 			$publish = explode(' ',$restaurant['restaurant']['publish_time']);
