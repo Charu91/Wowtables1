@@ -148,7 +148,7 @@ class Restaurant extends Vendor{
 
     protected function saveAttributes($vendorId, array $attributes){
         $attributeAliases = array_keys($attributes);
-        echo "<pre>"; print_r($attributeAliases); die;
+
 
         if(count($attributeAliases)){
             $attributeIdMap = DB::table('vendor_attributes as va')
@@ -202,7 +202,7 @@ class Restaurant extends Vendor{
                 }
 
                 $attributeInserts = true;
-
+                echo "<pre>"; print_r($attribute_inserts); die;
                 foreach($attribute_inserts as $table => $insertData){
                     $restauranrAttrInsert = DB::table($table)->insert($insertData);
 
