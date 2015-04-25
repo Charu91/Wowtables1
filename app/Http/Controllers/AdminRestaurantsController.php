@@ -67,7 +67,7 @@ class AdminRestaurantsController extends Controller {
 	public function store(CreateRestaurantRequest $createRestaurantRequest)
 	{
 		$input = $this->request->all();
-
+		dd($input);
         $createRestaurant = $this->restaurant->create($input);
 
         if($createRestaurant['status'] === 'success'){
@@ -106,7 +106,7 @@ class AdminRestaurantsController extends Controller {
 	public function edit($id)
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
-		echo "<pre>"; print_r($restaurant);
+		//echo "<pre>"; print_r($restaurant);
 
 		if ( $restaurant['restaurant']['status'] == 'Publish' ) {
 			$publish = explode(' ',$restaurant['restaurant']['publish_time']);
