@@ -1,5 +1,7 @@
 <?php namespace WowTables\Http\Models\Eloquent\Products;
 
+use DB;
+
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @since	1.0.0
  * @author	Parth Shukla <parthshukla@ahex.co.in>
  */
- class ProductVendorLocationBlockSchedule extends Model {
+ class ProductVendorLocationBlockedSchedule extends Model {
  	
 	/**
 	 * Table to be used by this model.
@@ -43,7 +45,7 @@ use Illuminate\Database\Eloquent\Model;
 	 */
 	public static function isDateBlocked($productVendorLocationID, $date) {
 		//query to check if current date is available
-		$queryResult = SELF::where(DB::raw('DATE(block_date'),'=',$date)
+		$queryResult = SELF::where(DB::raw('DATE(block_date)'),'=',$date)
 						->where('product_vendor_location_id',$productVendorLocationID)
 						->get();
 		
