@@ -365,7 +365,8 @@
 
             var addContactTemplate =  '<tr><td><input type="text" name="contacts['+contact_times+'][name]" class="form-control restaurant-contact-name"></td>'+
                 '<td><input type="text" name="contacts['+contact_times+'][designation]" class="form-control restaurant-contact-designation"></td>'+
-                '<td><input type="text" name="contacts['+contact_times+'][phone_number]" class="form-control restaurant-contact-name"></td>'+
+                '<td><input type="text" name="contacts['+contact_times+'][phone_number]" class="form-control restaurant-contact-phone"></td>'+
+                '<td><input type="text" name="contacts['+contact_times+'][email]" class="form-control restaurant-contact-email"></td>'+
                 '<td><a class="btn btn-danger delete-restaurant-contact">Remove</a></td></tr>';
 
             $('#restaurantContactsTable tr:last').after(addContactTemplate);

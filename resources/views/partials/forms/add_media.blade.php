@@ -24,7 +24,7 @@
                 </div>
             @endforeach
         @else
-            <input name="media[gallery_images[]]" type="hidden" required>
+            <input name="media[gallery_images][]" type="hidden" required>
         @endif
     </div>
 </div>

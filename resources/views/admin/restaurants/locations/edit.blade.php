@@ -32,19 +32,23 @@
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
             </li>
             <li>
-                <a href="#schedule_tab" data-toggle="tab" class="text-center">Scheduling</a>
+                <a href="#alacarte_tab" data-toggle="tab" class="text-center">Alacarte General</a>
             </li>
             <li>
-                <a href="#alacarte_tab" data-toggle="tab" class="text-center">Alacarte(Off Peak)</a>
+                <a href="#schedule_tab" data-toggle="tab" class="text-center">Alacarte Schedule</a>
             </li>
-            <li>
+            <!--<li>
                 <a href="#alacarte_peak_tab" data-toggle="tab" class="text-center">Alacarte(Peak)</a>
+            </li>-->
+            <li>
+                <a href="#block_schedules_tab" data-toggle="tab" class="text-center">Block Dates</a>
             </li>
             <li>
                 <a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>
             </li>
+
             <li>
-                <a href="#block_schedules_tab" data-toggle="tab" class="text-center">Block Schedules</a>
+                <a href="#contact_details" data-toggle="tab" class="text-center">Contact Details</a>
             </li>
         </ul>
 
@@ -103,6 +107,21 @@
             </div>
             <div id="media_tab" class="tab-pane mt-lg">
                 @include('partials.forms.add_media')
+                <hr/>
+                @foreach($restaurantLocationMedias as $restaurantLocationMediaKey => $restaurantLocationMediaValue)
+                    <h2>{{$restaurantLocationMediaKey}}</h2>
+                    @foreach($restaurantLocationMediaValue as $key => $restaurantLocationMedia)
+                        <img width="100" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/{{$restaurantLocationMedia}}" class="mt-xs mb-xs mr-xs img-thumbnail img-responsive">
+                        @if($restaurantLocationMediaKey == "listing")
+                            {{! $setInputName = "old_media[listing_image]"}}
+                            @elseif($restaurantLocationMediaKey == "gallery")
+                            {{! $setInputName = "old_media[gallery_images][]"}}
+                            @elseif($restaurantLocationMediaKey == "mobile")
+                            {{! $setInputName = "old_media[mobile_listing_image]"}}
+                        @endif
+                        <input type="hidden" name="{{$setInputName}}" value="{{$key}}"/>
+                    @endforeach
+                @endforeach
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
                 <div class="row">
@@ -222,20 +241,25 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['mon']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][day]','mon') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['mon']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],true)!!}</td>
+
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -248,20 +272,24 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['tue']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][day]','tue') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['tue']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -274,20 +302,24 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['wed']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][day]','wed') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['wed']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -300,20 +332,24 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['thu']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][day]','thu') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['thu']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -326,20 +362,24 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['fri']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][day]','fri') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['fri']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -352,20 +392,24 @@
                                                         <td>Sch</td>
                                                         @if( in_array($slot['sat']['schedule_id'],$schedules) )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][day]','sat') !!}
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['sat']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -380,18 +424,20 @@
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],true)!!}</td>
                                                         @else
                                                             <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
-                                                    <tr>
-                                                        <td>Max T</td>
-                                                        <td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                                    </tr>
+                                                    {{--<tr>--}}
+                                                        {{--<td>Max T</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                    {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['sun']['schedule_id']) == 1 )
                                                             <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],false)!!}</td>
+                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],false)!!}</td>--}}
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
                                                     </tbody>
@@ -412,8 +458,8 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1">
-                            <label  for="a_la_carte">Allow Alacarte Reservations <span class="required">*</span></label>
+                            <input type="checkbox" name="a_la_carte" id="a_la_carte" {{($restaurant['RestaurantLocation']->a_la_carte == 1  ? "checked = checked" : "") }} value="1">
+                            <label  for="a_la_carte">Allow Alacarte Reservations</label>
                         </div>
                     </div>
                 </div>
@@ -430,15 +476,39 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],$restaurant['RestaurantLocation']->pricing_level,['class'=>'form-control','data-plugin-selectTwo'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="cuisine" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,$restaurant['attributes']['cuisines'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('collections[]',['0'=>'None','1'=>'First'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                        {!! Form::select('attributes[collections][]',$tags_list,$restaurantLocationTags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="flags" class="col-sm-3 control-label">Flags </label>
+                    <div class="col-sm-6">
+                        {!! Form::select('attributes[flags]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
+                    <div class="col-sm-6">
+                        {!! Form::select('curators',$curator_list,$restaurantLocationCurators->curator_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('curator_tips',$restaurantLocationCurators->curator_tips,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -464,10 +534,147 @@
                 Coming Soon.
             </div>
             <div id="location_details" class="tab-pane mt-lg">
-                @include('partials.forms.locations')
+                @include('partials.forms.locations_edit')
             </div>
             <div id="block_schedules_tab" class="tab-pane mt-lg">
-                Coming Soon.
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h2 class="panel-title">Block Dates</h2>
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            @if(!empty($restaurantLocationBlockDates))
+                                @foreach($restaurantLocationBlockDates as $restaurantLocationBlockDate)
+                                    <div class="col-lg-4 mb-sm block-date-div">
+                                        <div class="col-lg-10"><div class="form-group">
+                                                <label class="col-sm-4 control-label" for="block_dates[]">Dates </label>
+                                                <div class="col-sm-8"><input type="text" class="form-control block-date-picker" name="block_dates[]" value="{{$restaurantLocationBlockDate->block_date}}"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <div class="form-group">
+                                                <a class="btn btn-danger delete-block-date-div">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="block-date-div"></div>
+                            @endif
+                        </div>
+                        <div class="panel-footer">
+                            <a id="addNewBlockDateBtn" class="btn btn-primary">Add Block Date</a>
+                        </div>
+                    </div>
+                </section>
+                <section class="panel">
+                    <header class="panel-heading">
+                        <h2 class="panel-title">Time Range Limits</h2>
+                    </header>
+                    <div class="panel-body">
+                        <table id="blockTimeRangeTable"  class="table table-bordered mb-none">
+                            <tr>
+                                <th>Limit By</th>
+                                <th>Select Day/Date</th>
+                                <th>Full Day</th>
+                                <th>From Time</th>
+                                <th>To Time</th>
+                                <th>Max Covers Limit</th>
+                                <th>Max Table Limit</th>
+                            </tr>
+                            <tbody>
+                            @if(!empty($restaurantLocationBlockTimeLimits))
+                                {{!$block_time_increment = 1}}
+                                @foreach($restaurantLocationBlockTimeLimits as $restaurantLocationBlockTimeLimit)
+                                    <tr>
+                                        <td>
+                                            <select name="reset_time_range_limits[{{$block_time_increment}}][limit_by]" class="form-control time-range-limit-by">
+                                                <option {{$restaurantLocationBlockTimeLimit->limit_by == "Day" ? "selected = selected" : ""}} value="Day">Day</option>
+                                                <option {{$restaurantLocationBlockTimeLimit->limit_by == "Date" ? "selected = selected" : ""}} value="Date">Date</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            @if($restaurantLocationBlockTimeLimit->limit_by == "Day")
+                                                <select name="reset_time_range_limits[{{$block_time_increment}}][day]" class="form-control block-time-range-day-picker">
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "mon" ? "selected = selected" : ""}} value="mon">Monday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "tue" ? "selected = selected" : ""}} value="tue">Tuesday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "wed" ? "selected = selected" : ""}} value="wed">Wednesday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "thu" ? "selected = selected" : ""}} value="thu">Thursday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "fri" ? "selected = selected" : ""}} value="fri">Friday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "sat" ? "selected = selected" : ""}} value="sat">Saturday</option>
+                                                    <option {{$restaurantLocationBlockTimeLimit->day == "sun" ? "selected = selected" : ""}} value="sun">Sunday</option>
+                                                </select>
+                                            @else
+                                                <input type="text" name="reset_time_range_limits[{{$block_time_increment}}][date]" class="form-control block-time-range-date-picker" value="{{$restaurantLocationBlockTimeLimit->date}}">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" {{(($restaurantLocationBlockTimeLimit->start_time == "00:00:00" && $restaurantLocationBlockTimeLimit->start_time == "00:00:00") ? "checked = checked" : "")}} class="form-control full-time-range-picker" name="" >
+                                        </td>
+                                        <td><input size="2" type="text" name="reset_time_range_limits[{{$block_time_increment}}][from_time]" class="form-control block-from-time-picker" value="{{$restaurantLocationBlockTimeLimit->start_time}}"></td>
+                                        <td><input size="2" type="text" name="reset_time_range_limits[{{$block_time_increment}}][to_time]" class="form-control block-to-time-picker" value="{{$restaurantLocationBlockTimeLimit->end_time}}"></td>
+                                        <td><input size="2" type="text" name="reset_time_range_limits[{{$block_time_increment}}][max_covers_limit]" class="form-control" value="{{$restaurantLocationBlockTimeLimit->max_covers_limit}}"></td>
+                                        <td><input size="2" type="text" name="reset_time_range_limits[{{$block_time_increment}}][max_tables_limit]" class="form-control" value="{{$restaurantLocationBlockTimeLimit->max_tables_limit}}"></td>
+                                        <td><a class="btn btn-danger delete-block-time-range">Remove</a></td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            </tbody>
+                        </table>
+                        <div class="panel-footer">
+                            <a id="addNewBlockTimeRangeBtn" class="btn mb-xs btn-primary">Add Time Range Limits</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="contact_details" class="tab-pane mt-lg">
+                <section class="panel">
+                    <header class="panel-heading">
+
+                        <h2 class="panel-title">Restaurant Contacts</h2>
+                    </header>
+                    <div class="panel-body">
+                        <table id="restaurantContactsTable"  class="table table-bordered mb-none">
+                            <tr>
+                                <th>Name</th>
+                                <th>Designation</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                            <tbody>
+                            @if(!empty($restaurantLocationContacts))
+                                {{!$contact_increment = 1}}
+                                @foreach($restaurantLocationContacts as $restaurantLocationContact)
+                                    <tr>
+                                        <td>{!! Form::text('contacts[{{$contact_increment}}][name]',$restaurantLocationContact->name,['class'=>'form-control restaurant-contact-name']) !!}</td>
+                                        <td>{!! Form::text('contacts[{{$contact_increment}}][designation]',$restaurantLocationContact->designation,['class'=>'form-control restaurant-contact-designation']) !!}</td>
+                                        <td>{!! Form::text('contacts[{{$contact_increment}}][phone_number]',$restaurantLocationContact->phone_number,['class'=>'form-control restaurant-contact-email']) !!}</td>
+                                        <td>{!! Form::text('contacts[{{$contact_increment}}][email]',$restaurantLocationContact->email,['class'=>'form-control restaurant-contact-phone']) !!}</td>
+                                        <td>
+                                            <a class="btn btn-danger delete-restaurant-contact">Remove</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    @else
+                                            <!--<tr>
+                                    <td>{!! Form::text('contacts[0][name]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
+                                    <td>{!! Form::text('contacts[0][designation]',null,['class'=>'form-control restaurant-contact-designation']) !!}</td>
+                                    <td>{!! Form::text('contacts[0][phone_number]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
+                                    <td>
+                                        <a class="btn btn-danger delete-restaurant-contact">Remove</a>
+                                    </td>
+                                </tr>-->
+                                    @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <a id="addNewContactsBtn" class="btn mb-xs btn-primary">Add Another Contact</a>
+                    </div>
+                </section>
             </div>
         </div>
     </div>

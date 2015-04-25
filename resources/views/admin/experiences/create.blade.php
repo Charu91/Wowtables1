@@ -162,6 +162,18 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="pricing[price_types]" class="col-sm-3 control-label">Price Types<span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('pricing[price_types]',$price_type_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pricing[taxes]" class="col-sm-3 control-label">Taxes<span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('pricing[taxes]',[''=>'Select Value','Inclusive-Taxes'=>'Inclusive-Taxes','Exclusive-Taxes'=>'Exclusive-Taxes'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="pricing[commission_per_cover]" class="col-sm-3 control-label">Commissions Per Cover<span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('pricing[commission_per_cover]',null,['class'=>'form-control','required'=>'']) !!}
@@ -291,7 +303,7 @@
                 <div class="form-group">
                     <label for="attributes[cuisine][]" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
                 <div class="form-group">

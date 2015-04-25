@@ -30,3 +30,9 @@ Route::resource('admin/promotions/variant_type','AdminVariantTypeController',[
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::resource('admin/promotions/price_type','AdminPriceTypesController',[
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
