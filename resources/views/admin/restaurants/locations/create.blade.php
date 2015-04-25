@@ -284,7 +284,7 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
                             <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1" checked="">
-                            <label for="a_la_carte">Allow Alacarte Reservations <span class="required">*</span></label>
+                            <label for="a_la_carte">Allow Alacarte Reservations </label>
                         </div>
                     </div>
                 </div>
@@ -303,7 +303,7 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control']) !!}
+                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control','data-plugin-selectTwo'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -321,14 +321,13 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[flags]',[''=>'','1'=>'New','2'=>'Valentines Special'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                        {!! Form::select('attributes[flags]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
                     </div>
                 </div>
-                {{--*/ //var_dump($curators_list); /*--}}
                 <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
-                        {!! Form::text('curators',null,['class'=>'form-control populate curators-select-box']) !!}
+                        {!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -382,6 +381,7 @@
             <div id="contact_details" class="tab-pane mt-lg">
                 <section class="panel">
                     <header class="panel-heading">
+
                         <h2 class="panel-title">Restaurant Contacts</h2>
                     </header>
                     <div class="panel-body">
@@ -390,6 +390,7 @@
                                 <th>Name</th>
                                 <th>Designation</th>
                                 <th>Phone Number</th>
+                                <th>Email</th>
                                 <th>Action</th>
                             </tr>
                             <tbody>
@@ -398,7 +399,8 @@
                                     <tr>
                                         <td>{!! Form::text('contacts['.$key.'][name]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
                                         <td>{!! Form::text('contacts['.$key.'][designation]',null,['class'=>'form-control restaurant-contact-designation']) !!}</td>
-                                        <td>{!! Form::text('contacts['.$key.'][phone_number]',null,['class'=>'form-control restaurant-contact-name']) !!}</td>
+                                        <td>{!! Form::text('contacts['.$key.'][phone_number]',null,['class'=>'form-control restaurant-contact-phone']) !!}</td>
+                                        <td>{!! Form::text('contacts['.$key.'][email]',null,['class'=>'form-control restaurant-contact-email']) !!}</td>
                                         <td>
                                             <a class="btn btn-danger delete-restaurant-contact">Remove</a>
                                         </td>

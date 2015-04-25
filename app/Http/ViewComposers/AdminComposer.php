@@ -6,6 +6,7 @@ use Laracasts\Utilities\JavaScript\JavaScriptFacade;
 use WowTables\Http\Models\Eloquent\Collection;
 use WowTables\Http\Models\Eloquent\Curator;
 use WowTables\Http\Models\Eloquent\Flag;
+use WowTables\Http\Models\Eloquent\PriceType;
 use WowTables\Http\Models\Eloquent\Role;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\UserAttributes;
@@ -52,6 +53,7 @@ class AdminComposer {
         $experienceTypeArray = array('simple','complex');
         $view->with('experiences_list',DB::table('products')->whereIn('type',$experienceTypeArray)->lists('name','id'));
         $view->with('locations_list',Location::where('Type','Locality')->lists('name','id'));
+        $view->with('price_type_list',PriceType::lists('type_name','id'));
 
         $variant_lists = DB::table('product_variant_options')->lists('variation_name','id');
         $view->with('variant_list',$variant_lists);

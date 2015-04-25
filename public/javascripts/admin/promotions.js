@@ -12,7 +12,10 @@
             , $deleteSidebarBtn = $('.delete-sidebar-btn')
             , $deleteEmailFooterPromotionBtn = $('.delete-efp-btn')
             , $editVariantHolder = $('#editVariantTypeHolder')
-            , $editvariantBtn = $('.edit-variant-btn');
+            , $editvariantBtn = $('.edit-variant-btn')
+            , $editPriceTypeHolder = $('#editPriceTypeHolder')
+            , $editPriceTypeBtn = $('.edit-price_type-btn')
+            , $deletePriceTypeBtn = $('.delete-price_type-btn');
 
         $editFlagBtn.on('click',function(){
 
@@ -136,6 +139,47 @@
 
         $('body').delegate('#cancelVariantEditBtn','click',function(){
             $editVariantHolder.hide();
+        });
+
+        $('body').delegate('#cancelPriceTypeEditBtn','click',function(){
+            $editPriceTypeHolder.hide();
+        });
+
+        $editPriceTypeBtn.on('click',function(){
+
+            var id = $(this).data('price_type-id');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/promotions/price_type/' + id + '/edit'
+            }).done(function (editHTML) {
+                $editPriceTypeHolder.html(editHTML);
+                $editPriceTypeHolder.show();
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+        $deletePriceTypeBtn.on('click',function(){
+
+            var id = $(this).data('price_type-id');
+
+            if(confirm('Are you sure you want to delete price type with id '+id+'?'))
+            {
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/admin/promotions/price_type/' + id,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    }
+                }).done(function () {
+                    location.reload();
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+
         });
 
     });

@@ -73,7 +73,7 @@ class RestaurantLocation extends VendorLocation{
             'slug' => $data['slug'],
             'location_id' => $data['location_id'],
             'status' => $data['status'],
-            'a_la_carte' => $data['a_la_carte']
+            'a_la_carte' => ($data['a_la_carte'] ? $data['a_la_carte'] : 0)
         ];
 
         if(!empty($data['pricing_level'])){
@@ -155,8 +155,8 @@ class RestaurantLocation extends VendorLocation{
                 }
             }
 
-            if(!empty($data['tags'])){
-                $tagMapping = $this->mapTags($restaurantLocationId, $data['tags']);
+            if(!empty($data['attributes']['collections'])){
+                $tagMapping = $this->mapTags($restaurantLocationId, $data['attributes']['collections']);
 
                 if($tagMapping['status'] !== 'success'){
                     $tagMapping['message'] = 'Could not map the Restaurant Location Tags. Contact the system admin';
@@ -164,8 +164,8 @@ class RestaurantLocation extends VendorLocation{
                 }
             }
 
-            if(!empty($data['curator'])){
-                $curatorMapping = $this->mapCurator($restaurantLocationId, $data['curator']);
+            if(!empty($data['curators'])){
+                $curatorMapping = $this->mapCurator($restaurantLocationId, $data['curators'],$data['curator_tips']);
 
                 if($curatorMapping['status'] !== 'success'){
                     $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
@@ -173,8 +173,8 @@ class RestaurantLocation extends VendorLocation{
                 }
             }
 
-            if(!empty($data['flags'])){
-                $flagMapping = $this->mapFlags($restaurantLocationId, $data['flags']);
+            if(!empty($data['attributes']['flags'])){
+                $flagMapping = $this->mapFlags($restaurantLocationId, $data['attributes']['flags']);
 
                 if($flagMapping['status'] !== 'success'){
                     $flagMapping['message'] = 'Could not map the Vendor Location Flags. Contact the system admin';
@@ -225,11 +225,23 @@ class RestaurantLocation extends VendorLocation{
 
         DB::delete($query, [$vendor_location_id]);
 
-        $vendorLocationUpdateData = [
+        /*$vendorLocationUpdateData = [
             'slug' => $data['slug'],
             'location_id' => $data['location_id'],
             'status' => $data['status']
+        ];*/
+
+        $vendorLocationUpdateData = [
+            'vendor_id' => $data['restaurant_id'],
+            'slug' => $data['slug'],
+            'location_id' => $data['location_id'],
+            'status' => $data['status'],
+            'a_la_carte' => ((isset($data['a_la_carte']) && $data['a_la_carte'] != "") ? $data['a_la_carte'] : 0)
         ];
+
+        if(!empty($data['pricing_level'])){
+            $vendorLocationUpdateData['pricing_level'] = $data['pricing_level'];
+        }
 
         DB::table('vendor_locations')->where('id', $vendor_location_id)->update($vendorLocationUpdateData);
 
@@ -253,11 +265,11 @@ class RestaurantLocation extends VendorLocation{
         }
 
         if(!empty($data['schedules'])){
-            if(isset($data['off_peak_schedules'])){
+            /*if(isset($data['off_peak_schedules'])){
                 $schedulesSaved = $this->saveSchedules($vendor_location_id ,$data['schedules'], $data['off_peak_schedules']);
-            }else{
+            }else{*/
                 $schedulesSaved = $this->saveSchedules($vendor_location_id ,$data['schedules']);
-            }
+            //}
 
 
             if($schedulesSaved['status'] !== 'success'){
@@ -266,8 +278,34 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['media'])){
-            $mediaSaved = $this->saveMedia($vendor_location_id, $data['media']);
+        /*
+         * Comparing the old and new media array and accordingly picking up the values
+         * */
+
+        $listing_image = $data['media']['listing_image'];
+        $gallery_images = $data['media']['gallery_images'];
+        $mobile_listing_images = $data['media']['mobile_listing_image'];
+
+        if(empty($listing_image)){
+            $listing_image_array = $data['old_media']['listing_image'];
+        }else{
+            $listing_image_array = $data['media']['listing_image'];
+        }
+
+        if($gallery_images[0] == ""){
+            $gallery_image_array = $data['old_media']['gallery_images'];
+        }else{
+            $gallery_image_array = $data['media']['gallery_images'];
+        }
+        if(empty($mobile_listing_images)){
+            $mobile_listing_image_array = $data['old_media']['mobile_listing_image'];
+        }else{
+            $mobile_listing_image_array = $data['media']['mobile_listing_image'];
+        }
+        $new_media['media'] = ['listing_image'=>$listing_image_array,'gallery_images'=>$gallery_image_array,'mobile_listing_image'=>$mobile_listing_image_array];
+
+        if(!empty($new_media['media'])){
+            $mediaSaved = $this->saveMedia($vendor_location_id, $new_media['media']);
 
             if($mediaSaved['status'] !== 'success'){
                 $mediaSaved['message'] = 'Could not create the Restaurant Location Media. Contact the system admin';
@@ -302,8 +340,17 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['tags'])){
+        /*if(!empty($data['tags'])){
             $tagMapping = $this->mapTags($vendor_location_id, $data['tags']);
+
+            if($tagMapping['status'] !== 'success'){
+                $tagMapping['message'] = 'Could not map the Restaurant Location Tags. Contact the system admin';
+                return $tagMapping;
+            }
+        }*/
+
+        if(!empty($data['attributes']['collections'])){
+            $tagMapping = $this->mapTags($vendor_location_id, $data['attributes']['collections']);
 
             if($tagMapping['status'] !== 'success'){
                 $tagMapping['message'] = 'Could not map the Restaurant Location Tags. Contact the system admin';
@@ -311,8 +358,8 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['curator'])){
-            $curatorMapping = $this->mapCurator($vendor_location_id, $data['curator']);
+        if(!empty($data['curators'])){
+            $curatorMapping = $this->mapCurator($vendor_location_id, $data['curators'],$data['curator_tips']);
 
             if($curatorMapping['status'] !== 'success'){
                 $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
@@ -320,8 +367,26 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['flags'])){
+        /*if(!empty($data['curators'])){
+            $curatorMapping = $this->mapCurator($vendor_location_id, $data['curators'],$data['curator_tips']);
+
+            if($curatorMapping['status'] !== 'success'){
+                $curatorMapping['message'] = 'Could not map the Restaurant Location curators. Contact the system admin';
+                return $curatorMapping;
+            }
+        }*/
+
+        /*if(!empty($data['flags'])){
             $flagMapping = $this->mapFlags($vendor_location_id, $data['flags']);
+
+            if($flagMapping['status'] !== 'success'){
+                $flagMapping['message'] = 'Could not map the Vendor Location Flags. Contact the system admin';
+                return $flagMapping;
+            }
+        }*/
+
+        if(!empty($data['attributes']['flags'])){
+            $flagMapping = $this->mapFlags($vendor_location_id, $data['attributes']['flags']);
 
             if($flagMapping['status'] !== 'success'){
                 $flagMapping['message'] = 'Could not map the Vendor Location Flags. Contact the system admin';
@@ -831,6 +896,7 @@ class RestaurantLocation extends VendorLocation{
         $schedules_insert_map = [];
 
         foreach($schedules as $schedule){
+            //echo "<pre>"; print_r($schedule);
             if(isset($schedule['id']) && ($schedule['id'] != "" || $schedule['id'] != 0)) {
                 $schedules_insert_map[] = [
                     'vendor_location_id' => $vendor_location_id,
@@ -893,7 +959,7 @@ class RestaurantLocation extends VendorLocation{
                         'start_time' => $time_range_limit['from_time'],
                         'end_time' => $time_range_limit['to_time'],
                         'max_covers_limit' => ($time_range_limit['max_covers_limit'] ? $time_range_limit['max_covers_limit'] : 0),
-                        'max_table_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
+                        'max_tables_limit' => ($time_range_limit['max_tables_limit'] ? $time_range_limit['max_tables_limit'] : 0),
                         'date' => $time_range_limit['date'],
                         'day' => null
                     ];
@@ -974,12 +1040,12 @@ class RestaurantLocation extends VendorLocation{
         }
     }
 
-    protected function mapCurator($vendor_location_id, $curator)
+    protected function mapCurator($vendor_location_id, $curator,$curator_tips)
     {
         $curator_insert_map = [
             'vendor_location_id' => $vendor_location_id,
-            'curator_id' => $curator['id'],
-            'curator_tips' => $curator['tips']
+            'curator_id' => $curator,
+            'curator_tips' => $curator_tips
         ];
 
 
@@ -995,14 +1061,14 @@ class RestaurantLocation extends VendorLocation{
     }
 
     protected function mapFlags($vendor_location_id, $flags){
-        $flags_insert_map = [];
+        //$flags_insert_map = [];
 
-        foreach($flags as $flag){
-            $flags_insert_map[] = [
+        //foreach($flags as $flag){
+            $flags_insert_map = [
                 'vendor_location_id' => $vendor_location_id,
-                'flag_id' => $flag
+                'flag_id' => $flags
             ];
-        }
+        //}
 
         if(DB::table('vendor_locations_flags_map')->insert($flags_insert_map)){
             return ['status' => 'success'];

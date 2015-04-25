@@ -30,9 +30,10 @@ class RestaurantLocationsRepository {
             'attributesSingleSelect',
             'attributesMultiSelect',
             'schedules'
-        )->findOrFail($id)->wherehas('vendor.vendorType',function($q) {
+        )->findOrFail($id);
+            /*->wherehas('vendor.vendorType',function($q) {
             $q->where('type','Restaurants');
-        })->first();
+        })->first();*/
         //dd(array_flatten($vendorLocationWithAttributes->schedules->toArray()));
         $this->populateVendorAttributes($vendorLocationWithAttributes->attributesBoolean);
         $this->populateVendorAttributes($vendorLocationWithAttributes->attributesInteger);
@@ -130,6 +131,69 @@ class RestaurantLocationsRepository {
 
         $vendor_location_details = DB::table('vendor_locations_limits')->where('vendor_location_id', $vendor_location_id);
         return $vendor_location_details->get();
+
+    }
+
+    public function populateVendorLocationTags( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_locations_tags_map')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationAddress( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_location_address')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationBlockDates( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_location_blocked_schedules')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationBlockTimeLimits( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_location_booking_time_range_limits')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationContacts( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_location_contacts')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationCurators( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_locations_curator_map')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
+    public function populateVendorLocationMedia( $vendor_location_id )
+    {
+
+        $media = '
+                    SELECT media_id,media_type,media.file,media.name
+                    FROM vendor_locations_media_map
+                    LEFT JOIN media on vendor_locations_media_map.media_id = media.id
+                    WHERE vendor_location_id = ?
+        ';
+
+        $mediaResults = DB::select($media,[$vendor_location_id]);
+        return $mediaResults;
 
     }
 

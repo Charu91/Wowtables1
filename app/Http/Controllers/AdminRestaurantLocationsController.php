@@ -101,20 +101,69 @@ class AdminRestaurantLocationsController extends Controller {
 
         $vendorLocationLimits = $this->repository->populateVendorLocationLimits($id);
 
+		$vendorLocationTags = $this->repository->populateVendorLocationTags($id);
+
+		$vendorLocationAddress = $this->repository->populateVendorLocationAddress($id);
+
+		$vendorLocationBlockDates = $this->repository->populateVendorLocationBlockDates($id);
+
+		$vendorLocationBlockTimeLimits = $this->repository->populateVendorLocationBlockTimeLimits($id);
+
+		$vendorLocationContacts = $this->repository->populateVendorLocationContacts($id);
+
+		$vendorLocationMedias = $this->repository->populateVendorLocationMedia($id);
+
+		$vendorLocationCurators = $this->repository->populateVendorLocationCurators($id);
+
 		$availableSchedules = $this->formatSchedules($this->schedules->available_time_slots('8:00','22:00'))['schedules'];
 
 		$restaurantSchedules = VendorLocationBookingSchedule::where('vendor_location_id',$id)->lists('off_peak_schedule','schedule_id');
 
 		$schedules = array_keys($restaurantSchedules);
 
-        //echo "<pre>"; print_r($restaurant); die;
+		$vendorLocationTagArray = array();
+
+		foreach($vendorLocationTags as $vendorLocationTag){
+			 array_push($vendorLocationTagArray,$vendorLocationTag->tag_id);
+		}
+
+		$gallery_media_array = array();
+		$listing_media_array = array();
+		$mobile_array = array();
+		foreach($vendorLocationMedias as $vendorLocationMedia){
+
+			if($vendorLocationMedia->media_type == "gallery"){
+				//array_push($gallery_media_array,$vendorLocationMedia->file);
+				$gallery_media_array[$vendorLocationMedia->media_id] = $vendorLocationMedia->file;
+			}
+
+			if($vendorLocationMedia->media_type == "listing"){
+				//array_push($listing_media_array,$vendorLocationMedia->file);
+				$listing_media_array[$vendorLocationMedia->media_id] = $vendorLocationMedia->file;
+			}
+
+			if($vendorLocationMedia->media_type == "mobile_listing_ios_alacarte"){
+				//array_push($mobile_array,$vendorLocationMedia->file);
+				$mobile_array[$vendorLocationMedia->media_id] = $vendorLocationMedia->file;
+			}
+		}
+		$vendorLocationMedia = array('listing'=>$listing_media_array,'gallery'=>$gallery_media_array,'mobile'=>$mobile_array);
+
+        //echo "<pre>"; print_r($availableSchedules); echo "<hr/>"; print_r($restaurantSchedules); echo "<hr/>"; print_r($schedules);die;
 
 		return view('admin.restaurants.locations.edit',[
 					'restaurant'=>$restaurant,
 					'restaurantLocationLimits'=>$vendorLocationLimits[0],
 					'schedules'=>$schedules,
 					'availableSchedules' => $availableSchedules,
-					'restaurantSchedules' => $restaurantSchedules
+					'restaurantSchedules' => $restaurantSchedules,
+					'restaurantLocationTags' => $vendorLocationTagArray,
+					'restaurantLocationAddress' => $vendorLocationAddress[0],
+					'restaurantLocationBlockDates' => $vendorLocationBlockDates,
+					'restaurantLocationBlockTimeLimits' => $vendorLocationBlockTimeLimits,
+					'restaurantLocationContacts' => $vendorLocationContacts,
+					'restaurantLocationMedias' => $vendorLocationMedia,
+					'restaurantLocationCurators' => $vendorLocationCurators[0],
 		]);
 	}
 

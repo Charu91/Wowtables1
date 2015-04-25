@@ -89,10 +89,10 @@
                                         <td>Sch</td>
                                         <td>{!! Form::checkbox('schedules['.Input::old('schedules')[$key]['id'].'][id]',Input::old('schedules')[$key]['id'],true) !!}</td>
                                     </tr>
-                                    <tr>
+                                    <!--<tr>
                                         <td>Max T</td>
                                         <td>{!! Form::text('schedules['.Input::old('schedules')[$key]['id'].'][max_reservations]','5',['size'=>'2']) !!}</td>
-                                    </tr>
+                                    </tr>-->
                                     <tr>
                                         <td>Off Peak</td>
                                         <td>{!! Form::checkbox('schedules['.Input::old('schedules')[$key]['id'].'][off_peak]','1',false) !!}</td>

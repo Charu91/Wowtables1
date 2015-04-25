@@ -48,16 +48,16 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['status'] = 'required|in:Active,Inactive';
 
         if($this->has('status') && $this->get('status') === 'Active'){
-            $rules['a_la_carte'] = 'required|boolean';
+            //$rules['a_la_carte'] = 'required|boolean';
             $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
-            $rules['attributes.terms_and_conditions'] = '';
-            $rules['attributes.menu_picks'] = '';
-            $rules['attributes.expert_tips'] = '';
-            $rules['attributes.seo_title'] = '';
-            $rules['attributes.seo_meta_description'] = '';
-            $rules['attributes.seo_meta_keywords'] = '';
+            $rules['attributes.terms_and_conditions'] = 'required';
+            $rules['attributes.menu_picks'] = 'required';
+            $rules['attributes.expert_tips'] = 'required';
+            $rules['attributes.seo_title'] = 'required';
+            $rules['attributes.seo_meta_description'] = 'required';
+            $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['location_attributes.min_people_per_reservation'] = 'required|integer';
             $rules['location_attributes.max_people_per_reservation'] = 'required|integer';
             $rules['location_attributes.min_people_increments_per_reservation'] = 'required|integer';
