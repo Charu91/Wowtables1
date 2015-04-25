@@ -148,6 +148,7 @@ class Restaurant extends Vendor{
 
     protected function saveAttributes($vendorId, array $attributes){
         $attributeAliases = array_keys($attributes);
+        echo "<pre>"; print_r($attributeAliases); die;
 
         if(count($attributeAliases)){
             $attributeIdMap = DB::table('vendor_attributes as va')
