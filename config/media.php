@@ -10,13 +10,13 @@ return [
 
     'sizes' => [
         'thumbnail' => [
-            'height' => 450,
-            'width' => 450
+            'height' => 239,
+            'width' => 303
         ],
 
         'listing' => [
-            'height' => 300,
-            'width' => 200
+            'height' => 269,
+            'width' => 651
         ],
 
         'mobile_listing_ios_experience' => [
@@ -40,8 +40,8 @@ return [
         ],
 
         'gallery' => [
-            'height' => 400,
-            'width' => 600
+            'height' => 269,
+            'width' => 651
         ]
     ]
 ];
