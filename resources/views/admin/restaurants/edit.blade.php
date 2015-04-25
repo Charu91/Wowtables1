@@ -45,6 +45,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Short Description <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[short_description]',$restaurant['attributes']['short_description'],['rows'=>'7','class'=>'form-control','id'=>'short_description','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::textarea('attributes[restaurant_info]',$restaurant['attributes']['restaurant_info'],['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
