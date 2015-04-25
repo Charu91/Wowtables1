@@ -7,3 +7,7 @@
  Route::get('api/reservation/party_size/{type}/{id}','Api\ReservationController@getPartySize');
  
  Route::get('api/reservation/schedule/{type}/{id}/{day?}','Api\ReservationController@getSchedule');
+ 
+ Route::post('api/reservation/reserve','Api\ReservationController@reserveTable');
+ 
+ Route::put('api/reservation/cancel','Api\ReservationController@cancelReservation');

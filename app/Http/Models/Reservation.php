@@ -5,6 +5,11 @@ use Config;
 
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBlockedSchedules;
+use WowTables\Http\Models\Eloquent\ReservationDetails;
+use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBookingTimeRangeLimit;
+/**
+ * 
+ */
 class Reservation {
 	
 	/**
@@ -124,6 +129,70 @@ class Reservation {
 	public static function addReservationDetails($data)  {
 		
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Validates the information provided by the user for booking 
+	 * reserving a seat.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	array 	$arrData
+	 * @since	1.0.0
+	 */
+	public static function validateReservationData($arrData) {
+		//array to store response
+		$arrResponse = array();
+		
+		//validation based on reservation type
+		if($arrData['reservationType'] == 'alacarte') {
+			
+			//validating that user has not selected blocked date
+			$returnResult = VendorLocationBlockedSchedules::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
+			if($returnResult) {
+				$arrResponse['status'] = Config::get('constants.API_ERROR');
+				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
+				
+			}
+			
+			//checking the availability for the booking
+			$arrTimeRangeLimits = VendorLocationBookingTimeRangeLimit::checkBookingTimeRangeLimits($arrData);
+			$arrReservationCount = ReservationDetails::getReservationCount($arrData);
+			
+			//setting the value of current day and date
+			//$currentDay = strtolower(date('D'));
+			//$currentDate = date('Y-m-d');
+			
+			if(!empty($arrTimeRangeLimits)) {
+				
+				foreach($arrTimeRangeLimits as $key => $value) {					
+						$maxCount = ($value['max_covers_limit'] == 0 ) ? $value['max_tables_limit'] : $value['max_covers_limit'];
+						
+						if($maxCount == $arrReservationCount ) {
+							$arrResponse['status'] = Config::get('constants.API_ERROR');
+							$arrResponse['msg'] = 'Sorry. Currently the place is full. Please try another day.';
+							return $arrResponse;
+						}
+						else if($maxCount > $arrReservationCount ) {
+							if(($maxCount - ($arrReservationCount+$arrData['partyCount'])) < 0) {
+								$arrResponse['status'] = Config::get('constants.API_ERROR');
+								$arrResponse['msg'] = "Sorry. We have only ". $maxCount - $arrReservationCount .'seats available.';
+								return $arrResponse;
+							}
+						}					
+				}
+			}
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			 return $arrResponse;
+		}
+		else if($arrData['type'] == 'experience') {
+			
+		}
+		
+		return -1;
+	}
+
 }
 //end of class Reservation
 //end of file Reservation.php
