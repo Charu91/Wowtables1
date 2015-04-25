@@ -65,7 +65,7 @@ class RestaurantLocations extends VendorLocations{
             ->join('locations AS l', 'l.id', '=', 'vl.location_id')
             ->join('locations AS la', 'la.id', '=', 'vladd.area_id')
             ->join('locations AS lc', 'lc.id', '=', 'vladd.city_id')
-            ->join('vendor_locations_media_map AS vmm', function($join){
+            /*->join('vendor_locations_media_map AS vmm', function($join){
                 $join->on('vmm.vendor_location_id', '=', 'vl.id')
                     ->on('vmm.order','=', DB::raw('0'))
                     ->on('vmm.media_type', '=', DB::raw('"gallery"'));
@@ -75,7 +75,7 @@ class RestaurantLocations extends VendorLocations{
                     ->on('mr.width','=', DB::raw('600'))
                     ->on('mr.height', '=', DB::raw('400'));
             })// Make the width and height dynamic
-            ->join('media AS m', 'm.id', '=', 'mr.media_id')
+            ->join('media AS m', 'm.id', '=', 'mr.media_id') */
             ->join('vendor_location_attributes_varchar AS vlav', 'vl.id', '=', 'vlav.vendor_location_id')
             ->join('vendor_attributes AS va', 'va.id', '=', 'vlav.vendor_attribute_id')
             ->leftJoin('vendor_location_attributes_multiselect AS vlam', 'vl.id', '=', 'vlam.vendor_location_id')
@@ -99,7 +99,7 @@ class RestaurantLocations extends VendorLocations{
                 'l.name AS locality',
                 'la.name AS area',
                 'vl.pricing_level',
-                'mr.file AS image',
+                //'mr.file AS image',
                 'm.alt AS image_alt',
                 'm.title AS image_title',
                 DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
