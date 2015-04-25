@@ -141,7 +141,7 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 	 */
 	public function reserveTable() {
 		//array to store response
-		#$arrResponse = array();
+		$arrResponse = array();
 		
 		//reading data input by the user
 		$arrData =  $this->request->all();
@@ -149,9 +149,7 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 		$arrResponse = Reservation::validateReservationData($arrData);
 		
 		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-			if(ReservationDetails::addReservationDetails($arrData)) {
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-			}
+			$arrResponse = ReservationDetails::addReservationDetails($arrData);			
 		}
 		
 		return response()->json($arrResponse,200);
@@ -163,8 +161,8 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 	 * Handles requests for cancelling a reservation.
 	 * 
 	 * @access	public
-	 * @since	1.0.0
 	 * @return	response
+	 * @since	1.0.0
 	 */
 	public function cancelReservation() {
 		$reservationID = $this->request->input('reservationID');
@@ -172,6 +170,50 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 		$arrResponse = ReservationDetails::cancelReservation($reservationID);
 		
 		return response()->json($arrResponse,200);		
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Handles requests for updating an existing reservation.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function changeReservation() {
+		//array to store response
+		$arrResponse = array();
+		
+		//reading data input by the user
+		$arrData =  $this->request->all();
+		
+		//validating the user input data
+		$arrResponse = Reservation::validateEditReservationData($arrData);
+		
+		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+			if(ReservationDetails::updateReservationDetail($arrData)) {
+				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			}
+		}		
+		return response()->json($arrResponse,200);		
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Handles requst for displaying the historical reservation
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function reservationRecord() {
+		$userID = 0;
+		
+		$arrResponse = ReservationDetails::getReservationRecord($userID);
+		return response()->json($arrResponse,200);
 	}
  }
 //end of class ReservationController

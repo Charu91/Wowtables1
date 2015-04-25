@@ -11,3 +11,7 @@
  Route::post('api/reservation/reserve','Api\ReservationController@reserveTable');
  
  Route::put('api/reservation/cancel','Api\ReservationController@cancelReservation');
+ 
+ Route::put('api/reservation/change','Api\ReservationController@changeReservation');
+ 
+ Route::get('api/reservation/my_reservation','Api\ReservationController@reservationRecord');

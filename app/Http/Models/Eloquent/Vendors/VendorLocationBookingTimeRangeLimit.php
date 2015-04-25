@@ -42,7 +42,7 @@ class VendorLocationBookingTimeRangeLimit extends Model {
 		foreach($queryResult as $row) {
 			$arrData[] = array(
 								'id' => $row->id,
-								'product_vendor_location_id' => $row->product_vendor_loction_id,
+								'vendor_location_id' => $row->vendor_loction_id,
 								'limit_by' => $row->limit_by,
 								'day' => $row->day,
 								'date' => $row->date,
