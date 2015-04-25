@@ -149,7 +149,7 @@ class Restaurant extends Vendor{
     protected function saveAttributes($vendorId, array $attributes){
         $attributeAliases = array_keys($attributes);
 
-
+        echo "count == ".count($attributeAliases);
         if(count($attributeAliases)){
             $attributeIdMap = DB::table('vendor_attributes as va')
                                 ->join('vendor_type_attributes_map as vtam', 'vtam.vendor_attribute_id','=','va.id')
@@ -158,6 +158,7 @@ class Restaurant extends Vendor{
                                 ->where('vtam.attribute_for','Vendor')
                                 ->select('va.id as attribute_id', 'alias')
                                 ->lists('attribute_id', 'alias');
+            echo "<br/><pre>"; print_r($attributeIdMap); die;
 
             if($attributeIdMap){
                 $attributesMap = $this->config->get('restaurant_attributes.attributesMap');
@@ -202,7 +203,7 @@ class Restaurant extends Vendor{
                 }
 
                 $attributeInserts = true;
-                echo "<pre>"; print_r($attribute_inserts); die;
+                //echo "<pre>"; print_r($attribute_inserts); die;
                 foreach($attribute_inserts as $table => $insertData){
                     $restauranrAttrInsert = DB::table($table)->insert($insertData);
 
