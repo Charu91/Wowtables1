@@ -53,6 +53,8 @@ use Config;
 						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
+						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
+						->leftJoin(DB::raw('vendor_attributes as va6'),'va6.id','=','vlat5.vendor_attribute_id')
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('va1.alias','restaurant_info')
@@ -61,13 +63,15 @@ use Config;
 						->where('va4.alias','menu_picks')
 						->where('vlmm.media_type','listing')
 						->where('va5.alias','reward_points_per_reservation')
+						->where('va6.alias','expert_tips')
 						->groupBy('vl.id')
 						->select(DB::raw('vl.id as vl_id'),'vl.vendor_id', 'vla.address','vla.pin_code', 'vla.latitude', 'vla.longitude',
 												 DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
 											  vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
 											  m1.file as resturant_image, loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
 											  loc4.name as country, curators.name as curator_name, curators.bio as curator_bio, 
-											  m2.file as curator_image'),'vl.pricing_level','vlai.attribute_value as reward_point')
+											  m2.file as curator_image'),'vl.pricing_level','vlai.attribute_value as reward_point',
+											  'vlat5.attribute_value as expert_tips')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -115,13 +119,14 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'name' => $queryResult->curator_name,
-																'bio' => $queryResult->curator_bio,
+																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
 																'image' => (!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
 															),
-									'menu_pick' => $queryResult->menu_picks,
+									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
-									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,									
+									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips									
 								);
 			
 			//reading the review details
