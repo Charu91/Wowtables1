@@ -181,7 +181,7 @@ use Config;
 		
 		#executing the query
 		$queryResult = $strQuery->select('vl.id', 'vendors.name', 'vl.pricing_level',
-									DB::raw('loc.name as location_name,vl.slug as vendor_slug'),
+									DB::raw('loc.name as location_name,vl.slug as vendor_slug')
 									//DB::raw('media.file as image')
 									)
 									->get();
