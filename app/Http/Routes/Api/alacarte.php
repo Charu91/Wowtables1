@@ -1,3 +1,3 @@
 <?php
 
-Route::resource('alacarte/{alacarteID}', 'Api\ALaCarteController@show');
+Route::resource('alacarte', 'Api\ALaCarteController');
