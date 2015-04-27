@@ -24,7 +24,6 @@ class ALaCarteController extends Controller {
 	 * @since	1.0.0
 	 */
 	public function show( $aLaCarteID ) {
-		die('Hello');
 		$arrALaCarte = ALaCarte::getALaCarteDetails($aLaCarteID);
 		
 		return response()->json($arrALaCarte,200);
