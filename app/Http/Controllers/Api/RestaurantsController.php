@@ -6,6 +6,8 @@ use WowTables\Http\Requests\Api\FetchRestaurantLocationsRequest;
 
 use Illuminate\Http\Request;
 
+use Config;
+
 class RestaurantsController extends Controller {
 
     protected $request;
@@ -24,14 +26,19 @@ class RestaurantsController extends Controller {
         $input = $this->request->all();
 
         $restaurantLocations->fetchAll($input);
+		
+		$arrResponse = array(
+							'status' => Config::get('constants.API_SUCCESS'),
+							'data' => array(
+											'listing' => $restaurantLocations->listing,
+            								'filters' => $restaurantLocations->filters,
+            								'total_count' => $restaurantLocations->total_count,
+            								'total_pages' => $restaurantLocations->total_pages,
+            								'sort_options' => $restaurantLocations->sort_options,
+										)
+						);
 
-        return response()->json([
-            'listing' => $restaurantLocations->listing,
-            'filters' => $restaurantLocations->filters,
-            'total_count' => $restaurantLocations->total_count,
-            'total_pages' => $restaurantLocations->total_pages,
-            '$sort_options' => $restaurantLocations->sort_options,
-        ]);
+        return response()->json($arrResponse,200);
 	}
 
 	/**
