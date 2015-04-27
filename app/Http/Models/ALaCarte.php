@@ -87,7 +87,7 @@ use Config;
 			}
 						
 			//formatting the array for the data
-			$arrData = array(
+			$arrData['data'][] = array(
 									'type' => 'A-La-Carte Details',
 									'id' => $queryResult->vl_id,
 									'title' => $queryResult->title,
@@ -121,13 +121,18 @@ use Config;
 								);
 			
 			//reading the review details
-			$arrData['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
+			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
 			
 			//reading the locations
-			$arrData['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
-			 
+			$arrData['data']['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
+			
+			//setting the value of status
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
-		
+		else {
+			$arrData['status'] = Config::get('constants.API_ERROR');
+			$arrData['msg'] = 'No matching values found.'; 
+		}
 		return $arrData;			
 	}
 
