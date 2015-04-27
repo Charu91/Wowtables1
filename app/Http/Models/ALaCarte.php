@@ -51,20 +51,23 @@ use Config;
 						->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
 						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
+						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
+						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('va1.alias','restaurant_info')
 						->where('va2.alias','short_description')
 						->where('va3.alias','terms_and_conditions')
 						->where('va4.alias','menu_picks')
-						->where('vlmm.media_type','=','listing')
+						->where('vlmm.media_type','listing')
+						->where('va5.alias','reward_points_per_reservation')
 						->groupBy('vl.id')
 						->select(DB::raw('vl.id as vl_id'),'vl.vendor_id', 'vla.address','vla.pin_code', 'vla.latitude', 'vla.longitude',
 												 DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
 											  vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
 											  m1.file as resturant_image, loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
 											  loc4.name as country, curators.name as curator_name, curators.bio as curator_bio, 
-											  m2.file as curator_image'),'vl.pricing_level')
+											  m2.file as curator_image'),'vl.pricing_level','vlai.attribute_value as reward_point')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -87,7 +90,7 @@ use Config;
 			}
 						
 			//formatting the array for the data
-			$arrData['data'][] = array(
+			$arrData['data'] = array(
 									'type' => 'A-La-Carte Details',
 									'id' => $queryResult->vl_id,
 									'title' => $queryResult->title,
@@ -95,7 +98,7 @@ use Config;
 									'short_description' => $queryResult->short_description,
 									'terms_and_condition' => $queryResult->terms_conditions,
 									'pricing' => $queryResult->pricing_level,
-									'image' => (!empty($queryResult->resturant_image)) ? Config::get('constants.IMAGE_URL').$queryResult->resturant_image:NULL,									
+									'image' => (!empty($queryResult->resturant_image)) ? Config::get('constants.IMAGE_URL').$queryResult->resturant_image:"",									
 									'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
 									'review_count' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['totalRating']:0,
 									'cuisine' => (array_key_exists($queryResult->vl_id, $arrVendorCuisine)) ? $arrVendorCuisine[$queryResult->vl_id]:array(),
@@ -117,7 +120,8 @@ use Config;
 																'image' => (!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
 															),
 									'menu_pick' => $queryResult->menu_picks,
-									'similar_option' => $arrSimilarVendor									
+									'similar_option' => $arrSimilarVendor,
+									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,									
 								);
 			
 			//reading the review details
