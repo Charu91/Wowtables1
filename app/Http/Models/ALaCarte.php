@@ -26,7 +26,7 @@ use Config;
 	 * @version	1.0.0
 	 */
 	public static function getALaCarteDetails( $aLaCarteID ) {
-		
+		echo 'Start';
 		//array to store the matching result
 		$arrData = array();
 		
@@ -74,6 +74,7 @@ use Config;
 											  'vlat5.attribute_value as expert_tips')
 						->first();
 		if($queryResult) {
+			echo 'query result';
 			//reading the review ratings
 			$arrReview = Review::findRatingByVendorLocation(array($queryResult->vl_id));
 			
