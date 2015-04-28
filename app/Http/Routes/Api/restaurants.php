@@ -5,5 +5,5 @@ Route::get('restaurants', [
     'as' => 'RestaurantsListings',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL')
+    'domain' => env('WEBSITE_URL')
 ]);
