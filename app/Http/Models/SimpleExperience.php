@@ -35,14 +35,14 @@ class SimpleExperience extends Experience {
                 }
             }
 
-            /*if(!empty($data['media'])){
+            if(!empty($data['media'])){
                 $mediaSaved = $this->saveMedia($experienceId, $data['media']);
 
                 if($mediaSaved['status'] !== 'success'){
                     $mediaSaved['message'] = 'Could not create the Simple Experience Media. Contact the system admin';
                     return $mediaSaved;
                 }
-            }*/
+            }
 
             if(!empty($data['pricing'])){
                 $pricingSaved = $this->savePricing($experienceId, $data['pricing']);
@@ -152,14 +152,14 @@ class SimpleExperience extends Experience {
             }
         }
 
-        /*if(!empty($data['media'])){
+        if(!empty($data['media'])){
             $mediaSaved = $this->saveMedia($experienceId, $data['media']);
 
             if($mediaSaved['status'] !== 'success'){
                 $mediaSaved['message'] = 'Could not create the Simple Experience Media. Contact the system admin';
                 return $mediaSaved;
             }
-        }*/
+        }
 
         if(!empty($data['pricing'])){
             $pricingSaved = $this->savePricing($experienceId, $data['pricing']);

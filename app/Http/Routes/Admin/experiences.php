@@ -33,7 +33,7 @@ Route::get('admin/experiences/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/experiences/{id}/edit', [
+Route::get('admin/experiences/edit/{id}', [
     'uses' => 'AdminExperiencesController@edit',
     'as' => 'AdminExperienceEdit',
     'middleware' => [],

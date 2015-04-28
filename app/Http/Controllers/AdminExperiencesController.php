@@ -54,8 +54,6 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function create()
 	{
-
-
         return view('admin.experiences.create');
 	}
 
@@ -107,12 +105,7 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function edit($id)
 	{
-        $product = $this->repository->getByProductId($id);
-        echo"<pre>"; print_r($product);
-
-        return view('admin.experiences.add_update',[
-                        'product'=>$product,
-                    ]);
+        return view('admin.experiences.add_update');
 	}
 
 	/**
