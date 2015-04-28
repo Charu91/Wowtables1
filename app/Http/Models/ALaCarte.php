@@ -26,7 +26,6 @@ use Config;
 	 * @version	1.0.0
 	 */
 	public static function getALaCarteDetails( $aLaCarteID ) {
-		
 		//array to store the matching result
 		$arrData = array();
 		
@@ -48,23 +47,30 @@ use Config;
 						->join(DB::raw('locations as loc2'), 'loc2.id', '=', 'vla.city_id')
 						->join(DB::raw('locations as loc3'), 'loc3.id', '=', 'vla.state_id')
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
-						->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
-						->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
-						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
+						//->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
+						//->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
+						//->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
+						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
+						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
+						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
+						->leftJoin(DB::raw('vendor_attributes as va6'),'va6.id','=','vlat5.vendor_attribute_id')
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('va1.alias','restaurant_info')
 						->where('va2.alias','short_description')
 						->where('va3.alias','terms_and_conditions')
 						->where('va4.alias','menu_picks')
-						->where('vlmm.media_type','=','listing')
+						//->where('vlmm.media_type','listing')
+						->where('va5.alias','reward_points_per_reservation')
+						->where('va6.alias','expert_tips')
 						->groupBy('vl.id')
 						->select(DB::raw('vl.id as vl_id'),'vl.vendor_id', 'vla.address','vla.pin_code', 'vla.latitude', 'vla.longitude',
-												 DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
-											  vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
-											  m1.file as resturant_image, loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
-											  loc4.name as country, curators.name as curator_name, curators.bio as curator_bio, 
-											  m2.file as curator_image'),'vl.pricing_level')
+											DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
+											vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
+											loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
+											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio')
+											,'vl.pricing_level','vlai.attribute_value as reward_point',
+											'vlat5.attribute_value as expert_tips')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -87,7 +93,7 @@ use Config;
 			}
 						
 			//formatting the array for the data
-			$arrData = array(
+			$arrData['data'] = array(
 									'type' => 'A-La-Carte Details',
 									'id' => $queryResult->vl_id,
 									'title' => $queryResult->title,
@@ -95,7 +101,7 @@ use Config;
 									'short_description' => $queryResult->short_description,
 									'terms_and_condition' => $queryResult->terms_conditions,
 									'pricing' => $queryResult->pricing_level,
-									'image' => (!empty($queryResult->resturant_image)) ? Config::get('constants.IMAGE_URL').$queryResult->resturant_image:NULL,									
+									'image' => "",//(!empty($queryResult->restaurant_image)) ? Config::get('constants.IMAGE_URL').$queryResult->resturant_image:"",									
 									'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
 									'review_count' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['totalRating']:0,
 									'cuisine' => (array_key_exists($queryResult->vl_id, $arrVendorCuisine)) ? $arrVendorCuisine[$queryResult->vl_id]:array(),
@@ -112,22 +118,29 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'name' => $queryResult->curator_name,
-																'bio' => $queryResult->curator_bio,
-																'image' => (!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
+																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
+																'image' => ""//(!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
 															),
-									'menu_pick' => $queryResult->menu_picks,
-									'similar_option' => $arrSimilarVendor									
+									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
+									'similar_option' => $arrSimilarVendor,
+									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips									
 								);
 			
 			//reading the review details
-			$arrData['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
+			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
 			
 			//reading the locations
-			$arrData['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
-			 
+			$arrData['data']['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
+			
+			//setting the value of status
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
-		
+		else {
+			$arrData['status'] = Config::get('constants.API_ERROR');
+			$arrData['msg'] = 'No matching values found.'; 
+		}
 		return $arrData;			
 	}
 
@@ -168,7 +181,9 @@ use Config;
 		
 		#executing the query
 		$queryResult = $strQuery->select('vl.id', 'vendors.name', 'vl.pricing_level',
-									DB::raw('loc.name as location_name,vl.slug as vendor_slug','media.file as image'))
+									DB::raw('loc.name as location_name,vl.slug as vendor_slug')
+									//DB::raw('media.file as image')
+									)
 									->get();
 									
 		//array to hold the vendors information
@@ -200,7 +215,7 @@ use Config;
 											'pricing_level' => $row->pricing_level,
 											'location' => $row->location_name,
 											'url' => URL::to('/').$row->vendor_location_slug,
-											'image' => (!empty($row->image)) ? Config::get('constants.IMAGE_URL').$row->image:NULL,
+											'image' => "",//(!empty($row->image)) ? Config::get('constants.IMAGE_URL').$row->image:NULL,
 											'cuisine' => (array_key_exists($row->id, $arrVendorCuisine)) ? $arrVendorCuisine[$row->id]:array()
 										);
 			}

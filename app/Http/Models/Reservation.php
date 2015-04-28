@@ -4,7 +4,7 @@ namespace WowTables\Http\Models;
 use DB;
 use Config;
 
-use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockSchedule;
+//use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBlockedSchedules;
 use WowTables\Http\Models\Eloquent\ReservationDetails;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBookingTimeRangeLimit;
@@ -76,7 +76,7 @@ class Reservation {
 		foreach ($queryResult as $row) {
 			$arrLocation[] = $row -> id;
 		}
-		$arrBlockedDates = ProductVendorLocationBlockSchedule::getBlockedDate($arrLocation);
+		$arrBlockedDates = ProductVendorLocationBlockedSchedule::getBlockedDate($arrLocation);
 
 		foreach ($queryResult as $row) {
 			$arrLocLmt[] = array('vl_id' => $row -> id, 'area' => $row -> area, 'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation, 'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation, 'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments, 'latitude' => $row -> latitude, 'longitude' => $row -> longitude, 'blocked_dates' => (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array(), );

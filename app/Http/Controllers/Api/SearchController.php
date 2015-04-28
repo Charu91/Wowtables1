@@ -76,7 +76,7 @@ use Config;
 				//setting up the array to be formatted as json
 				$arrResult['status'] = Config::get('constants.API_SUCCESS');
 				$arrResult['resultCount'] = $searchResult['resultCount'];
-				$arrResult['data'] = $searchResult['data'];
+				$arrResult['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
 				$arrResult['filters'] = $searchFilters['filters'];
 			}
 		}
