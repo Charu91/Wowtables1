@@ -14,6 +14,26 @@
 	 * @author		Parth Shukla <shuklaparth@hotmail.com>
 	 */
 	class Search {
+		
+		/**
+		 * Minimum Price for experiences in the given city.
+		 * 
+		 * @var		float
+		 * @access	protected
+		 * @since	1.0.0
+		 */
+		protected $minPrice;
+		
+		/**
+		 * Maximum price for experiences in the given city.
+		 * 
+		 * @var		float
+		 * @access	protected
+		 * @since	1.0.0
+		 */
+		protected $maxPrice;
+		
+		//-------------------------------------------------------------
 
 		/**
 		 * Reads the details of the vendors matching the passed
@@ -201,8 +221,10 @@
 				}
 				#reading the product ratings detail
 				$arrRatings = $this->findRatingByProduct($arrProduct);
-
+				
 				foreach($experienceResult as $row) {
+					$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
+					$this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
 					$arrData['data'][] = array(
 													'id' => $row->id,
 													'type' => $row->product_type,
@@ -297,8 +319,8 @@
 														"name" => "Price Range",
 														"type" => "single",
 														"options" => array(
-																		"min" => $arrSubmittedData['minPrice'],
-																		"max" => $arrSubmittedData['maxPrice']
+																		"min" => $this->minPrice,
+																		"max" => $this->maxPrice
 																	)
 													);
 			return $arrFilters;
@@ -385,6 +407,16 @@
 															"name" => $row->name
 														);
 			}
+			
+			#setting up the price filter
+			$arrFilters['filters']['price_range'] = array(
+														"name" => "Price Range",
+														"type" => "single",
+														"options" => array(
+																		"min" => (is_null($this->minPrice)) ? 0.00 : $this->minPrice,
+																		"max" => (is_null($this->maxPrice)) ? 0.00 :$this->maxPrice
+																	)
+													);
 
 
 			return $arrFilters;
