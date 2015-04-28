@@ -24,7 +24,7 @@
 	</header>
 
 
-	{!! Form::put(['route'=>'AdminExperienceUpdate','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+	{{--{!! Form::model(['route'=>['AdminRestaurantUpdate'],'method'=>'PUT','novalidate'=>'novalidate']) !!}--}}
 
 	<div class="tabs tabs-primary">
 		<ul class="nav nav-tabs nav-justified">
