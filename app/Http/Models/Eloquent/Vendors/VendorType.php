@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class VendorType extends Model {
+class VendorType_1 extends Model {
 
     /**
      * The database table used by the model.
