@@ -93,6 +93,8 @@ class RestaurantLocations extends VendorLocations{
                 $join->on('vl.id', '=', 'vlr.vendor_location_id')
                     ->on('vlr.status','=', DB::raw('"Approved"'));
             })
+			->leftJoin(DB::raw('vendor_locations_flags_map as vlfm'),'vlfm.vendor_location_id','=','vl.id')
+			->leftJoin('flags','flags.id','=','vlfm.flag_id')
             ->select(
                 DB::raw('SQL_CALC_FOUND_ROWS vl.id'),
                 'v.name AS restaurant',
@@ -105,7 +107,8 @@ class RestaurantLocations extends VendorLocations{
                 DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
                 DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
                 DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
-                DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating')
+                DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
+                DB::raw('IFNULL(flags.name,"") AS flag_name')
             )
             ->where('vt.type', DB::raw('"Restaurants"'))
             ->where('v.status', DB::raw('"Publish"'))
@@ -159,7 +162,8 @@ class RestaurantLocations extends VendorLocations{
         }else{
             $select->orderBy('v.publish_time', 'desc');
         }
-
+		
+		//echo $select->toSql();
         $this->listing = $select->get();
 
         $totalCountResult = DB::select('SELECT FOUND_ROWS() AS total_count');
