@@ -5,6 +5,8 @@ use WowTables\Http\Models\ExperienceAddons;
 
 class SimpleExperience extends Experience {
 
+    /*
+     * comments added for testing*/
     public function create($data)
     {
         DB::beginTransaction();
