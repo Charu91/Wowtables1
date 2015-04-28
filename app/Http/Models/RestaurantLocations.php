@@ -84,10 +84,10 @@ class RestaurantLocations extends VendorLocations{
                     ->on('vamso.alias','=', DB::raw('"cuisines"'));
             })
             ->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
-            ->join('vendor_location_booking_schedules AS vlbs', 'vlbs.vendor_location_id', '=', 'vl.id')
+            ->leftJoin('vendor_location_booking_schedules AS vlbs', 'vlbs.vendor_location_id', '=', 'vl.id')
             ->leftJoin('vendor_location_blocked_schedules AS vlbls', 'vlbls.vendor_location_id', '=', 'vl.id')
-            ->join('schedules AS s', 'vlbs.schedule_id', '=', 's.id')
-            ->join('time_slots AS ts', 's.time_slot_id', '=', 'ts.id')
+            ->leftJoin('schedules AS s', 'vlbs.schedule_id', '=', 's.id')
+            ->leftJoin('time_slots AS ts', 's.time_slot_id', '=', 'ts.id')
             ->leftJoin('vendor_locations_tags_map AS vltm', 'vl.id', '=', 'vltm.vendor_location_id')
             ->leftJoin('vendor_location_reviews AS vlr', function($join){
                 $join->on('vl.id', '=', 'vlr.vendor_location_id')
