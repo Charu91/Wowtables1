@@ -472,11 +472,18 @@ class User {
                 ]);
 
                 if($userDeviceInsert){
-                    DB::commit();
+                	DB::commit();
+					
+					//reading the location name from locations table
+                	$queryLocation = DB::table('locations')->where('id',$data['location_id'])->first();
+					
                     return [
                         'code' => 200,
                         'data' => [
-                            'access_token' => $access_token
+                            'access_token' => $access_token,
+                            'location_id' => $data['location_id'],
+                            'location_name' => $queryLocation->name,
+                            'phone_number' => $data['phone_number']
                         ]
                     ];
                 }else{
