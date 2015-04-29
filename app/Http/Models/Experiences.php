@@ -95,8 +95,8 @@ class Experiences {
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-										'menu' => stripslashes($expResult->menu),
-										'rating' => (is_null($arrReviews['avg_rating'])) ? 0:is_null($arrReviews['avg_rating']),
+										'menu' => $expResult->menu,
+										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
@@ -165,10 +165,11 @@ class Experiences {
 	 * @since	1.0.0
 	 */
 	public static function getProductLocations($productID) {
-		$queryResult = DB::table(DB::raw('product_venue_address as pva'))
-							->leftJoin('locations', 'locations.id','=','pva.area_id')
-							->select('locations.name as area','pva.latitude','pva.longitude')
-							->where('pva.product_id',$productID)
+		$queryResult = 		DB::table('product_vendor_locations as pvl')	
+							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.id','=','pvl.vendor_location_id')
+							->leftJoin('locations', 'locations.id','=','vla.area_id')
+							->select('locations.name as area','vla.latitude','vla.longitude')
+							->where('pvl.product_id',$productID)
 							->get();
 		
 		//array to hold location details
