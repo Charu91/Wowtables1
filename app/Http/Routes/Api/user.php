@@ -5,7 +5,7 @@ Route::post('api/login', [
     'as' => 'MobileUserLogin',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL'),
+    'domain' => env('WEBSITE_URL'),
 ]);
 
 Route::post('api/register', [
@@ -13,7 +13,7 @@ Route::post('api/register', [
     'as' => 'MobileUserRegister',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL'),
+    'domain' => env('WEBSITE_URL'),
 ]);
 
 Route::post('api/fb_login', [
@@ -21,7 +21,7 @@ Route::post('api/fb_login', [
     'as' => 'MobileUserFBLogin',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL'),
+    'domain' => env('WEBSITE_URL'),
 ]);
 
 Route::put('api/set_phone_location', [
@@ -29,5 +29,5 @@ Route::put('api/set_phone_location', [
     'as' => 'MobileUserSetLocationPhone',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL'),
+    'domain' => env('WEBSITE_URL'),
 ]);
