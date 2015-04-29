@@ -139,15 +139,17 @@ class Review {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function readPoductReviews($productID) {
+	public static function readProductReviews($productID) {
 		//query to read product reviews
 		$strQuery = DB::table(DB::raw('product_reviews as pr'))
 						->join('users','users.id','=', 'pr.user_id')
 						->where('pr.product_id',$productID)
 						->where('pr.status','approved')
-						->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings'),
-								'users.id','users.full_name','pr.review','pr.rating','pr.created_at')
+						->select('users.id','users.full_name','pr.review','pr.rating','pr.created_at')
 						->get();
+		
+		$ratingCount = 0;
+		$avgRating = 0;
 		
 		//array to store the result
 		$arrReviewDetail = array();
@@ -156,9 +158,9 @@ class Review {
 		//initializing the results
 		if($strQuery) {
 			foreach($strQuery as $row) {
-				$arrReviewDetail['avg_rating'] = $row->avg_rating;
-				$arrReviewDetail['total_rating'] = $row->total_ratings;
 				if(!is_null($row->id)) {
+					$ratingCount++;
+					$avgRating += $row->rating;
 					$arrReviewDetail['reviews'][] = array(
 													'id' => $row->id,
 													'name' => $row->full_name,
@@ -169,6 +171,8 @@ class Review {
 												);
 				}				
 			}
+			$arrReviewDetail['total_rating'] = $ratingCount;
+			$arrReviewDetail['avg_rating'] = ($ratingCount == 0) ? $avgRating : number_format(float($avgRating/$ratingCount),2,'.','');
 		}
 		else {
 				$arrReviewDetail['avg_rating'] = 0.00;
