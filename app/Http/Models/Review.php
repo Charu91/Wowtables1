@@ -172,7 +172,7 @@ class Review {
 				}				
 			}
 			$arrReviewDetail['total_rating'] = $ratingCount;
-			$arrReviewDetail['avg_rating'] = ($ratingCount == 0) ? $avgRating : number_format((float)($avgRating/$ratingCount),2,'.','');
+			$arrReviewDetail['avg_rating'] = ($ratingCount == 0) ? $avgRating : number_format(($avgRating/$ratingCount),2,'.','');
 		}
 		else {
 				$arrReviewDetail['avg_rating'] = 0.00;
