@@ -56,10 +56,10 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pa1.alias as experience_info'),
-								DB::raw('pa2.alias as short_description, media.file as experience_image'),
+								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
+								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pa3.alias as menu'));
+								DB::raw('pat3.attribute_value as menu'));
 							
 		}
 		else {
@@ -67,12 +67,13 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pa1.alias as experience_info'),
+								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pa2.alias as short_description, media.file as experience_image'));
+								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'));
 		}
 
 		//running the query to get the results
+		//echo $queryExperience->toSql();
 		$expResult = $queryExperience->first();		
 		
 		//array to store the experience details
