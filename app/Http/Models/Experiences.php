@@ -95,7 +95,7 @@ class Experiences {
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-										'menu' => $expResult->menu,
+										'menu' => stripslashes($expResult->menu),
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0:is_null($arrReviews['avg_rating']),
 										'total_reviews' => $arrReviews['total_rating'],
 										'review_detail' => $arrReviews['reviews'],
