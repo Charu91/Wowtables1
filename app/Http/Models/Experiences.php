@@ -46,6 +46,7 @@ class Experiences {
 							->leftJoin(DB::raw('product_curator_map as pcm'),'pcm.product_id','=','products.id')
 							->leftJoin('curators','curators.id','=','pcm.curator_id')
 							->leftJoin('media','media.id','=','pmm.media_id')
+							->leftJoin(DB::raw('media as cm'),'cm.id','=','curators.media_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description');
@@ -59,7 +60,8 @@ class Experiences {
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pat3.attribute_value as menu'));
+								DB::raw('pat3.attribute_value as menu'),
+								'cm.file as curator_image');
 							
 		}
 		else {
@@ -69,7 +71,9 @@ class Experiences {
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'));
+								DB::raw('pat2.attribute_value as short_description, 
+									media.file as experience_image'),
+									'cm.file as curator_image');
 		}
 
 		//running the query to get the results
@@ -95,6 +99,7 @@ class Experiences {
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
+										'curator_image' => (is_null($expResult->curator_image)) ? "" : $expResult->curator_image,
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
