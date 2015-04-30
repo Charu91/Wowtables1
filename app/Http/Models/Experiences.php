@@ -46,6 +46,7 @@ class Experiences {
 							->leftJoin(DB::raw('product_curator_map as pcm'),'pcm.product_id','=','products.id')
 							->leftJoin('curators','curators.id','=','pcm.curator_id')
 							->leftJoin('media','media.id','=','pmm.media_id')
+							->leftJoin(DB::raw('media as cm'),'cm.id','=','curators.media_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description');
@@ -56,10 +57,11 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pa1.alias as experience_info'),
-								DB::raw('pa2.alias as short_description, media.file as experience_image'),
+								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
+								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pa3.alias as menu'));
+								DB::raw('pat3.attribute_value as menu'),
+								'cm.file as curator_image');
 							
 		}
 		else {
@@ -67,12 +69,15 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pa1.alias as experience_info'),
+								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
-								DB::raw('pa2.alias as short_description, media.file as experience_image'));
+								DB::raw('pat2.attribute_value as short_description, 
+									media.file as experience_image'),
+									'cm.file as curator_image');
 		}
 
 		//running the query to get the results
+		//echo $queryExperience->toSql();
 		$expResult = $queryExperience->first();		
 		
 		//array to store the experience details
@@ -80,7 +85,7 @@ class Experiences {
 		
 		if($expResult) {
 			//getting the reviews for the particular experience
-				$arrReviews = Review::readPoductReviews($expResult->id);
+				$arrReviews = Review::readProductReviews($expResult->id);
 				$arrLocation = Self::getProductLocations($expResult->id);			
 				$arrExpDetails[] = array(
 										'id' => $expResult->id,
@@ -89,13 +94,17 @@ class Experiences {
 										'short_description' => $expResult->short_description,
 										'image' => (!empty($expResult->experience_image)) ? Config::get('constants.IMAGE_URL').$expResult->resturant_image:"",
 										'type' => $expResult->type,
-										'price' => $expResult->price,
+										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
+										'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
+										'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
+										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
+										'curator_image' => (is_null($expResult->curator_image)) ? "" : $expResult->curator_image,
 										'menu' => $expResult->menu,
-										'rating' => (is_null($arrReviews['avg_rating'])) ? 0:is_null($arrReviews['avg_rating']),
+										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
@@ -164,10 +173,11 @@ class Experiences {
 	 * @since	1.0.0
 	 */
 	public static function getProductLocations($productID) {
-		$queryResult = DB::table(DB::raw('product_venue_address as pva'))
-							->leftJoin('locations', 'locations.id','=','pva.area_id')
-							->select('locations.name as area','pva.latitude','pva.longitude')
-							->where('pva.product_id',$productID)
+		$queryResult = 		DB::table('product_vendor_locations as pvl')	
+							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
+							->leftJoin('locations', 'locations.id','=','vla.area_id')
+							->select('locations.name as area','vla.latitude','vla.longitude')
+							->where('pvl.product_id',$productID)
 							->get();
 		
 		//array to hold location details

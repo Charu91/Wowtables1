@@ -108,7 +108,8 @@ class RestaurantLocations extends VendorLocations{
                 DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
                 DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
                 DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
-                DB::raw('IFNULL(flags.name,"") AS flag_name')
+                DB::raw('IFNULL(flags.name,"") AS flag_name'),
+                DB::raw('GROUP_CONCAT(DISTINCT vaso.option) as cuisine')
             )
             ->where('vt.type', DB::raw('"Restaurants"'))
             ->where('v.status', DB::raw('"Publish"'))

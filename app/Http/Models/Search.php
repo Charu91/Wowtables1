@@ -14,6 +14,26 @@
 	 * @author		Parth Shukla <shuklaparth@hotmail.com>
 	 */
 	class Search {
+		
+		/**
+		 * Minimum Price for experiences in the given city.
+		 * 
+		 * @var		float
+		 * @access	protected
+		 * @since	1.0.0
+		 */
+		protected $minPrice;
+		
+		/**
+		 * Maximum price for experiences in the given city.
+		 * 
+		 * @var		float
+		 * @access	protected
+		 * @since	1.0.0
+		 */
+		protected $maxPrice;
+		
+		//-------------------------------------------------------------
 
 		/**
 		 * Reads the details of the vendors matching the passed
@@ -130,10 +150,11 @@
 								->leftJoin(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
 								->leftJoin('media','media.id','=','pmm.media_id')
 								->leftJoin(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
-								//->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
+								->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
 								//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
 								//->join('locations','locations.id','=','vl.location_id')
-								->leftJoin(DB::raw('product_venue_address as pva'),'pva.product_id','=','products.id')
+								//->leftJoin(DB::raw('product_venue_address as pva'),'pva.product_id','=','products.id')
+								->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 								->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 								//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
@@ -142,7 +163,7 @@
 								//->where('pa1.alias','short_description')
 								//->orWhere('pa2.alias','experience_info')
 								//->orWhere('pa3.alias','cuisines')
-								->where('pva.city_id',$arrData['city_id'])
+								->where('vla.city_id',$arrData['city_id'])
 								->where('products.visible',1)
 								->whereIN('products.type',array('simple','complex'))
 								->groupBy('products.id')
@@ -201,8 +222,10 @@
 				}
 				#reading the product ratings detail
 				$arrRatings = $this->findRatingByProduct($arrProduct);
-
+				
 				foreach($experienceResult as $row) {
+					$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
+					$this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
 					$arrData['data'][] = array(
 													'id' => $row->id,
 													'type' => $row->product_type,
@@ -210,8 +233,11 @@
 													'description' => $row->description,
 													'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
 													'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
-													'price_type' => $row->price_type,
-													'variable' => $row->is_variable,
+													'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
+													'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
+													'tax' => (is_null($row->tax)) ? "": $row->tax,
+													'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
+													'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
 													'image' => (is_null($row->image))? '':Config::get('constants.IMAGE_URL').$row->image,
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
@@ -297,8 +323,8 @@
 														"name" => "Price Range",
 														"type" => "single",
 														"options" => array(
-																		"min" => $arrSubmittedData['minPrice'],
-																		"max" => $arrSubmittedData['maxPrice']
+																		"min" => $this->minPrice,
+																		"max" => $this->maxPrice
 																	)
 													);
 			return $arrFilters;
@@ -385,6 +411,16 @@
 															"name" => $row->name
 														);
 			}
+			
+			#setting up the price filter
+			$arrFilters['filters']['price_range'] = array(
+														"name" => "Price Range",
+														"type" => "single",
+														"options" => array(
+																		"min" => (is_null($this->minPrice)) ? 0.00 : $this->minPrice,
+																		"max" => (is_null($this->maxPrice)) ? 0.00 :$this->maxPrice
+																	)
+													);
 
 
 			return $arrFilters;

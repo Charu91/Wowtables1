@@ -5,7 +5,7 @@ Route::delete('device/unlink', [
     'as' => 'MobileUserDeviceUnlink',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL')
+    'domain' => env('WEBSITE_URL')
 ]);
 
 Route::put('device/notification', [
@@ -13,5 +13,5 @@ Route::put('device/notification', [
     'as' => 'MobileUserDeviceAddNotification',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL')
+    'domain' => env('WEBSITE_URL')
 ]);

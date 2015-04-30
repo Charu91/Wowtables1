@@ -54,7 +54,7 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 	public function getLocation($type,$id) {
 		$arrResponse = array();
 		if($type=="experience") {
-			$arrResponse['data'] = Reservation::getExperienceLocationAndLimit($id);#Locations::getProductVendorLocation($id);
+			$arrResponse['data'] = Reservation::getExperienceLocationAndLimit($id);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else if($type=='alacarte') {
@@ -114,12 +114,12 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 	 * @return	response
 	 * @since	1.0.0
 	 */
-	public function getSchedule($type, $id, $day=NULL) {
+	public function getSchedule($type, $typeID, $typeLocationID = NULL, $day=NULL) {
 		//array to store response
 		$arrResponse = array();
 		
 		if($type=="experience") {
-			$arrResponse['data'] = Schedules::getExperienceLocationSchedule($id,$day);
+			$arrResponse['data'] = Schedules::getExperienceLocationSchedule($typeID, $typeLocationID, $day);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else if($type=='alacarte') {
