@@ -18,7 +18,7 @@
         </div>
     </header>
 
-{!! Form::open(['route'=>'AdminRestaurantLocationsStore','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
+{!! Form::open(['route'=>'AdminRestaurantLocationsStore','class'=>'form-horizontal','novalidate'=>'novalidate'],array('files' => true)) !!}
 
     <div class="tabs tabs-primary">
         <ul class="nav nav-tabs nav-justified">
@@ -102,6 +102,38 @@
             </div>
             <div id="media_tab" class="tab-pane mt-lg">
                 @include('partials.forms.add_media')
+                <!--<div class="input-append">
+                                <span class="btn btn-default">
+                                    <input type="file" name="media[listing_image]" required>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Gallery Images</label>
+                    <div class="col-md-6">
+                        <div data-provides="fileupload" class="fileupload fileupload-new">
+                            <div class="input-append">
+                                <span class="btn btn-default">
+                                    <input type="file" name="media[gallery_images][]" multiple required>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Mobile Listing Images</label>
+                    <div class="col-md-6">
+                        <div data-provides="fileupload" class="fileupload fileupload-new">
+                            <div class="input-append">
+                                <span class="btn btn-default">
+                                    <input type="file" name="media[mobile_listing_image]" required>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
                 <div class="row">

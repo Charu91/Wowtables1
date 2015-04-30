@@ -112,7 +112,7 @@
 
             </div>
             <div id="media_tab" class="tab-pane mt-lg">
-                @include('partials.forms.add_media')
+                @include('partials.forms.add_media_experience')
             </div>
             <div id="pricing_details" class="tab-pane mt-lg">
                 <div class="form-group">

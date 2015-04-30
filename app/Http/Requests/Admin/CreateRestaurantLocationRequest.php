@@ -76,8 +76,8 @@ class CreateRestaurantLocationRequest extends Request {
 
             //$rules['schedules'] = 'required|array';
 
-            $rules['media.listing_image'] = 'required|exists:media,id';
-            $rules['media.gallery_images'] = 'required|galleryarray';
+            $rules['media.listing_image'] = 'required';
+            $rules['media.gallery_images'] = 'required';
 
         }else{
             $rules['a_la_carte'] = 'boolean';
@@ -98,8 +98,8 @@ class CreateRestaurantLocationRequest extends Request {
 
             //$rules['schedules'] = 'array';
 
-            $rules['media.listing_image'] = 'exists:media,id';
-            $rules['media.gallery_images'] = 'galleryarray';
+            $rules['media.listing_image'] = 'required';
+            $rules['media.gallery_images'] = 'required';
         }
 
         /*if($this->has('schedules') && is_array($this->get('schedules'))){
