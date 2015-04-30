@@ -120,16 +120,23 @@ class Schedules {
 	 * @return	array
 	 * @author	Parth Shukla <parthshukla@ahex.co.in>
 	 */
-	public static function getExperienceLocationSchedule($productVendorLocationID, $day=NULL) {
+	public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
 		if(is_null($day)) {
 			$day = strtolower(date("D"));
-		}	
+		}
 		
+		//query to read the experience id in case 
+		//of parent child realtion in locations table
+		$queryMaxPVLI = DB::table('product_vendor_locations as pvl')
+						->where('product_id',$productID)
+						->select(DB::raw('MAX(id) as pvl_id'))
+						->first();	
+						
 		$schedules = DB::table('schedules')
 						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
 						->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
 						->where('schedules.day_short',$day)
-						->where('pvlbs.product_vendor_location_id', $productVendorLocationID)
+						->where('pvlbs.product_vendor_location_id', $queryMaxPVLI->pvl_id)
 						->select('schedules.id','ts.time','ts.slot_type')
 						->get();
 						
@@ -139,8 +146,8 @@ class Schedules {
 		if($schedules) {
 			foreach($schedules as $row) {
 				$arrData[] = array(
-									'schedule_id' => $row->id,
 									'time' => $row->time,
+									'schedule_id' => $row->id,
 									'slot_type' => $row->slot_type
 								);
 			}
