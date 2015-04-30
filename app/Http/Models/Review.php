@@ -177,7 +177,7 @@ class Review {
 		else {
 				$arrReviewDetail['avg_rating'] = 0.00;
 				$arrReviewDetail['total_rating'] = 0.00;
-				$arrReviewDetail['reviews'][] = array();				
+				$arrReviewDetail['reviews'] = array();				
 		}
 		return $arrReviewDetail;		
 	}	
