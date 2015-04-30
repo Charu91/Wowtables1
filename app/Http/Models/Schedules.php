@@ -124,19 +124,18 @@ class Schedules {
 		if(is_null($day)) {
 			$day = strtolower(date("D"));
 		}
-		
-		//query to read the experience id in case 
-		//of parent child realtion in locations table
-		$queryMaxPVLI = DB::table('product_vendor_locations as pvl')
-						->where('product_id',$productID)
-						->select(DB::raw('MAX(id) as pvl_id'))
-						->first();	
-						
+		//query to read the schedules
 		$schedules = DB::table('schedules')
 						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
 						->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
 						->where('schedules.day_short',$day)
-						->where('pvlbs.product_vendor_location_id', $queryMaxPVLI->pvl_id)
+						//->where('pvlbs.product_vendor_location_id', $queryMaxPVLI->pvl_id)
+						->where('pvlbs.product_vendor_location_id', function($query) use($productID) 
+								{
+									$query->select(DB::raw('MAX(id) as pvl_id'))
+											->from('product_vendor_locations as pvl')
+											->where('product_id',$productID);
+						})
 						->select('schedules.id','ts.time','ts.slot_type')
 						->get();
 						
