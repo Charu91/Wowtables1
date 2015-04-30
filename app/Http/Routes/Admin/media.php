@@ -17,9 +17,81 @@ Route::get('admin/media/modal', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::post('admin/media/', [
+Route::get('admin/media/modal', [
+    'uses' => 'AdminMediaController@modal',
+    'as' => 'AdminModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/media/listing_modal', [
+    'uses' => 'AdminMediaController@listing_modal',
+    'as' => 'AdminListingModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/media/gallery_modal', [
+    'uses' => 'AdminMediaController@gallery_modal',
+    'as' => 'AdminListingGalleryModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/media/mobile_modal', [
+    'uses' => 'AdminMediaController@mobile_modal',
+    'as' => 'AdminListingMobileModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/media/mobile_exp_modal', [
+    'uses' => 'AdminMediaController@mobile_exp_modal',
+    'as' => 'AdminListingMobileExpModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/store', [
     'uses' => 'AdminMediaController@store',
     'as' => 'AdminMediaStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/listing_media', [
+    'uses' => 'AdminMediaController@listingStore',
+    'as' => 'AdminMediaGalleryStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/gallery_media', [
+    'uses' => 'AdminMediaController@galleryStore',
+    'as' => 'AdminMediaGalleryStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/mobile_media', [
+    'uses' => 'AdminMediaController@mobileStore',
+    'as' => 'AdminMediaMobileStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/mobile_exp_media', [
+    'uses' => 'AdminMediaController@mobileExpStore',
+    'as' => 'AdminMediaMobileStore',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),

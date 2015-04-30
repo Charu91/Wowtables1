@@ -18,7 +18,7 @@
                         <section class="panel">
                             <div class="panel-body bg-primary">
                                 {{--<div style="height: 500px;" class="media-dropzone dz-square dz-clickable" id="mediaDropZone"></div>--}}
-                                <div style="height: 500px;" class="media-dropzone dz-square dz-clickable" id="mediaDropZoneListing"></div>
+                                <div style="height: 500px;" class="media-dropzone dz-square dz-clickable" id="mediaDropZoneMobile"></div>
                             </div>
                         </section>
                     </div>
@@ -34,7 +34,7 @@
                                         <div class="col-lg-2">
                                             <section class="panel">
                                                 <div style="padding:6px;" class="panel-body bg-primary">
-                                                    <p class="small">{{ str_limit($image->name, 5) }}<small class="pull-right">{{$image->created_date}}</small></p>
+                                                    <p class="small">{{ str_limit($image->file, 5) }}<small class="pull-right">{{$image->created_at}}</small></p>
                                                     <div style="margin-top: -5px;" class="btn-group mb-xs pull-right">
                                                         <button data-toggle="dropdown" class="mt-xs btn btn-xs btn-danger dropdown-toggle" type="button"><span class="caret"></span></button>
                                                         <ul role="menu" style="min-width: 60px;" class="dropdown-menu ">
@@ -52,7 +52,7 @@
                                                     </div>
                                                     <input name="media[]" class="mt-xs  multiple_checkbox" type="checkbox" id="media_{{$image->media_id}}" value="{{$image->media_id}}">
                                                     <label for="media_{{$image->media_id}}">
-                                                        <img style="cursor: pointer;" alt="{{ $image->alt }}" title="{{ $image->title }}" src="{!! $s3_url.$image->resized_file !!}" class="img-thumbnail img-responsive modal-select-img" >
+                                                        <img style="cursor: pointer;" src="{!! $s3_url.$image->file !!}" class="img-thumbnail img-responsive modal-select-img" >
                                                     </label>
                                                 </div>
                                             </section>
@@ -63,42 +63,6 @@
                                     <em>Could not find media matching the criteria that you entered</em>
                                 @endif
                             </div>
-
-                            <nav id="mediaPaginationBlock">
-                                <ul class="pagination">
-                                    @if ($pages > 1)
-                                        <li class="{{ ($pagenum == 1)? 'disabled': '' }}">
-                                            <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == 1)? '0': $pagenum - 1 }}" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        @for($i = 1; $i <= $pages; $i++)
-                                            <li class="{{ ($pagenum == $i)? 'active': '' }}">
-                                                <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ ($pagenum == $i)? '0': $i  }}">
-                                                    {{$i}}
-                                                </a>
-                                            </li>
-                                        @endfor
-                                        <li class="{{ ($pagenum == $pages)? 'disabled': '' }}">
-                                            <a class="media-modal-pagenum-btn" href="javascript:void(0);" data-media-pagenum="{{ $pagenum + 1  }}" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    @else
-                                        <li class="disabled">
-                                            <a href="javascript:void(0)" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="active"><a href="javascript:void(0)">1</a></li>
-                                        <li class="disabled">
-                                            <a href="javascript:void(0)" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </nav>
                         @endif
                     </div>
                     <div  id="mediaEditContentHolder" class="col-lg-3 hide">
@@ -125,39 +89,39 @@
 
 <script type="text/javascript">
     /*var myDropzone = new Dropzone("#mediaDropZone", {
+     init: function () {
+     this.on('success', function (file, response) {
+     myDropzone.removeFile(file);
+     $('#mediaModal').modal('hide');
+     refreshMediaModal();
+     });
+
+     this.on('error', function (file, error) {
+     myDropzone.removeFile(file);
+     });
+     },
+     url: "/admin/media/store/",
+     method: "POST",
+     maxFilesize: 10,
+     paramName: 'media',
+     headers: {
+     'X-XSRF-TOKEN': $("meta[name='_token']").attr('content')
+     }
+     });*/
+
+    var mediaDropZoneMobile = new Dropzone("#mediaDropZoneMobile", {
         init: function () {
             this.on('success', function (file, response) {
-                myDropzone.removeFile(file);
+                mediaDropZoneMobile.removeFile(file);
                 $('#mediaModal').modal('hide');
                 refreshMediaModal();
             });
 
             this.on('error', function (file, error) {
-                myDropzone.removeFile(file);
+                mediaDropZoneMobile.removeFile(file);
             });
         },
-        url: "/admin/media/store/",
-        method: "POST",
-        maxFilesize: 10,
-        paramName: 'media',
-        headers: {
-            'X-XSRF-TOKEN': $("meta[name='_token']").attr('content')
-        }
-    });*/
-
-   var mediaDropZoneListing = new Dropzone("#mediaDropZoneListing", {
-        init: function () {
-            this.on('success', function (file, response) {
-                mediaDropZoneListing.removeFile(file);
-                $('#mediaModal').modal('hide');
-                refreshMediaModal();
-            });
-
-            this.on('error', function (file, error) {
-                mediaDropZoneListing.removeFile(file);
-            });
-        },
-        url: "/admin/media/listing_media",
+        url: "/admin/media/mobile_media",
         method: "POST",
         maxFilesize: 10,
         paramName: 'media',
@@ -166,48 +130,27 @@
         }
     });
 
-    /*var mediaDropZoneListing = new Dropzone("#mediaDropZoneListing", {
-        init: function () {
-            this.on('success', function (file, response) {
-                mediaDropZoneListing.removeFile(file);
-                $('#mediaModal').modal('hide');
-                refreshMediaModal();
-            });
-
-            this.on('error', function (file, error) {
-                mediaDropZoneListing.removeFile(file);
-            });
-        },
-        url: "/admin/media/listing_media",
-        method: "POST",
-        maxFilesize: 10,
-        paramName: 'media',
-        headers: {
-            'X-XSRF-TOKEN': $("meta[name='_token']").attr('content')
-        }
-    });*/
-
     /*function refreshMediaModal()
-    {
-        var   mediaSelect = $('#selectMediaBtn').data('media-select')
-                , galleryPosition = $('#selectMediaBtn').data('gallery-position')
-                , mediaType = $('#selectMediaBtn').data('media-type');
+     {
+     var   mediaSelect = $('#selectMediaBtn').data('media-select')
+     , galleryPosition = $('#selectMediaBtn').data('gallery-position')
+     , mediaType = $('#selectMediaBtn').data('media-type');
 
-        $.ajax({
-            method: 'GET',
-            url: '/admin/media/modal'
-        }).done( function(result) {
-            $( "#mediaModalHolder" ).html( result );
-            $('#mediaModal').modal('show');
-            $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
-            $('#selectMediaBtn').attr('data-media-select',mediaSelect);
-            $('#selectMediaBtn').attr('data-media-type',mediaType);
-            $('#mediaModal').checkboxes('max', mediaSelect);
-            $("#selectMediaBtn").attr('disabled','disabled');
-        }).fail(function (jqXHR) {
-            console.log(jqXHR);
-        });
-    }*/
+     $.ajax({
+     method: 'GET',
+     url: '/admin/media/modal'
+     }).done( function(result) {
+     $( "#mediaModalHolder" ).html( result );
+     $('#mediaModal').modal('show');
+     $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+     $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+     $('#selectMediaBtn').attr('data-media-type',mediaType);
+     $('#mediaModal').checkboxes('max', mediaSelect);
+     $("#selectMediaBtn").attr('disabled','disabled');
+     }).fail(function (jqXHR) {
+     console.log(jqXHR);
+     });
+     }*/
 
     function refreshMediaModal()
     {
@@ -217,7 +160,7 @@
 
         $.ajax({
             method: 'GET',
-            url: '/admin/media/listing_modal'
+            url: '/admin/media/mobile_modal'
         }).done( function(result) {
             $( "#mediaModalHolder" ).html( result );
             $('#mediaModal').modal('show');

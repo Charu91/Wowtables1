@@ -6,6 +6,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Contracts\Queue\Queue;
 use WowTables\Commands\ImageResizeSendToCloud;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class RestaurantLocation extends VendorLocation{
 
@@ -54,11 +55,12 @@ class RestaurantLocation extends VendorLocation{
 
     protected $typeTableAliasMap;
 
-    public function __construct(Config $config, Cloud $cloud, Queue $queue)
+    public function __construct(Config $config, Cloud $cloud, Queue $queue, Media $media)
     {
         $this->config = $config;
         $this->cloud = $cloud;
         $this->queue = $queue;
+        $this->media = $media;
 
         $this->attributesMap = $config->get('restaurant_locations_attributes.attributesMap');
         $this->typeTableAliasMap = $config->get('restaurant_locations_attributes.typeTableAliasMap');
@@ -717,6 +719,20 @@ class RestaurantLocation extends VendorLocation{
         }
     }
 
+    /*protected function saveMedia($vendor_location_id, $medias)
+    {
+        foreach($medias as $media_key => $media_value) {
+            //echo "<pre>"; print_r($media_key); print_r($media_value);
+            $file = $this->media->file($media_value);
+            if ($media_key == "gallery_images") {
+                foreach ($media_value as $gallery_images) {
+                    $file = $this->media->file($gallery_images);
+                }
+            }
+            $this->media->save_manually($file , $vendor_location_id);
+        }
+    }*/
+
     protected function saveMedia($vendor_location_id, $media)
     {
         $mediaSizes = $this->config->get('media.sizes');
@@ -797,7 +813,7 @@ class RestaurantLocation extends VendorLocation{
                 ];
             }
         }
-        /*mobile listing ios alacarte*/
+
         if(isset($media['mobile_listing_image'])){
             $listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
@@ -835,7 +851,7 @@ class RestaurantLocation extends VendorLocation{
                 'order' => 0
             ];
         }
-        /*mobile listing andriod alacarte*/
+
         if(isset($media['mobile_listing_image'])){
             $listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')

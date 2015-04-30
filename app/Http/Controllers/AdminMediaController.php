@@ -128,6 +128,134 @@ class AdminMediaController extends Controller {
         }
     }
 
+    public function listing_modal()
+    {
+        $input = $this->request->all();
+
+        //$pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        //$search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllListingImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+            //echo "<pre>"; print_r($allMedia); die;
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.listing_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_listing')
+                ]
+            );
+        }else{
+            return view('admin.media.listing_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
+    public function gallery_modal()
+    {
+        $input = $this->request->all();
+
+        $pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        $search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllGalleryImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+           // 'search'        => $search_terms
+        ]);
+
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.gallery_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_gallery')
+                ]
+            );
+        }else{
+            return view('admin.media.gallery_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
+    public function mobile_modal()
+    {
+        $input = $this->request->all();
+
+        $pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        $search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllAlacarteMobileImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.mobile_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_mobile')
+                ]
+            );
+        }else{
+            return view('admin.media.mobile_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
+    public function mobile_exp_modal()
+    {
+        $input = $this->request->all();
+
+        $pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        $search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllExperiencesMobileImages([
+            //'pagenum'       => $pagenum,
+           // 'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.mobile_exp_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_mobile')
+                ]
+            );
+        }else{
+            return view('admin.media.mobile_exp_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
     /**
 	 * Store a newly created resource in storage.
      *
@@ -144,6 +272,60 @@ class AdminMediaController extends Controller {
             return response()->json($mediaStore, 200);
         }else{
             return response()->json($mediaStore, 500);
+        }
+	}
+
+    public function listingStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStore = $this->media->saveListingImage($file);
+
+        if($mediaStore['status'] === 'success'){
+            return response()->json($mediaStore, 200);
+        }else{
+            return response()->json($mediaStore, 500);
+        }
+	}
+
+    public function galleryStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStore = $this->media->saveGalleryImage($file);
+
+        if($mediaStore['status'] === 'success'){
+            return response()->json($mediaStore, 200);
+        }else{
+            return response()->json($mediaStore, 500);
+        }
+	}
+
+    public function mobileStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStoreAndriod = $this->media->saveAndriodImage($file);
+        $mediaStoreIOS = $this->media->saveIOSImage($file,$mediaStoreAndriod['last_insert_id']);
+
+        if($mediaStoreAndriod['status'] === 'success' && $mediaStoreIOS['status'] === 'success'){
+            return response()->json($mediaStoreAndriod, 200);
+        }else{
+            return response()->json($mediaStoreAndriod, 500);
+        }
+	}
+
+    public function mobileExpStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStoreAndriod = $this->media->saveExpAndriodImage($file);
+        $mediaStoreIOS = $this->media->saveExpIOSImage($file,$mediaStoreAndriod['last_insert_id']);
+
+        if($mediaStoreAndriod['status'] === 'success' && $mediaStoreIOS['status'] === 'success'){
+            return response()->json($mediaStoreAndriod, 200);
+        }else{
+            return response()->json($mediaStoreAndriod, 500);
         }
 	}
 
@@ -219,7 +401,7 @@ class AdminMediaController extends Controller {
         return response()->json(['items' => $this->media->autocomplete($search_term)]);
     }
 
-    /**
+    /**                                                                                                                                                                                                                                                                                                                                                                                                                                             
      * Get all the media to be served using ajax
      *
      * @Get("/fetch", as="AdminMediaFetch")

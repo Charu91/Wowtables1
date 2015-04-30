@@ -5,6 +5,10 @@
     $(document).on('ready', function(){
 
         var $mediaModalBtn = $(".media-modal-btn");
+        var $mediaModalBtnListing = $(".media-modal-btn-listing");
+        var $mediaModalBtnGallery = $(".media-modal-btn-gallery");
+        var $mediaModalBtnMobileListing = $(".media-modal-btn-mobile-listing");
+        var $mediaModalBtnMobileListingExperiences = $(".media-modal-btn-mobile-listing-experience");
 
 
         $('body').delegate('a.edit-media-link-modal','click', function () {
@@ -30,7 +34,7 @@
             $("#mediaEditContentHolder").toggleClass('hide');
         });
 
-        $mediaModalBtn.on('click',function(){
+        /*$mediaModalBtn.on('click',function(){
 
             var   mediaSelect = $(this).data('media-select')
                 , mediaType = $(this).data('media-type')
@@ -51,7 +55,101 @@
                 console.log(jqXHR);
             });
 
+        });*/
+
+        $mediaModalBtnListing.on('click',function(){
+
+            var   mediaSelect = $(this).data('media-select')
+                , mediaType = $(this).data('media-type')
+                , galleryPosition = $(this).data('gallery-position');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/media/listing_modal'
+            }).done( function(result) {
+                    $( "#mediaModalHolder" ).html( result );
+                    $('#mediaModal').modal('show');
+                    $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+                    $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+                    $('#selectMediaBtn').attr('data-media-type',mediaType);
+                    $('#mediaModal').checkboxes('max', mediaSelect);
+                    $("#selectMediaBtn").attr('disabled','disabled');
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
         });
+
+        $mediaModalBtnGallery.on('click',function(){
+
+            var   mediaSelect = $(this).data('media-select')
+                , mediaType = $(this).data('media-type')
+                , galleryPosition = $(this).data('gallery-position');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/media/gallery_modal'
+            }).done( function(result) {
+                $( "#mediaModalHolder" ).html( result );
+                $('#mediaModal').modal('show');
+                $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+                $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+                $('#selectMediaBtn').attr('data-media-type',mediaType);
+                $('#mediaModal').checkboxes('max', mediaSelect);
+                $("#selectMediaBtn").attr('disabled','disabled');
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+        $mediaModalBtnMobileListing.on('click',function(){
+
+            var   mediaSelect = $(this).data('media-select')
+                , mediaType = $(this).data('media-type')
+                , galleryPosition = $(this).data('gallery-position');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/media/mobile_modal'
+            }).done( function(result) {
+                $( "#mediaModalHolder" ).html( result );
+                $('#mediaModal').modal('show');
+                $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+                $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+                $('#selectMediaBtn').attr('data-media-type',mediaType);
+                $('#mediaModal').checkboxes('max', mediaSelect);
+                $("#selectMediaBtn").attr('disabled','disabled');
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+        $mediaModalBtnMobileListingExperiences.on('click',function(){
+
+            var   mediaSelect = $(this).data('media-select')
+                , mediaType = $(this).data('media-type')
+                , galleryPosition = $(this).data('gallery-position');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/media/mobile_exp_modal'
+            }).done( function(result) {
+                $( "#mediaModalHolder" ).html( result );
+                $('#mediaModal').modal('show');
+                $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+                $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+                $('#selectMediaBtn').attr('data-media-type',mediaType);
+                $('#mediaModal').checkboxes('max', mediaSelect);
+                $("#selectMediaBtn").attr('disabled','disabled');
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+
 
         $('body').delegate('input[name="media[]"]','change',function () {
             var media = new Array();

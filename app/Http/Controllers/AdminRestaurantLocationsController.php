@@ -60,7 +60,7 @@ class AdminRestaurantLocationsController extends Controller {
 	{
 
         $input = $this->request->all();
-		//dd($input);
+		dd($input);
         $restaurantLocationCreate = $this->restaurantLocation->create($input);
 
         if($restaurantLocationCreate['status'] === 'success'){
