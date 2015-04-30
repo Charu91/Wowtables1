@@ -152,13 +152,15 @@ class Media {
 
         if($totalMediaCount){
             $query = 'SELECT * FROM media_resized_new WHERE image_type = "listing"';
+
+            $images = DB::select($query);
+
+            return ['count'=> $totalMediaCount,'images'=> $images];
         }
 
 
 
-        $images = DB::select($query);
 
-        return ['count'=> $totalMediaCount,'images'=> $images];
     }
 
     public function getAllGalleryImages(){
@@ -167,11 +169,13 @@ class Media {
 
         if($totalMediaCount){
             $query = 'SELECT * FROM media_resized_new WHERE image_type = "gallery"';
+
+            $images = DB::select($query);
+
+            return ['count'=> $totalMediaCount,'images'=> $images];
         }
 
-        $images = DB::select($query);
 
-        return ['count'=> $totalMediaCount,'images'=> $images];
     }
 
     public function getAllAlacarteMobileImages(){
@@ -180,11 +184,13 @@ class Media {
 
         if($totalMediaCount){
             $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_andriod_alacarte","mobile_listing_ios_alacarte") and width = 1080 and height = 590';
+
+            $images = DB::select($query);
+
+            return ['count'=> $totalMediaCount,'images'=> $images];
         }
 
-        $images = DB::select($query);
 
-        return ['count'=> $totalMediaCount,'images'=> $images];
     }
 
     public function getAllExperiencesMobileImages(){
@@ -193,11 +199,13 @@ class Media {
 
         if($totalMediaCount){
             $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_andriod_experience","mobile_listing_ios_experience") and width = 1080 and height = 662';
+
+            $images = DB::select($query);
+
+            return ['count'=> $totalMediaCount,'images'=> $images];
         }
 
-        $images = DB::select($query);
 
-        return ['count'=> $totalMediaCount,'images'=> $images];
     }
 
     public function save(\Symfony\Component\HttpFoundation\File\UploadedFile $file)
