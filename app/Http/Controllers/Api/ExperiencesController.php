@@ -76,7 +76,7 @@ class ExperiencesController extends Controller {
 	 */
 	public function show($id) {
 		//die('Hello World');
-		$arrExperience['data'] = $this->experience->find($id);
+		$arrExperience = $this->experience->find($id);
 		$arrExperience['status'] = 'OK';
 
         return response()->json($arrExperience);

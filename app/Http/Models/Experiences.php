@@ -87,7 +87,7 @@ class Experiences {
 			//getting the reviews for the particular experience
 				$arrReviews = Review::readProductReviews($expResult->id);
 				$arrLocation = Self::getProductLocations($expResult->id);			
-				$arrExpDetails[] = array(
+				$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
 										'experience_info' => $expResult->experience_info,
