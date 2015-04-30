@@ -94,6 +94,8 @@ class Experiences {
 										'short_description' => $expResult->short_description,
 										'image' => (!empty($expResult->experience_image)) ? Config::get('constants.IMAGE_URL').$expResult->resturant_image:"",
 										'type' => $expResult->type,
+										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
+										'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
 										'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
 										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
