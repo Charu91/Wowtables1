@@ -59,7 +59,7 @@ class Experiences {
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
+								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
 								DB::raw('pat3.attribute_value as menu'),
 								'cm.file as curator_image');
 							
@@ -70,7 +70,7 @@ class Experiences {
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
+								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
 								DB::raw('pat2.attribute_value as short_description, 
 									media.file as experience_image'),
 									'cm.file as curator_image');
@@ -104,6 +104,7 @@ class Experiences {
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
 										'curator_image' => "",
+										'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
