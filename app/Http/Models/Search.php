@@ -450,7 +450,7 @@
 					$arrImage[$row->product_id] = array();
 				}
 				if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
-					$arrImage[$row->product_id][$row->image_type] = $row->image;
+					$arrImage[$row->product_id][$row->image_type] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
 				}
 			}
 		}
