@@ -59,7 +59,7 @@ class Experiences {
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
+								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
 								DB::raw('pat3.attribute_value as menu'),
 								'cm.file as curator_image');
 							
@@ -70,7 +70,7 @@ class Experiences {
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio'),
+								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
 								DB::raw('pat2.attribute_value as short_description, 
 									media.file as experience_image'),
 									'cm.file as curator_image');
@@ -86,13 +86,14 @@ class Experiences {
 		if($expResult) {
 			//getting the reviews for the particular experience
 				$arrReviews = Review::readProductReviews($expResult->id);
-				$arrLocation = Self::getProductLocations($expResult->id);			
+				$arrLocation = Self::getProductLocations($expResult->id);
+				$arrImage = Self::getProductImages($experienceID);			
 				$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
 										'experience_info' => $expResult->experience_info,
 										'short_description' => $expResult->short_description,
-										'image' => (!empty($expResult->experience_image)) ? Config::get('constants.IMAGE_URL').$expResult->resturant_image:"",
+										'image' => $arrImage,
 										'type' => $expResult->type,
 										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
 										'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
@@ -102,7 +103,8 @@ class Experiences {
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-										'curator_image' => (is_null($expResult->curator_image)) ? "" : $expResult->curator_image,
+										'curator_image' => "",
+										'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
@@ -209,6 +211,39 @@ class Experiences {
 						->where()
 						->where();
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public static function getProductImages($productID) {
+		//query to read media details
+		$queryImages = $queryImages = DB::table('media_resized_new as mrn')
+						->leftJoin('product_media_map as pmm','pmm.media_id','=','mrn.media_id')
+						->where('pmm.product_id',$productID)
+						->where('pmm.media_type','mobile_listing_ios_experience')
+						->select('mrn.file as image','mrn.image_type','pmm.product_id')
+						->get();
+		
+		//echo $queryImages->toSql();
+		
+		//array to hold images
+		$arrImage = array();
+		
+		if($queryImages) {
+			foreach($queryImages as $row) {
+				if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
+					$arrImage[$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+				if($row->image_type = 'gallery') {
+					$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+			}
+		}
+		
+		return $arrImage;
+	} 
 }
 //end of class Experiences
 //end of file Experiences.php

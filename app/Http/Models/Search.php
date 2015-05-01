@@ -223,6 +223,8 @@
 				#reading the product ratings detail
 				$arrRatings = $this->findRatingByProduct($arrProduct);
 				
+				$arrImage = $this->getExperienceImages($arrProduct);
+				
 				foreach($experienceResult as $row) {
 					$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
 					$this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
@@ -238,7 +240,7 @@
 													'tax' => (is_null($row->tax)) ? "": $row->tax,
 													'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
 													'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
-													'image' => (is_null($row->image))? '':Config::get('constants.IMAGE_URL').$row->image,
+													'image' => $arrImage[$row->id],
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
@@ -426,6 +428,38 @@
 			return $arrFilters;
 
 		}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function getExperienceImages($arrExperience) {
+		//query to read media details
+		$queryImages = DB::table('media_resized_new as mrn')
+						->leftJoin('product_media_map as pmm','pmm.media_id','=','mrn.media_id')
+						->whereIn('pmm.product_id',$arrExperience)
+						->where('pmm.media_type','mobile_listing_ios_experience')
+						->select('mrn.file as image','mrn.image_type','pmm.product_id')
+						->get();
+		//array to store images
+		$arrImage = array();
+		if($queryImages) {
+			foreach($queryImages as $row) {
+				if(!array_key_exists($row->product_id, $arrImage)) {
+					$arrImage[$row->product_id] = array();
+				}
+				if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
+					$arrImage[$row->product_id][$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+				if($row->image_type = 'gallery') {
+					$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+			}
+		}
+		
+		return $arrImage;
 	}
+}
 	//end of class Search
 	//end of file WowTables\Http\Models\E
