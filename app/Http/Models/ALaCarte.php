@@ -91,6 +91,9 @@ use Config;
 				$experienceAvailable = 'false';
 				$experienceURL = '';
 			}
+
+			//getting the images
+			$arrImage = self::getVendorImages($queryResult->vl_id);
 						
 			//formatting the array for the data
 			$arrData['data'] = array(
@@ -101,7 +104,7 @@ use Config;
 									'short_description' => $queryResult->short_description,
 									'terms_and_condition' => $queryResult->terms_conditions,
 									'pricing' => $queryResult->pricing_level,
-									'image' => "",//(!empty($queryResult->restaurant_image)) ? Config::get('constants.IMAGE_URL').$queryResult->resturant_image:"",									
+									'image' => $arrImage,									
 									'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
 									'review_count' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['totalRating']:0,
 									'cuisine' => (array_key_exists($queryResult->vl_id, $arrVendorCuisine)) ? $arrVendorCuisine[$queryResult->vl_id]:array(),
@@ -284,7 +287,45 @@ use Config;
 		}
 		
 		return FALSE;
-	}	
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns the images for the passed vendor location id.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @since	1.0.0
+	 * @version	1.0.0
+	 */
+	public static function getVendorImages($vendorLocationID) {
+		//query to read media details
+		$queryImages = DB::table('media_resized_new as mrn')
+						->leftJoin('vendor_locations_media_map as vlmm','vlmm.media_id','=','mrn.media_id')
+						->where('vlmm.vendor_location_id',$vendorLocationID)
+						->where('vlmm.media_type','mobile')
+						->select('mrn.id','mrn.file as image','mrn.image_type')
+						->groupBy('mrn.id')
+						->get();
+		
+		//array to hold images
+		$arrImage = array();
+		
+		if($queryImages) {
+			foreach($queryImages as $row) {
+				if(in_array($row->image_type, array('mobile_listing_android_alacarte','mobile_listing_ios_alacarte'))) {
+					$arrImage[$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+				if($row->image_type = 'gallery') {
+					$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}
+			}
+		}
+		
+		return $arrImage;
+			
+	}
  }
 //end of class LaCarte
 //end of file WowTables\Http\Models\LaCarte.php
