@@ -240,7 +240,7 @@
 													'tax' => (is_null($row->tax)) ? "": $row->tax,
 													'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
 													'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
-													'image' => (array_key_exists($row->id, $arrImage))? "" : $arrImage[$row->id],
+													'image' => (array_key_exists($row->id, $arrImage))? $arrImage[$row->id] : "",
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
