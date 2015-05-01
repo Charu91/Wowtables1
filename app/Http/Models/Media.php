@@ -183,7 +183,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_andriod_alacarte","mobile_listing_ios_alacarte") and width = 1080 and height = 590';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_alacarte","mobile_listing_ios_alacarte") and width = 1080 and height = 590';
 
             $images = DB::select($query);
 
@@ -198,7 +198,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_andriod_experience","mobile_listing_ios_experience") and width = 1080 and height = 662';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_experience","mobile_listing_ios_experience") and width = 1080 and height = 662';
 
             $images = DB::select($query);
 
@@ -441,7 +441,7 @@ class Media {
 
         $uploads_dir = $this->config->get('media.base_path_mobile');
         //echo "uploads dir == ".$uploads_dir; //die;
-        $new_filename = uniqid('media_andriod_alacarte_');
+        $new_filename = uniqid('media_android_alacarte_');
         //echo "after_new file = ".$new_filename;
         $media_upload = $this->cloud->put($uploads_dir.$new_filename.'.'.$file_extension, Image::make($file)->encode());
         //echo "after updlaod";
@@ -467,7 +467,7 @@ class Media {
                         'width'     => $thumbsize['width'],
                         'height'    => $thumbsize['height'],
                         'media_id'  => $media_id,
-                        'image_type'  => 'mobile_listing_andriod_alacarte',
+                        'image_type'  => 'mobile_listing_android_alacarte',
                     ]);
 
                     if($resizedMediaInsert){
@@ -619,7 +619,7 @@ class Media {
                         'width'     => $thumbsize['width'],
                         'height'    => $thumbsize['height'],
                         'media_id'  => $media_id,
-                        'image_type'  => 'mobile_listing_andriod_experience',
+                        'image_type'  => 'mobile_listing_android_experience',
                     ]);
 
                     if($resizedMediaInsert){
