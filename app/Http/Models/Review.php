@@ -85,7 +85,7 @@ class Review {
 		foreach($queryResult as $row) {
 			$arrRating[$row->vendor_location_id] = array(
 														'averageRating' => $row->avg_rating,
-														'totalRating' => $total_ratings
+														'totalRating' => $row->total_ratings
 													);
 		}		
 		return $arrRating;

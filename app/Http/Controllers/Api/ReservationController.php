@@ -123,7 +123,7 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else if($type=='alacarte') {
-			$arrResponse['data'] = Schedules::getVendorLocationSchedule($id,$day);
+			$arrResponse['data'] = Schedules::getVendorLocationSchedule($typeLocationID,$day);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
