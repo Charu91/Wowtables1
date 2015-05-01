@@ -418,11 +418,21 @@ class AdminMediaController extends Controller {
             $allImages [] = $this->media->fetchById($image)['media'];
         }
 
+        //echo "<pre>"; print_r($allImages);
+
+        if($allImages[0]['imageType'] == "listing"){
+            $setImageUrl = $this->config->get('media.base_s3_url_listing');
+        } elseif($allImages[0]['imageType'] == "gallery"){
+            $setImageUrl = $this->config->get('media.base_s3_url_gallery');
+        } elseif($allImages[0]['imageType'] == "mobile_listing_android_alacarte" || $allImages[0]['imageType'] == "mobile_listing_android_experience"){
+            $setImageUrl = $this->config->get('media.base_s3_url_mobile');
+        }
+
         return view('admin.media.fetch',
             [
                 'media' => $allImages ,
                 'media_type' => $media_type,
-                's3_url' => $this->config->get('media.base_s3_url')
+                's3_url' => $setImageUrl
             ]);
     }
 
