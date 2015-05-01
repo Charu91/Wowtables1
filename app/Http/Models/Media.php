@@ -593,13 +593,13 @@ class Media {
 
         $uploads_dir = $this->config->get('media.base_path_mobile');
         //echo "uploads dir == ".$uploads_dir; //die;
-        $new_filename = uniqid('media_andriod_exp_');
+        $new_filename = uniqid('media_android_exp_');
         //echo "after_new file = ".$new_filename;
         $media_upload = $this->cloud->put($uploads_dir.$new_filename.'.'.$file_extension, Image::make($file)->encode());
         //echo "after updlaod";
         //echo "<pre>"; print_r($media_upload); die;
         if($media_upload){
-            $thumbsize = $this->config->get('media.sizes.mobile_listing_andriod_experience');
+            $thumbsize = $this->config->get('media.sizes.mobile_listing_android_experience');
             $thumb_filename = $new_filename.'_'.$thumbsize['width'].'x'.$thumbsize['height'];
 
             $thumb_upload = $this->cloud->put($uploads_dir.$thumb_filename.'.'.$file_extension, Image::make($file)->fit($thumbsize['width'], $thumbsize['height'])->encode());
