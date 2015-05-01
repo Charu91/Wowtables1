@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use DB;
+use Config;
 
 class RestaurantLocations extends VendorLocations{
 
@@ -34,6 +35,8 @@ class RestaurantLocations extends VendorLocations{
     protected $filterOptions = ['date', 'time', 'tags', 'areas','cuisines','pricing_level'];
 
     public $sort_options = ['Latest','Popular'];
+	
+	public $arr_result;
 
     public function fetchAll($data){
         $params = [$data['filters']];
@@ -166,6 +169,8 @@ class RestaurantLocations extends VendorLocations{
 		
 		//echo $select->toSql();
         $this->listing = $select->get();
+		
+		$this->formatResultToArray($this->listing);
 
         $totalCountResult = DB::select('SELECT FOUND_ROWS() AS total_count');
         //dd($totalCountResult);
@@ -358,4 +363,76 @@ class RestaurantLocations extends VendorLocations{
     public function fetchTimings(){
         $this->filters['time']['slots'] = DB::table('time_slots')->get(['time', 'slot_type']);
     }
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Formats the the query result in an array.
+	 * 
+	 * @access	public
+	 * @param	array	$queryResult
+	 * @return	array 
+	 * @since	1.0.0
+	 */
+	public function formatResultToArray($queryResult) {
+		#creating an array of alacarte id
+		foreach($queryResult as $row) {
+			$arrAlaCarte[] = $row->id;
+		}
+		
+		$arrImage = $this->getVendorImages($arrAlaCarte);
+		
+		foreach($queryResult as $row) {
+			$this->arr_result[] = array(
+										'id' => $row->id,
+										'restaurant' => $row->restaurant,
+										'locality' => $row->locality,
+										'area' => $row->area,
+										'pricing_level' => $row->pricing_level,
+										'short_description' => (is_null($row->short_description)) ? "": $row->short_description,
+										'off_peak_available' => (is_null($row->off_peak_available)) ? "": $row->off_peak_available,
+										'total_reviews' => $row->total_reviews,
+										'rating' => $row->rating,
+										'flag_name' => $row->flag_name,
+										'cuisine' =>  $row->cuisine,
+										'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "" 
+									);
+		}
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns the images for the passed vendor location id.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @since	1.0.0
+	 * @version	1.0.0
+	 */
+	public function getVendorImages($arrVendorLocation) {
+		//query to read media details
+		$queryImages = DB::table('media_resized_new as mrn')
+						->leftJoin('vendor_locations_media_map as vlmm','vlmm.media_id','=','mrn.media_id')
+						->whereIn('vlmm.vendor_location_id',$arrVendorLocation)
+						->where('vlmm.media_type','mobile')
+						->select('mrn.id','mrn.file as image','mrn.image_type','vlmm.vendor_location_id')
+						->groupBy('mrn.id')
+						->get();
+		
+		//array to hold images
+		$arrImage = array();
+		
+		if($queryImages) {
+			foreach($queryImages as $row) {
+				if(!array_key_exists($row->vendor_location_id, $arrImage)) {
+					$arrImage[$row->vendor_location_id] = array();
+				}
+				if(in_array($row->image_type, array('mobile_listing_android_alacarte','mobile_listing_ios_alacarte'))) {
+					$arrImage[$row->vendor_location_id][$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				}							
+			}
+		}		
+		return $arrImage;		
+	}
 } 

@@ -30,7 +30,7 @@ class RestaurantsController extends Controller {
 		$arrResponse = array(
 							'status' => Config::get('constants.API_SUCCESS'),
 							'data' => array(
-											'listing' => $restaurantLocations->listing,
+											'listing' => $restaurantLocations->arr_result,
             								'filters' => $restaurantLocations->filters,
             								'total_count' => $restaurantLocations->total_count,
             								'total_pages' => $restaurantLocations->total_pages,
