@@ -234,10 +234,10 @@ class Experiences {
 		if($queryImages) {
 			foreach($queryImages as $row) {
 				if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
-					$arrImage[$row->image_type] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
+					$arrImage[$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
 				}
 				if($row->image_type = 'gallery') {
-					$arrImage['gallery'][] = Config::get('constants.API_GALLERY_IMAGE_URL').$row->image;
+					$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
 				}
 			}
 		}
