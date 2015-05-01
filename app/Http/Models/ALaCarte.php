@@ -68,7 +68,8 @@ use Config;
 											DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
 											vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
 											loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
-											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio')
+											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio,
+											curators.designation as designation')
 											,'vl.pricing_level','vlai.attribute_value as reward_point',
 											'vlat5.attribute_value as expert_tips')
 						->first();
@@ -123,7 +124,8 @@ use Config;
 									'curator_information' => array(
 																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
 																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => ""//(!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
+																'image' => "",
+																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
