@@ -846,13 +846,13 @@ class RestaurantLocation extends VendorLocation{
 
             $media_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
-                'media_type' => 'mobile_listing_ios_alacarte',
+                'media_type' => 'mobile',
                 'media_id' => $media['mobile_listing_image'],
                 'order' => 0
             ];
         }
 
-        if(isset($media['mobile_listing_image'])){
+        /*if(isset($media['mobile_listing_image'])){
             $listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -888,7 +888,7 @@ class RestaurantLocation extends VendorLocation{
                 'media_id' => $media['mobile_listing_image'],
                 'order' => 0
             ];
-        }
+        }*/
 
         if(count($media_insert_map)){
             $mediaMapInsert = DB::table('vendor_locations_media_map')->insert($media_insert_map);

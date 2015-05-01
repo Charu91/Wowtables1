@@ -267,13 +267,13 @@ class Experience extends Product{
 
             $media_insert_map[] = [
                 'product_id' => $productId,
-                'media_type' => 'mobile_listing_ios_experience',
+                'media_type' => 'mobile',
                 'media_id' => $media['mobile_listing_image'],
                 'order' => 0
             ];
         }
         /*mobile listing andriod experiences*/
-        if(isset($media['mobile_listing_image'])){
+        /*if(isset($media['mobile_listing_image'])){
             $listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -309,7 +309,7 @@ class Experience extends Product{
                 'media_id' => $media['mobile_listing_image'],
                 'order' => 0
             ];
-        }
+        }*/
 
         if(count($media_insert_map)){
             $mediaMapInsert = DB::table('product_media_map')->insert($media_insert_map);
