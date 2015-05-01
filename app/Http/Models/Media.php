@@ -808,16 +808,17 @@ class Media {
               m.`alt`,
               m.`title`,
               mr.`file` as `resized_file`,
+              mr.`image_type` as `imageType`,
               mt.`name` as `tag_name`,
               mt.`id` as `tag_id`
             FROM media m
-            LEFT JOIN media_resized mr ON m.`id` = mr.`media_id` AND mr.`height` = ? AND mr.`width` = ?
+            LEFT JOIN media_resized_new mr ON m.`id` = mr.`media_id`
             LEFT JOIN media_tags_map mtm ON m.`id` = mtm.media_id
             LEFT JOIN media_tags mt ON mtm.media_tag_id = mt.id
             WHERE m.`id` = ?
         ';
 
-        $results = DB::select($query, [450, 450, $id]);
+        $results = DB::select($query, [$id]);
 
         if($results){
             $media = [
@@ -826,6 +827,7 @@ class Media {
                 'title'         => $results[0]->title,
                 'alt'           => $results[0]->alt,
                 'resized_file'  => $results[0]->resized_file,
+                'imageType'  => $results[0]->imageType,
                 'tags'          => [],
             ];
 
