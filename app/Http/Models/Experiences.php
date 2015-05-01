@@ -215,7 +215,13 @@ class Experiences {
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Returns the images associated with a project.
 	 * 
+	 * @static 	true
+	 * @access	public
+	 * @param	integer	$productID
+	 * @return	array
+	 * @since	1.0.0
 	 */
 	public static function getProductImages($productID) {
 		//query to read media details
