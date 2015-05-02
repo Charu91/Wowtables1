@@ -46,7 +46,7 @@ class Experiences {
 							->leftJoin(DB::raw('product_curator_map as pcm'),'pcm.product_id','=','products.id')
 							->leftJoin('curators','curators.id','=','pcm.curator_id')
 							->leftJoin('media','media.id','=','pmm.media_id')
-							->leftJoin(DB::raw('media_resised_new as cm'),'cm.id','=','curators.media_id')
+							->leftJoin(DB::raw('media_resized_new as cm'),'cm.id','=','curators.media_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description');
