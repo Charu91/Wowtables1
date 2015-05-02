@@ -18,7 +18,7 @@ class ProductAttributesMultiSelect extends Model {
 
     public function selectOptions()
     {
-        return $this->hasOne('WowTables\Http\Models\Eloquent\Products\ProductAttributesSelectOptions', 'id', 'product_attribute_select_option_id');
+        return $this->hasOne('WowTables\Http\Models\Eloquent\Products\ProductAttributesSelectOptions', 'id', 'product_attributes_select_option_id');
     }
 
 }

@@ -740,7 +740,7 @@ class RestaurantLocation extends VendorLocation{
         $media_insert_map = [];
 
         if(isset($media['listing_image'])){
-            $listing_image = DB::table('media as m')
+            /*$listing_image = DB::table('media as m')
                                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                                 ->select(
                                     'm.id',
@@ -766,7 +766,7 @@ class RestaurantLocation extends VendorLocation{
                     $mediaSizes['listing']['height']
                 ));
 
-            }
+            }*/
 
             $media_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
@@ -777,7 +777,7 @@ class RestaurantLocation extends VendorLocation{
         }
 
         if(isset($media['gallery_images'])){
-            $galleryfiles = DB::table('media as m')
+            /*$galleryfiles = DB::table('media as m')
                                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                                 ->select(
                                     'm.id',
@@ -785,10 +785,10 @@ class RestaurantLocation extends VendorLocation{
                                     DB::raw('MAX(IF(mr.height = '.$mediaSizes['gallery']['height'].' && mr.width = '.$mediaSizes['gallery']['width'].', true, false)) as resized_exists'))
                                 ->whereIn('m.id', $media['gallery_images'])
                                 ->groupBy('m.id')
-                                ->get();
+                                ->get();*/
 
-            foreach($galleryfiles as $image){
-                if(!$image->resized_exists) {
+            foreach($galleryfiles as $key => $image){
+                /*if(!$image->resized_exists) {
                     $gallery_file = $image->file;
                     $fileInfo = new \SplFileInfo($gallery_file);
                     $fileExtension = $fileInfo->getExtension();
@@ -803,19 +803,19 @@ class RestaurantLocation extends VendorLocation{
                         $mediaSizes['gallery']['width'],
                         $mediaSizes['gallery']['height']
                     ));
-                }
+                }*/
 
                 $media_insert_map[] = [
                     'vendor_location_id' => $vendor_location_id,
                     'media_type' => 'gallery',
-                    'media_id' => $image->id,
-                    'order' => array_search($image->id, $media['gallery_images'])
+                    'media_id' => $image,
+                    'order' => $key
                 ];
             }
         }
 
         if(isset($media['mobile_listing_image'])){
-            $listing_image = DB::table('media as m')
+            /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
                     'm.id',
@@ -842,7 +842,7 @@ class RestaurantLocation extends VendorLocation{
                     $mediaSizes['mobile_listing_ios_alacarte']['height']
                 ));
 
-            }
+            }*/
 
             $media_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
