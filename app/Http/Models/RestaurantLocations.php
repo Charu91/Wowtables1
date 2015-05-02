@@ -375,6 +375,10 @@ class RestaurantLocations extends VendorLocations{
 	 * @since	1.0.0
 	 */
 	public function formatResultToArray($queryResult) {
+		
+		//array to hold all the alacarte ids
+		$arrAlaCarte = array();
+		
 		#creating an array of alacarte id
 		foreach($queryResult as $row) {
 			$arrAlaCarte[] = $row->id;
