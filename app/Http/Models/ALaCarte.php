@@ -134,7 +134,7 @@ use Config;
 								);
 			
 			//reading the review details
-			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
+			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vl_id);
 			
 			//reading the locations
 			$arrData['data']['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
