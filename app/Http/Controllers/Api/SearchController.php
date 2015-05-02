@@ -69,15 +69,18 @@ use Config;
 			} else {							
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
-		
-				//setting up the filters
-				$searchFilters = $this->search->getExperienceSearchFiltersTest($arrSubmittedData['city_id']);
-		
-				//setting up the array to be formatted as json
-				$arrResult['status'] = Config::get('constants.API_SUCCESS');
-				$arrResult['resultCount'] = $searchResult['resultCount'];
-				$arrResult['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
-				$arrResult['filters'] = $searchFilters['filters'];
+				
+				if(!empty($searchResult)) {
+					//setting up the array to be formatted as json
+					$arrResult['status'] = Config::get('constants.API_SUCCESS');
+					$arrResult['resultCount'] = $searchResult['resultCount'];
+					$arrResult['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
+					$arrResult['filters'] = $this->search->getExperienceSearchFilters();
+				}
+				else {
+					$arrResult['status'] = Config::get('constants.API_ERROR');
+					$arrResult['msg'] = 'No matching data found';
+				}
 			}
 		}
 		else {
@@ -85,7 +88,7 @@ use Config;
 			
 			//validation failed
 			$arrResult['status'] = Config::get('constants.API_ERROR');
-			$arrResult['error'] = 'Invalid Request';
+			$arrResult['msg'] = 'Invalid Request';
 		}				
 		
 		return response()->json($arrResult,200);		
