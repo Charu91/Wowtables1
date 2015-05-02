@@ -71,7 +71,7 @@ use Config;
 											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio,
 											curators.designation as designation')
 											,'vl.pricing_level','vlai.attribute_value as reward_point',
-											'vlat5.attribute_value as expert_tips, m2.file as curator_image')
+											'vlat5.attribute_value as expert_tips', 'm2.file as curator_image')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -124,7 +124,7 @@ use Config;
 									'curator_information' => array(
 																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
 																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->curator_image,
+																'image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
 																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
