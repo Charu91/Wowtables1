@@ -284,7 +284,7 @@
 					else {
 						foreach($this->filters['locations'] as $key => $value) {
 							if($value['id'] == $row->location_id) {
-								$this->filters['location'][$key]['count']++;
+								$this->filters['locations'][$key]['count']++;
 							}
 						}
 					}					
@@ -440,7 +440,7 @@
 						->select('tags.name', 'tags.id')
 						->get();
 		
-		#setting up the cuisines filter information
+		#setting up the tag filter information
 		$arrTagProduct = array();
 		if($queryTag) {
 			foreach ($queryTag as $row) {
