@@ -49,7 +49,7 @@ use Config;
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
 						//->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
 						//->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
-						->leftJoin(DB::raw('media_resize_new as m2'), 'm2.id', '=', 'curators.media_id')
+						->leftJoin(DB::raw('media_resized_new as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
 						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
