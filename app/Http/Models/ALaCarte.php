@@ -124,7 +124,7 @@ use Config;
 									'curator_information' => array(
 																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
 																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->cureator_image,
+																'image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->curator_image,
 																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
