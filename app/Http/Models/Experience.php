@@ -160,7 +160,7 @@ class Experience extends Product{
         $media_insert_map = [];
 
         if(isset($media['listing_image'])){
-            $listing_image = DB::table('media as m')
+            /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
                     'm.id',
@@ -187,7 +187,7 @@ class Experience extends Product{
                     $mediaSizes['listing']['height']
                 ));
 
-            }
+            }*/
 
             $media_insert_map[] = [
                 'product_id' => $productId,
@@ -198,18 +198,18 @@ class Experience extends Product{
         }
 
         if(isset($media['gallery_images'])){
-            $galleryfiles = DB::table('media as m')
-                ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
+            /*$galleryfiles = DB::table('media as m')
+                ->leftJoin('media_resized_new as mr', 'mr.media_id','=', 'm.id')
                 ->select(
                     'm.id',
                     'm.file',
-                    DB::raw('MAX(IF(mr.height = '.$mediaSizes['gallery']['height'].' && mr.width = '.$mediaSizes['gallery']['width'].', true, false)) as resized_exists'))
+                    //DB::raw('MAX(IF(mr.height = '.$mediaSizes['gallery']['height'].' && mr.width = '.$mediaSizes['gallery']['width'].', true, false)) as resized_exists'))
                 ->whereIn('m.id', $media['gallery_images'])
                 ->groupBy('m.id')
-                ->get();
+                ->get();*/
 
-            foreach($galleryfiles as $image){
-                if(!$image->resized_exists) {
+            foreach($media['gallery_images'] as $key => $image){ //echo "<pre>"; print_r($key); print_r($image);
+                /*if(!$image->resized_exists) {
                     $gallery_file = $image->file;
                     $fileInfo = new \SplFileInfo($gallery_file);
                     $fileExtension = $fileInfo->getExtension();
@@ -224,19 +224,20 @@ class Experience extends Product{
                         $mediaSizes['gallery']['width'],
                         $mediaSizes['gallery']['height']
                     ));
-                }
+                }*/
 
                 $media_insert_map[] = [
                     'product_id' => $productId,
                     'media_type' => 'gallery',
-                    'media_id' => $image->id,
-                    'order' => array_search($image->id, $media['gallery_images'])
+                    'media_id' => $image,
+                    'order' => $key
                 ];
             }
+
         }
         /*mobile listing ios experience*/
         if(isset($media['mobile_listing_image'])){
-            $listing_image = DB::table('media as m')
+            /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
                     'm.id',
@@ -263,7 +264,7 @@ class Experience extends Product{
                     $mediaSizes['mobile_listing_ios_experience']['height']
                 ));
 
-            }
+            }*/
 
             $media_insert_map[] = [
                 'product_id' => $productId,
@@ -335,6 +336,8 @@ class Experience extends Product{
             'tax' => isset($pricing['tax'])? $pricing['tax'] : null,
             'post_tax_price' => isset($pricing['post_tax_price'])? $pricing['post_tax_price'] : null,
             'commission' => isset($pricing['commission'])? $pricing['commission'] : null,
+            'price_type' => $pricing['price_types'],
+            'taxes' => isset($pricing['taxes'])? $pricing['taxes'] : "Inclusive-Taxes",
         ];
 
         if(isset($data['commission_on'])){

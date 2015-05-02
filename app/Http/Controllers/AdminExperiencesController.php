@@ -74,7 +74,7 @@ class AdminExperiencesController extends Controller {
             if($this->request->ajax()) {
                 return response()->json(['status' => 'success'], 200);
             }
-            flash()->success('The Simple Experieince has been successfully created.');
+            flash()->success('The Simple Experience has been successfully created.');
             return redirect()->route('AdminExperiences');
         }else{
             return response()->json([
@@ -105,7 +105,13 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function edit($id)
 	{
-        return view('admin.experiences.add_update');
+
+        $experience = $this->repository->getByExperienceId($id);
+        echo "<pre>"; print_r($experience);
+
+        return view('admin.experiences.add_update',[
+                        'experience'=>$experience,
+                    ]);
 	}
 
 	/**
