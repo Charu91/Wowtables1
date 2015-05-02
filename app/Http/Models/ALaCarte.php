@@ -49,7 +49,7 @@ use Config;
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
 						//->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
 						//->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
-						//->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
+						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
 						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
@@ -71,7 +71,7 @@ use Config;
 											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio,
 											curators.designation as designation')
 											,'vl.pricing_level','vlai.attribute_value as reward_point',
-											'vlat5.attribute_value as expert_tips')
+											'vlat5.attribute_value as expert_tips, m2.file as curator_image')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -124,7 +124,7 @@ use Config;
 									'curator_information' => array(
 																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
 																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => "",
+																'image' => (is_null($queryResult->curator_image)) ? "" : $queryResult->cureator_image,
 																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
