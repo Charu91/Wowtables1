@@ -49,7 +49,7 @@ use Config;
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
 						//->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
 						//->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
-						//->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
+						->leftJoin(DB::raw('media as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
 						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
@@ -68,9 +68,10 @@ use Config;
 											DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
 											vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
 											loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
-											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio')
+											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio,
+											curators.designation as designation')
 											,'vl.pricing_level','vlai.attribute_value as reward_point',
-											'vlat5.attribute_value as expert_tips')
+											'vlat5.attribute_value as expert_tips', 'm2.file as curator_image')
 						->first();
 		if($queryResult) {
 			//reading the review ratings
@@ -123,7 +124,8 @@ use Config;
 									'curator_information' => array(
 																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
 																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => ""//(!empty($queryResult->curator_image)) ? Config::get('constants.IMAGE_URL').$queryResult->curator_image:NULL,
+																'image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
+																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
@@ -132,7 +134,7 @@ use Config;
 								);
 			
 			//reading the review details
-			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vendor_id);
+			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vl_id);
 			
 			//reading the locations
 			$arrData['data']['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);

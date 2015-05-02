@@ -103,7 +103,7 @@ class Experiences {
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
 										'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-										'curator_image' => "",
+										'curator_image' => (is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
 										'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
@@ -215,7 +215,13 @@ class Experiences {
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Returns the images associated with a project.
 	 * 
+	 * @static 	true
+	 * @access	public
+	 * @param	integer	$productID
+	 * @return	array
+	 * @since	1.0.0
 	 */
 	public static function getProductImages($productID) {
 		//query to read media details

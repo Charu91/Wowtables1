@@ -26,17 +26,24 @@ class RestaurantsController extends Controller {
         $input = $this->request->all();
 
         $restaurantLocations->fetchAll($input);
-		
-		$arrResponse = array(
+		$arrResult = $restaurantLocations->arr_result;
+		if(empty($arrResult)) {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['msg'] = 'No matching data found.'; 
+		}
+		else {
+			$arrResponse = array(
 							'status' => Config::get('constants.API_SUCCESS'),
 							'data' => array(
-											'listing' => $restaurantLocations->listing,
+											'listing' => $arrResult,
             								'filters' => $restaurantLocations->filters,
             								'total_count' => $restaurantLocations->total_count,
             								'total_pages' => $restaurantLocations->total_pages,
             								'sort_options' => $restaurantLocations->sort_options,
 										)
 						);
+		}
+		
 
         return response()->json($arrResponse,200);
 	}

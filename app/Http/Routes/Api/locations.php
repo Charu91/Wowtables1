@@ -5,5 +5,5 @@ Route::get('/locations/cities', [
     'as' => 'MobileLocationsCities',
     'middleware' => [],
     'where' => [],
-    'domain' => env('API_URL'),
+    'domain' => env('WEBSITE_URL'),
 ]);

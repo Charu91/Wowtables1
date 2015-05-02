@@ -33,6 +33,33 @@
 		 */
 		protected $maxPrice;
 		
+		/**
+		 * Filters to be sent for search results.
+		 * 
+		 * @var		array
+		 * @access	protected
+		 * @since	1.0.0
+		 */
+		protected $filters = array(
+									'locations' => array(),
+									'cuisines' => array(),
+									'tags' => array(),
+									'price_range' => array(),
+								);
+		
+		//-------------------------------------------------------------
+		
+		/**
+		 * Getter method for filters.
+		 * 
+		 * @access	public
+		 * @return	array
+		 * @since	1.0.0
+		 */
+		public function getExperienceSearchFilters() {
+			return $this->filters;
+		}
+		
 		//-------------------------------------------------------------
 
 		/**
@@ -142,24 +169,18 @@
 			$experienceQuery = DB::table('products')
 								->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
 								->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
-								//->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
-								//->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
-								//->join(DB::raw('product_attributes as pa1'),'pa1.id','=','product_attributes_varchar.product_attribute_id')
-								//->join(DB::raw('product_attributes as pa2'),'pa2.id','=','product_attributes_text.product_attribute_id')
-								//->join(DB::raw('product_attributes as pa3'),'pa3.id','=','paso.product_attribute_id')
 								->leftJoin(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
 								->leftJoin('media','media.id','=','pmm.media_id')
 								->leftJoin(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
 								->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-								//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
-								//->join('locations','locations.id','=','vl.location_id')
-								//->leftJoin(DB::raw('product_venue_address as pva'),'pva.product_id','=','products.id')
 								->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 								->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
+								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+								->leftJoin('locations','locations.id','=','vl.location_id')
 								//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 								//->leftJoin('tags','tags.id','=','ptm.tag_id')
-								//->where('pvl.status','Active')
+								->where('pvl.status','Active')
 								//->where('pa1.alias','short_description')
 								//->orWhere('pa2.alias','experience_info')
 								//->orWhere('pa3.alias','cuisines')
@@ -169,7 +190,8 @@
 								->groupBy('products.id')
 								->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
 												pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
-												products.type as product_type, flags.name as flag_name'));
+												products.type as product_type, flags.name as flag_name, locations.id as location_id,
+												locations.name as location_name'));
 
 
 			//adding filter for cuisines if cuisines are present
@@ -181,11 +203,11 @@
 
 			//adding filter for locations if locations are present
 			if(isset($arrData['location'])) {
-				$experienceQuery->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-								->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
-								->join('locations','locations.id','=','vl.location_id')
-								->whereIn('locations.name',$arrData['location'])
-								->where('pvl.status','Active');
+				$experienceQuery->//join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
+								//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
+								//->join('locations','locations.id','=','vl.location_id')
+								whereIn('locations.name',$arrData['location']);
+								//->where('pvl.status','Active');
 			}
 
 			//adding filter for tags if tags are present
@@ -208,11 +230,12 @@
 			//array to store final result
 			$arrData = array();
 
-			$arrData['resultCount'] = 0;
-			$arrData['experiences'] = array();
+		
 
 			#query executed successfully
 			if($experienceResult) {
+					$arrData['resultCount'] = 0;
+					$arrData['experiences'] = array();
 				#initializing the total number of matching rows returned
 				$arrData['resultCount'] = count($experienceResult);
 
@@ -224,6 +247,9 @@
 				$arrRatings = $this->findRatingByProduct($arrProduct);
 				
 				$arrImage = $this->getExperienceImages($arrProduct);
+				
+				//array to store location IDs
+				$arrLocationId = array();
 				
 				foreach($experienceResult as $row) {
 					$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
@@ -245,7 +271,26 @@
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
 												);
+												
+					#setting up the value for the location filter
+					if( !in_array($row->location_id, $arrLocationId)) {
+						$arrLocationId[] = $row->location_id;
+						$this->filters['locations'][] = array(
+																"id" => $row->location_id,
+																"name" => $row->location_name,
+																"count" => 1
+															);
+					}
+					else {
+						foreach($this->filters['locations'] as $key => $value) {
+							if($value['id'] == $row->location_id) {
+								$this->filters['location'][$key]['count']++;
+							}
+						}
+					}					
 				}
+				#setting up remaining filters
+				$this->initializeExperienceFilters($arrProduct);
 			}
 
 			return $arrData;
@@ -281,57 +326,7 @@
 			}
 			return $arrRating;
 		}
-
-		//-----------------------------------------------------------------
-
-		/**
-		 * Initializes the value for filters to be used
-		 * in the experience search filter.
-		 *
-		 * @static	true
-		 * @access	public
-		 * @param	array 	$arrSubmittedData
-		 * @since	1.0.0
-		 */
-		public static function getExperienceSearchFilter($arrSubmittedData) {
-			//array to store filter information
-			$arrFilters['filters'] = array();
-
-			#setting up the location filter information
-			if(isset($arrSubmittedData['location'])) {
-				$arrFilters['filters']['locations'] = Location::formatLocationFilters($arrSubmittedData['location']);
-			}
-
-			#setting up the tag filter information
-			if(isset($arrSubmittedData['tags'])) {
-				$arrFilters['filters']['tags'] = Tag::formatTagFilters($arrSubmittedData['tags']);
-			}
-
-
-			#setting up the date filter information
-			$arrFilters['filters']['date'] = array(
-													"name" => 'Date',
-													"type" => 'single'
-												);
-
-			#setting up the time filter information
-			$arrFilters['filters']['time'] = array(
-													"name" => 'Time',
-													"type" => 'single'
-												);
-
-			#setting up the price filter
-			$arrFilters['filters']['price_range'] = array(
-														"name" => "Price Range",
-														"type" => "single",
-														"options" => array(
-																		"min" => $this->minPrice,
-																		"max" => $this->maxPrice
-																	)
-													);
-			return $arrFilters;
-		}
-
+		
 		//-----------------------------------------------------------------
 
 		/**
@@ -357,109 +352,126 @@
 
 			return $arrResponse;
 		}
-
+		
 		//-----------------------------------------------------------------
-
+		
 		/**
-		 *
+		 * Returns the images associated with matching experiences
+		 * in the passed array.
+		 * 
+		 * @access	public
+		 * @param	array 	$arrExperience
+		 * @return	array
+		 * @since	1.0.0
 		 */
-		public function getExperienceSearchFiltersTest($cityID) {
-			#getting all the locations
-			$queryLocations = DB::table('locations')
-								->join(DB::raw('locations_tree as lt'),'lt.descendant','=','locations.id')
-								->where('lt.ancestor',$cityID)
-								->where('lt.length','>',1)
-								->where('locations.visible',1)
-								->select('locations.id','locations.name')
-								->get();
-			//array of filters
-			$arrFilters = array();
-
-			#setting up the location filter information
-			if($queryLocations) {
-				foreach($queryLocations as $row) {
-					$arrFilters['filters']['locations'][] = array(
-															"id" => $row->id,
-															"name" => $row->name
-														);
-				}
-			}
-
-			#getting all the available cuisines
-			$queryCuisines = DB::table(DB::raw('product_attributes_select_options as paso'))
-								->join(DB::raw('product_attributes as pa'), 'pa.id','=','paso.product_attribute_id')
-								->leftJoin(DB::raw('product_attributes_singleselect as pass'),'pass.product_attributes_select_option_id','=','paso.id')
-								->where('pa.alias','cuisines')
-								->select('paso.id','paso.option')
-								->get();
-
-			#setting up the cuisines filter information
-			if($queryCuisines) {
-				foreach ($queryCuisines as $row) {
-					$arrFilters['filters']['cuisines'][] = array(
-																	"id" => $row->id,
-																	"name" => $row->option
-																);
-				}
-			}
-
-			#getting all the tags from the database
-			$queryTags = DB::table('tags')->select('id','name')->get();
-
-			#setting up the tags filter information
-			foreach ($queryTags as $row) {
-				$arrFilters['filters']['tags'][] = array(
-															"id" => $row->id,
-															"name" => $row->name
-														);
-			}
-			
-			#setting up the price filter
-			$arrFilters['filters']['price_range'] = array(
-														"name" => "Price Range",
-														"type" => "single",
-														"options" => array(
-																		"min" => (is_null($this->minPrice)) ? 0.00 : $this->minPrice,
-																		"max" => (is_null($this->maxPrice)) ? 0.00 :$this->maxPrice
-																	)
-													);
-
-
-			return $arrFilters;
-
-		}
-
-	//-----------------------------------------------------------------
-	
-	/**
-	 * 
-	 */
-	public function getExperienceImages($arrExperience) {
-		//query to read media details
-		$queryImages = DB::table('media_resized_new as mrn')
+		public function getExperienceImages($arrExperience) {
+			//query to read media details
+			$queryImages = DB::table('media_resized_new as mrn')
 						->leftJoin('product_media_map as pmm','pmm.media_id','=','mrn.media_id')
 						->whereIn('pmm.product_id',$arrExperience)
 						->where('pmm.media_type','mobile')
 						->select('mrn.file as image','mrn.image_type','pmm.product_id')
 						->get();
-		//array to store images
-		$arrImage = array();
-		if($queryImages) {
-			foreach($queryImages as $row) {
-				if(!array_key_exists($row->product_id, $arrImage)) {
-					$arrImage[$row->product_id] = array();
+			//array to store images
+			$arrImage = array();
+			if($queryImages) {
+				foreach($queryImages as $row) {
+					if(!array_key_exists($row->product_id, $arrImage)) {
+						$arrImage[$row->product_id] = array();
+					}
+					if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
+						$arrImage[$row->product_id][$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+					}
+					if($row->image_type = 'gallery') {
+						$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+					}
 				}
-				if(in_array($row->image_type, array('mobile_listing_android_experience','mobile_listing_ios_experience'))) {
-					$arrImage[$row->product_id][$row->image_type] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+			}
+		
+			return $arrImage;
+		}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Initializes the value for the filters to be sent
+	 * with search results.
+	 * 
+	 * @access	public
+	 * @param	array 	$arrProduct
+	 * @since	1.0.0
+	 */
+	public function initializeExperienceFilters($arrProduct) {
+		//query to read cuisines
+		$queryCuisine = DB::table('product_attributes_select_options as paso')
+								->join('product_attributes as pa','pa.id','=','paso.product_attribute_id')
+								->join('product_attributes_multiselect as pam','pam.product_attributes_select_option_id','=','paso.id')
+								->where('pa.alias','cuisines')
+								->whereIn('pam.product_id',$arrProduct)
+								->select('paso.id','paso.option','pam.product_id')
+								->get();
+		
+		#setting up the cuisines filter information
+		$arrCuisineProduct = array();
+		if($queryCuisine) {
+			foreach ($queryCuisine as $row) {
+				if( ! in_array($row->id, $arrCuisineProduct)) {
+					$arrCuisineProduct[] = $row->id; 
+					$this->filters['cuisines'][] = array(
+													"id" => $row->id,
+													"name" => $row->option,
+													"count" => 1
+												);
 				}
-				if($row->image_type = 'gallery') {
-					$arrImage['gallery'][] = Config::get('constants.API_MOBILE_IMAGE_URL').$row->image;
+				else {
+					foreach($this->filters['cuisines'] as $key => $value) {
+						if($value['id'] == $row->id) {
+								$this->filters['cuisines'][$key]['count']++;
+							}
+						}
+				}
+			}
+		}
+
+		//query to initialize the tags
+		$queryTag = DB::table('tags')
+						->join('product_tag_map as ptm','ptm.tag_id','=','tags.id')
+						->whereIn('ptm.product_id', $arrProduct)
+						->select('tags.name', 'tags.id')
+						->get();
+		
+		#setting up the cuisines filter information
+		$arrTagProduct = array();
+		if($queryTag) {
+			foreach ($queryTag as $row) {
+				if( ! in_array($row->id, $arrTagProduct)) {
+					$arrTagProduct[] = $row->id; 
+					$this->filters['tags'][] = array(
+													"id" => $row->id,
+													"name" => $row->name,
+													"count" => 1
+												);
+				}
+				else {
+					foreach($this->filters['tags'] as $key => $value) {
+						if($value['id'] == $row->id) {
+								$this->filters['tags'][$key]['count']++;
+							}
+						}
 				}
 			}
 		}
 		
-		return $arrImage;
+		#setting the value of min and max price
+		$this->filters['price_range'] = array(
+											"name" => 'Price Range',
+											"type" => 'single',
+											"options" => array(
+															"min" => $this->minPrice,
+															"max" => $this->maxPrice,
+														)
+										);
 	}
 }
-	//end of class Search
-	//end of file WowTables\Http\Models\E
+//end of class Search
+//end of file WowTables\Http\Models\E

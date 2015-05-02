@@ -94,12 +94,18 @@ class Review {
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Reads the details of the reviews based on vendor locations.
 	 * 
+	 * @access	public
+	 * @param	integer		$vendorLocationID
+	 * @param	integer		$start
+	 * @param	integer		$limit
+	 * @since	1.0.0
 	 */
-	public static function getVendorLocationRatingDetails($vendorID, $start = NULL, $limit = NULL) {
+	public static function getVendorLocationRatingDetails($vendorLocationID, $start = NULL, $limit = NULL) {
 		$strQuery = DB::table(DB::raw('vendor_location_reviews as vlr'))
 						->join('users','users.id','=', 'vlr.user_id')
-						->where('vlr.vendor_location_id',$vendorID)
+						->where('vlr.vendor_location_id',$vendorLocationID)
 						->where('status','Approved')
 						->select('users.id','users.full_name','vlr.review','vlr.rating','vlr.created_at');
 		if(!empty($start) && !empty($limit)) {
@@ -118,6 +124,7 @@ class Review {
 				$arrReviewDetail[] = array(
 										'id' => $row->id,
 										'name' => $row->full_name,
+										'image' => "",
 										'review' => $row->review,
 										'rating' => $row->rating,
 										'created_at' => $row->created_at
