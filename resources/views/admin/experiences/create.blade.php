@@ -309,7 +309,7 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('flags[]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
