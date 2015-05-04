@@ -37,9 +37,9 @@
     </div>
     <div data-gallery-position="3" class="popup-gallery">
         @if( Input::old('media.mobile_listing_image') )
-            {!! Form::hidden('media[mobile_listing_image]',null) !!}
+            {!! Form::hidden('media[mobile]',null) !!}
         @else
-            <input name="media[mobile_listing_image]" type="hidden" required>
+            <input name="media[mobile]" type="hidden" required>
         @endif
     </div>
 </div>

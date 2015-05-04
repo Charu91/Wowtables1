@@ -111,14 +111,18 @@
                 @foreach($restaurantLocationMedias as $restaurantLocationMediaKey => $restaurantLocationMediaValue)
                     <h2>{{$restaurantLocationMediaKey}}</h2>
                     @foreach($restaurantLocationMediaValue as $key => $restaurantLocationMedia)
-                        <img width="100" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/{{$restaurantLocationMedia}}" class="mt-xs mb-xs mr-xs img-thumbnail img-responsive">
+
                         @if($restaurantLocationMediaKey == "listing")
                             {{! $setInputName = "old_media[listing_image]"}}
+                            {{! $setImageUrl = "listing"}}
                             @elseif($restaurantLocationMediaKey == "gallery")
                             {{! $setInputName = "old_media[gallery_images][]"}}
+                            {{! $setImageUrl = "gallery"}}
                             @elseif($restaurantLocationMediaKey == "mobile")
-                            {{! $setInputName = "old_media[mobile_listing_image]"}}
+                            {{! $setInputName = "old_media[mobile]"}}
+                            {{! $setImageUrl = "mobile"}}
                         @endif
+                            <img width="100" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/{{$setImageUrl}}/{{$restaurantLocationMedia}}" class="mt-xs mb-xs mr-xs img-thumbnail img-responsive">
                         <input type="hidden" name="{{$setInputName}}" value="{{$key}}"/>
                     @endforeach
                 @endforeach

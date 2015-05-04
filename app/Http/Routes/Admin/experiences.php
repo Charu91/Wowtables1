@@ -33,11 +33,11 @@ Route::get('admin/experiences/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/experiences/edit/{id}', [
+Route::get('admin/experiences/{id}/edit', [
     'uses' => 'AdminExperiencesController@edit',
     'as' => 'AdminExperienceEdit',
     'middleware' => [],
-    'where' => [],
+    'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
 ]);
 
@@ -45,7 +45,7 @@ Route::put('admin/experiences/{id}', [
     'uses' => 'AdminExperiencesController@update',
     'as' => 'AdminExperienceUpdate',
     'middleware' => [],
-    'where' => [],
+    'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
 ]);
 
