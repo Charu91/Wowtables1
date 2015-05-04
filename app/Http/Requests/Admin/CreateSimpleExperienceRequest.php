@@ -110,12 +110,12 @@ class CreateSimpleExperienceRequest extends Request {
         }
 
 
-        $rules['curator'] = 'array';
-        $rules['curator.id'] = 'required_with:curator|exists:curators,id';
-        $rules['curator.tips'] ='required_with:curator.id';
+        //$rules['curators'] = 'required';
+        //$rules['curator.id'] = 'required_with:curator|exists:curators,id';
+        //$rules['curator.tips'] ='required_with:curator.id';
 
         $rules['tags'] = 'tagarray';
-        $rules['flags'] = 'flagarray';
+        //$rules['flags'] = 'required';
 
         return $rules;
     }
