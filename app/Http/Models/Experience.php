@@ -159,7 +159,7 @@ class Experience extends Product{
         $uploads_dir = $this->config->get('media.base_path');
         $media_insert_map = [];
 
-        if(isset($media['listing'])){
+        if(isset($media['listing_image'])){
             /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -197,7 +197,7 @@ class Experience extends Product{
             ];
         }
 
-        if(isset($media['gallery'])){
+        if(isset($media['gallery_images'])){
             /*$galleryfiles = DB::table('media as m')
                 ->leftJoin('media_resized_new as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -208,7 +208,7 @@ class Experience extends Product{
                 ->groupBy('m.id')
                 ->get();*/
 
-            foreach($media['gallery'] as $key => $image){ //echo "<pre>"; print_r($key); print_r($image);
+            foreach($media['gallery_images'] as $key => $image){ //echo "<pre>"; print_r($key); print_r($image);
                 /*if(!$image->resized_exists) {
                     $gallery_file = $image->file;
                     $fileInfo = new \SplFileInfo($gallery_file);
