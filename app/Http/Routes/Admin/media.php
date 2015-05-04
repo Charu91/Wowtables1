@@ -91,7 +91,7 @@ Route::post('admin/media/mobile_media', [
 
 Route::post('admin/media/mobile_exp_media', [
     'uses' => 'AdminMediaController@mobileExpStore',
-    'as' => 'AdminMediaMobileStore',
+    'as' => 'AdminMediaExpMobileStore',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
