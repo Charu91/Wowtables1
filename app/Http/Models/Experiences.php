@@ -37,7 +37,7 @@ class Experiences {
 							->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
 							->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
-							->leftJoin('price_type as pt','pt.id','=','pp.price_type')
+							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 							->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
 							->leftJoin('product_media_map as pmm', function($join){
