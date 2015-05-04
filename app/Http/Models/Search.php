@@ -169,9 +169,10 @@
 			$experienceQuery = DB::table('products')
 								->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
 								->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
-								->leftJoin(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
+								->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
 								->leftJoin('media','media.id','=','pmm.media_id')
-								->leftJoin(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
+								->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+								->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
 								->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
 								->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 								->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
@@ -189,7 +190,7 @@
 								->whereIN('products.type',array('simple','complex'))
 								->groupBy('products.id')
 								->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
-												pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
+												pp.price, pt.type_name as price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
 												products.type as product_type, flags.name as flag_name, locations.id as location_id,
 												locations.name as location_name'));
 
