@@ -167,8 +167,8 @@
 		 */
 		public function findMatchingExperience( $arrData ) {
 			$experienceQuery = DB::table('products')
-								->join('product_attributes_varchar as pav','pav.product_id','=','products.id')
-								->join('product_attributes_text as pat','pat.product_id','=','products.id')
+								->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+								->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
 								->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
 								->leftJoin('media','media.id','=','pmm.media_id')
 								->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
@@ -179,20 +179,20 @@
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
 								->leftJoin('locations','locations.id','=','vl.location_id')
-								->join('product_attributes as pa1','pa1.id','=','pav.product_attribute_id')
-								->join('product_attributes as pa2','pa2.id','=','pat.product_attribute_id')
+								->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
+								->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
 								//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 								//->leftJoin('tags','tags.id','=','ptm.tag_id')
 								->where('pvl.status','Active')
-								->where('pa1.alias','short_description')
-								->orWhere('pa2.alias','experience_info')
+								->where('pa1.alias','experience_info')
+								->where('pa2.alias','short_description')
 								//->orWhere('pa3.alias','cuisines')
 								->where('vla.city_id',$arrData['city_id'])
 								->where('products.visible',1)
 								->whereIN('products.type',array('simple','complex'))
 								->groupBy('products.id')
 								->select('products.id','products.name as title','pat.attribute_value as description',
-											'pav.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
+											'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
 											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
 											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
 											'locations.name as location_name');
