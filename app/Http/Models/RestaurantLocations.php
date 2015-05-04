@@ -6,25 +6,25 @@ use Config;
 
 class RestaurantLocations extends VendorLocations{
 
-    public $filters = [
-        'date' => [],
-        'time' => [],
-        'pricing_level' => [
-            'options' => ['Low','Medium','High']
-        ],
-        'cuisines' => [
-            'options' => [],
-            'active' => []
-        ],
-        'tags' => [
-            'options' => [],
-            'active' => []
-        ],
-        'areas' => [
-            'options' => [],
-            'active' => []
-        ],
-    ];
+    public $filters = array(
+        					'date' => array(),
+        					'time' => array(),
+        					'pricing_level' => array(
+            										'options' => array('Low','Medium','High')
+        										),
+        					'cuisines' => array(
+            									'options' => array(),
+            									//'active' => array()
+        									),
+        					'tags' => array(
+            								'options' => array(),
+            								//'active' => array()
+        								),
+        					'areas' => array(
+            							'options' => array(),
+            							//'active' => array()
+        							),
+    					);
 
     public $listing;
 
@@ -107,6 +107,7 @@ class RestaurantLocations extends VendorLocations{
                 //'mr.file AS image',
                 //'m.alt AS image_alt',
                 //'m.title AS image_title',
+                'l.id as location_id',
                 DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
                 DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
                 DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
@@ -178,9 +179,9 @@ class RestaurantLocations extends VendorLocations{
             $this->total_count = $totalCountResult[0]->total_count;
             $this->total_pages = (int)ceil($this->total_count/$items_per_page);
 
-            $this->fetchFilters($filters);
-            $this->fetchMaxDate();
-            $this->fetchTimings();
+          //  $this->fetchFilters($filters);
+          //  $this->fetchMaxDate();
+          //  $this->fetchTimings();
         }else{
             $this->total_count = 0;
             $this->total_pages = 0;
@@ -379,12 +380,16 @@ class RestaurantLocations extends VendorLocations{
 		//array to hold all the alacarte ids
 		$arrAlaCarte = array();
 		
+		//array to store location IDs
+		$arrLocationId = array();
+		
 		#creating an array of alacarte id
 		foreach($queryResult as $row) {
 			$arrAlaCarte[] = $row->id;
 		}
 		
 		$arrImage = $this->getVendorImages($arrAlaCarte);
+		$this->initializeRestaurantFilters($arrAlaCarte);
 		
 		foreach($queryResult as $row) {
 			$this->arr_result[] = array(
@@ -401,7 +406,24 @@ class RestaurantLocations extends VendorLocations{
 										'cuisine' =>  $row->cuisine,
 										'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "" 
 									);
-		}
+									
+			#setting up the value for the location filter
+			if( !in_array($row->location_id, $arrLocationId)) {
+				$arrLocationId[] = $row->location_id;
+				$this->filters['areas']['options'][] = array(
+													"id" => $row->location_id,
+													"name" => $row->locality,
+													"count" => 1
+												);
+					}
+					else {
+						foreach($this->filters['areas']['options'] as $key => $value) {
+							if($value['id'] == $row->location_id) {
+								$this->filters['areas']['options'][$key]['count']++;
+							}
+						}
+					}					
+				}
 	}
 	
 	//-----------------------------------------------------------------
@@ -439,4 +461,73 @@ class RestaurantLocations extends VendorLocations{
 		}		
 		return $arrImage;		
 	}
-} 
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function initializeRestaurantFilters($arrVendorLocation) {
+		//query to read cuisines
+		$queryCuisine = DB::table('vendor_attributes_select_options as vaso')
+								->join('vendor_attributes as va','va.id','=','vaso.vendor_attribute_id')
+								->join('vendor_location_attributes_multiselect as vlam','vlam.vendor_attributes_select_option_id','=','vaso.id')
+								->where('va.alias','cuisines')
+								->whereIn('vlam.vendor_location_id',$arrVendorLocation)
+								->select('vaso.id','vaso.option')
+								->get();
+		
+		#setting up the cuisines filter information
+		$arrCuisineProduct = array();
+		if($queryCuisine) {
+			foreach ($queryCuisine as $row) {
+				if( ! in_array($row->id, $arrCuisineProduct)) {
+					$arrCuisineProduct[] = $row->id; 
+					$this->filters['cuisines']['options'][] = array(
+																"id" => $row->id,
+																"name" => $row->option,
+																"count" => 1
+															);
+				}
+				else {
+					foreach($this->filters['cuisines']['options'] as $key => $value) {
+						if($value['id'] == $row->id) {
+								$this->filters['cuisines']['options'][$key]['count']++;
+							}
+						}
+				}
+			}
+		}
+
+		//query to initialize the tags
+		$queryTag = DB::table('tags')
+						->join('vendor_locations_tags_map as vltm','vltm.tag_id','=','tags.id')
+						->whereIn('vltm.vendor_location_id', $arrVendorLocation)
+						->select('tags.name', 'tags.id')
+						->get();
+		
+		#setting up the tag filter information
+		$arrTagProduct = array();
+		if($queryTag) {
+			foreach ($queryTag as $row) {
+				if( ! in_array($row->id, $arrTagProduct)) {
+					$arrTagProduct[] = $row->id; 
+					$this->filters['tags']['options'][] = array(
+															"id" => $row->id,
+															"name" => $row->name,
+															"count" => 1
+														);
+				}
+				else {
+					foreach($this->filters['tags']['options'] as $key => $value) {
+						if($value['id'] == $row->id) {
+								$this->filters['tags']['options'][$key]['count']++;
+							}
+						}
+				}
+			}
+		}
+		
+	} 
+}
+//end of class RestaurantLocations.php
