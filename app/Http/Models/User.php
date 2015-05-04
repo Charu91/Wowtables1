@@ -427,13 +427,14 @@ class User {
 
             $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
 
-            $userInsertId = DB::table('users')->insertGetId([
-                'email' => $data['email'],
-                'role_id' => $gourmetRoleId,
-                'password' => bcrypt($data['password']),
-                'location_id' => $data['location_id'],
-                'phone_number' => $data['phone_number']
-            ]);
+            $userInsertId = DB::table('users')->insertGetId(array(
+                												'email' => $data['email'],
+                												'role_id' => $gourmetRoleId,
+                												'password' => bcrypt($data['password']),
+                												'location_id' => $data['location_id'],
+                												'phone_number' => $data['phone_number'],
+                												'full_name' => $data['full_name']
+            								));
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();
@@ -483,7 +484,9 @@ class User {
                             'access_token' => $access_token,
                             'location_id' => $data['location_id'],
                             'location_name' => $queryLocation->name,
-                            'phone_number' => $data['phone_number']
+                            'phone_number' => $data['phone_number'],
+                            'full_name' => $data['full_name'],
+                            'reward_points' => $data['location_id'] + 300,
                         ]
                     ];
                 }else{
@@ -523,7 +526,7 @@ class User {
         DB::beginTransaction();
 
         $user = DB::table('users')
-                        ->select('password', 'id', 'location_id', 'phone_number')
+                        ->select('password', 'id', 'location_id', 'phone_number','full_name')
                         ->where('email', $data['email'])
                         ->first();
 
@@ -588,7 +591,9 @@ class User {
                             'access_token' => $access_token,
                             'location_id' => $location_id,
                             'location_name' => $location_name,
-                            'phone_number' => $user->phone_number
+                            'phone_number' => $user->phone_number,
+                            'full_name' => $user->full_name,
+                            'reward_points' => $user->id + 500,
                         ]
                     ];
                 }else{
@@ -750,7 +755,9 @@ class User {
                     'access_token' => $access_token,
                     'location_id' => $location_id,
                     'location_name' => $location_name,
-                    'phone_number' => $phone_number
+                    'phone_number' => $phone_number,
+                    'full_name' => $data['full_name'],
+                    'reward_points' => $location_id + 500,
                 ]
             ];
         }else{
