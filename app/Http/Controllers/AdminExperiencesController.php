@@ -67,7 +67,7 @@ class AdminExperiencesController extends Controller {
 	public function store(CreateSimpleExperienceRequest $request)
 	{
         $input = $this->request->all();
-        //dd($input);
+        dd($input);
         $simpleExperienceCreate = $this->simpleExperience->create($input);
 
         if($simpleExperienceCreate['status'] === 'success'){
