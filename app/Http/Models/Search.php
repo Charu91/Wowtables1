@@ -167,34 +167,37 @@
 		 */
 		public function findMatchingExperience( $arrData ) {
 			$experienceQuery = DB::table('products')
-								->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
-								->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
+								->join('product_attributes_varchar as pav','pav.product_id','=','products.id')
+								->join('product_attributes_text as pat','pat.product_id','=','products.id')
 								->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
 								->leftJoin('media','media.id','=','pmm.media_id')
 								->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
 								->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
-								->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-								->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
-								->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
+								->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+								->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+								->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
 								->leftJoin('locations','locations.id','=','vl.location_id')
+								->join('product_attributes as pa1','pa1.id','=','pav.product_attribute_id')
+								->join('product_attributes as pa2','pa2.id','=','pat.product_attribute_id')
 								//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
 								//->leftJoin('tags','tags.id','=','ptm.tag_id')
 								->where('pvl.status','Active')
-								//->where('pa1.alias','short_description')
-								//->orWhere('pa2.alias','experience_info')
+								->where('pa1.alias','short_description')
+								->orWhere('pa2.alias','experience_info')
 								//->orWhere('pa3.alias','cuisines')
 								->where('vla.city_id',$arrData['city_id'])
 								->where('products.visible',1)
 								->whereIN('products.type',array('simple','complex'))
 								->groupBy('products.id')
-								->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_text.attribute_value as description,
-												pp.price, pt.type_name as price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
-												products.type as product_type, flags.name as flag_name, locations.id as location_id,
-												locations.name as location_name'));
+								->select('products.id','products.name as title','pat.attribute_value as description',
+											'pav.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
+											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
+											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
+											'locations.name as location_name');
 
-
+			//echo $experienceQuery->toSql();
 			//adding filter for cuisines if cuisines are present
 			if(isset($arrData['cuisine'])) {
 				$experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
@@ -260,6 +263,7 @@
 													'type' => $row->product_type,
 													'name' => $row->title,
 													'description' => $row->description,
+													'short_description' => $row->short_description,
 													'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
 													'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
 													'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
@@ -473,6 +477,8 @@
 														)
 										);
 	}
+
+	//-----------------------------------------------------------------
 }
 //end of class Search
 //end of file WowTables\Http\Models\E
