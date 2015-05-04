@@ -200,25 +200,21 @@
 			//echo $experienceQuery->toSql();
 			//adding filter for cuisines if cuisines are present
 			if(isset($arrData['cuisine'])) {
-				$experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
-						->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
-						->whereIn('paso.option',$arrData['cuisine']);
+				$experienceQuery->join('product_attributes_multiselect as pam','pam.product_id','=','products.id')
+								->join('product_attributes_select_options as paso','paso.id','=','pam.product_attributes_select_option_id')
+								->whereIn('paso.id',$arrData['cuisine']);
 			}
 
 			//adding filter for locations if locations are present
 			if(isset($arrData['location'])) {
-				$experienceQuery->//join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-								//->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
-								//->join('locations','locations.id','=','vl.location_id')
-								whereIn('locations.name',$arrData['location']);
-								//->where('pvl.status','Active');
+				$experienceQuery->whereIn('locations.id',$arrData['location']);								
 			}
 
 			//adding filter for tags if tags are present
 			if(isset($arrData['tag'])) {
 				$experienceQuery->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
-					->leftJoin('tags','tags.id','=','ptm.tag_id')
-					->whereIn('tags.name',$arrData['tag']);
+								->leftJoin('tags','tags.id','=','ptm.tag_id')
+								->whereIn('tags.id',$arrData['tag']);
 			}
 
 			//adding filter for price if price has been selected
