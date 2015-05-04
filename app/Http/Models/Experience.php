@@ -192,7 +192,7 @@ class Experience extends Product{
             $media_insert_map[] = [
                 'product_id' => $productId,
                 'media_type' => 'listing',
-                'media_id' => $media['listing'],
+                'media_id' => $media['listing_image'],
                 'order' => 0
             ];
         }
