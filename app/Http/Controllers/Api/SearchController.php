@@ -93,6 +93,16 @@ use Config;
 		
 		return response()->json($arrResult,200);		
 	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * 
+	 */
+	public function searchResturants() {
+		
+	}
+
  }
 //end of class SearchController
 //end of file WowTables/Http/Controllers/Api/SearchController.php
