@@ -91,14 +91,14 @@ elixir(function(mix) {
             "javascripts/admin/roles.js",
             "javascripts/admin/pages.js",
             "javascripts/admin/permissions.js",
-            "javascripts/admin/experiences.js",
             "javascripts/admin/restaurants.js",
             "javascripts/admin/schedules.js",
             "javascripts/admin/events.js",
             "javascripts/admin/media_modal.js",
             "javascripts/admin/maps.js",
             "javascripts/admin/promotions.js",
-            "javascripts/admin/curator.js"
+            "javascripts/admin/curator.js",
+            "javascripts/admin/experiences.js"
         ], "public/js", "public")
 
         .version(["css/all.css","js/all.js"])

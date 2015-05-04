@@ -100,7 +100,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="attributes[seo_meta_description]">SEO Meta Description <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                        {!! Form::textarea('attributes[seo_meta_desciption]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -174,9 +174,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="pricing[commission_per_cover]" class="col-sm-3 control-label">Commissions Per Cover<span class="required">*</span></label>
+                    <label for="pricing[commission]" class="col-sm-3 control-label">Commissions Per Cover<span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('pricing[commission_per_cover]',null,['class'=>'form-control','required'=>'']) !!}
+                        {!! Form::text('pricing[commission]',null,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -321,7 +321,7 @@
                 <div class="form-group">
                     <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('curators[]',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">

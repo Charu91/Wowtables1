@@ -149,7 +149,7 @@ return [
         ],
 
         'end_date' => [
-            'name' => 'end_date',
+            'name' => 'End Date',
             'type' => 'datetime',
             'value' => 'single'
         ]

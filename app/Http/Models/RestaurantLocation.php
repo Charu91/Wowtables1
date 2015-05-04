@@ -286,7 +286,7 @@ class RestaurantLocation extends VendorLocation{
 
         $listing_image = $data['media']['listing_image'];
         $gallery_images = $data['media']['gallery_images'];
-        $mobile_listing_images = $data['media']['mobile_listing_image'];
+        $mobile_listing_images = $data['media']['mobile'];
 
         if(empty($listing_image)){
             $listing_image_array = $data['old_media']['listing_image'];
@@ -300,11 +300,11 @@ class RestaurantLocation extends VendorLocation{
             $gallery_image_array = $data['media']['gallery_images'];
         }
         if(empty($mobile_listing_images)){
-            $mobile_listing_image_array = $data['old_media']['mobile_listing_image'];
+            $mobile_listing_image_array = $data['old_media']['mobile'];
         }else{
-            $mobile_listing_image_array = $data['media']['mobile_listing_image'];
+            $mobile_listing_image_array = $data['media']['mobile'];
         }
-        $new_media['media'] = ['listing_image'=>$listing_image_array,'gallery_images'=>$gallery_image_array,'mobile_listing_image'=>$mobile_listing_image_array];
+        $new_media['media'] = ['listing_image'=>$listing_image_array,'gallery_images'=>$gallery_image_array,'mobile'=>$mobile_listing_image_array];
 
         if(!empty($new_media['media'])){
             $mediaSaved = $this->saveMedia($vendor_location_id, $new_media['media']);
@@ -735,8 +735,8 @@ class RestaurantLocation extends VendorLocation{
 
     protected function saveMedia($vendor_location_id, $media)
     {
-        $mediaSizes = $this->config->get('media.sizes');
-        $uploads_dir = $this->config->get('media.base_path');
+        /*$mediaSizes = $this->config->get('media.sizes');
+        $uploads_dir = $this->config->get('media.base_path');*/
         $media_insert_map = [];
 
         if(isset($media['listing_image'])){
@@ -787,7 +787,7 @@ class RestaurantLocation extends VendorLocation{
                                 ->groupBy('m.id')
                                 ->get();*/
 
-            foreach($galleryfiles as $key => $image){
+            foreach($media['gallery_images'] as $key => $image){
                 /*if(!$image->resized_exists) {
                     $gallery_file = $image->file;
                     $fileInfo = new \SplFileInfo($gallery_file);
@@ -814,7 +814,7 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(isset($media['mobile_listing_image'])){
+        if(isset($media['mobile'])){
             /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -847,7 +847,7 @@ class RestaurantLocation extends VendorLocation{
             $media_insert_map[] = [
                 'vendor_location_id' => $vendor_location_id,
                 'media_type' => 'mobile',
-                'media_id' => $media['mobile_listing_image'],
+                'media_id' => $media['mobile'],
                 'order' => 0
             ];
         }

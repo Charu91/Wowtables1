@@ -159,7 +159,7 @@ class Experience extends Product{
         $uploads_dir = $this->config->get('media.base_path');
         $media_insert_map = [];
 
-        if(isset($media['listing_image'])){
+        if(isset($media['listing'])){
             /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -192,12 +192,12 @@ class Experience extends Product{
             $media_insert_map[] = [
                 'product_id' => $productId,
                 'media_type' => 'listing',
-                'media_id' => $media['listing_image'],
+                'media_id' => $media['listing'],
                 'order' => 0
             ];
         }
 
-        if(isset($media['gallery_images'])){
+        if(isset($media['gallery'])){
             /*$galleryfiles = DB::table('media as m')
                 ->leftJoin('media_resized_new as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -208,7 +208,7 @@ class Experience extends Product{
                 ->groupBy('m.id')
                 ->get();*/
 
-            foreach($media['gallery_images'] as $key => $image){ //echo "<pre>"; print_r($key); print_r($image);
+            foreach($media['gallery'] as $key => $image){ //echo "<pre>"; print_r($key); print_r($image);
                 /*if(!$image->resized_exists) {
                     $gallery_file = $image->file;
                     $fileInfo = new \SplFileInfo($gallery_file);
@@ -236,7 +236,7 @@ class Experience extends Product{
 
         }
         /*mobile listing ios experience*/
-        if(isset($media['mobile_listing_image'])){
+        if(isset($media['mobile'])){
             /*$listing_image = DB::table('media as m')
                 ->leftJoin('media_resized as mr', 'mr.media_id','=', 'm.id')
                 ->select(
@@ -269,7 +269,7 @@ class Experience extends Product{
             $media_insert_map[] = [
                 'product_id' => $productId,
                 'media_type' => 'mobile',
-                'media_id' => $media['mobile_listing_image'],
+                'media_id' => $media['mobile'],
                 'order' => 0
             ];
         }
@@ -382,8 +382,8 @@ class Experience extends Product{
     {
         $curator_insert_map = [
             'product_id' => $productId,
-            'curator_id' => $curator['id'],
-            'curator_tips' => $curator['tips']
+            'curator_id' => $curator,
+            //'curator_tips' => $curator['tips']
         ];
 
 
@@ -401,12 +401,12 @@ class Experience extends Product{
     protected function mapFlags($productId, $flags){
         $flags_insert_map = [];
 
-        foreach($flags as $flag){
+        //foreach($flags as $flag){
             $flags_insert_map[] = [
                 'product_id' => $productId,
-                'flag_id' => $flag
+                'flag_id' => $flags
             ];
-        }
+        //}
 
         if(DB::table('product_flag_map')->insert($flags_insert_map)){
             return ['status' => 'success'];

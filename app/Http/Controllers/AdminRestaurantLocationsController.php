@@ -142,7 +142,7 @@ class AdminRestaurantLocationsController extends Controller {
 				$listing_media_array[$vendorLocationMedia->media_id] = $vendorLocationMedia->file;
 			}
 
-			if($vendorLocationMedia->media_type == "mobile_listing_ios_alacarte"){
+			if($vendorLocationMedia->media_type == "mobile"){
 				//array_push($mobile_array,$vendorLocationMedia->file);
 				$mobile_array[$vendorLocationMedia->media_id] = $vendorLocationMedia->file;
 			}
@@ -176,7 +176,7 @@ class AdminRestaurantLocationsController extends Controller {
 	public function update($id, UpdateRestaurantLocationRequest $updateRestaurantLocationRequest)
 	{
         $input = $this->request->all();
-
+		//dd($input);
         $restaurantLocationUpdate = $this->restaurantLocation->update($id, $input);
 
         if($restaurantLocationUpdate['status'] === 'success'){

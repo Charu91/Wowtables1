@@ -107,10 +107,48 @@ class AdminExperiencesController extends Controller {
 	{
 
         $experience = $this->repository->getByExperienceId($id);
-        echo "<pre>"; print_r($experience);
+
+        $experienceMedias = $this->repository->populateProductMedia($id);
+
+        $experiencePricing = $this->repository->populateProductPricing($id);
+
+        $experienceFlags = $this->repository->populateProductFlags($id);
+
+        $experienceTags = $this->repository->populateProductTags($id);
+
+        $experienceCurator = $this->repository->populateProductCurator($id);
+
+        $gallery_media_array = array();
+        $listing_media_array = array();
+        $mobile_array = array();
+        foreach($experienceMedias as $experienceMedia){
+
+            if($experienceMedia->media_type == "gallery"){
+                //array_push($gallery_media_array,$vendorLocationMedia->file);
+                $gallery_media_array[$experienceMedia->media_id] = $experienceMedia->file;
+            }
+
+            if($experienceMedia->media_type == "listing"){
+                //array_push($listing_media_array,$vendorLocationMedia->file);
+                $listing_media_array[$experienceMedia->media_id] = $experienceMedia->file;
+            }
+
+            if($experienceMedia->media_type == "mobile"){
+                //array_push($mobile_array,$vendorLocationMedia->file);
+                $mobile_array[$experienceMedia->media_id] = $experienceMedia->file;
+            }
+        }
+        $experienceMediaArray = array('listing'=>$listing_media_array,'gallery'=>$gallery_media_array,'mobile'=>$mobile_array);
+
+        //echo "<pre>"; print_r($experienceCurator); die;
 
         return view('admin.experiences.add_update',[
                         'experience'=>$experience,
+                        'experienceMedias'=>$experienceMediaArray,
+                        'experiencePricing'=>$experiencePricing[0],
+                        'experienceFlags'=>$experienceFlags[0],
+                        'experienceTags'=>$experienceTags[0],
+                        'experienceCurator'=>$experienceCurator[0],
                     ]);
 	}
 
@@ -125,6 +163,11 @@ class AdminExperiencesController extends Controller {
 	{
         $input = $this->request->all();
 
+        if($input['attributes']['menu_markdown'] == ""){
+            $input['attributes']['menu_markdown'] =  $input['attributes']['old_menu_markdown'];
+            $input['attributes']['menu'] =  $input['attributes']['old_menu'];
+        }
+        //dd($input);
         $simpleExperienceUpdate = $this->simpleExperience->update($id, $input);
 
         if($simpleExperienceUpdate['status'] === 'success'){

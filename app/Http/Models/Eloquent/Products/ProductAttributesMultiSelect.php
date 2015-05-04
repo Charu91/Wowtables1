@@ -9,16 +9,11 @@ class ProductAttributesMultiSelect extends Model {
 
     protected $fillable = [];
 
-    protected $with = ['attribute','selectOptions'];
+    protected $with = ['attribute'];
 
     public function attribute()
     {
-        return $this->belongsTo('WowTables\Http\Models\Eloquent\Products\ProductAttributes', 'product_attribute_id', 'id');
-    }
-
-    public function selectOptions()
-    {
-        return $this->hasOne('WowTables\Http\Models\Eloquent\Products\ProductAttributesSelectOptions', 'id', 'product_attributes_select_option_id');
+        return $this->belongsTo('WowTables\Http\Models\Eloquent\Products\ProductAttributesSelectOptions','product_attributes_select_option_id');
     }
 
 }

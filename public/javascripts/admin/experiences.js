@@ -49,6 +49,9 @@
             , $addonShortDescription = $('#addonShortDescription')
             , $addonsMenu = $('#addonsMenu')
 
+
+
+
         $('#experiencesTable').DataTable();
 
         $addNewExperienceAddonBtn.on('click', function () {
@@ -191,6 +194,15 @@
             $('#addOnsMenuBtn').hide();
         });
 
+        var oldMarkdownSyntax = $('#oldMarkdownSyntax').val();
+
+        if(oldMarkdownSyntax != ""){
+            var getMarkdownhtml = markdown.toHTML( oldMarkdownSyntax );
+
+            $("#oldExpMenu").val(getMarkdownhtml);
+        }
+
+
         $("#loc_exp").change(function(){
            var curr_val = $(this).val();
             /*$.ajax({
@@ -223,6 +235,7 @@
              })
              */
         });
+
 
 
         /*$('#addNewExperienceForm').submit(function(e){

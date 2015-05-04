@@ -75,8 +75,8 @@ class SimpleExperience extends Experience {
                 }
             }
 
-            if(!empty($data['curator'])){
-                $curatorMapping = $this->mapCurator($experienceId, $data['curator']);
+            if(!empty($data['curators'])){
+                $curatorMapping = $this->mapCurator($experienceId, $data['curators']);
 
                 if($curatorMapping['status'] !== 'success'){
                     $curatorMapping['message'] = 'Could not map the Simple Experience curators. Contact the system admin';
@@ -154,8 +154,32 @@ class SimpleExperience extends Experience {
             }
         }
 
-        if(!empty($data['media'])){
-            $mediaSaved = $this->saveMedia($experienceId, $data['media']);
+        $listing_image = $data['media']['listing_image'];
+        $gallery_images = $data['media']['gallery_images'];
+        $mobile_listing_images = $data['media']['mobile'];
+
+        if(empty($listing_image)){
+            $listing_image_array = $data['old_media']['listing_image'];
+        }else{
+            $listing_image_array = $data['media']['listing_image'];
+        }
+
+        if($gallery_images[0] == ""){
+            $gallery_image_array = $data['old_media']['gallery_images'];
+        }else{
+            $gallery_image_array = $data['media']['gallery_images'];
+        }
+        if(empty($mobile_listing_images)){
+            $mobile_listing_image_array = $data['old_media']['mobile'];
+        }else{
+            $mobile_listing_image_array = $data['media']['mobile'];
+        }
+
+        $new_media['media'] = ['listing'=>$listing_image_array,'gallery'=>$gallery_image_array,'mobile'=>$mobile_listing_image_array];
+        //echo "<pre>"; print_r($new_media['media']); die;
+
+        if(!empty($new_media['media'])){
+            $mediaSaved = $this->saveMedia($experienceId, $new_media['media']);
 
             if($mediaSaved['status'] !== 'success'){
                 $mediaSaved['message'] = 'Could not create the Simple Experience Media. Contact the system admin';
@@ -192,8 +216,8 @@ class SimpleExperience extends Experience {
             }
         }
 
-        if(!empty($data['curator'])){
-            $curatorMapping = $this->mapCurator($experienceId, $data['curator']);
+        if(!empty($data['curators'])){
+            $curatorMapping = $this->mapCurator($experienceId, $data['curators']);
 
             if($curatorMapping['status'] !== 'success'){
                 $curatorMapping['message'] = 'Could not map the Simple Experience curators. Contact the system admin';

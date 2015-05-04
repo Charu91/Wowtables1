@@ -54,13 +54,13 @@ class UpdateSimpleExperienceRequest extends Request {
 
             $rules['attributes.experience_info'] = 'required';
             $rules['attributes.experience_includes'] = 'required';
-            $rules['attributes.short_description'] = 'required';
+            $rules['attributes.seo_meta_desciption'] = 'required';
             $rules['attributes.terms_and_conditions'] = 'required';
-            $rules['attributes.menu'] = 'required';
-            $rules['attributes.menu_markdown'] = 'required';
+            //$rules['attributes.menu'] = 'required';
+            //$rules['attributes.menu_markdown'] = 'required';
             $rules['attributes.seo_title'] = 'required';
-            $rules['attributes.seo_meta_description'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|array';
+            $rules['attributes.seo_meta_desciption'] = 'required';
+            $rules['attributes.seo_meta_keywords'] = 'required';
             //$rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
            // $rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
@@ -73,11 +73,11 @@ class UpdateSimpleExperienceRequest extends Request {
             $rules['pricing.price'] = 'required|numeric';
             $rules['pricing.post_tax_price'] = 'required|numeric';
             $rules['pricing.tax'] = 'required|numeric';
-            $rules['pricing.commission_per_cover'] = 'required|numeric';
+            $rules['pricing.commission'] = 'required|numeric';
             $rules['pricing.commission_on'] = 'required|in:Pre-Tax,Post-Tax';
 
-            $rules['media.listing_image'] = 'required|exists:media,id';
-            $rules['media.gallery_images'] = 'required|galleryarray';
+            //$rules['media.listing_image'] = 'required|exists:media,id';
+            //$rules['media.gallery_images'] = 'required|galleryarray';
         } else {
             //$rules['attributes.prepayment_allowed'] = 'boolean';
             //$rules['attributes.allow_gift_card_redemptions'] = 'boolean';
@@ -93,8 +93,8 @@ class UpdateSimpleExperienceRequest extends Request {
             $rules['pricing.commission_per_cover'] = 'numeric';
             $rules['pricing.commission_on'] = 'in:Pre-Tax,Post-Tax';
 
-            $rules['media.listing_image'] = 'exists:media,id';
-            $rules['media.gallery_images'] = 'galleryarray';
+            //$rules['media.listing_image'] = 'exists:media,id';
+            //$rules['media.gallery_images'] = 'galleryarray';
         }
 
         $rules['addons'] = 'array';
@@ -112,12 +112,12 @@ class UpdateSimpleExperienceRequest extends Request {
         }
 
 
-        $rules['curator'] = 'array';
+        //$rules['curator'] = 'required';
         $rules['curator.id'] = 'required_with:curator|exists:curators,id';
         $rules['curator.tips'] ='required_with:curator.id';
 
-        $rules['tags'] = 'tagarray';
-        $rules['flags'] = 'flagarray';
+        $rules['tags'] = 'required';
+        $rules['flags'] = 'required';
 
         return $rules;
     }
