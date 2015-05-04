@@ -32,7 +32,7 @@ return [
         ],
 
 
-        'mobile_listing_andriod_experience' => [
+        'mobile_listing_android_experience' => [
             'height' => 662,
             'width' => 1080
         ],
@@ -42,7 +42,7 @@ return [
             'width' => 750
         ],
 
-        'mobile_listing_andriod_alacarte' => [
+        'mobile_listing_android_alacarte' => [
             'height' => 590,
             'width' => 1080
         ],

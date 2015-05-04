@@ -447,7 +447,7 @@ class Media {
         //echo "after updlaod";
         //echo "<pre>"; print_r($media_upload); die;
         if($media_upload){
-            $thumbsize = $this->config->get('media.sizes.mobile_listing_andriod_alacarte');
+            $thumbsize = $this->config->get('media.sizes.mobile_listing_android_alacarte');
             $thumb_filename = $new_filename.'_'.$thumbsize['width'].'x'.$thumbsize['height'];
 
             $thumb_upload = $this->cloud->put($uploads_dir.$thumb_filename.'.'.$file_extension, Image::make($file)->fit($thumbsize['width'], $thumbsize['height'])->encode());
