@@ -32,21 +32,22 @@ class Experiences {
 		
 		//query to read the experience detail
 		$queryExperience = DB::table('products')
-							->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
-							->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
-							->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
-							->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
-							->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
-							->leftJoin(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-							->leftJoin(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
-							->leftJoin(DB::raw('product_media_map as pmm'), function($join){
+							->leftJoin('product_attributes_text as pat1','pat1.product_id','=','products.id')
+							->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+							->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
+							->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
+							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
+							->leftJoin('price_type as pt','pt.id','=','pp.price_type')
+							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+							->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+							->leftJoin('product_media_map as pmm', function($join){
 								$join->on('pmm.product_id','=','products.id')
 									->where('pmm.media_type','=','main');
 							})
-							->leftJoin(DB::raw('product_curator_map as pcm'),'pcm.product_id','=','products.id')
+							->leftJoin('product_curator_map as pcm','pcm.product_id','=','products.id')
 							->leftJoin('curators','curators.id','=','pcm.curator_id')
 							->leftJoin('media','media.id','=','pmm.media_id')
-							->leftJoin(DB::raw('media_resized_new as cm'),'cm.id','=','curators.media_id')
+							->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description');
@@ -56,7 +57,7 @@ class Experiences {
 			$queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
-							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
+							->select('products.id','products.name','products.type','pp.price','pp.tax','pt.type_name as price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
@@ -68,7 +69,7 @@ class Experiences {
 				$queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
-							->select('products.id','products.name','products.type','pp.price','pp.tax','pp.price_type',
+							->select('products.id','products.name','products.type','pp.price','pp.tax','pt.type_name as price_type',
 								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
 								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
 								DB::raw('pat2.attribute_value as short_description, 
