@@ -206,8 +206,8 @@
 			}
 
 			//adding filter for locations if locations are present
-			if(isset($arrData['location'])) {
-				$experienceQuery->whereIn('locations.id',$arrData['location']);								
+			if(isset($arrData['area'])) {
+				$experienceQuery->whereIn('locations.id',$arrData['area']);								
 			}
 
 			//adding filter for tags if tags are present
@@ -221,6 +221,14 @@
 			if(isset($arrData['minPrice']) && isset($arrData['maxPrice'])) {
 				$experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
 			}
+			else if(isset($arrData['minPrice'])) {
+				echo 'inside min price';
+				$experienceQuery->where('pp.price','>=',$arrData['minPrice']);
+			}
+			else if(isset($arrData['maxPrice'])) {
+				echo 'inside max price';
+				$experienceQuery->where('pp.price','<=', $arrData['maxPrice']);
+			}			
 
 			//executing the query
 			$experienceResult = $experienceQuery->get();
