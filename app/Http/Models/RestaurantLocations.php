@@ -121,8 +121,9 @@ class RestaurantLocations extends VendorLocations{
             ->where('v.publish_time', '<', DB::raw('NOW()'))
             ->where('lc.id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
-            ->groupBy('vl.id')
-            ->skip($offset)->take($items_per_page);
+			->where('vl.status','Active')
+            ->groupBy('vl.id');
+           // ->skip($offset)->take($items_per_page);
 
 
 
