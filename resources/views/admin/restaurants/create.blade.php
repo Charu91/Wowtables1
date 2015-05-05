@@ -72,7 +72,7 @@
                 <div class="form-group">
                     <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords </label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_meta_keywords][]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
+                        {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                     </div>
                 </div>
             </div>
