@@ -462,7 +462,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="a_la_carte" id="a_la_carte" {{($restaurant['RestaurantLocation']->a_la_carte == 1  ? "checked = checked" : "") }} value="1">
+                            <input type="checkbox" name="a_la_carte" id="a_la_carte" {{(isset($restaurant['RestaurantLocation']->a_la_carte) && $restaurant['RestaurantLocation']->a_la_carte == 1  ? "checked = checked" : "") }} value="1">
                             <label  for="a_la_carte">Allow Alacarte Reservations</label>
                         </div>
                     </div>

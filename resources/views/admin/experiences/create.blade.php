@@ -118,7 +118,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="attributes[prepayment_allowed]" id="attributes[allow_prepayment]" value="1" checked="">
+                            <input type="checkbox" name="attributes[prepayment_allowed]" id="attributes[allow_prepayment]" value="1">
                             <label  for="attributes[prepayment_allowed]">Allow Prepayment </label>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="attributes[allow_gift_card_redemptions]" id="attributes[allow_gift_card_redemptions]" value="1" checked="">
+                            <input type="checkbox" name="attributes[allow_gift_card_redemptions]" id="attributes[allow_gift_card_redemptions]" value="1" >
                             <label  for="attributes[allow_gift_card_redemptions]">Allow Gift Card Redemptions</label>
                         </div>
                     </div>
