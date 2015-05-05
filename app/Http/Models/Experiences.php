@@ -66,19 +66,20 @@ class Experiences {
 									'media.file as experience_image', 'curators.name as curator_name', 
 									'curators.bio as curator_bio', 'curators.designation',
 									'pat3.attribute_value as menu','cm.file as curator_image',
-									'pat4.attribute_value as terms_and_condition');
+									'pat4.attribute_value as terms_and_condition',
+									'pvl.id as product_vendor_location_id');
 							
 		}
 		else {
 				$queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
-							->select('products.id','products.name','products.type','pp.price','pp.tax','pt.type_name as price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
-								DB::raw('pat2.attribute_value as short_description, 
-									media.file as experience_image'),
-									'cm.file as curator_image', 'pat4.attribute_value as terms_and_condition');
+							->select('products.id','products.name','products.type','pp.price','pp.tax',
+									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+									'pat1.attribute_value as experience_info','curators.name as curator_name', 
+									'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
+									'media.file as experience_image','cm.file as curator_image', 
+									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id');
 		}
 
 		//running the query to get the results
@@ -91,7 +92,7 @@ class Experiences {
 		if($expResult) {
 			//getting the reviews for the particular experience
 				$arrReviews = Review::readProductReviews($expResult->id);
-				$arrLocation = Self::getProductLocations($expResult->id);
+				$arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
 				$arrImage = Self::getProductImages($experienceID);			
 				$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
@@ -180,12 +181,13 @@ class Experiences {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function getProductLocations($productID) {
-		$queryResult = 		DB::table('product_vendor_locations as pvl')	
+	public static function getProductLocations($productID, $pvlID) {
+		$queryResult = 	DB::table('product_vendor_locations as pvl')	
 							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 							->leftJoin('locations', 'locations.id','=','vla.area_id')
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
+							->where('pvl.id','!=',$pvlID)
 							->get();
 		
 		//array to hold location details
