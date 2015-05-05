@@ -78,8 +78,10 @@ use Config;
 					$arrResult['filters'] = $this->search->getExperienceSearchFilters();
 				}
 				else {
-					$arrResult['status'] = Config::get('constants.API_ERROR');
-					$arrResult['msg'] = 'No matching data found';
+					$arrResult['status'] = Config::get('constants.API_SUCCESS');
+					$arrResult['resultCount'] = 0;
+					$arrResult['data'] = array();
+					$arrResponse['msg'] = 'No matching data found.';
 				}
 			}
 		}
