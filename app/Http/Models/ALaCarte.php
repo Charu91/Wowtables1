@@ -64,15 +64,15 @@ use Config;
 						->where('va5.alias','reward_points_per_reservation')
 						->where('va6.alias','expert_tips')
 						->groupBy('vl.id')
-						->select(DB::raw('vl.id as vl_id'),'vl.vendor_id', 'vla.address','vla.pin_code', 'vla.latitude', 'vla.longitude',
-											DB::raw('vendors.name as title, vlat1.attribute_value as resturant_info, 
-											vlat2.attribute_value as short_description, vlat3.attribute_value as terms_conditions, vlat4.attribute_value as menu_picks,
-											loc1.name as area, loc1.id as area_id, loc2.name as city, loc3.name as state_name,
-											loc4.name as country, curators.name as curator_name, curators.bio as curator_bio,
-											curators.designation as designation')
-											,'vl.pricing_level','vlai.attribute_value as reward_point',
-											'vlat5.attribute_value as expert_tips', 'm2.file as curator_image')
+						->select('vl.id as vl_id','vl.vendor_id', 'vla.address','vla.pin_code', 
+									'vla.latitude', 'vla.longitude', 'vendors.name as title', 'vlat1.attribute_value as resturant_info', 
+									'vlat2.attribute_value as short_description', 'vlat3.attribute_value as terms_conditions', 
+									'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
+									'loc3.name as state_name', 'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
+									'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point',
+									'vlat5.attribute_value as expert_tips', 'm2.file as curator_image','vl.location_id as vl_location_id')
 						->first();
+						
 		if($queryResult) {
 			//reading the review ratings
 			$arrReview = Review::findRatingByVendorLocation(array($queryResult->vl_id));
@@ -137,7 +137,7 @@ use Config;
 			$arrData['data']['review_detail'] = Review::getVendorLocationRatingDetails($queryResult->vl_id);
 			
 			//reading the locations
-			$arrData['data']['other_location'] = Locations::getVendorLocation($queryResult->vendor_id);
+			$arrData['data']['other_location'] = self::getVendorLocation($queryResult->vendor_id, $queryResult->vl_location_id);
 			
 			//setting the value of status
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
@@ -327,6 +327,39 @@ use Config;
 		
 		return $arrImage;
 			
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns all the location of a Vendor matching
+	 * the passed id.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	integer	$vendorID
+	 * @return	array
+	 * @since	v1.0.0
+	 */
+	public static function getVendorLocation($vendorID,$locationID=0) {
+		//array to contain the list of locations
+		$arrLocation = array();
+		
+		$queryResult = DB::table('vendor_locations as vl')
+							->leftJoin('locations as loc', 'loc.id','=','vl.location_id')
+							->where('vl.vendor_id','=',$vendorID)
+							->where('vl.location_id','!=',$locationID)
+							->select('loc.name','vl.slug')
+							->get();
+		
+		foreach( $queryResult as $vendorLocation) {				
+			$arrLocation[] = array(
+									'name' => $vendorLocation->name,
+									'slug' => $vendorLocation->slug 
+								);
+		}
+		
+		return $arrLocation;
 	}
  }
 //end of class LaCarte

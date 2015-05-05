@@ -103,6 +103,7 @@ class RestaurantLocations extends VendorLocations{
                 'v.name AS restaurant',
                 'l.name AS locality',
                 'la.name AS area',
+                'la.id as area_id',
                 'vl.pricing_level',
                 //'mr.file AS image',
                 //'m.alt AS image_alt',
@@ -125,24 +126,24 @@ class RestaurantLocations extends VendorLocations{
 
 
 
-        if(isset($filters['areas'])){
-            $select->whereIn('la.id', $filters['areas']);
-            $this->filters['areas']['active'] = $filters['areas'];
+        if(isset($filters['area'])){
+        	$select->whereIn('la.id', $filters['area']);
+            //$this->filters['areas']['active'] = $filters['area'];
         }
 
         if(isset($filters['pricing_level'])){
             $select->where('vl.pricing_level', $filters['pricing_level']);
-            $this->filters['pricing_level']['active'] = $filters['pricing_level'];
+            //$this->filters['pricing_level']['active'] = $filters['pricing_level'];
         }
 
-        if(isset($filters['tags'])){
-            $select->whereIn('vltm.tag_id', $filters['tags']);
-            $this->filters['tags']['active'] = $filters['tags'];
+        if(isset($filters['tag'])){
+            $select->whereIn('vltm.tag_id', $filters['tag']);
+            //$this->filters['tag']['active'] = $filters['tag'];
         }
 
-        if(isset($filters['cuisines'])){
-            $select->whereIn('vaso.id', $filters['cuisines']);
-            $this->filters['tags']['cuisines'] = $filters['cuisines'];
+        if(isset($filters['cuisine'])){
+            $select->whereIn('vaso.id', $filters['cuisine']);
+            //$this->filters['cuisine']['active'] = $filters['cuisine'];
         }
 
         if(isset($filters['date']) && isset($filters['time'])){
@@ -408,17 +409,17 @@ class RestaurantLocations extends VendorLocations{
 									);
 									
 			#setting up the value for the location filter
-			if( !in_array($row->location_id, $arrLocationId)) {
-				$arrLocationId[] = $row->location_id;
+			if( !in_array($row->area_id, $arrLocationId)) {
+				$arrLocationId[] = $row->area_id;
 				$this->filters['areas']['options'][] = array(
-													"id" => $row->location_id,
-													"name" => $row->locality,
+													"id" => $row->area_id,
+													"name" => $row->area,
 													"count" => 1
 												);
 					}
 					else {
 						foreach($this->filters['areas']['options'] as $key => $value) {
-							if($value['id'] == $row->location_id) {
+							if($value['id'] == $row->area_id) {
 								$this->filters['areas']['options'][$key]['count']++;
 							}
 						}

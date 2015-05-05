@@ -34,8 +34,10 @@ class Experiences {
 		$queryExperience = DB::table('products')
 							->leftJoin('product_attributes_text as pat1','pat1.product_id','=','products.id')
 							->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+							->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
 							->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
 							->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
+							->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
 							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
@@ -50,31 +52,34 @@ class Experiences {
 							->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
-							->where('pa2.alias','short_description');
+							->where('pa2.alias','short_description')
+							->where('pa4.alias','terms_and_conditions');
 		
 		//adding additional parameters in case of simple experience
 		if($queryType && $queryType->type == 'simple') {			
 			$queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
-							->select('products.id','products.name','products.type','pp.price','pp.tax','pt.type_name as price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
-								DB::raw('pat2.attribute_value as short_description, media.file as experience_image'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
-								DB::raw('pat3.attribute_value as menu'),
-								'cm.file as curator_image');
+							->select('products.id','products.name','products.type','pp.price','pp.tax',
+									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+									'pat1.attribute_value as experience_info', 'pat2.attribute_value as short_description', 
+									'media.file as experience_image', 'curators.name as curator_name', 
+									'curators.bio as curator_bio', 'curators.designation',
+									'pat3.attribute_value as menu','cm.file as curator_image',
+									'pat4.attribute_value as terms_and_condition',
+									'pvl.id as product_vendor_location_id');
 							
 		}
 		else {
 				$queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
-							->select('products.id','products.name','products.type','pp.price','pp.tax','pt.type_name as price_type',
-								'pp.is_variable','pp.post_tax_price', DB::raw('pat1.attribute_value as experience_info'),
-								DB::raw('curators.name as curator_name, curators.bio as curator_bio, curators.designation'),
-								DB::raw('pat2.attribute_value as short_description, 
-									media.file as experience_image'),
-									'cm.file as curator_image');
+							->select('products.id','products.name','products.type','pp.price','pp.tax',
+									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+									'pat1.attribute_value as experience_info','curators.name as curator_name', 
+									'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
+									'media.file as experience_image','cm.file as curator_image', 
+									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id');
 		}
 
 		//running the query to get the results
@@ -87,13 +92,14 @@ class Experiences {
 		if($expResult) {
 			//getting the reviews for the particular experience
 				$arrReviews = Review::readProductReviews($expResult->id);
-				$arrLocation = Self::getProductLocations($expResult->id);
+				$arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
 				$arrImage = Self::getProductImages($experienceID);			
 				$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
 										'experience_info' => $expResult->experience_info,
 										'short_description' => $expResult->short_description,
+										'terms_and_condition' => $expResult->terms_and_condition,
 										'image' => $arrImage,
 										'type' => $expResult->type,
 										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
@@ -175,12 +181,13 @@ class Experiences {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function getProductLocations($productID) {
-		$queryResult = 		DB::table('product_vendor_locations as pvl')	
+	public static function getProductLocations($productID, $pvlID) {
+		$queryResult = 	DB::table('product_vendor_locations as pvl')	
 							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 							->leftJoin('locations', 'locations.id','=','vla.area_id')
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
+							->where('pvl.id','!=',$pvlID)
 							->get();
 		
 		//array to hold location details
