@@ -56,6 +56,7 @@ use Config;
 						->leftJoin(DB::raw('vendor_attributes as va6'),'va6.id','=','vlat5.vendor_attribute_id')
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
+						->where('vl.status','Active')
 						->where('va1.alias','restaurant_info')
 						->where('va2.alias','short_description')
 						->where('va3.alias','terms_and_conditions')
