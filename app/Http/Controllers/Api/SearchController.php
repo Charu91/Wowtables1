@@ -81,7 +81,7 @@ use Config;
 					$arrResult['status'] = Config::get('constants.API_SUCCESS');
 					$arrResult['resultCount'] = 0;
 					$arrResult['data'] = array();
-					$arrResponse['msg'] = 'No matching data found.';
+					$arrResult['no_result_msg'] = 'No matching data found.';
 				}
 			}
 		}
