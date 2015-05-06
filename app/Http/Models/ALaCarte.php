@@ -32,14 +32,8 @@ use Config;
 		//query to read the details of the A-La-Carte
 		$queryResult = DB::table(DB::raw('vendor_locations as vl'))
 						->join('vendors','vendors.id','=','vl.vendor_id')
-						->join(DB::raw('vendor_location_attributes_text as vlat1'), 'vlat1.vendor_location_id', '=', 'vl.id')
-						->join(DB::raw('vendor_location_attributes_text as vlat2'), 'vlat2.vendor_location_id', '=', 'vl.id')
-						->join(DB::raw('vendor_location_attributes_text as vlat3'), 'vlat3.vendor_location_id', '=', 'vl.id')
-						->join(DB::raw('vendor_location_attributes_text as vlat4'), 'vlat4.vendor_location_id', '=', 'vl.id')
-						->join(DB::raw('vendor_attributes as va1'), 'va1.id', '=', 'vlat1.vendor_attribute_id')
-						->join(DB::raw('vendor_attributes as va2'), 'va2.id', '=', 'vlat2.vendor_attribute_id')
-						->join(DB::raw('vendor_attributes as va3'), 'va3.id', '=', 'vlat3.vendor_attribute_id')
-						->leftJoin(DB::raw('vendor_attributes as va4'), 'va4.id', '=', 'vlat4.vendor_attribute_id')
+						->join(DB::raw('vendor_location_attributes_text as vlat'), 'vlat.vendor_location_id', '=', 'vl.id')
+						->join(DB::raw('vendor_attributes as va'), 'va.id', '=', 'vlat.vendor_attribute_id')
 						->leftjoin(DB::raw('vendor_locations_curator_map as vlcm'),'vlcm.vendor_location_id','=','vl.id')
 						->leftjoin('curators', 'curators.id', '=', 'vlcm.curator_id')
 						->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
@@ -47,31 +41,25 @@ use Config;
 						->join(DB::raw('locations as loc2'), 'loc2.id', '=', 'vla.city_id')
 						->join(DB::raw('locations as loc3'), 'loc3.id', '=', 'vla.state_id')
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
-						//->leftJoin(DB::raw('vendor_locations_media_map as vlmm'),'vlmm.vendor_location_id','=','vl.id')
-						//->leftJoin(DB::raw('media as m1'), 'm1.id', '=', 'vlmm.media_id')
 						->leftJoin(DB::raw('media_resized_new as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
-						->leftJoin(DB::raw('vendor_attributes as va5'),'va5.id','=','vlai.vendor_attribute_id')
-						->leftJoin(DB::raw('vendor_location_attributes_text as vlat5'),'vlat5.vendor_location_id','=','vl.id')
-						->leftJoin(DB::raw('vendor_attributes as va6'),'va6.id','=','vlat5.vendor_attribute_id')
+						->leftJoin(DB::raw('vendor_attributes as va2'),'va2.id','=','vlai.vendor_attribute_id')
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('vl.status','Active')
-						->where('va1.alias','restaurant_info')
-						->where('va2.alias','short_description')
-						->where('va3.alias','terms_and_conditions')
-						->where('va4.alias','menu_picks')
-						//->where('vlmm.media_type','listing')
-						->where('va5.alias','reward_points_per_reservation')
-						->where('va6.alias','expert_tips')
+						->where('va2.alias','reward_points_per_reservation')						
 						->groupBy('vl.id')
-						->select('vl.id as vl_id','vl.vendor_id', 'vla.address','vla.pin_code', 
-									'vla.latitude', 'vla.longitude', 'vendors.name as title', 'vlat1.attribute_value as resturant_info', 
-									'vlat2.attribute_value as short_description', 'vlat3.attribute_value as terms_conditions', 
-									'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
-									'loc3.name as state_name', 'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
-									'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point',
-									'vlat5.attribute_value as expert_tips', 'm2.file as curator_image','vl.location_id as vl_location_id')
+						->select( 'vl.id as vl_id','vl.vendor_id', 'vla.address','vla.pin_code',
+								'vla.latitude', 'vla.longitude', 'vendors.name as title', 
+								DB::raw('MAX(IF(va.alias = "restaurant_info", vlat.attribute_value, "")) AS resturant_info'),
+								DB::raw('MAX(IF(va.alias = "short_description", vlat.attribute_value, "")) AS short_description'),
+								DB::raw('MAX(IF(va.alias = "terms_and_conditions", vlat.attribute_value, "")) AS terms_conditions'),
+								DB::raw('MAX(IF(va.alias = "menu_picks", vlat.attribute_value, "")) AS menu_picks'),
+								DB::raw('MAX(IF(va.alias = "expert_tips", vlat.attribute_value, "")) AS expert_tips'),
+								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+								'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
+								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
+								'm2.file as curator_image','vl.location_id as vl_location_id')						
 						->first();
 						
 		if($queryResult) {
@@ -144,8 +132,10 @@ use Config;
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_ERROR');
-			$arrData['msg'] = 'No matching values found.'; 
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
+			$arrData['no_result_msg'] = 'No matching values found.';
+			$arrData['data'] = array();
+			$arrData['total_count'] = 0;
 		}
 		return $arrData;			
 	}
