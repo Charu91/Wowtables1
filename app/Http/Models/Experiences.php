@@ -90,11 +90,21 @@ class Experiences {
 		$arrExpDetails = array();
 		
 		if($expResult) {
-			//getting the reviews for the particular experience
-				$arrReviews = Review::readProductReviews($expResult->id);
-				$arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
-				$arrImage = Self::getProductImages($experienceID);			
-				$arrExpDetails['data'] = array(
+			
+			//reading all the reviews for the particular experience
+			$arrReviews = Review::readProductReviews($expResult->id);
+			
+			//reading other locations where same product is found
+			$arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
+			
+			//reading all the images of the product			 
+			$arrImage = Self::getProductImages($experienceID);
+			
+			//reading all the addons associated with the product
+			$arrAddOn = self::readExperienceAddOns($expResult->id);
+			
+						
+			$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
 										'experience_info' => $expResult->experience_info,
@@ -118,6 +128,7 @@ class Experiences {
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
 										'similar_option' => array(),
+										'addons' => $arrAddOn,
 									);
 				
 				
@@ -257,7 +268,57 @@ class Experiences {
 		}
 		
 		return $arrImage;
-	} 
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the addons details from the database associated
+	 * with a particular experience.
+	 * 
+	 * @access	public
+	 * @param	integer 	$experienceID
+	 * @since	1.0.0
+	 */
+	public static function readExperienceAddOns($experienceID) {
+		//query to read addons details for a experience 
+		$queryResult = DB::table('products as p')
+						->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
+						->leftJoin('product_attributes as pa','pa.id','=','pat.product_attribute_id')
+						->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
+						->leftJoin('price_types as pt','pt.id','=','pp.price_type')
+						->where('p.product_parent_id',$experienceID)
+						->where('p.type','addon')
+						->groupBy('p.id')
+						->select(
+								'p.id as product_id','p.name as product_name',
+								DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+								DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
+								'pp.price','pp.tax','pp.post_tax_price','pp.is_variable','pp.taxes',
+								'pt.type_name'
+							)
+						->get();
+		//array to hold formatted result
+		$arrData = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {
+				$arrData[] = array(
+								'prod_id' => $row->product_id,
+								'title' => $row->product_name,
+								'short_description' => $row->short_description,
+								'menu' => $row->menu,
+								'price' => (is_null($row->price)) ? "" : $row->price,
+								'tax' => (is_null($row->tax)) ? "" : $row->tax,
+								'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
+								'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
+								'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
+								'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
+							);
+			}
+		}
+		
+		return $arrData;
+	}
 }
 //end of class Experiences
 //end of file Experiences.php

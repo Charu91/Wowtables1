@@ -661,6 +661,8 @@ class RestaurantLocation extends VendorLocation{
                             DB::raw('MAX(IF(l.type = "Area", lt.ancestor, null)) as area_id')
                         )->where('lt.descendant', $location_id)->first();
 
+        //echo "<pre>"; print_r($locations); die;
+
         if($locations){
             $addressInsert = DB::table('vendor_location_address')->insert([
                 'vendor_location_id' => $vendor_location_id,

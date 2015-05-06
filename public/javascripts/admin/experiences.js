@@ -31,6 +31,10 @@
             minHeight: 300
         });
 
+        $("#addonsMenu").redactor({
+            minHeight: 300
+        });
+
         var   token = $("meta[name='_token']").attr('content')
             , $addNewExperienceAddonBtn = $('#addNewExperienceAddonBtn')
             , $experienceAddonForm = $('#experienceAddonForm')

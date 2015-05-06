@@ -15,9 +15,11 @@ class ExperienceAddons extends Experience{
         $attributeIdMap = DB::table('product_attributes AS pa')
             ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
             ->where('ptam.product_type_id', $productTypeId)
-            ->whereIn('pa.alias', ['menu', 'menu_markdown', 'short_description'])
+            ->whereIn('pa.alias', ['menu', 'short_description'])
             ->select('pa.id as attribute_id', 'pa.alias')
             ->lists('attribute_id', 'alias');
+
+        echo "<pre>"; print_r($addons);
 
         foreach($addons as $addon){
             $addonId = DB::table('products')->insertGetId([
@@ -30,7 +32,7 @@ class ExperienceAddons extends Experience{
                 'product_parent_id' => $productId
             ]);
 
-
+    
             if($addonId){
 
                 if(!isset($addon_pricing_insert_data)){
@@ -38,7 +40,7 @@ class ExperienceAddons extends Experience{
                 }
 
                 $addon_pricing_insert_data[] = [
-                    'product_id' => $productId,
+                    'product_id' => $addonId,
                     'price' => $addon['price'],
                     'tax' => $addon['tax'],
                     'post_tax_price' => $addon['post_tax_price'],
@@ -49,21 +51,24 @@ class ExperienceAddons extends Experience{
                 if(!isset($addon_attributes_insert_data)){
                     $addon_attributes_insert_data = [];
                 }
-
-                if(isset($addon['menu'])){
-                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['menu']];
-                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu_markdown'], 'attribute_value' => $addon['menu_markdown']];
-                }
-
-                if(isset($addon['short_description'])){
+                //$addon_attributes = array();
+                if(isset($addon['addonsMenu'])){
+                    //$addon_attributes = $experienceMedia->file;
+                        $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['addonsMenu']];
+                    //$addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu_markdown'], 'attribute_value' => $addon['menu_markdown']];
                     $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['short_description'], 'attribute_value' => $addon['short_description']];
                 }
+
+                /*if(isset($addon['short_description'])){
+
+                }*/
             }else{
                 $addonInserts = false;
                 break;
             }
-        }
 
+        }
+        //echo "<pre>"; print_r($addon_pricing_insert_data); print_r($addon_attributes); die;
         if(!$addonInserts){
             DB::rollBack();
             return [
@@ -82,8 +87,8 @@ class ExperienceAddons extends Experience{
             }
         }
 
-        if(!empty($addon_attributes_insert_data)){
-            if(!DB::table('product_attributes_text')->insert($addon_attributes_insert_data)){
+        if(!empty($addon_attributes)){
+            if(!DB::table('product_attributes_text')->insert($addon_attributes)){
                 DB::rollBack();
                 return [
                     'status' => 'failure',
