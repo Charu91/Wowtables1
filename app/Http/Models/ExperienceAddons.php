@@ -32,7 +32,7 @@ class ExperienceAddons extends Experience{
                 'product_parent_id' => $productId
             ]);
 
-
+    
             if($addonId){
 
                 if(!isset($addon_pricing_insert_data)){
@@ -40,7 +40,7 @@ class ExperienceAddons extends Experience{
                 }
 
                 $addon_pricing_insert_data[] = [
-                    'product_id' => $productId,
+                    'product_id' => $addonId,
                     'price' => $addon['price'],
                     'tax' => $addon['tax'],
                     'post_tax_price' => $addon['post_tax_price'],
@@ -54,7 +54,7 @@ class ExperienceAddons extends Experience{
                 //$addon_attributes = array();
                 if(isset($addon['addonsMenu'])){
                     //$addon_attributes = $experienceMedia->file;
-                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['addonsMenu']];
+                        $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['addonsMenu']];
                     //$addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu_markdown'], 'attribute_value' => $addon['menu_markdown']];
                     $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['short_description'], 'attribute_value' => $addon['short_description']];
                 }
