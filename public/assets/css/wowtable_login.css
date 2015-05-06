@@ -1,0 +1,25 @@
+.wowtable_signup_form{
+	background:#fafafa !important;
+	border-top-left-radius:3px;
+	border-top-right-radius:3px;
+}
+.wowtable_login_height{
+	height: 65px;
+	padding-left: 15%;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+.wowtable_signup_wrapper{
+	margin-top:-30px;
+	background:#f0f0f0 !important;
+	border-bottom-left-radius:3px;
+	border-bottom-right-radius: 3px;
+}
+.wowtable_login_tagline{
+	margin-top: -9px !important;
+}
+.wowtable_login_text_p{
+	color:#ab9d8a;
+	font-weight: 200;
+	font-size: 15px;
+}

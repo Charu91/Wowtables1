@@ -1,0 +1,350 @@
+@media (min-width: 290px) and (max-width: 400px) {
+	#top_padding{
+	top:10% !important;
+}
+#description_deal2{
+bottom:8% !important;
+}
+}
+
+
+@media (min-width: 550px) and (max-width: 759px) {
+#top_alignment2{
+top:58% !important;
+}
+#description_deal2{
+bottom:7% !important;
+}
+#description_deal{
+bottom:14% !important;
+}
+}
+
+@media (min-width: 300px) and (max-width: 549px) {
+#top_alignment2{
+top:62% !important;
+}
+#top_padding{
+top:22% !important;
+}
+#top_alignment{
+top:18% !important;
+}
+#description_deal2{
+bottom:12% !important;
+}
+#description_deal{
+bottom:25% !important;
+}
+}
+@media (max-width: 299px){
+#description_deal2{
+bottom:12% !important;
+}
+#description_deal{
+bottom:-50px; !important;
+}
+#top_padding{
+top:26% !important;
+}
+}
+@media (min-width: 993px) and (max-width: 1023px) {
+  #top_padding{
+	top:16.5% !important;
+ }
+  #top_alignment{
+	top:13% !important;
+ }
+ #description_deal{
+ bottom:19% !important;
+ }
+ #description_deal2{
+ bottom:19% !important;
+ }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+
+//COLLECTION PAGE
+
+#table_head_coll{
+background: none repeat scroll 0 0 #EA9403;
+width: 100%;
+}
+
+.deal-head-coll{
+width: 100% !important;
+}
+
+#desc_tag_coll{
+background: rgba(0,0,0,0.7);
+position: absolute;
+bottom: 0;
+width: 91% !important;
+padding: 5px 10px;
+margin-bottom: 60px;
+}
+
+#background_image_coll{
+background:url("http://boot.gourmetitup.com/uploads/list_image_450187d10696977744936f51dd8dc8ecIMG_9999_518listsmall.jpg");
+width: 100% !important;
+height:239px;
+}
+
+.white_background1_coll{
+height:60px;
+background:#E4E4E4;
+width: 100%;
+}
+
+//EXPERIANCE DETAIL PAGE
+
+#table_head_exp{
+background: none repeat scroll 0 0 #EA9403;
+width: 91%;
+}
+
+.deal-head-exp{
+width: 100% !important;
+}
+
+#desc_tag_exp{
+background: rgba(0,0,0,0.7);
+position: absolute;
+bottom: 0;
+width: 91% !important;
+padding: 5px 10px;
+margin-bottom: 60px;
+}
+
+#background_image_exp{
+background:url("http://boot.gourmetitup.com/uploads/list_image_450187d10696977744936f51dd8dc8ecIMG_9999_518listsmall.jpg");
+width: 100% !important;
+height:239px;
+}
+
+.white_background1_exp{
+height:60px;
+background:#E4E4E4;
+width: 100% !important;
+}
+
+
+#popular_listing{
+max-width: 150px;
+height: 30px;
+bottom: 265px;
+display: inline-block;
+color: #fff;
+background: #14decd;
+margin-left: 8px;
+margin-top: -208px !important;
+}
+
+#small_col{
+padding-top:10px;
+}
+
+#background_image{
+background:url("http://boot.gourmetitup.com/uploads/list_image_450187d10696977744936f51dd8dc8ecIMG_9999_518listsmall.jpg");
+width:300px !important;
+height:239px;
+}
+
+.new_flag1{
+width:60px;
+height:30px;
+background:#9aa816;
+transform:scale(1,1);
+margin-left:8px;
+color:#fff;
+text-align:center;
+padding-top:5px;
+}
+
+.book_mark1{
+width:23px;
+height:40px;
+background:url('http://boot.gourmetitup.com/assets/img/bookmark_plain.png')
+no-repeat;transform:scale(1,1);
+float:right !important;
+margin-right:8px;
+}
+.white_background1{
+height:60px;
+background:#E4E4E4;
+width: 300px;
+}
+
+.rewiew_statrs1{
+float:right !important;
+height:60px;
+width:100px;
+text-align:center;
+padding-top:10px;
+}
+#dummy_text{
+font-style: italic;
+line-height: 16px;
+color: #ea9403;
+margin: 0;
+}
+#desc_tag{
+background: rgba(0,0,0,0.7);
+position: absolute;
+bottom: 0;
+width: 139% !important;
+padding: 5px 10px;
+margin-bottom: 60px;
+}
+#table_head{
+background: none repeat scroll 0 0 #EA9403;
+width: 162%;
+}
+#large_td{
+background: none repeat scroll 0 0 #000;
+color: #EAB703;
+font-weight: 700;
+width: 70%;
+font-size: 16px;
+line-height: 20px;
+text-align: left;
+padding: 10px;
+}
+#small_td{
+font-weight: 700;
+text-shadow: 0 0 2px rgba(0,0,0,.3);
+text-transform: uppercase;
+width: 30%;
+color: #FFF;
+font-size: 16px;
+line-height: 20px;
+text-align: left;
+padding: 10px;
+}
+
+  #top_padding{
+	top:16.5% !important;
+ }
+  #top_alignment{
+	top:13% !important;
+ }
+ #description_dea{
+ bottom:12% !important;
+ }
+ #description_dea2{
+ bottom:12% !important;
+ }
+  #description_dea_ajax{
+ bottom:12% !important;
+ }
+ #description_dea2_ajax{
+ bottom:12% !important;
+ }
+ .description_deal{
+max-width: 95.5% !important;
+min-width: 95.5% !important;
+background: rgba(0,0,0,0.7);
+position: absolute;
+bottom: 13.6%;
+max-width: 95.5%;
+padding: 5px 10px;
+color: #ea9403;
+ }
+ }
+@media (min-width: 1200px) and (max-width: 1365px) {
+  #top_padding{
+	top:16.5% !important;
+ }
+  #top_alignment{
+	top:13% !important;
+ }
+ #description_deal{
+ bottom:19% !important;
+ }
+ #description_deal2{
+ bottom:19% !important;
+ }
+ #description_dea{
+ bottom:100px !important;
+ }
+  #description_dea_ajax{
+ bottom:100px !important;
+ }
+}
+@media screen and (min-width: 1201px){
+.star-icon{
+line-height:13px;
+}
+.list_star_icon{
+line-height:10px!important;
+}
+#top_paddin_ajax{
+margin-top:1px !important;
+}
+#top_paddin1_ajax{
+margin-top:1px !important;
+}
+#description_dea{
+bottom:12% !important;
+}
+#description_dea_ajax{
+bottom:12% !important;
+max-width: 95.5%;
+}
+#description_dea2_ajax{
+bottom:12% !important;
+}
+#description_dea2{
+bottom:12% !important;
+min-width: 95.5%;
+}
+#top_alignmen_ajax{
+padding-top:0px;
+}
+#top_alignmen2_ajax{
+padding-top:0px;
+}
+#top_alignmen:{
+margin-top:20px !important;
+}
+#top_alignmen2_ajax:{
+padding-top:20px !important;
+}
+}
+@media screen and (min-width: 100px){
+.star-icon{
+line-height: 16px;
+}
+.exper_list_page_full{
+line-height: 11px !important;
+}
+.star_icon_exper{
+line-height: 16px!important;
+}
+}
+
+.featured-experience span.small {
+    display: inline-block;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: normal;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#big_col{
+margin-left:20px;
+margin-top: 6px;
+}
+
+#big_div_height{
+height:171px;
+}
+
+#rupee_symobol{
+margin-top: 8px;
+}
+
+#review_tab{
+height:40px;
+}
