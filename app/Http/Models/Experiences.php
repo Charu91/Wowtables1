@@ -283,8 +283,8 @@ class Experiences {
 	public static function readExperienceAddOns($experienceID) {
 		//query to read addons details for a experience 
 		$queryResult = DB::table('products as p')
-						->leftJoin('product_attributes_text as pat','pat.product_attribute_id','=','p.id')
-						->leftJoin('product_attributes as pa','pa.id','=','pat.product_id')
+						->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
+						->leftJoin('product_attributes as pa','pa.id','=','pat.product_attribute_id')
 						->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
 						->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 						->where('p.product_parent_id',$experienceID)
