@@ -59,7 +59,7 @@ use Config;
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 								'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
 								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
-								'm2.file as curator_image','vl.location_id as vl_location_id')						
+								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips')						
 						->first();
 						
 		if($queryResult) {
@@ -119,7 +119,8 @@ use Config;
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
-									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips									
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
+									'curator_tips' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips,									
 								);
 			
 			//reading the review details
