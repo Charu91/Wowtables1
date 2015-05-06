@@ -303,16 +303,16 @@ class Experiences {
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$arrData[] = array(
-								'prod_id' => $queryResult->product_id,
-								'title' => $queryResult->product_name,
-								'short_description' => $queryResult->short_description,
-								'menu' => $queryResult->menu,
-								'price' => (is_null($queryResult->price)) ? "" : $queryResult->price,
-								'tax' => (is_null($queryResult->tax)) ? "" : $queryResult->tax,
-								'post_tax_price' => (is_null($queryResult->post_tax_price)) ? "" : $queryResult->post_tax_price,
-								'is_variable' => (is_null($queryResult->is_variable)) ? "" : $queryResult->variable,
-								'taxes' => (is_null($queryResult->taxes)) ? "" : $queryResult->taxes,
-								'price_type' => (is_null($query->type_name)) ? "" : $queryResult->type_name,
+								'prod_id' => $row->product_id,
+								'title' => $row->product_name,
+								'short_description' => $row->short_description,
+								'menu' => $row->menu,
+								'price' => (is_null($row->price)) ? "" : $row->price,
+								'tax' => (is_null($row->tax)) ? "" : $row->tax,
+								'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
+								'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
+								'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
+								'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
 							);
 			}
 		}
