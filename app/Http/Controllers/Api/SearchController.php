@@ -76,10 +76,13 @@ use Config;
 					$arrResult['resultCount'] = $searchResult['resultCount'];
 					$arrResult['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
 					$arrResult['filters'] = $this->search->getExperienceSearchFilters();
+					$arrResult['no_result_msg'] = 'No matching data found.';
 				}
 				else {
-					$arrResult['status'] = Config::get('constants.API_ERROR');
-					$arrResult['msg'] = 'No matching data found';
+					$arrResult['status'] = Config::get('constants.API_SUCCESS');
+					$arrResult['resultCount'] = 0;
+					$arrResult['data'] = array();
+					$arrResult['no_result_msg'] = 'No matching data found.';
 				}
 			}
 		}

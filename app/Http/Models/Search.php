@@ -47,6 +47,19 @@
 									'price_range' => array(),
 								);
 		
+		//------------------------------------------------------------
+		
+		/**
+		 * Default constructor.
+		 * 
+		 * @access	public
+		 * @since	1.0.0
+		 */
+		public function __construct() {
+			$this->minPrice = 0.00;
+			$this->maxPrice = 0.00;
+		}
+		
 		//-------------------------------------------------------------
 		
 		/**
@@ -260,8 +273,10 @@
 				$arrLocationId = array();
 				
 				foreach($experienceResult as $row) {
-					$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
-					$this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
+					if(!is_null($row->price)) {
+						$this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
+						$this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
+					}
 					$arrData['data'][] = array(
 													'id' => $row->id,
 													'type' => $row->product_type,
