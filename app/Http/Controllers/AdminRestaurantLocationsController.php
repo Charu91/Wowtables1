@@ -61,6 +61,11 @@ class AdminRestaurantLocationsController extends Controller {
 
         $input = $this->request->all();
 		//dd($input);
+		if(!isset($input['a_la_carte'])){
+			$input['a_la_carte'] =  0;
+			//$input['attributes']['menu'] =  $input['attributes']['old_menu'];
+		}
+
         $restaurantLocationCreate = $this->restaurantLocation->create($input);
 
         if($restaurantLocationCreate['status'] === 'success'){
