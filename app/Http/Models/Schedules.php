@@ -121,9 +121,9 @@ class Schedules {
 	 * @author	Parth Shukla <parthshukla@ahex.co.in>
 	 */
 	public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
-		if(is_null($day)) {
-			$day = strtolower(date("D"));
-		}
+		//initializing the value of day
+		$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+		
 		//query to read the schedules
 		$schedules = DB::table('schedules')
 						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
