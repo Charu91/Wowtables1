@@ -335,7 +335,7 @@ class Experiences {
 								'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
 								'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
 								'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
-								'resrevation_title' => (is_null($row->reservation_title)) ? "" : $row->reservation_title,
+								'reservation_title' => (is_null($row->reservation_title)) ? "" : $row->reservation_title,
 							);
 			}
 		}
