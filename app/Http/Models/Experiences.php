@@ -292,19 +292,22 @@ class Experiences {
 		$queryResult = DB::table('products as p')
 						->leftJoin('product_attributes_text as pat1','pat1.product_id','=','p.id')
 						->leftJoin('product_attributes_text as pat2','pat2.product_id','=','p.id')
+						->leftJoin('product_attributes_text as pat3','pat3.product_id','=','p.id')
 						->leftJoin('product_attributes as pa1','pa1.id','=','pat1.product_attribute_id')
 						->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+						->leftJoin('product_attributes as pa3', 'pa3.id','=','pa3.product_attribute_id')
 						->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
 						->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 						->where('p.product_parent_id',$experienceID)
 						->where('p.type','addon')
 						->where('pa1.alias','short_description')
 						->where('pa2.alias','menu')
+						->where('pa3.alias','reservation_title')
 						->groupBy('p.id')
 						->select(
 								'p.id as product_id','p.name as product_name',
 								'pat1.attribute_value as short_description',
-								'pat2.attribute_value as menu',
+								'pat2.attribute_value as menu', 'pat3.attribute_value as reservation_title',
 								//DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 								//DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
 								'pp.price','pp.tax','pp.post_tax_price','pp.is_variable','pp.taxes',
@@ -326,7 +329,7 @@ class Experiences {
 								'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
 								'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
 								'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
-								'resrevation_title' => 'No of Alcohol Pairing'
+								'resrevation_title' => (is_null($row->reservation_title)) ? "" : $row->reservation_title,
 							);
 			}
 		}
