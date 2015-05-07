@@ -33,5 +33,29 @@ class UserDevices {
             'data' => new \stdClass()
         ];
     }
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns user_id if access token matches the one 
+	 * in the DB.
+	 * 
+	 * @access	public
+	 * @param	string	$aceessToken
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+	public static function getUserDetailsByAccessToken($accessToken) {
+		$queryResult = DB::table('user_devices')
+						->where('access_token',$accessToken)
+						->select('user_id')
+						->first();
+		
+		if($queryResult) {
+			return $queryResult->user_id;
+		}
+		
+		return 0;
+	}
 
 } 
