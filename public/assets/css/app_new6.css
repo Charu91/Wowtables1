@@ -1,0 +1,664 @@
+.price{
+	border: 1px solid #e7e4da;
+	height: 40px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	background: #F4F7F8;
+	padding-top: 8px;
+}
+.photo{
+	width:80%;
+}
+.blurb{
+	position: relative;
+	height: 60px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	border: 1px solid #e7e4da;
+	background: #F4F7F8;
+	padding-top: 15px;
+	padding-left: 15px;
+}
+.img-design{
+	/*background-image:url('http://boot.gourmetitup.com/uploads/list_image_fc164d9547ac9be89f7aa9331bcad664listsmall.jpg');*/
+	height: 150px !important;
+	width: 125% !important;
+}
+.rupees-point{
+	color: #42413e;
+	font-size: 19px;
+	margin-left: 20px;
+}
+.footer-content{
+	padding-left: 20px;
+	font-size: 16px;
+	/* text-align: center; */
+	text-align: -webkit-left;
+	word-wrap: break-word;
+}
+
+@media screen and (min-width: 451px) and (max-width: 500px) {
+	
+	.wowtables_padding{
+		padding-left: 25% !important;
+	 }
+	
+	.wowtables_header_padding_bottom{
+		  margin-top: 161px !important;
+	}
+
+	.wowtables_button_hide{
+		display:none !important;
+	}
+	.wowtables_hide_refer_menu{
+		display:none !important;
+	}
+  header .site-logo img {
+	width:auto;
+	height: 35px !important;
+  }
+	
+ .wowtables_mobole_menu_padding{
+	 padding: 2px 6.4% !important;
+	 position: static !important;
+  }
+  .wowtables_header1{
+	height:14% !important;
+  }
+  #wowtable_content{ 
+	display: block; 
+  }
+  #wowtable_img_margin{
+	  margin-left: -50% !important;
+  }
+  #wowtables_contents_1{
+	margin-left:30%;
+	margin-left: 71%;
+	margin-top: -8%;
+  }
+  .wowtables_glyphicon{
+	font-size: 20px;
+	color: #ffffff;
+  }
+  .wowtable_divider{
+	border:1px solid black !important;
+  }
+  .wowtables_big_header{
+	display:none !important;
+  }
+  .wowtables_header1{
+	height:12% !important;
+  }
+  .wowtable_refer_friends{
+	border-right:1px solid #f6f6f6 !important;
+	font-size:15px !important;
+	color: #979797 !important;
+	text-align:center !important;
+	font-weight:none !important;
+  }
+  .wowtables_map{
+	  font-size: 16px !important;
+	  padding-top: 7%;
+	  border-left: 1px solid #979797;
+	  padding-left: 90%;
+	  height: 5%;
+  }
+  .wowtables_big_btn{
+   border-radius:0px !important;
+   color: #ab9d8a !important;
+   background-color: #f0f0f0 !important;
+   border-color: #c2c2c2 !important;
+   text-align: left !important;
+   padding-top:12px !important;
+   padding-bottom:12px !important;
+   padding-left: 7% !important;
+   font-family: inherit !important;
+   font-size: 15px !important;
+  }
+  .wowtables_services{
+	padding-bottom: 68px;
+	  margin-top: -45px !important;
+  }
+  .wowtables_user_info{
+	margin-top:-21% !important;
+	padding-bottom: 10px;
+  }
+  .wowtables_city{
+	padding-bottom: 10px;
+  }
+  .btn-block+.btn-block {
+	  margin-top: 0px !important;
+	}
+  .wowtables_padding_top{
+	padding-top:11px important;	
+  }
+  header{
+	padding-top:11px !important;
+  }
+  #wowtables_glyphicon_services{
+	padding-left: 71.5% !important;
+	margin-top: -14px;
+    color: white !important;
+  }
+  #wowtables_glyphicon_user{
+	padding-left: 85% !important;
+	margin-bottom: -5px !important;
+	color: white !important;
+  }
+  #wowtables_glyphicon_city{
+	padding-left: 86% !important;
+	margin-top: -14px;
+	color: #ffffff !important;
+  }
+  .wowtables_border_width{
+	border-bottom-width:0px !important;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 450px) {
+	.wowtables_padding{
+		padding-left: 25% !important;
+	 }
+
+	.wowtables_header_padding_bottom{
+		  margin-top: 161px !important;
+	}
+
+	.wowtables_button_hide{
+		display:none !important;
+	}
+	.wowtables_hide_refer_menu{
+		display:none !important;
+	}
+  header .site-logo img {
+	width:auto;
+	height: 35px !important;
+  }
+	
+ .wowtables_mobole_menu_padding{
+	 padding: 2px 6.4% !important;
+	 position: static !important;
+  }
+  .wowtables_header1{
+	height:14% !important;
+  }
+  #wowtable_content{ 
+	display: block; 
+  }
+  #wowtable_img_margin{
+	  margin-left: -50% !important;
+  }
+  #wowtables_contents_1{
+	margin-left:30%;
+	margin-left: 71%;
+	margin-top: -8%;
+  }
+  .wowtables_glyphicon{
+	font-size: 20px;
+	color: #ffffff;
+  }
+  .wowtable_divider{
+	border:1px solid black !important;
+  }
+  .wowtables_big_header{
+	display:none !important;
+  }
+  .wowtables_header1{
+	height:8.4% !important;
+  }
+  .wowtable_refer_friends{
+	border-right:1px solid #f6f6f6 !important;
+	font-size:15px !important;
+	color: #979797 !important;
+	text-align:center !important;
+	font-weight:none !important;
+  }
+  .wowtables_map{
+	  font-size: 16px !important;
+	  padding-top: 7%;
+	  border-left: 1px solid #979797;
+	  padding-left: 90%;
+	  height: 5%;
+  }
+  .wowtables_big_btn{
+   border-radius:0px !important;
+   color: #ab9d8a !important;
+   background-color: #f0f0f0 !important;
+   border-color: #c2c2c2 !important;
+   text-align: left !important;
+   padding-top:12px !important;
+   padding-bottom:12px !important;
+   padding-left: 7% !important;
+   font-family: inherit !important;
+   font-size: 15px !important;
+  }
+  .wowtables_services{
+	padding-bottom: 68px;
+	  margin-top: -45px !important;
+  }
+  .wowtables_user_info{
+	margin-top:-21% !important;
+	padding-bottom: 10px;
+  }
+  .wowtables_city{
+	padding-bottom: 10px;
+  }
+  .btn-block+.btn-block {
+	  margin-top: 0px !important;
+	}
+  .wowtables_padding_top{
+	padding-top:11px important;	
+  }
+  header{
+	padding-top:11px !important;
+  }
+  #wowtables_glyphicon_services{
+	padding-left: 71.5% !important;
+	margin-top: -14px;
+    color: white !important;
+  }
+  #wowtables_glyphicon_user{
+	padding-left: 85% !important;
+	margin-bottom: -5px !important;
+	color: white !important;
+  }
+  #wowtables_glyphicon_city{
+	padding-left: 86% !important;
+	margin-top: -14px;
+	color: #ffffff !important;
+  }
+  .wowtables_border_width{
+	border-bottom-width:0px !important;
+  }
+}
+
+
+@media screen and (min-width: 380px) and (max-width: 399px) {
+	
+	.wowtables_padding{
+		padding-left: 30% !important;
+	 }
+
+	.wowtables_header_padding_bottom{
+		  margin-top: 161px !important;
+	}
+
+	.wowtables_button_hide{
+		display:none !important;
+	}
+	.wowtables_hide_refer_menu{
+		display:none !important;
+	}
+  header .site-logo img {
+	width:auto;
+	height: 35px !important;
+  }
+	
+ .wowtables_mobole_menu_padding{
+	 padding: 2px 6.4% !important;
+	 position: static !important;
+  }
+  .wowtables_header1{
+	height:14% !important;
+  }
+  #wowtable_content{ 
+	display: block; 
+  }
+  #wowtable_img_margin{
+	  margin-left: -50% !important;
+  }
+  #wowtables_contents_1{
+	margin-left:30%;
+	margin-left: 71%;
+	margin-top: -8%;
+  }
+  .wowtables_glyphicon{
+	font-size: 20px;
+	color: #ffffff;
+  }
+  .wowtable_divider{
+	border:1px solid black !important;
+  }
+  .wowtables_big_header{
+	display:none !important;
+  }
+  .wowtables_header1{
+	height:9.5% !important;
+  }
+  .wowtable_refer_friends{
+	border-right:1px solid #f6f6f6 !important;
+	font-size:15px !important;
+	color: #979797 !important;
+	text-align:center !important;
+	font-weight:none !important;
+  }
+  .wowtables_map{
+	  font-size: 16px !important;
+	  padding-top: 7%;
+	  border-left: 1px solid #979797;
+	  padding-left: 90%;
+	  height: 5%;
+  }
+  .wowtables_big_btn{
+   border-radius:0px !important;
+   color: #ab9d8a !important;
+   background-color: #f0f0f0 !important;
+   border-color: #c2c2c2 !important;
+   text-align: left !important;
+   padding-top:12px !important;
+   padding-bottom:12px !important;
+   padding-left: 7% !important;
+   font-family: inherit !important;
+   font-size: 15px !important;
+  }
+  .wowtables_services{
+	padding-bottom: 68px;
+	  margin-top: -45px !important;
+  }
+  .wowtables_user_info{
+	margin-top:-21% !important;
+	padding-bottom: 10px;
+  }
+  .wowtables_city{
+	padding-bottom: 10px;
+  }
+  .btn-block+.btn-block {
+	  margin-top: 0px !important;
+	}
+  .wowtables_padding_top{
+	padding-top:11px important;	
+  }
+  header{
+	padding-top:11px !important;
+  }
+  #wowtables_glyphicon_services{
+	padding-left: 71.5% !important;
+	margin-top: -14px;
+    color: white !important;
+  }
+  #wowtables_glyphicon_user{
+	padding-left: 85% !important;
+	margin-bottom: -5px !important;
+	color: white !important;
+  }
+  #wowtables_glyphicon_city{
+	padding-left: 86% !important;
+	margin-top: -14px;
+	color: #ffffff !important;
+  }
+  .wowtables_border_width{
+	border-bottom-width:0px !important;
+  }
+}
+
+
+@media screen and (min-width: 360px) and (max-width: 379px) {
+	
+	.wowtables_header_login_padding{
+		padding-top:69px !important;
+	}
+	
+	.wowtables_padding{
+		padding-left: 25% !important;
+	 }
+	
+	.wowtables_header_padding_bottom{
+		  margin-top: 161px !important;
+	}
+
+	.wowtables_button_hide{
+		display:none !important;
+	}
+	.wowtables_hide_refer_menu{
+		display:none !important;
+	}
+  header .site-logo img {
+	width:auto;
+	height: 35px !important;
+  }
+	
+ .wowtables_mobole_menu_padding{
+	 padding: 2px 6.4% !important;
+	 position: static !important;
+  }
+  .wowtables_header1{
+	height:14% !important;
+  }
+  #wowtable_content{ 
+	display: block; 
+  }
+  #wowtable_img_margin{
+	  margin-left: -50% !important;
+  }
+  #wowtables_contents_1{
+	margin-left:30%;
+	margin-left: 71%;
+	margin-top: -8%;
+  }
+  .wowtables_glyphicon{
+	font-size: 20px;
+	color: #ffffff;
+  }
+  .wowtable_divider{
+	border:1px solid black !important;
+  }
+  .wowtables_padding{
+	padding-left: 4% !important;
+  }
+  .wowtables_big_header{
+	display:none !important;
+  }
+  .wowtables_header1{
+	height:9.5% !important;
+  }
+  .wowtable_refer_friends{
+	border-right:1px solid #f6f6f6 !important;
+	font-size:15px !important;
+	color: #979797 !important;
+	text-align:center !important;
+	font-weight:none !important;
+  }
+  .wowtables_map{
+	  font-size: 16px !important;
+	  padding-top: 7%;
+	  border-left: 1px solid #979797;
+	  padding-left: 90%;
+	  height: 5%;
+  }
+  .wowtables_big_btn{
+   border-radius:0px !important;
+   color: #ab9d8a !important;
+   background-color: #f0f0f0 !important;
+   border-color: #c2c2c2 !important;
+   text-align: left !important;
+   padding-top:12px !important;
+   padding-bottom:12px !important;
+   padding-left: 7% !important;
+   font-family: inherit !important;
+   font-size: 15px !important;
+  }
+  .wowtables_services{
+	padding-bottom: 68px;
+	  margin-top: -45px !important;
+  }
+  .wowtables_user_info{
+	margin-top:-21% !important;
+	padding-bottom: 10px;
+  }
+  .wowtables_city{
+	padding-bottom: 10px;
+  }
+  .btn-block+.btn-block {
+	  margin-top: 0px !important;
+	}
+  .wowtables_padding_top{
+	padding-top:11px important;	
+  }
+  header{
+	padding-top:11px !important;
+  }
+  #wowtables_glyphicon_services{
+	padding-left: 71.5% !important;
+	margin-top: -14px;
+    color: white !important;
+  }
+  #wowtables_glyphicon_user{
+	padding-left: 85% !important;
+	margin-bottom: -5px !important;
+	color: white !important;
+  }
+  #wowtables_glyphicon_city{
+	padding-left: 86% !important;
+	margin-top: -14px;
+	color: #ffffff !important;
+  }
+  .wowtables_border_width{
+	border-bottom-width:0px !important;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 359px) {
+	
+	.wowtables_padding{
+		padding-left: 0% !important;
+	 }
+
+	.wowtables_header_padding_bottom{
+		  margin-top: 161px !important;
+	}
+
+	.wowtables_button_hide{
+		display:none !important;
+	}
+	.wowtables_hide_refer_menu{
+		display:none !important;
+	}
+  header .site-logo img {
+	width:auto;
+	height: 35px !important;
+  }
+	
+ .wowtables_mobole_menu_padding{
+	 padding: 2px 6.4% !important;
+	 position: static !important;
+  }
+  .wowtables_header1{
+	height:14% !important;
+  }
+  #wowtable_content{ 
+	display: block; 
+  }
+  #wowtable_img_margin{
+	  margin-left: -50% !important;
+  }
+  #wowtables_contents_1{
+	margin-left:30%;
+	margin-left: 71%;
+	margin-top: -8%;
+  }
+  .wowtables_glyphicon{
+	font-size: 20px;
+	color: #ffffff;
+  }
+  .wowtable_divider{
+	border:1px solid black !important;
+  }
+  .wowtables_big_header{
+	display:none !important;
+  }
+  .wowtables_header1{
+	height:12% !important;
+  }
+  .wowtable_refer_friends{
+	border-right:1px solid #f6f6f6 !important;
+	font-size:15px !important;
+	color: #979797 !important;
+	text-align:center !important;
+	font-weight:none !important;
+  }
+  .wowtables_map{
+	  font-size: 16px !important;
+	  padding-top: 7%;
+	  border-left: 1px solid #979797;
+	  padding-left: 90%;
+	  height: 5%;
+  }
+  .wowtables_big_btn{
+   border-radius:0px !important;
+   color: #ab9d8a !important;
+   background-color: #f0f0f0 !important;
+   border-color: #c2c2c2 !important;
+   text-align: left !important;
+   padding-top:12px !important;
+   padding-bottom:12px !important;
+   padding-left: 7% !important;
+   font-family: inherit !important;
+   font-size: 15px !important;
+  }
+  .wowtables_services{
+	padding-bottom: 68px;
+	  margin-top: -45px !important;
+  }
+  .wowtables_user_info{
+	margin-top:-21% !important;
+	padding-bottom: 10px;
+  }
+  .wowtables_city{
+	padding-bottom: 10px;
+  }
+  .btn-block+.btn-block {
+	  margin-top: 0px !important;
+	}
+  .wowtables_padding_top{
+	padding-top:11px important;	
+  }
+  header{
+	padding-top:11px !important;
+  }
+  #wowtables_glyphicon_services{
+	padding-left: 71.5% !important;
+	margin-top: -14px;
+    color: white !important;
+  }
+  #wowtables_glyphicon_user{
+	padding-left: 85% !important;
+	margin-bottom: -5px !important;
+	color: white !important;
+  }
+  #wowtables_glyphicon_city{
+	padding-left: 86% !important;
+	margin-top: -14px;
+	color: #ffffff !important;
+  }
+  .wowtables_border_width{
+	border-bottom-width:0px !important;
+  }
+}
+
+@media screen and (min-width: 960px) and (max-width: 1020px) {
+	.wowtables_tablet_size{
+		margin-left:-12% !important;
+	}
+
+}
+
+@media screen and (min-width: 601px) and (max-width: 1990px) {
+  .wowtables_header1{
+	height:27% !important;
+  }
+  #wowtable_content {
+	display: none; 
+  }
+  .wowtables_header3{
+	display:none !important;
+  }
+  .wowtables_services{
+	display:none !important;
+  }
+  .wowtables_user_info{
+	display:none !important;
+  }
+  .wowtables_city{
+	display:none !important;
+  }
+}
