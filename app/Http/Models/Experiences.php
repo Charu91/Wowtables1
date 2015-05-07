@@ -283,17 +283,23 @@ class Experiences {
 	public static function readExperienceAddOns($experienceID) {
 		//query to read addons details for a experience 
 		$queryResult = DB::table('products as p')
-						->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
-						->leftJoin('product_attributes as pa','pa.id','=','pat.product_attribute_id')
+						->leftJoin('product_attributes_text as pat1','pat1.product_id','=','p.id')
+						->leftJoin('product_attributes_text as pat2','pat2.product_id','=','p.id')
+						->leftJoin('product_attributes as pa1','pa1.id','=','pat1.product_attribute_id')
+						->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
 						->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
 						->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 						->where('p.product_parent_id',$experienceID)
 						->where('p.type','addon')
+						->where('pa1.alias','short_description')
+						->where('pa2.alias','menu')
 						->groupBy('p.id')
 						->select(
 								'p.id as product_id','p.name as product_name',
-								DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
-								DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
+								'pat1.attribute_value as short_description',
+								'pat2.attribute_value as menu',
+								//DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+								//DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
 								'pp.price','pp.tax','pp.post_tax_price','pp.is_variable','pp.taxes',
 								'pt.type_name'
 							)
