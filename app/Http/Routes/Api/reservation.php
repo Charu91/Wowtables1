@@ -4,7 +4,7 @@
  */
  Route::get('api/reservation/location/{type}/{id}','Api\ReservationController@getLocation');
  
- Route::get('api/reservation/party_size/{type}/{id}','Api\ReservationController@getPartySize');
+ //Route::get('api/reservation/party_size/{type}/{id}','Api\ReservationController@getPartySize');
  
  Route::get('api/reservation/schedule/{type}/{typeID}/{typeLocationID?}/{day?}','Api\ReservationController@getSchedule');
  
