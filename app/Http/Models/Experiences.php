@@ -32,14 +32,14 @@ class Experiences {
 		
 		//query to read the experience detail
 		$queryExperience = DB::table('products')
-							->leftJoin('product_attributes_text as pat1','pat1.product_id','=','products.id')
-							->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
-							->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
-							->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
-							->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
-							->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
-							->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
-							->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
+							->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+							//->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+							//->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
+							//->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
+							->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
+							//->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
+							//->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
+							//->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
 							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
@@ -53,11 +53,11 @@ class Experiences {
 							->leftJoin('media','media.id','=','pmm.media_id')
 							->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
 							->join('vendors','vendors.id','=','vl.vendor_id')
-							->where('products.id',$experienceID)
-							->where('pa1.alias','experience_info')
-							->where('pa2.alias','short_description')
-							->where('pa4.alias','terms_and_conditions')
-							->where('pa5.alias','experience_includes');
+							->where('products.id',$experienceID);
+							//->where('pa1.alias','experience_info')
+							//->where('pa2.alias','short_description')
+							//->where('pa4.alias','terms_and_conditions')
+							//->where('pa5.alias','experience_includes');
 		
 		//adding additional parameters in case of simple experience
 		if($queryType && $queryType->type == 'simple') {			
@@ -66,12 +66,17 @@ class Experiences {
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax',
 									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
-									'pat1.attribute_value as experience_info', 'pat2.attribute_value as short_description', 
+									DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
+									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+									DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
+									DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
+									DB::raw('MAX(IF(pa.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes'),
+									
 									'media.file as experience_image', 'curators.name as curator_name', 
 									'curators.bio as curator_bio', 'curators.designation',
-									'pat3.attribute_value as menu','cm.file as curator_image',
-									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
-									 'pat5.attribute_value as experience_includes', 'vendors.name as vendor_name');
+									'cm.file as curator_image',
+									'pvl.id as product_vendor_location_id',
+									'vendors.name as vendor_name');
 							
 		}
 		else {
@@ -116,7 +121,7 @@ class Experiences {
 										'experience_info' => $expResult->experience_info,
 										'experience_includes' => $expResult->experience_includes,
 										'short_description' => $expResult->short_description,
-										'terms_and_condition' => $expResult->terms_and_condition,
+										'terms_and_condition' => $expResult->terms_and_conditions,
 										'image' => $arrImage,
 										'type' => $expResult->type,
 										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
@@ -307,7 +312,8 @@ class Experiences {
 						->select(
 								'p.id as product_id','p.name as product_name',
 								'pat1.attribute_value as short_description',
-								'pat2.attribute_value as menu', 'pat3.attribute_value as reservation_title',
+								'pat2.attribute_value as menu', 
+								'pat3.attribute_value as reservation_title',
 								//DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 								//DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
 								'pp.price','pp.tax','pp.post_tax_price','pp.is_variable','pp.taxes',
