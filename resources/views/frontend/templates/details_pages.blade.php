@@ -678,7 +678,246 @@ function current_page_url() {
  return $pageURL;
 }
 $current_page_url =  current_page_url();
+
+if(isset($dropdowns_opt) && $dropdowns_opt == 1)
+{
 ?>
+<section class="related-experiences deal-detail">
+      <div class="container">
+        <div class="row wowtables_padding_left"> 
+          <div class="bottom-filters">
+    <ul>
+        <li class="col-md-4 col-sm-4">
+                <div class="btn-group dropup btn-block">
+                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_cuisine">
+                    Experiences by Cuisine
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" id="f_cuisine_ul">
+                  <?php 
+                  if(isset($allCuisines))
+                  {
+                      foreach($allCuisines as $cousine): ?>
+                     <li ><a rel="<?php echo strtolower($cousine); ?>" href="javascript:void(0);"><?php echo $cousine; ?></a></li>
+                  <?php endforeach; 
+                  }
+                  ?>
+                  </ul>
+                </div>
+              </li>
+               <li class="col-md-4 col-sm-4">
+                <div class="btn-group dropup btn-block">
+                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_area">
+                    Experiences by Location
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" id="f_area_ul">
+                  <?php 
+                  if(isset($allAreas))
+                  {
+                      foreach($allAreas as $area_data): ?>
+                     <li ><a rel="<?php echo strtolower($area_data['slug']); ?>" href="javascript:void(0);"><?php echo $area_data['name']; ?></a></li>
+                     <?php endforeach; 
+                  }
+                  ?>
+                  </ul>
+                </div>
+              </li>
+               <li class="col-md-4 col-sm-4">
+                <div class="btn-group dropup btn-block">
+                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_price">
+                    Experiences by Price
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" id="f_price_ul">
+                  <?php
+                  if(isset($allPrices))
+                  {
+                   foreach($allPrices as $key => $price): ?>  
+                     <li rel="<?php echo $key; ?>"><a rel="<?php echo strtolower($key); ?>" href="javascript:void(0);"><?php echo htmlspecialchars($price); ?></a></li>
+                  <?php endforeach; 
+                  }
+                  ?>
+                  </ul>
+                </div>
+              </li>
+          </ul>
+    </div> 
+        </div>
+      </div>
+</section> 
+<?php
+}
+?>
+  <!--Share Modal -->
+
+  <div class="modal fade" id="redirectloginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title text-center" id="myModalLabel">Please login / signup to make a reservation</h4>
+        </div>
+          <div class="modal-body">
+  <p class="wowtables_doted"></p>
+              <a href="javascript:void(0)" type="submit" onclick=popup() id="FBSignup" style="border-radius: 3px;margin-top:18px; !important"><span class="fbicon"></span> Log in with Facebook</a>
+              <p class="text-center" style="color:#9d9d9c;">OR</p>            
+          <!-- Nav tabs -->
+          <ul class="nav nav-pills nav-justified wowtables-nav">
+            <li class="wowtables_signin active" style="padding-left:19%;padding-right:1% !important;border-right:1px solid #9d9d9c;"><a href="#signin" data-toggle="tab">SIGN IN</a></li>          
+            <li class="wowtables_signup" style="padding-right:21%;"><a href="#signup" data-toggle="tab">SIGN UP</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content" style="border-top:1px dashed #c2c2c2;margin-top:20px;">
+            <div class="tab-pane fade in active" id="signin">
+            <div id="signinForm-wrap" style="  padding-top: 20px !important;">
+              <form role="form" method="POST" action="{{URL::to('/')}}users/login">
+                <div class="form-group">
+                  <input type="email" class="form-control" id="email1" placeholder="Enter email" name="email">
+                  <label class="control-label error-code text-danger" id="email_error_1">Please enter a valid email address</label>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="pass1" placeholder="Password" name="password">
+                  <input type="hidden" name="url" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+                  <label class="control-label error-code text-danger" id="password_error_1">Please enter a password.</label>
+                  <p class="text-right pass-forget"><a href="javascript:void(0)" class="forgot-pass-link">Forgot Password?</a></p>
+                </div>                      
+                <button type="submit" class="btn btn-warning btn-block wowtable_enter_btn" id="login">ENTER</button>
+              </form>
+              </div>
+              <div id="forgotpassForm">
+                <div class="info-text">
+                  <h5 class="text-center" style="color: #725A32;">ENTER YOUR EMAIL ADDRESS</h5>
+                </div>
+                <form role="form" method="POST" action="{{URL::to('/')}}users/forgot_password" id='forgot_password'>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="f_pass" placeholder="Enter email" name="forgotemail">
+                    <label class="control-label error-code text-danger" id='wrong_email'>Please enter your email address</label>
+                  </div>                     
+                  <button type="submit" class="btn btn-warning btn-block">Get Reset Link</button>
+                  <p class="text-center pass-forget"><a href="#" class="login-link">Go back to Login</a></p>
+                  <p class="text-center pass-forget check-email hidden" id='f_response'>
+                      New password has been emailed to you
+                  </p>
+                </form>
+              </div> <!-- forgot pass end -->
+              
+            </div>
+            <div class="tab-pane fade" id="signup">                
+              <div id="signupFormwrap" style="padding-top:20px;">
+              <form role="form">
+                <div class="form-group">
+                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email1">
+                  <label class="control-label error-code text-danger" id="email_error">Please enter a valid email address</label>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password1">
+                  <label class="control-label error-code text-danger" id="password_error">Write correct password</label>
+                </div>
+                <div class="form-group">
+                  <select class="form-control" name="city" id="city">
+                    <option value="-1">Choose A City</option>
+                       <?php foreach ($cities as $cur_city => $city_name_data): ?>
+                          <option value="<?php echo strtolower($city_name_data);?>"><?php echo ucfirst($city_name_data);?></option>                          
+                        <?php endforeach; ?>
+                  </select>
+                  <label class="control-label error-code text-danger" id="city_error">Please pick a city</label>
+                </div>                      
+                <input type="submit" class="btn btn-warning btn-block wowtable_enter_btn" name="send" id="send" value="REGISTER"/>
+                 <input type="hidden" name="url" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+                 <input type="hidden" name="base_url" id="url" value="{{URL::to('/')}}">
+                <small class="text-center comment"><span style="color: #ab9d8a !important;padding-left: 16%;">By Joining, you agree to our</span><a href="{{URL::to('/')}}/terms-of-use" style="color: #81ad5e !important;"> Terms & Conditions</a>
+                </small>
+              </form>
+              </div>
+              <div id="signupSecondscreen">
+                <div class="info-text">
+                  <h4 class="text-center">THANK YOU FOR JOINING!</h4>
+                  <p class="text-center">Help us customize your experience further.</p>
+                </div>
+                <form role="form">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="full_name" placeholder="Full Name" name='full_name'>
+                    <label class="control-label error-code text-danger" id="error_name">Please enter your first and last name</label>
+                  </div>
+                  <div class="form-group gender-checkbox">
+                    <div>
+                    <label class="radio-inline">
+                      <input type="radio" name="generRadios" id="inlineRadio1" value="option1"><span>Male</span>
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="generRadios" id="inlineRadio2" value="option2"><span>Female</span>
+                    </label>
+                    </div>
+                    <label class="control-label error-code text-danger">Value cannot be blank.</label>
+                  </div>
+                  <div class="form-group year-dropdown">
+                      <select class="form-control pull-left b_day" id="day_bd" name='day_bd'>
+                      <option value="0">Date of birth</option>
+                      <?php 
+                          
+                          for($i=1;$i<=31;$i++)
+                          {
+                              $day = ($i<10)? "0".$i : $i;
+                              echo '<option value="'.$day.'">'.$day.'</option>';
+                          }
+                        ?> 
+                      </select>
+                      <select class="form-control pull-right b_day" id="month_bd" name='day_bd'>
+                      <option value="0">Month of birth</option>
+                      <?php 
+                          for($x = 1; $x <= 12; $x++) {
+                              echo '<option value="'.date('m', mktime(0, 0, 0, $x, 1)).'">'.date('F', mktime(0, 0, 0, $x, 1)).'</option>';
+                          }
+                        ?> 
+                      </select>
+                      <div class="clearfix"></div>
+                      <label class="control-label error-code text-danger" id="error_bd">Please select your birthday.</label> 
+                      <input type="hidden" id="year_bd" value="<?=date('Y');?>">
+                  </div>                      
+                  <button type="submit" class="btn btn-warning btn-block" id="send1">Complete My Profile</button>
+                  <p class="lead text-center"><a href='javascript:' id='skip'> SKIP THIS ></a></p>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+
+
+
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+        <!-- Modal -->
+    <div class="modal fade" id="fbSelectCity" tabindex="-5" role="dialog" aria-labelledby="fbSelectCityLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button> -->
+            <h4 id="myModalLabel" class="modal-title text-center">Thank you for signing in</h4>
+          </div>
+          <div class="modal-body">   
+            <p class="text-center">Please select your city to proceed:</p>         
+            <div class="panel panel-default">
+              <!-- List group -->
+              <ul class="list-group">
+                <li class="list-group-item"><a href="#" data-dismiss="modal">Mumbai</a></li>
+                <li class="list-group-item"><a href="#" data-dismiss="modal">Delhi</a></li>
+                <li class="list-group-item"><a href="#" data-dismiss="modal">Pune</a></li>
+        <li class="list-group-item"><a href="#" data-dismiss="modal">Bangalore</a></li>
+              </ul>
+            </div>
+          </div>
+          
+        </div><!-- /.modal-content -->
+      </div>
+    </div>
+<a href="#" class="scrollToTop"><span id="scroll_top_display">Top</span> &and;</a>
 <footer>
     
       <div class="container">

@@ -252,7 +252,6 @@ $(document).ready(function(){
 									}
 								}
 								?>
-
 							  </div>
                             </div>
                             <div class="tags option">
@@ -372,7 +371,7 @@ $(document).ready(function(){
 							</div>
 							*/?>
 							<div class="description_deal" id="description_dea">
-								<p><?php echo $data[0]['description'];?></p>
+								<p><?php echo $data[0]['short_description'];?></p>
 							</div>
 						</div>		
 
@@ -445,7 +444,7 @@ $(document).ready(function(){
 							</div>
 							*/?>
 							<div class="description_deal" id="description_dea">
-								<p><?php echo $data[1]['description'];?></p>
+								<p><?php echo $data[1]['short_description'];?></p>
 							</div>
 						</div>		
 
@@ -531,7 +530,7 @@ $(document).ready(function(){
 											</div>
 											*/?>
 											<div class="deal-desc" >
-												<p><?php echo $data[$j_count]['description'];?></p>
+												<p><?php echo $data[$j_count]['short_description'];?></p>
 											</div>
 										</div>		
 

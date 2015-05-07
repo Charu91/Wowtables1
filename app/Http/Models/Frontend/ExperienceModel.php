@@ -99,31 +99,35 @@ class ExperienceModel {
      */
     public function findMatchingExperience( $arrData ) {
       $experienceQuery = DB::table('products')
-                ->join('product_attributes_varchar','product_attributes_varchar.product_id','=','products.id')
-                ->join('product_attributes_text','product_attributes_text.product_id','=','products.id')
-                ->leftJoin(DB::raw('product_media_map as pmm'), 'pmm.product_id','=','products.id')
+                ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+                ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+                ->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
                 ->leftJoin('media','media.id','=','pmm.media_id')
-                ->leftJoin(DB::raw('product_pricing as pp'),'pp.product_id','=','products.id')
-                ->join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
-                ->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
-                ->leftJoin(DB::raw('product_flag_map as pfm'),'pfm.product_id','=','products.id')
+                ->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+                ->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
+                ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+                ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+                ->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
                 ->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
                 ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
                 ->leftJoin('locations','locations.id','=','vl.location_id')
+                ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
+                ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('tags','tags.id','=','ptm.tag_id')
                 ->where('pvl.status','Active')
-                //->where('pa1.alias','short_description')
-                //->orWhere('pa2.alias','experience_info')
+                ->where('pa1.alias','experience_info')
+                ->where('pa2.alias','short_description')
                 //->orWhere('pa3.alias','cuisines')
                 ->where('vla.city_id',$arrData['city_id'])
                 ->where('products.visible',1)
                 ->whereIN('products.type',array('simple','complex'))
                 ->groupBy('products.id')
-                ->select('products.id',DB::raw('product_attributes_varchar.attribute_value as title, product_attributes_varchar.attribute_value as description,
-                        pp.price, pp.price_type, pp.is_variable, pp.tax, pp.post_tax_price, media.file as image,
-                        products.type as product_type, flags.name as flag_name,flags.color as flag_color, locations.id as location_id,
-                        locations.name as location_name,products.slug'));
+                ->select('products.id','products.name as title','pat.attribute_value as description',
+                      'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
+                      'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
+                      'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
+                      'locations.name as location_name','products.slug');
 
 
       //adding filter for cuisines if cuisines are present
@@ -192,6 +196,7 @@ class ExperienceModel {
                           'type' => $row->product_type,
                           'name' => $row->title,
                           'description' => $row->description,
+                          'short_description' => $row->short_description,
                           'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
                           'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
                           'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
@@ -460,12 +465,14 @@ class ExperienceModel {
     
     //query to read the experience detail
     $queryExperience = DB::table('products')
-              ->leftJoin('product_attributes_text as pat1','pat1.product_id','=','products.id')
-              ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
-              ->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
-              ->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
-              ->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
-              ->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
+              ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+              //->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+              //->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
+              //->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
+              ->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
+              //->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
+              //->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
+              //->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
               ->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
               ->leftJoin('price_types as pt','pt.id','=','pp.price_type')
               ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
@@ -478,37 +485,46 @@ class ExperienceModel {
               ->leftJoin('curators','curators.id','=','pcm.curator_id')
               ->leftJoin('media','media.id','=','pmm.media_id')
               ->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
-              ->where('products.id',$experienceID)
-              ->where('pa1.alias','experience_info')
-              ->where('pa2.alias','short_description')
-              ->where('pa4.alias','terms_and_conditions');
+              ->join('vendors','vendors.id','=','vl.vendor_id')
+              ->where('products.id',$experienceID);
+              //->where('pa1.alias','experience_info')
+              //->where('pa2.alias','short_description')
+              //->where('pa4.alias','terms_and_conditions')
+              //->where('pa5.alias','experience_includes');
     
     //adding additional parameters in case of simple experience
     if($queryType && $queryType->type == 'simple') {      
       $queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
               ->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
               ->where('pa3.alias','menu')
-              ->select('products.id','products.name','products.slug','products.type','pp.price','pp.tax',
-                  'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
-                  'pat1.attribute_value as experience_info', 'pat2.attribute_value as short_description', 
+              ->select('products.id','products.name','products.type','pp.price','pp.tax','products.slug',
+                'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+                  DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
+                  DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                  DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
+                  DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
+                  DB::raw('MAX(IF(pa.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes'),
+                  
                   'media.file as experience_image', 'curators.name as curator_name', 
                   'curators.bio as curator_bio', 'curators.designation',
-                  'pat3.attribute_value as menu','cm.file as curator_image',
-                  'pat4.attribute_value as terms_and_condition',
-                  'pvl.id as product_vendor_location_id');
+                  'cm.file as curator_image',
+                  'pvl.id as product_vendor_location_id',
+                  'vendors.name as vendor_name');
               
     }
     else {
         $queryExperience->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
               ->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
               ->where('pa3.alias','menu')
-              ->select('products.id','products.name','products.slug','products.type','pp.price','pp.tax',
+              ->select('products.id','products.name','products.type','products.slug','pp.price','pp.tax',
                   'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
                   'pat1.attribute_value as experience_info','curators.name as curator_name', 
                   'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
                   'media.file as experience_image','cm.file as curator_image', 
-                  'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id');
+                  'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
+                  'pat5.attribute_value as experience_includes','vendors.name as vendor_name');
     }
+
 
     //running the query to get the results
     //echo $queryExperience->toSql();
@@ -522,14 +538,18 @@ class ExperienceModel {
         $arrReviews = Self::readProductReviews($expResult->id);
         $arrCuisines = Self::getExperienceCuisine($expResult->id);
         $arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
-        $arrImage = Self::getProductImages($experienceID);      
+        $arrImage = Self::getProductImages($expResult->id);  
+        //reading all the addons associated with the product
+        $arrAddOn = self::readExperienceAddOns($expResult->id);    
         $arrExpDetails['data'] = array(
                     'id' => $expResult->id,
                     'name' => $expResult->name,
                     'slug'  => $expResult->slug,
+                    'vendor_name' => $expResult->vendor_name,
                     'experience_info' => $expResult->experience_info,
+                    'experience_includes' => $expResult->experience_includes,
                     'short_description' => $expResult->short_description,
-                    'terms_and_condition' => $expResult->terms_and_condition,
+                    'terms_and_condition' => $expResult->terms_and_conditions,
                     'image' => $arrImage,
                     'type' => $expResult->type,
                     'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
@@ -548,7 +568,7 @@ class ExperienceModel {
                     'review_detail' => $arrReviews['reviews'],
                     'cuisine' => (array_key_exists($expResult->id, $arrCuisines)) ? $arrCuisines[$expResult->id]:array(),
                     'location' => $arrLocation,
-
+                    'addons' => $arrAddOn,
                     'similar_option' => array(),
                   );
         
@@ -725,6 +745,57 @@ class ExperienceModel {
         $arrReviewDetail['reviews'] = array();        
     }
     return $arrReviewDetail;    
+  }
+
+  public static function readExperienceAddOns($experienceID) {
+    //query to read addons details for a experience 
+    $queryResult = DB::table('products as p')
+            ->leftJoin('product_attributes_text as pat1','pat1.product_id','=','p.id')
+            ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','p.id')
+            ->leftJoin('product_attributes_text as pat3','pat3.product_id','=','p.id')
+            ->leftJoin('product_attributes as pa1','pa1.id','=','pat1.product_attribute_id')
+            ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+            ->leftJoin('product_attributes as pa3', 'pa3.id','=','pat3.product_attribute_id')
+            ->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
+            ->leftJoin('price_types as pt','pt.id','=','pp.price_type')
+            ->where('p.product_parent_id',$experienceID)
+            ->where('p.type','addon')
+            ->where('pa1.alias','short_description')
+            ->where('pa2.alias','menu')
+            ->where('pa3.alias','reservation_title')
+            ->groupBy('p.id')
+            ->select(
+                'p.id as product_id','p.name as product_name',
+                'pat1.attribute_value as short_description',
+                'pat2.attribute_value as menu', 
+                'pat3.attribute_value as reservation_title',
+                //DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                //DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
+                'pp.price','pp.tax','pp.post_tax_price','pp.is_variable','pp.taxes',
+                'pt.type_name'
+              )
+            ->get();
+    //array to hold formatted result
+    $arrData = array();
+    if($queryResult) {
+      foreach($queryResult as $row) {
+        $arrData[] = array(
+                'prod_id' => $row->product_id,
+                'title' => $row->product_name,
+                'short_description' => $row->short_description,
+                'menu' => $row->menu,
+                'price' => (is_null($row->price)) ? "" : $row->price,
+                'tax' => (is_null($row->tax)) ? "" : $row->tax,
+                'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
+                'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
+                'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
+                'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
+                'reservation_title' => (is_null($row->reservation_title)) ? "" : $row->reservation_title,
+              );
+      }
+    }
+    
+    return $arrData;
   }
 
 }
