@@ -8,7 +8,7 @@ use WowTables\Http\Models\Eloquent\Page;
 use Session;
 use Config;
 use WowTables\Http\Models\Eloquent\Location;
-use WowTables\Http\Models\Frontend\CustomerModel;
+use WowTables\Http\Models\Frontend\CommonModel;
 use WowTables\Http\Models\Frontend\AlacarteModel;
 use Input;
 use WowTables\Http\Models\Eloquent\User;
@@ -93,8 +93,14 @@ class AlacarteController extends Controller {
         }
 
         $data['allow_guest']='Yes'; 
-        $data['current_city']  = strtolower($city_name);
+        $data['current_city']  = strtolower($city);
        
+
+        $commonmodel = new CommonModel();
+        $data['allCuisines']  = $commonmodel->getAllCuisines();
+        $data['allAreas']  =   $commonmodel->getAllAreas();
+        $data['allPrices']  = $commonmodel->getAllPrices();
+        
 
         if(Input::get('ref')){
             $refid = Input::get('ref'); 
@@ -139,10 +145,16 @@ class AlacarteController extends Controller {
         $data['arrALaCarte']= $arrALaCarte;
         $data['hasOrder']   =''; 
         $data['allow_guest']='Yes';
-        $data['current_city']  = strtolower($city_name);
-        /*echo '<pre>';
-        print_r($data);
-        exit;*/
+        $data['current_city']  = strtolower($city);
+        
+
+
+        $commonmodel = new CommonModel();
+        $data['allCuisines']  = $commonmodel->getAllCuisines();
+        $data['allAreas']  =   $commonmodel->getAllAreas();
+        $data['allPrices']  = $commonmodel->getAllPrices();
+        $data['dropdowns_opt']  = 0; //1 for disp
+
         return response()->view('frontend.pages.alacartedetails',$data);
     }
 }

@@ -9,7 +9,7 @@ use Session;
 use Config;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\Products\Product;
-use WowTables\Http\Models\Frontend\CustomerModel;
+use WowTables\Http\Models\Frontend\CommonModel;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 use Input;
 use WowTables\Http\Models\Eloquent\User;
@@ -59,11 +59,20 @@ class ExperienceController extends Controller {
         
         $id = DB::table('products')->where('slug',$expslug)->first()->id;
 
-        $arrSubmittedData['city_id'] = $city_id;
-        $data['allow_guest']='Yes'; 
-        $data['current_city']  = strtolower($city_name);
-        $arrExperience = $this->experiences_model->find($id);
-        $data['arrExperience'] = $arrExperience;
+        $arrSubmittedData['city_id']    = $city_id;
+        $data['allow_guest']            ='Yes'; 
+        $data['current_city']           = strtolower($city);
+        $arrExperience                  = $this->experiences_model->find($id);
+        $data['arrExperience']          = $arrExperience;
+
+
+        $commonmodel = new CommonModel();
+        $data['allCuisines']  = $commonmodel->getAllCuisines();
+        $data['allAreas']  =   $commonmodel->getAllAreas();
+        $data['allPrices']  = $commonmodel->getAllPrices();
+
+        $data['dropdowns_opt']  = 1; //1 for disp
+        
         //dd( DB::getQueryLog());
         //echo '<pre>';print_R( $data);exit;
 
@@ -138,8 +147,17 @@ class ExperienceController extends Controller {
         }
 
         $data['allow_guest']='Yes'; 
-        $data['current_city']  = strtolower($city_name);
+        $data['current_city']  = strtolower($city);
        
+
+        
+
+        $commonmodel = new CommonModel();
+        $data['allCuisines']  = $commonmodel->getAllCuisines();
+        $data['allAreas']  =   $commonmodel->getAllAreas();
+        $data['allPrices']  = $commonmodel->getAllPrices();
+
+        $data['dropdowns_opt']  = 1; //1 for disp
 
         if(Input::get('ref')){
             $refid = Input::get('ref'); 
@@ -149,7 +167,7 @@ class ExperienceController extends Controller {
         if (!empty($refid)) {
             //$data['referral'] = $this->partners_model->get_row_by_refid($refid);
         }
-       
+
 
         return response()->view('frontend.pages.experiencelist',$data);
     }
