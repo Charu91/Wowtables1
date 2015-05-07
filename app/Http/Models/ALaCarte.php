@@ -41,6 +41,7 @@ use Config;
 						->join(DB::raw('locations as loc2'), 'loc2.id', '=', 'vla.city_id')
 						->join(DB::raw('locations as loc3'), 'loc3.id', '=', 'vla.state_id')
 						->join(DB::raw('locations as loc4'), 'loc4.id', '=', 'vla.country_id')
+						->join('locations as loc5','loc5.id','=','vl.location_id')
 						->leftJoin(DB::raw('media_resized_new as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
 						->leftJoin(DB::raw('vendor_attributes as va2'),'va2.id','=','vlai.vendor_attribute_id')
@@ -57,7 +58,7 @@ use Config;
 								DB::raw('MAX(IF(va.alias = "menu_picks", vlat.attribute_value, "")) AS menu_picks'),
 								DB::raw('MAX(IF(va.alias = "expert_tips", vlat.attribute_value, "")) AS expert_tips'),
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
-								'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
+								'loc4.name as country', 'loc5.name as locality', 'curators.name as curator_name', 'curators.bio as curator_bio',
 								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
 								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips')						
 						->first();
@@ -102,6 +103,7 @@ use Config;
 									'experience_url' => $experienceURL,
 									'location_address' => array(
 																"address_line" => $queryResult->address,
+																"locality" => $queryResult->locality,
 																"area" => $queryResult->area,
 																"city" => $queryResult->city,
 																"pincode" => $queryResult->pin_code,
