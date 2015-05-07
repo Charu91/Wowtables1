@@ -295,7 +295,7 @@ class Experiences {
 						->leftJoin('product_attributes_text as pat3','pat3.product_id','=','p.id')
 						->leftJoin('product_attributes as pa1','pa1.id','=','pat1.product_attribute_id')
 						->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
-						->leftJoin('product_attributes as pa3', 'pa3.id','=','pa3.product_attribute_id')
+						->leftJoin('product_attributes as pa3', 'pa3.id','=','pat3.product_attribute_id')
 						->leftJoin('product_pricing as pp', 'pp.product_id','=','p.id')
 						->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 						->where('p.product_parent_id',$experienceID)
