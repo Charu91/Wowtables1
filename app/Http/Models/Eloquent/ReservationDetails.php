@@ -45,7 +45,7 @@ class ReservationDetails extends Model {
 	 * @return	boolean
 	 * @since	1.0.0
 	 */
-	public static function addReservationDetails($arrData) {
+	public static function addReservationDetails($arrData, $userID) {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
@@ -58,6 +58,7 @@ class ReservationDetails extends Model {
 		$reservation->guest_email = $arrData['guestEmail'];
 		$reservation->guest_phone = $arrData['phone'];
 		$reservation->reservation_type = $arrData['reservationType'];
+		$reservation->user_id = $userID;
 		
 		//setting up the variables that may be present
 		if(isset($arrData['specialRequest'])) {

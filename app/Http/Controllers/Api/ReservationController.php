@@ -158,7 +158,7 @@ use WowTables\Http\Models\UserDevices;
 			$arrResponse = Reservation::validateReservationData($arrData);
 			
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-				$arrResponse = ReservationDetails::addReservationDetails($arrData);			
+				$arrResponse = ReservationDetails::addReservationDetails($arrData,$userID);			
 			}
 		}
 		else {
