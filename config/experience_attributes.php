@@ -152,6 +152,12 @@ return [
             'name' => 'End Date',
             'type' => 'datetime',
             'value' => 'single'
+        ],
+
+        'reservation_title' => [
+            'name' => 'Reservation Title',
+            'type' => 'text',
+            'value' => 'single'
         ]
     ]
 ];

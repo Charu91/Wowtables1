@@ -200,6 +200,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        {!! Form::label('addon_reservation_title','Addon Reservation Title',['class'=>'col-sm-3 control-label']) !!}
+                        <div class="col-sm-6">
+                            {!! Form::text('addon_reservation_title',null,['class'=>'form-control','id'=>'addonReservationTitle']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
                         {!! Form::label('addon_price_before_tax','Addon Price',['class'=>'col-sm-3 control-label']) !!}
                         <div class="col-sm-6">
                             {!! Form::text('addon_price_before_tax',null,['class'=>'form-control','id'=>'addonPrice']) !!}

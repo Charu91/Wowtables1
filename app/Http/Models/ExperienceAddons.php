@@ -15,13 +15,14 @@ class ExperienceAddons extends Experience{
         $attributeIdMap = DB::table('product_attributes AS pa')
             ->join('product_type_attributes_map AS ptam', 'ptam.product_attribute_id', '=', 'pa.id')
             ->where('ptam.product_type_id', $productTypeId)
-            ->whereIn('pa.alias', ['menu', 'short_description'])
+            ->whereIn('pa.alias', ['menu', 'short_description','reservation_title'])
             ->select('pa.id as attribute_id', 'pa.alias')
             ->lists('attribute_id', 'alias');
 
-        echo "<pre>"; print_r($addons);
+        //echo "<pre>"; print_r($attributeIdMap); die;
 
         foreach($addons as $addon){
+            //echo "<pre>"; print_r($addon['reservation_title']); die;
             $addonId = DB::table('products')->insertGetId([
                 'name' => $addon['name'],
                 'slug' => uniqid('addon'),
@@ -57,6 +58,7 @@ class ExperienceAddons extends Experience{
                         $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu'], 'attribute_value' => $addon['addonsMenu']];
                     //$addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['menu_markdown'], 'attribute_value' => $addon['menu_markdown']];
                     $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['short_description'], 'attribute_value' => $addon['short_description']];
+                    $addon_attributes[] = ['product_id' => $addonId, 'product_attribute_id' => $attributeIdMap['reservation_title'], 'attribute_value' => $addon['reservation_title']];
                 }
 
                 /*if(isset($addon['short_description'])){

@@ -45,6 +45,7 @@
             , $updateExperienceAddonBtn = $("#updateExperienceAddonBtn")
             , $cancelUpdateExperienceAddonBtn = $("#cancelUpdateExperienceAddonBtn")
             , $addonTitle = $('#addonTitle')
+            , $addonReservationTitle = $('#addonReservationTitle')
             , $addonPriceBeforeTax = $('#addonPrice')
             , $addonPriceAfterTax = $('#addonPriceAfterTax')
             , $addonTax = $('#addon_tax')
@@ -75,6 +76,7 @@
             {
                 $experienceAddons.push({
                     addonTitle: $addonTitle.val(),
+                    addonReservationTitle: $addonReservationTitle.val(),
                     addonPriceBeforeTax: $addonPriceBeforeTax.val(),
                     addonPriceAfterTax: $addonPriceAfterTax.val(),
                     addonTax: $addonTax.val(),
@@ -107,6 +109,7 @@
                         '<i class="fa fa-trash-o"></i></a>' +
                         '</td>' +
                         '<input type="hidden" name="addons['+key+'][name]" value="'+value.addonTitle+'" />'+
+                        '<input type="hidden" name="addons['+key+'][reservation_title]" value="'+value.addonReservationTitle+'" />'+
                         '<input type="hidden" name="addons['+key+'][price]" value="'+value.addonPriceBeforeTax+'" />'+
                         '<input type="hidden" name="addons['+key+'][tax]" value="'+value.addonTax+'" />'+
                         '<input type="hidden" name="addons['+key+'][post_tax_price]" value="'+value.addonPriceAfterTax+'" />'+
