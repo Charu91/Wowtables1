@@ -20,6 +20,19 @@ use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBookingTimeRang
  * @author		Parth Shukla<parthshukla@ahex.co.in>
  */
 class Reservation {
+	
+	public $arrRules = array(
+							'reservationDate' => 'required',
+							'reservationDay' => 'required',
+							'reservationTime' => 'required',
+							'partySize' => 'required',
+							'vendorLocationID' => 'required|not_in:0',
+							'guestName' => 'required',
+							'guestEmail' => 'required:email',
+							'phone' => 'required',
+							'reservationType' => 'required',
+							'specialRequest' => ''
+						) ;
 
 	/**
 	 * Query to read the details of the vendor locations and
@@ -32,14 +45,14 @@ class Reservation {
 	 */
 	public static function getVendorLocationAndLimit($vendorID) {
 		$queryResult = DB::table(DB::raw('vendor_locations as vl')) 
-						-> join(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
-						-> join('locations', 'locations.id', '=', 'vla.area_id') 
-						-> leftJoin(DB::raw('vendor_locations_limits as vll'), 'vll.vendor_location_id', '=', 'vl.id') 
-						-> where('vl.vendor_id', $vendorID) 
-						-> select('vl.id', DB::raw('locations.name as area'), 'vla.latitude', 
+						->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
+						->join('locations', 'locations.id', '=', 'vl.location_id') 
+						->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
+						->where('vl.vendor_id', $vendorID) 
+						->select('vl.id', 'locations.name as area', 'vla.latitude', 
 									'vla.longitude', 'vll.min_people_per_reservation', 
 									'vll.max_people_per_reservation', 'vll.min_people_increments') 
-						-> get();
+						->get();
 
 		//array to read the locations and limits
 		$arrLocLmt = array();
@@ -54,7 +67,16 @@ class Reservation {
 		$arrBlockedDates = VendorLocationBlockedSchedules::getBlockedDate($arrLocation);
 
 		foreach ($queryResult as $row) {
-			$arrLocLmt[] = array('vl_id' => $row -> id, 'area' => $row -> area, 'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation, 'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation, 'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments, 'latitude' => $row -> latitude, 'longitude' => $row -> longitude, 'blocked_dates' => (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array(), );
+			$arrLocLmt[] = array(
+								'vl_id' => $row -> id, 
+								'area' => $row -> area, 
+								'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation, 
+								'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation, 
+								'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments, 
+								'latitude' => $row -> latitude, 
+								'longitude' => $row -> longitude, 
+								'blocked_dates' => (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array(), 
+							);
 		}
 
 		return $arrLocLmt;
@@ -72,16 +94,17 @@ class Reservation {
 	 * @since	1.0.0
 	 */
 	public static function getExperienceLocationAndLimit($experienceID) {
-		$queryResult = DB::table(DB::raw('product_vendor_locations as pvl')) 
-							-> join(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'pvl.vendor_location_id') 
-							-> join('locations', 'locations.id', '=', 'vla.area_id') 
-							-> leftJoin(DB::raw('product_vendor_locations_limits as pvll'), 'pvll.product_vendor_location_id', '=', 'pvl.id') 
-							-> where('pvl.product_id', $experienceID) 
-							-> select('pvl.vendor_location_id as id', DB::raw('locations.name as area'), 
+		$queryResult = DB::table('product_vendor_locations as pvl') 
+							->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id') 
+							->join('locations', 'locations.id', '=', 'vl.location_id') 
+							->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
+							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
+							->where('pvl.product_id', $experienceID) 
+							->select('pvl.vendor_location_id as id', 'locations.name as area', 
 									'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
 									'pvll.max_people_per_reservation', 'pvll.min_people_increments',
-									'pvl.product_id as experience_id') 
-							-> get();
+									'pvl.product_id as experience_id','pvl.id as pvl_id') 
+							->get();
 
 		#array to read experiences and location limits
 		$arrLocLmt = array();
@@ -91,21 +114,21 @@ class Reservation {
 
 		#reading the blocked dates
 		foreach ($queryResult as $row) {
-			$arrLocation[] = $row -> id;
+			$arrLocation[] = $row->pvl_id;
 		}
 		$arrBlockedDates = ProductVendorLocationBlockedSchedule::getBlockedDate($arrLocation);
-
+		
 		foreach ($queryResult as $row) {
 			$arrLocLmt[] = array(
 									'experience_id' => $row->experience_id,
-									'vl_id' => $row -> id, 
-									'area' => $row -> area, 
-									'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation, 
-									'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation, 
-									'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments, 
-									'latitude' => $row -> latitude, 
-									'longitude' => $row -> longitude, 
-									'blocked_dates' => (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array(), 
+									'vl_id' => $row->id, 
+									'area' => $row->area, 
+									'min_people' => (is_null($row->min_people_per_reservation)) ? '' : $row->min_people_per_reservation, 
+									'max_people' => (is_null($row->max_people_per_reservation)) ? '' : $row->max_people_per_reservation, 
+									'increment' => (is_null($row->min_people_increments)) ? '' : $row->min_people_increments, 
+									'latitude' => $row->latitude, 
+									'longitude' => $row->longitude, 
+									'blocked_dates' => (array_key_exists($row->pvl_id, $arrBlockedDates)) ? $arrBlockedDates[$row->pvl_id] : array(), 
 								);
 		}
 
@@ -129,13 +152,13 @@ class Reservation {
 
 		//validation based on reservation type
 		if ($arrData['reservationType'] == 'alacarte') {
-
+			
 			//validating that user has not selected blocked date
 			$returnResult = VendorLocationBlockedSchedules::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
 			if ($returnResult) {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
 				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
-
+				return $arrResponse;
 			}
 
 			//checking the availability for the booking
@@ -212,7 +235,12 @@ class Reservation {
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Validates the data entered for the edit reservation.
 	 * 
+	 * @access	public
+	 * @param	array 	$arrData
+	 * @return	array
+	 * @since	v1.0.0
 	 */
 	public static function validateEditReservationData($arrData) {
 		//array to store response

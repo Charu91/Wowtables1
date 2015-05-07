@@ -1,0 +1,890 @@
+@media (max-width: 768px) {	
+
+	.featured-experience span.small {
+    display: block;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: normal;
+    margin-top: 5px;
+   }
+
+	#abovefold .cover-images .mobile-cover img {
+		width: 100%;
+		height: 100%;
+	}
+
+	header .site-logo img {
+		max-width: 156px;
+	}
+
+	header {
+		max-height: inherit;
+		margin-bottom: 30px;
+	}
+
+	header .head-links {
+		margin: 0 0 10px 0;
+	}
+
+	footer .block-list.foot-menu li {
+		margin: 15px 10px;
+		display: block;
+	}
+
+	footer .inline-list.text-right {
+		text-align: left;
+	}
+
+	footer .foot2 .concierge-info {
+		float: left !important;
+		margin-top: 10px;
+	}
+
+	header .head-links p {
+		text-align: left;
+		margin-top: 0;
+	}
+
+	.deal-detail .deal-bottom-box ul.nav > li {
+		width: 42% !important;
+		border-right: none;
+	}
+
+	.deal-detail .deal-bottom-box ul.nav > li:last-child {
+		width: 28% !important;
+		border-right: none;
+	}
+
+	.deal-listing .deal-listing-right .widget {
+		float: none;
+		margin: 0 auto 20px;
+	}
+
+	.deal-listing .top-filter .filter-right {
+		width: 70%;
+	}
+
+	header .head-links ul li .dropdown-menu li a {
+		text-align: left;
+		padding: 0 5px !important;
+	}
+
+	#abovefold #signupSecondscreen p.lead a {
+		font-size: 14px;
+	}
+
+	.redeem-points .experience-grid .experience-wrap .exp-desc,
+	.redeem-points .experience-grid li.small .experience-wrap .exp-desc {
+		position: relative;
+		background: #000;
+		padding: 5px 10px;
+		color: #fff;
+		bottom: 0;
+	}
+
+	.redeem-points .experience-grid li:hover a {
+		text-decoration: none;
+	}
+
+	#redirectloginModal .nav li{
+		display: table-cell;
+		width: 1%;
+	}
+
+	.admin-reservation .member-reservation-wrap .nav-justified {
+		border-bottom: 1px solid #ddd;
+	}
+
+	.admin-reservation .member-reservation-wrap li.active a {
+		font-size: 100%;
+	}
+
+	.admin-reservation .member-reservation-wrap .nav-justified li {
+		float: left;
+		width: auto;
+		display: block;
+	}
+
+	.deal-detail .deal-bottom-box ul.nav > li.review-tab a > span.star-all {
+		display: none !important;
+	}
+	.deal-detail .deal-bottom-box ul.nav > li.review-tab a > span.star-mob {
+		display: inline-block !important;
+	}	
+}
+
+/*Facebook style*/
+
+#abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin  {
+	display: block;
+	background: #2E4C8A;
+	padding: 4px 20px;
+	margin: 15px auto 0;
+	text-align: center;
+	color: #fff;
+	text-decoration: none; 
+	outline:none;
+	max-width: 85%;
+}
+
+#abovefold .signup-wrapper #FBSignup:hover, #abovefold .signup-wrapper #FBLogin:hover{
+	background: #1C3D7A;
+} 
+
+#abovefold .signup-wrapper #FBSignup span.fbicon,
+#abovefold .signup-wrapper #FBLogin span.fbicon {
+	background:url("../img/fb-white.png") no-repeat scroll center / 100% auto rgba(0, 0, 0, 0);
+	display: inline-block;
+	vertical-align: sub;
+	width: 24px;
+	height: 24px;
+	margin-right: 5px; 
+}
+
+
+
+#redirectloginModal .modal-body #FBSignup {
+display: block;
+background: #2E4C8A;
+padding: 4px 20px;
+margin: 0 auto 10px;
+text-align: center;
+color: #fff;
+height:45px;
+text-transform: uppercase;
+text-decoration: none;
+outline: none;
+max-width: 100%;
+}
+
+#redirectloginModal .modal-body #FBSignup:hover {
+	background: #1C3D7A;
+}
+
+#redirectloginModal .modal-body #FBSignup span.fbicon {
+	background: url("../img/fb-white.png") no-repeat scroll center center / 100% auto rgba(0, 0, 0, 0);
+	display: inline-block;
+	vertical-align: bottom;
+	width: 24px;
+	margin-top: 6px;
+	height: 24px;
+	margin-right: 5px;
+}
+
+#abovefold #signupSecondscreen p.lead {
+	margin: 10px 0;
+	font-size: 14px;
+}
+
+#abovefold #signupSecondscreen p.lead a {
+	color: #EAB803;
+	text-decoration: underline;
+}
+
+#abovefold #signupSecondscreen .gender-checkbox label.radio-inline {
+	color: #EAB803;
+}
+
+#abovefold #signupSecondscreen .gender-checkbox label span {
+	margin-top: 7px;
+	display: block;
+}
+
+#abovefold .form-slide-wrapper .control-label.error-code {
+	position: absolute;
+	margin: 0;
+	font-size: 12px;
+	line-height: 14px;
+	display: none;
+}
+
+#abovefold .form-slide-wrapper .info-text.new a {
+	color: #cacaca;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 115%;
+	margin-bottom: 15px;
+	outline: none;
+	opacity: 0.8;
+}
+
+#abovefold .form-slide-wrapper .info-text.new a.active {
+	color: #fff;
+	text-shadow: 0 0 6px rgba(255,255,255,0.8);
+}
+
+#abovefold .form-slide-wrapper .info-text.new a.active .underline {
+	border-bottom: 1px solid #fff;
+    bottom: -4px;
+    left: 60%;
+    position: absolute;
+    width: 27px;
+}
+
+#abovefold .form-slide-wrapper #signinForm-wrap .info-text.new a.active .underline {
+	left: 20%;
+}
+
+#fbSelectCity .modal-dialog {
+	width: 35%;
+	min-width: 300px;
+}
+
+#fbSelectCity .modal-dialog .modal-content{
+	border-radius:0;
+}
+
+#fbSelectCity .modal-header {
+	background: #000;
+	color: #fff;	
+}
+
+#fbSelectCity .modal-footer ,
+#fbSelectCity .modal-header {
+	padding: 10px 20px;
+	margin: 0;
+}
+
+#fbSelectCity .modal-body .btn-group .btn {
+	margin-right: 10px;
+	border-radius: 0;
+}
+
+#fbSelectCity .modal-body .btn-group .btn.active {
+	background: #000;
+	color: #EAB704;
+}
+
+#fbSelectCity .modal-dialog {
+	width: 28%;
+	min-width: 300px;
+}
+
+#fbSelectCity .modal-dialog .modal-content{
+	border-radius:0;
+	background: #000;
+	color: #fff;
+}
+
+#fbSelectCity .modal-header {
+	background: none repeat scroll 0 0 #eab703;
+    border-bottom: medium none;
+    color: #fff;
+    margin-top: 20px;
+    padding: 10px 15px;	
+}
+
+#fbSelectCity .modal-header h4 {
+	font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+}
+
+
+#fbSelectCity #fbSelectCityLabel {
+	margin-top: 0;
+}
+#fbSelectCity .panel {
+	border: none;
+	background: transparent;
+	margin-bottom: 0;
+}
+
+#fbSelectCity .list-group, #fbSelectCity .list-group li {
+	background: transparent;
+	color: #fff;
+}
+
+#fbSelectCity .list-group li {
+	border-top: none;
+	border-bottom: 1px solid #444242;
+}
+
+#fbSelectCity .list-group li:last-child {
+	border-bottom: none;
+}
+
+#fbSelectCity .list-group li a {
+	color: #fff;
+	text-decoration: none;
+	font-size: 120%;
+	left: 35%;
+	position: relative;
+}
+
+#fbSelectCity .list-group li a:before {
+	content: ">";
+	padding-right: 7px;
+	transition: all ease 0.3s;
+}
+
+#fbSelectCity .list-group li a:hover:before {
+	padding-left: 3px;
+	padding-right: 4px;
+}
+
+#abovefold .form-slide-wrapper .info-text.new a#slideSignin {
+	border-left: 1px solid #fff;
+}
+
+#abovefold .form-slide-wrapper .info-text.new a#slideSignup{
+	border-right: 1px solid #fff;
+}
+
+.bookmark_plain
+{background: url(../img/bookmark_plain.png) no-repeat; width: 23px; height: 39px; margin-right: 8px;margin-top:18px !important;cursor:pointer}
+.bookmark_marked
+{background: url(../img/bookmark_red.png) no-repeat; width: 23px; height: 39px; margin-right: 8px;margin-top:18px !important;cursor:pointer}
+
+.deal-listing .flag, .deal-listing .bookmark {
+	position: absolute;
+	top: 1%;
+}
+.deal-listing .experience-grid li .bookmark {
+	right:5%;
+    margin-top: -17px;
+}
+
+.deal-listing-left .divider {
+	margin: 15px 0;
+	height: 1px;
+	background-color: #ddd;
+}
+.deal-listing .experience-grid li .bookmark .btn {
+    padding: 0;
+    margin-right: 8px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
+
+.deal-listing .experience-grid li .flag {
+	max-width: 150px;
+    height: 30px;
+    bottom: 265px;
+    display: inline-block;;
+	padding: 5px 15px;
+	color: #fff;
+	margin-left: 8px;
+}
+
+
+.deal-listing .experience-grid li .flag.new {
+	background: #EA0309;
+}
+
+.deal-listing .experience-grid li .flag.ending-soon {
+	background: #069505;
+}
+
+.deal-listing .experience-grid li .flag.popular{ background: #0c1512;}
+
+.discount { width: auto; height: auto; background: #ebebeb; color: #000; font-family: 'PT Sans';font-size: 18px;padding: 5px 10px;            
+}
+
+.star-icon {
+    color: #bababa;
+    font-size: 18px;
+    position: relative;
+    padding: 0 1px;
+    line-height: 18px;
+    -webkit-text-stroke: 0.55px;
+}
+.star-icon.full:before {
+    color: #000000;
+    content: '\2605'; /* Full star in UTF-8 */
+    position: absolute;
+    left: 0;
+    padding: 0 1px;
+    -webkit-text-stroke: 0.55px;
+    margin-top: 4px;
+}
+.star-icon.half:before {
+    color: #000000;
+    content: '\2605'; /* Full star in UTF-8 */
+    position: absolute;
+    left: 0;
+     margin-top: 4px;
+    width: 50%;
+    overflow: hidden;
+    padding: 0 1px;
+    -webkit-text-stroke: 0.55px;	 
+}
+.rating {
+	display: block;
+	font-size: 14px;
+	font-weight: normal;
+	font-style: italic;
+	margin-top: 0px;
+}
+.star-all {
+	display: inline-block !important;
+	margin-top: 3px;
+}
+
+.desc-price p {
+	font-weight: bold;
+	font-size: 18px;
+	margin-top: 5px;
+}
+
+
+span.small 
+{display: block;
+	font-size: 13px;
+	font-weight: normal;
+	font-style: italic;
+	margin-top: 5px;
+}
+
+span.small-subarea 
+{
+	display: inline;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+.terms_padding{
+	padding-top:15px;
+}
+
+@-moz-document url-prefix() { /* Firefox Hack :( */
+  .star-icon {
+    font-size: 18px;
+    line-height: 16px;
+  }
+ /*.star-icon.full:before, .star-icon.half:before {
+    bottom: 4px;
+  }*/
+}
+
+/***************** Listing page search filter*******************/
+
+.deal-listing-right .widget.filter-widget-wrap,
+.widget.filter-widget-wrap.small {
+	background: #111;
+}
+
+.widget.filter-widget-wrap.small {
+	float: left;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.widget.filter-widget-wrap.small .filter-widget {
+	padding: 0 20px 20px;
+}
+
+.deal-listing-right .widget.filter-widget-wrap h3,
+.widget.filter-widget-wrap.small h3 {
+	background-color: #eab703;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 7px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+}
+
+.deal-listing-right .widget .filter-widget {
+	background: #111;
+	padding: 0 20px 20px;
+}
+
+.deal-listing-right .widget .filter-widget form label,
+.widget.small .filter-widget form label {
+	color: #eab703;
+	font-weight: normal;
+	font-size: 92% !important;
+}
+
+#rupee_symbol{
+	font-weight: normal;
+	font-size: 14px;
+	background: none repeat scroll 0 0 #222;
+	width:65px;
+	border-color: #222 !important;
+}
+#rupee_symbol.active{
+	background: none repeat scroll 0 0 #eab803;
+    border-color: #eab803;
+    color: #000;
+}
+
+.deal-listing-right .widget .filter-widget form input,
+.deal-listing-right .widget .filter-widget form select,
+.widget.small .filter-widget form input,
+.widget.small .filter-widget form select {
+	border-radius: 0;
+	padding: 3px 12px;
+	height: 28px;
+}
+
+.widget .filter-widget form .checkbox label {
+	color: #fff;
+}
+
+.widget .filter-widget form input[type="checkbox"] {
+	height: auto;
+}
+
+.deal-listing-right .widget .filter-widget form .typeahead {
+	border-radius: 0;
+}
+
+.deal-listing-right .widget .filter-widget form .typeahead .active > a,
+.deal-listing-right .widget .filter-widget form .typeahead .active > a:hover,
+.deal-listing-right .widget .filter-widget form .typeahead .active > a:focus,
+.small.widget .filter-widget form .typeahead .active > a,
+.small.widget .filter-widget form .typeahead .active > a:hover,
+.small.widget .filter-widget form .typeahead .active > a:focus {
+	background: #dadada;
+	color: #333;
+}
+
+.datepicker.datepicker-dropdown {
+	cursor: pointer;
+}
+
+.datepicker.datepicker-dropdown table td.day:hover {
+	background: #ddd;
+}
+
+.deal-listing-right .widget .filter-widget form .date-group,
+.deal-listing-right .widget .filter-widget form .time-group,
+.small.widget .filter-widget form .date-group,
+.small.widget .filter-widget form .time-group {
+	width: 48%;
+	float: left;
+}
+
+.deal-listing-right .widget .filter-widget form .date-group,
+.small.widget .filter-widget form .date-group {margin-right: 4%;}
+
+.deal-listing-right .widget .filter-widget form .date-group #datepicker,
+.small.widget .filter-widget form .date-group #datepicker {
+	font-size: 12px;
+	padding: 3px 5px;
+}
+
+.deal-listing-right .widget .filter-widget form .input-group-addon,
+.small.widget .filter-widget form .input-group-addon {
+	padding: 3px 12px;
+	border-radius: 0;
+}
+
+.deal-listing-right .widget .filter-widget form #amount,
+.small.widget .filter-widget form #amount-small {
+	background: none repeat scroll 0 0 #333;
+    border: medium none;
+    color: #fff;
+    display: inline-block;
+    float: right;
+    height: auto;
+    margin-left: 10px;
+    padding: 1px 5px;
+    text-align: center;
+    width: 60%;
+    font-size: 14px;
+}
+
+.deal-listing-right .widget .filter-widget .ui-widget-content,
+.small.widget .filter-widget .ui-widget-content {
+	background: #555;
+	margin: 15px 0 20px;
+	height: 10px;
+	position: relative;
+	border: none;
+}
+
+.deal-listing-right .widget .filter-widget .ui-slider .ui-slider-handle,
+.small.widget .filter-widget .ui-slider .ui-slider-handle {
+	position: absolute;
+	z-index: 2;
+	width: 20px;
+	height: 20px;
+	cursor: default;
+	margin-left: -6px;
+	text-align: center;	
+	line-height: 30px;
+	font-size: 15px;
+	bottom: -5px;
+	background: #EAB703;
+	border-color:#C99F06;
+}
+
+.deal-listing-right .widget .filter-widget  .ui-slider .ui-slider-range,
+.small.widget .filter-widget  .ui-slider .ui-slider-range{
+	background-position: 0 0;
+    border: 0 none;
+    display: block;
+    font-size: 0.7em;
+    position: absolute;
+    z-index: 1;
+    background: #eab703;
+    height: 10px;
+}
+
+
+.deal-listing-right .widget .filter-widget .ui-corner-all,
+.small.widget .filter-widget .ui-corner-all {
+	border-radius: 20px;
+}
+
+.ui-slider .ui-slider-handle {
+	cursor: pointer;
+}
+
+.ui-slider a,
+.ui-slider a:focus {
+	cursor: pointer;
+	outline: none;
+}
+
+.deal-listing-right .widget .filter-widget .more-filter,
+.small.widget .filter-widget .more-filter {margin-top: 20px;}
+
+.deal-listing-right .widget .filter-widget .more-filter .panel-group,
+.small.widget .filter-widget .more-filter .panel-group {margin: 0;}
+
+.widget .filter-widget .more-filter .panel-heading,
+.widget .filter-widget .more-filter .panel-default {
+	background: transparent;
+	border: none;
+	padding: 0;
+	border-radius: 0;
+}
+
+.widget .filter-widget .more-filter .panel-heading {
+	background: #222;
+}
+
+.widget .filter-widget .more-filter .panel-title {
+	padding: 2px;
+	color: #fff;
+}
+
+.widget .filter-widget .more-filter .panel-title a {
+	text-decoration: none;
+	outline: none;
+	display: block;
+}
+
+.widget .filter-widget .more-filter .panel-title a .caret {
+	border-width: 6px 5px 0;
+	margin-left: 5px;
+}
+
+.widget .filter-widget .more-filter .panel-body {
+	border: none;
+	color: #fff;
+	padding: 15px 0 0;
+}
+
+.widget .filter-widget .more-filter .panel-body .option {
+	margin-bottom: 20px;
+}
+
+.widget .filter-widget .more-filter .panel-body .option.tags {
+	margin-bottom: 10px;
+}
+
+.widget .filter-widget .more-filter .panel-body .option .lead {
+	color: #EAB703;
+	margin-bottom: 0;
+}
+
+.leads_tag{
+	padding-top:95% !important;
+	width: 68% !important;
+}
+
+.widget .filter-widget .more-filter .panel-body .option .badge {
+	background: #222;
+}
+
+.widget .filter-widget .more-filter .panel-body .option.tags label {
+	padding: 5px 3px !important; 
+	margin: 10px 10px 0 0;
+}
+
+.widget .filter-widget .more-filter .panel-body .option.tags label {
+	background: #222;
+	border-color: #222;
+	color: #EAB703;
+}
+
+.widget .filter-widget .more-filter .panel-body .option.tags label.active {
+	background: #eab803;
+	border-color: #eab803;
+	color: #000;
+}
+
+.widget .filter-widget .more-filter .panel-body .small {
+	margin: 0;
+}
+
+.widget .filter-widget .more-filter .panel-body .small a{
+	color: #eab803;
+	text-decoration: none;
+}
+
+/***************** datepicker styling*******************/
+
+.ui-datepicker .ui-widget-header {
+	background: none !important;
+	border: none !important;
+}
+
+.ui-datepicker .ui-state-default {
+	background: transparent !important;
+	border: none !important;
+	text-align: center !important;
+	font-weight: bold !important;
+	color: #37762A !important; 
+	border: 1px solid transparent !important;
+}
+
+.ui-datepicker .ui-state-hover {
+	background: none !important;
+	border: none !important;
+}
+
+.ui-datepicker .ui-state-default:hover {
+	border: 1px solid #EA9403 !important;
+}
+
+.ui-datepicker .ui-state-default.ui-state-highlight {
+	background: #EA9403 !important;
+	color: #fff !important;
+
+}
+
+.deal-listing .sort-info {
+	font-weight: bold;
+	margin: 10px 0 0;
+}
+
+
+/*************************Inside page ala cart listing*****************************/
+
+ .deal-listing-right .widget {
+	float: left;
+}
+
+.deal-listing .form-control {
+	border-radius: 0;
+}
+
+.deal-listing-left .alert-warning {
+	border-radius: 0;
+	background: #EBEBEB;
+	border-color: #ddd;
+	color: #777;
+}
+
+.deal-listing-left .alert-warning button.close {
+	opacity: 0.8;
+}
+
+.deal-listing .sort-info {
+	font-weight: bold;
+	margin: 10px 0 0;
+}
+
+/*********************CSS FOR 2 UPPER BLOCKS ON EXPERIENCE LISTING PAGE*********************/
+.valign{top:15% !important}
+.balign{margin-top:-17px}
+#description_dea
+{
+bottom:73px;
+}
+#description_dea2
+{
+bottom:73px;
+}
+#description_dea_ajax
+{
+bottom:70px;
+}
+#description_dea2_ajax
+{
+bottom:93px;
+}
+ .deal-listing .deal_desc 
+{background:rgba(0,0,0,0.7);
+position:absolute;
+bottom:13.6%;
+max-width:95.5%;
+padding:5px 10px;
+color:#ea9403
+}
+
+.deal-listing .flag {
+    max-width: 150px;
+    height: 30px;
+    bottom: 265px;
+    display: inline-block;;
+    padding: 5px 15px;
+    color: #fff;
+    margin-left: 8px;
+}
+
+
+
+.deal_desc ._price p 
+{ font-weight:italic;
+    font-size: 13px;
+    font-family:'PT Sans' sans-serif; 
+    line-height:0.8em;
+    float: right; 
+    margin-right:12px;
+    padding: 2px 5px;
+}
+
+
+
+.deal-listing .deal-desc ._price p {
+font-style:italic;
+line-height:16px;
+color:#ea9403;
+margin:0;
+}
+
+.deal-listing .deal_desc ._price p span.small{
+    display: inline-block;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: italic;
+    margin-top: 5px;}
+
+.deal-listing .flag, .deal-listing .bookmark {
+    position: absolute;
+    top: 1%;
+}
+.deal-listing .bookmark {
+    right:5%;
+    padding-top: 0px;
+    float:right;
+}
+
+span.smalls 
+{display: inline;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.ratings {
+    display: inline;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: italic;
+    margin-top: 0px;
+}
+
+#top_alignment{
+top:10px;
+}
