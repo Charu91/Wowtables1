@@ -52,6 +52,7 @@ class Experiences {
 							->leftJoin('curators','curators.id','=','pcm.curator_id')
 							->leftJoin('media','media.id','=','pmm.media_id')
 							->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
+							->join('vendors','vendors.id','=','vl.vendor_id')
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description')
@@ -69,8 +70,8 @@ class Experiences {
 									'media.file as experience_image', 'curators.name as curator_name', 
 									'curators.bio as curator_bio', 'curators.designation',
 									'pat3.attribute_value as menu','cm.file as curator_image',
-									'pat4.attribute_value as terms_and_condition',
-									'pvl.id as product_vendor_location_id', 'pat5.attribute_value as experience_includes');
+									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
+									 'pat5.attribute_value as experience_includes', 'vendors.name as vendor_name');
 							
 		}
 		else {
@@ -83,7 +84,7 @@ class Experiences {
 									'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
 									'media.file as experience_image','cm.file as curator_image', 
 									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
-									'pat5.attribute_value as experience_includes');
+									'pat5.attribute_value as experience_includes','vendors.name as vendor_name');
 		}
 
 		//running the query to get the results
@@ -111,6 +112,7 @@ class Experiences {
 			$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
+										'vendor_name' => $expResult->vendor_name,
 										'experience_info' => $expResult->experience_info,
 										'experience_includes' => $expResult->experience_includes,
 										'short_description' => $expResult->short_description,
