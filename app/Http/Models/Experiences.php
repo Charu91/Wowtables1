@@ -35,9 +35,11 @@ class Experiences {
 							->leftJoin('product_attributes_text as pat1','pat1.product_id','=','products.id')
 							->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
 							->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
+							->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
 							->leftJoin('product_attributes as pa1', 'pa1.id','=','pat1.product_attribute_id')
 							->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
 							->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
+							->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
 							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
@@ -53,7 +55,8 @@ class Experiences {
 							->where('products.id',$experienceID)
 							->where('pa1.alias','experience_info')
 							->where('pa2.alias','short_description')
-							->where('pa4.alias','terms_and_conditions');
+							->where('pa4.alias','terms_and_conditions')
+							->where('pa5.alias','experience_includes');
 		
 		//adding additional parameters in case of simple experience
 		if($queryType && $queryType->type == 'simple') {			
@@ -67,7 +70,7 @@ class Experiences {
 									'curators.bio as curator_bio', 'curators.designation',
 									'pat3.attribute_value as menu','cm.file as curator_image',
 									'pat4.attribute_value as terms_and_condition',
-									'pvl.id as product_vendor_location_id');
+									'pvl.id as product_vendor_location_id', 'pat5.attribute_value as experience_includes');
 							
 		}
 		else {
@@ -79,7 +82,8 @@ class Experiences {
 									'pat1.attribute_value as experience_info','curators.name as curator_name', 
 									'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
 									'media.file as experience_image','cm.file as curator_image', 
-									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id');
+									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
+									'pat5.attribute_value as experience_includes');
 		}
 
 		//running the query to get the results
@@ -108,6 +112,7 @@ class Experiences {
 										'id' => $expResult->id,
 										'name' => $expResult->name,
 										'experience_info' => $expResult->experience_info,
+										'experience_includes' => $expResult->experience_includes,
 										'short_description' => $expResult->short_description,
 										'terms_and_condition' => $expResult->terms_and_condition,
 										'image' => $arrImage,
@@ -319,6 +324,7 @@ class Experiences {
 								'is_variable' => (is_null($row->is_variable)) ? "" : $row->variable,
 								'taxes' => (is_null($row->taxes)) ? "" : $row->taxes,
 								'price_type' => (is_null($row->type_name)) ? "" : $row->type_name,
+								'resrevation_title' => 'No of Alcohol Pairing'
 							);
 			}
 		}
