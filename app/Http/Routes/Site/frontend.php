@@ -72,6 +72,26 @@ Route::get('/{city}/',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('/custom_search/sorting',[
+    'uses' => 'Site\ExperienceController@sorting',
+    'as' => 'experience.sorting',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/custom_search/search_filter',[
+    'uses' => 'Site\ExperienceController@search_filter',
+    'as' => 'experience.search_filter',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/custom_search/new_custom_search',[
+    'uses' => 'Site\ExperienceController@new_custom_search',
+    'as' => 'experience.new_custom_search',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+
 Route::get('/{city}/experiences/{experience}/',[
     'uses' => 'Site\ExperienceController@details',
     'as' => 'experience.details',
@@ -88,5 +108,17 @@ Route::get('/{city}/alacarte/',[
 Route::get('/{city}/alacarte/{alacarteexperience}',[
     'uses' => 'Site\AlacarteController@details',
     'as' => 'alacarte.lists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/alacarte_custom_search/search_filter',[
+    'uses' => 'Site\AlacarteController@search_filter',
+    'as' => 'alacarte.search_filter',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/alacarte_custom_search/new_custom_search',[
+    'uses' => 'Site\AlacarteController@new_custom_search',
+    'as' => 'alacarte.new_custom_search',
     'domain' => env('WEBSITE_URL'),
 ]);

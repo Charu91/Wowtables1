@@ -292,6 +292,45 @@
 					</div>
 				</div>
 				@include('partials.forms.experience_addon')
+				<hr/>
+				<div>
+					<div class="panel-body">
+						<table class="table table-striped table-responsive mb-none">
+							<thead>
+							<tr>
+								<th>S.No</th>
+								<th>Addon title</th>
+								<th>Price</th>
+								<th>Post Tax Price</th>
+								<th>Addon Short Description</th>
+								<th>Check to Inactive</th>
+							</tr>
+							</thead>
+							<tbody>
+
+							@foreach($experienceAddons as $key => $experienceAddon)
+								<tr>
+									<th>{{$key}}</th>
+									<th>{{$experienceAddon['addOnsName']}}</th>
+									<th>{{$experienceAddon['price']}}</th>
+									<th>{{$experienceAddon['post_tax_price']}}</th>
+									<th>{{$experienceAddon['short_description']}}</th>
+									<th><input type="checkbox" value="1" class="inactive_addon" data-addon_id="{{$key}}"/></th>
+									<input type="hidden" id="addonTitle_{{$key}}" name="addons[{{$key}}][name]" value="{{$experienceAddon['addOnsName']}}" />
+									<input type="hidden" id="addon_reservation_title_{{$key}}" name="addons[{{$key}}][reservation_title]" value="{{$experienceAddon['reservation_title']}}" />
+									<input type="hidden" id="addonPriceBeforeTax_{{$key}}" name="addons['{{$key}}'][price]" value="{{$experienceAddon['price']}}" />
+									<input type="hidden" id="addon_tax_{{$key}}" name="addons[{{$key}}][tax]" value="{{$experienceAddon['tax']}}" />
+									<input type="hidden" id="addonPriceAfterTax_{{$key}}" name="addons[{{$key}}][post_tax_price]" value="{{$experienceAddon['post_tax_price']}}" />
+									<input type="hidden" id="addon_commission_per_cover_{{$key}}" name="addons[{{$key}}][commission_per_cover]" value="{{$experienceAddon['commission']}}" />
+									<input type="hidden" id="addon_commission_on_{{$key}}" name="addons[{{$key}}][commission_on]" value="{{$experienceAddon['commission_on']}}" />
+									<input type="hidden" id="addon_short_description_{{$key}}" name="addons[{{$key}}][short_description]" value="{{$experienceAddon['short_description']}}" />
+									<input type="hidden" id="addon_addonsMenu_{{$key}}" name="addons[{{$key}}][addonsMenu]" value="{{$experienceAddon['menu']}}" />
+								</tr>
+							@endforeach
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 
 			<div id="menu_details" class="tab-pane mt-lg">

@@ -31,7 +31,7 @@ class ExperiencesRepository {
             'attributesVarChar',
             'attributesSingleSelect',
             'attributesMultiSelect'
-            //'schedules'
+        //'schedules'
         )->findOrFail($id);
         /*->wherehas('vendor.vendorType',function($q) {
         $q->where('type','Restaurants');
@@ -113,6 +113,77 @@ class ExperiencesRepository {
 
         $productCuratorDetails = DB::table('product_curator_map')->where('product_id', $product_id);
         return $productCuratorDetails->get();
+    }
+
+    public function populateProductAddOns($product_id){
+        $addOns = '
+                    SELECT p.id,p.name
+                    FROM products as p
+                    WHERE product_parent_id = ?
+        ';
+
+        $addOnsResults = DB::select($addOns,[$product_id]);
+
+        $addOnsArray = array();
+        $addOnsAttributesArray = array();
+
+        foreach($addOnsResults as $addOnsResult){
+            //echo "<pre>"; print_r($addOnsResult);
+
+            $addOnsDetails = '
+                    SELECT pat.attribute_value,pat.product_attribute_id,pa.alias
+                    FROM product_attributes_text as pat
+                    LEFT JOIN product_attributes as pa ON pat.product_attribute_id = pa.id
+                    WHERE product_id = ?
+            ';
+
+           //echo $addOnsDetails;
+
+            $addOnsAttributesValues = DB::select($addOnsDetails,[$addOnsResult->id]);
+
+            //echo "<pre>"; print_r($addOnsAttributesValues);
+
+            foreach($addOnsAttributesValues as $addOnsAttributesValue){
+                $addOnsAttributesArray[$addOnsAttributesValue->alias] = $addOnsAttributesValue->attribute_value;
+            }
+
+            //echo "<pre>"; print_r($addOnsAttributesValue);
+
+            $addOnsPricing = '
+                    SELECT pp.price,pp.tax,pp.post_tax_price,pp.commission,pp.commission_on
+                    FROM product_pricing as pp
+                    WHERE product_id = ?
+            ';
+
+            $addOnsPricingValues = DB::select($addOnsPricing,[$addOnsResult->id]);
+
+            //$addOnsArray = $experienceMedia->file;
+
+            //echo "<pre>"; print_r($addOnsPricingValues);
+
+            foreach($addOnsPricingValues as $addOnsPricingValue){
+                //echo "<pre>"; print_r($addOnsPricingValue);
+                foreach($addOnsPricingValue as $key => $value){
+                    $addOnsAttributesArray[$key] = $value;
+                    $addOnsAttributesArray[$key] = $value;
+                    $addOnsAttributesArray[$key] = $value;
+                    $addOnsAttributesArray[$key] = $value;
+                    $addOnsAttributesArray[$key] = $value;
+
+                }
+            }
+
+            $addOnsAttributesArray['addOnsName'] = $addOnsResult->name;
+
+            //$addOnsArray['addOnsName'] = $addOnsResult->name;
+
+            //echo "<pre>"; print_r($addOnsAttributesArray);
+            $addOnsArray[$addOnsResult->id] = $addOnsAttributesArray;
+        }
+
+        return $addOnsArray;
+
+
     }
 
 }

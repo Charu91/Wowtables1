@@ -87,6 +87,48 @@ class ExperienceModel {
       return $arrRating;
     }
 
+
+    public function getExperienceAreaCuisineByName($arrData = array())
+    {
+      
+      $experienceQuery = 'select `products`.`id`, `locations`.`name` as `location_name`, 
+                  `locations`.`id` as `location_id`, `vendors`.`name` as `vendor_name`, 
+                  `vendors`.`id` as `vendor_id`, `paso`.`id` as `cuisine_id`, `paso`.`option` as `cuisine_name` 
+                  from `products` inner join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `products`.`id` 
+                  left join `vendor_location_address` as `vla` on `vla`.`vendor_location_id` = `pvl`.`vendor_location_id` 
+                  left join `vendor_locations` as `vl` on `vl`.`id` = `pvl`.`vendor_location_id` 
+                  left join `locations` on `locations`.`id` = `vl`.`location_id` 
+                  left join `product_attributes_multiselect` as `pam` on `pam`.`product_id` = `products`.`id` 
+                  left join `product_attributes_select_options` as `paso` on `paso`.`id` = `pam`.`product_attributes_select_option_id` 
+                  inner join `vendors` on `vendors`.`id` = `vl`.`vendor_id` 
+                  where `pvl`.`status` = "Active" and `vla`.`city_id` = "'.$arrData['city_id'].'" 
+                  and `products`.`visible` = 1 and `products`.`type` in ("simple","complex") AND
+                  (`paso`.`option` like  "%'.$arrData['term'].'%"  or `locations`.`name` like  "%'.$arrData['term'].'%" 
+                   or `vendors`.`name` like  "%'.$arrData['term'].'%" )';
+
+      //executing the query
+      $experienceResult = DB::select($experienceQuery);
+
+      //array to store the product ids
+      $arrProduct = array();
+      //array to store final result
+      $arrData = array();
+
+      #query executed successfully
+      if($experienceResult) {
+          $arrData = array();
+          foreach($experienceResult as $row) {
+
+                $arrData[] = $row->location_name.'~~~'.$row->location_id.'~~~location';
+                $arrData[] = $row->vendor_name.'~~~'.$row->vendor_id.'~~~vendor';
+                $arrData[] = $row->cuisine_name.'~~~'.$row->cuisine_id.'~~~cuisine';
+          }
+      }
+     // echo '<pre>';print_r($arrData['data']);
+      $arrDataNew =  array_unique( $arrData);
+      return $arrDataNew;
+    } 
+
     //-----------------------------------------------------------------
 
     /**
@@ -114,7 +156,7 @@ class ExperienceModel {
                 ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
                 ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
-                //->leftJoin('tags','tags.id','=','ptm.tag_id')
+                //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
                 ->where('pa1.alias','experience_info')
                 ->where('pa2.alias','short_description')
@@ -131,31 +173,47 @@ class ExperienceModel {
 
 
       //adding filter for cuisines if cuisines are present
-      if(isset($arrData['cuisine'])) {
+      if(isset($arrData['cuisine']) && !empty($arrData['cuisine'])) {
         $experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
             ->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
-            ->whereIn('paso.option',$arrData['cuisine']);
+            ->whereIn('paso.id',$arrData['cuisine']);
       }
 
       //adding filter for locations if locations are present
-      if(isset($arrData['location'])) {
+      if(isset($arrData['location']) && !empty($arrData['location'])) {
         $experienceQuery->//join(DB::raw('product_vendor_locations as pvl'),'pvl.product_id','=','products.id')
                 //->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
                 //->join('locations','locations.id','=','vl.location_id')
-                whereIn('locations.name',$arrData['location']);
+                whereIn('locations.id',$arrData['location']);
                 //->where('pvl.status','Active');
       }
 
       //adding filter for tags if tags are present
-      if(isset($arrData['tag'])) {
+      if(isset($arrData['tag']) && !empty($arrData['tag'])) {
         $experienceQuery->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
           ->leftJoin('tags','tags.id','=','ptm.tag_id')
-          ->whereIn('tags.name',$arrData['tag']);
+          ->whereIn('tags.id',$arrData['tag']);
       }
 
       //adding filter for price if price has been selected
       if(isset($arrData['minPrice']) && isset($arrData['maxPrice'])) {
-        $experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
+       $experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
+      }
+
+      //adding filter for price if price has been selected
+      if(isset($arrData['vendor']) && isset($arrData['vendor'])) {
+        $experienceQuery->whereIN('vl.vendor_id',$arrData['vendor']);
+      }
+
+      //adding filter for price if price has been selected
+      if(isset($arrData['orderby']) && !empty($arrData['orderby']) != '') {
+        $orderType = 'desc';
+        if(isset($arrData['ordertype']))
+        {
+          $orderType = !empty($arrData['ordertype'])?$arrData['ordertype']:'desc';
+        }
+
+        $experienceQuery->orderBy($arrData['orderby'],$orderType);
       }
 
       //executing the query
@@ -576,6 +634,7 @@ class ExperienceModel {
     }
     return $arrExpDetails;        
   }
+
 
   public static function getExperienceCuisine($exp_id) {
         //query to read cuisines

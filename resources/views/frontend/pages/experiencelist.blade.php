@@ -774,6 +774,8 @@ $(document).ready(function(){
         </div>
 	</div>
 </div>
+<input type='hidden' name='hdn_search_type' id='hdn_search_type' value=""/>
+<input type='hidden' name='hdn_search_id' id='hdn_search_id' value=""/>
 <script> // Jquery slider 
       $(document).ready(function(){
         $( "#slider-range" ).slider({
@@ -785,16 +787,16 @@ $(document).ready(function(){
         $( "#amount" ).val( "Rs " + ui.values[ 0 ] + " - Rs " + ui.values[ 1 ] );
          },
 			stop:function(event, ui){
-				var time_val = $("#search_by_time").val();
+			var time_val = $("#search_by_time").val();
 			var date_val = $("#datepicker").val();
 			var rest_val = $("#search_by").val();
 			var start_from = ui.values[0];
 			var end_with = ui.values[1];
-			var c = $("#uri_city").val();
+			var c = $("#uri_city_id").val();
 			//console.log("ajax call for according to price "+ui.values[ 1 ]+" , "+ui.values[ 0 ]);
 			//console.log("time value = "+time_val+" , date value = "+date_val+" , rest value = "+rest_val);
 			$.ajax({
-				url: "{{URL::to('/')}}/custom_search/search_restaurant",
+				url: "{{URL::to('/')}}/custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
@@ -806,22 +808,20 @@ $(document).ready(function(){
 					//$("#results").append(d);
 					//console.log(d);
 					var area_replace = '';
-					$.each(d.area_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					});
+		            $.each(d.area_count,function(index, valueData){
+		              area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+		            });
+
 
 					var cuisine_replace = '';
-					$.each(d.cuisine_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					});
+		            $.each(d.cuisine_count,function(index, valueData){
+		              cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+		            });
 
-					var tags_replace = '';
-					$.each(d.tags_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+index+'"> '+value+'</label>'
-					});
+		            var tags_replace = '';
+		            $.each(d.tags_count,function(index, valueData){
+		              tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+valueData.id+'"> '+valueData.name+'</label>'
+		            });
 
 					$("#left-content").fadeOut(500, function() {
 						$("#left-content").empty();
@@ -873,11 +873,11 @@ $(document).ready(function(){
 			var rest_val = $("#search_by").val();
 			var start_from = ui.values[0];
 			var end_with = ui.values[1];
-			var c = $("#uri_city").val();
+			var c = $("#uri_city_id").val();
 			//console.log("ajax call for according to price "+ui.values[ 1 ]+" , "+ui.values[ 0 ]);
 			//console.log("time value = "+time_val+" , date value = "+date_val+" , rest value = "+rest_val);
 			$.ajax({
-				url: "{{URL::to('/')}}/custom_search/search_restaurant",
+				url: "{{URL::to('/')}}/custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
@@ -889,22 +889,19 @@ $(document).ready(function(){
 					//$("#results").append(d);
 					//console.log(d);
 					var area_replace = '';
-					$.each(d.area_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					});
+		            $.each(d.area_count,function(index, valueData){
+		              area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+		            });
 
 					var cuisine_replace = '';
-					$.each(d.cuisine_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					});
+		            $.each(d.cuisine_count,function(index, valueData){
+		              cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+		            });
 
-					var tags_replace = '';
-					$.each(d.tags_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+index+'"> '+value+'</label>'
-					});
+		            var tags_replace = '';
+		            $.each(d.tags_count,function(index, valueData){
+		              tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+valueData.id+'"> '+valueData.name+'</label>'
+		            });
 
 					$("#left-content").fadeOut(500, function() {
 						$("#left-content").empty();
@@ -945,9 +942,10 @@ $(document).ready(function(){
 		  //search by cuisine/restaurant/area and brings the dropdown and appends it to the table which is below the search bar (Full resolution)
 		  var search_var = 0;
 		 
-			var c = $("#uri_city").val();
-			$('#search_by, #search_by_rest').autocomplete({
-				
+			var c = $("#uri_city_id").val();
+
+
+			$('#search_by, #search_by_rest').autocomplete({			
 				
 				source: function( request, response ) {
 
@@ -964,24 +962,51 @@ $(document).ready(function(){
 					});
 				},
 				select: function(event,ui){
-					//console.log("selected value = "+ui.item.value);
-					var rest_val = ui.item.value;
+					event.preventDefault();
+					var itemArr = ui.item.value.split('~~~');
+					
+					var rest_val = itemArr[0];
 					var date_val = $("#datepicker").val();
 					var time_val = $("#search_by_time").val();
 					var amount_value = $("#amount").val();
 					var final_amount = amount_value.split(' ');
 					var start_from = final_amount[1];
 					var end_with = final_amount[4];
-					var c = $("#uri_city").val();
+					var c = $("#uri_city_id").val();
+					var sList1        = "";
+					var sList2        = "";
+					var sList         = "";
+
+					if(itemArr[2] == 'location')
+					{
+						sList1	= 	itemArr[1]
+					}
+
+					if(itemArr[2] == 'cuisine')
+					{
+						sList2	= 	itemArr[1]
+					}
+
+					if(itemArr[2] == 'vendor')
+					{
+						sList	= 	itemArr[1]
+					}
+
+					$( "#search_by_rest" ).val( rest_val);
+					$( "#search_by" ).val( rest_val );
+
+					$( "#hdn_search_id" ).val( itemArr[1]);
+					$( "#hdn_search_type" ).val(itemArr[2]);
+
 					search_var = 1;
 					//console.log("rest_val = "+rest_val+" , date_val = "+date_val+" , time_val = "+time_val+" , amount_val = "+amount_value);
 					$.ajax({
 
-						url: "{{URL::to('/')}}/custom_search/search_restaurant",
+						url: "{{URL::to('/')}}/custom_search/search_filter",
 						dataType: "JSON",
 						type: "post",
 						//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
-						data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c},
+						data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c,area_values : sList1,cuisine_values : sList2,vendor_value : sList},
 						beforeSend:function(){
 							//$(".show_loading_img").css("display","block");
 							$('#exp_list_load_layer').removeClass('hidden');
@@ -989,23 +1014,19 @@ $(document).ready(function(){
 						success: function(d) {
 						  //console.log(d.area_count);
 						  var area_replace = '';
-						  $.each(d.area_count,function(index, value){
-							//console.log('city' + index + ',  value: ' + value);
-							area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-						  });
+				            $.each(d.area_count,function(index, valueData){
+				              area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+				            });
 
 						  var cuisine_replace = '';
-						  $.each(d.cuisine_count,function(index, value){
-							//console.log('city' + index + ',  value: ' + value);
-							cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-						  });
+				            $.each(d.cuisine_count,function(index, valueData){
+				              cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
+				            });
 
-						  var tags_replace = '';
-						  $.each(d.tags_count,function(index, value){
-							//console.log('city' + index + ',  value: ' + value);
-							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+index+'"> '+value+'</label>'
-						  });
-
+				            var tags_replace = '';
+				            $.each(d.tags_count,function(index, valueData){
+				              tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+valueData.id+'"> '+valueData.name+'</label>'
+				            });
 						  $("#left-content").fadeOut(500, function() {
 								$("#left-content").empty();
 								$("#left-content").html(d.restaurant_data);
@@ -1034,9 +1055,18 @@ $(document).ready(function(){
 						},
 						timeout: 9999999
 					  });
-				},	
+				},
+				create: function () {
+		          $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+		               itemArr = item.value.split('~~~');
+						return $( "<li>" )
+						.append( "<a data-id='"+itemArr[1]+"' data-type='"+itemArr[2]+"'>"+itemArr[0] + "</a>" )
+						.appendTo( ul );
+		            };
+		        },	
 				minLength: 1
-			});
+			})
+
 			var search_var = 0;
 			var search_var = 0;
 	

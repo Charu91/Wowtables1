@@ -118,6 +118,10 @@ class AdminExperiencesController extends Controller {
 
         $experienceCurator = $this->repository->populateProductCurator($id);
 
+        $experienceAddons = $this->repository->populateProductAddOns($id);
+
+        //echo "asc<Pre>"; print_r($experienceAddons); echo "sadsa";die;
+
         $gallery_media_array = array();
         $listing_media_array = array();
         $mobile_array = array();
@@ -149,6 +153,7 @@ class AdminExperiencesController extends Controller {
                         'experienceFlags'=>$experienceFlags[0],
                         'experienceTags'=>$experienceTags[0],
                         'experienceCurator'=>$experienceCurator[0],
+                        'experienceAddons'=>$experienceAddons,
                     ]);
 	}
 
@@ -207,5 +212,9 @@ class AdminExperiencesController extends Controller {
             ], 400);
         }
 	}
+
+    public function deactive_Addon($id){
+        echo " id == ".$id;
+    }
 
 }
