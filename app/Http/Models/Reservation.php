@@ -373,6 +373,8 @@ class Reservation {
 						->leftJoin('vendor_locations as vl2','vl2.id','=','pvl.vendor_location_id')
 						->leftJoin('locations as ploc','ploc.id','=','vl2.location_id')
 						->leftJoin('vendor_location_address as pvla','pvla.vendor_location_id','=','pvl.vendor_location_id')
+						->leftJoin('vendor_location_address as vvla','vvla.vendor_location_id','=','rd.vendor_location_id')
+						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.id')
 						->where('rd.user_id', $userID)
 						->whereIn('reservation_status',array('new','edited'))
 						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
@@ -383,10 +385,11 @@ class Reservation {
 									 'rd.guest_phone', 'rd.points_awarded',
 									 DB::raw('MAX(IF(pa.alias="short_description", pat.attribute_value,"")) AS product_short_description'),
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
-									 'ploc.name as locality','pvla.address')
+									 'ploc.name as product_locality','pvla.address as product_address',
+									 'vloc.name as vendor_locality', 'vvla.address as vendor_address')
 						->groupBy('rd.id')
 						->get();
-		//echo $queryResult->toSql();
+		echo $queryResult->toSql();
 		
 		//array to store the information
 		$arrData = array();
@@ -449,8 +452,8 @@ class Reservation {
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
-														'address' => $row->address,
-														'locality' => $row->locality,
+														'address' => (empty($row->product_address)) ? $row->vendor_address : $row->product_address,
+														'locality' => (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality,
 														
 													),
 									'addons' => $arrAddOn,
