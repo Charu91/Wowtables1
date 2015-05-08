@@ -389,7 +389,7 @@ class Reservation {
 									 'vloc.name as vendor_locality', 'vvla.address as vendor_address')
 						->groupBy('rd.id')
 						->get();
-		echo $queryResult->toSql();
+		//echo $queryResult->toSql();
 		
 		//array to store the information
 		$arrData = array();
