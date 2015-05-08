@@ -217,10 +217,30 @@
 
         $(".inactive_addon").on('change',function(){
             var addon_id = $(this).data('addon_id');
+            var addon_value = $(this).val();
+            var set_addon_val;
+            if(addon_value == 1){
+                set_addon_val = 0;
+            } else if(addon_value == 0){
+                set_addon_val = 1;
+            }
             $.ajax({
-                method: 'GET',
+                method: 'POST',
                 url: '/admin/experiences/deactive_Addon/'+addon_id,
-                type:'json'
+                type:'json',
+                data:{addon_value:addon_value},
+                success: function(response){
+                    var data = jQuery.parseJSON(response);
+                    //alert(data.addon_status);
+                    //console.log("asd = "+ response.addon_status+" , dsfdf = "+response);
+                    if(data.status == "success"){
+                        $(".addon_change_status_"+addon_id).html("("+data.addon_status+")");
+                        //$(this).val(set_addon_val);
+                    } else if(data.status == "failure"){
+                        $(".addon_change_status_"+addon_id).html('Updating failed!');
+                    }
+                    location.reload();
+                }
             }).fail(function (jqXHR) {
                 console.log(jqXHR);
             });

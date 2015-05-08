@@ -213,8 +213,16 @@ class AdminExperiencesController extends Controller {
         }
 	}
 
-    public function deactive_Addon($id){
-        echo " id == ".$id;
+    public function deactive_Addon($addOn_id){
+        //echo " id == ".$addOn_id;
+        //echo "<pre>"; print_r($_GET['addon_value']); die;
+
+        if((isset($addOn_id) && $addOn_id != "") &&(isset($_POST['addon_value']) && $_POST['addon_value'] != "")) {
+            $addOnsStatus = $this->repository->AddOnsDeactive($addOn_id,$_POST['addon_value']);
+
+            echo json_encode($addOnsStatus);
+        }
+
     }
 
 }

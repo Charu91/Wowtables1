@@ -109,7 +109,7 @@ class SimpleExperience extends Experience {
     {
         $query = '
             DELETE pab, pad, paf, pai, pam, pas, pat, pav,
-                    pcm, pmm, ptm, padd, pp, pfm
+                    pcm, pmm, ptm, pp, pfm
             FROM products AS `p`
             LEFT JOIN product_attributes_boolean AS `pab` ON pab.product_id = p.`id`
             LEFT JOIN product_attributes_date AS `pad` ON pad.product_id = p.`id`
@@ -122,11 +122,11 @@ class SimpleExperience extends Experience {
             LEFT JOIN product_curator_map AS `pcm` ON pcm.product_id = p.`id`
             LEFT JOIN product_media_map AS `pmm` ON pmm.product_id = p.`id`
             LEFT JOIN product_tag_map AS `ptm` ON ptm.product_id = p.`id`
-            LEFT JOIN products AS `padd` ON padd.`product_parent_id` = p.`id`
             LEFT JOIN product_pricing AS `pp` ON pp.`product_id` = p.`id`
             LEFT JOIN product_flag_map AS `pfm` ON pfm.`product_id` = p.`id`
             WHERE p.id = ?
         ';
+        //LEFT JOIN products AS `padd` ON padd.`product_parent_id` = p.`id`
 
         DB::delete($query, [$experienceId]);
 

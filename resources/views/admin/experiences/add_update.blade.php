@@ -221,6 +221,12 @@
 						</div>
 					</div>
 					<div class="form-group">
+						{!! Form::label('addon_reservation_title','Addon Reservation Title',['class'=>'col-sm-3 control-label']) !!}
+						<div class="col-sm-6">
+							{!! Form::text('addon_reservation_title',null,['class'=>'form-control','id'=>'addonReservationTitle']) !!}
+						</div>
+					</div>
+					<div class="form-group">
 						{!! Form::label('addon_price_before_tax','Addon Price',['class'=>'col-sm-3 control-label']) !!}
 						<div class="col-sm-6">
 							{!! Form::text('addon_price_before_tax',null,['class'=>'form-control','id'=>'addonPrice']) !!}
@@ -293,6 +299,7 @@
 				</div>
 				@include('partials.forms.experience_addon')
 				<hr/>
+				<h4>Previous Addons Data</h4>
 				<div>
 					<div class="panel-body">
 						<table class="table table-striped table-responsive mb-none">
@@ -315,16 +322,16 @@
 									<th>{{$experienceAddon['price']}}</th>
 									<th>{{$experienceAddon['post_tax_price']}}</th>
 									<th>{{$experienceAddon['short_description']}}</th>
-									<th><input type="checkbox" value="1" class="inactive_addon" data-addon_id="{{$key}}"/></th>
-									<input type="hidden" id="addonTitle_{{$key}}" name="addons[{{$key}}][name]" value="{{$experienceAddon['addOnsName']}}" />
-									<input type="hidden" id="addon_reservation_title_{{$key}}" name="addons[{{$key}}][reservation_title]" value="{{$experienceAddon['reservation_title']}}" />
-									<input type="hidden" id="addonPriceBeforeTax_{{$key}}" name="addons['{{$key}}'][price]" value="{{$experienceAddon['price']}}" />
-									<input type="hidden" id="addon_tax_{{$key}}" name="addons[{{$key}}][tax]" value="{{$experienceAddon['tax']}}" />
-									<input type="hidden" id="addonPriceAfterTax_{{$key}}" name="addons[{{$key}}][post_tax_price]" value="{{$experienceAddon['post_tax_price']}}" />
-									<input type="hidden" id="addon_commission_per_cover_{{$key}}" name="addons[{{$key}}][commission_per_cover]" value="{{$experienceAddon['commission']}}" />
-									<input type="hidden" id="addon_commission_on_{{$key}}" name="addons[{{$key}}][commission_on]" value="{{$experienceAddon['commission_on']}}" />
-									<input type="hidden" id="addon_short_description_{{$key}}" name="addons[{{$key}}][short_description]" value="{{$experienceAddon['short_description']}}" />
-									<input type="hidden" id="addon_addonsMenu_{{$key}}" name="addons[{{$key}}][addonsMenu]" value="{{$experienceAddon['menu']}}" />
+									<th><input type="checkbox" {{ (($experienceAddon['status'] == "Publish") ? "value=1" : "value=0")}} {{ (($experienceAddon['status'] == "Inactive") ? 'checked="checked" ' : ' ')  }} class="inactive_addon" data-addon_id="{{$key}}"/> <span class="addon_change_status_{{$key}}">({{$experienceAddon['status']}})</span></th>
+									<input type="hidden" id="addonTitle_{{$key}}" name="old_addons[{{$key}}][name]" value="{{$experienceAddon['addOnsName']}}" />
+									<input type="hidden" id="addon_reservation_title_{{$key}}" name="old_addons[{{$key}}][reservation_title]" value="{{$experienceAddon['reservation_title']}}" />
+									<input type="hidden" id="addonPriceBeforeTax_{{$key}}" name="old_addons['{{$key}}'][price]" value="{{$experienceAddon['price']}}" />
+									<input type="hidden" id="addon_tax_{{$key}}" name="old_addons[{{$key}}][tax]" value="{{$experienceAddon['tax']}}" />
+									<input type="hidden" id="addonPriceAfterTax_{{$key}}" name="old_addons[{{$key}}][post_tax_price]" value="{{$experienceAddon['post_tax_price']}}" />
+									<input type="hidden" id="addon_commission_per_cover_{{$key}}" name="old_addons[{{$key}}][commission_per_cover]" value="{{$experienceAddon['commission']}}" />
+									<input type="hidden" id="addon_commission_on_{{$key}}" name="old_addons[{{$key}}][commission_on]" value="{{$experienceAddon['commission_on']}}" />
+									<input type="hidden" id="addon_short_description_{{$key}}" name="old_addons[{{$key}}][short_description]" value="{{$experienceAddon['short_description']}}" />
+									<input type="hidden" id="addon_addonsMenu_{{$key}}" name="old_addons[{{$key}}][addonsMenu]" value="{{$experienceAddon['menu']}}" />
 								</tr>
 							@endforeach
 							</tbody>

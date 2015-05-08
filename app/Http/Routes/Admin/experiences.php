@@ -83,7 +83,7 @@ Route::post('admin/experience/locations/getVendorLocationsDetails',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/experiences/deactive_Addon/{id}',[
+Route::post('admin/experiences/deactive_Addon/{id}',[
     'uses' => 'AdminExperiencesController@deactive_Addon',
     'middleware' => [],
     'domain' => env('WEBSITE_URL'),

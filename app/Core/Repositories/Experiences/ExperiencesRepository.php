@@ -117,7 +117,7 @@ class ExperiencesRepository {
 
     public function populateProductAddOns($product_id){
         $addOns = '
-                    SELECT p.id,p.name
+                    SELECT p.id,p.name,p.status
                     FROM products as p
                     WHERE product_parent_id = ?
         ';
@@ -137,17 +137,11 @@ class ExperiencesRepository {
                     WHERE product_id = ?
             ';
 
-           //echo $addOnsDetails;
-
             $addOnsAttributesValues = DB::select($addOnsDetails,[$addOnsResult->id]);
-
-            //echo "<pre>"; print_r($addOnsAttributesValues);
 
             foreach($addOnsAttributesValues as $addOnsAttributesValue){
                 $addOnsAttributesArray[$addOnsAttributesValue->alias] = $addOnsAttributesValue->attribute_value;
             }
-
-            //echo "<pre>"; print_r($addOnsAttributesValue);
 
             $addOnsPricing = '
                     SELECT pp.price,pp.tax,pp.post_tax_price,pp.commission,pp.commission_on
@@ -157,33 +151,50 @@ class ExperiencesRepository {
 
             $addOnsPricingValues = DB::select($addOnsPricing,[$addOnsResult->id]);
 
-            //$addOnsArray = $experienceMedia->file;
-
-            //echo "<pre>"; print_r($addOnsPricingValues);
 
             foreach($addOnsPricingValues as $addOnsPricingValue){
-                //echo "<pre>"; print_r($addOnsPricingValue);
                 foreach($addOnsPricingValue as $key => $value){
                     $addOnsAttributesArray[$key] = $value;
                     $addOnsAttributesArray[$key] = $value;
                     $addOnsAttributesArray[$key] = $value;
                     $addOnsAttributesArray[$key] = $value;
                     $addOnsAttributesArray[$key] = $value;
-
                 }
             }
 
             $addOnsAttributesArray['addOnsName'] = $addOnsResult->name;
+            $addOnsAttributesArray['status'] = $addOnsResult->status;
 
-            //$addOnsArray['addOnsName'] = $addOnsResult->name;
-
-            //echo "<pre>"; print_r($addOnsAttributesArray);
             $addOnsArray[$addOnsResult->id] = $addOnsAttributesArray;
         }
 
         return $addOnsArray;
 
 
+    }
+
+    public function AddOnsDeactive($addOn_id,$status){
+
+        if($status == 1){
+            $setStatus = "Inactive";
+        }elseif($status == 0){
+            $setStatus = "Publish";
+        }
+        $addonsUpdateData = [
+            'status' => $setStatus,
+        ];
+
+
+
+        if(DB::table('products')->where('id', $addOn_id)->update($addonsUpdateData)){
+            return ['status' => 'success','addon_status'=> ($status == 1 ? 'Inactive':'Publish')];
+        }else{
+            DB::rollback();
+            return [
+                'status' => 'failure',
+                'action' => 'Updating Addons'
+            ];
+        }
     }
 
 }
