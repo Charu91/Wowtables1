@@ -59,7 +59,7 @@ class HomePageController extends Controller {
         $i = 0;
         
         foreach($bg_images as $bgimage ){
-            $image[] = Config::get('constants.IMAGE_URL').$bgimage['file'];
+            $image[] = Config::get('constants.API_LISTING_IMAGE_URL').$bgimage['file'];
             $inf = array();
             $inf['id'] = $bgimage['id'];
             $inf['title'] = $bgimage['title'];

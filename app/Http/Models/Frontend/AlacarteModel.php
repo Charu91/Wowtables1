@@ -51,6 +51,49 @@ class AlacarteModel{
         return $this->filters;
     }
 
+     public function getAlaCarteAreaCuisineByName($arrData = array())
+    {
+      
+      $experienceQuery = 'select `products`.`id`, `locations`.`name` as `location_name`, 
+                  `locations`.`id` as `location_id`, `vendors`.`name` as `vendor_name`, 
+                  `vendors`.`id` as `vendor_id`, `paso`.`id` as `cuisine_id`, `paso`.`option` as `cuisine_name` 
+                  from `products` 
+                  inner join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `products`.`id` 
+                  left join `vendor_location_address` as `vla` on `vla`.`vendor_location_id` = `pvl`.`vendor_location_id` 
+                  left join `vendor_locations` as `vl` on `vl`.`id` = `pvl`.`vendor_location_id` 
+                  left join `locations` on `locations`.`id` = `vl`.`location_id` 
+                  left join `product_attributes_multiselect` as `pam` on `pam`.`product_id` = `products`.`id` 
+                  left join `product_attributes_select_options` as `paso` on `paso`.`id` = `pam`.`product_attributes_select_option_id` 
+                  inner join `vendors` on `vendors`.`id` = `vl`.`vendor_id` 
+                  where `pvl`.`status` = "Active" and `vla`.`city_id` = "'.$arrData['city_id'].'" 
+                  and `products`.`visible` = 1 and `products`.`type` in ("simple","complex") AND
+                  (`paso`.`option` like  "%'.$arrData['term'].'%"  or `locations`.`name` like  "%'.$arrData['term'].'%" 
+                   or `vendors`.`name` like  "%'.$arrData['term'].'%" )';
+
+      //executing the query
+      $experienceResult = DB::select($experienceQuery);
+
+      //array to store the product ids
+      $arrProduct = array();
+      //array to store final result
+      $arrData = array();
+
+      #query executed successfully
+      if($experienceResult) {
+          $arrData = array();
+          foreach($experienceResult as $row) {
+
+                $arrData[] = $row->location_name.'~~~'.$row->location_id.'~~~location';
+                $arrData[] = $row->vendor_name.'~~~'.$row->vendor_id.'~~~vendor';
+                $arrData[] = $row->cuisine_name.'~~~'.$row->cuisine_id.'~~~cuisine';
+          }
+      }
+     // echo '<pre>';print_r($arrData['data']);
+      $arrDataNew =  array_unique( $arrData);
+      return $arrDataNew;
+    } 
+
+
     public function findMatchingAlacarte(array $filters)
     {
          $select = DB::table('vendor_locations AS vl')
