@@ -10,6 +10,7 @@ use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 use WowTables\Http\Models\Schedules;
 use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\ReservationDetails;
+use WowTables\Http\Models\UserDevices;
 
 
 /**
@@ -137,7 +138,11 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Handles requests for reserving the table.
 	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
 	 */
 	public function reserveTable() {
 		//array to store response
@@ -146,10 +151,19 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 		//reading data input by the user
 		$arrData =  $this->request->all();
 		
-		$arrResponse = Reservation::validateReservationData($arrData);
+		$userID = UserDevices::getUserDetailsByAccessToken($arrData['access_token']);
 		
-		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-			$arrResponse = ReservationDetails::addReservationDetails($arrData);			
+		if($userID > 0) {
+			//validating the information submitted by users
+			$arrResponse = Reservation::validateReservationData($arrData);
+			
+			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+				$arrResponse = ReservationDetails::addReservationDetails($arrData,$userID);			
+			}
+		}
+		else {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['msg'] = 'Not a valid request.';	
 		}
 		
 		return response()->json($arrResponse,200);
