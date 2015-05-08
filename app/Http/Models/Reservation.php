@@ -10,6 +10,8 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBookingTimeRangeLimit;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockedSchedule;
 use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBookingTimeRangeLimit;
+use WowTables\Http\Models\Schedules;
+use WowTables\Http\Models\Experiences;
 
 /**
  * Model class Reservation.
@@ -344,6 +346,172 @@ class Reservation {
 		}
 		return -1;
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Returns the Reservation record of a user.
+	 * 
+	 * @static	true
+	 * @access	public
+	 * @param	integer		$userID
+	 * @param	integer		$start
+	 * @param	integer		$limit
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
+		$queryResult = DB::table('reservation_details as rd')
+						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
+						->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
+						->leftJoin('products','products.id','=','pvl.product_id')
+						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
+						->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+						->leftJoin('product_attributes as pa','pa.id','=','pat.product_attribute_id')
+						->leftJoin('vendor_location_attributes_text as vlat','vlat.vendor_location_id','=','vl.id')
+						->leftJoin('vendor_attributes as va','va.id','=','vlat.vendor_attribute_id')
+						->leftJoin('vendor_locations as vl2','vl2.id','=','pvl.vendor_location_id')
+						->leftJoin('locations as ploc','ploc.id','=','vl2.location_id')
+						->leftJoin('vendor_location_address as pvla','pvla.vendor_location_id','=','pvl.vendor_location_id')
+						->where('rd.user_id', $userID)
+						->whereIn('reservation_status',array('new','edited'))
+						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
+									'rd.reservation_time','rd.no_of_persons', 'products.name as product_name','vendors.id as vendor_id',
+									 'vendors.name as vendor_name', 'rd.reservation_type', 'products.id as product_id',
+									 'rd.vendor_location_id', 'rd.product_vendor_location_id', 'rd.special_request',
+									 'rd.giftcard_id', 'rd.guest_name', 'rd.guest_name', 'rd.guest_email',
+									 'rd.guest_phone', 'rd.points_awarded',
+									 DB::raw('MAX(IF(pa.alias="short_description", pat.attribute_value,"")) AS product_short_description'),
+									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
+									 'ploc.name as locality','pvla.address')
+						->groupBy('rd.id')
+						->get();
+		//echo $queryResult->toSql();
+		
+		//array to store the information
+		$arrData = array();
+		
+		//sub array to store the previous reservation information
+		$arrData['data']['pastReservation'] = array();
+		
+		//sub array to store the upcoming reservation information
+		$arrData['data']['upcomingReservation'] = array(); 
+		
+		if($queryResult) {
+			//converting current day time to timestamp
+			$currentTimestamp = strtotime(date('Y-m-d H:i:s'));
+			
+			//getting each reservation addons
+			foreach($queryResult as $row) {
+				$arrReservation[] = $row->id;
+			}
+			
+			//array to keep record of addons of reservation
+			$arrSelectedAddOn = array();
+			$arrSchedule = array();
+			$arrAddOn = array();
+			
+			
+			$arrSelectedAddOn = self::getReservationAddonsDetails($arrReservation);
+			$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
+			
+			foreach($queryResult as $row) {
+				//converting reservation day time to timestamp
+				$reservationTimestamp = strtotime($row->reservation_date.' '.$row->reservation_time);
+				if($reservationTimestamp >= $currentTimestamp) {
+					if($row->reservation_type == 'experience') {
+						$day = date('D',strtotime($row->reservation_date));
+						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day);
+						
+					}
+					else if($row->reservation_type == 'alacarte') {
+						$day = date('D',strtotime($row->reservation_date));
+						$arrSchedule = Schedules::getVendorLocationSchedule($row->vendor_location_id, $day);
+					}
+				}
+				$arrDatum = array(
+									'id' => $row->id,
+									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
+									'status' => $row->reservation_status,
+									'date' => $row->reservation_date,
+									'time' => $row->reservation_time,
+									'no_of_persons' => $row->no_of_persons,
+									'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
+									'type' => $row->reservation_type,
+									'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
+									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_id,
+									'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
+									'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
+									'guest_name' => $row->guest_name,
+									'guest_email' => $row->guest_email,
+									'guest_phone' => $row->guest_phone,
+									'reward_point' => $row->points_awarded,
+									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
+									'day_schedule' => $arrSchedule,
+									'address' => array(
+														'address' => $row->address,
+														'locality' => $row->locality,
+														
+													),
+									'addons' => $arrAddOn,
+								);
+				
+				if($reservationTimestamp >= $currentTimestamp ) {
+					array_push($arrData['data']['upcomingReservation'],$arrDatum);
+				}
+				else {
+					array_push($arrData['data']['pastReservation'],$arrDatum);
+				}
+				
+			}
+			$arrData['data']['pastReservationCount'] = count($arrData['data']['pastReservation']);
+			$arrData['data']['upcomingReservationCount'] = count($arrData['data']['upcomingReservation']);
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
+		}
+		else {
+			$arrData['status'] = Config::get('constants.API_ERROR');
+			$arrData['msg'] = 'No matching record found.';
+		}
+		return $arrData;
+	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the details of the add-ons associated with a reservation.
+	 * 
+	 * @access	public
+	 * @static
+	 * @param	array 	$arrReservation
+	 * @return	array 
+	 */
+	public static function getReservationAddonsDetails($arrReservation) {
+		$queryResult = DB::table('reservation_addons_variants_details as ravd')
+							->join('products as p','p.id','=','ravd.options_id')
+							->whereIn('ravd.reservation_id',$arrReservation)
+							->select('ravd.options_id as prod_id','ravd.no_of_persons as qty',
+										'ravd.reservation_id')
+							->get();
+		
+		//array to store the addons details
+		$arrData = array();
+		
+		foreach($queryResult as $row) {
+			if(array_key_exists($row->reservation_id, $arrData)) {
+				$arrData[$row->reservation_id][] = array(
+														'prod_id' => $row->prod_id,
+														'qty' => $row->qty
+													);
+			}
+			else {
+				$arrData[$row->reservation_id][] = array(
+														'prod_id' => $row->prod_id,
+														'qty' => $row->qty
+													);
+			}
+		}
+		return $arrData;
+	}	
 }
 //end of class Reservation
 //end of file Reservation.php
