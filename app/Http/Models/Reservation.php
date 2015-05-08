@@ -260,7 +260,7 @@ class Reservation {
 			//reading details of the existing reservation from tables
 			$arrCurrentReservation = ReturnDetails::getActiveReservationDetail($arrData['reservationID']);
 			
-			print_r($arrCurrentReservation);
+		
 			
 			//checking the availability for the booking
 			$arrTimeRangeLimits = VendorLocationBookingTimeRangeLimit::checkBookingTimeRangeLimits($arrData);
