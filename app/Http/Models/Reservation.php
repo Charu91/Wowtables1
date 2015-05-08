@@ -363,7 +363,7 @@ class Reservation {
 	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-						->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
+						->leftJoin('product_vendor_locations as pvl','pvl.vendor_location_id','=','rd.product_vendor_location_id')
 						->leftJoin('products','products.id','=','pvl.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
 						->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
