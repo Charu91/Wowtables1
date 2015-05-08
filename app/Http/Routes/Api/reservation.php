@@ -14,4 +14,4 @@
  
  Route::put('api/reservation/change','Api\ReservationController@changeReservation');
  
- Route::get('api/reservation/my_reservation','Api\ReservationController@reservationRecord');
+ Route::get('api/reservation/my_reservation/{access_token}','Api\ReservationController@reservationRecord');
