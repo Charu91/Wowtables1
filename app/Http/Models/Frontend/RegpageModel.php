@@ -26,20 +26,22 @@ class RegpageModel extends Model {
     {
         if($id)
         {
-            $query = Self::join('media','regpage_images.media_id','=','media.id')
-            		->where('id', $id)
+            $query = Self::join('media_resized_new as media','regpage_images.media_id','=','media.media_id')
+            		->where('media.image_type', 'listing')
+                    ->where('id', $id)
             		->get();
 
             $result = $query->toArray();
         }
         else
         {
-            $query = Self::join('media','regpage_images.media_id','=','media.id')
-            		->get();
+            $query = Self::join('media_resized_new as media','regpage_images.media_id','=','media.media_id')
+            		->where('media.image_type', 'listing')
+                    ->get();
 
             $result = $query->toArray();
         }
-                       
+                 
         return $result;
     }
     function delete_image($id)

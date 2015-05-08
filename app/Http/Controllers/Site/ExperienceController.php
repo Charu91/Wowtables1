@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use WowTables\Http\Models\Eloquent\Page;
 use Session;
 use Config;
+use Response;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Frontend\CommonModel;
@@ -59,9 +60,12 @@ class ExperienceController extends Controller {
         
         $id = DB::table('products')->where('slug',$expslug)->first()->id;
 
-        $arrSubmittedData['city_id']    = $city_id;
         $data['allow_guest']            ='Yes'; 
         $data['current_city']           = strtolower($city);
+        $data['current_city_id']        = $city_id;
+
+        //$arrSubmittedData['city_id']    = $city_id;
+       
         $arrExperience                  = $this->experiences_model->find($id);
         $data['arrExperience']          = $arrExperience;
 
@@ -73,9 +77,6 @@ class ExperienceController extends Controller {
 
         $data['dropdowns_opt']  = 1; //1 for disp
         
-        //dd( DB::getQueryLog());
-        //echo '<pre>';print_R( $data);exit;
-
         return response()->view('frontend.pages.experiencedetails',$data);
     }
 
@@ -148,6 +149,7 @@ class ExperienceController extends Controller {
 
         $data['allow_guest']='Yes'; 
         $data['current_city']  = strtolower($city);
+        $data['current_city_id']  = $city_id;
        
 
         
@@ -170,5 +172,163 @@ class ExperienceController extends Controller {
 
 
         return response()->view('frontend.pages.experiencelist',$data);
+    }
+
+    public function sorting(){
+        $city_id    = Input::get('city');
+        $sortby     = Input::get('sortby');
+        
+        $city       = Location::where(['Type' => 'City', 'id' => $city_id])->first()->name;
+
+        if($sortby == "popular"){
+            $set_order = 'products.created_at';//order by if(flag_name like "popular", 0, if(flag_name not like "popular", 1, 2))';
+            $set_order_type = 'ASC';
+        } else if($sortby == "new"){
+            $set_order = 'products.created_at';
+            $set_order_type = 'DESC';
+        }
+
+        $data['current_city'] = $city;
+        $data['sort_selected'] = $sortby;
+        
+        $arrSubmittedData['city_id'] = $city_id;
+        $arrSubmittedData['orderby'] = $set_order;
+        $arrSubmittedData['ordertype'] = $set_order_type;
+
+        $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);     
+        if(!empty($searchResult)) {
+            //setting up the array to be formatted as json
+            $data['resultCount'] = $searchResult['resultCount'];
+            $data['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
+        }
+        else {
+            $data['resultCount'] = 0;
+        }
+
+
+        $restaurant_data_values = view('frontend.pages.experiencelistajax',$data)->render();
+        $restaurant_data = str_replace(array('\r', '\n', '\t'),"",$restaurant_data_values);
+
+        return Response::json(array('restaurant_data'=> $restaurant_data), 200);
+
+    }
+
+    public function search_filter()
+    {
+        //DB::connection()->enableQueryLog();
+        $restaurant_value = Input::get('restaurant_val');
+        $format_date_value = (Input::get('date_value') ? Input::get('date_value') : "");
+        $time_value = Input::get('time_value');
+        $price_start_range = Input::get('start_price');
+        $price_end_with = Input::get('end_price');
+        $arrAreasList = Input::get('area_values');
+        $arrCuisineList = Input::get('cuisine_values');   
+        $arrTagsList = Input::get('tags_values');   
+        $arrVendorList = Input::get('vendor_value');   
+             
+        $search_city = Input::get('city');
+       
+        $city       = Location::where(['Type' => 'City', 'id' => $search_city])->first()->name;
+
+        if(isset($format_date_value) && $format_date_value != "") {
+            $day = strtolower(date('N',strtotime($format_date_value)));
+            $explode_before_time = explode("/",$format_date_value);
+            $date_value = $explode_before_time[2]."-".$explode_before_time[0]."-".$explode_before_time[1];
+
+            $set_start_time = "11:00:00_".$day;
+            $set_end_time = "23:59:00_".$day;
+        }else{
+            $format_date_value = '';
+            $date_value = '';
+            $day = '';
+        }
+
+        if($time_value != "") {
+            
+            if($time_value == "lunch") {
+                $set_start_time = "11:00:00";
+                $set_end_time = "14:00:00";
+            } else if($time_value == "dinner"){
+                $set_start_time = "18:00:00";
+                $set_end_time = "23:59:00";
+            } else {
+                $change_start_time = strtotime("-30 minutes", strtotime($time_value));
+                $set_start_time = date('H:i', $change_start_time).":00";
+                $change_end_time = strtotime("+30 minutes", strtotime($time_value));
+                $set_end_time = date('H:i', $change_end_time).":00";
+            }
+
+        } else {
+            
+            $set_start_time = "";
+            $set_end_time = "";
+
+        }
+
+        $data['current_city'] = $city;
+        $arrSubmittedData['city_id'] = $search_city;
+        if(!empty($arrAreasList))
+        {
+            $arrSubmittedData['location'] = explode(',',$arrAreasList);
+        }
+
+        if(!empty($arrCuisineList))
+        {
+            $arrSubmittedData['cuisine']  = explode(',',$arrCuisineList);
+        }
+
+        if(!empty($arrTagsList))
+        {
+            $arrSubmittedData['tag']  = explode(',',$arrTagsList);
+        }
+
+        if(!empty($arrVendorList))
+        {
+            $arrSubmittedData['vendor']  = explode(',',$arrVendorList);
+        }
+
+        $arrSubmittedData['minPrice']       = $price_start_range; 
+
+        if(!empty($price_end_with))
+        {
+            $arrSubmittedData['maxPrice']  = $price_end_with;
+        }
+        
+        $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
+                
+        if(!empty($searchResult)) {
+            //setting up the array to be formatted as json
+            $data['resultCount'] = $searchResult['resultCount'];
+            $data['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
+            $data['filters'] = $this->experiences_model->getExperienceSearchFilters();
+        }
+        else {
+            $data['resultCount'] = 0;
+            $data['filters']['locations']  = array();
+            $data['filters']['cuisines']  = array();
+            $data['filters']['tags']  = array();
+        }
+
+        $restaurant_data_values = view('frontend.pages.experiencelistajax',$data)->render();
+        $restaurant_data = str_replace(array('\r', '\n', '\t'),"",$restaurant_data_values);
+
+        return Response::json(array('restaurant_data'=> $restaurant_data,'area_count' => $data['filters']['locations'], 'cuisine_count' => $data['filters']['cuisines'], 'tags_count' => $data['filters']['tags']), 200);
+        
+    }
+
+    public function new_custom_search()
+    {
+        //DB::connection()->enableQueryLog();
+
+        $term_str   = Input::get('term');
+
+        $term = strip_tags($term_str);
+        $city = Input::get('city');
+        
+        $arrSubmittedData['city_id'] = $city;
+        $arrSubmittedData['term']    = $term_str;
+
+        $arrExpData = $this->experiences_model->getExperienceAreaCuisineByName($arrSubmittedData);
+        echo json_encode($arrExpData);
     }
 }

@@ -70,7 +70,7 @@ class ReservationDetails extends Model {
 		}
 		
 		if(isset($arrData['giftCardID'])) {
-			$reservation->giftcard_id = $arrData['gitftCardID'];
+			$reservation->giftcard_id = $arrData['giftCardID'];
 		}
 		
 		//setting up the value of the location id as per type
@@ -102,7 +102,7 @@ class ReservationDetails extends Model {
 				
 				
 				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'alacarte/'.$aLaCarteDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
@@ -111,10 +111,12 @@ class ReservationDetails extends Model {
 			else if($arrData['reservationType'] == 'experience') {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-				self::addReservationAddonDetails($reservation->id, $arrData['addon']);
+				if(array_key_exists('addons', $arrData) && !empty($arrData['addon'])) {
+					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
+				}				
 				
 				$arrResponse['data']['name'] = $productDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'alacarte/'.$productDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
@@ -312,7 +314,7 @@ class ReservationDetails extends Model {
 		
 		$queryResult = \DB::table('vendors')
 						->join('vendor_locations as vl','vl.vendor_id','=','vendors.id')
-						->leftJoin('vendor_attributes_integer as vai','vai.vendor_id','=','vendors.id')
+						->leftJoin('vendor_location_attributes_integer as vai','vai.vendor_location_id','=','vl.id')
 						->join('vendor_attributes as va','va.id','=','vai.vendor_attribute_id')
 						->where('vl.id',$vendorLocationID)
 						->where('va.alias','reward_points_per_reservation')
@@ -346,7 +348,7 @@ class ReservationDetails extends Model {
 						->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
 						->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
-						->where('pvl.id',$productVendorLocationID)
+						->where('pvl.vendor_location_id',$productVendorLocationID)
 						->where('pa.alias','reward_points_per_reservation')
 						->select('products.id','products.name','pai.attribute_value as reward_point')
 						->first();
