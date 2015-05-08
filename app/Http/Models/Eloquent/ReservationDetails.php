@@ -362,76 +362,7 @@ class ReservationDetails extends Model {
 	
 	//-----------------------------------------------------------------
 	
-	/**
-	 * Returns the Reservation record of a user.
-	 * 
-	 * @static	true
-	 * @access	public
-	 * @param	integer		$userID
-	 * @param	integer		$start
-	 * @param	integer		$limit
-	 * @return	array
-	 * @since	1.0.0
-	 */
-	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
-		$queryResult = \DB::table('reservation_details as rd')
-						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-						->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
-						->leftJoin('products','products.id','=','pvl.product_id')
-						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
-						->where('rd.user_id', $userID)
-						->whereIn('reservation_status',array('new','edited'))
-						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
-									'rd.reservation_time','rd.no_of_persons', 'products.name as product_name',
-									 'vendors.name as vendor_name','rd.reservation_type')
-						->get();
 		
-		//array to store the information
-		$arrData = array();
-		
-		//sub array to store the previous reservation information
-		$arrData['data']['pastReservation'] = array();
-		
-		//sub array to store the upcoming reservation information
-		$arrData['data']['upcomingReservation'] = array(); 
-		
-		if($queryResult) {
-			//converting current day time to timestamp
-			$currentTimestamp = strtotime(date('Y-m-d H:i:s'));
-			
-			foreach($queryResult as $row) {
-				//converting reservation day time to timestamp
-				$reservationTimestamp = strtotime($row->reservation_date.' '.$row->reservation_time);
-				$arrDatum = array(
-									'id' => $row->id,
-									'status' => $row->reservation_status,
-									'date' => $row->reservation_date,
-									'time' => $row->reservation_time,
-									'no_of_persons' => $row->no_of_persons,
-									'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
-									'type' => $row->reservation_type 
-								);
-				
-				if($reservationTimestamp >= $currentTimestamp ) {
-					array_push($arrData['data']['upcomingReservation'],$arrDatum);
-				}
-				else {
-					array_push($arrData['data']['pastReservation'],$arrDatum);
-				}
-				
-			}
-			
-			$arrData['status'] = Config::get('constants.API_SUCCESS');
-		}
-		else {
-			$arrData['status'] = Config::get('constants.API_ERROR');
-			$arrData['msg'] = 'No matching record found.';
-		}
-		return $arrData;
-	}
-
-	//-----------------------------------------------------------------
-	
 	/**
 	 * Writes the addons details associated with a reservation into
 	 * the DB.
