@@ -220,13 +220,20 @@ use WowTables\Http\Models\UserDevices;
 	 * record of the logged in user.
 	 * 
 	 * @access	public
+	 * @param	string	$access_token
 	 * @return	response
 	 * @since	1.0.0
 	 */
-	public function reservationRecord() {
-		$userID = 0;
+	public function reservationRecord($access_token) {	
+		$userID = UserDevices::getUserDetailsByAccessToken($access_token);
+		if($userID) {
+			$arrResponse = Reservation::getReservationRecord($userID);
+		}
+		else {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['msg'] = 'Not a valid request'; 
+		}
 		
-		$arrResponse = ReservationDetails::getReservationRecord($userID);
 		return response()->json($arrResponse,200);
 	}
  }
