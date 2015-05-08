@@ -16,6 +16,7 @@ class CheckMobileAccess {
 	public function handle($request, Closure $next)
 	{
         $input = $request->all();
+        echo "<pre>"; print_r($input); die;
         $v = Validator::make($input, [
             'access_token' => 'required',
             'device_id' => 'required'
