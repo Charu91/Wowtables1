@@ -98,25 +98,25 @@
                     tablebody +=
                         '<tr id="'+key+'">' +
                         '<td>' + key + '</td>' +
-                        '<td id="addonTitle_'+key+'">' + value.addonTitle + ' </td>' +
-                        '<td id="addonPriceBeforeTax_'+key+'">' + value.addonPriceBeforeTax + '</td>' +
-                        '<td id="addonPriceAfterTax_'+key+'">' + value.addonPriceAfterTax + '</td>' +
-                        '<td id="addonTax_'+key+'">' + value.addonDescription + '</td>' +
+                        '<td >' + value.addonTitle + ' </td>' +
+                        '<td >' + value.addonPriceBeforeTax + '</td>' +
+                        '<td >' + value.addonPriceAfterTax + '</td>' +
+                        '<td >' + value.addonDescription + '</td>' +
                         '<td>' +
                         '<a class="edit-addon-btn" data-addon-row-id="' + key + '" href="javascript:void(0);">' +
                         '<i class="fa fa-edit"></i></a>&nbsp;|&nbsp;' +
                         '<a class="delete-addon-btn" data-addon-row-id="' + key + '" href="javascript:void(0);">' +
                         '<i class="fa fa-trash-o"></i></a>' +
                         '</td>' +
-                        '<input type="hidden" name="addons['+key+'][name]" value="'+value.addonTitle+'" />'+
-                        '<input type="hidden" name="addons['+key+'][reservation_title]" value="'+value.addonReservationTitle+'" />'+
-                        '<input type="hidden" name="addons['+key+'][price]" value="'+value.addonPriceBeforeTax+'" />'+
-                        '<input type="hidden" name="addons['+key+'][tax]" value="'+value.addonTax+'" />'+
-                        '<input type="hidden" name="addons['+key+'][post_tax_price]" value="'+value.addonPriceAfterTax+'" />'+
-                        '<input type="hidden" name="addons['+key+'][commission_per_cover]" value="'+value.addonCommissionPerCover+'" />'+
-                        '<input type="hidden" name="addons['+key+'][commission_on]" value="'+value.addonCommissionOn+'" />'+
-                        '<input type="hidden" name="addons['+key+'][short_description]" value="'+value.addonDescription+'" />'+
-                        '<input type="hidden" name="addons['+key+'][addonsMenu]" value="'+value.addonsMenu+'" />'+
+                        '<input type="hidden" id="addonTitle_'+key+'" name="addons['+key+'][name]" value="'+value.addonTitle+'" />'+
+                        '<input type="hidden" id="addon_reservation_title_'+key+'" name="addons['+key+'][reservation_title]" value="'+value.addonReservationTitle+'" />'+
+                        '<input type="hidden" id="addonPriceBeforeTax_'+key+'" name="addons['+key+'][price]" value="'+value.addonPriceBeforeTax+'" />'+
+                        '<input type="hidden" id="addon_tax_'+key+'" name="addons['+key+'][tax]" value="'+value.addonTax+'" />'+
+                        '<input type="hidden" id="addonPriceAfterTax_'+key+'" name="addons['+key+'][post_tax_price]" value="'+value.addonPriceAfterTax+'" />'+
+                        '<input type="hidden" id="addon_commission_per_cover_'+key+'" name="addons['+key+'][commission_per_cover]" value="'+value.addonCommissionPerCover+'" />'+
+                        '<input type="hidden" id="addon_commission_on_'+key+'" name="addons['+key+'][commission_on]" value="'+value.addonCommissionOn+'" />'+
+                        '<input type="hidden" id="addon_short_description_'+key+'" name="addons['+key+'][short_description]" value="'+value.addonDescription+'" />'+
+                        '<input type="hidden" id="addon_addonsMenu_'+key+'" name="addons['+key+'][addonsMenu]" value="'+value.addonsMenu+'" />'+
                         '</tr>'
                         /*'<input id="addonInput_'+key+'" type="hidden" name="addons[]" value="'+
                             value.addonTitle +','+
@@ -142,10 +142,16 @@
 
         $('body').delegate('.edit-addon-btn','click',function () {
             var id = $(this).data('addon-row-id');
-            $addonTitle.val( $('#addonTitle_'+id).text() );
-            $addonPriceBeforeTax.val( $('#addonPriceBeforeTax_'+id).text() );
-            $addonPriceAfterTax.val( $('#addonPriceAfterTax_'+id).text() );
-            $addonShortDescription.val( $('#addonTax_'+id).text() );
+            //console.log("title value == "+$('#addonTitle_'+id).val());
+            $addonTitle.val( $('#addonTitle_'+id).val() );
+            $addonReservationTitle.val( $('#addonTitle_'+id).val() );
+            $addonTax.val($('#addon_tax_'+id).val());
+            $addonPriceBeforeTax.val( $('#addonPriceBeforeTax_'+id).val() );
+            $addonPriceAfterTax.val( $('#addonPriceAfterTax_'+id).val() );
+            $addonCommissionPerCover.val( $('#addon_commission_per_cover_'+id).val() );
+            $addonCommissionOn.val( $('#addon_commission_on_'+id).val() );
+            $addonShortDescription.val( $('#addon_short_description_'+id).val() );
+            $addonsMenu.val( $('#addon_addonsMenu_'+id).val() );
             $experienceAddonBtn.text('Update');
             $cancelUpdateExperienceAddonBtn.show();
             $experienceAddonForm.show();
@@ -208,6 +214,17 @@
 
             $("#oldExpMenu").val(getMarkdownhtml);
         }
+
+        $(".inactive_addon").on('change',function(){
+            var addon_id = $(this).data('addon_id');
+            $.ajax({
+                method: 'GET',
+                url: '/admin/experiences/deactive_Addon/'+addon_id,
+                type:'json'
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+        });
 
 
         $("#loc_exp").change(function(){

@@ -75,10 +75,17 @@ Route::resource('admin/experience/locations','AdminExperienceLocationsController
     'domain' => env('WEBSITE_URL'),
 ]);
 
+
 Route::post('admin/experience/locations/getVendorLocationsDetails',[
     'uses' => 'AdminExperienceLocationsController@getVendorLocationsDetails',
     'middleware' => [],
     'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/experiences/deactive_Addon/{id}',[
+    'uses' => 'AdminExperiencesController@deactive_Addon',
+    'middleware' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
 
