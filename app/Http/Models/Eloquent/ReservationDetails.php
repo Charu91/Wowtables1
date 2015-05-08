@@ -70,7 +70,7 @@ class ReservationDetails extends Model {
 		}
 		
 		if(isset($arrData['giftCardID'])) {
-			$reservation->giftcard_id = $arrData['gitftCardID'];
+			$reservation->giftcard_id = $arrData['giftCardID'];
 		}
 		
 		//setting up the value of the location id as per type
