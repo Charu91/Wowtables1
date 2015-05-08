@@ -48,7 +48,7 @@ class CheckMobileAccess {
                     'action' => 'Check if location and phone number has been set',
                     'message' => 'The location and phone number needs to be set before proceeding further'
                 ], 225);
-            }else{ */
+            }else{*/
                 $request->request->add(['user' => $user]);
                 return $next($request);
             //}
