@@ -2,6 +2,10 @@
 
 use Illuminate\Support\ServiceProvider;
 use DB;
+//use Illuminate\Validation\Validator;
+//use WowTables\Services\Validation;
+
+use WowTables\Services\Validation\CustomValidator;
 
 class ValidatorServiceProvider extends ServiceProvider {
 
@@ -138,6 +142,10 @@ class ValidatorServiceProvider extends ServiceProvider {
                 }
             }
         });
+		
+		$this->app->validator->resolver(function($translator, $data, $rules, $messages) {
+			return new CustomValidator($translator, $data, $rules, $messages);
+		});
 	}
 
 	/**

@@ -11,6 +11,7 @@ use WowTables\Http\Models\Schedules;
 use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\ReservationDetails;
 use WowTables\Http\Models\UserDevices;
+use Validator;
 
 
 /**
@@ -148,24 +149,48 @@ use WowTables\Http\Models\UserDevices;
 		//array to store response
 		$arrResponse = array();
 		
-		//reading data input by the user
-		$arrData =  $this->request->all();
-		
-		$userID = UserDevices::getUserDetailsByAccessToken($arrData['access_token']);
-		
-		if($userID > 0) {
-			//validating the information submitted by users
-			$arrResponse = Reservation::validateReservationData($arrData);
-			
-			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-				$arrResponse = ReservationDetails::addReservationDetails($arrData,$userID);			
-			}
+		if(Reservation::isReservationCutOffTimeReached()) {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['error'] = 'Sorry. Reservations are not done after '.
+										Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION').
+										'. You can try again tommorrow.';
 		}
 		else {
-			$arrResponse['status'] = Config::get('constants.API_ERROR');
-			$arrResponse['msg'] = 'Not a valid request.';	
-		}
+			//reading data input by the user
+			$data =  $this->request->all();
+				
+			//validating user data
+			$validator = Validator::make($data,Reservation::$arrRules);
 		
+			if($validator->fails()) {
+				$message = $validator->messages();
+				$errorMessage = "";
+				foreach($data as $key => $value) {				
+					if($message->has($key)) {
+						$errorMessage .= $message->first($key).'\n ';
+					}
+				}
+			
+				$arrResponse['status'] = Config::get('constants.API_ERROR');
+				$arrResponse['error'] = $errorMessage;				
+			}
+			else {
+				$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
+		
+				if($userID > 0) {
+					//validating the information submitted by users
+					$arrResponse = Reservation::validateReservationData($data);
+			
+					if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+						$arrResponse = ReservationDetails::addReservationDetails($data,$userID);			
+					}
+				}
+				else {
+					$arrResponse['status'] = Config::get('constants.API_ERROR');
+					$arrResponse['msg'] = 'Not a valid request.';	
+				}
+			}
+		}				
 		return response()->json($arrResponse,200);
 	}
 	

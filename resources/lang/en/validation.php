@@ -73,6 +73,10 @@ return [
 	"unique"               => "The :attribute has already been taken.",
 	"url"                  => "The :attribute format is invalid.",
 	"timezone"             => "The :attribute must be a valid zone.",
+	
+	//custom validator methods messages
+	"outside_prev_reservation_time_range"  => "You cannot reserve next Table within 2 hours of your last reservation time.",
+	"not_previous_date" => "You cannot reserve table for a past date.",
 
 	/*
 	|--------------------------------------------------------------------------
