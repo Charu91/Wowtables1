@@ -34,7 +34,8 @@ class Reservation {
 									'phone' => 'required',
 									'reservationType' => 'required|in:experience,alacarte,event',
 									'specialRequest' => 'max:512',
-									'access_token' => 'required|exists:user_devices,access_token'
+									'access_token' => 'required|exists:user_devices,access_token',
+									'reservationID' => 'sometimes|required|exists: reservation_details,id'
 								) ;
 								
 	//-----------------------------------------------------------------
@@ -534,7 +535,7 @@ class Reservation {
 		$cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
 		
 		$timeDiff = $currentTime - $cutOffTime;
-		echo 'Current: '. $currentTime .' '.'Cutoff : '.$cutOffTime;
+				
 		if($timeDiff >= 0) {
 			return TRUE;
 		}		
