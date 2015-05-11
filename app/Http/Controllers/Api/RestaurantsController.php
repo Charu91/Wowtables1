@@ -28,8 +28,10 @@ class RestaurantsController extends Controller {
         $restaurantLocations->fetchAll($input);
 		$arrResult = $restaurantLocations->arr_result;
 		if(empty($arrResult)) {
-			$arrResponse['status'] = Config::get('constants.API_ERROR');
-			$arrResponse['msg'] = 'No matching data found.'; 
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			$arrResponse['no_result_msg'] = 'No matching data found.';
+			$arrResponse['data'] = array();
+			$arrResponse['total_count'] = 0;
 		}
 		else {
 			$arrResponse = array(
@@ -40,7 +42,9 @@ class RestaurantsController extends Controller {
             								'total_count' => $restaurantLocations->total_count,
             								'total_pages' => $restaurantLocations->total_pages,
             								'sort_options' => $restaurantLocations->sort_options,
-										)
+            							),
+            				'no_result_msg' => 'No matching result found.'
+										
 						);
 		}
 		
