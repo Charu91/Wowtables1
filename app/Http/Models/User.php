@@ -484,7 +484,7 @@ class User {
                             'access_token' => $access_token,
                             'location_id' => $data['location_id'],
                             'location_name' => $queryLocation->name,
-                            'phone_number' => $data['phone_number'],
+                            'phone_number' => (string)$data['phone_number'],
                             'full_name' => $data['full_name'],
                             'reward_points' => $data['location_id'] + 300,
                         ]
@@ -755,7 +755,7 @@ class User {
                     'access_token' => $access_token,
                     'location_id' => $location_id,
                     'location_name' => $location_name,
-                    'phone_number' => $phone_number,
+                    'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
                     'reward_points' => $location_id + 500,
                 ]
