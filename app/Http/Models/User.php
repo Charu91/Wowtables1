@@ -591,7 +591,7 @@ class User {
                             'access_token' => $access_token,
                             'location_id' => $location_id,
                             'location_name' => $location_name,
-                            'phone_number' => $user->phone_number,
+                            'phone_number' => (string)$user->phone_number,
                             'full_name' => $user->full_name,
                             'reward_points' => $user->id + 500,
                         ]

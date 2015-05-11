@@ -58,6 +58,7 @@ class ReservationDetails extends Model {
 		$reservation->guest_email = $arrData['guestEmail'];
 		$reservation->guest_phone = $arrData['phone'];
 		$reservation->reservation_type = $arrData['reservationType'];
+		$reservation->order_amount = 0;
 		$reservation->user_id = $userID;
 		
 		//setting up the variables that may be present
