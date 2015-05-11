@@ -23,18 +23,21 @@ use WowTables\Http\Models\Experiences;
  */
 class Reservation {
 	
-	public $arrRules = array(
-							'reservationDate' => 'required',
-							'reservationDay' => 'required',
-							'reservationTime' => 'required',
-							'partySize' => 'required',
-							'vendorLocationID' => 'required|not_in:0',
-							'guestName' => 'required',
-							'guestEmail' => 'required:email',
-							'phone' => 'required',
-							'reservationType' => 'required',
-							'specialRequest' => ''
-						) ;
+	public  static $arrRules = array(
+									'reservationDate' => 'required|date|NotPreviousDate',
+									'reservationDay' => 'required',
+									'reservationTime' => 'required|OutsidePrevReservationTimeRange: reservationDate',
+									'partySize' => 'required|integer',
+									'vendorLocationID' => 'required|not_in:0',
+									'guestName' => 'required|max:255',
+									'guestEmail' => 'required|email|max:255',
+									'phone' => 'required',
+									'reservationType' => 'required|in:experience,alacarte,event',
+									'specialRequest' => 'max:512',
+									'access_token' => 'required|exists:user_devices,access_token'
+								) ;
+								
+	//-----------------------------------------------------------------
 
 	/**
 	 * Query to read the details of the vendor locations and
@@ -514,6 +517,28 @@ class Reservation {
 			}
 		}
 		return $arrData;
+	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Verifies tha the reservation request is within the reservation
+	 * cut off time for the day.
+	 * 
+	 * @access	public
+	 * @return	boolean
+	 * @since	1.0.0
+	 */
+	public static function isReservationCutOffTimeReached() {
+		$currentTime = strtotime(date("H:i:s"));
+		$cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
+		
+		$timeDiff = $currentTime - $cutOffTime;
+		echo 'Current: '. $currentTime .' '.'Cutoff : '.$cutOffTime;
+		if($timeDiff >= 0) {
+			return TRUE;
+		}		
+		return FALSE;
 	}	
 }
 //end of class Reservation
