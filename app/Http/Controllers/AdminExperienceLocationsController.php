@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers;
 
 use Illuminate\Http\Request;
+use WowTables\Http\Models\Eloquent\Products\ProductLocationsBookingSchedule;
 use WowTables\Http\Requests\Admin\CreateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\UpdateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\DeleteExperienceLocationRequest;
@@ -36,8 +37,10 @@ class AdminExperienceLocationsController extends Controller {
     public function index()
     {
         $locations = [];
+        $experienceLocationDetails = $this->experienceLocation->getExperienceLocationDetails();
 
-        return view('admin.experiences.locations.index',['locations'=>$locations]);
+
+        return view('admin.experiences.locations.index',['experienceLocationDetails'=>$experienceLocationDetails]);
     }
 
     /**
@@ -91,7 +94,60 @@ class AdminExperienceLocationsController extends Controller {
      */
     public function edit($id)
     {
-        return view('admin.experiences.locations.edit');
+        //echo "sad"; die;
+        $productLocationDetails = $this->experienceLocation->getLocationsFromProduct($id);
+
+        $productLocationLimits = $this->experienceLocation->populateProductLocationLimits($id);
+
+        $productLocationBlockDates = $this->experienceLocation->populateProductLocationBlockDates($id);
+
+        $productLocationBlockTimeLimits = $this->experienceLocation->populateProductLocationBlockTimeLimits($id);
+
+        $availableSchedules = $this->formatSchedules($this->experienceLocation->available_time_slots('8:00','22:00'))['schedules'];
+
+        $productLocationSchedules = ProductLocationsBookingSchedule::where('product_vendor_location_id',$id)->lists('schedule_id');
+
+        $schedules = array_values($productLocationSchedules);
+
+        $productLocation = array();
+        $productID = '';
+        $productDescriptiveTitle = '';
+        $productStatus = '';
+        foreach($productLocationDetails as $productLocationDetail){
+            $productID = $productLocationDetail->product_id;
+            $productDescriptiveTitle = $productLocationDetail->descriptive_title;
+            $productStatus = $productLocationDetail->status;
+            $productLocation[] = $productLocationDetail->vendor_location_id;
+        }
+        $productLocationsDetails = ['product_id'=>$productID,'experience_location_id'=>$id,'experience_location_descriptive_title'=>$productDescriptiveTitle,'status'=>$productStatus];
+
+        //echo "<pre>"; print_r($schedules); die;
+        return view('admin.experiences.locations.edit',[
+                        'productLocationDetails' => $productLocationsDetails,
+                        'productLocations' => $productLocation,
+                        'productLocationsLimits' => $productLocationLimits[0],
+                        'schedules'=>$schedules,
+                        'availableSchedules' => $availableSchedules,
+                        'productLocationSchedules' => $productLocationSchedules,
+                        'productLocationBlockDates' => $productLocationBlockDates,
+                        'productLocationBlockTimeLimits' => $productLocationBlockTimeLimits,
+                    ]);
+    }
+
+    public function formatSchedules($fetchSchedules)
+    {
+        $schedules = [];
+
+        foreach ($fetchSchedules['schedules'] as $schedule) {
+
+            $schedules [] = $schedule;
+        }
+
+        $data = [
+            'schedules' => $schedules,
+        ];
+
+        return $data;
     }
 
     /**
@@ -102,7 +158,7 @@ class AdminExperienceLocationsController extends Controller {
     public function update($id, UpdateExperienceLocationRequest $updateExperienceLocationRequest)
     {
         $input = $this->request->all();
-
+        //dd($input);
         $experienceLocationUpdate = $this->experienceLocation->update($id, $input);
 
         if($experienceLocationUpdate['status'] === 'success'){
@@ -111,7 +167,7 @@ class AdminExperienceLocationsController extends Controller {
             }
 
             flash()->success('The Experience Location has been successfully updated.');
-            return redirect()->route('AdminExperiences');
+            return redirect('admin/experience/locations');
         }else{
             return response()->json([
                 'action' => $experienceLocationUpdate['action'],

@@ -2,6 +2,7 @@
 
 use WowTables\Http\Requests\Request;
 use WowTables\Http\Models\User;
+use DB;
 
 class UpdateExperienceLocationRequest extends Request {
 
@@ -42,7 +43,8 @@ class UpdateExperienceLocationRequest extends Request {
         $rules = [];
 
         $rules['experience_id'] = 'required|integer|exists:products,id';
-        $rules['restaurant_location_id'] = 'required|integer|exists:restaurant_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
+        //$rules['restaurant_location_id'] = 'required|integer|exists:restaurant_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
+        $rules['restaurant_location_id'] = 'required';
         $rules['status'] = 'required|in:Active,Inactive';
 
         if($this->has('status') && $this->get('status') === 'Active'){
@@ -51,27 +53,27 @@ class UpdateExperienceLocationRequest extends Request {
             $rules['limits.max_reservations_per_day'] = 'required|integer';
             $rules['limits.minimum_reservation_time_buffer'] = 'required|integer';
             $rules['limits.maximum_reservation_time_buffer'] = 'required|integer';
-            $rules['limits.min_people_increments'] = 'required|integer';
+            $rules['limits.min_people_increments_per_reservation'] = 'required|integer';
 
-            $rules['schedules'] = 'required|array';
+            //$rules['schedules'] = 'required|array';
         }else{
             $rules['limits.min_people_per_reservation'] = 'integer';
             $rules['limits.max_people_per_reservation'] = 'integer';
             $rules['limits.max_reservations_per_day'] = 'integer';
             $rules['limits.minimum_reservation_time_buffer'] = 'integer';
             $rules['limits.maximum_reservation_time_buffer'] = 'integer';
-            $rules['limits.min_people_increments'] = 'integer';
+            $rules['limits.min_people_increments_per_reservation'] = 'integer';
 
-            $rules['schedules'] = 'array';
+            //$rules['schedules'] = 'array';
         }
 
-        if($this->has('schedules') && is_array($this->get('schedules'))){
+        /*if($this->has('schedules') && is_array($this->get('schedules'))){
             $schedule_ids = DB::table('schedules')->lists('id');
             foreach($this->get('schedules') as $key => $schedule){
                 $rules['schedules'.$key.'id'] = 'required_with:schedules, in'.implode(',',$schedule_ids);
                 $rules['schedules'.$key.'max_reservations'] = 'required_with:schedules|integer';
             }
-        }
+        }*/
 
         $rules['block_dates'] = 'array';
 
@@ -87,13 +89,13 @@ class UpdateExperienceLocationRequest extends Request {
             foreach($this->get('reset_time_range_limits') as $key => $range){
                 $rules['reset_time_range_limits.'.$key.'.from_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
                 $rules['reset_time_range_limits.'.$key.'.to_time'] = 'required_with:reset_time_range_limits|date_format:H:i:s'; //HH:MM:SS
-                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day.Date';
-                $rules['reset_time_range_limits.'.$key.'.max_reservations_limit'] = 'required_with:reset_time_range_limits|integer';
+                $rules['reset_time_range_limits.'.$key.'.limit_by'] = 'required_with:reset_time_range_limits|in:Day,Date';
+                //$rules['reset_time_range_limits.'.$key.'.max_reservations_limit'] = 'required_with:reset_time_range_limits|integer';
                 if(isset($range['limit_by'])){
                     if($range['limit_by'] === 'Day'){
-                        $rules['reset_time_range_limits.'.$key.'.day'] = 'required_with:reset_time_range_limits.'.$key.'.limit_by|in:mon,tue,wed,thu,fri,sat,sun';
+                        $rules['reset_time_range_limits.'.$key.'.day'] = 'required_with:'.'reset_time_range_limits.'.$key.'.limit_by|in:mon,tue,wed,thu,fri,sat,sun';
                     }else if($range['limit_by'] === 'Date'){
-                        $rules['reset_time_range_limits.'.$key.'.date'] = 'required_with:reset_time_range_limits.'.$key.'.limit_by|date_format:Y-m-d';
+                        $rules['reset_time_range_limits.'.$key.'.date'] = 'required_with:'.'reset_time_range_limits.'.$key.'.limit_by|date_format:Y-m-d';
                     }
                 }
             }
