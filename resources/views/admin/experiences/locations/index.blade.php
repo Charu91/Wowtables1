@@ -26,17 +26,28 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
-                    <th>Name</th>
-                    <th>Slug</th>
+                    <th>Experience Name</th>
+                    <th>Locations</th>
+                    <th>Restaurant name</th>
                     <th>Status</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-
+                    @foreach($experienceLocationDetails as $experienceLocationDetail)
+                        <tr>
+                            <td>{{$experienceLocationDetail->id}}</td>
+                            <td>{{$experienceLocationDetail->product_name}}</td>
+                            <td>{{$experienceLocationDetail->slug}}</td>
+                            <td>{{$experienceLocationDetail->vendor_name}}</td>
+                            <td>{{$experienceLocationDetail->status}}</td>
+                            <td>
+                                {!! link_to_route('AdminExperienceLocationsEdit','Edit',$experienceLocationDetail->product_vendor_last_id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']) !!}
+                                &nbsp;|&nbsp;
+                                <a data-experience-id="{!! $experienceLocationDetail->product_vendor_last_id !!}" class="btn btn-xs btn-danger delete-experience">Delete</a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

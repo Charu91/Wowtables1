@@ -46,6 +46,12 @@
                         {!! Form::select('restaurant_location_id[]',$restaurant_locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="descriptive_title" class="col-sm-3 control-label">Descriptive Title<span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::text('descriptive_title',null,['class'=>'form-control', 'required'=>'required']) !!}
+                    </div>
+                </div>
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
                 @include('partials.forms.schedule_limits')
