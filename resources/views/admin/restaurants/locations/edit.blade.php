@@ -244,25 +244,25 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['mon']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['mon']['schedule_id'].'][day]','mon') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['mon']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][id]',$slot['mon']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['tue']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['mon']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][off_peak]',$slot['mon']['schedule_id'],true)!!}</td>
 
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['mon']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]',$slot['mon']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['mon']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -275,24 +275,24 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['tue']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['tue']['schedule_id'].'][day]','tue') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['tue']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][id]',$slot['tue']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['tue']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['tue']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]',$slot['tue']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['tue']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]',$slot['tue']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['tue']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -305,24 +305,24 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['wed']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['wed']['schedule_id'].'][day]','wed') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['wed']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][id]',$slot['wed']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['wed']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['wed']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][off_peak]',$slot['wed']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['wed']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][off_peak]',$slot['wed']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['wed']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -335,24 +335,24 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['thu']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['thu']['schedule_id'].'][day]','thu') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['thu']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][id]',$slot['thu']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['thu']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['thu']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][off_peak]',$slot['thu']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['thu']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][off_peak]',$slot['thu']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['thu']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -365,24 +365,24 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['fri']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['fri']['schedule_id'].'][day]','fri') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['fri']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][id]',$slot['fri']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['fri']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['fri']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][off_peak]',$slot['fri']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['fri']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][off_peak]',$slot['fri']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['fri']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -395,24 +395,25 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['sat']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],true)!!}</td>
                                                             {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][time]',$slot['time']) !!}
                                                             {!! Form::hidden('schedules['.$slot['sat']['schedule_id'].'][day]','sat') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sat']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][id]',$slot['sat']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['sat']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['sat']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][off_peak]',$slot['sat']['schedule_id'],true)!!}</td>
+
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sat']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][off_peak]',$slot['sat']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['sat']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>
@@ -425,22 +426,24 @@
                                                     <tr>
                                                         <td>Sch</td>
                                                         @if( in_array($slot['sun']['schedule_id'],$schedules) )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],true)!!}</td>
+                                                            {!! Form::hidden('schedules['.$slot['sun']['schedule_id'].'][time]',$slot['time']) !!}
+                                                            {!! Form::hidden('schedules['.$slot['sun']['schedule_id'].'][day]','sun') !!}
                                                         @else
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][id]',$slot['sun']['schedule_id'],false)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],false)!!}</td>
                                                             {{--<td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][id]',$slot['sun']['schedule_id'],false) !!}</td>--}}
                                                         @endif
                                                     </tr>
                                                     {{--<tr>--}}
                                                         {{--<td>Max T</td>--}}
-                                                        {{--<td>{!! Form::text('schedules['.$key.'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
+                                                        {{--<td>{!! Form::text('schedules['.$slot['sun']['schedule_id'].'][max_reservations]','5',['size'=>'2']) !!}</td>--}}
                                                     {{--</tr>--}}
                                                     <tr>
                                                         <td>Off Peak</td>
                                                         @if( array_get($restaurantSchedules,$slot['sun']['schedule_id']) == 1 )
-                                                            <td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],true)!!}</td>
+                                                            <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][off_peak]',$slot['sun']['schedule_id'],true)!!}</td>
                                                         @else
-                                                            {{--<td>{!! Form::checkbox('schedules['.$key.'][off_peak]',$slot['sun']['schedule_id'],false)!!}</td>--}}
+                                                            {{--<td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][off_peak]',$slot['sun']['schedule_id'],false)!!}</td>--}}
                                                             <td>{!! Form::checkbox('schedules['.$slot['sun']['schedule_id'].'][off_peak]','1',false) !!}</td>
                                                         @endif
                                                     </tr>

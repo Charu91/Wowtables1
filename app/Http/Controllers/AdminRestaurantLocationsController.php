@@ -181,7 +181,7 @@ class AdminRestaurantLocationsController extends Controller {
 	public function update($id, UpdateRestaurantLocationRequest $updateRestaurantLocationRequest)
 	{
         $input = $this->request->all();
-		//dd($input);
+
         $restaurantLocationUpdate = $this->restaurantLocation->update($id, $input);
 
         if($restaurantLocationUpdate['status'] === 'success'){
