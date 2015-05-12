@@ -149,39 +149,32 @@ use Validator;
 		//array to store response
 		$arrResponse = array();
 		
-		if(Reservation::isReservationCutOffTimeReached()) {
+		//reading data input by the user
+		$data =  $this->request->all();
+		
+		//validating user data
+		$validator = Validator::make($data,Reservation::$arrRules);
+		
+		if($validator->fails()) {
+			$message = $validator->messages();
+			$errorMessage = "";
+			foreach($data as $key => $value) {
+				if($message->has($key)) {
+					$errorMessage .= $message->first($key).'\n ';
+				}
+			}
+			
 			$arrResponse['status'] = Config::get('constants.API_ERROR');
-			$arrResponse['error'] = 'Sorry. Reservations are not done after '.
-										Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION').
-										'. You can try again tommorrow.';
+			$arrResponse['error'] = $errorMessage;				
 		}
 		else {
-			//reading data input by the user
-			$data =  $this->request->all();
+			$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
+			
+			if($userID > 0) {
+				//validating the information submitted by users
+				$arrResponse = Reservation::validateReservationData($data);
 				
-			//validating user data
-			$validator = Validator::make($data,Reservation::$arrRules);
-		
-			if($validator->fails()) {
-				$message = $validator->messages();
-				$errorMessage = "";
-				foreach($data as $key => $value) {				
-					if($message->has($key)) {
-						$errorMessage .= $message->first($key).'\n ';
-					}
-				}
-			
-				$arrResponse['status'] = Config::get('constants.API_ERROR');
-				$arrResponse['error'] = $errorMessage;				
-			}
-			else {
-				$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
-		
-				if($userID > 0) {
-					//validating the information submitted by users
-					$arrResponse = Reservation::validateReservationData($data);
-			
-					if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+				if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
 						$arrResponse = ReservationDetails::addReservationDetails($data,$userID);			
 					}
 				}
@@ -190,7 +183,7 @@ use Validator;
 					$arrResponse['msg'] = 'Not a valid request.';	
 				}
 			}
-		}				
+					
 		return response()->json($arrResponse,200);
 	}
 	
@@ -225,16 +218,43 @@ use Validator;
 		$arrResponse = array();
 		
 		//reading data input by the user
-		$arrData =  $this->request->all();
+		$data =  $this->request->all();
+		/*
+		//reading the reservation rules
+		$arrRule = Reservation::$arrRules;
 		
-		//validating the user input data
-		$arrResponse = Reservation::validateEditReservationData($arrData);
+		//updating the validation rule for reservation time
+		$arrRule['reservationTime'] = 'required|OutsidePrevReservationTimeRange: reservationDate, reservationID'; 
 		
-		if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-			if(ReservationDetails::updateReservationDetail($arrData)) {
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		 */
+		 
+		 //validating user data
+		 $validator = Validator::make($data,Reservation::$arrRules); 
+		 
+		 if($validator->fails()) {
+		 	$message = $validator->messages();
+			$errorMessage = "";
+			foreach($data as $key => $value) {
+				if($message->has($key)) {
+					$errorMessage .= $message->first($key).'\n ';
+				}
 			}
-		}		
+			
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+			$arrResponse['error'] = $errorMessage;
+		 }
+		 else {
+		 	
+		 	//validating the user input data
+			$arrResponse = Reservation::validateEditReservationData($data);
+		
+			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
+				if(ReservationDetails::updateReservationDetail($data)) {
+					$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+				}
+			} 
+			 
+		 }				
 		return response()->json($arrResponse,200);		
 	}
 	
