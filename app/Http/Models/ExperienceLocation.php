@@ -112,6 +112,12 @@ class ExperienceLocation {
 
         DB::delete($query, [$productVendorLocationId]);
 
+        $q1 = 'SELECT product_id from product_vendor_locations WHERE id = ?';
+
+        $productID = DB::select($q1,[$productVendorLocationId]);
+
+        //echo "<pre>"; print_r($productID); die;
+
 
         $deleteFromProductID = 'DELETE FROM product_vendor_locations WHERE product_id = ?';
 
@@ -119,6 +125,8 @@ class ExperienceLocation {
 
 
         $location_count = count($data['restaurant_location_id']);
+
+
 
         $productVendorLocationLastID = '';
         if($location_count > 1){
@@ -144,12 +152,12 @@ class ExperienceLocation {
                 'status' => $data['status']
             ];
 
-            $productVendorLocationLastID = DB::table('product_vendor_locations')->where('id', $productVendorLocationId)->update($productVendorLocationInsertData);
+            $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
         }
 
 
         $productVendorLocationId = $productVendorLocationLastID;
-
+        //echo "productVendorLocationId = ".$productVendorLocationId; die;
         /*$productVendorLocationUpdateData = [
             'vendor_location_id' => $data['restaurant_location_id'],
             'descriptive_title' => $data['descriptive_title'],
