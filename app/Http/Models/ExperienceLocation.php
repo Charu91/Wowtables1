@@ -15,7 +15,7 @@ class ExperienceLocation {
                 $productVendorLocationInsertData = [
                     'product_id' => $data['experience_id'],
                     'vendor_location_id' => $location_id,
-                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : NULL),
+                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
                     'status' => $data['status']
                 ];
@@ -28,7 +28,7 @@ class ExperienceLocation {
             $productVendorLocationInsertData = [
                 'product_id' => $data['experience_id'],
                 'vendor_location_id' => $data['restaurant_location_id'][0],
-                'location_parent_id' => NULL,
+                'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
                 'status' => $data['status']
             ];
@@ -112,6 +112,12 @@ class ExperienceLocation {
 
         DB::delete($query, [$productVendorLocationId]);
 
+        $q1 = 'SELECT product_id from product_vendor_locations WHERE id = ?';
+
+        $productID = DB::select($q1,[$productVendorLocationId]);
+
+        //echo "<pre>"; print_r($productID); die;
+
 
         $deleteFromProductID = 'DELETE FROM product_vendor_locations WHERE product_id = ?';
 
@@ -120,13 +126,15 @@ class ExperienceLocation {
 
         $location_count = count($data['restaurant_location_id']);
 
+
+
         $productVendorLocationLastID = '';
         if($location_count > 1){
             foreach($data['restaurant_location_id'] as $key => $location_id){
                 $productVendorLocationInsertData = [
                     'product_id' => $data['experience_id'],
                     'vendor_location_id' => $location_id,
-                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : NULL),
+                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
                     'status' => $data['status']
                 ];
@@ -139,17 +147,17 @@ class ExperienceLocation {
             $productVendorLocationInsertData = [
                 'product_id' => $data['experience_id'],
                 'vendor_location_id' => $data['restaurant_location_id'][0],
-                'location_parent_id' => NULL,
+                'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
                 'status' => $data['status']
             ];
 
-            $productVendorLocationLastID = DB::table('product_vendor_locations')->where('id', $productVendorLocationId)->update($productVendorLocationInsertData);
+            $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
         }
 
 
         $productVendorLocationId = $productVendorLocationLastID;
-
+        //echo "productVendorLocationId = ".$productVendorLocationId; die;
         /*$productVendorLocationUpdateData = [
             'vendor_location_id' => $data['restaurant_location_id'],
             'descriptive_title' => $data['descriptive_title'],
