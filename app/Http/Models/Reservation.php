@@ -24,9 +24,9 @@ use WowTables\Http\Models\Experiences;
 class Reservation {
 	
 	public  static $arrRules = array(
-									'reservationDate' => 'required|date|NotPreviousDate',
+									'reservationDate' => 'required|date|NotPreviousDate|dayReservationCutOff',
 									'reservationDay' => 'required',
-									'reservationTime' => 'required|OutsidePrevReservationTimeRange: reservationDate',
+									'reservationTime' => 'required|OutsidePrevReservationTimeRange:reservationDate',
 									'partySize' => 'required|integer',
 									'vendorLocationID' => 'required|not_in:0',
 									'guestName' => 'required|max:255',
@@ -35,7 +35,7 @@ class Reservation {
 									'reservationType' => 'required|in:experience,alacarte,event',
 									'specialRequest' => 'max:512',
 									'access_token' => 'required|exists:user_devices,access_token',
-									'reservationID' => 'sometimes|required|exists: reservation_details,id'
+									'reservationID' => 'sometimes|required|exists:reservation_details,id'
 								) ;
 								
 	//-----------------------------------------------------------------
@@ -163,7 +163,7 @@ class Reservation {
 			$returnResult = VendorLocationBlockedSchedules::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
 			if ($returnResult) {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
-				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
+				$arrResponse['error'] = 'You cannot make any reservation on the selected date.';
 				return $arrResponse;
 			}
 
@@ -180,12 +180,12 @@ class Reservation {
 					
 					if ($maxCount == $existingReservationCount) {
 						$arrResponse['status'] = Config::get('constants.API_ERROR');
-						$arrResponse['msg'] = 'Sorry. Currently the place is full. Please try another day.';
+						$arrResponse['error'] = 'Sorry. Currently the place is full. Please try another day.';
 						return $arrResponse;
 					} else if ($maxCount > $existingReservationCount) {
 						if (($maxCount - ($existingReservationCount + $arrData['partySize'])) < 0) {
 							$arrResponse['status'] = Config::get('constants.API_ERROR');
-							$arrResponse['msg'] = "Sorry. We have only " . $maxCount - $arrReservationCount . ' seats available.';
+							$arrResponse['error'] = "Sorry. We have only " . $maxCount - $arrReservationCount . ' seats available.';
 							return $arrResponse;
 						}
 					}
@@ -198,7 +198,7 @@ class Reservation {
 			$returnResult = ProductVendorLocationBlockedSchedule::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
 			if ($returnResult) {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
-				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
+				$arrResponse['error'] = 'You cannot make any reservation on the selected date.';
 				return $arrResponse;
 			}
 
@@ -219,12 +219,12 @@ class Reservation {
 					if ($startTime <= $reservationTime && $endTime >= $reservationTime) {
 						if ($maxCount == $existingReservationCount) {
 							$arrResponse['status'] = Config::get('constants.API_ERROR');
-							$arrResponse['msg'] = 'Sorry. Currently the place is full. Please try another day.';
+							$arrResponse['error'] = 'Sorry. Currently the place is full. Please try another day.';
 							return $arrResponse;
 						} else if ($maxCount > $existingReservationCount) {
 							if (($maxCount - ($existingReservationCount + $arrData['partySize'])) < 0) {
 								$arrResponse['status'] = Config::get('constants.API_ERROR');
-								$arrResponse['msg'] = "Sorry. We have only " . abs($maxCount - $existingReservationCount) . ' seats available.';
+								$arrResponse['error'] = "Sorry. We have only " . abs($maxCount - $existingReservationCount) . ' seats available.';
 								return $arrResponse;
 							}
 						}
@@ -257,7 +257,7 @@ class Reservation {
 			$returnResult = VendorLocationBlockedSchedules::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
 			if ($returnResult) {				
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
-				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
+				$arrResponse['error'] = 'You cannot make any reservation on the selected date.';
 				return $arrResponse;
 			}
 			
@@ -289,7 +289,7 @@ class Reservation {
 					} else if ($maxCount > $existingReservationCount) {
 						if (($maxCount - ($existingReservationCount + $arrData['partySize'])) < 0) {
 							$arrResponse['status'] = Config::get('constants.API_ERROR');
-							$arrResponse['msg'] = "Sorry. We have only " . $maxCount - $arrReservationCount . ' seats available.';
+							$arrResponse['error'] = "Sorry. We have only " . $maxCount - $arrReservationCount . ' seats available.';
 							return $arrResponse;
 						}
 					}
@@ -304,7 +304,7 @@ class Reservation {
 			$returnResult = ProductVendorLocationBlockedSchedule::isDateBlocked($arrData['vendorLocationID'], $arrData['reservationDate']);
 			if ($returnResult) {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
-				$arrResponse['msg'] = 'You cannot make any reservation on the selected date.';
+				$arrResponse['error'] = 'You cannot make any reservation on the selected date.';
 				return $arrResponse;
 			}			
 			
@@ -333,12 +333,12 @@ class Reservation {
 					if ($startTime <= $reservationTime && $endTime >= $reservationTime) {
 						if ($maxCount == $existingReservationCount) {
 							$arrResponse['status'] = Config::get('constants.API_ERROR');
-							$arrResponse['msg'] = 'Sorry. Currently the place is full. Please try another day.';
+							$arrResponse['error'] = 'Sorry. Currently the place is full. Please try another day.';
 							return $arrResponse;
 						} else if ($maxCount > $existingReservationCount) {
 							if (($maxCount - ($existingReservationCount + $arrData['partySize'])) < 0) {
 								$arrResponse['status'] = Config::get('constants.API_ERROR');
-								$arrResponse['msg'] = "Sorry. We have only " . abs($maxCount - $existingReservationCount) . ' seats available.';
+								$arrResponse['error'] = "Sorry. We have only " . abs($maxCount - $existingReservationCount) . ' seats available.';
 								return $arrResponse;
 							}
 						}
@@ -496,7 +496,7 @@ class Reservation {
 		$queryResult = DB::table('reservation_addons_variants_details as ravd')
 							->join('products as p','p.id','=','ravd.options_id')
 							->whereIn('ravd.reservation_id',$arrReservation)
-							->select('ravd.options_id as prod_id','ravd.no_of_persons as qty',
+							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
 										'ravd.reservation_id')
 							->get();
 		
@@ -506,40 +506,20 @@ class Reservation {
 		foreach($queryResult as $row) {
 			if(array_key_exists($row->reservation_id, $arrData)) {
 				$arrData[$row->reservation_id][] = array(
+														'id' => $row->id,
 														'prod_id' => $row->prod_id,
 														'qty' => $row->qty
 													);
 			}
 			else {
 				$arrData[$row->reservation_id][] = array(
+														'id' => $row->id,
 														'prod_id' => $row->prod_id,
 														'qty' => $row->qty
 													);
 			}
 		}
 		return $arrData;
-	}
-	
-	//-----------------------------------------------------------------
-	
-	/**
-	 * Verifies tha the reservation request is within the reservation
-	 * cut off time for the day.
-	 * 
-	 * @access	public
-	 * @return	boolean
-	 * @since	1.0.0
-	 */
-	public static function isReservationCutOffTimeReached() {
-		$currentTime = strtotime(date("H:i:s"));
-		$cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
-		
-		$timeDiff = $currentTime - $cutOffTime;
-				
-		if($timeDiff >= 0) {
-			return TRUE;
-		}		
-		return FALSE;
 	}	
 }
 //end of class Reservation

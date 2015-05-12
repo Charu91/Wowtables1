@@ -112,7 +112,7 @@ class ReservationDetails extends Model {
 			else if($arrData['reservationType'] == 'experience') {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-				if(array_key_exists('addons', $arrData) && !empty($arrData['addon'])) {
+				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
 					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
 				}				
 				
@@ -239,15 +239,19 @@ class ReservationDetails extends Model {
 			//setting up the value of the location id as per type
  			if($arrData['reservationType'] == 'alacarte') {
  				$reservation->vendor_location_id = $arrData['vendorLocationID'];
+				$reservation->vendor_location_id = 0;
  			}
 			else if($arrData['reservationType'] == 'experience') {
 				$reservation->vendor_location_id = 0;
 				$reservation->product_vendor_location_id = $arrData['vendorLocationID'];
-			
+				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
+					self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
+				}
 			}
  		
 			#saving the information into the DB
 			$savedData = $reservation->save();
+			
 			$arrResponse['status'] = ($savedData) ? Config::get('constants.API_SUCCESS'): Config::get('constants.API_FAILED');
 			
 		}
@@ -394,6 +398,55 @@ class ReservationDetails extends Model {
 		//writing data to reservation_addons_variants_details table
 		ReservationAddonsVariantsDetails::insert($arrInsertData);
 	}
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Updates the reservation Addon details in the database.
+	 * 
+	 * @access	public
+	 * @static
+	 * @param	integer
+	 * @param	$arrAddon
+	 * @since	1.0.0
+	 */
+	public static function updateReservationAddonDetails($reservationID, $arrAddon) {
+			
+		//array to hold the data to be written into the DB
+		$arrInsertData = array();		
+		
+		//updating the addons values	
+		foreach($arrAddon as $key => $value) {
+			if(isset($value['id'])) {
+				//getting an instance of the row to be updated
+				$addOn = ReservationAddonsVariantsDetails::find($value['id']);
+			
+				//initializing the values to be updated
+				$addOn->no_of_persons = $value['qty'];
+				$addOn->options_id = $value['prod_id'];
+			
+				//writing the updated information
+				$addOn->save();
+			}
+			else {
+				$arrInsertData[] = array(
+									'reservation_id' => $reservationID,
+									'no_of_persons' => $detail['qty'],
+									'options_id' => $detail['prod_id'],
+									'option_type' => 'addon',
+									'reservation_type' => 'experience',
+									'created_at' => date('Y-m-d H:i:m'),
+									'updated_at' => date('Y-m-d H:i:m'),
+								);
+			}
+			
+		}
+		
+		if(count($arrInsertData) > 0) {
+			//writing data to reservation_addons_variants_details table
+			ReservationAddonsVariantsDetails::insert($arrInsertData);
+		}
+	}  
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php

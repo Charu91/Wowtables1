@@ -21,17 +21,24 @@ class CustomValidator extends Validator {
 		
 		$reservationDate = $this->data['reservationDate'];
 		$accessToken = $this->data['access_token'];
+		$reservationID = (isset($this->data['reservationID'])) ? $this->data['reservationID']:0; 
 		$reservationTime = $value;
 		
-		$queryResult = DB::table('reservation_details as rd')
+		$query = DB::table('reservation_details as rd')
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
 							->where('rd.reservation_date','=',$reservationDate)
 							->where('ud.access_token',$accessToken)
 							->select('rd.id',
 									DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
 									)
-							->orderBy('time_difference','ASC')
-							->get();
+							->orderBy('time_difference','ASC');
+		
+		if($reservationID > 0) {
+			$query->where('rd.id','!=',$reservationID);
+		}
+		
+		//executing the query
+		$queryResult = $query->get();
 		if($queryResult) {
 			$hourLimit = Config::get('constants.NEXT_RESERVATION_TIME_RANGE_LIMIT');
 			foreach($queryResult as $row) {
@@ -60,6 +67,35 @@ class CustomValidator extends Validator {
 			return true;
 		}		
 		return false;
+	}
+
+	//------------------------------------------------------------------------
+	
+	/**
+	 * Checks whether user has sent a reservation request for the current day
+	 * after the current day reservation cut off time limit.
+	 * 
+	 * @access	public
+	 * @param	$attribute
+	 * @param	$value
+	 * @param	$parameter
+	 * @return	boolean
+	 * @since	1.0.0
+	 */
+	public function validateDayReservationCutOff($attribute, $value, $parameter) {
+		$currentDay = date('Y-m-d');
+		
+		if($currentDay == $value) {
+			$currentTime = strtotime(date("H:i:s"));
+			$cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
+		
+			$timeDiff = $currentTime - $cutOffTime;
+				
+			if($timeDiff >= 0) {
+				return FALSE;
+			}
+		}				
+		return TRUE;
 	}	
 	
 }

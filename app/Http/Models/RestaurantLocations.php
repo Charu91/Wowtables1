@@ -133,7 +133,16 @@ class RestaurantLocations extends VendorLocations{
         }
 
         if(isset($filters['pricing_level'])){
-            $select->where('vl.pricing_level', $filters['pricing_level']);
+        	if(strtolower($filters['pricing_level']) == 'high') {
+        		$select->whereIn('vl.pricing_level',array('Low','Medium','High'));
+        	}
+			elseif(strtolower($filters['pricing_level']) == "medium") {
+				$select->whereIn('vl.pricing_level',array('Low','Medium'));
+			}
+			elseif(strtolower($filters['pricing_level']) == "low") {
+				$select->whereIn('vl.pricing_level',array('Low'));
+			}
+            
             //$this->filters['pricing_level']['active'] = $filters['pricing_level'];
         }
 

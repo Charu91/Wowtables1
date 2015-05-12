@@ -77,6 +77,7 @@ return [
 	//custom validator methods messages
 	"outside_prev_reservation_time_range"  => "You cannot reserve next Table within 2 hours of your last reservation time.",
 	"not_previous_date" => "You cannot reserve table for a past date.",
+	"day_reservation_cut_off" => "Sorry. You cannot make any reservations, for today. Please call the Concierge services.",
 
 	/*
 	|--------------------------------------------------------------------------
