@@ -15,7 +15,7 @@ class ExperienceLocation {
                 $productVendorLocationInsertData = [
                     'product_id' => $data['experience_id'],
                     'vendor_location_id' => $location_id,
-                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : NULL),
+                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
                     'status' => $data['status']
                 ];
@@ -28,7 +28,7 @@ class ExperienceLocation {
             $productVendorLocationInsertData = [
                 'product_id' => $data['experience_id'],
                 'vendor_location_id' => $data['restaurant_location_id'][0],
-                'location_parent_id' => NULL,
+                'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
                 'status' => $data['status']
             ];
@@ -126,7 +126,7 @@ class ExperienceLocation {
                 $productVendorLocationInsertData = [
                     'product_id' => $data['experience_id'],
                     'vendor_location_id' => $location_id,
-                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : NULL),
+                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
                     'status' => $data['status']
                 ];
@@ -139,7 +139,7 @@ class ExperienceLocation {
             $productVendorLocationInsertData = [
                 'product_id' => $data['experience_id'],
                 'vendor_location_id' => $data['restaurant_location_id'][0],
-                'location_parent_id' => NULL,
+                'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
                 'status' => $data['status']
             ];
