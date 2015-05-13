@@ -24,7 +24,7 @@ use WowTables\Http\Models\Experiences;
 class Reservation {
 	
 	public  static $arrRules = array(
-									'reservationDate' => 'required|date|NotPreviousDate|dayReservationCutOff',
+									'reservationDate' => 'required|date|NotPreviousDate',
 									'reservationDay' => 'required',
 									'reservationTime' => 'required|OutsidePrevReservationTimeRange:reservationDate',
 									'partySize' => 'required|integer',
