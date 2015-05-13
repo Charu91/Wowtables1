@@ -498,6 +498,46 @@
 	}
 
 	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the details of the restaurants matching the passed string.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	string	$matchString
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function readRestaurantsByMatchingNames($matchString) {
+		
+		//array to store the restaurant details
+		$data = array();
+			
+		
+		$queryResult = DB::table('vendors as v')
+						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
+						->where('v.name','LIKE',"$matchString%")
+						->select('v.name', 'v.id as vendor_id',
+								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
+						->groupBy('vl.vendor_id')
+						->get();
+						
+		if($queryResult) {
+			
+			foreach($queryResult as $row) {
+				$data[] = array(
+								'id' => $row->vendor_id,
+								'name' => $row->name,
+								'branches' => $row->branch_count,
+							);
+			}
+		}
+		
+		$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		$arrResponse['data'] = $data;
+		
+		return $arrResponse;
+	}
 }
 //end of class Search
 //end of file WowTables\Http\Models\E
