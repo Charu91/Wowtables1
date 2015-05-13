@@ -42,12 +42,14 @@
                 </thead>
                 <tbody>
                 @foreach($collections as $collection)
+
                     <tr>
                         <th>{!! $collection->id !!}</th>
                         <th>{!! $collection->name !!}</th>
                         <th>{!! $collection->slug !!}</th>
                         <th>{!! $collection->description !!}</th>
-                        <th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$collection->media->media_resized->first()->file !!}"/></th>
+                        {{--<th>{!! $collection->media->file !!}</th>--}}
+                        {{--<th><img style="height: 56px;" class="img-thumbnail" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/{!! $collection->media->file !!}"/></th>--}}
                         <th>{!! $collection->status !!}</th>
                         <th>
                             <a href="/admin/promotions/collections/{!! $collection->id !!}/edit" data-collection-id="{!! $collection->id !!}" class="btn btn-xs btn-primary edit-collection-btn">Edit</a>

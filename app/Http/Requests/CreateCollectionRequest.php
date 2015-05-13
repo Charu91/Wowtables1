@@ -28,7 +28,7 @@ class CreateCollectionRequest extends Request {
             'seo_title'  => 'required',
             'seo_meta_description'  => 'required',
             'seo_meta_keywords'  => 'required',
-            'media_id'  => 'required|exists:media,id',
+            //'media_id'  => 'required|exists:media,id',
         ];
     }
 

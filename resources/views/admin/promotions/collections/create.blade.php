@@ -62,14 +62,14 @@
                 {!! Form::text('seo_meta_keywords',null,['class'=>'form-control','required'=>'']) !!}
             </div>
         </div>
-        <div class="mt-lg mb-lg form-group">
-            <div class="col-sm-4">
-                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Banner Image</button>
-            </div>
-            <div data-gallery-position="1" class="popup-gallery col-sm-8">
-                <input name="media_id" type="hidden" required>
-            </div>
-        </div>
+        {{--<div class="mt-lg mb-lg form-group">--}}
+            {{--<div class="col-sm-4">--}}
+                {{--<button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary collection-media-modal-btn">Select Banner Image</button>--}}
+            {{--</div>--}}
+            {{--<div data-gallery-position="1" class="popup-gallery col-sm-8">--}}
+                {{--<input name="media_id" type="hidden" required>--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <div class="form-group">
             <label for="status">&nbsp;&nbsp;&nbsp;Status &nbsp;&nbsp;&nbsp;</label>
             <div class="radio-custom radio-success radio-inline">
