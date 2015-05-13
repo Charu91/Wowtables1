@@ -18,6 +18,10 @@ return [
 
     'base_s3_url_mobile' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/mobile/',
 
+    'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/website/',
+
+    'base_s3_url_collection_mobile' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/mobile/',
+
     'base_cdn_url' => '',
 
     'sizes' => [
@@ -27,8 +31,8 @@ return [
         ],
 
         'listing' => [
-            'height' => 269,
-            'width' => 651
+            'height' => 303,
+            'width' => 239
         ],
 
 
