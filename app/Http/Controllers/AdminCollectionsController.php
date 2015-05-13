@@ -22,6 +22,8 @@ class AdminCollectionsController extends Controller {
     {
         $collections = Collection::all();
 
+        //echo "<pre>"; print_r($collections);
+
         return view('admin.promotions.collections.index',['collections'=>$collections]);
     }
 
@@ -40,14 +42,15 @@ class AdminCollectionsController extends Controller {
     public function store(CreateCollectionRequest $request)
     {
         $collection = new Collection();
-
+        //dd($request);
         $collection->name = $this->request->get('name');
         $collection->slug = $this->request->get('slug');
         $collection->description = $this->request->get('description');
         $collection->seo_title = $this->request->get('seo_title');
         $collection->seo_meta_description = $this->request->get('seo_meta_description');
         $collection->seo_meta_keywords = $this->request->get('seo_meta_keywords');
-        $collection->media_id = $this->request->get('media_id');
+        //$collection->media_id = $this->request->get('media_id');
+        $collection->media_id = ($this->request->get('media_id') ? $this->request->get('media_id') : 0);
         $collection->status = $this->request->get('status');
         $collection->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
         $collection->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);
@@ -89,7 +92,8 @@ class AdminCollectionsController extends Controller {
         $collection->seo_title = $this->request->get('seo_title');
         $collection->seo_meta_description = $this->request->get('seo_meta_description');
         $collection->seo_meta_keywords = $this->request->get('seo_meta_keywords');
-        $collection->media_id = $this->request->get('media_id');
+        //$collection->media_id = $this->request->get('media_id');
+        $collection->media_id = ($this->request->get('media_id') ? $this->request->get('media_id') : 0);
         $collection->status = $this->request->get('status');
         $collection->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
         $collection->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);

@@ -62,15 +62,15 @@
                 {!! Form::text('seo_meta_keywords',null,['class'=>'form-control','required'=>'']) !!}
             </div>
         </div>
-        <div class="mt-lg mb-lg form-group">
-            <div class="col-sm-4">
-                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Banner Image</button>
-            </div>
-            <div data-gallery-position="1" class="popup-gallery col-sm-8">
-                <input name="media_id" type="hidden" required value="{{$collection->media_id}}">
-                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $media_url.$collection->media->media_resized->first()->file !!}" width="100">
-            </div>
-        </div>
+        {{--<div class="mt-lg mb-lg form-group">--}}
+            {{--<div class="col-sm-4">--}}
+                {{--<button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Banner Image</button>--}}
+            {{--</div>--}}
+            {{--<div data-gallery-position="1" class="popup-gallery col-sm-8">--}}
+                {{--<input name="media_id" type="hidden" required value="{{$collection->media_id}}">--}}
+                {{--<img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/{!! $collection->media->file !!}" width="100">--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <div class="form-group">
             <label for="status">&nbsp;&nbsp;&nbsp;Status &nbsp;&nbsp;&nbsp;</label>
             <div class="radio-custom radio-success radio-inline">
