@@ -175,7 +175,7 @@ class SimpleExperience extends Experience {
             $mobile_listing_image_array = $data['media']['mobile'];
         }
 
-        $new_media['media'] = ['listing'=>$listing_image_array,'gallery'=>$gallery_image_array,'mobile'=>$mobile_listing_image_array];
+        $new_media['media'] = ['listing_image'=>$listing_image_array,'gallery_images'=>$gallery_image_array,'mobile'=>$mobile_listing_image_array];
         //echo "<pre>"; print_r($new_media['media']); die;
 
         if(!empty($new_media['media'])){
