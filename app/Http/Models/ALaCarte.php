@@ -355,6 +355,150 @@ use Config;
 		
 		return $arrLocation;
 	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads the details of the branches of the restaurants matching the
+	 * passed vendorID.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	integer	$vendorID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function getResturantBranchesInformation($vendorID) {
+		
+		//query to read the vendor details
+		$queryResult = DB::table('vendors as v')
+						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
+						->leftJoin('vendor_location_attributes_varchar AS vlav', 'vl.id', '=', 'vlav.vendor_location_id')
+						->leftJoin('vendor_attributes AS va', 'va.id', '=', 'vlav.vendor_attribute_id')
+            			->leftJoin('vendor_location_attributes_multiselect AS vlam', 'vlam.vendor_location_id', '=', 'vl.id')
+            			->leftJoin('vendor_attributes AS vamso', function($join){
+               	 				$join->on('va.id', '=', 'vlav.vendor_attribute_id')
+                    			->on('vamso.alias','=', DB::raw('"cuisines"'));
+            				})
+						->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+						->leftJoin('vendor_location_reviews AS vlr', function($join){
+                				$join->on('vlr.vendor_location_id', '=', 'vl.id')
+                    				->on('vlr.status','=', DB::raw('"Approved"'));
+            			})
+						->leftJoin('locations as loc','loc.id','=','vl.location_id')
+						->leftJoin('vendor_locations_flags_map as vlfm','vlfm.vendor_location_id','=','vl.id')
+						->leftJoin('flags','flags.id','=','vlfm.flag_id')
+						->leftJoin('vendor_locations_media_map as vlmm', 'vlmm.vendor_location_id','=', 'vl.id')
+						->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'vlmm.media_id')
+						->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'vlmm.media_id')            
+						->where('vl.vendor_id',$vendorID)
+						->where('v.status','Publish')
+						->where('vl.status','Active')
+						->where('mrn1.image_type','mobile_listing_ios_alacarte')
+						->where('mrn2.image_type', 'mobile_listing_android_alacarte')
+						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
+								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
+								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
+                				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
+								'loc.name as location_name',
+								DB::raw('IFNULL(flags.name,"") AS flag_name'),
+								'mrn1.file as ios_image',
+								'mrn2.file as android_image'
+								)
+						->groupBy('vl.id')
+						->get();
+		
+		//array to store the information from the DB
+		$data = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {
+				$data['data']['branch'][] = array(
+												'vl_id' => $row->vl_id,
+												'name' => $row->name,
+												'cuisine' => $row->cuisine,
+												'pricing_level' => $row->pricing_level,
+												'total_reviews' => $row->total_reviews,
+												'rating' => $row->rating,
+												'location' => $row->location_name,
+												'flag' => $row->flag_name,
+												'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+												'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+											);
+			}
+		}
+		
+		$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
+		
+		return $data;
+	}
+
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Reads all the experiences avalilable at a particular
+	 * restaurant.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	integer	$vendorID
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function readRestaurantsExperiences($vendorID) {
+		
+		//query to read experiences available at the Restaurant
+		$queryResult = DB::table('products as p')
+							->join('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+							->join('vendor_locations as vl', 'vl.id','=', 'pvl.vendor_location_id')
+							->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
+							->leftJoin('product_attributes as pa', 'pa.id', '=', 'pat.product_attribute_id')
+							->leftJoin('product_pricing as pp', 'pp.product_id', '=', 'p.id')
+							->leftJoin('product_reviews as pr', 'pr.product_id', '=', 'p.id')
+							->leftJoin('locations as loc','loc.id','=','vl.location_id')
+							->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
+							->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
+							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
+							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
+							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
+							->where('vl.vendor_id', $vendorID)
+							->where('pr.status','Approved')
+							->where('p.status', 'Publish')
+							->where('mrn1.image_type','mobile_listing_ios_experience')
+							->where('mrn2.image_type', 'mobile_listing_android_experience')						
+							->select(
+									'p.id as product_id','p.name', 'pvl.id as pvl_id',
+									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
+									//DB::raw('IF(mrn.image_type="mobile_listing_android_experience",mrn.file,"") as android_image'),
+									//DB::raw('IF(mrn.image_type="mobile_listing_ios_experience",mrn.file,"") as ios_image'),
+									'mrn1.file as ios_image','mrn2.file as android_image',
+									'loc.name as location_name','flags.name as flag_name',
+									'pp.post_tax_price','pp.price'
+									)
+							->groupBy('p.id')
+							->get();							
+							
+		//array to store the information from the DB
+		$data = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {
+				$data[] = array(
+											'prod_id' => $row->product_id,
+											'pvl_id' => $row->pvl_id,
+											'name' => $row->name,
+											'total_reviews' => $row->total_reviews,
+											'rating' => $row->rating,
+											'price' => $row->price,
+											'post_tax_price' => $row->post_tax_price,
+											'location' => $row->location_name,
+											'flag' => $row->flag_name,
+											'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+											'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+										);
+			}
+		}
+		return $data;							
+	}
  }
 //end of class LaCarte
 //end of file WowTables\Http\Models\LaCarte.php
