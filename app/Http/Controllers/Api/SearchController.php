@@ -1,9 +1,11 @@
 <?php namespace WowTables\Http\Controllers\Api;
 
+use Config;
+
 use Illuminate\Http\Request;
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Search;
-use Config;
+use WowTables\Http\Models\ALaCarte;
 
 /**
  * Controller class SearchController.
@@ -100,12 +102,33 @@ use Config;
 	//-----------------------------------------------------------------
 	
 	/**
+	 * Handles requests for showing restaurants names matching
+	 * the passed name.
 	 * 
+	 * @access	public
+	 * @param	string	$strName
+	 * @return	response
+	 * @since	1.0.0
 	 */
-	public function searchResturants() {
-		
+	public function getMatchingRestaurantsName($strName) {
+		return response()->json(Search::readRestaurantsByMatchingNames($strName), 200);
 	}
-
+	
+	//-----------------------------------------------------------------
+	
+	/**
+	 * Handles requests for showing the details of the 
+	 * passed resource type matchning passed resource id.
+	 * 
+	 * @access	public
+	 * @param	string		$resourceType
+	 * @param	integer		$resourceID
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function getResourceDetail($resourceType, $resourceID) {
+		return response()->json(ALaCarte::getResturantBranchesInformation($resourceID),200);
+	}
  }
 //end of class SearchController
 //end of file WowTables/Http/Controllers/Api/SearchController.php
