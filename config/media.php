@@ -31,8 +31,8 @@ return [
         ],
 
         'listing' => [
-            'height' => 303,
-            'width' => 239
+            'height' => 239,
+            'width' => 303
         ],
 
 
