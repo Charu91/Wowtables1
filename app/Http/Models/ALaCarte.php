@@ -113,10 +113,10 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
-																'bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
+																'name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
 																'image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
-																'designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation
+																'designation' => "has reviewd this"//(is_null($queryResult->designation)) ? "" : $queryResult->designation
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
