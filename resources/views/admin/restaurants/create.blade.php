@@ -25,9 +25,9 @@
             <li class="active">
                 <a href="#basic_details" data-toggle="tab" class="text-center">Restaurant Basic Details</a>
             </li>
-            <li>
+            <!--<li>
                 <a href="#seo_details" data-toggle="tab" class="text-center">Search Engine Optimization</a>
-            </li>
+            </li>-->
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
@@ -37,7 +37,7 @@
                         {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
@@ -54,9 +54,9 @@
                     <div class="col-sm-6">
                         {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
                     </div>
-                </div>
+                </div>-->
             </div>
-            <div id="seo_details" class="tab-pane mt-lg">
+            <!--<div id="seo_details" class="tab-pane mt-lg">
                 <div class="form-group">
                     <label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title </label>
                     <div class="col-sm-6">
@@ -75,7 +75,7 @@
                         {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 

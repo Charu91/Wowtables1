@@ -40,7 +40,8 @@ class RestaurantRepository {
         $this->populateVendorAttributes($vendorWithAttributes->attributesSingleSelect);
         $this->populateVendorAttributes($vendorWithAttributes->attributesMultiSelect);
 
-        return [ 'restaurant' => Vendor::find($id), 'attributes' => $this->attributes];
+        //return [ 'restaurant' => Vendor::find($id), 'attributes' => $this->attributes];
+        return [ 'restaurant' => Vendor::find($id)];
     }
 
     public function populateVendorAttributes ( $vendorAttributes )

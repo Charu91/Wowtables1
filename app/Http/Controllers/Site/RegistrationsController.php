@@ -1,22 +1,15 @@
-<?php namespace WowTables\Http\Controllers\Site;
+<?php namespace GIU\Http\Controllers\Site;
 
-use WowTables\Http\Controllers\Controller;
-use WowTables\Http\Models\User;
+use GIU\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
-use WowTables\Http\Requests\Site\CustomerRegisterUserRequest;
 
 class RegistrationsController extends Controller {
 
 
-	/**
-	 * @var User
-	 */
-	protected $user;
-
-	function __construct(Request $request,User $user)
+	function __construct(Request $request)
 	{
 		$this->request = $request;
-		$this->user = $user;
 	}
 
 	public function registerView()
@@ -24,13 +17,8 @@ class RegistrationsController extends Controller {
 		return view('site.users.register');
 	}
 
-	public function register(CustomerRegisterUserRequest $customerRegisterUserRequest)
+	public function register()
 	{
-		$createUser = $this->dispatchFrom('WowTables\Commands\Site\RegisterUserCommand', $customerRegisterUserRequest);
-
-		if ( $createUser['state'] == 'success' )
-		{
-			return redirect()->route('SiteHomePageLoggedIn');
-		}
+		dd($this->request->all());
 	}
 }

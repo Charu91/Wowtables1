@@ -602,9 +602,9 @@ $last_url_item = count($url)-1;
                                 <?php
                                     $selected = '';
                                     if ($hasOrder && $order['qty'] == $i)
-                                        {
-                                            $selected = 'selected';
-                                        }
+                                    {
+                                        $selected = 'selected';
+                                    }
                                     $peop_name = ($i == 1) ? 'Person' : 'People';
                                 ?>
                                 <option value="<?php echo $i?>"<?php echo $selected;?>><?php echo $i?> <?php echo $peop_name ?></option>
@@ -692,9 +692,9 @@ $last_url_item = count($url)-1;
                 </div>
               </div>
                 <?php
-                    $mealOptions = ((!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00') || (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00'));
-                    $nonVeg = (!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00');
-                    $alcohol = (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00');
+                $mealOptions = ((!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00') || (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00'));
+                $nonVeg = (!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00');
+                $alcohol = (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00');
                 ?>
                 <?php if ($mealOptions): ?>
               <div class="panel panel-default">

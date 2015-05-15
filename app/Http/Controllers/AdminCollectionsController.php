@@ -42,7 +42,7 @@ class AdminCollectionsController extends Controller {
     public function store(CreateCollectionRequest $request)
     {
         $collection = new Collection();
-        //dd($request);
+        dd($request);
         $collection->name = $this->request->get('name');
         $collection->slug = $this->request->get('slug');
         $collection->description = $this->request->get('description');

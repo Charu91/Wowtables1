@@ -26,9 +26,9 @@
             <li class="active">
                 <a href="#basic_details" data-toggle="tab" class="text-center">Restaurant Basic Details</a>
             </li>
-            <li>
+            <!--<li>
                 <a href="#seo_details" data-toggle="tab" class="text-center">Search Engine Optimization</a>
-            </li>
+            </li>-->
         </ul>
         <div class="tab-content">
             <div id="basic_details" class="tab-pane active mt-lg">
@@ -38,45 +38,45 @@
                         {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Short Description <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[short_description]',$restaurant['attributes']['short_description'],['rows'=>'7','class'=>'form-control','id'=>'short_description','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[restaurant_info]',$restaurant['attributes']['restaurant_info'],['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}
-                    </div>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--<label for="slug" class="col-sm-3 col-sm-offset-1 control-label">Slug <span class="required">*</span></label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::text('slug',null,['class'=>'form-control','id'=>'slug','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="attributes[short_description]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Short Description <span class="required">*</span></label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::textarea('attributes[short_description]',$restaurant['attributes']['short_description'],['rows'=>'7','class'=>'form-control','id'=>'short_description','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="attributes[restaurant_info]" class="col-sm-3 col-sm-offset-1 control-label">Restaurant Info <span class="required">*</span></label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::textarea('attributes[restaurant_info]',$restaurant['attributes']['restaurant_info'],['rows'=>'7','class'=>'form-control','id'=>'description','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
-            <div id="seo_details" class="tab-pane mt-lg">
-                <div class="form-group">
-                    <label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title </label>
-                    <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_title]',$restaurant['attributes']['seo_title'],['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="attributes[seo_meta_description]" class="col-sm-3 col-sm-offset-1 control-label">SEO Meta Description </label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_description]',$restaurant['attributes']['seo_meta_description'],['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords </label>
-                    <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_meta_keywords]',$restaurant['attributes']['seo_meta_keywords'],['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
-                    </div>
-                </div>
-            </div>
+            {{--<div id="seo_details" class="tab-pane mt-lg">--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="attributes[seo_title]" class="col-sm-3 col-sm-offset-1 control-label">SEO Title </label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::text('attributes[seo_title]',$restaurant['attributes']['seo_title'],['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="attributes[seo_meta_description]" class="col-sm-3 col-sm-offset-1 control-label">SEO Meta Description </label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::textarea('attributes[seo_meta_description]',$restaurant['attributes']['seo_meta_description'],['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="form-group">--}}
+                    {{--<label for="attributes[seo_meta_keywords]" class="col-sm-3 col-sm-offset-1 control-label">SEO Keywords </label>--}}
+                    {{--<div class="col-sm-6">--}}
+                        {{--{!! Form::text('attributes[seo_meta_keywords]',$restaurant['attributes']['seo_meta_keywords'],['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
     </div>
 

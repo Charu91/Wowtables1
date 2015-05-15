@@ -24,7 +24,8 @@ class Restaurant extends Vendor{
         $vendorTypeId = DB::table('vendor_types')->where('type','Restaurants')->pluck('id');
 
         if($vendorTypeId){
-            $vendorInsertData = ['name' => $data['name'], 'slug' => $data['slug'], 'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
+            //$vendorInsertData = ['name' => $data['name'], 'slug' => $data['slug'], 'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
+            $vendorInsertData = ['name' => $data['name'], 'slug' => $data['name'],'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
 
             if($data['status'] === 'Publish'){
                 if(isset($data['publish_date']) && isset($data['publish_time'])){
@@ -37,7 +38,7 @@ class Restaurant extends Vendor{
             $restaurantId = DB::table('vendors')->insertGetId($vendorInsertData);
 
             if($restaurantId){
-                if(count($data['attributes'])){
+                /*if(count($data['attributes'])){
                     $AttributesSaved = $this->saveAttributes($restaurantId, $data['attributes']);
 
                     if($AttributesSaved['status'] === 'success'){
@@ -49,7 +50,13 @@ class Restaurant extends Vendor{
                 }else{
                     DB::commit();
                     return ['status' => 'success'];
-                }
+                }*/
+                DB::commit();
+                return [
+                    'status' => 'success',
+                    'action' => 'Added Restaurant successfully',
+                    'message' => 'Restaurant has been added successfully'
+                ];
             }else{
                 DB::rollBack();
                 return [
@@ -58,6 +65,7 @@ class Restaurant extends Vendor{
                     'message' => 'Could not create the Restaurant. Contact the system admin'
                 ];
             }
+
         }else{
             DB::rollBack();
             return [
@@ -72,9 +80,11 @@ class Restaurant extends Vendor{
     {
         DB::beginTransaction();
 
+        $vendorTypeId = DB::table('vendor_types')->where('type','Restaurants')->pluck('id');
+
         if(DB::table('vendors')->where('id', $restaurant_id)->count()){
             //delete all existing attributes
-            $query = '
+            /*$query = '
                 DELETE vab, vad, vaf, vai, vam, vas, vat, vav
                 FROM vendors AS `v`
                 LEFT JOIN vendor_attributes_boolean AS `vab` ON vab.vendor_id = v.`id`
@@ -86,11 +96,18 @@ class Restaurant extends Vendor{
                 LEFT JOIN vendor_attributes_text AS `vat` ON vat.vendor_id = v.`id`
                 LEFT JOIN vendor_attributes_varchar AS `vav` ON vav.vendor_id = v.`id`
                 WHERE v.id = ?
+            ';*/
+
+            $query = '
+                DELETE
+                FROM vendors
+                WHERE vendors.id = ?
             ';
 
             DB::delete($query, [$restaurant_id]);
 
-            $vendorUpdateData = ['name' => $data['name'], 'slug' => $data['slug'], 'status' => $data['status']];
+            //$vendorUpdateData = ['name' => $data['name'], 'slug' => $data['slug'], 'status' => $data['status']];
+            $vendorUpdateData = ['name' => $data['name'],'slug' => $data['name'],'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
 
             if($data['status'] === 'Publish'){
                 if(isset($data['publish_date']) && isset($data['publish_time'])){
@@ -100,9 +117,25 @@ class Restaurant extends Vendor{
                 }
             }
 
-            DB::table('vendors')->where('id', $restaurant_id)->update($vendorUpdateData);
+            //DB::table('vendors')->where('id', $restaurant_id)->update($vendorUpdateData);
+            $restaurantId = DB::table('vendors')->insertGetId($vendorUpdateData);
 
-            if(count($data['attributes'])){
+            if($restaurantId){
+                DB::commit();
+                return [
+                    'status' => 'success',
+                    'action' => 'Added Restaurant successfully',
+                    'message' => 'Restaurant has been added successfully'
+                ];
+            }else{
+                return [
+                    'status' => 'failure',
+                    'action' => 'Check if restaurant based on the id',
+                    'message' => 'Could not find the restaurant you are trying to update. Try again or contact the sys admin'
+                ];
+            }
+
+            /*if(count($data['attributes'])){
                 $AttributesSaved = $this->saveAttributes($restaurant_id, $data['attributes']);
 
                 if($AttributesSaved['status'] === 'success'){
@@ -114,7 +147,7 @@ class Restaurant extends Vendor{
             }else{
                 DB::commit();
                 return ['status' => 'success'];
-            }
+            }*/
         }else{
             return [
                 'status' => 'failure',
