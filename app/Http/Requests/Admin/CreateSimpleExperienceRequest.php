@@ -114,7 +114,7 @@ class CreateSimpleExperienceRequest extends Request {
         //$rules['curator.id'] = 'required_with:curator|exists:curators,id';
         //$rules['curator.tips'] ='required_with:curator.id';
 
-        $rules['tags'] = 'tagarray';
+        //$rules['tags'] = 'tagarray';
         //$rules['flags'] = 'required';
 
         return $rules;

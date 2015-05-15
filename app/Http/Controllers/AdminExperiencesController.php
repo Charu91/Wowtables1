@@ -149,10 +149,10 @@ class AdminExperiencesController extends Controller {
         return view('admin.experiences.add_update',[
                         'experience'=>$experience,
                         'experienceMedias'=>$experienceMediaArray,
-                        'experiencePricing'=>$experiencePricing[0],
-                        'experienceFlags'=>$experienceFlags[0],
-                        'experienceTags'=>$experienceTags[0],
-                        'experienceCurator'=>$experienceCurator[0],
+                        'experiencePricing'=>((isset($experiencePricing[0]) && $experiencePricing[0]->id != '') ? $experiencePricing[0] : ''),
+                        'experienceFlags'=>((isset($experienceFlags[0]) && $experienceFlags[0]->id != '') ? $experienceFlags[0] : ''),
+                        'experienceTags'=>((isset($experienceTags[0]) && $experienceTags[0]->id != '') ? $experienceTags[0] : ''),
+                        'experienceCurator'=>((isset($experienceCurator[0]) && $experienceCurator[0]->id != '') ? $experienceCurator[0] : ''),
                         'experienceAddons'=>$experienceAddons,
                     ]);
 	}
@@ -166,8 +166,9 @@ class AdminExperiencesController extends Controller {
 	 */
 	public function update($id, UpdateSimpleExperienceRequest $updateSimpleExperienceRequest)
 	{
-        $input = $this->request->all();
 
+        $input = $this->request->all();
+        //dd($input);
         if($input['attributes']['menu_markdown'] == ""){
             $input['attributes']['menu_markdown'] =  $input['attributes']['old_menu_markdown'];
             $input['attributes']['menu'] =  $input['attributes']['old_menu'];

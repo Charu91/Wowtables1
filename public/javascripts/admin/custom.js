@@ -196,6 +196,11 @@ $(document).ready(function(){
          data: curatorsList
     });
 
+    $('.flags-select-box').select2({
+        'placeholder': 'Select Value',
+         data: flagsList
+    });
+
     $('.restaurants-select-box').select2({
         'placeholder': 'Select Value',
         data: restaurantsList

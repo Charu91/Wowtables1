@@ -156,8 +156,8 @@ class CreateRestaurantLocationRequest extends Request {
         $rules['curator.tips'] ='required_with:curator.id';
 
 
-        $rules['tags'] = 'tagarray';
-        $rules['flags'] = 'flagarray';
+        //$rules['tags'] = 'tagarray';
+        //$rules['flags'] = 'flagarray';
 
 
         return $rules;
