@@ -128,6 +128,38 @@ class AdminMediaController extends Controller {
         }
     }
 
+    public function collectionModal()
+    {
+        $input = $this->request->all();
+
+        $pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        $search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAll([
+            'pagenum'       => $pagenum,
+            'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            'search'        => $search_terms
+        ]);
+
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    'pages' => $allMedia['pages'],
+                    'pagenum' => $allMedia['pagenum'],
+                    'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url')
+                ]
+            );
+        }else{
+            return view('admin.media.modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
     public function listing_modal()
     {
         $input = $this->request->all();
@@ -153,6 +185,39 @@ class AdminMediaController extends Controller {
                     //'pagenum' => $allMedia['pagenum'],
                     //'search' => empty($input['search'])? '' : $input['search'],
                     's3_url' => $this->config->get('media.base_s3_url_listing')
+                ]
+            );
+        }else{
+            return view('admin.media.listing_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
+
+    public function web_collection_modal()
+    {
+        $input = $this->request->all();
+
+        //$pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        //$search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllWebCollectionImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+            //echo "<pre>"; print_r($allMedia); die;
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.web_collection_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_collection_web')
                 ]
             );
         }else{
@@ -280,6 +345,19 @@ class AdminMediaController extends Controller {
         $file = $this->request->file('media');
         //echo "<pre>"; print_r($file); die;
         $mediaStore = $this->media->saveListingImage($file);
+
+        if($mediaStore['status'] === 'success'){
+            return response()->json($mediaStore, 200);
+        }else{
+            return response()->json($mediaStore, 500);
+        }
+	}
+
+    public function webCollectionStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStore = $this->media->saveWebCollectionImage($file);
 
         if($mediaStore['status'] === 'success'){
             return response()->json($mediaStore, 200);
@@ -418,7 +496,6 @@ class AdminMediaController extends Controller {
             $allImages [] = $this->media->fetchById($image)['media'];
         }
 
-        //echo "<pre>"; print_r($allImages);
 
         if($allImages[0]['imageType'] == "listing"){
             $setImageUrl = $this->config->get('media.base_s3_url_listing');

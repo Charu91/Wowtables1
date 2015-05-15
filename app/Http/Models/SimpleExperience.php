@@ -216,14 +216,16 @@ class SimpleExperience extends Experience {
             }
         }
 
-        if(!empty($data['curators'])){
-            $curatorMapping = $this->mapCurator($experienceId, $data['curators']);
+        if(!empty($data['curators']) && $data['curators'] != " "){
+            //echo "in";
+            /*$curatorMapping = $this->mapCurator($experienceId, $data['curators']);
 
             if($curatorMapping['status'] !== 'success'){
                 $curatorMapping['message'] = 'Could not map the Simple Experience curators. Contact the system admin';
                 return $curatorMapping;
-            }
+            }*/
         }
+        //echo "out"; die;
 
         if(!empty($data['flags'])){
             $flagMapping = $this->mapFlags($experienceId, $data['flags']);

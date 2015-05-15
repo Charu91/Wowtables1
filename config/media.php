@@ -18,9 +18,7 @@ return [
 
     'base_s3_url_mobile' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/mobile/',
 
-    'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/website/',
-
-    'base_s3_url_collection_mobile' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/mobile/',
+    'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/website',
 
     'base_cdn_url' => '',
 
@@ -33,6 +31,11 @@ return [
         'listing' => [
             'height' => 239,
             'width' => 303
+        ],
+
+        'web_collection' => [
+            'height' => 250,
+            'width' => 959
         ],
 
 

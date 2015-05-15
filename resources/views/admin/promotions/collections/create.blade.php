@@ -70,6 +70,32 @@
                 {{--<input name="media_id" type="hidden" required>--}}
             {{--</div>--}}
         {{--</div>--}}
+        <div class="mt-lg mb-lg ml-lg form-group">
+            <div class="col-md-5">
+                <span class="required">*</span>
+                <button data-media-select="1" data-gallery-position="3" data-media-type="mobile_listing_image" type="button" class="btn btn-success media-modal-btn media-modal-btn-mobile-listing-experience" ><span class="fa fa-plus"></span>&nbsp;Mobile Images (1)</button>
+            </div>
+            <div data-gallery-position="3" class="popup-gallery">
+                @if( Input::old('media.mobile_listing_image') )
+                    {!! Form::hidden('media[mobile]',null) !!}
+                @else
+                    <input name="media[mobile]" type="hidden" required>
+                @endif
+            </div>
+        </div>
+        <div class="mt-lg mb-lg ml-lg form-group">
+            <div class="col-md-5">
+                <span class="required">*</span>
+                <button data-media-select="1" data-collection-position="3" data-media-type="web_images" type="button" class="btn btn-success media-modal-btn-web-collection-images" ><span class="fa fa-plus"></span>&nbsp;Web Images (1)</button>
+            </div>
+            <div data-collection-position="3" class="popup-gallery">
+                @if( Input::old('media.web_collection') )
+                    {!! Form::hidden('media[web_collection]',null) !!}
+                @else
+                    <input name="media[web_collection]" type="hidden" required>
+                @endif
+            </div>
+        </div>
         <div class="form-group">
             <label for="status">&nbsp;&nbsp;&nbsp;Status &nbsp;&nbsp;&nbsp;</label>
             <div class="radio-custom radio-success radio-inline">

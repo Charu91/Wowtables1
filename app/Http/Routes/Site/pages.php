@@ -16,27 +16,3 @@ Route::get('/home', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
-
-Route::get('/pages/{slug}', [
-    'uses' => 'Site\StaticPagesController@show',
-    'as' => '',
-    'middleware' => [],
-    'where' => [],
-    'domain' => env('WEBSITE_URL'),
-]);
-
-Route::get('/test', [
-    'uses' => 'TestController@index',
-    'as' => 'TestingPage',
-    'middleware' => [],
-    'where' => [],
-    'domain' => env('WEBSITE_URL'),
-]);
-
-Route::get('/test/queue', [
-    'uses' => 'TestController@queue',
-    'as' => 'TestingPage',
-    'middleware' => [],
-    'where' => [],
-    'domain' => env('WEBSITE_URL'),
-]);

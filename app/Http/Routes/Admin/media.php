@@ -17,17 +17,41 @@ Route::get('admin/media/modal', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/media/modal', [
-    'uses' => 'AdminMediaController@modal',
-    'as' => 'AdminModal',
+Route::get('/admin/media/collection_modal', [
+    'uses' => 'AdminMediaController@collectionModal',
+    'as' => 'AdminCollectionModal',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/admin/media/web_collection_modal', [
+    'uses' => 'AdminMediaController@webCollectionModal',
+    'as' => 'AdminWebCollectionModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+/*Route::get('admin/media/modal', [
+    'uses' => 'AdminMediaController@modal',
+    'as' => 'AdminModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);*/
+
 Route::get('admin/media/listing_modal', [
     'uses' => 'AdminMediaController@listing_modal',
     'as' => 'AdminListingModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/media/web_collection_modal', [
+    'uses' => 'AdminMediaController@web_collection_modal',
+    'as' => 'AdminWebsiteCollectionModal',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
@@ -57,6 +81,14 @@ Route::get('admin/media/mobile_exp_modal', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/media/web_collection_modal', [
+    'uses' => 'AdminMediaController@web_collection_modal',
+    'as' => 'AdminWebCollectionModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::post('admin/media/store', [
     'uses' => 'AdminMediaController@store',
     'as' => 'AdminMediaStore',
@@ -67,6 +99,14 @@ Route::post('admin/media/store', [
 
 Route::post('admin/media/listing_media', [
     'uses' => 'AdminMediaController@listingStore',
+    'as' => 'AdminMediaGalleryStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/web_collection_media', [
+    'uses' => 'AdminMediaController@webCollectionStore',
     'as' => 'AdminMediaGalleryStore',
     'middleware' => [],
     'where' => [],
