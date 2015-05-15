@@ -49,12 +49,12 @@ class Reservation {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function getVendorLocationAndLimit($vendorID) {
+	public static function getVendorLocationAndLimit($vendorLocationID) {
 		$queryResult = DB::table(DB::raw('vendor_locations as vl')) 
 						->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
 						->join('locations', 'locations.id', '=', 'vl.location_id') 
 						->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
-						->where('vl.vendor_id', $vendorID) 
+						->where('vl.id', $vendorLocationID) 
 						->select('vl.id', 'locations.name as area', 'vla.latitude', 
 									'vla.longitude', 'vll.min_people_per_reservation', 
 									'vll.max_people_per_reservation', 'vll.min_people_increments') 
