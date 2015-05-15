@@ -210,4 +210,16 @@ class RestaurantLocationsRepository {
         $vendorLocation->save();
     }
 
+    public function getCityFromLocation($locality_value){
+        $cityDetails = '
+                    SELECT (SELECT l2.name FROM locations AS l2 WHERE l2.id = lt.ancestor) AS ancestor_name
+                    FROM locations_tree AS lt
+                    INNER JOIN locations AS l1 ON l1.id = lt.descendant
+                    WHERE l1.name = ? AND lt.length = 2;
+        ';
+
+        $cityResults = DB::select($cityDetails,[$locality_value]);
+        return $cityResults;
+    }
+
 }

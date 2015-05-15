@@ -63,3 +63,9 @@ Route::delete('admin/restaurants/locations/{id}', [
     'where' => ['id' => '\d+'],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::post('admin/restaurants/locations/getCity/{name}',[
+    'uses' => 'AdminRestaurantLocationsController@getCityName',
+    'middleware' => [],
+    'domain' => env('WEBSITE_URL'),
+]);

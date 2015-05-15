@@ -211,6 +211,51 @@ $(document).ready(function(){
         data: localitiesList
     });
 
+    $("#experience_name").on('blur',function(){
+        console.log("called");
+        var v = $(this).val();
+
+        if(v != ""){
+            $("#experience_seo_title").val(v);
+            $("#seo_meta_desciption").val(v);
+            $(".seo_meta_keywords").val(v);
+        }
+    });
+
+    $("#restaurant_seo_tab").click(function(){
+       var rest_name = $("#select2-chosen-12").text();
+        var location_name = $("#select2-chosen-14").text();
+        var cuisine = $("#s2id_autogen3").text();
+        var cuisine_split = cuisine.split(" ");
+        var cusines_array = [];
+        $.each(cuisine_split,function(key,val){
+            console.log("key = "+key+" , value = "+val);
+            if(val != ""){
+                cusines_array.push(val);
+            }
+        });
+        $.ajax({
+            method: 'POST',
+            url: '/admin/restaurants/locations/getCity/'+location_name,
+            type:'json',
+            data:{locality_value:location_name},
+            success: function(response){
+                var data = jQuery.parseJSON(response);
+                if(rest_name != "" && location_name != "" && cuisine != "" && data.ancestor_name != ""){
+                    $("#restaurant_seo_title").val(rest_name+' , '+data.ancestor_name+" , "+location_name);
+                    $("#seo_meta_description").val(cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
+                } else {
+                    $("#restaurant_seo_title").val('');
+                    $("#seo_meta_description").val('');
+                }
+
+
+            }
+        }).fail(function (jqXHR) {
+            console.log(jqXHR);
+        });
+    });
+
 
 });
 

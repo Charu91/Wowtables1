@@ -247,6 +247,10 @@
         });
 
 
+
+
+
+
         $("#loc_exp").change(function(){
            var curr_val = $(this).val();
             /*$.ajax({

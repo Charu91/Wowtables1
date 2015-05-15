@@ -264,4 +264,19 @@ class AdminRestaurantLocationsController extends Controller {
 		return $data;
 	}
 
+	public function getCityName($name){
+		//echo "name == ".$_POST['locality_value'];
+		//die;
+
+		if(isset($_POST['locality_value']) && $_POST['locality_value'] != ""){
+			$vendorLocationCurators = $this->repository->getCityFromLocation($_POST['locality_value']);
+
+			//echo "<pre>"; print_r($vendorLocationCurators[0]);
+			echo json_encode($vendorLocationCurators[0]);
+		}
+
+		//if($name)
+		//echo "<prE>"; print_r($_GET['locality_value']);
+	}
+
 }

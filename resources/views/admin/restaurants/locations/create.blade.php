@@ -26,9 +26,6 @@
                 <a href="#basic_details" data-toggle="tab" class="text-center">Basic Details</a>
             </li>
             <li>
-                <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
-            </li>
-            <li>
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
             </li>
             <li>
@@ -45,6 +42,9 @@
             </li>
             <li>
                 <a href="#contact_details" data-toggle="tab" class="text-center">Contact Details</a>
+            </li>
+            <li>
+                <a href="#seo_details" id="restaurant_seo_tab" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
         </ul>
         <div class="tab-content">
@@ -84,13 +84,13 @@
                 <div class="form-group">
                     <label for="attributes[seo_title]" class="col-sm-3 control-label">SEO Title </label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70']) !!}
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70', 'id'=>'restaurant_seo_title']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[seo_meta_description]" class="col-sm-3 control-label">SEO Meta Description </label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140']) !!}
+                        {!! Form::textarea('attributes[seo_meta_description]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140', 'id'=>'seo_meta_description']) !!}
                     </div>
                 </div>
                 <div class="form-group">

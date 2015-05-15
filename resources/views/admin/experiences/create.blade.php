@@ -32,7 +32,7 @@
                 <a href="#basic_details" data-toggle="tab" class="text-center">Basic Details</a>
             </li>
             <li>
-                <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
+                <a href="#seo_details" id="seo_details_tab" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="name">Experience Name <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
+                        {!! Form::text('name',null,['class'=>'form-control','id'=>'title','required'=>'','id'=>'experience_name']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,19 +94,20 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="attributes[seo_title]">SEO Title <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                        {!! Form::text('attributes[seo_title]',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'', 'id'=>'experience_seo_title']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="attributes[seo_meta_description]">SEO Meta Description <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_desciption]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                        {!! Form::textarea('attributes[seo_meta_desciption]',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'', 'id'=>'seo_meta_desciption']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label" for="attributes[seo_meta_keywords]">SEO Keywords <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[seo_meta_keywords][]',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+                        {{--{!! Form::select('attributes[seo_meta_keywords][]',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}--}}
+                        {!! Form::text('attributes[seo_meta_keywords]',null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'','class'=>'seo_meta_keywords']) !!}
                     </div>
                 </div>
 
