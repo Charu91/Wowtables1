@@ -204,7 +204,7 @@ class RestaurantLocation extends VendorLocation{
         //delete all existing attributes
         $query = '
             DELETE vlab, vlad, vlaf, vlai, vlam, vlas, vlat, vlav,
-                  vlbls, vlbs, vlbtrl, vlc, vlcm, vlmm, vla, vltm
+                  vlbls, vlbs, vlbtrl, vlc, vlcm, vlmm, vla, vltm,vlfm
             FROM vendor_locations AS `vl`
             LEFT JOIN vendor_location_attributes_boolean AS `vlab` ON vlab.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_attributes_date AS `vlad` ON vlad.vendor_location_id = vl.`id`
@@ -222,6 +222,7 @@ class RestaurantLocation extends VendorLocation{
             LEFT JOIN vendor_locations_media_map AS `vlmm` ON vlmm.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_address AS `vla` ON vla.vendor_location_id = vl.`id`
             LEFT JOIN vendor_locations_tags_map AS `vltm` ON vltm.vendor_location_id = vl.`id`
+            LEFT JOIN vendor_locations_flags_map AS `vlfm` ON vlfm.vendor_location_id = vl.`id`
             WHERE vl.id = ?
         ';
 
@@ -360,7 +361,7 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        if(!empty($data['curators'])){
+        if(!empty($data['curators']) && $data['curators'] != " "){
             $curatorMapping = $this->mapCurator($vendor_location_id, $data['curators'],$data['curator_tips']);
 
             if($curatorMapping['status'] !== 'success'){
@@ -387,7 +388,7 @@ class RestaurantLocation extends VendorLocation{
             }
         }*/
 
-        if(!empty($data['attributes']['flags'])){
+        if(!empty($data['attributes']['flags']) && $data['attributes']['flags'] != " "){
             $flagMapping = $this->mapFlags($vendor_location_id, $data['attributes']['flags']);
 
             if($flagMapping['status'] !== 'success'){

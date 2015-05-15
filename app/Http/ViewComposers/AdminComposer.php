@@ -67,6 +67,13 @@ class AdminComposer {
             $curatorsList[] = [ 'id' => $key , 'text' => $value];
         }
 
+        $flags_list = Flag::all()->lists('name','id');
+        $flagsList = [];
+        foreach($flags_list as $key => $value)
+        {
+            $flagsList[] = [ 'id' => $key , 'text' => $value];
+        }
+
         $restaurants_list = DB::table('vendors')->lists('name','id');
         $restaurantsList = [];
         foreach($restaurants_list as $key => $value)
@@ -84,6 +91,7 @@ class AdminComposer {
 
         JavaScriptFacade::put([
            'curatorsList' =>  $curatorsList,
+           'flagsList' =>  $flagsList,
            'restaurantsList' => $restaurantsList,
            'localitiesList' => $localitiesList
         ]);

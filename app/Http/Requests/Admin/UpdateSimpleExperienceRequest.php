@@ -113,11 +113,11 @@ class UpdateSimpleExperienceRequest extends Request {
 
 
         //$rules['curator'] = 'required';
-        $rules['curator.id'] = 'required_with:curator|exists:curators,id';
-        $rules['curator.tips'] ='required_with:curator.id';
+        //$rules['curator.id'] = 'required_with:curator|exists:curators,id';
+        //$rules['curator.tips'] ='required_with:curator.id';
 
-        $rules['tags'] = 'required';
-        $rules['flags'] = 'required';
+        //$rules['tags'] = 'required';
+        //$rules['flags'] = 'required';
 
         return $rules;
     }

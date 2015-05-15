@@ -142,6 +142,14 @@ class RestaurantLocationsRepository {
 
     }
 
+    public function populateVendorLocationFlags( $vendor_location_id )
+    {
+
+        $vendor_location_flags_details = DB::table('vendor_locations_flags_map')->where('vendor_location_id', $vendor_location_id);
+        return $vendor_location_flags_details->get();
+
+    }
+
     public function populateVendorLocationAddress( $vendor_location_id )
     {
 

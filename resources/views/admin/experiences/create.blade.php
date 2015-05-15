@@ -315,7 +315,8 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {{--{!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
+                        {!! Form::text('flags',null,['class'=>'form-control populate flags-select-box flagsList']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -327,7 +328,8 @@
                 <div class="form-group">
                     <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
+                        {!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}
                     </div>
                 </div>
                 <div class="form-group">

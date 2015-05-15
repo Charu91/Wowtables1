@@ -491,31 +491,40 @@
                 <div class="form-group">
                     <label for="cuisine" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,$restaurant['attributes']['cuisines'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}
+                        {{--{!! Form::select('attributes[cuisines][]',$cuisines,$restaurant['attributes']['cuisines'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}--}}
+                        {{! $set_cuisines = (isset($restaurant['attributes']['cuisines']) && $restaurant['attributes']['cuisines'] !="" ? $restaurant['attributes']['cuisines'] : ' ') }}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,$set_cuisines,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[collections][]',$tags_list,$restaurantLocationTags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}
+                        {{! $set_tags = (isset($restaurantLocationTags) && $restaurantLocationTags !="" ? $restaurantLocationTags : ' ')}}
+                        {!! Form::select('attributes[collections][]',$tags_list,$set_tags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
+                        {{--{!! Form::select('attributes[collections][]',$tags_list,$restaurantLocationTags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[flags]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                        {{! $set_flags = (isset($restaurantLocationFlags->flag_id) && $restaurantLocationFlags->flag_id !="" ? $restaurantLocationFlags->flag_id : ' ')}}
+                        {!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}
+                        {{--{!! Form::text('attributes[flags]',$restaurantLocationFlags->flag_id,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
-                        {!! Form::select('curators',$curator_list,$restaurantLocationCurators->curator_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}
+                        {{! $set_curators = (isset($restaurantLocationCurators->curator_id) && $restaurantLocationCurators->curator_id !="" ? $restaurantLocationCurators->curator_id : ' ')}}
+                        {!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}
+                        {{--{!! Form::text('curators',$restaurantLocationCurators->curator_id,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('curator_tips',$restaurantLocationCurators->curator_tips,['class'=>'form-control redactor-text','required'=>'']) !!}
+                        {{! $set_curators_tips = (isset($restaurantLocationCurators->curator_tips) && $restaurantLocationCurators->curator_tips !="" ? $restaurantLocationCurators->curator_tips : ' ')}}
+                        {!! Form::textarea('curator_tips',$set_curators_tips,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">

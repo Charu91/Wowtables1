@@ -108,6 +108,8 @@ class AdminRestaurantLocationsController extends Controller {
 
 		$vendorLocationTags = $this->repository->populateVendorLocationTags($id);
 
+		$vendorLocationFlags = $this->repository->populateVendorLocationFlags($id);
+
 		$vendorLocationAddress = $this->repository->populateVendorLocationAddress($id);
 
 		$vendorLocationBlockDates = $this->repository->populateVendorLocationBlockDates($id);
@@ -154,21 +156,22 @@ class AdminRestaurantLocationsController extends Controller {
 		}
 		$vendorLocationMedia = array('listing'=>$listing_media_array,'gallery'=>$gallery_media_array,'mobile'=>$mobile_array);
 
-        //echo "<pre>"; print_r($availableSchedules); echo "<hr/>"; print_r($restaurantSchedules); echo "<hr/>"; print_r($schedules);die;
+       //echo "<pre>"; print_r($vendorLocationFlags); die; //echo "<hr/>"; print_r($restaurantSchedules); echo "<hr/>"; print_r($schedules);die;
 
 		return view('admin.restaurants.locations.edit',[
 					'restaurant'=>$restaurant,
-					'restaurantLocationLimits'=>$vendorLocationLimits[0],
+					'restaurantLocationLimits'=>((isset($vendorLocationLimits[0]) && $vendorLocationLimits[0]->id != '') ? $vendorLocationLimits[0] : ''),
 					'schedules'=>$schedules,
 					'availableSchedules' => $availableSchedules,
 					'restaurantSchedules' => $restaurantSchedules,
 					'restaurantLocationTags' => $vendorLocationTagArray,
-					'restaurantLocationAddress' => $vendorLocationAddress[0],
+					'restaurantLocationAddress' => ((isset($vendorLocationAddress[0]) && $vendorLocationAddress[0]->id != '') ? $vendorLocationAddress[0] : ''),
+					'restaurantLocationFlags' => ((isset($vendorLocationFlags[0]) && $vendorLocationFlags[0]->id != '') ? $vendorLocationFlags[0] : ''),
 					'restaurantLocationBlockDates' => $vendorLocationBlockDates,
 					'restaurantLocationBlockTimeLimits' => $vendorLocationBlockTimeLimits,
 					'restaurantLocationContacts' => $vendorLocationContacts,
 					'restaurantLocationMedias' => $vendorLocationMedia,
-					'restaurantLocationCurators' => $vendorLocationCurators[0],
+					'restaurantLocationCurators' => ((isset($vendorLocationCurators[0]) && $vendorLocationCurators[0]->id != '') ? $vendorLocationCurators[0] : ''),
 		]);
 	}
 

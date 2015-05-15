@@ -151,12 +151,12 @@ class UpdateRestaurantLocationRequest extends Request {
             }
         }
 
-        $rules['curator'] = 'array';
-        $rules['curator.id'] = 'required_with:curator|exists:curators,id';
-        $rules['curator.tips'] ='required_with:curator.id';
+        //$rules['curator'] = 'array';
+        //$rules['curator.id'] = 'required_with:curator|exists:curators,id';
+        //$rules['curator.tips'] ='required_with:curator.id';
 
-        $rules['tags'] = 'tagarray';
-        $rules['flags'] = 'flagarray';
+        //$rules['tags'] = 'tagarray';
+        //$rules['flags'] = 'flagarray';
 
         return $rules;
     }
