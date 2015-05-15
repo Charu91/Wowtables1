@@ -125,7 +125,7 @@ class Experiences {
 										'curator_name' => "Deepa Jain",//(is_null($expResult->curator_name)) ? "":$expResult->curator_name,
 										'curator_bio' => "",//(is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
 										'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
-										'curator_designation' => "has reviewd this",//(is_null($expResult->designation)) ? "":$expResult->designation,
+										'curator_designation' => "has reviewed this",//(is_null($expResult->designation)) ? "":$expResult->designation,
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
