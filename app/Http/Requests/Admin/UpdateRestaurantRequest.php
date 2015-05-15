@@ -44,10 +44,10 @@ class UpdateRestaurantRequest extends Request {
         $id = $this->route()->getParameter('id');
 
         $rules['name'] = 'required';
-        $rules['slug'] = 'required|unique:vendors,slug,'.$id;
+        //$rules['slug'] = 'required|unique:vendors,slug,'.$id;
         $rules['status'] = 'required|in:Publish,Draft';
 
-        if($this->get('status') === 'Publish'){
+        /*if($this->get('status') === 'Publish'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'required_with:publish_date|date_format:H:i:s'; //HH:MM:SS
             $rules['attributes.restaurant_info'] = 'required';
@@ -55,7 +55,7 @@ class UpdateRestaurantRequest extends Request {
             $rules['attributes.seo_title'] = '';
             $rules['attributes.seo_meta_description'] = '';
             $rules['attributes.seo_meta_keywords'] = '';
-        }
+        }*/
 
         return $rules;
     }

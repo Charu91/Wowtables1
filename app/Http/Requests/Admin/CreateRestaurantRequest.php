@@ -42,10 +42,10 @@ class CreateRestaurantRequest extends Request {
 		$rules = [];
 
         $rules['name'] = 'required';
-        $rules['slug'] = 'required|unique:vendors,slug';
+        //$rules['slug'] = 'required|unique:vendors,slug';
         $rules['status'] = 'required|in:Publish,Draft';
 
-        if($this->get('status') === 'Publish'){
+        /*if($this->get('status') === 'Publish'){
             $rules['publish_date'] = 'date_format:Y-m-d'; //YYYY-MM-DD
             $rules['publish_time'] = 'date_format:H:i:s'; //HH:MM:SS
             $rules['attributes.restaurant_info'] = 'required';
@@ -55,7 +55,7 @@ class CreateRestaurantRequest extends Request {
             $rules['attributes.seo_meta_keywords'] = 'required';
         }else{
             $rules['attributes.seo_meta_keywords'] = 'required';
-        }
+        }*/
 
         return $rules;
 	}
