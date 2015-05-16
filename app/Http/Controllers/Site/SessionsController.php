@@ -1,8 +1,8 @@
-<?php namespace GIU\Http\Controllers\Site;
+<?php namespace WowTables\Http\Controllers\Site;
 
-use GIU\Http\Controllers\Controller;
-use GIU\Http\Models\User;
-use GIU\Http\Requests\Site\CustomerLoginUserRequest;
+use WowTables\Http\Controllers\Controller;
+use WowTables\Http\Models\User;
+use WowTables\Http\Requests\Site\CustomerLoginUserRequest;
 use Illuminate\Http\Request;
 
 class SessionsController extends Controller {

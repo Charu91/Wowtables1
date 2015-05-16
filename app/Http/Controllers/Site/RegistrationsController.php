@@ -1,6 +1,6 @@
-<?php namespace GIU\Http\Controllers\Site;
+<?php namespace WowTables\Http\Controllers\Site;
 
-use GIU\Http\Controllers\Controller;
+use WowTables\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 

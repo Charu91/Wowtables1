@@ -9,7 +9,7 @@ Route::get('/', [
 
 
 Route::get('/exp/lists/{city?}',[
-    'uses' => 'site\ExperienceController@lists',
+    'uses' => 'Site\ExperienceController@lists',
     'as' => '',
     'domain' => env('WEBSITE_URL'),
 ]);
