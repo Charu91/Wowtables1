@@ -40,12 +40,12 @@ class AdminListpageSidebarController extends Controller {
     public function store(CreateListpageSidebarRequest $request)
     {
         $sidebars = new ListpageSidebar();
-
+        //dd($request);
         $sidebars->link = $this->request->get('link');
         $sidebars->title = $this->request->get('title');
         $sidebars->description = $this->request->get('description');
         $sidebars->promotion_title = ($this->request->get('promotion_title') ? $this->request->get('promotion_title') : 0);;
-        $sidebars->media_id = $this->request->get('media_id');
+        $sidebars->media_id = $this->request->get('sidebar_media_id');
         $sidebars->city_id = $this->request->get('location_id');
         $sidebars->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
         $sidebars->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);
@@ -67,6 +67,7 @@ class AdminListpageSidebarController extends Controller {
     {
         $sidebar = ListpageSidebar::find($id);
 
+        //echo "<pre>"; print_r($sidebar); die;
         return view('admin.promotions.sidebar.edit',['sidebars'=>$sidebar]);
     }
 
@@ -85,7 +86,7 @@ class AdminListpageSidebarController extends Controller {
         $sidebars->title = $this->request->get('title');
         $sidebars->description = $this->request->get('description');
         $sidebars->promotion_title = ($this->request->get('promotion_title') ? $this->request->get('promotion_title') : 0);;
-        $sidebars->media_id = $this->request->get('media_id');
+        $sidebars->media_id = $this->request->get('sidebar_media_id');
         $sidebars->city_id = $this->request->get('location_id');
         $sidebars->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
         $sidebars->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);

@@ -28,10 +28,10 @@
     <div class="panel-body">
         <div class="mt-lg mb-lg form-group">
             <div class="col-sm-4">
-                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Image</button>
+                <button data-media-select="1" data-gallery-position="1"  data-media-type="sidebar-image" type="button" class="btn btn-primary sidebar-media-modal-btn">Select Image</button>
             </div>
             <div data-gallery-position="1" class="popup-gallery col-sm-8">
-                <input name="media_id" type="hidden" required>
+                <input name="sidebar_media_id" type="hidden" required>
             </div>
         </div>
         <div class="form-group">
