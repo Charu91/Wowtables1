@@ -192,6 +192,38 @@ class AdminMediaController extends Controller {
         }
     }
 
+    public function sidebar_modal()
+    {   //echo "sadsad"; die;
+        $input = $this->request->all();
+
+        //$pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        //$search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllSidebarsImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+            //echo "<pre>"; print_r($allMedia); die;
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.sidebars_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_sidebars')
+                ]
+            );
+        }else{
+            return view('admin.media.sidebars_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
 
     public function web_collection_modal()
     {
@@ -353,6 +385,19 @@ class AdminMediaController extends Controller {
         }
 	}
 
+    public function sidebarStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStore = $this->media->saveSidebarImage($file);
+
+        if($mediaStore['status'] === 'success'){
+            return response()->json($mediaStore, 200);
+        }else{
+            return response()->json($mediaStore, 500);
+        }
+	}
+
     public function webCollectionStore()
 	{
         $file = $this->request->file('media');
@@ -489,6 +534,8 @@ class AdminMediaController extends Controller {
         $images = $this->request->get('media');
         $media_type = $this->request->get('media_type');
 
+        //echo "<pre>"; print_r($media_type);die;
+
         $allImages = [];
 
         foreach ( $images as $image )
@@ -503,6 +550,10 @@ class AdminMediaController extends Controller {
             $setImageUrl = $this->config->get('media.base_s3_url_gallery');
         } elseif($allImages[0]['imageType'] == "mobile_listing_android_alacarte" || $allImages[0]['imageType'] == "mobile_listing_android_experience"){
             $setImageUrl = $this->config->get('media.base_s3_url_mobile');
+        } elseif($allImages[0]['imageType'] == "web_collection"){
+            $setImageUrl = $this->config->get('media.base_s3_url_collection_web');
+        }elseif($allImages[0]['imageType'] == "sidebar"){
+            $setImageUrl = $this->config->get('media.base_s3_url_sidebars');
         }
 
         return view('admin.media.fetch',

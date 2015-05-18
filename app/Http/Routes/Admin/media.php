@@ -49,6 +49,14 @@ Route::get('admin/media/listing_modal', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/media/sidebar_modal', [
+    'uses' => 'AdminMediaController@sidebar_modal',
+    'as' => 'AdminSidebarModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('admin/media/web_collection_modal', [
     'uses' => 'AdminMediaController@web_collection_modal',
     'as' => 'AdminWebsiteCollectionModal',
@@ -100,6 +108,14 @@ Route::post('admin/media/store', [
 Route::post('admin/media/listing_media', [
     'uses' => 'AdminMediaController@listingStore',
     'as' => 'AdminMediaGalleryStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/media/sidebar_media', [
+    'uses' => 'AdminMediaController@sidebarStore',
+    'as' => 'AdminMediaSidebarStore',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),

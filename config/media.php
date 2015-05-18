@@ -10,6 +10,10 @@ return [
 
     'base_path_mobile' => '/uploads/mobile/',
 
+    'base_path_collection' => '/uploads/collections/',
+
+    'base_path_sidebar' => '/uploads/sidebars/',
+
     'base_s3_url' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/',
 
     'base_s3_url_listing' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/',
@@ -18,7 +22,9 @@ return [
 
     'base_s3_url_mobile' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/mobile/',
 
-    'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/website',
+    'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/',
+
+    'base_s3_url_sidebars' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/sidebars/',
 
     'base_cdn_url' => '',
 
@@ -32,6 +38,11 @@ return [
             'height' => 239,
             'width' => 303
         ],
+
+        /*'sidebars' => [
+            'height' => 283,
+            'width' => 285
+        ],*/
 
         'web_collection' => [
             'height' => 250,

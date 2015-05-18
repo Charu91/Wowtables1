@@ -22,7 +22,7 @@ class CreateListpageSidebarRequest extends Request {
     public function rules()
     {
         return [
-            'media_id'  => 'required|exists:media,id|unique:listpage_sidebar',
+            'sidebar_media_id'  => 'required',
             'link' => 'required|url',
             'title' => 'required',
             'description' => 'required',

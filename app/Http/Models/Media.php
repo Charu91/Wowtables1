@@ -160,6 +160,20 @@ class Media {
 
     }
 
+    public function getAllSidebarsImages(){
+
+        $totalMediaCount = DB::table('media_resized_new')->count();
+
+        if($totalMediaCount){
+            $query = 'SELECT * FROM media_resized_new WHERE image_type = "sidebar"';
+
+            $images = DB::select($query);
+
+            return ['count'=> $totalMediaCount,'images'=> $images];
+        }
+
+    }
+
     public function getAllWebCollectionImages(){
 
         $totalMediaCount = DB::table('media_resized_new')->count();
@@ -367,6 +381,68 @@ class Media {
 
     }
 
+    public function saveSidebarImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file)
+    {
+        //echo "<pre>"; print_r($file); //die;
+        $file_extension = $file->getClientOriginalExtension();
+        $file_mime_type = $file->getMimeType();
+
+        $original_filename = pathinfo($file->getClientOriginalName())['filename'];
+
+        $uploads_dir = $this->config->get('media.base_path_sidebar');
+        //echo "uploads dir == ".$uploads_dir; //die;
+        $new_filename = uniqid('media_');
+        //echo "after_new file = ".$new_filename;
+        $media_upload = $this->cloud->put($uploads_dir.$new_filename.'.'.$file_extension, Image::make($file)->encode());
+        //echo "after updlaod";
+        //echo "<pre>"; print_r($media_upload); die;
+        if($media_upload){
+
+                DB::beginTransaction();
+
+                $media_id = DB::table('media')->insertGetId([
+                    'file'      => $new_filename.'.'.$file_extension,
+                    'mime_type' => $file_mime_type,
+                    'name'      => $original_filename
+                ]);
+
+                if($media_id){
+                    $resizedMediaInsert = DB::table('media_resized_new')->insert([
+                        'file'      => $new_filename.'.'.$file_extension,
+                        'media_id'  => $media_id,
+                        'image_type'  => 'sidebar',
+                    ]);
+
+                    if($resizedMediaInsert){
+                        DB::commit();
+                        return ['status' => 'success'];
+                    }else{
+                        DB::rollBack();
+                        return [
+                            'status' => 'failure',
+                            'action' => 'Error adding the thumbnail media file to the DB',
+                            'message' => 'There was an error adding the resized media to DB. Contact the website admin'
+                        ];
+                    }
+
+            }else{
+                return [
+                    'status' => 'failure',
+                    'action' => 'Save the resized thumb file to s3',
+                    'message' => 'There was an issue uploading the thumbnail file. Contact the website admin'
+                ];
+            }
+        }else{
+            return [
+                'status' => 'failure',
+                'action' => 'Save the original file to s3',
+                'message' => 'There was an issue uploading the media file. Contact the website admin'
+            ];
+        }
+
+
+    }
+
     public function saveWebCollectionImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file)
     {
         //echo "<pre>"; print_r($file); //die;
@@ -375,7 +451,7 @@ class Media {
 
         $original_filename = pathinfo($file->getClientOriginalName())['filename'];
 
-        $uploads_dir = $this->config->get('media.base_s3_url_collection_web');
+        $uploads_dir = $this->config->get('media.base_path_collection');
         //echo "uploads dir == ".$uploads_dir; die;
         $new_filename = uniqid('media_');
         //echo "after_new file = ".$new_filename;

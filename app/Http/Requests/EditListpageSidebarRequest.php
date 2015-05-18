@@ -22,7 +22,7 @@ class EditListpageSidebarRequest extends Request {
     public function rules()
     {
         return [
-            'media_id'  => 'required|exists:media,id',
+            'sidebar_media_id'  => 'required',
             'location_id' => 'required|exists:locations,id,type,City',
             'link' => 'required|url',
             'title' => 'required',
