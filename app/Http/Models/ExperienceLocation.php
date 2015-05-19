@@ -17,6 +17,7 @@ class ExperienceLocation {
                     'vendor_location_id' => $location_id,
                     'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
+                    'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
                     'status' => $data['status']
                 ];
 
@@ -30,6 +31,7 @@ class ExperienceLocation {
                 'vendor_location_id' => $data['restaurant_location_id'][0],
                 'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
+                'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
                 'status' => $data['status']
             ];
 
@@ -136,6 +138,7 @@ class ExperienceLocation {
                     'vendor_location_id' => $location_id,
                     'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
                     'descriptive_title' => $data['descriptive_title'],
+                    'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
                     'status' => $data['status']
                 ];
 
@@ -149,6 +152,7 @@ class ExperienceLocation {
                 'vendor_location_id' => $data['restaurant_location_id'][0],
                 'location_parent_id' => 0,
                 'descriptive_title' => $data['descriptive_title'],
+                'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
                 'status' => $data['status']
             ];
 
@@ -419,7 +423,7 @@ class ExperienceLocation {
     }
 
     public function getLocationsFromProduct($id){
-        $experienceLocations = 'SELECT T2.vendor_location_id,T2.product_id,T2.descriptive_title,T2.status FROM (
+        $experienceLocations = 'SELECT T2.vendor_location_id,T2.product_id,T2.descriptive_title,T2.status,T2.show_status FROM (
                                     SELECT
                                         @r AS _id,
                                         (

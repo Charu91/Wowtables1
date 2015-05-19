@@ -52,6 +52,12 @@
                         {!! Form::text('descriptive_title',$productLocationDetails['experience_location_descriptive_title'],['class'=>'form-control', 'required'=>'required']) !!}
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="show_status" class="col-sm-3 control-label">Show Status<span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::select('show_status',['show_in_all'=>'Show in all','hide_in_mobile'=>'Hide in mobile','hide_in_website'=>'Hide in website'],$productLocationDetails['show_status'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                    </div>
+                </div>
             </div>
             <div id="schedule_tab" class="tab-pane mt-lg">
                 {{--@include('partials.forms.schedule_limits')--}}
