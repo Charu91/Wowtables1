@@ -58,7 +58,7 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['attributes.menu_markdown'] = 'required';
             $rules['attributes.seo_title'] = 'required';
             $rules['attributes.seo_meta_desciption'] = 'required';
-            $rules['attributes.seo_meta_keywords'] = 'required|array';
+            $rules['attributes.seo_meta_keywords'] = 'required';
             //$rules['attributes.allow_gift_card_redemptions'] = 'required|boolean';
             //$rules['attributes.prepayment_allowed'] = 'required|boolean';
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
