@@ -378,7 +378,7 @@ class Reservation {
 						->leftJoin('locations as ploc','ploc.id','=','vl2.location_id')
 						->leftJoin('vendor_location_address as pvla','pvla.vendor_location_id','=','pvl.vendor_location_id')
 						->leftJoin('vendor_location_address as vvla','vvla.vendor_location_id','=','rd.vendor_location_id')
-						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.id')
+						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
 						->where('rd.user_id', $userID)
 						->whereIn('reservation_status',array('new','edited'))
 						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
