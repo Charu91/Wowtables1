@@ -158,7 +158,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="location_attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Reservations per day <span class="required">*</span></label>
+                                <label for="location_attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max Covers <span class="required">*</span></label>
                                 <div class="col-sm-6">
                                     {!! Form::text('location_attributes[max_reservations_per_day]',null,['class'=>'form-control','required'=>'']) !!}
                                 </div>

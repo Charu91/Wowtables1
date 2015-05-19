@@ -28,11 +28,11 @@
     <div class="panel-body">
         <div class="mt-lg mb-lg form-group">
             <div class="col-sm-4">
-                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Image</button>
+                <button data-media-select="1" data-gallery-position="1"  data-media-type="sidebar-image" type="button" class="btn btn-primary sidebar-media-modal-btn">Select Image</button>
             </div>
             <div data-gallery-position="1" class="popup-gallery col-sm-8">
-                <input name="media_id" type="hidden" required value="{{$sidebars->media_id}}">
-                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $media_url.$sidebars->media->media_resized->first()->file !!}" width="100">
+                <input name="sidebar_media_id" type="hidden" required value="{{$sidebars->media_id}}">
+                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/sidebars/{!! $sidebars->media->file !!}" width="100">
             </div>
         </div>
         <div class="form-group">

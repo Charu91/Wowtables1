@@ -10,11 +10,16 @@ class Collection extends Model {
 
     protected $hidden = ['collection','filterable','seo_title','seo_meta_description','seo_meta_keywords','status','created_on','updated_on'];
 
-    protected $with = ['media'];
+    protected $with = ['media','collection_media'];
 
     public function media()
     {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Media','media_id','id');
+    }
+
+    public function collection_media()
+    {
+        return $this->belongsTo('WowTables\Http\Models\Eloquent\Media','web_media_id','id');
     }
 
 

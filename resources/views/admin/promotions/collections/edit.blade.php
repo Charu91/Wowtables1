@@ -71,6 +71,26 @@
                 {{--<img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/{!! $collection->media->file !!}" width="100">--}}
             {{--</div>--}}
         {{--</div>--}}
+        <div class="mt-lg mb-lg ml-lg form-group">
+            <div class="col-md-5">
+                <span class="required">*</span>
+                <button data-media-select="1" data-gallery-position="4" data-media-type="mobile_listing_image" type="button" class="btn btn-success media-modal-btn media-modal-btn-mobile-listing-experience" ><span class="fa fa-plus"></span>&nbsp;Mobile Images (1)</button>
+            </div>
+            <div data-gallery-position="4" class="popup-gallery">
+                <input name="media[mobile]" type="hidden" required value="{{$collection->media_id}}">
+                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/mobile/{!! $collection->media->file !!}" width="100">
+            </div>
+        </div>
+        <div class="mt-lg mb-lg ml-lg form-group">
+            <div class="col-md-5">
+                <span class="required">*</span>
+                <button data-media-select="1" data-gallery-position="5" data-media-type="web_images" type="button" class="btn btn-success media-modal-btn-web-collection-images" ><span class="fa fa-plus"></span>&nbsp;Web Images (1)</button>
+            </div>
+            <div data-gallery-position="5" class="popup-gallery">
+                <input name="media[web_collection]" type="hidden" required value="{{$collection->web_media_id}}">
+                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/{!! $collection->collection_media->file !!}" width="100">
+            </div>
+        </div>
         <div class="form-group">
             <label for="status">&nbsp;&nbsp;&nbsp;Status &nbsp;&nbsp;&nbsp;</label>
             <div class="radio-custom radio-success radio-inline">

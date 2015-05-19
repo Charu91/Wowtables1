@@ -33,7 +33,6 @@
                 <tr>
                     <th>Id</th>
                     <th>Link</th>
-                    <th>Media</th>
                     <th>Title</th>
                     <th>Promotion Title</th>
                     <th>City</th>
@@ -45,7 +44,6 @@
                     <tr>
                         <th>{!! $sidebar->id !!}</th>
                         <th>{!! $sidebar->link !!}</th>
-                        <th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$sidebar->media->media_resized->first()->file !!}"/></th>
                         <th>{!! $sidebar->title !!}</th>
                         <th>{!! $sidebar->promotion_title !!}</th>
                         <th>{!! $sidebar->location->name !!}</th>

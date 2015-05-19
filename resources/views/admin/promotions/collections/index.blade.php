@@ -35,7 +35,6 @@
                     <th>Name</th>
                     <th>Slug</th>
                     <th>Description</th>
-                    <th>Banner Image</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -48,8 +47,6 @@
                         <th>{!! $collection->name !!}</th>
                         <th>{!! $collection->slug !!}</th>
                         <th>{!! $collection->description !!}</th>
-                        {{--<th>{!! $collection->media->file !!}</th>--}}
-                        {{--<th><img style="height: 56px;" class="img-thumbnail" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/{!! $collection->media->file !!}"/></th>--}}
                         <th>{!! $collection->status !!}</th>
                         <th>
                             <a href="/admin/promotions/collections/{!! $collection->id !!}/edit" data-collection-id="{!! $collection->id !!}" class="btn btn-xs btn-primary edit-collection-btn">Edit</a>

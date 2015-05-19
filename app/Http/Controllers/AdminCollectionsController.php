@@ -41,19 +41,20 @@ class AdminCollectionsController extends Controller {
      */
     public function store(CreateCollectionRequest $request)
     {
+        $input = $this->request->all();
         $collection = new Collection();
-        dd($request);
-        $collection->name = $this->request->get('name');
-        $collection->slug = $this->request->get('slug');
-        $collection->description = $this->request->get('description');
-        $collection->seo_title = $this->request->get('seo_title');
-        $collection->seo_meta_description = $this->request->get('seo_meta_description');
-        $collection->seo_meta_keywords = $this->request->get('seo_meta_keywords');
-        //$collection->media_id = $this->request->get('media_id');
-        $collection->media_id = ($this->request->get('media_id') ? $this->request->get('media_id') : 0);
-        $collection->status = $this->request->get('status');
-        $collection->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
-        $collection->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);
+
+        $collection->name = $input['name'];
+        $collection->slug = $input['slug'];
+        $collection->description = $input['description'];
+        $collection->seo_title = $input['seo_title'];
+        $collection->seo_meta_description = $input['seo_meta_description'];
+        $collection->seo_meta_keywords = $input['seo_meta_keywords'];
+        $collection->media_id = $input['media']['mobile'];
+        $collection->web_media_id = $input['media']['web_collection'];
+        $collection->status = $input['status'];
+        $collection->show_in_experience = (isset($input['show_in_experience']) && $input['show_in_experience'] != "" ? $input['show_in_experience'] : 0);
+        $collection->show_in_alacarte = (isset($input['show_in_alacarte']) && $input['show_in_alacarte'] != "" ? $input['show_in_alacarte'] : 0);
 
         $collection->save();
 
@@ -72,6 +73,8 @@ class AdminCollectionsController extends Controller {
     {
         $collection = Collection::find($id);
 
+        //echo "<pre>"; print_r($collection); die;
+
         return view('admin.promotions.collections.edit',['collection'=>$collection]);
     }
 
@@ -85,8 +88,21 @@ class AdminCollectionsController extends Controller {
     public function update($id,EditCollectionRequest $request)
     {
         $collection = Collection::find($id);
+        //dd($request);
+        $input = $this->request->all();
 
-        $collection->name = $this->request->get('name');
+        $collection->name = $input['name'];
+        $collection->slug = $input['slug'];
+        $collection->description = $input['description'];
+        $collection->seo_title = $input['seo_title'];
+        $collection->seo_meta_description = $input['seo_meta_description'];
+        $collection->seo_meta_keywords = $input['seo_meta_keywords'];
+        $collection->media_id = $input['media']['mobile'];
+        $collection->web_media_id = $input['media']['web_collection'];
+        $collection->status = $input['status'];
+        $collection->show_in_experience = (isset($input['show_in_experience']) && $input['show_in_experience'] != "" ? $input['show_in_experience'] : 0);
+        $collection->show_in_alacarte = (isset($input['show_in_alacarte']) && $input['show_in_alacarte'] != "" ? $input['show_in_alacarte'] : 0);
+        /*$collection->name = $this->request->get('name');
         $collection->slug = $this->request->get('slug');
         $collection->description = $this->request->get('description');
         $collection->seo_title = $this->request->get('seo_title');
@@ -96,7 +112,7 @@ class AdminCollectionsController extends Controller {
         $collection->media_id = ($this->request->get('media_id') ? $this->request->get('media_id') : 0);
         $collection->status = $this->request->get('status');
         $collection->show_in_experience = ($this->request->get('show_in_experience') ? $this->request->get('show_in_experience') : 0);
-        $collection->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);
+        $collection->show_in_alacarte = ($this->request->get('show_in_alacarte') ? $this->request->get('show_in_alacarte') : 0);*/
 
         $collection->save();
 

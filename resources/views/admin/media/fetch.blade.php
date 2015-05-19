@@ -13,6 +13,16 @@
         {!! Form::hidden('media[mobile]',$asset['id']) !!}
         <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
     @endforeach
+@elseif( $media_type == 'web_images' )
+    @foreach ( $media as $asset )
+        {!! Form::hidden('media[web_collection]',$asset['id']) !!}
+        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+    @endforeach
+@elseif( $media_type == 'sidebar-image' )
+    @foreach ( $media as $asset )
+        {!! Form::hidden('sidebar_media_id',$asset['id']) !!}
+        <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $s3_url.$asset['resized_file'] !!}" width="100">
+    @endforeach
 @elseif( $media_type == 'gallery_image' )
     <section class="panel col-lg-8">
         <div class="panel-body">
