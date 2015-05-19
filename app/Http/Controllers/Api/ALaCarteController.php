@@ -16,7 +16,7 @@ class ALaCarteController extends Controller {
 	
 	/**
 	 * Displays the details of the aLaCarte matching
-	 * passed name in json format.
+	 * passed id.
 	 * 
 	 * @access	public
 	 * @param	string	$name
