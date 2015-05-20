@@ -68,7 +68,19 @@ class ExperienceController extends Controller {
        
         $arrExperience                  = $this->experiences_model->find($id);
         $data['arrExperience']          = $arrExperience;
-
+        $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
+        $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
+        $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
+             
+       /*echo '<pre>';
+       //print_r( $time_range);
+       print_r( $data['arrExperience']);
+       //print_r(DB::getQueryLog());
+       print_r( $data['reserveData']);
+       print_r( $data['block_dates']);
+       print_r( $data['schedule']);
+       echo '</pre>';
+      //  exit;*/
 
         $commonmodel = new CommonModel();
         $data['allCuisines']  = $commonmodel->getAllCuisines();
@@ -76,7 +88,8 @@ class ExperienceController extends Controller {
         $data['allPrices']  = $commonmodel->getAllPrices();
 
         $data['dropdowns_opt']  = 1; //1 for disp
-        
+
+
         return response()->view('frontend.pages.experiencedetails',$data);
     }
 
@@ -330,5 +343,98 @@ class ExperienceController extends Controller {
 
         $arrExpData = $this->experiences_model->getExperienceAreaCuisineByName($arrSubmittedData);
         echo json_encode($arrExpData);
+    }
+
+    public function exporder()
+    {
+        $dataPost['reservationDate'] = Input::get('booking_date');
+        $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
+        $dataPost['reservationTime'] = Input::get('booking_time');
+        $dataPost['partySize'] = Input::get('qty');
+        $dataPost['vendorLocationID'] = Input::get('address');
+        $dataPost['guestName'] = Input::get('fullname');
+        $dataPost['guestEmail'] = Input::get('email');
+        $dataPost['phone'] = Input::get('phone');
+        $dataPost['reservationType'] = 'experience';
+        $dataPost['specialRequest'] = Input::get('special');
+        $dataPost['addon']              = Input::get('add_ons');
+        //$dataPost['access_token'] = Session::get('id');
+
+        $arrRules = array(
+                            'reservationDate' => 'required|date',
+                            'reservationDay' => 'required',
+                            'reservationTime' => 'required',
+                            'partySize' => 'required|integer',
+                            'vendorLocationID' => 'required|not_in:0',
+                            'guestName' => 'required|max:255',
+                            'guestEmail' => 'required|email|max:255',
+                            'phone' => 'required',
+                            'reservationType' => 'required|in:experience,alacarte,event',
+                            'specialRequest' => 'max:512'//,
+                            //'reservationID' => 'sometimes|required|exists:reservation_details,id'
+                        ) ;
+
+        $validator = Validator::make($dataPost,$arrRules);
+        
+        if($validator->fails()) {
+            $message = $validator->messages();
+            $errorMessage = "";
+            foreach($data as $key => $value) {
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            
+           return redirect()->back()->withErrors($validator);          
+        }
+        else {
+            $userID = Session::get('id');
+        
+            if($userID > 0) {
+                //validating the information submitted by users
+                $arrResponse = $this->experiences_model->validateReservationData($dataPost);
+            
+            if($arrResponse['status'] == 'success') {
+                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);            
+                }
+            }
+            else {
+                return redirect()->back()->withErrors($validator);   
+            }
+        }
+
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');        
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+
+        return response()->view('frontend.pages.thankyou',$arrResponse);
+    }
+
+    public function exporderexists()
+    {
+        $dataPost['reservationDate']    = Input::get('booking_date');
+        $dataPost['reservationDay']     =  date("D", strtotime($dataPost['reservationDate']));
+        $dataPost['reservationTime']    = Input::get('booking_time');
+        $dataPost['partySize']          = Input::get('qty');
+        $dataPost['vendorLocationID']   = Input::get('address');
+        $dataPost['guestName']          = Input::get('fullname');
+        $dataPost['guestEmail']         = Input::get('email');
+        $dataPost['phone']              = Input::get('phone');
+        $dataPost['reservationType']    = 'experience';
+        $dataPost['specialRequest']     = Input::get('special');
+        $dataPost['access_token']       = Session::get('id');
+
+        $arrData = $this->experiences_model->validateReservationData($dataPost);
+        echo json_encode($arrData);
     }
 }
