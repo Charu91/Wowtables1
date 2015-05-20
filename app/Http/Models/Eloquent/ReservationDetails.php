@@ -431,8 +431,8 @@ class ReservationDetails extends Model {
 			else {
 				$arrInsertData[] = array(
 									'reservation_id' => $reservationID,
-									'no_of_persons' => $detail['qty'],
-									'options_id' => $detail['prod_id'],
+									'no_of_persons' => $value['qty'],
+									'options_id' => $value['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
 									'created_at' => date('Y-m-d H:i:m'),
