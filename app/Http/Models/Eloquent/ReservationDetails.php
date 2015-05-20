@@ -239,7 +239,7 @@ class ReservationDetails extends Model {
 			//setting up the value of the location id as per type
  			if($arrData['reservationType'] == 'alacarte') {
  				$reservation->vendor_location_id = $arrData['vendorLocationID'];
-				$reservation->vendor_location_id = 0;
+				$reservation->product_vendor_location_id = 0;
  			}
 			else if($arrData['reservationType'] == 'experience') {
 				$reservation->vendor_location_id = 0;
