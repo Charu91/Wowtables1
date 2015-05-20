@@ -239,7 +239,7 @@ class ReservationDetails extends Model {
 			//setting up the value of the location id as per type
  			if($arrData['reservationType'] == 'alacarte') {
  				$reservation->vendor_location_id = $arrData['vendorLocationID'];
-				$reservation->vendor_location_id = 0;
+				$reservation->product_vendor_location_id = 0;
  			}
 			else if($arrData['reservationType'] == 'experience') {
 				$reservation->vendor_location_id = 0;
@@ -431,8 +431,8 @@ class ReservationDetails extends Model {
 			else {
 				$arrInsertData[] = array(
 									'reservation_id' => $reservationID,
-									'no_of_persons' => $detail['qty'],
-									'options_id' => $detail['prod_id'],
+									'no_of_persons' => $value['qty'],
+									'options_id' => $value['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
 									'created_at' => date('Y-m-d H:i:m'),

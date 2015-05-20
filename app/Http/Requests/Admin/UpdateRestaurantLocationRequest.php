@@ -84,7 +84,7 @@ class UpdateRestaurantLocationRequest extends Request {
 
         }else{
             $rules['pricing_level'] = 'in:Low,Medium,High';
-            $rules['attributes.seo_meta_keywords'] = '';
+            $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['location_attributes.min_people_per_reservation'] = 'integer';
             $rules['location_attributes.max_people_per_reservation'] = 'integer';
             $rules['location_attributes.max_people_per_day'] = 'integer';

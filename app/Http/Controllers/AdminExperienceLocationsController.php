@@ -113,15 +113,17 @@ class AdminExperienceLocationsController extends Controller {
         $productID = '';
         $productDescriptiveTitle = '';
         $productStatus = '';
+        //echo "<pre>"; print_r($productLocationDetails); die;
         foreach($productLocationDetails as $productLocationDetail){
             $productID = $productLocationDetail->product_id;
             $productDescriptiveTitle = $productLocationDetail->descriptive_title;
             $productStatus = $productLocationDetail->status;
+            $productShowStatus = $productLocationDetail->show_status;
             $productLocation[] = $productLocationDetail->vendor_location_id;
         }
-        $productLocationsDetails = ['product_id'=>$productID,'experience_location_id'=>$id,'experience_location_descriptive_title'=>$productDescriptiveTitle,'status'=>$productStatus];
+        $productLocationsDetails = ['product_id'=>$productID,'experience_location_id'=>$id,'experience_location_descriptive_title'=>$productDescriptiveTitle,'status'=>$productStatus,'show_status'=>$productShowStatus];
 
-        //echo "<pre>"; print_r($schedules); die;
+
         return view('admin.experiences.locations.edit',[
                         'productLocationDetails' => $productLocationsDetails,
                         'productLocations' => $productLocation,
