@@ -420,7 +420,7 @@ class Reservation {
 			
 			
 			$arrSelectedAddOn = self::getReservationAddonsDetails($arrReservation);
-			$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
+			//$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 			
 			foreach($queryResult as $row) {
 				//converting reservation day time to timestamp
@@ -429,6 +429,7 @@ class Reservation {
 					if($row->reservation_type == 'experience') {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day);
+						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 						
 					}
 					else if($row->reservation_type == 'alacarte') {
