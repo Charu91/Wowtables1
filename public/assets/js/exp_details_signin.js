@@ -254,14 +254,16 @@ $(document).ready(function() {
                 },
                 dataType: "json",
                 async: false,
-                success: function(e) {
-                    if (e.all_res == 0) {
+                success: function(response) {
+                    console.log("asd = "+response);
+                    var data = jQuery.parseJSON(response);
+                    console.log("state = "+data);
+
+                    if (data.state == "failure") {
                         logerror++;
-                        if (e.check_res >= 1) {
-                            error_text = "Incorrect password. Please try again."
-                        } else {
-                            error_text = "Unrecognized email address. Please register for an account."
-                        }
+
+                        var error_text = "Incorrect password/email. Please try again."
+
                         $("#password_error_1").text(error_text);
                         $("#password_error_1").show()
                     } else {

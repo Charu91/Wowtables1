@@ -14,8 +14,6 @@ Route::get('/exp/lists/{city?}',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-
-
 Route::get('/set_reservation_location', [
     'uses' => 'Site\HomePageController@set_reservation_location',
     'as' => '',
@@ -35,6 +33,14 @@ Route::post('/users/login', [
 
 Route::post('/users/checkemail', [
     'uses' => 'Site\HomePageController@checkemail',
+    'as' => '',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/users/check_user', [
+    'uses' => 'Site\HomePageController@check_user',
     'as' => '',
     'middleware' => ['guest'],
     'where' => [],
