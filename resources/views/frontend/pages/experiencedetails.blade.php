@@ -1076,19 +1076,22 @@ $last_url_item = count($url)-1;
             var location_id = $('#locations1').val();
             var disabledDays = disabledAllDays[location_id];
            
-            for (i = 0; i < disabledDays.length; i++) {
-                m=m+1;
-                mon=m.toString();
-                if(mon.length <2){
-                    m="0"+m;
-                }
-                day=d.toString();
-                if(day.length <2){
-                    d="0"+d;
-                }
-                if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
-                    return [false];
-                }
+            if(disabledDays != undefined)
+            {
+              for (i = 0; i < disabledDays.length; i++) {
+                  m=m+1;
+                  mon=m.toString();
+                  if(mon.length <2){
+                      m="0"+m;
+                  }
+                  day=d.toString();
+                  if(day.length <2){
+                      d="0"+d;
+                  }
+                  if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                      return [false];
+                  }
+              }
             }
             return [true];
         }
