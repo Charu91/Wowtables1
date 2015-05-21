@@ -1066,7 +1066,7 @@ class ExperienceModel {
     
     //reading the product detail
     $productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
-    $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'';
+    $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'0';
     $reservation['vendor_location_id']         = $arrData['vendorLocationID'];
     $reservation['product_vendor_location_id'] = $productDetail['vendor_location_id'];
 

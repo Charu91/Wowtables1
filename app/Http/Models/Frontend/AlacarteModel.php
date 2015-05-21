@@ -929,8 +929,8 @@ class AlacarteModel{
     }
     
     //reading the product detail
-    $productDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
-    $reservation['points_awarded']             = isset($aLaCarteDetail['reward_point'])?$aLaCarteDetail['reward_point']:'';
+    $aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
+    $reservation['points_awarded']             = isset($aLaCarteDetail['reward_point'])?$aLaCarteDetail['reward_point']:'0';
     $reservation['vendor_location_id']         = $arrData['vendorLocationID'];
     $reservation['product_vendor_location_id'] = 0;
     #saving the information into the DB

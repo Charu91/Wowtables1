@@ -294,7 +294,7 @@ class AlacarteController extends Controller {
         $dataPost['phone'] = Input::get('phone');
         $dataPost['reservationType'] = 'alacarte';
         $dataPost['specialRequest'] = Input::get('special');
-        $dataPost['addon']              = Input::get('add_ons');
+        $dataPost['addon']          = Input::get('add_ons');
         //$dataPost['access_token'] = Session::get('id');
 
        
