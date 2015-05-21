@@ -262,7 +262,7 @@ class Reservation {
 			}
 			
 			//reading details of the existing reservation from tables
-			$arrCurrentReservation = ReturnDetails::getActiveReservationDetail($arrData['reservationID']);
+			$arrCurrentReservation = ReservationDetails::getActiveReservationDetail($arrData['reservationID']);
 			
 		
 			
@@ -378,7 +378,7 @@ class Reservation {
 						->leftJoin('locations as ploc','ploc.id','=','vl2.location_id')
 						->leftJoin('vendor_location_address as pvla','pvla.vendor_location_id','=','pvl.vendor_location_id')
 						->leftJoin('vendor_location_address as vvla','vvla.vendor_location_id','=','rd.vendor_location_id')
-						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.id')
+						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
 						->where('rd.user_id', $userID)
 						->whereIn('reservation_status',array('new','edited'))
 						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
@@ -420,7 +420,7 @@ class Reservation {
 			
 			
 			$arrSelectedAddOn = self::getReservationAddonsDetails($arrReservation);
-			$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
+			//$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 			
 			foreach($queryResult as $row) {
 				//converting reservation day time to timestamp
@@ -429,6 +429,7 @@ class Reservation {
 					if($row->reservation_type == 'experience') {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day);
+						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 						
 					}
 					else if($row->reservation_type == 'alacarte') {

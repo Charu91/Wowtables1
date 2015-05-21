@@ -28,7 +28,7 @@
 	});
 </script>
 <?php 
-$hasOrder = (bool)(isset($order) && is_array($order) && $slug == $order['slug']);
+$hasOrder = (bool)(isset($order) && is_array($order) && $arrExperience['data']['slug'] == $order['slug']);
 //$soldOut = !($arrExperience['data']['intval'] >=0 && $arrExperience['data']['tickets_sold'] < $arrExperience['data']['max_num_orders']);
 ?>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -54,7 +54,7 @@ $hasOrder = (bool)(isset($order) && is_array($order) && $slug == $order['slug'])
 
 ?>
     <li class="col-md-4 col-sm-4">
-        <a href="<?php echo base_url().$exp['city']."/experiences/".$exp['slug'];?>">
+        <a href="<?php echo URL::to('/').$exp['city']."/experiences/".$exp['slug'];?>">
            <table class="deal-head">
                 <tr>
                     <td>
@@ -66,7 +66,7 @@ $hasOrder = (bool)(isset($order) && is_array($order) && $slug == $order['slug'])
                   </tr>
                 </table>
                  <div class="deal-img">
-                    <img src="<?php echo base_url().$exp['list_image']; ?>" alt="" class="img-responsive">
+                    <img src="<?php echo URL::to('/').$exp['list_image']; ?>" alt="" class="img-responsive">
                   <div class="deal-desc">
                     <p><?php echo trim($exp['exp_short_desc']);?></p>
                   </div>
@@ -165,7 +165,7 @@ $last_url_item = count($url)-1;
                	{
                		?>
                     <td rowspan="2" class="gourmet-label <?php echo ($details['banner_opt'] == 1)? 'banner_option_1':'';?>">
-                    <span><img src="<?php echo base_url(); ?>assets/img/banner-in-bg.png" class="img-responsive hidden-xs" style="padding:5px;"></span>
+                    <span><img src="<?php echo URL::to('/'); ?>assets/img/banner-in-bg.png" class="img-responsive hidden-xs" style="padding:5px;"></span>
                     <span class="visible-xs">Exclusively for<br/>WowTables<br/>Members</span><div class="label-caret"></div> 
                     </td>  
                 	<?php
@@ -191,18 +191,14 @@ $last_url_item = count($url)-1;
               <!-- Wrapper for slides -->
               <div class="carousel-inner">
                 
-                <div class="item active">
-                  <img  itemprop="photo" src="<?php echo isset($arrExperience['data']['image']['listing'])?$arrExperience['data']['image']['listing']:'';?>" alt="deal1">
-                </div>
-
                 <?php 
-                $i=2;
+                $i=1;
                 if(isset($arrExperience['data']['image']['gallery']) && is_array($arrExperience['data']['image']['gallery'])) 
                 {
                   foreach($arrExperience['data']['image']['gallery'] as $key => $value) 
                   { 
                     ?>
-                    <div class="item">
+                    <div class="item <?php echo ($i == 1)?'active':''?>">
                         <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
                     </div>
                     <?php $i++;
@@ -218,14 +214,13 @@ $last_url_item = count($url)-1;
                     <img  src="/images/arrow-right1.png" >
                 </a>
                <?php /*if (!empty($arrExperience['data']['multiplier']) && $arrExperience['data']['multiplier'] > 1 && !empty($arrExperience['data']['reward_points'])): ?>
-                <div class="multiplier"><img class='img-responsive' src="<?php echo base_url("images/x{$arrExperience['data']['multiplier']}.png") ?>"></div>
+                <div class="multiplier"><img class='img-responsive' src="<?php echo URL::to("images/x{$arrExperience['data']['multiplier']}.png") ?>"></div>
                <?php endif; */?>    
             </div>
             <div class="booking clearfix visible-xs">
               <div class="row">
                       <div class="col-xs-10">
-                              <!--<p style="font-size: 16px;font-weight: 300;line-height: 1.4;padding: 10px;padding-bottom:3px;">Rs. 1083 Per Price</p>-->
-                              <?php if($arrExperience['data']['price'] != 0):?>
+                         <?php if($arrExperience['data']['price'] != 0):?>
                          <div class="col-xs-10"><p style="font-size: 16px;font-weight: 300;line-height: 1.4;margin-top: 10px;">Rs. <?php echo ceil($arrExperience['data']['price']);?> <span><?php echo $arrExperience['data']['price_type']?></span></p></div>
                          <?php endif;?>
                       </div>
@@ -297,10 +292,10 @@ $last_url_item = count($url)-1;
 			<?php
 			$areas_str = '';
 			$addresses_str = '';
-			if(is_array($arrExperience['data']['location']) && count($arrExperience['data']['location'])>0)
+			$areas_arr = array();
+      $addresses_arr  = array();
+      if(is_array($arrExperience['data']['location']) && count($arrExperience['data']['location'])>0)
 			{
-				$areas_arr	= array();
-				$addresses_arr	= array();
 				foreach($arrExperience['data']['location'] as $key =>$listData)
 				{
 					$areas_arr[]		=$listData['area'];
@@ -387,52 +382,101 @@ $last_url_item = count($url)-1;
               </div>
               <div class="tab-pane fade" id="menu">
                 <?php 
-                $menuData = json_decode($arrExperience['data']['menu']) ;
-               
-                if(isset($menuData->title))
+
+                //$arrExperience['data']['menu'] ='{"title":"A Modern 4 Course Experience at Yauatcha","menu":[{"heading":"Course 1","sub-menu":[{"heading":"Salad","description":"choose any one","items":[{"title":"Oriental Salad With Bean Curd Chips"},{"title":"Mixed Salad With Lotus Root"}]}]},{"heading":"Course 2","sub-menu":[{"heading":"Dim Sum","description":"choose any two","items":[{"title":"Sato Bean And Cashew Nut Dumpling"},{"title":"Vegetable Ying Yang Dumpling"},{"title":"Baked Vegetarian Puff"},{"title":"Crispy Asparagus, Pumpkin And Corn Roll"},{"title":"Sugarcane Chicken And Prawn Roll"},{"title":"Chicken And Prawn Sui Mai"},{"title":"Charcoal Lamb Bun"}]}]},{"heading":"Course 3","sub-menu":[{"heading":"Main Course","description":"choose any one","items":[{"title":"Szechuan Vegetable And Tofu Clay Pot"},{"title":"Stir-Fried French Beans With Shiitake Mushroom"},{"title":"Stir-Fried Chicken In Hometown Chilli Sauce"},{"title":"Steamed Indian Salmon In Spicy Black Bean Sauce"}]}]},{"heading":"Course 4","sub-menu":[{"heading":"Staple","description":"choose any one ","items":[{"title":"Stir-Fried Spicy Ramen Noodles"},{"title":"Spicy Vegetable Fried Rice With Taro And Spring Onion"},{"title":"Egg White Chicken Fried Rice"}]}]},{"heading":"Course 5","sub-menu":[{"heading":"Dessert","description":"choose any one","items":[{"title":"Chocolate Mandarin Tart"},{"title":"Mango Mascarpone Gateau"},{"title":"Raspberry Delice"}]}]}]}';
+                $menuData = json_decode($arrExperience['data']['menu'],true) ;
+               //echo '<pre>';
+               //print_r($menuData);exit;
+                if(isset($menuData['title']))
                 {
                 	?>
                 	<ul class="menu-content">
-						<li>
-							<p class="lead"><?php echo $menuData->title;?></p>
-						</li>
-					</ul>
-					<br/>
+        						<li>
+        							<p class="lead"><?php echo $menuData['title'];?></p>
+        						</li>
+        					</ul>
+        					<br/>
                 	<?php
-                	if(is_array($menuData->menu) && count($menuData->menu)>0)
+                	if(is_array($menuData['menu']) && count($menuData['menu'])>0)
                 	{
-                		foreach($menuData->menu as $menu_list_data)
+                		foreach($menuData['menu'] as $menu_list_data)
                 		{
                 			?>
 		                	<ul class="menu-content">
-								<li>
-									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo $menu_list_data->description;?></small></p>
-								</li>
-							</ul>
+        								<li>
+        									<p class="lead"><?php echo $menu_list_data['heading'];?><br/><small><?php echo isset($menu_list_data['description'])?$menu_list_data['description']:'';?></small></p>
+        								</li>
+        							</ul>
 		                	<?php
-		                	if(isset($menu_list_data->items) && is_array($menu_list_data->items) && count($menu_list_data->items)>0)
-		                	{
-		                		?>
-		                		<ul class="menu-content">
-		                		<?php
-		                		foreach($menu_list_data->items as $menu_items_data)
-		                		{
-		                			?>
-				                	
-										<li>
-											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo $menu_items_data->description;?></small></p>
-										</li>
-									<?php
-			                
-		                		}
-		                		?>
-		                		</ul>
-								<br/>
-			                	<?php
-		                	}
-	                
-                		}
-                	}
+                      if(isset($menu_list_data['sub-menu']) && is_array($menu_list_data['sub-menu']) && count($menu_list_data['sub-menu'])>0)
+                      {
+                        foreach($menu_list_data['sub-menu'] as $sub_menu_list_data)
+                        {
+                          ?>
+                          <ul class="menu-content">
+                            <li>
+                              <p class="lead"><?php echo $sub_menu_list_data['heading'];?><br/><small><?php echo isset($sub_menu_list_data['description'])?$sub_menu_list_data['description']:'';?></small></p>
+                            </li>
+                          </ul>
+                          <?php
+                          if(isset($sub_menu_list_data['items']) && is_array($sub_menu_list_data['items']) && count($sub_menu_list_data['items'])>0)
+                          {
+                            ?>
+                            <ul class="menu-content">
+                              <?php
+                              foreach($sub_menu_list_data['items'] as $submenu_items_data)
+                              {
+                                ?>                          
+                                <li>
+                                  <p class="lead"><?php echo $submenu_items_data['title'];?> <small><?php echo isset($submenu_items_data['tags'])?'('.implode(',',$submenu_items_data['tags']).')':'';?></small><br/> <small><?php echo isset($submenu_items_data['description'])?$submenu_items_data['description']:'';;?></small></p>
+                                </li>
+                              <?php                     
+                              }
+                              ?>
+                            </ul>
+                            <br/>
+                            <?php
+                          }
+                        }
+                		  }
+
+                      if(isset($menu_list_data['items']) && is_array($menu_list_data['items']) && count($menu_list_data['items'])>0)
+                      {
+                        foreach($menu_list_data['items'] as $sub_menu_list_data)
+                        {
+                          if(isset($sub_menu_list_data['heading']))
+                          {
+                          ?>
+                          <ul class="menu-content">
+                            <li>
+                              <p class="lead"><?php echo $sub_menu_list_data['heading'];?><br/><small><?php echo isset($sub_menu_list_data['description'])?$sub_menu_list_data['description']:'';?></small></p>
+                            </li>
+                          </ul>
+                          <?php
+                          }
+
+                          if(isset($sub_menu_list_data['items']) && is_array($sub_menu_list_data['items']) && count($sub_menu_list_data['items'])>0)
+                          {
+                            ?>
+                            <ul class="menu-content">
+                              <?php
+                              foreach($sub_menu_list_data['items'] as $submenu_items_data)
+                              {
+                                ?>                          
+                                <li>
+                                  <p class="lead"><?php echo $submenu_items_data['title'];?> <small><?php echo isset($submenu_items_data['tags'])?'('.implode(',',$submenu_items_data['tags']).')':'';?></small><br/> <small><?php echo isset($submenu_items_data['description'])?$submenu_items_data['description']:'';;?></small></p>
+                                </li>
+                              <?php                     
+                              }
+                              ?>
+                            </ul>
+                            <br/>
+                            <?php
+                          }
+                        }
+                      }
+                	 }
+                  }
                 }
                 ?>
               </div>
@@ -522,7 +566,7 @@ $last_url_item = count($url)-1;
             <h4>This Experience Includes:</h4>
             <ul>
              <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['experience_includes']); ?>
-				     <?php echo ((isset($arrExperience['data']['reward_points']) && $arrExperience['data']['reward_points'] > 0)? '<li>- '.$arrExperience['data']['reward_points'].' Gourmet Points when you make a reservation online<a  href="'.base_url("gourmet-rewards").'" target="_blank" data-original-title="Click here to read about Gourmet Rewards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="'.base_url('images/question_icon_small_display.png').'"></a></li>': ' '  )?>
+				     <?php echo ((isset($arrExperience['data']['reward_points']) && $arrExperience['data']['reward_points'] > 0)? '<li>- '.$arrExperience['data']['reward_points'].' Gourmet Points when you make a reservation online<a  href="'.URL::to("gourmet-rewards").'" target="_blank" data-original-title="Click here to read about Gourmet Rewards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="'.URL::to('images/question_icon_small_display.png').'"></a></li>': ' '  )?>
              <?php /*if ($soldOut): ?>
               <li>
                 <h1 class="sold_out">SOLD OUT</h1>
@@ -530,85 +574,92 @@ $last_url_item = count($url)-1;
               <?php endif;*/?>
             </ul>
           </div>
-          <?php //if (!$soldOut): ?>
-		  <?php if(Input::get('v') == 2) :?>
-		  <div class="widget reservation-box" id="startBox">
-			  <div id="variationres-wrap">
-			   <h3 class="text-center">Reserve a table</h3>
-			   <div class="text-center btn-wrap version2">                
-				  <a class="btn btn-warning var-jump-exp">Make An Experience Reservation</a>
+      
+      <?php 
+      //Reservation start
+      //if (!$soldOut): ?>
+      <?php /*if($_GET['v'] == 2) :?>
+      <div class="widget reservation-box" id="startBox">
+        <div id="variationres-wrap">
+         <h3 class="text-center">Reserve a table</h3>
+         <div class="text-center btn-wrap version2">                
+          <a class="btn btn-warning var-jump-exp">Make An Experience Reservation</a>
           <?php if($restaurant[0]['allow_reserv'] == 1) :?>
-				  <p style="padding-top: 13px;">OR</p>
-				  <?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
-							<a class="alacarte_reservation_text" href="<?php echo base_url();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
-							<small>Make An A la carte Reservation at <br>
-								<span>
-									<?php echo $restaurant[0]["name"]?></span><br><span>(500 Gourmet Points)
-								</span>
-							</small>
-						</a>
-				  <?php } else { ?>
-						<a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
-							<small>Make An A la carte Reservation at <br>
-								<span>
-									<?php echo $restaurant[0]["name"]?></span><br><span>(500 Gourmet Points)
-								</span>
-							</small>
-						</a>
-				<?php } ?>
-			    <?php endif ?>
+          <p style="padding-top: 13px;">OR</p>
+          <?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
+              <a class="alacarte_reservation_text" href="<?php echo URL::to();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
+              <small>Make An A la carte Reservation at <br>
+                <span>
+                  <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                </span>
+              </small>
+            </a>
+          <?php } else { ?>
+            <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
+              <small>Make An A la carte Reservation at <br>
+                <span>
+                  <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                </span>
+              </small>
+            </a>
+        <?php } ?>
+          <?php endif ?>
          </div>
-			 </div>
-		  </div>
-		  <?php //endif ?>
-          <div class="widget reservation-box" id="ReservationBox"<?=($_GET['v']==2) ? ' style="display:none"' : ''?>>
+       </div>
+      </div>
+      <?php endif*/ ?>
+          <div class="widget reservation-box" id="ReservationBox"<?=(isset($_GET['v']) && $_GET['v']==2) ? ' style="display:none"' : ''?>>
              <h3 class="text-center">RESERVE THIS EXPERIENCE</h3>
-             <form role='form' method="post" action="<?=base_url('orders/checkout')?>" id="booking_form">  
+             <form role='form' method="post" action="<?=URL::to('orders/expcheckout')?>" id="booking_form">  
              <div class="panel-group reservation-accordian" id="accordion">
              <div id="reserv_table">
-             <?php if(!empty($rows[1]['addresses']) && count($rows[1]['addresses']) > 1): ?>
+             <?php if(is_array($arrExperience['data']['location']) && count($arrExperience['data']['location'])>1): ?>
                     <div class="panel panel-default" id="address">
                         <div class="panel-heading">
                           <h4 class="panel-title">
                              <a href="javascript:" style="text-decoration: none;">
                                 Location</a>  
                                 <select name="address" id='locations1' class="pull-right space">
-                                <?php foreach($rows[1]['addresses'] as $address): ?>
-                                    <option value="<?php echo $address['address'];?>" <?=($hasOrder && $address['address'] == $order['location'])? 'selected="selected"' : '';?>><?php echo $address['keyword'];?></option>
+                                <?php
+                                foreach($arrExperience['data']['location'] as $key =>$listData): ?>
+                                    <option value="<?php echo $listData['vendor_location_id'];?>" ><?php echo $listData['area'];?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <input type="hidden" name="address_keyword" value="<?php echo ($hasOrder)? $order['outlet'] : $rows[1]['addresses'][1]['keyword']; ?>">
                           </h4>
                      </div>
                 </div>
-             <?php elseif(!empty($rows[1]['addresses']) && count($rows[1]['addresses']) == 1): ?>    
-                <input type="hidden" name="address_keyword" value="<?php echo $rows[1]['addresses'][1]['keyword']; ?>">
-                <input type="hidden" name="address" value="<?php echo $rows[1]['addresses'][1]['address']?>">   
+             <?php elseif(!empty($arrExperience['data']['location']) && count($arrExperience['data']['location']) == 1): ?>    
+                <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">   
              <?php endif; ?>
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
                   <h4 class="panel-title">
                      <a href="javascript:" style="text-decoration: none;">
-                      Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="<?=base_url('images/question_icon_small_display.png');?>"></a>
+                      Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="<?=URL::to('images/question_icon_small_display.png');?>"></a>
                       <select name="qty" id="party_size1" class="pull-right space <?=($hasOrder)? 'hidden' : '';?>">
                             <option value="0">SELECT</option>
                             
-                            <?php 
-                            
-                            $min_num = $rows[1]['min_num_tickets']; 
-
-                            $max_num = ($rows[1]['max_num_orders']-$rows[1]['tickets_sold'] < $rows[1]['max_num_tickets']) ? $rows[1]['max_num_orders']-$rows[1]['tickets_sold'] : $rows[1]['max_num_tickets'];
-                            for ($i = $min_num; $i <= $max_num; $i++): ?>
+                            <?php   
+                            $exp_location_id = $arrExperience['data']['location'][0]['vendor_location_id'];                          
+                            $min_num = ($reserveData[$exp_location_id]['min_people'])?$reserveData[$exp_location_id]['min_people']:0;
+                            $max_num = ($reserveData[$exp_location_id]['max_people'])?$reserveData[$exp_location_id]['max_people']:0; 
+                            if($max_num > 0)
+                            {
+                            for ($i = $min_num; $i <= $max_num;): ?>
                                 <?php
                                     $selected = '';
                                     if ($hasOrder && $order['qty'] == $i)
-                                    {
-                                        $selected = 'selected';
-                                    }
+                                        {
+                                            $selected = 'selected';
+                                        }
                                     $peop_name = ($i == 1) ? 'Person' : 'People';
                                 ?>
                                 <option value="<?php echo $i?>"<?php echo $selected;?>><?php echo $i?> <?php echo $peop_name ?></option>
-                            <?php endfor; ?>
+                            <?php 
+                            $i = $i+(int)$reserveData[$exp_location_id]['increment'];
+                            endfor; 
+                            }
+                            ?>
                         </select>
                         <strong><a id="party_edit1" href="javascript:" class="<?=($hasOrder)? '' : 'hidden';?>" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder)? $order['qty'] : '';?></span> EDIT</a></strong>
                   </h4>
@@ -627,7 +678,7 @@ $last_url_item = count($url)-1;
                 <div id="collapseTwo" class="panel-collapse collapse">
                   <div class="panel-body">
                     <div class="input-append date" id='dp1' data-date-format="dd-mm-yyyy">
-                        <input type="hidden" value="<?php echo ($hasOrder) ? date('Y-n-d',strtotime($order['date'])) : ''; ?>" name="booking_date" id="booking_date">
+                        <input type="hidden" value="" name="booking_date" id="booking_date">
                         <div class="options" style="margin: -10px;">
                             <div id="choose_date"></div>
                         </div>
@@ -654,9 +705,9 @@ $last_url_item = count($url)-1;
                           $week_number = date('w',strtotime($order['date']));
                           $week = $weeks[$week_number];
                           if(isset($schedule)):
-								if(isset($schedule_times)):
-									$schedule = $schedule_times;
-								endif;
+                if(isset($schedule_times)):
+                  $schedule = $schedule_times;
+                endif;
                                 foreach($schedule[$week] as $time=>$hours):?>
                                   <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="<?=$time?>" style="padding:2px"><?=strtoupper($time);?></label> 
                          <?php   
@@ -672,9 +723,9 @@ $last_url_item = count($url)-1;
                         <?php if($hasOrder):?>
                         <?php
                           if(isset($schedule)):
-							  if(isset($schedule_times)):
-								$schedule = $schedule_times;
-							  endif;
+                if(isset($schedule_times)):
+                $schedule = $schedule_times;
+                endif;
                               foreach($schedule[$week] as $time=>$hours):
                               ?>
                                <div id="<?=$time."_tab";?>"  class="<?=(in_array($order['time'],$hours))? '':'hidden';?>">
@@ -692,9 +743,10 @@ $last_url_item = count($url)-1;
                 </div>
               </div>
                 <?php
-                $mealOptions = ((!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00') || (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00'));
-                $nonVeg = (!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00');
-                $alcohol = (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00');
+                 $mealOptions = (is_array($arrExperience['data']['addons']) && count($arrExperience['data']['addons'])>0)?count($arrExperience['data']['addons']):0;
+                 //$mealOptions = ((!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00') || (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00'));
+                 //$nonVeg = (!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00');
+                 //$alcohol = (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00');
                 ?>
                 <?php if ($mealOptions): ?>
               <div class="panel panel-default">
@@ -705,34 +757,21 @@ $last_url_item = count($url)-1;
                     </a>
                   </h4>
                 </div>
-                <div id="collapseFour" class="panel-collapse <?=($hasOrder) ? 'in' : 'collapse';?>">
+                <div id="collapseFour" class="panel-collapse collapse">
                   <div class="panel-body meals">
-                        <?php if($nonVeg): ?>
-                            <div style="margin-bottom: 10px;">
-                                <span>Non-vegetarian</span>
-                                <select name="non_veg" id="non_veg">
+                        <?php 
+                        foreach($arrExperience['data']['addons'] as $addons)
+                        {
+                          ?>
+                          <div style="margin-bottom: 10px;">
+                                <span><?php echo $addons['reservation_title'];?></span>
+                                <select name="add_ons[<?php echo $addons['prod_id'];?>]" id="non_veg">
                                     <option value="0">0</option>
-                                    <?php if ($hasOrder): ?>
-                                        <?php for($i = 1; $i <= $order['qty']; $i++): ?>
-                                            <option value="<?php echo $i; ?>" <?=($i == $order['non_veg'])?'selected="selected"':'';?>><?php echo $i; ?></option>
-                                        <?php endfor; ?>
-                                    <?php endif; ?>
                                 </select>
                             </div>
-                        <?php endif; ?>
-                        <?php if($alcohol): ?>
-                        <div>
-                            <span>Alcohol pairings </span>
-                            <select name="alcohol" id="alcohol">
-                                <option value="0">0</option>
-                                <?php if ($hasOrder): ?>
-                                    <?php for($i = 1; $i <= $order['qty']; $i++): ?>
-                                        <option value="<?php echo $i; ?>" <?=($i == $order['alcohol'])?'selected="selected"':'';?>><?php echo $i; ?></option>
-                                    <?php endfor; ?>
-                                <?php endif; ?>
-                            </select>
-                        </div>
-                        <?php endif; ?>
+                          <?php
+                        }
+                        ?>
                   </div>
                  </div>
               </div>
@@ -742,6 +781,18 @@ $last_url_item = count($url)-1;
                 <div id="load_layer">
                 <img src="/images/loading.gif">
                 </div>
+                <?php 
+                $user_array = Session::all();
+                $user_data = array();
+                if (Session::has('logged_in'))
+                {
+                  $user_data=$user_array;
+                }
+                else{
+                    $user_data['full_name']='Guest';
+                }     
+
+                ?>
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a href="javascript:" style="text-decoration: none; font-size: 13px;" id='fullinfo'>
@@ -755,17 +806,17 @@ $last_url_item = count($url)-1;
                   <p style="font-size: 12px; text-align: center;">RESERVATION INFORMATION</p> 
                    <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-envelope"></i></span>
-                      <input type="email" name="email" id="email" class="form-control" placeholder="EMAIL" value="<?=(!empty($user))? $user['email_address'] :'';?>">
+                      <input type="email" name="email" id="email" class="form-control" placeholder="EMAIL" value="<?=(isset($user_data['email']))? $user_data['email'] :'';?>">
                     </div>  
                     <div class="reservation_errors" id="error_email"></div> 
                     <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-user"></i></span>
-                      <input type="text" name="fullname" id="fullname" class="form-control" placeholder="FULL NAME" value="<?=(!empty($user))? $user['full_name']:''; ?>">
+                      <input type="text" name="fullname" id="fullname" class="form-control" placeholder="FULL NAME" value="<?=(isset($user_data['full_name']))? $user_data['full_name']:''; ?>">
                     </div> 
                     <div class="reservation_errors" id="error_fullname"></div> 
                     <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-earphone"></i></span>
-                      <input type="text" name="phone" id="phone" class="form-control" placeholder="MOBILE" value="<?=(!empty($user))? $user['phone']:''; ?>">
+                      <input type="text" name="phone" id="phone" class="form-control" placeholder="MOBILE" value="<?=(isset($user_data['phone']))? $user_data['phone']:''; ?>">
                     </div>
                     <div class="reservation_errors" id="error_phone"></div> 
                     <div class="input-group">
@@ -784,283 +835,47 @@ $last_url_item = count($url)-1;
               <div class="text-center">
                 <span class="hidden" id="cant_select_table">To check for immediate availability, please call our concierge.</span> 
                 <p class="hidden" id="cant_do_reserv1">You have an existing reservation that conflicts with this one. To modify or cancel your existing reservation please click</p>
-                <a class="btn btn-warning hidden" id="brs_my_reserv" href="<?=base_url('users/myreservations');?>">View My Existing Reservations</a>
+                <a class="btn btn-warning hidden" id="brs_my_reserv" href="<?=URL::to('/users/myreservations');?>">View My Existing Reservations</a>
                 <p class="hidden" id="cant_do_reserv2">If you have any queries please call our concierge desk.</p> 
                 <div class="text-center select-all-data hidden" id="select_all_data">Please select all data</div>
-                <a  data-page_loc="Reservation Widget" class="btn btn-warning header_loc <?php //=($hasOrder)? '' : 'hidden';?>" <?=(isset($allow_guest) && $allow_guest == "Yes") ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='select_table'>SELECT TABLE</a>
-				        <?php if($restaurant[0]['allow_reserv'] == 1): ?>
+                <a  data-page_loc="Reservation Widget" class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && (isset($allow_guest) && $allow_guest == "Yes")) ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='select_table_exp'>SELECT TABLE</a>
+                <?php //if($restaurant[0]['allow_reserv'] == 1): ?>
                   <p class="text-center or-reservation <?php //=($hasOrder)? '' : 'hidden';?>" id="or_reservation">OR</p>
-				          <!--<p class="text-center"><a id="jump2-alacarte"><small>Make An A la carte Reservation at <br><span><?php echo $restaurant[0]["name"]?></span><br><span>(<?php echo $restaurant[0]["reward_points"] ?> Gourmet Points)</span></small></a></p>-->
-						   <p class="text-center">
-							<?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
-								<a class="alacarte_reservation_text" href="<?php echo base_url();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
-								<small>Make An A la carte Reservation at <br>
-									<span>
-										<?php echo $restaurant[0]["name"]?></span><br><span>(500 Gourmet Points)
-									</span>
-								</small>
-							</a>
-							<?php } else { ?>
-								<a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
-									<small>Make An A la carte Reservation at <br>
-										<span>
-											<?php echo $restaurant[0]["name"]?></span><br><span>(500 Gourmet Points)
-										</span>
-									</small>
-								</a>
-							<?php } ?>
-						</p>
-				        <?php endif ?>
+                  <!--<p class="text-center"><a id="jump2-alacarte"><small>Make An A la carte Reservation at <br><span><?php //echo ucfirst($arrExperience['data']['name'])?></span><br><span>(<?php //echo $restaurant[0]["reward_points"] ?> Gourmet Points)</span></small></a></p>-->
+               <p class="text-center">
+              <?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
+                <a class="alacarte_reservation_text" href="<?php echo URL::to();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
+                <small>Make An A la carte Reservation at <br>
+                  <span>
+                    <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                  </span>
+                </small>
+              </a>
+              <?php } else { ?>
+                <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
+                  <small>Make An A la carte Reservation at <br>
+                    <span>
+                      <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                    </span>
+                  </small>
+                </a>
+              <?php } ?>
+            </p>
+                <?php //endif ?>
               </div>
-                <input type="hidden" id="slug" value="<?php echo $slug; ?>">
+                <input type="hidden" id="slug" value="<?php echo $arrExperience['data']['slug']; ?>">
                 <input type="hidden" name="time" id="fulltime">
                 <input type="hidden" name="amount" id="amount">
                 <input type="hidden" name="post_amount" id="post_amount">
-                <input type="hidden" name="description" value="<?php echo $rows[1]['exp_short_desc']?>">
-                <input type="hidden" name="experience_id" id="experience_id" value="<?php echo $rows[1]['id']?>">
-                <input type="hidden" name="city" value="<?php echo $current_city?>">
+                <input type="hidden" name="description" value="<?php echo $arrExperience['data']['short_description']?>">
+                <input type="hidden" name="experience_id" id="experience_id" value="<?php echo $arrExperience['data']['id']?>">
+                <input type="hidden" name="city" value="<?php echo $current_city_id;?>">
                 <input type="hidden" name="send">
             </form>
           </div>
-		  <div class="widget reservation-box" id="AlacarteBox" style="display:none">
-             <h3 class="text-center">Reserve A Table</h3>
-             <form role='form' method="post" action="<?=base_url('orders/restaurant_checkout')?>" id="ac_booking_form">  
-             <div class="panel-group reservation-accordian" id="ac_accordion">
-             <div id="ac_reserv_table">
-             <?php if(!empty($rows[1]['rest_addresses']) && count($rows[1]['rest_addresses']) > 1): ?>
-                    <div class="panel panel-default" id="ac_address">
-                        <div class="panel-heading">
-                          <h4 class="panel-title">
-                             <a href="javascript:" style="text-decoration: none;">
-                                Location</a>  
-                                <select name="address" id='ac_locations1' class="pull-right space">
-                                <?php foreach($rows[1]['rest_addresses'] as $address): ?>
-                                    <option value="<?php echo $address['address'];?>"><?php echo $address['outlet_name'];?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <input type="hidden" name="address_keyword" value="<?php echo $rows[1]['rest_addresses'][1]['outlet_name']; ?>">
-                          </h4>
-                     </div>
-                </div>
-             <?php elseif(!empty($rows[1]['rest_addresses']) && count($rows[1]['rest_addresses']) == 1): ?>    
-                <input type="hidden" name="address_keyword" value="<?php echo $rows[1]['rest_addresses'][1]['outlet_name']; ?>">
-                <input type="hidden" name="address" value="<?php echo $rows[1]['rest_addresses'][1]['address']?>">   
-             <?php endif; ?>
-              <div class="panel panel-default">
-                <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
-                  <h4 class="panel-title">
-                     <a href="javascript:" style="text-decoration: none;">
-                      Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="<?=base_url('images/question_icon_small_display.png');?>"></a>
-                      <select name="qty" id="ac_party_size1" class="pull-right space <?=($hasOrder)? 'hidden' : '';?>">
-                            <option value="0">SELECT</option>
-                            
-                            <?php 
-                            
-                            $min_num = $rows[1]['min_num_tickets']; 
+          <?php //endif;?>
 
-                            $max_num = ($rows[1]['max_num_orders']-$rows[1]['tickets_sold'] < $rows[1]['max_num_tickets']) ? $rows[1]['max_num_orders']-$rows[1]['tickets_sold'] : $rows[1]['max_num_tickets'];
-                            for ($i = $min_num; $i <= $max_num; $i++): ?>
-                                <?php
-                                    $selected = '';
-                                    if ($hasOrder && $order['qty'] == $i)
-                                        {
-                                            $selected = 'selected';
-                                        }
-                                    $peop_name = ($i == 1) ? 'Person' : 'People';
-                                ?>
-                                <option value="<?php echo $i?>"<?php echo $selected;?>><?php echo $i?> <?php echo $peop_name ?></option>
-                            <?php endfor; ?>
-                        </select>
-                        <strong><a id="ac_party_edit1" href="javascript:" class="<?=($hasOrder)? '' : 'hidden';?>" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder)? $order['qty'] : '';?></span> EDIT</a></strong>
-                  </h4>
-                </div>
-             
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading" >
-                  <h4 class="panel-title">
-                    <a href="javascript:" style="text-decoration: none;">
-                      Select Date
-                    </a>
-                     <strong><a id="ac_date_edit1" class="<?=($hasOrder) ?  : 'hidden'; ?>" data-toggle="collapse" data-parent="#ac_accordion" href="#ac_collapseTwo" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder) ? $order['date'] : ''; ?></span> EDIT</a></strong>
-                  </h4>
-                </div>
-                <div id="ac_collapseTwo" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="input-append date" id='ac_dp1' data-date-format="dd-mm-yyyy">
-                        <input type="hidden" value="<?php echo ($hasOrder) ? date('Y-n-d',strtotime($order['date'])) : ''; ?>" name="booking_date" id="ac_booking_date">
-                        <div class="options" style="margin: -10px;">
-                            <div id="ac_choose_date"></div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a href="javascript:" style="text-decoration: none;">
-                      Select Time
-                    </a>
-                    <strong><a id="ac_time_edit1" class="<?=($hasOrder) ? '' : 'hidden';?>" data-toggle="collapse" data-parent="#ac_accordion" href="#ac_collapseThree" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder) ? $order['time'] : ''; ?></span> EDIT</a></strong>
-                  </h4>
-                </div>
-                <div id="ac_collapseThree" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div id='ac_time'>
-                        <?php if($hasOrder):?>
-                        <div class="btn-group col-lg-10 pull-right ac_actives ">
-                        <?php
-                          $weeks = array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
-                          $week_number = date('w',strtotime($order['date']));
-                          $week = $weeks[$week_number];
-                          if(isset($schedule)):
-								if(isset($res_schedule_times)):
-									$schedule = $res_schedule_times;
-								endif;
-                                foreach($schedule[$week] as $time=>$hours):?>
-                                  <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="ac_<?=$time?>" style="padding:2px"><?=strtoupper($time);?></label> 
-                         <?php   
-                                endforeach;
-                          endif;
-                        ?>
-                        </div>
-                        <div class="clearfix"></div>
-                        <input type="hidden" name="booking_time" id="ac_booking_time" value="<?=$order['time']?>">
-                        <?php endif;?>
-                    </div>
-                    <div id='ac_hours'>
-                        <?php if($hasOrder):?>
-                        <?php
-                          if(isset($schedule)):
-							  if(isset($res_schedule_times)):
-								$schedule = $res_schedule_times;
-							  endif;
-                              foreach($schedule[$week] as $time=>$hours):
-                              ?>
-                               <div id="ac_<?=$time."_tab";?>"  class="<?=(in_array($order['time'],$hours))? '':'hidden';?>">
-                               <?php foreach($hours as $hour):?>
-                                    <div class="time col-lg-3 col-xs-5 <?=($hour == $order['time'])? 'time_active' : '';?>" rel="<?=$hour;?>"><a href="javascript:"><?=$hour;?></a></div>
-                               <?php endforeach;?>
-                               </div>
-                              <?php 
-                              endforeach;
-                          endif;
-                        ?>
-                        <?php endif;?>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                <?php
-                    $mealOptions = ((!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00') || (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00'));
-                    $nonVeg = (!empty($rows[1]['price_non_veg']) && $rows[1]['price_non_veg'] != '0.00');
-                    $alcohol = (!empty($rows[1]['price_alcohol']) && $rows[1]['price_alcohol'] != '0.00');
-                ?>
-                <?php if ($mealOptions): ?>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a href="javascript:" style="text-decoration: none;">
-                        Meal options<strong><a id="ac_meal_edit1" class="hidden" data-toggle="collapse" data-parent="#ac_accordion" href="#ac_collapseFour" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"></span> EDIT</a></strong>
-                    </a>
-                  </h4>
-                </div>
-                <div id="ac_collapseFour" class="panel-collapse <?=($hasOrder) ? 'in' : 'collapse';?>">
-                  <div class="panel-body meals">
-                        <?php if($nonVeg): ?>
-                            <div style="margin-bottom: 10px;">
-                                <span>Non-vegetarian</span>
-                                <select name="non_veg" id="ac_non_veg">
-                                    <option value="0">0</option>
-                                    <?php if ($hasOrder): ?>
-                                        <?php for($i = 1; $i <= $order['qty']; $i++): ?>
-                                            <option value="<?php echo $i; ?>" <?=($i == $order['non_veg'])?'selected="selected"':'';?>><?php echo $i; ?></option>
-                                        <?php endfor; ?>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
-                        <?php endif; ?>
-                        <?php if($alcohol): ?>
-                        <div>
-                            <span>Alcohol pairings </span>
-                            <select name="alcohol" id="ac_alcohol">
-                                <option value="0">0</option>
-                                <?php if ($hasOrder): ?>
-                                    <?php for($i = 1; $i <= $order['qty']; $i++): ?>
-                                        <option value="<?php echo $i; ?>" <?=($i == $order['alcohol'])?'selected="selected"':'';?>><?php echo $i; ?></option>
-                                    <?php endfor; ?>
-                                <?php endif; ?>
-                            </select>
-                        </div>
-                        <?php endif; ?>
-                  </div>
-                </div>
-              </div>
-              <?php endif; ?> 
-              </div>
-                <div class="panel panel-default hidden" id="ac_order_info">
-                <div id="ac_load_layer">
-                <img src="/images/loading.gif">
-                </div>
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a href="javascript:" style="text-decoration: none; font-size: 13px;" id='ac_fullinfo'>
-                      info
-                    </a>
-                    <strong><a id="ac_info_edit1" href="javascript:" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"></span> EDIT</a></strong>
-                  </h4>
-                </div>
-                <div id="ac_collapseFive" class="panel-collapse">
-                  <div class="panel-body">
-                  <p style="font-size: 12px; text-align: center;">RESERVATION INFORMATION</p> 
-                   <div class="input-group">
-                      <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-envelope"></i></span>
-                      <input type="email" name="email" id="ac_email" class="form-control" placeholder="EMAIL" value="<?=(!empty($user))? $user['email_address'] :'';?>">
-                    </div>  
-                    <div class="reservation_errors" id="ac_error_email"></div> 
-                    <div class="input-group">
-                      <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-user"></i></span>
-                      <input type="text" name="fullname" id="ac_fullname" class="form-control" placeholder="FULL NAME" value="<?=(!empty($user))? $user['full_name']:''; ?>">
-                    </div> 
-                    <div class="reservation_errors" id="ac_error_fullname"></div> 
-                    <div class="input-group">
-                      <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-earphone"></i></span>
-                      <input type="text" name="phone" id="ac_phone" class="form-control" placeholder="MOBILE" value="<?=(!empty($user))? $user['phone']:''; ?>">
-                    </div>
-                    <div class="reservation_errors" id="ac_error_phone"></div> 
-                    <div class="input-group">
-                      <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
-                      <input type="text" name="special" id="ac_special" class="form-control" placeholder="(Optional) Special Requests">
-                    </div> 
-                    <div class="reservation_errors"></div> 
-                    <div class="text-center">
-                        <button class="btn btn-warning btn-xs" type="button"  id="ac_make_reservation">MAKE A RESERVATION</button>
-                    </div> 
-                  </div>
-                </div>
-              </div>
-            </div>
-              <div class="text-center">
-                <span class="hidden" id="ac_cant_select_table">To check for immediate availability, please call our concierge.</span> 
-                <p class="hidden" id="ac_cant_do_reserv1">You have an existing reservation that conflicts with this one. To modify or cancel your existing reservation please click</p>
-                <a class="btn btn-warning hidden" id="ac_brs_my_reserv" href="<?=base_url('users/myreservations');?>">View My Existing Reservations</a>
-                <p class="hidden" id="ac_cant_do_reserv2">If you have any queries please call our concierge desk.</p> 
-                <div class="text-center select-all-data hidden" id="ac_select_all_data">Please select all data</div>
-                <a  class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(isset($allow_guest) && $allow_guest == "Yes") ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='ac_select_table'>SELECT TABLE</a>
-                <p class="text-center or-reservation <?php //=($hasOrder)? '' : 'hidden';?>" id="ac_or_reservation">OR</p>
-				        <a id="jump2-expres"><small>Make An Experience Reservation</small></a>
-              </div>
-                <input type="hidden" id="ac_slug" value="<?php echo $slug; ?>">
-                <input type="hidden" name="time" id="ac_fulltime">
-                <input type="hidden" name="amount" id="ac_amount">
-                <input type="hidden" name="description" value="<?php echo $rows[1]['exp_short_desc']?>">
-                <input type="hidden" name="restaurant_id" id="ac_restaurant_id" value="<?=$restaurant[0]["id"]?>">
-                <input type="hidden" name="city" value="<?php echo $current_city?>">
-                <input type="hidden" name="send">
-            </form>
-          </div>
-          <?php endif;?>
+
           <div class="widget query-contact">
             <p>Got a question? <br> Call our Concierge at <a href="tel:09619551387">09619551387</a></p>
           </div>
@@ -1070,12 +885,12 @@ $last_url_item = count($url)-1;
             <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['terms_and_condition']);?>
             <?php if(isset($arrExperience['data']['gift_card']) && $arrExperience['data']['gift_card']==1){?>
             <li>- Can be redeemed with a WowTables Gift Card
-            <a  href="<?php echo base_url('gift-cards')?>" target="_blank" data-original-title="Click here to find out more about WowTables Gift Cards"
+            <a  href="<?php echo URL::to('gift-cards')?>" target="_blank" data-original-title="Click here to find out more about WowTables Gift Cards"
              data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="/images/question_icon_small_display.png"></a>
             </li>
             <?php } else {?>
-			<li>- WowTables Gift Cards cannot be used for this experience</li>
-			<?php } ?>
+      			<li>- WowTables Gift Cards cannot be used for this experience</li>
+      			<?php } ?>
             </ul> 
             
           </div>
@@ -1270,54 +1085,198 @@ $last_url_item = count($url)-1;
 </style>
   <!--Modal for selecting alacarte location from experiences reservation modal-->
   <script type="text/javascript">
-  //code for floating reservation button
-  	$(function() {
-               var offsetPixels = 50; // change with your sidebar height
+      //code for floating reservation button
+	    $(function() {
+             var offsetPixels = 50; // change with your sidebar height
 
-               $(window).scroll(function() {
-                       if ($(window).scrollTop() > offsetPixels) {
-                               $(".scrollingBox").css({
-                                       "position": "fixed",
-                                       "top": "88%"
-                               });
-                       } else {
-                               $(".scrollingBox").css({
-                                       "position": "relative",
-                                       "top": "88%"
-                               });
-                       }
-               });
-       }); 
+             $(window).scroll(function() {
+                     if ($(window).scrollTop() > offsetPixels) {
+                             $(".scrollingBox").css({
+                                     "position": "fixed",
+                                     "top": "88%"
+                             });
+                     } else {
+                             $(".scrollingBox").css({
+                                     "position": "relative",
+                                     "top": "88%"
+                             });
+                     }
+             });
+      }); 
        
-          function changeClass()
-              {
-                document.getElementById("menu_tab").classList.add('active');
-                document.getElementById("info_tab").classList.remove('active');
-                document.getElementById('menu').className = "tab-pane fade in active"; 
-                document.getElementById('info').className = "tab-pane fade";
-                
-           }
-		   $(document).ready(function(){
-				//alert("here");
-				var current_url = window.location.href;
-				var check_menu = current_url.indexOf("#menu"); 
-				//console.log("checkmenu = "+check_menu);
-				if(check_menu > 0){
-					$('html, body').animate({
-						scrollTop: $('.deal-bottom-box').offset().top
-					}, 'slow');
-					$("#info_tab").removeClass("active");
-					$("#menu_tab").addClass("active");
-					$("#info").removeClass("in");
-					$("#info").removeClass("active");
-					$("#menu").addClass("in");
-					$("#menu").addClass("active");
-				}
+      function changeClass()
+      {
+            document.getElementById("menu_tab").classList.add('active');
+            document.getElementById("info_tab").classList.remove('active');
+            document.getElementById('menu').className = "tab-pane fade in active"; 
+            document.getElementById('info').className = "tab-pane fade";
+            
+       }
 
-				$(".a-list-group-item").on('click',function(){
-					var v = $(this).attr('data-alacarte_link');
-					window.location.href=v;
-				});
+       
+  	    var disabledAllDays = <?php echo json_encode($block_dates);?>;
+        var allschedule = <?php echo json_encode($schedule);  ?>;
+        var reserveminmax = <?php echo json_encode($reserveData);  ?>;
+
+        function disableAllTheseDays(date) {
+            var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
+            var location_id = $('#locations1').val();
+            var disabledDays = disabledAllDays[location_id];
+           
+            if(disabledDays != undefined)
+            {
+              for (i = 0; i < disabledDays.length; i++) {
+                  m=m+1;
+                  mon=m.toString();
+                  if(mon.length <2){
+                      m="0"+m;
+                  }
+                  day=d.toString();
+                  if(day.length <2){
+                      d="0"+d;
+                  }
+                  if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                      return [false];
+                  }
+              }
+            }
+            return [true];
+        }
+
+        $(document).ready(function(){				
+            //alert("here");
+    				var current_url = window.location.href;
+    				var check_menu = current_url.indexOf("#menu"); 
+    				//console.log("checkmenu = "+check_menu);
+    				if(check_menu > 0){
+    					$('html, body').animate({
+    						scrollTop: $('.deal-bottom-box').offset().top
+    					}, 'slow');
+    					$("#info_tab").removeClass("active");
+    					$("#menu_tab").addClass("active");
+    					$("#info").removeClass("in");
+    					$("#info").removeClass("active");
+    					$("#menu").addClass("in");
+    					$("#menu").addClass("active");
+    				}
+
+    				$(".a-list-group-item").on('click',function(){
+    					var v = $(this).attr('data-alacarte_link');
+    					window.location.href=v;
+    				});
+
+            /*reservation strat*/
+            loadDatePicker();
+
+            $('#locations1').change(function(){
+              $('#party_edit1').trigger('click'); 
+              
+               loadPartySelect();
+               loadDatePicker();
+            });
+
+
+             /*reservation over*/
 		   });
+
+       function loadPartySelect()
+       {
+          var location_id = $('#locations1').val();
+          var jsondata = reserveminmax[location_id];
+          //console.log(jsondata);
+          var selectList = $("#party_size1");
+          selectList.find("option:gt(0)").remove();
+          
+          var min_people = jsondata.min_people;
+          var max_people = jsondata.max_people;
+          if(parseInt(max_people)>0)
+          {
+            for(var j = min_people;j <max_people;)
+            {
+               var optiontext = (j == 1) ? ' Person' : ' People';
+               selectList.append('<option value="'+j+'">'+j+optiontext+'</option>')
+
+               j = j+ parseInt(jsondata['increment']);
+            }
+          }
+
+        }
+
+       function loadDatePicker() {
+          $("#choose_date").datepicker("destroy");
+         
+          $("#choose_date").datepicker({
+             dateFormat: 'yy-mm-dd',
+             minDate: 'new Date()',
+             beforeShowDay: disableAllTheseDays,
+             onSelect: function(dateText, inst) 
+             {
+                    var d = $.datepicker.parseDate("yy-m-dd",  dateText);
+                   
+                    var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                    var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
+                    var txt2 = '';
+                    var g = 1;
+                    var cur_date =  new Date('<?php echo date('d M Y H:i:s'); ?>');
+                    month = parseInt(cur_date.getMonth());
+                    month += 1;
+                    c_date = cur_date.getFullYear() + '-' + ((month<10)?'0':'')+month +  '-'  + cur_date.getDate();
+                    c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
+                    
+                    //console.log(c_date);
+                    //console.log(dateText);
+                    /*Time display container*/
+                      var location_id = $('#locations1').val();
+                      var schedule = allschedule[location_id];
+                      if(schedule != undefined)
+                      {
+                        for(key_sch in schedule[datestrInNewFormat])
+                        {   
+                            
+                            var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
+                            active_tab = (g == obj_length) ? 'active' : '' ;
+                            active_blck = (g == obj_length) ? '' : 'hidden' ;  
+                            txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
+                            txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+                            for(key_sch_time in schedule[datestrInNewFormat][key_sch])
+                            {
+                               if(c_date == dateText)
+                               {
+                                 if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                   txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                 } 
+                               }  
+                               else
+                               {
+                                 txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                               }                          
+                                                       
+                            }
+                            txt2+= '</div>';    
+                            g++;
+                        }
+                      }
+                      /*Time display container*/
+
+
+                    txt += '</div><div class="clearfix"></div>';
+                    txt += '<input type="hidden" name="booking_time" id="booking_time" value="">';
+                            $('#hours').html(txt2);
+                            $('#time').html(txt);
+
+                    $('#booking_date').val(dateText);
+
+
+                    
+                    $('#date_edit1 span').text(formatDate(dateText));
+                    $('#date_edit1').click();
+                    timehide=0;
+                    $('#time_edit1').click(); 
+              }
+          });
+        $( "#choose_date" ).datepicker("refresh");
+      }
+
+
   </script>
 @endsection

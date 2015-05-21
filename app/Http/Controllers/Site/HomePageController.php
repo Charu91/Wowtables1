@@ -20,13 +20,16 @@ use DB;
 use Auth;
 use Redirect;
 use Mail;
-
+use Mailchimp;
 
 class HomePageController extends Controller {
 
-	function __construct(CustomerModel $customermodel,Request $request){
+    protected $listId = '986c01a26a';
+
+    function __construct(CustomerModel $customermodel,Request $request , Mailchimp $mailchimp){
          $this->customermodel = $customermodel;
          $this->request = $request;
+         $this->mailchimp = $mailchimp;
     }
 
 	public function home()
@@ -211,6 +214,15 @@ class HomePageController extends Controller {
         }
     }
 
+    public function check_user()
+    {
+
+        $customerLoginUserRequest = new CustomerLoginUserRequest();
+        $all_res = $this->customermodel->login($this->request->input('email'), $this->request->input('password'), $this->request->input('remember_me') ? 1 :0);
+        //echo "<pre>"; print_r($all_res); die;
+        echo json_encode($all_res);
+    }
+
     public function register()
     {
     	$rules = [
@@ -289,20 +301,21 @@ class HomePageController extends Controller {
                     $newdata['Registration_Page'] = $set_reg_page;
                     Session::put($newdata);
 
-            		/*$mailbody = "You are now a WowTables VIP!
-	                        
-					Thank you for joining WowTables.com!
+$mailbody = "
+You are now a WowTables VIP!
 
-					Your account details are:
-					Email:".$users['email_address']."
-					Password:".$users['password']."
+Thank you for joining WowTables.com!
 
-					We add new experiences from the best restaurants in Mumbai every week. So the next time you feel like treating yourself or a loved one to something special just check out WowTables.com or call our concierge at 9619551387 to make a booking. We hope you will enjoy what we have to offer.
+Your account details are:
+Email:".$users['email_address']."
+Password:".$users['password']."
 
-					Happy Dining, 
-					The WowTables Team";
+We add new experiences from the best restaurants in Mumbai,Pune,Delhi,Bengaluru every week. So the next time you feel like treating yourself or a loved one to something special just check out WowTables.com or call our concierge at 9619551387 to make a booking. We hope you will enjoy what we have to offer.
 
-					Mail::raw($mailbody, function($message) use ($users)
+Happy Dining,
+The WowTables Team";
+
+					/*Mail::raw($mailbody, function($message) use ($users)
 					{
 					    $message->from('info@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -318,45 +331,43 @@ class HomePageController extends Controller {
 				   );
 					$newdata['add_mixpanel_event'] = 'yes';
 					$newdata['login_type'] = $set_login_type;
-					$newdata['Registration_Page'] = $set_reg_page;
+					$newdata['Registration_Page'] = $set_reg_page;*/
                     
 
                     //$this->email->send();
                     //Start MailChimp
-                    require_once 'MCAPI.class.php'; //specify the proper path
-                    $apikey = 'f60ffa078492fad96cb1575e38c86160-us5';
-                    $listId = '986c01a26a';
-                    $api = new MCAPI($apikey);
-                    if(!isset($_GET["utm_source"])) $_GET["utm_source"] = "";
-                    if(!isset($_GET["utm_medium"])) $_GET["utm_medium"] = "";
-                    if(!isset($_GET["utm_campaign"])) $_GET["utm_campaign"] = "";
+                    //require_once 'MCAPI.class.php'; //specify the proper path
+
                     $merge_vars = array(
                         'NAME'         =>     isset($users['full_name'] )? $users['full_name']: '',
                         'SIGNUPTP'     =>     isset($facebook_id)? 'Facebook': 'Email',
                         'BDATE'     =>    isset($users['dob'])? $users['dob']: '',
                         'GENDER'    =>  isset($users['gender'])? $users['gender']: '',
                         'MERGE11'  => 0,
-                        'MERGE17'=>'Has GIU account',
+                        'MERGE17'=>'Has WowTables account',
                         'PHONE'=>   isset($users['phone'])? $users['phone']: '',
                         'MERGE18'=>$_GET["utm_source"],
                         'MERGE19'=>$_GET["utm_medium"],
                         'MERGE20'=>$_GET["utm_campaign"]
                     );
-                    $api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
+
+                    $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                    //echo "<pre>"; print_r($api); die;
+                    //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
                     $city = $users['city'];
-                    $mergeVars = array(
-                    'GROUPINGS' => array(
-                    array(
-                        'id' => 9613, 
-                        'groups' => ucfirst($city),
-                    )
-                    )); 
-                    $api->listUpdateMember($listId, $my_email, $mergeVars);
-                    */	
-                    //End MailChimp 
-                    $date_of_registration = date("m/d/Y h:i A");
-                    //$zoho_res = $this->zoho_crm_add(array("last_name"=>$this->input->post('full_name'), "date_of_registration"=>$date_of_registration, "user_email"=>$this->input->post('email')));
+                        $mergeVars = array(
+                            'GROUPINGS' => array(
+                                array(
+                                    'id' => 9613,
+                                    'groups' => ucfirst($city),
+                                )
+                            )
+                        );
+                //echo "asd , ";
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+
+                    //End MailChimp
                      echo 1;
             }//
             else

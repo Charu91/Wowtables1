@@ -102,7 +102,7 @@
                 mediaDropZoneListing.removeFile(file);
             });
         },
-        url: "/admin/media/sidebar_media",
+        url: "/admin/media/sidebars_media",
         method: "POST",
         maxFilesize: 10,
         paramName: 'media',

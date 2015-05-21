@@ -768,7 +768,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="tab-content" style="border-top:1px dashed #c2c2c2;margin-top:20px;">
             <div class="tab-pane fade in active" id="signin">
             <div id="signinForm-wrap" style="  padding-top: 20px !important;">
-              <form role="form" method="POST" action="{{URL::to('/')}}users/login">
+              <form role="form" method="POST" action="{{URL::to('/')}}/users/login">
                 <div class="form-group">
                   <input type="email" class="form-control" id="email1" placeholder="Enter email" name="email">
                   <label class="control-label error-code text-danger" id="email_error_1">Please enter a valid email address</label>
@@ -786,7 +786,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                 <div class="info-text">
                   <h5 class="text-center" style="color: #725A32;">ENTER YOUR EMAIL ADDRESS</h5>
                 </div>
-                <form role="form" method="POST" action="{{URL::to('/')}}users/forgot_password" id='forgot_password'>
+                <form role="form" method="POST" action="{{URL::to('/')}}/users/forgot_password" id='forgot_password'>
                   <div class="form-group">
                     <input type="email" class="form-control" id="f_pass" placeholder="Enter email" name="forgotemail">
                     <label class="control-label error-code text-danger" id='wrong_email'>Please enter your email address</label>
@@ -1272,678 +1272,158 @@ var google_remarketing_only = true;
         }
     }
 
-         var logged_in = "<?php echo isset($user_data['full_name'])?$user_data['full_name']:''; ?>";
-        <?php if(empty($logged_in) && (isset($details['make_reservation_opt']) && $details['make_reservation_opt']==1)):?>
-        logged_in = "1";
-        <?php endif ?> 
-        
-        $(document).ready(function(){
-      
-      <?php if(isset($rows[1]) && !empty($rows[1])) {?>
-            var bl_dates = Array();
-            <?php 
-                if(!empty($block_dates) && is_array($block_dates)){
-                    $tmp_bl_date = array();
-                    foreach($block_dates as $bl_date){
-                        if($bl_date['block_time'] != $rows[1]['start_time'].'-'.$rows[1]['end_time'] && !empty($bl_date['block_time'])){
-                            $tmp_bl_date[][$bl_date['block_time']] = $bl_date['block_date']; 
-                        }
-                    }
-            ?>
-                bl_dates = <?php echo json_encode($tmp_bl_date);?>;
-            <?php           
-                }
-            ?>
-            window.schedule = <?php echo json_encode($schedule);  ?>;
-            $("#choose_date").datepicker({
-            dateFormat: 'yy-m-d',
-            minDate: <?php echo $startDate; ?>,
-            maxDate: <?php echo $endDate; ?>,
-            onSelect: function(dateText, inst) {
-                var d = $.datepicker.parseDate("yy-m-dd",  dateText);
-                /*var bl_time_start = "";
-                var bl_time_end = "";*/
+    var logged_in = "";
+    <?php if(Session::has('logged_in')):?>
+    logged_in = "1";
+    <?php endif ?> 
 
-        var bl_time_start = [];
-                var bl_time_end = [];
-                $.each(bl_dates,function(key,val){
-                    $.each(val,function(k,v){
-                        if($.datepicker.formatDate( "yy-mm-dd", d) == v){
-                            key = k.split('-');
-                            /*bl_time_start = key[0];
-                            bl_time_end = key[1];*/
-              bl_time_start.push(key[0]);
-                            bl_time_end.push(key[1]);
-                        }
-                    })
-                })
-                var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
-                var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
-                var txt2 = '';
-                var g = 1;
-              var cur_date =  new Date('<?php echo date('d M Y H:i:s'); ?>');
-              month = parseInt(cur_date.getMonth());
-                month += 1;
-                c_date = cur_date.getFullYear() + '-' + month +  '-'  + cur_date.getDate();
-                c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes();
-                for(key_sch in schedule[datestrInNewFormat])
-                {   
-                    
-                    var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
-                    active_tab = (g == obj_length) ? 'active' : '' ;
-                    active_blck = (g == obj_length) ? '' : 'hidden' ;  
-                    txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch+'">'+key_sch.toUpperCase()+'</label>';
-                    txt2 +=    '<div id="' + key_sch + '_tab"  class="'+active_blck+'">';
-                    for(key_sch_time in schedule[datestrInNewFormat][key_sch])
-                    {
+    //
+
+    var open_order_info = false;
+    $("#select_table_exp").click(function(e) {
+        e.preventDefault();
+        if ($("#booking_date").val() && $("#booking_time").val()) {
             
-              var is_valid = true;
-              for (var i = 0; i < bl_time_start.length; i++) {
-                
-                if (String(key_sch_time) < String(bl_time_start[i]) || String(key_sch_time) > String(bl_time_end[i])) {
-                  console.log(String(key_sch_time)+" < "+String(bl_time_start[i])+" || "+String(key_sch_time) +"> "+String(bl_time_end[i]))
-                  is_valid = is_valid && true;
-
-                } else {
-                  is_valid = is_valid && false;
-
-                }
-
-              }
-              if(is_valid) {
-                txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-              }
-                                              
-                    }
-                    txt2+= '</div>';    
-                    g++;
-                }
-                <?php if(isset($schedule_times)): ?>  
-                    var schedule_times = <?php echo json_encode($schedule_times)?>;
-                    var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
-                    for(key in schedule_times[datestrInNewFormat])
-                    { 
-                        var obj_length = Object.keys(schedule_times[datestrInNewFormat]).length; 
-                        active_tab = (g == obj_length) ? 'active' : '' ;
-                        active_blck = (g == obj_length) ? '' : 'hidden' ;
-                        txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key+'">'+key.toUpperCase()+'</label>';
-                        txt2 +=    '<div id="' + key + '_tab"  class="'+active_blck+'">';
-                       
-                        for(key_sch_time in schedule_times[datestrInNewFormat][key])
-                        {
-                            txt2+= '<div class="time col-lg-3" rel="' + schedule_times[datestrInNewFormat][key][key_sch_time] + '"><a href="javascript:">' + schedule_times[datestrInNewFormat][key][key_sch_time]+ '</a></div>';                        
-                        txt2+= '</div>';    
-                        g++;                               
-                         }
-                    }
-                <?php endif; ?>
-                txt += '</div><div class="clearfix"></div>';
-                txt += '<input type="hidden" name="booking_time" id="booking_time" value="">';
-                    $('#hours').html(txt2);
-                    $('#time').html(txt);
-                d = new Date('<?php echo date('d M Y H:i:s'); ?>');
-                month = parseInt(d.getMonth());
-                month += 1;
-                current_date = d.getFullYear() + '-' + month +  '-'  + d.getDate();
-                var select_table = $('#select_table');
-                var cant_select_table = $('#cant_select_table');
-                if (current_date == dateText &&  (d.getHours() > 20 || (d.getHours() >= 20 && d.getMinutes()>=30))) {
-                    cant_select_table.removeClass('hidden');
-                    if(!select_table.hasClass('hidden')){
-                        select_table.addClass('hidden');   
-                    }
-                } else{
-                    if(!cant_select_table.hasClass('hidden')){
-                        cant_select_table.addClass('hidden');   
-                    }
-                    $('#booking_date').val(dateText);
-                    $('#date_edit1 span').text(formatDate(dateText));
-                    $('#date_edit1').click();
-                    timehide=0;
-                    $('#time_edit1').click();    
-                }
-                
-            },
-            beforeShowDay: function(date) {
-                var is_event = "<?php echo $rows[1]['is_event'];?>";
-                if( is_event == 1 ){
-                    var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
-                    if($.inArray(y + '-' + (m+1) + '-' + d,schedule) != -1) {
-                        return [true, '', ''];
-                    } else{
-                        return [false];
-                    }
-                    return date;
-                } else{
-                    var weekday_cnd = $.datepicker.formatDate( "D", date).toLowerCase();    
-                }
-                if(schedule[weekday_cnd] == undefined)
-                {
-                    return new Array(false);
-                }
-                <?php
-                    
-                    if(!empty($block_dates) && is_array($block_dates))
-                    {
-                        foreach($block_dates as $bd)
-                        {       
-                            if($bd['block_time'] == $rows[1]['start_time'].'-'.$rows[1]['end_time'] || empty($bd['block_time'])){
-                                $tmp_bd[] = $bd['block_date'];   
-                            }
+            if (logged_in == "1") {
+               has_reserv = false;
+                $.ajax({
+                    url: "/orders/check_exporder_exists",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: $('#booking_form').serialize(),
+                    async: false,
+                    success: function(e) {
+                        if (e.status == 'error') {
+                            has_reserv = true;
+                            $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").removeClass("hidden");
+                            $("#select_table_exp").addClass("hidden");
+                            $("#or_reservation").addClass("hidden")
+                        } else {
+                            $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").addClass("hidden");
+                            $("#select_table_exp").removeClass("hidden");
+                            $("#select_all_data").addClass("hidden");
+                            $("#or_reservation").removeClass("hidden");
+                            has_reserv = false
                         }
-                        $bd_dates = implode('","',$tmp_bd);
-                        $bd_dates = '"' . $bd_dates . '"';
-                    }              
-                    
-                    if(isset($bd_dates))
-                    {
-                ?>
-                var bd_dates = new Array(<?php echo $bd_dates ?>);    
-                tmp_date = $.datepicker.formatDate('yy-mm-dd', date);
-                tmp_day = $.datepicker.formatDate('dd', date);
-                for(var i in bd_dates)
-                {
-                    if(bd_dates[i] == tmp_date)
-                    {      
-                        return new Array(false,'closed_date');
-                    }                      
-                }
-                <?php } if (!empty($rows[1]['weekdays'])): ?>
-                
-                var td = date.getDay();
-                
-                <?php
-                    $dates = explode(',', $rows[1]['weekdays']);
-                    $td = array();
-                    $wd = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-                    foreach ($dates as &$date) {
-                        $td[] = 'td != \''.$wd[$date].'\'';
-                        $date = 'date.getDay() != '.$date;
                     }
-                ?>
-                var dxk = "<?php echo implode(' && ', $dates);?>";
-                var dxkl = "<?php echo implode(' && ', $td);?>";
-                var ret = [!(<?php echo implode(' && ', $dates);?>),'',!(<?php echo implode(' && ', $td);?>)?'':''];
-                return ret;
-                <?php endif; ?>
-                <?php if(!empty($block_dates)):?>
-                        <?php foreach($block_dates as $date): ?>
-                            <?php
-                                list($year, $month, $day) = explode('-', $date['block_date']);
-                            ?>
-                            var b_date = new Date('<?php echo $year; ?>', '<?php echo $month-1; ?>', '<?php echo $day; ?>');
-                            var ret = [!(date == b_date),'',!(date == b_date)?'':''];                                                        
-                            return ret;
-                        <?php endforeach; ?>
-                <?php endif; ?>
-                return [date];
-            }, 
-        });
-    <?php } ?>
-  //#choose date ends here
-
-    <?php if((isset($res_startDate) && $res_startDate != "") && $res_endDate) :?>
-    window.ac_schedule = <?php echo json_encode($res_schedule_times);  ?>;
-    var ac_bl_dates = Array();
-    <?php 
-        if(!empty($res_block_dates) && is_array($res_block_dates)){
-            $tmp_bl_date = array();
-            foreach($res_block_dates as $bl_date){
-                if($bl_date['block_time'] != $rows[1]['start_time'].'-'.$rows[1]['end_time'] && !empty($bl_date['block_time'])){
-                    $tmp_bl_date[][$bl_date['block_time']] = $bl_date['block_date']; 
-                }
-            }
-    ?>
-        ac_bl_dates = <?php echo json_encode($tmp_bl_date);?>;
-    <?php           
-        }
-    ?>
-    $("#ac_choose_date").datepicker({
-            dateFormat: 'yy-m-d',
-            minDate: <?php echo $res_startDate; ?>,
-            maxDate: <?php echo $res_endDate; ?>,
-            onSelect: function(dateText, inst) {
-                var d = $.datepicker.parseDate("yy-m-dd",  dateText);
-                var bl_time_start = "";
-                var bl_time_end = "";
-                $.each(ac_bl_dates,function(key,val){
-                    $.each(val,function(k,v){
-                        if($.datepicker.formatDate( "yy-mm-dd", d) == v){
-                            key = k.split('-');
-                            bl_time_start = key[0];
-                            bl_time_end = key[1];
-                        }
-                    })
-                })
-                var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
-                var txt = '<div class="btn-group col-lg-10 pull-right ac_actives ">';
-                var txt2 = '';
-                var g = 1;
-              var cur_date =  new Date('<?php echo date('d M Y H:i:s'); ?>');
-              month = parseInt(cur_date.getMonth());
-                month += 1;
-                c_date = cur_date.getFullYear() + '-' + month +  '-'  + cur_date.getDate();
-                c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes();
-                for(key_sch in ac_schedule[datestrInNewFormat])
-                {   
-                    var obj_length = Object.keys(ac_schedule[datestrInNewFormat]).length;
-                    active_tab = (g == obj_length) ? 'active' : '' ;
-                    active_blck = (g == obj_length) ? '' : 'hidden' ;  
-                    txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="ac_'+key_sch+'">'+key_sch.toUpperCase()+'</label>';
-                    txt2 +=    '<div id="ac_' + key_sch + '_tab"  class="'+active_blck+'">';
-                    for(key_sch_time in ac_schedule[datestrInNewFormat][key_sch])
-                    {
-                      if(dateText == c_date){
-                        //console.log("key_sch_time = " + key_sch_time);
-              if(key_sch_time>=c_time && (key_sch_time < bl_time_start || key_sch_time > bl_time_end)){
-                          txt2+= '<div class="ac_time col-lg-3" rel="' + ac_schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + ac_schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-                          }     
-                      } else{
-                          if(key_sch_time < bl_time_start || key_sch_time > bl_time_end){
-                          txt2+= '<div class="ac_time col-lg-3" rel="' + ac_schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + ac_schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-                          } 
-                        }                       
+                });
+                if (!has_reserv) {
+                    $("#jump2-alacarte").addClass("hidden");
+                    $("#reserv_table").slideUp();
+                    $(this).addClass("hidden");
+                    $("#or_reservation").addClass("hidden");
+                    if (open_order_info) {
+                        $("#order_info").slideDown()
                     }
-                    txt2+= '</div>';    
-                    g++;
+                    $("#order_info").removeClass("hidden");
+                    full_info = $("#party_edit1 span").text() + " people - " + $("#time_edit1 span").text() + " - " + $("#date_edit1 span").text();
+                    $("#fullinfo").html("<strong>" + full_info + "</strong>")
                 }
-                txt += '</div><div class="clearfix"></div>';
-                txt += '<input type="hidden" name="booking_time" id="ac_booking_time" value="">';
-                    //$('#time').html(txt);
-                    $('#ac_hours').html(txt2);
-                    $('#ac_time').html(txt);
-                d = new Date('<?php echo date('d M Y H:i:s'); ?>');
-                month = parseInt(d.getMonth());
-                month += 1;
-                current_date = d.getFullYear() + '-' + month +  '-'  + d.getDate();
-                var select_table = $('#ac_select_table');
-                var cant_select_table = $('#ac_cant_select_table');
-                if (current_date == dateText &&  (d.getHours() > 20 || (d.getHours() >= 20 && d.getMinutes()>=30))) {
-                    cant_select_table.removeClass('hidden');
-                    if(!select_table.hasClass('hidden')){
-                        select_table.addClass('hidden');   
-                    }
-                } else{
-                    if(!cant_select_table.hasClass('hidden')){
-                        cant_select_table.addClass('hidden');   
-                    }
-                    $('#ac_booking_date').val(dateText);
-                    $('#ac_date_edit1 span').text(formatDate(dateText));
-                    $('#ac_date_edit1').click();
-                    timehide=0;
-                    $('#ac_time_edit1').click();
-          $('#ac_date_edit1').removeClass('hidden');
-                }
-            },
-            beforeShowDay: function(date) {
-                var is_event = "<?php echo $rows[1]['is_event'];?>";
-                if( is_event == 1 ){
-                    var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
-                    if($.inArray(y + '-' + (m+1) + '-' + d,schedule) != -1) {
-                        return [true, '', ''];
-                    } else{
-                        return [false];
-                    }
-                    return date;
-                } else{
-                    var weekday_cnd = $.datepicker.formatDate( "D", date).toLowerCase();    
-                }
-                if(schedule[weekday_cnd] == undefined)
-                {
-                    return new Array(false);
-                }
-                <?php
-                    if(!empty($res_block_dates) && is_array($res_block_dates))
-                    {
-                        foreach($res_block_dates as $bd)
-                        {       
-                            if($bd['block_time'] == $rows[1]['start_time'].'-'.$rows[1]['end_time'] || empty($bd['block_time'])){
-                                $tmp_bd[] = $bd['block_date'];   
-                            }
-                        }
-                        $bd_dates = implode('","',$tmp_bd);
-                        $bd_dates = '"' . $bd_dates . '"';
-                    }    
-                    if(isset($bd_dates))
-                    {
-                ?>
-                var bd_dates = new Array(<?php echo $bd_dates ?>);    
-                tmp_date = $.datepicker.formatDate('yy-mm-dd', date);
-                tmp_day = $.datepicker.formatDate('dd', date);
-                for(var i in bd_dates)
-                {
-                    if(bd_dates[i] == tmp_date)
-                    {      
-                        return new Array(false,'closed_date');
-                    }                      
-                }
-                <?php } if (!empty($rows[1]['weekdays'])): ?>
-                var td = date.getDay();
-                <?php
-                    $dates = explode(',', $rows[1]['weekdays']);
-                    $td = array();
-                    $wd = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-                    foreach ($dates as &$date) {
-                        $td[] = 'td != \''.$wd[$date].'\'';
-                        $date = 'date.getDay() != '.$date;
-                    }
-                ?>
-                var dxk = "<?php echo implode(' && ', $dates);?>";
-                var dxkl = "<?php echo implode(' && ', $td);?>";
-                var ret = [!(<?php echo implode(' && ', $dates);?>),'',!(<?php echo implode(' && ', $td);?>)?'':''];
-                 
-                return ret;
-                <?php endif; ?>
-                
-                <?php if(!empty($res_block_dates)):?>
-                        <?php foreach($res_block_dates as $date): ?>
-                            <?php
-                                list($year, $month, $day) = explode('-', $date['block_date']);
-                            ?>
-                            var b_date = new Date('<?php echo $year; ?>', '<?php echo $month-1; ?>', '<?php echo $day; ?>');
-                            var ret = [!(date == b_date),'',!(date == b_date)?'':''];                                                        
-                            return ret;
-                        <?php endforeach; ?>
-                <?php endif; ?>
-                return [date];
-            }, 
-        });//END
-        <?php endif; ?>
-
-
-    /*alacarte detail page*/
-    <?php if((isset($alacarte_start_date) && $alacarte_start_date != "")) : ?>
-    window.alacarte_schedule = <?php echo json_encode($alacarte_schedule_times);  ?>;
-    window.schedule = <?php echo json_encode($schedule);  ?>;
-    var alacarte_bl_dates = Array();
-    <?php 
-      if(!empty($alacarte_block_dates) && is_array($alacarte_block_dates)){
-        $tmp_bl_date = array();
-        foreach($alacarte_block_dates as $bl_date){
-          if($bl_date['ala_block_time'] != $rows[0]['start_time'].'-'.$rows[0]['end_time'] && !empty($bl_date['ala_block_time'])){
-            $tmp_bl_date[][$bl_date['ala_block_time']] = $bl_date['ala_block_date']; 
-          }
-        }
-    ?>
-      alacarte_bl_dates = <?php echo json_encode($tmp_bl_date);?>;
-    <?php           
-      }
-    ?> 
-      $("#ac_choose_date2").datepicker({
-        dateFormat: 'yy-m-d',
-        minDate: <?php echo $alacarte_startDate; ?>,
-        onSelect: function(dateText, inst) {
-          var d = $.datepicker.parseDate("yy-m-dd",  dateText);
-          
-          var bl_time_start = [];
-          var bl_time_end = [];
-          $.each(alacarte_bl_dates,function(key,val){
-            $.each(val,function(k,v){
-              if($.datepicker.formatDate( "yy-mm-dd", d) == v){
-                key = k.split('-');
-                
-                bl_time_start.push(key[0]);
-                bl_time_end.push(key[1]);
-              }
-            })
-          })
-          var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
-          var txt = '<div class="btn-group col-lg-10 pull-right ac_actives ">';
-          var txt2 = '';
-          var g = 1;
-          var cur_date =  new Date('<?php echo date('d M Y H:i:s'); ?>');
-          month = parseInt(cur_date.getMonth());
-          month += 1;
-          c_date = cur_date.getFullYear() + '-' + month +  '-'  + cur_date.getDate();
-          c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes();
-          for(key_sch in alacarte_schedule[datestrInNewFormat])
-          {   
-            var obj_length = Object.keys(alacarte_schedule[datestrInNewFormat]).length;
-            active_tab = (g == obj_length) ? 'active' : '' ;
-            active_blck = (g == obj_length) ? '' : 'hidden' ;  
-            txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="ac_'+key_sch+'">'+key_sch.toUpperCase()+'</label>';
-            txt2 +=    '<div id="ac_' + key_sch + '_tab"  class="'+active_blck+'">';
-            for(key_sch_time in alacarte_schedule[datestrInNewFormat][key_sch])
-            {
-              if(dateText == c_date){
-                var is_valid = true;
-                for (var i = 0; i < bl_time_start.length; i++) {
-                  
-                  if (String(key_sch_time) < String(bl_time_start[i]) || String(key_sch_time) > String(bl_time_end[i])) {
-                    console.log(String(key_sch_time)+" < "+String(bl_time_start[i])+" || "+String(key_sch_time) +"> "+String(bl_time_end[i]))
-                    is_valid = is_valid && true;
-
-                  } else {
-                    is_valid = is_valid && false;
-
-                  }
-
-                }
-                if(is_valid) {
-                  txt2+= '<div class="alacarte_time col-lg-3 col-xs-5" rel="' + alacarte_schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + alacarte_schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-                }
-
-              } else{
-                var is_valid = true;
-                for (var i = 0; i < bl_time_start.length; i++) {
-                  
-                  if (String(key_sch_time) < String(bl_time_start[i]) || String(key_sch_time) > String(bl_time_end[i])) {
-                    console.log(String(key_sch_time)+" < "+String(bl_time_start[i])+" || "+String(key_sch_time) +"> "+String(bl_time_end[i]))
-                    is_valid = is_valid && true;
-
-                  } else {
-                    is_valid = is_valid && false;
-
-                  }
-
-                }
-                if(is_valid) {
-                  txt2+= '<div class="alacarte_time col-lg-3 col-xs-5" rel="' + alacarte_schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + alacarte_schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-                }
-                
-              }                       
-            }
-            txt2+= '</div>';    
-            g++;
-          }
-          txt += '</div><div class="clearfix"></div>';
-          txt += '<input type="hidden" name="booking_time" id="alacarte_booking_time" value="">';
-            //$('#time').html(txt);
-            $('#alacarte_hours').html(txt2);
-            $('#alacarte_time').html(txt);
-          d = new Date('<?php echo date('d M Y H:i:s'); ?>');
-          month = parseInt(d.getMonth());
-          month += 1;
-          current_date = d.getFullYear() + '-' + month +  '-'  + d.getDate();
-          var select_table = $('#ac_select_table2');
-          var cant_select_table = $('#alacarte_cant_select_table');
-          if (current_date == dateText &&  (d.getHours() > 20 || (d.getHours() >= 20 && d.getMinutes()>=30))) {
-            cant_select_table.removeClass('hidden');
-            if(!select_table.hasClass('hidden')){
-              select_table.addClass('hidden');   
-            }
-          } else{
-            if(!cant_select_table.hasClass('hidden')){
-              cant_select_table.addClass('hidden');   
-            }
-            $('#ac_booking_date2').val(dateText);
-            $('#ac_date_edit2 span').text(formatDate(dateText));
-            $('#ac_date_edit2').click();
-            timehide=0;
-            $('#ac_time_edit2').click();
-            $('#ac_date_edit2').removeClass('hidden');
-          }
-        },
-        beforeShowDay: function(date) {
-
-          var weekday_cnd = $.datepicker.formatDate( "D", date).toLowerCase();
-          if(schedule[weekday_cnd] == undefined)
-          {
-            return new Array(false);
-          }
-          <?php
-            if(!empty($alacarte_block_dates) && is_array($alacarte_block_dates))
-            {
-              foreach($alacarte_block_dates as $bd)
-              {       
-                if($bd['ala_block_time'] == $rows[0]['start_time'].'-'.$rows[0]['end_time'] || empty($bd['ala_block_time'])){
-                  $tmp_bd[] = $bd['ala_block_date'];   
-                }
-              }
-              $bd_dates = implode('","',$tmp_bd);
-              $bd_dates = '"' . $bd_dates . '"';
-            }    
-            if(isset($bd_dates))
-            {
-          ?>
-          var bd_dates = new Array(<?php echo $bd_dates ?>);    
-          tmp_date = $.datepicker.formatDate('yy-mm-dd', date);
-          tmp_day = $.datepicker.formatDate('dd', date);
-          for(var i in bd_dates)
-          {
-            if(bd_dates[i] == tmp_date)
-            {      
-              return new Array(false,'closed_date');
-            }                      
-          }
-          <?php } if (!empty($rows[0]['weekdays'])): ?>
-          var td = date.getDay();
-          <?php
-            $dates = explode(',', $rows[0]['weekdays']);
-            $td = array();
-            $wd = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-            foreach ($dates as &$date) {
-              $td[] = 'td != \''.$wd[$date].'\'';
-              $date = 'date.getDay() != '.$date;
-            }
-          ?>
-          var dxk = "<?php echo implode(' && ', $dates);?>";
-          var dxkl = "<?php echo implode(' && ', $td);?>";
-          var ret = [!(<?php echo implode(' && ', $dates);?>),'',!(<?php echo implode(' && ', $td);?>)?'':''];
-           
-          return ret;
-          <?php endif; ?>
-          
-          <?php if(!empty($alacarte_block_dates)):?>
-              <?php foreach($alacarte_block_dates as $date): ?>
-                <?php
-                  list($year, $month, $day) = explode('-', $date['ala_block_date']);
-                ?>
-                var b_date = new Date('<?php echo $year; ?>', '<?php echo $month-1; ?>', '<?php echo $day; ?>');
-                var ret = [!(date == b_date),'',!(date == b_date)?'':''];                                                        
-                return ret;
-              <?php endforeach; ?>
-          <?php endif; ?>
-          return [date];
-        }, 
-      });//END
-      <?php endif; ?>
-    /*alacarte detail page*/
-        <?php if(isset($order) && is_array($order)):?>
-            var  timehide=0;
-        <?php endif;?>
-        $(document).on('click', '.time', function(){
-           $('#hours').find('.time_active').removeClass('time_active') 
-           $(this).addClass('time_active');
-           $('#time_edit1 span').text($(this).text()); 
-           $('#booking_time').val($(this).text());
-           $('#time_edit1').removeClass('hidden');
-           $('#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv').addClass('hidden');
-           timehide=1;
-           $('#time_edit1').click();
-           counter=$('#party_edit1 span').text();
-           str='';
-           for(var i=0;i<=counter;i++)
-           {
-               str+="<option value='"+i+"'>"+i+"</option>";
-           }
-           $('.meals select').html(str);
-           $('#meal_edit1').click();
-       });
-        $(document).on('click', '.ac_time', function(){
-           $('#ac_hours').find('.time_active').removeClass('time_active') 
-           $(this).addClass('time_active');
-           $('#ac_time_edit1 span').text($(this).text()); 
-           $('#ac_booking_time').val($(this).text());
-           $('#ac_time_edit1').removeClass('hidden');
-           $('#ac_cant_do_reserv1,#ac_cant_do_reserv2,#ac_brs_my_reserv').addClass('hidden');
-           timehide=1;
-           $('#ac_time_edit1').click();
-           counter=$('#ac_party_edit1 span').text();
-           str='';
-           for(var i=0;i<=counter;i++)
-           {
-               str+="<option value='"+i+"'>"+i+"</option>";
-           }
-           $('.meals select').html(str);
-           $('#ac_meal_edit1').click();
-       });
-
-     /*alacarte details page*/
-
-     $(document).on('click', '.alacarte_time', function(){
-           $('#alacarte_hours').find('.time_active').removeClass('time_active') 
-           $(this).addClass('time_active');
-           $('#ac_time_edit2 span').text($(this).text()); 
-           $('#alacarte_booking_time').val($(this).text());
-           $('#ac_time_edit2').removeClass('hidden');
-           $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass('hidden');
-           timehide=1;
-           $('#ac_time_edit2').click();
-           counter=$('#ac_party_edit2 span').text();
-           str='';
-           for(var i=0;i<=counter;i++)
-           {
-               str+="<option value='"+i+"'>"+i+"</option>";
-           }
-
-       });
-     /*alacarte details page*/
-         $('#time_edit1').click(function(){
-            $('#party_edit1').removeClass('hidden');
-            $('#date_edit1').removeClass('hidden');
-            if(timehide!=1)
-            {
-                $(this).addClass('hidden');
             } 
-            else 
-            {
-                timehide=0;
-                $(this).removeClass('hidden');   
-            }   
-       });
-        <?php if (isset($hasOrder) && $hasOrder != ""): ?>
-                <?php
-                    $dateJS = explode('-', $order['date']);
-                    $year = $dateJS[0];
-                    $month = $dateJS[1]-1;
-                    $day = $dateJS[2];
-                    $dateJS = "$year,$month,$day";
-                ?>
-             $( "#choose_date" ).datepicker("setDate", new Date(<?php echo $dateJS; ?>));
-       $( "#ac_choose_date" ).datepicker("setDate", new Date(<?php echo $dateJS; ?>));
-             $('#date .date').text(formatDate('<?php echo $order['date'];?>')).show();
-             $('#time .time1').text('<?php echo $order['time'];?>').show();
-            <?php endif; ?>
-           
-           <?php if(empty($logged_in) && (isset($details['make_reservation_opt']) && $details['make_reservation_opt']==1)):?>
-               logged_in = "1";
-            <?php endif ?>
-   $('#make_reservation').click(function(){
-       $('#booking_form').submit();
-   })  
+            /*else {
+                $.ajax({
+                    url: "/experience/request_reg",
+                    type: "GET",
+                    data: {
+                        location: $("#locations1").val(),
+                        outlet: $("#locations1 option:selected").text(),
+                        date: $("#date_edit1 span").text(),
+                        time: $("#time_edit1 span").text(),
+                        non_veg: $("#non_veg").val(),
+                        alcohol: $("#alcohol").val(),
+                        qty: $("#party_edit1 span").text(),
+                        slug: $("#slug").val()
+                    },
+                    success: function() {},
+                    error: function() {},
+                    cache: false
+                })
+            }*/
+        } else {
+            $("#select_table_exp").addClass("hidden");
+            $("#select_all_data").removeClass("hidden")
+        }
+    });
 
-  $('#ac_make_reservation').click(function(){
-       $('#ac_booking_form').submit();
-   })
+    $("#ac_select_table2_ala").click(function(e) {
+            e.preventDefault();
+            if ($("#ac_booking_date2").val() && $("#alacarte_booking_time").val()) {
+                
+                if (logged_in == "1") {
+                   has_reserv = false;
+                    $.ajax({
+                        url: "/orders/check_alaorder_exists",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: $('#booking_form').serialize(),
+                        async: false,
+                        success: function(e) {
+                            if (e.status == 'error') {
+                                has_reserv = true;
+                                $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').removeClass("hidden");
+                                $("#ac_select_table2_ala").addClass("hidden");
+                            } else {
+                                $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass("hidden");
+                                $("#ac_select_table2_ala").removeClass("hidden");
+                                $("#ac_select_all_data2").addClass("hidden");
+                                has_reserv = false
+                            }
+                        }
+                    });
+                    $("#alacarte_load_layer").hide();
+                        if (!has_reserv) {
+                            $("#jump2-expres").addClass("hidden");
+                            $("#ac_reserv_table2").slideUp();
+                            $(this).addClass("hidden");
+                            if (open_order_info) {
+                                $("#ac_order_info2").slideDown()
+                            }
+                            $("#ac_order_info2").removeClass("hidden");
+                            full_info = $("#ac_party_edit2 span").text() + " people - " + $("#ac_time_edit2 span").text() + " - " + $("#ac_date_edit2 span").text();
+                            //console.log("full info = "+full_info);
+                            $("#ac_fullinfo2").html("<strong>" + full_info + "</strong>")
+                    }
 
-  $('#alacarte_make_reservation').click(function(){
-       $('#alacarte_booking_form').submit();
-   })
-           
-  $('#booking_form').submit(function(){
-        var error = false;
+                        
+                } 
+                /*else {
+                    $.ajax({
+                        url: "/experience/request_reg",
+                        type: "GET",
+                        data: {
+                            location: $("#locations1").val(),
+                            outlet: $("#locations1 option:selected").text(),
+                            date: $("#date_edit1 span").text(),
+                            time: $("#time_edit1 span").text(),
+                            non_veg: $("#non_veg").val(),
+                            alcohol: $("#alcohol").val(),
+                            qty: $("#party_edit1 span").text(),
+                            slug: $("#slug").val()
+                        },
+                        success: function() {},
+                        error: function() {},
+                        cache: false
+                    })
+                }*/
+            } else {
+                $("#ac_select_table2_ala").addClass("hidden");
+                $("#select_all_data").removeClass("hidden")
+            }
+        });
+            
         
+    $(document).ready(function(){ 
+
+      $('#make_reservation').click(function(){
+       $('#booking_form').submit();
+      })  
+
+      $('#alacarte_make_reservation').click(function(){
+         $('#alacarte_booking_form').submit();
+     })
+           
+    $('#booking_form').submit(function(){
+        var error = false;        
         email = $('#email').val();
         fullname = $.trim($('#fullname').val());
         phone = $('#phone').val();
@@ -1993,20 +1473,22 @@ var google_remarketing_only = true;
             date_time = date + ' ' + time;
             $('#fulltime').val(date_time);
             
-            price = parseFloat(<?php echo isset($rows[1])?$rows[1]['post_tax_price']:'' ; ?>);
-            post_price = parseFloat(<?php echo isset($rows[1])?$rows[1]['post_tax_price']:''; ?>);
+            price = parseFloat(<?php echo isset($arrExperience['data'])?$arrExperience['data']['post_tax_price']:'' ; ?>);
+            post_price = parseFloat(<?php echo isset($arrExperience['data'])?$arrExperience['data']['post_tax_price']:''; ?>);
             
-            if ($('#non_veg').length > 0)
+            /*if ($('#non_veg').length > 0)
                 non_veg_qty = parseInt($('#non_veg').val());
-            else
+            else*/
                 non_veg_qty = 0;
             qty = parseInt($('#party_size1').val());    
-            if ($('#alcohol').length > 0)
+            /*if ($('#alcohol').length > 0)
                 alcohol_qty = parseInt($('#alcohol').val());
-            else
+            else*/
                 alcohol_qty = 0;
-            non_veg_price = parseFloat(<?php echo isset($rows[1])?$rows[1]['price_non_veg']:'';?>);
-            alcohol_price = parseFloat(<?php echo isset($rows[1])?$rows[1]['price_alcohol']:'';?>);
+            //non_veg_price = parseFloat(<?php echo isset($rows[1])?$rows[1]['price_non_veg']:'';?>);
+            //alcohol_price = parseFloat(<?php echo isset($rows[1])?$rows[1]['price_alcohol']:'';?>);
+            non_veg_price = 0;
+            alcohol_price = 0;
             amount = qty * price + non_veg_qty * non_veg_price + alcohol_qty * alcohol_price;
             post_amount = qty * post_price + non_veg_qty * non_veg_price + alcohol_qty * alcohol_price;
             $('#amount').val(amount);
@@ -2074,60 +1556,8 @@ var google_remarketing_only = true;
         }
     });
 
-  <?php if((isset($alacarte_start_date) && $alacarte_start_date != "")) { ?>
-    /*alacarte detail page*/
-    $('#alacarte_booking_form').submit(function(){
-      var error = false;        
-      email = $('#alacarte_email').val();
-      fullname = $.trim($('#alacarte_fullname').val());
-      phone = $('#alacarte_phone').val();
-      special = $('#alacarte_special').val();        
-      if (email == '') {
-        error = true;
-        $('#alacarte_error_email').text('Please enter a valid email.');
-      } else {
-        $('#alacarte_error_email').empty();
-      }        
-      var check_fullname = fullname.split(' ');
-      if (fullname == '' || check_fullname.length < 2) {
-        error = true;
-        $('#alacarte_error_fullname').text('Please enter your first and last name.');
-      } else if(fullname.length <= 2){
-         error = true;
-         $('#alacarte_error_fullname').text('Please enter your full name.'); 
-      } else {
-        $('#alacarte_error_fullname').empty();
-      }
-      
-      if (phone == '' || phone.length < 10) {
-        error = true;
-        $('#alacarte_error_phone').text('Please enter a valid telephone number.');
-      } else {
-        $('#alacarte_error_phone').empty();
-      }
-      if (error){
-        $('#alacarte_load_layer').hide();
-        return false;
-      }
-      else {
-        time = $('#alacarte_booking_time').val();            
-        date = $('#ac_booking_date2').val();
-        date = date.split('-');
-        date = date[1] + '/' + date[2] + '/' + date[0];
-        date_time = date + ' ' + time;
-        $('#ac_fulltime2').val(date_time);
-        
-        price = parseFloat(<?php echo $rows[0]['price'] ; ?>);
-        
-        qty = parseInt($('#ac_party_size2').val());    
-
-        $('#ac_amount2').val(price);
-        $('#alacarte_load_layer').show();
-      }
-    });
-    /*alacarte detail page*/
-  <?php } ?>
-        $("#jump2-alacarte").click(function(){
+  
+    $("#jump2-alacarte").click(function(){
         $("#ReservationBox").css('display','none');
       $("#AlacarteBox").fadeIn();
     }); 

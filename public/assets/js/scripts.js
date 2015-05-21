@@ -1112,6 +1112,11 @@ $(document).ready(function() {
         }
     });
     $("#party_size1").change(function(e) {
+        $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").addClass("hidden");
+        $("#select_table_exp").removeClass("hidden");
+        $("#select_all_data").addClass("hidden");
+        $("#or_reservation").removeClass("hidden");
+
         size = $(this).val();
         $("#party_edit1 span").text(size);
         sizehide = 1;
@@ -1121,10 +1126,11 @@ $(document).ready(function() {
             $("#date_edit1").click()
         } else if ($("#time_edit1 span").text() == "") {
             $("#time_edit1").click()
-        } else if (!$("#collapseFour").hasClass("in")) {
+        } else if ($("#collapseFour").hasClass("in")) {
             $("#meal_edit1").click()
         }
     });
+
     $("#ac_party_size1").change(function(e) {
         size = $(this).val();
         $("#ac_party_edit1 span").text(size);
@@ -1171,11 +1177,38 @@ $(document).ready(function() {
         } else if ($("#collapseFour").hasClass("in")) {
             $("#meal_edit1").click()
         }
+
         $("#party_size1").removeClass("hidden");
         $("#location_edit").removeClass("hidden");
         $(this).addClass("hidden")
     });
+
+
+
+    $('#time_edit1').click(function(){
+          $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").addClass("hidden");
+          $("#select_table_exp").removeClass("hidden");
+          $("#select_all_data").addClass("hidden");
+          $("#or_reservation").removeClass("hidden");
+          $('#party_edit1').removeClass('hidden');
+          $('#date_edit1').removeClass('hidden');
+          if(timehide!=1)
+          {
+              $(this).addClass('hidden');
+          } 
+          else 
+          {
+              timehide=0;
+              $(this).removeClass('hidden');   
+          }   
+     });
+
     $("#date_edit1").click(function() {
+        $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").addClass("hidden");
+        $("#select_table_exp").removeClass("hidden");
+        $("#select_all_data").addClass("hidden");
+        $("#or_reservation").removeClass("hidden");
+
         if ($("#collapseThree").hasClass("in")) {
             $("#time_edit1").click()
         } else if ($("#collapseFour").hasClass("in")) {
@@ -1202,13 +1235,13 @@ $(document).ready(function() {
         $("#ac_party_size1").addClass("hidden")
     });
     $("#time_edit1").click(function() {
-        if ($("#collapseTwo").hasClass("in")) {
-            $("#date_edit1").click()
-        } else if ($("#collapseFour").hasClass("in")) {
+        
+        if ($("#collapseFour").hasClass("in")) {
             $("#meal_edit1").click()
         }
         $("#party_size1").addClass("hidden");
         $("#party_edit1").removeClass("hidden")
+        $("#party_size1").addClass("hidden")
     });
     $(document).on("click", ".actives label", function() {
         label_id = $(this).attr("id");
@@ -1237,13 +1270,13 @@ $(document).ready(function() {
         $("#time_edit").removeClass("hidden");
         timehide = 1;
         $("#time_edit").click();
-        counter = $("#party_edit span").text();
+        counter = $("#party_edit1 span").text();
         str = "";
         for (var e = 0; e <= counter; e++) {
             str += "<option value='" + e + "'>" + e + "</option>"
         }
         $(".meals select").html(str);
-        $("#meal_edit").click();
+        $("#meal_edit1").click();
         ifchangedparams()
     });
 
@@ -1267,70 +1300,7 @@ $(document).ready(function() {
     });
 	/*** end alacarte details*/
     var open_order_info = false;
-    $("#select_table").click(function(e) {
-        e.preventDefault();
-        if ($("#booking_date").val() && $("#booking_time").val()) {
-            if (logged_in == "1") {
-                has_reserv = false;
-                $.ajax({
-                    url: "/orders/check_order_exists",
-                    type: "POST",
-                    data: {
-                        booking_date: $("#booking_date").val(),
-                        booking_time: $("#booking_time").val()
-                    },
-                    async: false,
-                    success: function(e) {
-                        if (e == 1) {
-                            has_reserv = true;
-                            $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").removeClass("hidden");
-                            $("#select_table").addClass("hidden");
-                            $("#or_reservation").addClass("hidden")
-                        } else {
-                            $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").addClass("hidden");
-                            $("#select_table").removeClass("hidden");
-                            $("#select_all_data").addClass("hidden");
-                            $("#or_reservation").removeClass("hidden");
-                            has_reserv = false
-                        }
-                    }
-                });
-                if (!has_reserv) {
-                    $("#jump2-alacarte").addClass("hidden");
-                    $("#reserv_table").slideUp();
-                    $(this).addClass("hidden");
-                    $("#or_reservation").addClass("hidden");
-                    if (open_order_info) {
-                        $("#order_info").slideDown()
-                    }
-                    $("#order_info").removeClass("hidden");
-                    full_info = $("#party_edit1 span").text() + " people - " + $("#time_edit1 span").text() + " - " + $("#date_edit1 span").text();
-                    $("#fullinfo").html("<strong>" + full_info + "</strong>")
-                }
-            } else {
-                $.ajax({
-                    url: "/experience/request_reg",
-                    type: "GET",
-                    data: {
-                        location: $("#locations1").val(),
-                        outlet: $("#locations1 option:selected").text(),
-                        date: $("#date_edit1 span").text(),
-                        time: $("#time_edit1 span").text(),
-                        non_veg: $("#non_veg").val(),
-                        alcohol: $("#alcohol").val(),
-                        qty: $("#party_edit1 span").text(),
-                        slug: $("#slug").val()
-                    },
-                    success: function() {},
-                    error: function() {},
-                    cache: false
-                })
-            }
-        } else {
-            $("#select_table").addClass("hidden");
-            $("#select_all_data").removeClass("hidden")
-        }
-    });
+    
     $("#ac_select_table").click(function(e) {
         e.preventDefault();
         if ($("#ac_booking_date").val() && $("#ac_booking_time").val()) {
@@ -1461,7 +1431,7 @@ $(document).ready(function() {
     $("#info_edit1").click(function() {
         open_order_info = true;
         $("#reserv_table").slideDown();
-        $("#select_table").removeClass("hidden");
+        $("#select_table_exp").removeClass("hidden");
         $("#select_all_data").addClass("hidden");
         $("#or_reservation").removeClass("hidden");
         $("#jump2-alacarte").removeClass("hidden");
@@ -1490,17 +1460,25 @@ $(document).ready(function() {
     $(document).on("click", ".time", function() {
         $("#time_edit1 span").text($(this).text());
         $("#time_edit1").removeClass("hidden");
-        $("#select_table").removeClass("hidden");
+        $("#select_table_exp").removeClass("hidden");
         $("#select_all_data").addClass("hidden");
         $("#or_reservation").removeClass("hidden");
         $("#time_edit1").click()
+        counter = $("#party_edit1 span").text();
+        str = "";
+        for (var e = 0; e <= counter; e++) {
+            str += "<option value='" + e + "'>" + e + "</option>"
+        }
+        $(".meals select").html(str);
+        $("#meal_edit1").click();
+        ifchangedparams()
     });
 
 	/*starts alacarte details*/
 	$(document).on("click", ".alacarte_time", function() { console.log("called");
         $("#ac_time_edit2 span").text($(this).text());
         $("#ac_time_edit2").removeClass("hidden");
-        $("#ac_select_table2").removeClass("hidden");
+        $("#ac_select_table2_ala").removeClass("hidden");
         $("#ac_select_all_data2").addClass("hidden");
         $("#or_reservation").removeClass("hidden");
         $("#ac_time_edit2").click()
@@ -1630,6 +1608,11 @@ $(document).ready(function() {
     });
 	/*starts alacarte*/
 	$("#ac_date_edit2").click(function() {
+        $("#ac_time_edit2").removeClass("hidden");
+        $("#ac_select_table2_ala").removeClass("hidden");
+        $("#ac_select_all_data2").addClass("hidden");
+        $("#or_reservation").removeClass("hidden");
+
         if ($("#ac_collapseThree").hasClass("in")) {
             $("#ac_time_edit2").click()
         } /*else if ($("#ac_collapseFour").hasClass("in")) {
@@ -1654,6 +1637,11 @@ $(document).ready(function() {
     });
 	/* starts alacarte*/
 	$("#ac_time_edit2").click(function() {
+        $("#ac_time_edit2").removeClass("hidden");
+        $("#ac_select_table2_ala").removeClass("hidden");
+        $("#ac_select_all_data2").addClass("hidden");
+        $("#or_reservation").removeClass("hidden");
+
         if ($("#ac_collapseTwo").hasClass("in")) {
             $("#ac_date_edit2").click()
         } /*else if ($("#ac_collapseFour").hasClass("in")) {

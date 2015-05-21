@@ -116,7 +116,7 @@ class AlacarteController extends Controller {
     }
 
      function details($city='',$alaslug = ''){
-        //DB::connection()->enableQueryLog();
+        DB::connection()->enableQueryLog();
 
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
@@ -143,6 +143,17 @@ class AlacarteController extends Controller {
         $arrALaCarte = $this->alacarte_model->getALaCarteDetails($aLaCarteID);
 
         $data['arrALaCarte']= $arrALaCarte;
+        $data['reserveData']            = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
+        $data['block_dates']            = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
+        $data['schedule']               = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);
+        
+        /*echo '<pre>';
+        print_r($data['arrALaCarte']);
+        print_r( $data['reserveData']);
+        print_r( $data['block_dates']);
+        print_r( $data['schedule']);
+        echo '</pre>';*/
+
         $data['hasOrder']   =''; 
         $data['allow_guest']='Yes';
         $data['current_city']  = strtolower($city);
@@ -269,5 +280,100 @@ class AlacarteController extends Controller {
 
         $arrExpData = $this->alacarte_model->getAlaCarteAreaCuisineByName($arrSubmittedData);
         echo json_encode($arrExpData);
+    }
+
+    public function alaorder()
+    {
+        $dataPost['reservationDate'] = Input::get('booking_date');
+        $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
+        $dataPost['reservationTime'] = Input::get('booking_time');
+        $dataPost['partySize'] = Input::get('qty');
+        $dataPost['vendorLocationID'] = Input::get('address');
+        $dataPost['guestName'] = Input::get('fullname');
+        $dataPost['guestEmail'] = Input::get('email');
+        $dataPost['phone'] = Input::get('phone');
+        $dataPost['reservationType'] = 'alacarte';
+        $dataPost['specialRequest'] = Input::get('special');
+        $dataPost['addon']          = Input::get('add_ons');
+        //$dataPost['access_token'] = Session::get('id');
+
+       
+
+        $arrRules = array(
+                            'reservationDate' => 'required|date',
+                            'reservationDay' => 'required',
+                            'reservationTime' => 'required',
+                            'partySize' => 'required|integer',
+                            'vendorLocationID' => 'required|not_in:0',
+                            'guestName' => 'required|max:255',
+                            'guestEmail' => 'required|email|max:255',
+                            'phone' => 'required',
+                            'reservationType' => 'required|in:experience,alacarte,event',
+                            'specialRequest' => 'max:512'//,
+                            //'reservationID' => 'sometimes|required|exists:reservation_details,id'
+                        ) ;
+
+        $validator = Validator::make($dataPost,$arrRules);
+        
+        if($validator->fails()) {
+            $message = $validator->messages();
+            $errorMessage = "";
+            foreach($data as $key => $value) {
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            
+           return redirect()->back()->withErrors($validator);          
+        }
+        else {
+            $userID = Session::get('id');
+        
+            if($userID > 0) {
+                //validating the information submitted by users
+                $arrResponse = $this->alacarte_model->validateReservationData($dataPost);
+            
+            if($arrResponse['status'] == 'success') {
+                    $arrResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);            
+                }
+            }
+            else {
+                return redirect()->back()->withErrors($validator);   
+            }
+        }
+
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');        
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+
+        return response()->view('frontend.pages.thankyou',$arrResponse);
+    }
+
+    public function alaorderexists()
+    {
+        $dataPost['reservationDate']    = Input::get('booking_date');
+        $dataPost['reservationDay']     =  date("D", strtotime($dataPost['reservationDate']));
+        $dataPost['reservationTime']    = Input::get('booking_time');
+        $dataPost['partySize']          = Input::get('qty');
+        $dataPost['vendorLocationID']   = Input::get('address');
+        $dataPost['guestName']          = Input::get('fullname');
+        $dataPost['guestEmail']         = Input::get('email');
+        $dataPost['phone']              = Input::get('phone');
+        $dataPost['reservationType']    = 'alacarte';
+        $dataPost['specialRequest']     = Input::get('special');
+        $dataPost['access_token']       = Session::get('id');
+
+        $arrData = $this->alacarte_model->validateReservationData($dataPost);
+        echo json_encode($arrData);
     }
 }
