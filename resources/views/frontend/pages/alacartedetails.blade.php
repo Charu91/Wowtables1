@@ -1,6 +1,7 @@
 @extends('frontend.templates.details_pages')
 
 @section('content')
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <div class="container deal-detail">
 
 <style>
@@ -141,8 +142,8 @@
             <div class="tab-content">
               <div class="tab-pane fade in active" id="info">
                <p><p>
-  <?php echo $arrALaCarte['data']['resturant_information']?></p>
-</p>
+                <?php echo $arrALaCarte['data']['resturant_information']?></p>
+              </p>
                 <hr> 
                 <div class="">
                                                             <?php echo $arrALaCarte['data']['location_address']['address_line'];?><br>
@@ -384,8 +385,7 @@
              <form role='form' method="post" action="{{URL::to('/')}}/orders/restaurant_checkout" id="alacarte_booking_form">  
              <div class="panel-group reservation-accordian" id="ac_accordion">
              <div id="ac_reserv_table2">
-       <input type="hidden" name="address_keyword" value="<?php echo $arrALaCarte['data']['location_address']['area']; ?>">
-                <input type="hidden" name="address" value="<?php echo $arrALaCarte['data']['location_address']['address_line']?>">
+        <input type="hidden" name="address" id='ac_locations2' value="<?php echo $arrALaCarte['data']['id'];?>">   
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
                   <h4 class="panel-title">
@@ -395,11 +395,12 @@
                             <option value="0">SELECT</option>
                             
                             <?php 
-                            /*
-                            $min_num = $rows[0]['min_num_tickets']; 
-
-                            $max_num = $rows[0]['max_num_tickets'];
-                            for ($i = $min_num; $i <= $max_num; $i++): ?>
+                            $exp_location_id = $arrALaCarte['data']['id'];                          
+                            $min_num = ($reserveData[$exp_location_id]['min_people'])?$reserveData[$exp_location_id]['min_people']:0;
+                            $max_num = ($reserveData[$exp_location_id]['max_people'])?$reserveData[$exp_location_id]['max_people']:0; 
+                            if($max_num > 0)
+                            {
+                            for ($i = $min_num; $i <= $max_num;): ?>
                                 <?php
                                     $selected = '';
                                     if ($hasOrder && $order['qty'] == $i)
@@ -409,8 +410,10 @@
                                     $peop_name = ($i == 1) ? 'Person' : 'People';
                                 ?>
                                 <option value="<?php echo $i?>"<?php echo $selected;?>><?php echo $i?> <?php echo $peop_name ?></option>
-                            <?php endfor; 
-                            */
+                            <?php 
+                            $i = $i+(int)$reserveData[$exp_location_id]['increment'];
+                            endfor; 
+                            }
                             ?>
                         </select>
                         <strong><a id="ac_party_edit2" href="javascript:" class="<?=($hasOrder)? '' : 'hidden';?>" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder)? $order['qty'] : '';?></span> EDIT</a></strong>
@@ -499,6 +502,18 @@
                 <div id="alacarte_load_layer">
                 <img src="/images/loading.gif">
                 </div>
+                <?php 
+                $user_array = Session::all();
+                $user_data = array();
+                if (Session::has('logged_in'))
+                {
+                  $user_data=$user_array;
+                }
+                else{
+                    $user_data['full_name']='Guest';
+                }     
+
+                ?>
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a href="javascript:" style="text-decoration: none; font-size: 13px;" id='ac_fullinfo2'>
@@ -512,17 +527,17 @@
                   <p style="font-size: 12px; text-align: center;">RESERVATION INFORMATION</p> 
                    <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-envelope"></i></span>
-                      <input type="email" name="email" id="alacarte_email" class="form-control" placeholder="EMAIL" value="<?=(!empty($user))? $user['email_address'] :'';?>">
+                      <input type="email" name="email" id="alacarte_email" class="form-control" placeholder="EMAIL" value="<?=(isset($user_data['email']))? $user_data['email'] :'';?>">
                     </div>  
                     <div class="reservation_errors" id="alacarte_error_email"></div> 
                     <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-user"></i></span>
-                      <input type="text" name="fullname" id="alacarte_fullname" class="form-control" placeholder="FULL NAME" value="<?=(!empty($user))? $user['full_name']:''; ?>">
+                      <input type="text" name="fullname" id="alacarte_fullname" class="form-control" placeholder="FULL NAME" value="<?=(isset($user_data['full_name']))? $user_data['full_name'] :'';?>">
                     </div> 
                     <div class="reservation_errors" id="alacarte_error_fullname"></div> 
                     <div class="input-group">
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-earphone"></i></span>
-                      <input type="text" name="phone" id="alacarte_phone" class="form-control" placeholder="MOBILE" value="<?=(!empty($user))? $user['phone']:''; ?>">
+                      <input type="text" name="phone" id="alacarte_phone" class="form-control" placeholder="MOBILE" value="<?=(isset($user_data['phone']))? $user_data['phone'] :'';?>">
                     </div>
                     <div class="reservation_errors" id="alacarte_error_phone"></div> 
                     <div class="input-group">
@@ -543,7 +558,7 @@
                 <a class="btn btn-warning hidden" id="alacarte_brs_my_reserv" href="/users/myreservations">View My Existing Reservations</a>
                 <p class="hidden" id="alacarte_cant_do_reserv2">If you have any queries please call our concierge desk.</p> 
                 <div class="text-center select-all-data hidden" id="ac_select_all_data2">Please select all data</div>
-                <a  class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(isset($allow_guest) && $allow_guest == "Yes") ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='ac_select_table2'>SELECT TABLE</a>
+                <a  class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && isset($allow_guest) && $allow_guest == "Yes") ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='ac_select_table2_ala'>SELECT TABLE</a>
               </div>
 
         <p class="text-center" style="margin-top:-7px;">
@@ -877,33 +892,144 @@
           $("#menu").addClass("active");
         }
 
-    $("#send_tip").on("click",function(){
-      var v = $("textarea#suggest_expert_tip").val();
 
-      var uname = $("#user_name").val();
-      var uemail = $("#user_email").val();
-      var ala_id = $("#alacarte_exp_id").val();
-      var u_id = $("#user_id").val();
-      
-      if(v.length > 0 ){
-        //console.log("value == "+v);
-        $.ajax({
-          url: "{{URL::to('/')}}/alacarte/send_suggest_tip",
-          dataType: "JSON",
-          type: "post",
-          data: {user_id:u_id, alacarte_id:ala_id, user_name:uname, user_email:uemail, tip:v},
-          success: function(d) {
-            //console.log("response = "+d.email_send_status);
-            if(d.email_send_status == "success")
-              $("#email_status_message").html("Thank you for your suggestion. Our curators will review and add it to the list. 500 Gourmet Points have been awarded to you.").delay(9000).fadeOut(500);
-            else
-              $("#email_status_message").html("Something went wrong. Please try again");
-          }
-        });
-        $("textarea#suggest_expert_tip").val('');
-        
-      }
-    });
+          $("#send_tip").on("click",function(){
+            var v = $("textarea#suggest_expert_tip").val();
+
+            var uname = $("#user_name").val();
+            var uemail = $("#user_email").val();
+            var ala_id = $("#alacarte_exp_id").val();
+            var u_id = $("#user_id").val();
+            
+            if(v.length > 0 ){
+              //console.log("value == "+v);
+              $.ajax({
+                url: "{{URL::to('/')}}/alacarte/send_suggest_tip",
+                dataType: "JSON",
+                type: "post",
+                data: {user_id:u_id, alacarte_id:ala_id, user_name:uname, user_email:uemail, tip:v},
+                success: function(d) {
+                  //console.log("response = "+d.email_send_status);
+                  if(d.email_send_status == "success")
+                    $("#email_status_message").html("Thank you for your suggestion. Our curators will review and add it to the list. 500 Gourmet Points have been awarded to you.").delay(9000).fadeOut(500);
+                  else
+                    $("#email_status_message").html("Something went wrong. Please try again");
+                }
+              });
+              $("textarea#suggest_expert_tip").val('');
+              
+            }
+          });
+
+          loadDatePicker();
        });
+
+        var disabledAllDays = <?php echo json_encode($block_dates);?>;
+        var allschedule = <?php echo json_encode($schedule);  ?>;
+        var reserveminmax = <?php echo json_encode($reserveData);  ?>;
+
+        function disableAllTheseDays(date) {
+            var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
+            var location_id = $('#ac_locations2').val();
+            var disabledDays = disabledAllDays[location_id];
+            if(disabledDays != undefined)
+            {
+              for (i = 0; i < disabledDays.length; i++) {
+                  m=m+1;
+                  mon=m.toString();
+                  if(mon.length <2){
+                      m="0"+m;
+                  }
+                  day=d.toString();
+                  if(day.length <2){
+                      d="0"+d;
+                  }
+                  if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                      return [false];
+                  }
+              }
+            }
+            return [true];
+        }
+
+        
+
+        function loadDatePicker() {
+          //$("#ac_choose_date2").datepicker("destroy");
+         
+          $("#ac_choose_date2").datepicker({
+             dateFormat: 'yy-mm-dd',
+             minDate: 'new Date()',
+             beforeShowDay: disableAllTheseDays,
+             onSelect: function(dateText, inst) 
+             {
+                    var d = $.datepicker.parseDate("yy-m-dd",  dateText);
+                   
+                    var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                    var txt = '<div class="btn-group col-lg-10 pull-right ac_actives ">';
+                    var txt2 = '';
+                    var g = 1;
+                    var cur_date =  new Date('<?php echo date('d M Y H:i:s'); ?>');
+                    month = parseInt(cur_date.getMonth());
+                    month += 1;
+                    c_date = cur_date.getFullYear() + '-' + ((month<10)?'0':'')+month +  '-'  + cur_date.getDate();
+                    c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
+                    
+                    //console.log(c_date);
+                    //console.log(dateText);
+                    /*Time display container*/
+                      var location_id = $('#ac_locations2').val();
+                      var schedule = allschedule[location_id];
+                      //console.log(schedule);
+                      if(schedule != undefined)
+                      {
+                        for(key_sch in schedule[datestrInNewFormat])
+                        {   
+                            
+                            var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
+                            active_tab = (g == obj_length) ? 'active' : '' ;
+                            active_blck = (g == obj_length) ? '' : 'hidden' ;  
+                            txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="ac_'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
+                            txt2 +=    '<div id="ac_' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+                            for(key_sch_time in schedule[datestrInNewFormat][key_sch])
+                            {
+                               if(c_date == dateText)
+                               {
+                                 if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                   txt2 += '<div class="alacarte_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                 } 
+                               }  
+                               else
+                               {
+                                 txt2 += '<div class="alacarte_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                               }                          
+                                                       
+                            }
+                            txt2+= '</div>';    
+                            g++;
+                        }
+                      }
+                      /*Time display container*/
+
+
+                    txt += '</div><div class="clearfix"></div>';
+                    txt += '<input type="hidden" name="booking_time" id="alacarte_booking_time" value="">';
+                            $('#alacarte_hours').html(txt2);
+                            $('#alacarte_time').html(txt);
+
+                    
+                    $('#ac_booking_date2').val(dateText);
+                    $('#ac_date_edit2 span').text(formatDate(dateText));
+                    $('#ac_date_edit2').click();
+                    timehide=0;
+                    $('#ac_time_edit2').click();
+                    $('#ac_date_edit2').removeClass('hidden');
+
+
+              }
+          });
+          //$( "#ac_choose_date2" ).datepicker("refresh");
+      }
+
   </script>
 @endsection

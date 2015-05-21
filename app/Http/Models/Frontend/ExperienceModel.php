@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Models\Frontend;
 use DB;
 use Config;
+use URL;
 /**
  * Class User
  * @package WowTables\Http\Models
@@ -625,6 +626,7 @@ class ExperienceModel {
                     'total_reviews' => $arrReviews['total_rating'],
                     'review_detail' => $arrReviews['reviews'],
                     'cuisine' => (array_key_exists($expResult->id, $arrCuisines)) ? $arrCuisines[$expResult->id]:array(),
+                    //'product_vendor_location_id' => $expResult->product_vendor_location_id,
                     'location' => $arrLocation,
                     'addons' => $arrAddOn,
                     'similar_option' => array(),
@@ -722,7 +724,7 @@ class ExperienceModel {
               ->leftJoin('locations as l1', 'l1.id','=','vla.area_id')
               ->leftJoin('locations as l2', 'l2.id','=','vla.city_id')
               ->leftJoin('locations as l3', 'l3.id','=','vla.state_id')
-              ->select('l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
+              ->select('pvl.id as vendor_location_id','l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
               ->where('pvl.product_id',$productID)
               ->get();
     
@@ -732,6 +734,7 @@ class ExperienceModel {
       foreach($queryResult as $row) {
 
         $arrLocation[] = array(
+                  "vendor_location_id" => $row->vendor_location_id,
                   "address_line" => $row->address,
                   "area" => $row->area,
                   "city" => $row->city,
@@ -856,5 +859,281 @@ class ExperienceModel {
     
     return $arrData;
   }
+
+
+  public static function getExperienceLimit($experienceID) {
+    $queryResult = DB::table('product_vendor_locations as pvl') 
+              ->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id') 
+              ->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
+              ->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
+              ->join('locations as l1', 'l1.id', '=', 'vla.area_id') 
+              ->where('pvl.product_id', $experienceID) 
+              ->select('pvl.id as vendor_location_id','pvl.vendor_location_id as id', 'l1.name as area', 
+                  'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
+                  'pvll.max_people_per_reservation', 'pvll.min_people_increments',
+                  'pvl.product_id as experience_id','pvl.id as pvl_id') 
+              ->get();
+
+
+    #array to read experiences and location limits
+    $arrLocLmt = array();
+
+    foreach ($queryResult as $row) {
+      $arrLocLmt[$row->vendor_location_id] = array(
+                  'experience_id' => $row->experience_id,
+                  'vl_id' => $row->id, 
+                  'area' => $row->area, 
+                  'min_people' => (is_null($row->min_people_per_reservation)) ? '' : $row->min_people_per_reservation, 
+                  'max_people' => (is_null($row->max_people_per_reservation)) ? '' : $row->max_people_per_reservation, 
+                  'increment' => (is_null($row->min_people_increments)) ? '' : $row->min_people_increments, 
+                  //'latitude' => $row->latitude, 
+                  //'longitude' => $row->longitude, 
+                );
+    }
+
+    return $arrLocLmt;
+  }
+
+  
+
+  public function getExperienceBlockDates($expId=0)
+  {
+      $queryResult = DB::table('product_vendor_locations as pvl') 
+              ->leftJoin('product_vendor_location_block_schedules as pvlbs', 'pvlbs.product_vendor_location_id','=','pvl.id') 
+              ->where('pvl.product_id', $expId) 
+              ->select('pvl.id as vendor_location_id', 'block_date') 
+              ->get();
+
+
+      $arrBlockedDate = array();
+    
+      foreach($queryResult as $row){
+        $formatted_date = '';
+        if(!empty($row->block_date))
+        {
+          $formatted_date =  date('m-d-Y',strtotime($row->block_date));
+        }
+
+        if(array_key_exists($row->vendor_location_id, $arrBlockedDate)) {
+          $arrBlockedDate[$row->vendor_location_id][] = $formatted_date;
+        }
+        else {
+          $arrBlockedDate[$row->vendor_location_id] = array($formatted_date);  
+        }
+
+
+      }
+
+     return $arrBlockedDate;
+
+  }
+
+  public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+    
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID) 
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.id','ts.time','ts.slot_type') 
+            ->get();
+
+             
+    #array to hold information
+    $arrData = array();
+    
+    if($schedules) {
+      foreach($schedules as $row) {
+
+        $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = $row->time;
+        
+      }
+    }
+    return $arrData;
+  }
+
+  public static function checkBookingTimeRangeLimits($arrData) {
+     $queryResult = DB::table('product_vendor_location_booking_time_range_limits')
+              ->where('product_vendor_location_id',$arrData['vendorLocationID'])
+              ->where('day',$arrData['reservationDay'])
+              ->orWhere('date',$arrData['reservationDate'])
+              ->get();
+    
+    //array to save the details
+    $arrData = array();
+    
+    foreach($queryResult as $row) {
+       $arrData[] = array(
+                'id' => $row->id,
+                'product_vendor_location_id' => $row->product_vendor_location_id,
+                'limit_by' => $row->limit_by,
+                'day' => $row->day,
+                'date' => $row->date,
+                'start_time' => $row->start_time,
+                'end_time' => $row->end_time,
+                'max_covers_limit' => $row->max_covers_limit,
+                'max_tables_limit' => $row->max_tables_limit                 
+              );
+      
+    }
+    return $arrData;
+  }
+
+  public static function getReservationCount($arrData) {
+    $queryResult = DB::table('reservation_details')
+              ->where('vendor_location_id',$arrData['vendorLocationID'])
+            ->where('reservation_date',$arrData['reservationDate'])
+            ->where('reservation_type',$arrData['reservationType'])
+            ->whereIn('reservation_status',array('new','edited'))
+            ->groupBy('vendor_location_id')
+            ->select(\DB::raw('SUM(no_of_persons) as person_count'))
+            ->first();
+    
+    if($queryResult) {
+      return $queryResult->person_count;
+    }
+    return 0;
+  }
+
+  public static function validateReservationData($arrData) {
+    //array to store response
+    $arrResponse = array();
+
+    //checking the availability for the booking
+    $arrTimeRangeLimits = Self::checkBookingTimeRangeLimits($arrData);
+    $existingReservationCount = Self::getReservationCount($arrData);
+
+    //converting the reservation time
+    $reservationTime = strtotime($arrData['reservationTime']);
+
+    if (!empty($arrTimeRangeLimits)) {
+      foreach ($arrTimeRangeLimits as $key => $value) {
+        $maxCount = ($value['max_covers_limit'] == 0) ? $value['max_tables_limit'] : $value['max_covers_limit'];
+
+        $startTime = strtotime($value['start_time']);
+        $endTime = strtotime($value['end_time']);
+        
+        if ($startTime <= $reservationTime && $endTime >= $reservationTime) {
+          if ($maxCount == $existingReservationCount) {
+            $arrResponse['status'] = 'error';
+            $arrResponse['error'] = 'Sorry. Currently the place is full. Please try another day.';
+            return $arrResponse;
+          } else if ($maxCount > $existingReservationCount) {
+            if (($maxCount - ($existingReservationCount + $arrData['partySize'])) < 0) {
+              $arrResponse['status'] = 'error';
+              $arrResponse['error'] = "Sorry. We have only " . abs($maxCount - $existingReservationCount) . ' seats available.';
+              return $arrResponse;
+            }
+          }
+        }
+      }
+    }
+
+    $arrResponse['status'] = 'success';
+    return $arrResponse;
+  }
+
+  public static function addReservationDetails($arrData, $userID) {
+    
+    $reservation = array();
+    
+    //initializing the data
+    $reservation['reservation_status'] = 'new';
+    $reservation['reservation_date'] = $arrData['reservationDate'];
+    $reservation['reservation_time'] = $arrData['reservationTime'];
+    $reservation['no_of_persons'] = $arrData['partySize'];    
+    $reservation['guest_name'] = $arrData['guestName'];
+    $reservation['guest_email'] = $arrData['guestEmail'];
+    $reservation['guest_phone'] = $arrData['phone'];
+    $reservation['reservation_type'] = $arrData['reservationType'];
+    $reservation['order_amount'] = 0;
+    $reservation['user_id'] = $userID;
+    
+    //setting up the variables that may be present
+    if(isset($arrData['specialRequest'])) {
+      $reservation['special_request'] = $arrData['specialRequest'];
+    }
+    
+    if(isset($arrData['addedBy'])) {
+      $reservation['added_by'] = $arrData['addedBy'];
+    }
+    
+    if(isset($arrData['giftCardID'])) {
+      $reservation['giftcard_id'] = $arrData['giftCardID'];
+    }
+    
+    //reading the product detail
+    $productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
+    $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'';
+    $reservation['vendor_location_id']         = $arrData['vendorLocationID'];
+    $reservation['product_vendor_location_id'] = $productDetail['vendor_location_id'];
+
+    #saving the information into the DB
+    $reservationId = DB::table('reservation_details')->insertGetId($reservation);
+    
+    if($reservationId) {
+     
+      $arrResponse['status'] = 'success';
+      if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
+        self::addReservationAddonDetails($reservationId, $arrData['addon']);
+      }       
+      
+      //$arrResponse['data']['name'] = isset($productDetail['name'])?$productDetail['name']:'';
+      //$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
+      $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+      $arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+      $arrResponse['data']['partySize'] = $arrData['partySize'];
+      //$arrResponse['data']['reward_point'] = $productDetail['reward_point']; 
+      return $arrResponse;
+    }
+    
+    return FALSE;
+  }
+
+  public static function readProductDetailByProductVendorLocationID($productVendorLocationID) {
+    //array to store the data
+    $arrData = array();
+    
+    $queryResult = \DB::table('products')
+            ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+            ->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
+            ->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
+            ->where('pvl.id',$productVendorLocationID)
+            ->where('pa.alias','reward_points_per_reservation')
+            ->select('products.id','pvl.vendor_location_id','products.name','pai.attribute_value as reward_point')
+            ->first();
+    
+    if($queryResult) {
+      $arrData['id'] = $queryResult->id;
+      $arrData['vendor_location_id'] = $queryResult->vendor_location_id;
+      $arrData['name'] = $queryResult->name;
+      $arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
+    }
+    
+    return $arrData;
+  }
+
+  public static function addReservationAddonDetails($reservationID, $arrAddon) {
+    //array to hold the data to be written into the DB
+    $arrInsertData = array();
+    
+    foreach($arrAddon as $prod_id => $qty) {
+      $arrInsertData[] = array(
+                  'reservation_id' => $reservationID,
+                  'no_of_persons' => $qty,
+                  'options_id' => $prod_id,
+                  'option_type' => 'addon',
+                  'reservation_type' => 'experience',
+                  'created_at' => date('Y-m-d H:i:m'),
+                  'updated_at' => date('Y-m-d H:i:m'),
+                );
+    }
+    
+    //writing data to reservation_addons_variants_details table
+    DB::table('reservation_addons_variants_details')->insert($arrInsertData);
+  } 
+
 
 }

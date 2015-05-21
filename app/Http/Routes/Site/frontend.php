@@ -14,8 +14,6 @@ Route::get('/exp/lists/{city?}',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-
-
 Route::get('/set_reservation_location', [
     'uses' => 'Site\HomePageController@set_reservation_location',
     'as' => '',
@@ -35,6 +33,14 @@ Route::post('/users/login', [
 
 Route::post('/users/checkemail', [
     'uses' => 'Site\HomePageController@checkemail',
+    'as' => '',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/users/check_user', [
+    'uses' => 'Site\HomePageController@check_user',
     'as' => '',
     'middleware' => ['guest'],
     'where' => [],
@@ -95,6 +101,31 @@ Route::get('/custom_search/new_custom_search',[
 Route::get('/{city}/experiences/{experience}/',[
     'uses' => 'Site\ExperienceController@details',
     'as' => 'experience.details',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('orders/expcheckout',[
+    'uses' => 'Site\ExperienceController@exporder',
+    'as' => 'experience.expcheckout',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('orders/check_exporder_exists',[
+    'uses' => 'Site\ExperienceController@exporderexists',
+    'as' => 'experience.exporderexists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+Route::post('orders/restaurant_checkout',[
+    'uses' => 'Site\AlacarteController@alaorder',
+    'as' => 'alacarte.alacheckout',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('orders/check_alaorder_exists',[
+    'uses' => 'Site\AlacarteController@alaorderexists',
+    'as' => 'alacarte.alaorderexists',
     'domain' => env('WEBSITE_URL'),
 ]);
 
