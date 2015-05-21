@@ -2,6 +2,7 @@
 
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use DB;
+use Config;
 
 class Locations {
 
@@ -441,5 +442,50 @@ class Locations {
 		}		
 		return $arrLocation;
 	}
+
+
+    //-----------------------------------------------------------------
+
+    /**
+     * Reads the cities Area
+     *
+     * @access	public
+     * @static	true
+     * @param	integer	$cityID
+     * @return	array
+     * @since	1.0.0
+     */
+    public static function  readCityArea($cityID){
+
+                $queryCityArea=DB::table('locations as l')
+                                    ->join('locations_tree as lt','l.id','=','lt.descendant')
+                                    ->where('lt.ancestor',$cityID)
+                                    ->where('lt.length',1)
+                                    ->select('l.name', 'l.id')
+                                    ->get();
+
+        //array to contain the response to be sent back to client
+        $arrResponse = array();
+
+        if($queryCityArea) {
+            $arrResponse['status'] = Config::get('constants.API_SUCCESS');
+            foreach($queryCityArea as $row){
+                $arrResponse['data'][]=array(
+                                            'location_id' => $row->id,
+                                            'location_name' => $row->name,
+                                           );
+            }
+        }
+        else {
+            $arrResponse['status'] = Config::get('constants.API_SUCCESS');
+            $arrResponse['data'] = array();
+        }
+
+
+        return $arrResponse;
+    }
+
+    //-----------------------------------------------------------------
+
 }
 //end of class Locations.php
