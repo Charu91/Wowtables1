@@ -410,7 +410,7 @@ class ExperienceModel {
     $queryImages = $queryImages = DB::table('media_resized_new as mrn')
             ->leftJoin('product_media_map as pmm','pmm.media_id','=','mrn.media_id')
             ->where('pmm.product_id',$productID)
-            ->where('pmm.media_type','listing')
+            ->where('pmm.media_type','gallery')
             ->select('mrn.file as image','mrn.image_type','pmm.product_id')
             ->get();
     

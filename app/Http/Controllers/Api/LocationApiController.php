@@ -55,6 +55,20 @@ class LocationApiController extends Controller {
 
         return response()->json(array('cities' => $cities), 200);
 	}
+
+    //-----------------------------------------------------------------
+
+    /**
+     * Displays the City Areas
+     *
+     * @access	public
+     * @param	string	$cityID
+     * @return	json
+     * @since	1.0.0
+     */
+    public function showCityAreas($cityID){
+        return response()->json(Locations::readCityArea($cityID),200);
+    }
 }
 //end of class LocationController
 //end of file WowTables\Http\Controllers\Api\LocationController.php

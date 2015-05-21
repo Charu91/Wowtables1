@@ -7,3 +7,5 @@ Route::get('/locations/cities', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('api/area/{cityID}','Api\LocationApiController@showCityAreas');
