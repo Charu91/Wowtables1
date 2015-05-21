@@ -405,7 +405,7 @@ $last_url_item = count($url)-1;
                 			?>
 		                	<ul class="menu-content">
         								<li>
-        									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo $menu_list_data->description;?></small></p>
+        									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo isset($menu_list_data->description)?$menu_list_data->description:'';?></small></p>
         								</li>
         							</ul>
 		                	<?php
@@ -418,7 +418,7 @@ $last_url_item = count($url)-1;
   		                		{
   		                			?>				                	
         										<li>
-        											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo $menu_items_data->description;?></small></p>
+        											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo isset($menu_items_data->description)?$menu_items_data->description:'';;?></small></p>
         										</li>
         									<?php			                
   		                		}
@@ -1076,19 +1076,22 @@ $last_url_item = count($url)-1;
             var location_id = $('#locations1').val();
             var disabledDays = disabledAllDays[location_id];
            
-            for (i = 0; i < disabledDays.length; i++) {
-                m=m+1;
-                mon=m.toString();
-                if(mon.length <2){
-                    m="0"+m;
-                }
-                day=d.toString();
-                if(day.length <2){
-                    d="0"+d;
-                }
-                if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
-                    return [false];
-                }
+            if(disabledDays != undefined)
+            {
+              for (i = 0; i < disabledDays.length; i++) {
+                  m=m+1;
+                  mon=m.toString();
+                  if(mon.length <2){
+                      m="0"+m;
+                  }
+                  day=d.toString();
+                  if(day.length <2){
+                      d="0"+d;
+                  }
+                  if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                      return [false];
+                  }
+              }
             }
             return [true];
         }
