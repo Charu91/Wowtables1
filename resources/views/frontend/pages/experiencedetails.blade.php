@@ -191,18 +191,14 @@ $last_url_item = count($url)-1;
               <!-- Wrapper for slides -->
               <div class="carousel-inner">
                 
-                <div class="item active">
-                  <img  itemprop="photo" src="<?php echo isset($arrExperience['data']['image']['listing'])?$arrExperience['data']['image']['listing']:'';?>" alt="deal1">
-                </div>
-
                 <?php 
-                $i=2;
+                $i=1;
                 if(isset($arrExperience['data']['image']['gallery']) && is_array($arrExperience['data']['image']['gallery'])) 
                 {
                   foreach($arrExperience['data']['image']['gallery'] as $key => $value) 
                   { 
                     ?>
-                    <div class="item">
+                    <div class="item <?php echo ($i == 1)?'active':''?>">
                         <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
                     </div>
                     <?php $i++;
