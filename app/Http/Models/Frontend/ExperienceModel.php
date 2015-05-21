@@ -1133,7 +1133,7 @@ class ExperienceModel {
     
     //writing data to reservation_addons_variants_details table
     DB::table('reservation_addons_variants_details')->insert($arrInsertData);
-  } 
+  }
 
 
 }

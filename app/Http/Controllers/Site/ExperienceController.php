@@ -395,7 +395,7 @@ class ExperienceController extends Controller {
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
             
             if($arrResponse['status'] == 'success') {
-                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);            
+                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
                 }
             }
             else {
