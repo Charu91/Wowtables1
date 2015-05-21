@@ -386,50 +386,101 @@ $last_url_item = count($url)-1;
               </div>
               <div class="tab-pane fade" id="menu">
                 <?php 
-                $menuData = json_decode($arrExperience['data']['menu']) ;
-               
-                if(isset($menuData->title))
+
+                //$arrExperience['data']['menu'] ='{"title":"A Modern 4 Course Experience at Yauatcha","menu":[{"heading":"Course 1","sub-menu":[{"heading":"Salad","description":"choose any one","items":[{"title":"Oriental Salad With Bean Curd Chips"},{"title":"Mixed Salad With Lotus Root"}]}]},{"heading":"Course 2","sub-menu":[{"heading":"Dim Sum","description":"choose any two","items":[{"title":"Sato Bean And Cashew Nut Dumpling"},{"title":"Vegetable Ying Yang Dumpling"},{"title":"Baked Vegetarian Puff"},{"title":"Crispy Asparagus, Pumpkin And Corn Roll"},{"title":"Sugarcane Chicken And Prawn Roll"},{"title":"Chicken And Prawn Sui Mai"},{"title":"Charcoal Lamb Bun"}]}]},{"heading":"Course 3","sub-menu":[{"heading":"Main Course","description":"choose any one","items":[{"title":"Szechuan Vegetable And Tofu Clay Pot"},{"title":"Stir-Fried French Beans With Shiitake Mushroom"},{"title":"Stir-Fried Chicken In Hometown Chilli Sauce"},{"title":"Steamed Indian Salmon In Spicy Black Bean Sauce"}]}]},{"heading":"Course 4","sub-menu":[{"heading":"Staple","description":"choose any one ","items":[{"title":"Stir-Fried Spicy Ramen Noodles"},{"title":"Spicy Vegetable Fried Rice With Taro And Spring Onion"},{"title":"Egg White Chicken Fried Rice"}]}]},{"heading":"Course 5","sub-menu":[{"heading":"Dessert","description":"choose any one","items":[{"title":"Chocolate Mandarin Tart"},{"title":"Mango Mascarpone Gateau"},{"title":"Raspberry Delice"}]}]}]}';
+                $menuData = json_decode($arrExperience['data']['menu'],true) ;
+               //echo '<pre>';
+               //print_r($menuData);exit;
+                if(isset($menuData['title']))
                 {
                 	?>
                 	<ul class="menu-content">
         						<li>
-        							<p class="lead"><?php echo $menuData->title;?></p>
+        							<p class="lead"><?php echo $menuData['title'];?></p>
         						</li>
         					</ul>
         					<br/>
                 	<?php
-                	if(is_array($menuData->menu) && count($menuData->menu)>0)
+                	if(is_array($menuData['menu']) && count($menuData['menu'])>0)
                 	{
-                		foreach($menuData->menu as $menu_list_data)
+                		foreach($menuData['menu'] as $menu_list_data)
                 		{
                 			?>
 		                	<ul class="menu-content">
         								<li>
-        									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo isset($menu_list_data->description)?$menu_list_data->description:'';?></small></p>
+        									<p class="lead"><?php echo $menu_list_data['heading'];?><br/><small><?php echo isset($menu_list_data['description'])?$menu_list_data['description']:'';?></small></p>
         								</li>
         							</ul>
 		                	<?php
-		                	if(isset($menu_list_data->items) && is_array($menu_list_data->items) && count($menu_list_data->items)>0)
-		                	{
-		                		?>
-		                		<ul class="menu-content">
-  		                		<?php
-  		                		foreach($menu_list_data->items as $menu_items_data)
-  		                		{
-  		                			?>				                	
-        										<li>
-        											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo isset($menu_items_data->description)?$menu_items_data->description:'';;?></small></p>
-        										</li>
-        									<?php			                
-  		                		}
-  		                		?>
-		                		</ul>
-								        <br/>
-			                 	<?php
-		                	}
-	                
-                		}
-                	}
+                      if(isset($menu_list_data['sub-menu']) && is_array($menu_list_data['sub-menu']) && count($menu_list_data['sub-menu'])>0)
+                      {
+                        foreach($menu_list_data['sub-menu'] as $sub_menu_list_data)
+                        {
+                          ?>
+                          <ul class="menu-content">
+                            <li>
+                              <p class="lead"><?php echo $sub_menu_list_data['heading'];?><br/><small><?php echo isset($sub_menu_list_data['description'])?$sub_menu_list_data['description']:'';?></small></p>
+                            </li>
+                          </ul>
+                          <?php
+                          if(isset($sub_menu_list_data['items']) && is_array($sub_menu_list_data['items']) && count($sub_menu_list_data['items'])>0)
+                          {
+                            ?>
+                            <ul class="menu-content">
+                              <?php
+                              foreach($sub_menu_list_data['items'] as $submenu_items_data)
+                              {
+                                ?>                          
+                                <li>
+                                  <p class="lead"><?php echo $submenu_items_data['title'];?> <small><?php echo isset($submenu_items_data['tags'])?'('.implode(',',$submenu_items_data['tags']).')':'';?></small><br/> <small><?php echo isset($submenu_items_data['description'])?$submenu_items_data['description']:'';;?></small></p>
+                                </li>
+                              <?php                     
+                              }
+                              ?>
+                            </ul>
+                            <br/>
+                            <?php
+                          }
+                        }
+                		  }
+
+                      if(isset($menu_list_data['items']) && is_array($menu_list_data['items']) && count($menu_list_data['items'])>0)
+                      {
+                        foreach($menu_list_data['items'] as $sub_menu_list_data)
+                        {
+                          if(isset($sub_menu_list_data['heading']))
+                          {
+                          ?>
+                          <ul class="menu-content">
+                            <li>
+                              <p class="lead"><?php echo $sub_menu_list_data['heading'];?><br/><small><?php echo isset($sub_menu_list_data['description'])?$sub_menu_list_data['description']:'';?></small></p>
+                            </li>
+                          </ul>
+                          <?php
+                          }
+
+                          if(isset($sub_menu_list_data['items']) && is_array($sub_menu_list_data['items']) && count($sub_menu_list_data['items'])>0)
+                          {
+                            ?>
+                            <ul class="menu-content">
+                              <?php
+                              foreach($sub_menu_list_data['items'] as $submenu_items_data)
+                              {
+                                ?>                          
+                                <li>
+                                  <p class="lead"><?php echo $submenu_items_data['title'];?> <small><?php echo isset($submenu_items_data['tags'])?'('.implode(',',$submenu_items_data['tags']).')':'';?></small><br/> <small><?php echo isset($submenu_items_data['description'])?$submenu_items_data['description']:'';;?></small></p>
+                                </li>
+                              <?php                     
+                              }
+                              ?>
+                            </ul>
+                            <br/>
+                            <?php
+                          }
+                        }
+                      }
+                	 }
+                  }
                 }
                 ?>
               </div>
