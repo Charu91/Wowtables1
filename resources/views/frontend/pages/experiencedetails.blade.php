@@ -418,7 +418,7 @@ $last_url_item = count($url)-1;
   		                		{
   		                			?>				                	
         										<li>
-        											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo $menu_items_data->description;?></small></p>
+        											<p class="lead"><?php echo $menu_items_data->title;?> <small><?php echo isset($menu_items_data->tags)?'('.implode(',',$menu_items_data->tags).')':'';?></small><br/> <small><?php echo isset($menu_items_data->description)?$menu_items_data->description:'';;?></small></p>
         										</li>
         									<?php			                
   		                		}
