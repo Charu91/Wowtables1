@@ -405,7 +405,7 @@ $last_url_item = count($url)-1;
                 			?>
 		                	<ul class="menu-content">
         								<li>
-        									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo $menu_list_data->description;?></small></p>
+        									<p class="lead"><?php echo $menu_list_data->heading;?><br/><small><?php echo isset($menu_list_data->description)?$menu_list_data->description:'';?></small></p>
         								</li>
         							</ul>
 		                	<?php
