@@ -140,6 +140,7 @@ return [
 
 		'Laracasts\Flash\FlashServiceProvider',
 		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
+		'Skovmand\Mailchimp\MailchimpServiceProvider',
 
 		/*
 		 * Application Service Providers...

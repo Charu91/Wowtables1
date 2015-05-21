@@ -634,8 +634,8 @@
                                                 <?php 
                                                 $order = Session::get('order');
                                                 if (!empty($order) && is_array($order)) {
-                                                $order_path = $order['slug']; ?>
-                                                order_path = <?php echo json_encode($order_path); ?>;
+                                                    $order_path = $order['slug']; ?>
+                                                    order_path = <?php echo json_encode($order_path); ?>;
                                                 <?php         } ?>
                                                 if(order_path!=""){
                                                     window.location = "{{URL::to('/')}}/exp/"+order_path;

@@ -1,0 +1,253 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/bin/npm', 'install', 'laravel-elixir' ]
+2 info using npm@2.10.0
+3 info using node@v0.10.33
+4 verbose node symlink /usr/bin/node
+5 verbose install initial load of /home/vagrant/projects/wowtables/package.json
+6 warn package.json @ No repository field.
+7 warn package.json @ No license field.
+8 verbose readDependencies loading dependencies from /home/vagrant/projects/wowtables/package.json
+9 silly cache add args [ 'laravel-elixir', null ]
+10 verbose cache add spec laravel-elixir
+11 silly cache add parsed spec { raw: 'laravel-elixir',
+11 silly cache add   scope: null,
+11 silly cache add   name: 'laravel-elixir',
+11 silly cache add   rawSpec: '',
+11 silly cache add   spec: '*',
+11 silly cache add   type: 'range' }
+12 silly addNamed laravel-elixir@*
+13 verbose addNamed "*" is a valid semver range for laravel-elixir
+14 silly addNameRange { name: 'laravel-elixir', range: '*', hasData: false }
+15 silly mapToRegistry name laravel-elixir
+16 silly mapToRegistry using default registry
+17 silly mapToRegistry registry https://registry.npmjs.org/
+18 silly mapToRegistry uri https://registry.npmjs.org/laravel-elixir
+19 verbose addNameRange registry:https://registry.npmjs.org/laravel-elixir not in flight; fetching
+20 verbose request uri https://registry.npmjs.org/laravel-elixir
+21 verbose request no auth needed
+22 info attempt registry request try #1 at 13:57:44
+23 verbose request id 1b2004023da8a697
+24 verbose etag "DH3DAH1O1BE1BWEIS5S0TBD2F"
+25 http request GET https://registry.npmjs.org/laravel-elixir
+26 http 304 https://registry.npmjs.org/laravel-elixir
+27 silly get cb [ 304,
+27 silly get   { date: 'Wed, 20 May 2015 13:57:48 GMT',
+27 silly get     via: '1.1 varnish',
+27 silly get     'cache-control': 'max-age=60',
+27 silly get     etag: '"DH3DAH1O1BE1BWEIS5S0TBD2F"',
+27 silly get     age: '0',
+27 silly get     connection: 'keep-alive',
+27 silly get     'x-served-by': 'cache-fra1243-FRA',
+27 silly get     'x-cache': 'HIT',
+27 silly get     'x-cache-hits': '1',
+27 silly get     'x-timer': 'S1432130268.555606,VS0,VE425',
+27 silly get     vary: 'Accept' } ]
+28 verbose etag https://registry.npmjs.org/laravel-elixir from cache
+29 verbose get saving laravel-elixir to /home/vagrant/.npm/registry.npmjs.org/laravel-elixir/.cache.json
+30 silly addNameRange number 2 { name: 'laravel-elixir', range: '*', hasData: true }
+31 silly addNameRange versions [ 'laravel-elixir',
+31 silly addNameRange   [ '0.1.0',
+31 silly addNameRange     '0.1.1',
+31 silly addNameRange     '0.1.2',
+31 silly addNameRange     '0.1.3',
+31 silly addNameRange     '0.1.4',
+31 silly addNameRange     '0.1.5',
+31 silly addNameRange     '0.1.6',
+31 silly addNameRange     '0.1.7',
+31 silly addNameRange     '0.1.8',
+31 silly addNameRange     '0.1.9',
+31 silly addNameRange     '0.2.0',
+31 silly addNameRange     '0.2.1',
+31 silly addNameRange     '0.2.2',
+31 silly addNameRange     '0.3.0',
+31 silly addNameRange     '0.3.1',
+31 silly addNameRange     '0.3.2',
+31 silly addNameRange     '0.3.3',
+31 silly addNameRange     '0.3.4',
+31 silly addNameRange     '0.3.5',
+31 silly addNameRange     '0.3.7',
+31 silly addNameRange     '0.3.8',
+31 silly addNameRange     '0.3.9',
+31 silly addNameRange     '0.3.10',
+31 silly addNameRange     '0.3.11',
+31 silly addNameRange     '0.4.0',
+31 silly addNameRange     '0.4.1',
+31 silly addNameRange     '0.4.3',
+31 silly addNameRange     '0.4.4',
+31 silly addNameRange     '0.4.5',
+31 silly addNameRange     '0.4.6',
+31 silly addNameRange     '0.4.7',
+31 silly addNameRange     '0.4.8',
+31 silly addNameRange     '0.4.9',
+31 silly addNameRange     '0.4.10',
+31 silly addNameRange     '0.4.11',
+31 silly addNameRange     '0.4.12',
+31 silly addNameRange     '0.4.13',
+31 silly addNameRange     '0.4.14',
+31 silly addNameRange     '0.4.15',
+31 silly addNameRange     '0.4.16',
+31 silly addNameRange     '0.4.17',
+31 silly addNameRange     '0.5.0',
+31 silly addNameRange     '0.5.1',
+31 silly addNameRange     '0.5.2',
+31 silly addNameRange     '0.5.3',
+31 silly addNameRange     '0.5.4',
+31 silly addNameRange     '0.5.5',
+31 silly addNameRange     '0.5.6',
+31 silly addNameRange     '0.5.7',
+31 silly addNameRange     '0.5.8',
+31 silly addNameRange     '0.6.0',
+31 silly addNameRange     '0.6.1',
+31 silly addNameRange     '0.6.2',
+31 silly addNameRange     '0.6.3',
+31 silly addNameRange     '0.6.4',
+31 silly addNameRange     '0.6.5',
+31 silly addNameRange     '0.6.6',
+31 silly addNameRange     '0.7.0',
+31 silly addNameRange     '0.6.7',
+31 silly addNameRange     '0.6.8',
+31 silly addNameRange     '0.7.1',
+31 silly addNameRange     '0.7.3',
+31 silly addNameRange     '0.7.4',
+31 silly addNameRange     '0.7.5',
+31 silly addNameRange     '0.7.6',
+31 silly addNameRange     '0.7.7',
+31 silly addNameRange     '0.7.8',
+31 silly addNameRange     '0.7.9',
+31 silly addNameRange     '0.7.10',
+31 silly addNameRange     '0.7.11',
+31 silly addNameRange     '0.8.0',
+31 silly addNameRange     '0.8.1',
+31 silly addNameRange     '0.9.1',
+31 silly addNameRange     '0.10.0',
+31 silly addNameRange     '0.10.1',
+31 silly addNameRange     '0.10.2',
+31 silly addNameRange     '0.10.3',
+31 silly addNameRange     '0.10.4',
+31 silly addNameRange     '0.10.5',
+31 silly addNameRange     '0.10.6',
+31 silly addNameRange     '0.10.7',
+31 silly addNameRange     '0.11.0',
+31 silly addNameRange     '0.12.0',
+31 silly addNameRange     '0.12.2',
+31 silly addNameRange     '0.12.3',
+31 silly addNameRange     '0.13.0',
+31 silly addNameRange     '0.13.1',
+31 silly addNameRange     '0.13.2',
+31 silly addNameRange     '0.13.3',
+31 silly addNameRange     '0.14.0',
+31 silly addNameRange     '0.14.2',
+31 silly addNameRange     '0.14.3',
+31 silly addNameRange     '0.14.4',
+31 silly addNameRange     '0.15.0',
+31 silly addNameRange     '0.15.1',
+31 silly addNameRange     '0.15.2',
+31 silly addNameRange     '0.15.3',
+31 silly addNameRange     '0.15.4',
+31 silly addNameRange     '0.15.5',
+31 silly addNameRange     '0.16.0',
+31 silly addNameRange     '0.16.1',
+31 silly addNameRange     '0.16.2',
+31 silly addNameRange     '0.16.3',
+31 silly addNameRange     '0.18.0',
+31 silly addNameRange     '0.18.1',
+31 silly addNameRange     '0.18.2',
+31 silly addNameRange     '0.18.3',
+31 silly addNameRange     '0.18.4',
+31 silly addNameRange     '0.18.5',
+31 silly addNameRange     '0.18.6',
+31 silly addNameRange     '0.18.7',
+31 silly addNameRange     '1.0.1',
+31 silly addNameRange     '1.0.2',
+31 silly addNameRange     '1.0.3' ] ]
+32 silly addNamed laravel-elixir@1.0.3
+33 verbose addNamed "1.0.3" is a plain semver version for laravel-elixir
+34 silly cache afterAdd laravel-elixir@1.0.3
+35 verbose afterAdd /home/vagrant/.npm/laravel-elixir/1.0.3/package/package.json not in flight; writing
+36 verbose afterAdd /home/vagrant/.npm/laravel-elixir/1.0.3/package/package.json written
+37 silly install resolved [ { name: 'laravel-elixir',
+37 silly install resolved     version: '1.0.3',
+37 silly install resolved     description: 'Laravel Elixir Core',
+37 silly install resolved     main: 'index.js',
+37 silly install resolved     scripts: { test: 'echo "Error: no test specified" && exit 1' },
+37 silly install resolved     repository:
+37 silly install resolved      { type: 'git',
+37 silly install resolved        url: 'git+https://github.com/laravel/elixir.git' },
+37 silly install resolved     keywords: [ 'laravel', 'elixir', 'gulp' ],
+37 silly install resolved     author: { name: 'Taylor Otwell, Jeffrey Way' },
+37 silly install resolved     license: 'MIT',
+37 silly install resolved     homepage: 'https://github.com/laravel/elixir',
+37 silly install resolved     dependencies:
+37 silly install resolved      { babelify: '^6.0.0',
+37 silly install resolved        browserify: '^9.0.4',
+37 silly install resolved        del: '^0.1.3',
+37 silly install resolved        'gulp-autoprefixer': '^1.0.1',
+37 silly install resolved        'gulp-coffee': '^2.2.0',
+37 silly install resolved        'gulp-concat': '^2.4.1',
+37 silly install resolved        'gulp-filter': '^1.0.2',
+37 silly install resolved        'gulp-if': '^1.2.5',
+37 silly install resolved        'gulp-less': '^3.0.2',
+37 silly install resolved        'gulp-load-plugins': '^0.7.0',
+37 silly install resolved        'gulp-minify-css': '^0.3.10',
+37 silly install resolved        'gulp-notify': '^1.8.0',
+37 silly install resolved        'gulp-phpspec': '^0.3.0',
+37 silly install resolved        'gulp-phpunit': '^0.6.3',
+37 silly install resolved        'gulp-rename': '^1.2.0',
+37 silly install resolved        'gulp-rev': '^2.0.0',
+37 silly install resolved        'gulp-ruby-sass': '^1.0.1',
+37 silly install resolved        'gulp-sass': '^2.0.0',
+37 silly install resolved        'gulp-shell': '^0.2.9',
+37 silly install resolved        'gulp-sourcemaps': '^1.3.0',
+37 silly install resolved        'gulp-uglify': '^1.0.1',
+37 silly install resolved        'gulp-util': '^3.0.1',
+37 silly install resolved        install: '^0.1.7',
+37 silly install resolved        'main-bower-files': '^2.4.0',
+37 silly install resolved        'merge-stream': '^0.1.7',
+37 silly install resolved        npm: '^2.1.2',
+37 silly install resolved        'parse-filepath': '^0.5.0',
+37 silly install resolved        'require-dir': '^0.1.0',
+37 silly install resolved        'run-sequence': '^1.0.1',
+37 silly install resolved        underscore: '^1.7.0',
+37 silly install resolved        'vinyl-paths': '^1.0.0',
+37 silly install resolved        'vinyl-source-stream': '^1.1.0',
+37 silly install resolved        'vinyl-buffer': '^1.0.0' },
+37 silly install resolved     devDependencies: { gulp: '^3.8.8' },
+37 silly install resolved     gitHead: 'ae6cceaaf008fbc98478ba740545c6c2acab7ae6',
+37 silly install resolved     bugs: { url: 'https://github.com/laravel/elixir/issues' },
+37 silly install resolved     _id: 'laravel-elixir@1.0.3',
+37 silly install resolved     _shasum: 'bb2e4c0599c04f5de589c19416e3f324b68ae567',
+37 silly install resolved     _from: 'laravel-elixir@*',
+37 silly install resolved     _npmVersion: '1.4.21',
+37 silly install resolved     _npmUser: { name: 'jeffreyway', email: 'jeffrey@laracasts.com' },
+37 silly install resolved     maintainers: [ [Object] ],
+37 silly install resolved     dist:
+37 silly install resolved      { shasum: 'bb2e4c0599c04f5de589c19416e3f324b68ae567',
+37 silly install resolved        tarball: 'http://registry.npmjs.org/laravel-elixir/-/laravel-elixir-1.0.3.tgz' },
+37 silly install resolved     directories: {},
+37 silly install resolved     _resolved: 'https://registry.npmjs.org/laravel-elixir/-/laravel-elixir-1.0.3.tgz',
+37 silly install resolved     readme: 'ERROR: No README data found!' } ]
+38 info install laravel-elixir@1.0.3 into /home/vagrant/projects/wowtables
+39 info installOne laravel-elixir@1.0.3
+40 verbose installOne of laravel-elixir to /home/vagrant/projects/wowtables not in flight; installing
+41 warn locking Error: EACCES, open '/home/vagrant/.npm/_locks/laravel-elixir-2fbd0261c959a26e.lock'
+41 warn locking  /home/vagrant/.npm/_locks/laravel-elixir-2fbd0261c959a26e.lock failed { [Error: EACCES, open '/home/vagrant/.npm/_locks/laravel-elixir-2fbd0261c959a26e.lock']
+41 warn locking   errno: 3,
+41 warn locking   code: 'EACCES',
+41 warn locking   path: '/home/vagrant/.npm/_locks/laravel-elixir-2fbd0261c959a26e.lock' }
+42 verbose stack Error: Attempt to unlock /home/vagrant/projects/wowtables/node_modules/laravel-elixir, which hasn't been locked
+42 verbose stack     at unlock (/usr/lib/node_modules/npm/lib/utils/locker.js:66:11)
+42 verbose stack     at cb (/usr/lib/node_modules/npm/lib/install.js:1017:5)
+42 verbose stack     at /usr/lib/node_modules/npm/lib/install.js:1021:20
+42 verbose stack     at /usr/lib/node_modules/npm/lib/utils/locker.js:40:9
+42 verbose stack     at cb (/usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+42 verbose stack     at /usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+42 verbose stack     at Object.oncomplete (fs.js:107:15)
+43 verbose cwd /home/vagrant/projects/wowtables
+44 error Linux 3.13.0-30-generic
+45 error argv "node" "/usr/bin/npm" "install" "laravel-elixir"
+46 error node v0.10.33
+47 error npm  v2.10.0
+48 error Attempt to unlock /home/vagrant/projects/wowtables/node_modules/laravel-elixir, which hasn't been locked
+49 error If you need help, you may report this error at:
+49 error     <https://github.com/npm/npm/issues>
+50 verbose exit [ 1, true ]
