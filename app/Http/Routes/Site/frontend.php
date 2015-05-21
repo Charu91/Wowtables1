@@ -104,6 +104,31 @@ Route::get('/{city}/experiences/{experience}/',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('orders/expcheckout',[
+    'uses' => 'Site\ExperienceController@exporder',
+    'as' => 'experience.expcheckout',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('orders/check_exporder_exists',[
+    'uses' => 'Site\ExperienceController@exporderexists',
+    'as' => 'experience.exporderexists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+Route::post('orders/restaurant_checkout',[
+    'uses' => 'Site\AlacarteController@alaorder',
+    'as' => 'alacarte.alacheckout',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('orders/check_alaorder_exists',[
+    'uses' => 'Site\AlacarteController@alaorderexists',
+    'as' => 'alacarte.alaorderexists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 Route::get('/{city}/alacarte/',[
     'uses' => 'Site\AlacarteController@lists',

@@ -262,7 +262,7 @@ class Reservation {
 			}
 			
 			//reading details of the existing reservation from tables
-			$arrCurrentReservation = ReturnDetails::getActiveReservationDetail($arrData['reservationID']);
+			$arrCurrentReservation = ReservationDetails::getActiveReservationDetail($arrData['reservationID']);
 			
 		
 			
