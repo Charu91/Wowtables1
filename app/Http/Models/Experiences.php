@@ -13,6 +13,12 @@ use WowTables\Http\Models\Review;
  * @author	Parth Shukla <shuklaparth@hotmail.com>
  */
 class Experiences {
+
+        //Validation rule
+        static $arrRules = array(
+            'id' => 'required|exists:products,id'
+        );
+        //-------------------------------------------------------------
 	
 	/**
 	 * Returns the details of the experience
@@ -29,8 +35,8 @@ class Experiences {
 						->where('id',$experienceID)
 						->select('name','type')
 						->first();
-		
-		//query to read the experience detail
+
+       		//query to read the experience detail
 		$queryExperience = DB::table('products')
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
 							->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
@@ -225,14 +231,14 @@ class Experiences {
 	 * 
 	 */
 	public static function getSimilarProductListing() {
-		$queryResult = DB::table('products')
-						->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
-						->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
-						->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
-						->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
-						->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
-						->where()
-						->where();
+//		$queryResult = DB::table('products')
+//						->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
+//						->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
+//						->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
+//						->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
+//						->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
+//						->where()
+//						->where();
 	}
 	
 	//-----------------------------------------------------------------
