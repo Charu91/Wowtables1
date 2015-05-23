@@ -127,7 +127,7 @@ class Reservation {
 		foreach ($queryResult as $row) {
 			$arrLocLmt[] = array(
 									'experience_id' => $row->experience_id,
-									'vl_id' => $row->id, 
+									'vl_id' => $row->pvl_id,
 									'area' => $row->area, 
 									'min_people' => (is_null($row->min_people_per_reservation)) ? '' : $row->min_people_per_reservation, 
 									'max_people' => (is_null($row->max_people_per_reservation)) ? '' : $row->max_people_per_reservation, 
@@ -367,7 +367,7 @@ class Reservation {
 	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-						->leftJoin('product_vendor_locations as pvl','pvl.vendor_location_id','=','rd.product_vendor_location_id')
+						->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
 						->leftJoin('products','products.id','=','pvl.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
 						->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
