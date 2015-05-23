@@ -45,7 +45,7 @@ class ReservationDetails extends Model {
 	 * @return	boolean
 	 * @since	1.0.0
 	 */
-	public static function addReservationDetails($arrData, $userID) {
+	public static function addReservationDetails($arrData, $userID, $userType='website_user') {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
@@ -353,10 +353,11 @@ class ReservationDetails extends Model {
 						->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
 						->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
-						->where('pvl.vendor_location_id',$productVendorLocationID)
-						->where('pa.alias','reward_points_per_reservation')
+						->where('pvl.id',$productVendorLocationID)
+                        ->where('pa.alias','reward_points_per_reservation')
 						->select('products.id','products.name','pai.attribute_value as reward_point')
-						->first();
+                        ->first();
+
 		
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;
