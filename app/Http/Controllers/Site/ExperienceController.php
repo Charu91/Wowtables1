@@ -359,6 +359,9 @@ class ExperienceController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']              = Input::get('add_ons');
         //$dataPost['access_token'] = Session::get('id');
+        $outlet = $this->experiences_model->getOutlet($dataPost['vendorLocationID']);
+        //echo "<pre>"; print_r($outlet);
+        //echo "<pre>"; print_r($dataPost); die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -395,7 +398,31 @@ class ExperienceController extends Controller {
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
             
             if($arrResponse['status'] == 'success') {
-                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);            
+                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                $zoho_data = array(
+                    'Name' => 'Rushikesh Joshi',
+                    'Email_ids' => 'tech@gourmetitup.com',
+                    'Contact' => '9699985906',
+                    'Experience_Title' => 'Gastronomical - Gastronomical Brunch',
+                    'No_of_People' => '2',
+                    'Date_of_Visit' => date('d-M-Y'),
+                    'Time' => '10:00PM',
+                    'Alternate_ID' =>  'E0001',//sprintf("%06d",$this->data['order_id1']);
+                    'Refferal' => 'google add',
+                    'Occasion' => 'This is a test',
+                    'Type' => 'Experience',
+                    'API_added' => 'Yes',
+                    'GIU_Membership_ID' => '1001010',
+                    'Outlet' => 'Lower Parel',
+                    'Points_Notes'=>'test',
+                    'AR_Confirmation_ID'=>'0',
+                    'Auto_Reservation'=>'Not available',
+                    //'telecampaign' => $campaign_id,
+                    'total_no_of_reservations'=> '1',
+                    'Calling_option' => 'No'
+                );
+                $zoho_res = $this->zoho_add_booking($zoho_data);
+                $zoho_success = $zoho_res->result->form->add->status;
                 }
             }
             else {
@@ -436,5 +463,24 @@ class ExperienceController extends Controller {
 
         $arrData = $this->experiences_model->validateReservationData($dataPost);
         echo json_encode($arrData);
+    }
+    public function zoho_add_booking($data)
+    {
+        $ch = curl_init();
+        $config = array(
+            //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+            'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+            'scope' => 'creatorapi',
+        );
+        $curlConfig = array(
+            CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/add/",
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS     => $config + $data,
+        );
+        curl_setopt_array($ch, $curlConfig);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return	simplexml_load_string($result);
     }
 }

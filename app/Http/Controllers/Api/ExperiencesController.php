@@ -6,6 +6,8 @@ use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Products;
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Experiences;
+use Validator;
+use Config;
 
 class ExperiencesController extends Controller {
 
@@ -75,11 +77,27 @@ class ExperiencesController extends Controller {
 	 * @return Response
 	 */
 	public function show($id) {
-		//die('Hello World');
-		$arrExperience = $this->experience->find($id);
-		$arrExperience['status'] = 'OK';
 
-        return response()->json($arrExperience);
+        //data to be validated
+        $data=array('id' => $id);
+
+        //Validation user's profile data
+        $validator = Validator::make($data,Experiences::$arrRules);
+
+        if($validator->fails()){
+            $arrResponse['status'] = Config::get('constants.API_SUCCESS');
+            $arrResponse['no_result_msg'] = 'No matching values found.';
+            $arrResponse['data'] = array();
+            $arrResponse['total_count'] = 0;
+        }
+        else{
+            $arrResponse=$this->experience->find($id);
+        }
+
+        return response()->json( $arrResponse,200);
+
 	}
 
 }
+//End of Class ExperiencesController
+//End of File ExperiencesController.php

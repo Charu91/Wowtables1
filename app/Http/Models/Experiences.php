@@ -13,6 +13,12 @@ use WowTables\Http\Models\Review;
  * @author	Parth Shukla <shuklaparth@hotmail.com>
  */
 class Experiences {
+
+        //Validation rule
+        static $arrRules = array(
+            'id' => 'required|exists:products,id'
+        );
+        //-------------------------------------------------------------
 	
 	/**
 	 * Returns the details of the experience
@@ -29,8 +35,10 @@ class Experiences {
 						->where('id',$experienceID)
 						->select('name','type')
 						->first();
-		
-		//query to read the experience detail
+
+        //print_r($queryType); die();
+
+       	//query to read the experience detail
 		$queryExperience = DB::table('products')
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
 							->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
@@ -57,6 +65,7 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax',
+                                    'pcm.curator_tips as tips',
 									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
 									DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
@@ -80,6 +89,7 @@ class Experiences {
 									'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
 									'media.file as experience_image','cm.file as curator_image', 
 									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
+                                    'pcm.curator_tips as tips',
 									'pat5.attribute_value as experience_includes','vendors.name as vendor_name', 'reward_points');
 		}
 
@@ -122,10 +132,13 @@ class Experiences {
 										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
-										'curator_name' => "Deepa Jain",//(is_null($expResult->curator_name)) ? "":$expResult->curator_name,
-										'curator_bio' => "",//(is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-										'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
-										'curator_designation' => "has reviewed this",//(is_null($expResult->designation)) ? "":$expResult->designation,
+                                        'curator_information' => array(
+                                                                        'curator_name' => "Deepa Jain",//(is_null($expResult->curator_name)) ? "":$expResult->curator_name,
+                                                                        'curator_bio' => "",//(is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
+                                                                        'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
+                                                                        'curator_designation' => "has reviewed this",//(is_null($expResult->designation)) ? "":$expResult->designation
+                                                                        'suggestions' => (is_null($expResult->tips)) ? "": $expResult->tips,
+                                                                      ),
 										'menu' => $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
@@ -134,8 +147,8 @@ class Experiences {
 										'similar_option' => array(),
 										'addons' => $arrAddOn,
 									);
-				
-				
+
+            $arrExpDetails['status'] = Config::get('constants.API_SUCCESS');
 		}
 		return $arrExpDetails;					
 	}
@@ -225,14 +238,14 @@ class Experiences {
 	 * 
 	 */
 	public static function getSimilarProductListing() {
-		$queryResult = DB::table('products')
-						->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
-						->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
-						->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
-						->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
-						->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
-						->where()
-						->where();
+//		$queryResult = DB::table('products')
+//						->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
+//						->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
+//						->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
+//						->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
+//						->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
+//						->where()
+//						->where();
 	}
 	
 	//-----------------------------------------------------------------

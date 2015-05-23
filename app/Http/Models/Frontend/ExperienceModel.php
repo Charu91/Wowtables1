@@ -410,7 +410,7 @@ class ExperienceModel {
     $queryImages = $queryImages = DB::table('media_resized_new as mrn')
             ->leftJoin('product_media_map as pmm','pmm.media_id','=','mrn.media_id')
             ->where('pmm.product_id',$productID)
-            ->where('pmm.media_type','listing')
+            ->where('pmm.media_type','gallery')
             ->select('mrn.file as image','mrn.image_type','pmm.product_id')
             ->get();
     
@@ -1066,7 +1066,7 @@ class ExperienceModel {
     
     //reading the product detail
     $productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
-    $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'';
+    $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'0';
     $reservation['vendor_location_id']         = $arrData['vendorLocationID'];
     $reservation['product_vendor_location_id'] = $productDetail['vendor_location_id'];
 
@@ -1133,7 +1133,22 @@ class ExperienceModel {
     
     //writing data to reservation_addons_variants_details table
     DB::table('reservation_addons_variants_details')->insert($arrInsertData);
-  } 
+  }
+
+  public function getOutlet($vendorLocationID){
+      $queryResult = \DB::table('product_vendor_locations as pvl')
+          ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+          ->leftJoin('locations as l','vl.location_id','=','l.id')
+          ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+          ->leftJoin('products as p','pvl.product_id','=','p.id')
+          ->where('pvl.id',$vendorLocationID)
+          ->select('l.name', 'pvl.descriptive_title' , 'p.name as product_name', 'v.name as vendor_name')
+          ->first();
+
+
+      return $queryResult;
+
+  }
 
 
 }
