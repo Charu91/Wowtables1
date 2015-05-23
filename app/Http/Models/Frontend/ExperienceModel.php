@@ -1135,5 +1135,20 @@ class ExperienceModel {
     DB::table('reservation_addons_variants_details')->insert($arrInsertData);
   }
 
+  public function getOutlet($vendorLocationID){
+      $queryResult = \DB::table('product_vendor_locations as pvl')
+          ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+          ->leftJoin('locations as l','vl.location_id','=','l.id')
+          ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+          ->leftJoin('products as p','pvl.product_id','=','p.id')
+          ->where('pvl.id',$vendorLocationID)
+          ->select('l.name', 'pvl.descriptive_title' , 'p.name as product_name', 'v.name as vendor_name')
+          ->first();
+
+
+      return $queryResult;
+
+  }
+
 
 }
