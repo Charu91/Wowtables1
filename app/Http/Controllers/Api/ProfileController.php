@@ -3,6 +3,8 @@
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\Profile;
 use Request;
+use Config;
+use Validator;
 
 class ProfileController extends Controller {
 
@@ -15,7 +17,31 @@ class ProfileController extends Controller {
      * @since	1.0.0
      */
     public function show($token) {
-        return response()->json(Profile::getUserProfile($token),200);
+
+        //array to store response
+        $arrResponse=array();
+
+        $data=array('access_token' => $token);
+
+        //Validate user's access_token exist or not
+        $validator = Validator::make($data,Profile::$arrMyProfileRule);
+
+        if($validator->fails()){
+            $message=$validator->messages();
+            $errorMessage="";
+            foreach($data as $key => $value) {
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            $arrResponse['status'] = Config::get('constants.API_ERROR');
+            $arrResponse['error'] = $errorMessage;
+        }
+        else{
+            $arrResponse=Profile::getUserProfile($token);
+        }
+
+        return response()->json( $arrResponse,200);
     }
 
     //---------------------------------------------------------------------
@@ -29,8 +55,32 @@ class ProfileController extends Controller {
      * @since	1.0.0
      */
     public function update() {
+        //array to store response
+        $arrResponse=array();
+
+        //read data input by the user
         $data = Request::all();
-        return response()->json(Profile::updateProfile($data),200);
+
+        //print_r($data); die();
+        //Validation user's profile data
+        $validator = Validator::make($data,Profile::$arrRules);
+
+        if($validator->fails()){
+            $message=$validator->messages();
+            $errorMessage="";
+            foreach($data as $key => $value) {
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            $arrResponse['status'] = Config::get('constants.API_ERROR');
+            $arrResponse['error'] = $errorMessage;
+        }
+        else{
+            $arrResponse=Profile::updateProfile($data);
+        }
+
+        return response()->json( $arrResponse,200);
     }
 
     //---------------------------------------------------------------------
