@@ -391,7 +391,9 @@ class Reservation {
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
 									 'ploc.name as product_locality','pvla.address as product_address',
 									 'vloc.name as vendor_locality', 'vvla.address as vendor_address')
-						->groupBy('rd.id')
+						->orderBy('rd.reservation_date','asc')
+						->orderBy('rd.reservation_time','asc')
+						->groupBy('rd.id') 
 						->get();
 		//echo $queryResult->toSql();
 		
