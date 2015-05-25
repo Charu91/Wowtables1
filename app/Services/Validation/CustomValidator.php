@@ -28,6 +28,7 @@ class CustomValidator extends Validator {
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
 							->where('rd.reservation_date','=',$reservationDate)
 							->where('ud.access_token',$accessToken)
+							->whereIn('rd.reservation_status',['new', 'edited'])
 							->select('rd.id',
 									DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
 									)
