@@ -453,15 +453,17 @@ use Config;
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
 							->leftJoin('product_attributes as pa', 'pa.id', '=', 'pat.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id', '=', 'p.id')
-							->leftJoin('product_reviews as pr', 'pr.product_id', '=', 'p.id')
+							->leftJoin('product_reviews AS pr', function($join){
+                														$join->on('p.id', '=', 'pr.product_id')
+                    													->on('pr.status','=', DB::raw('"Approved"'));
+                    												})
 							->leftJoin('locations as loc','loc.id','=','vl.location_id')
 							->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
 							->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
 							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
 							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
 							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
-							->where('vl.vendor_id', $vendorID)
-							->where('pr.status','Approved')
+							->where('vl.vendor_id', $vendorID)							
 							->where('p.status', 'Publish')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
 							->where('mrn2.image_type', 'mobile_listing_android_experience')						
@@ -471,11 +473,11 @@ use Config;
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
 									//DB::raw('IF(mrn.image_type="mobile_listing_android_experience",mrn.file,"") as android_image'),
 									//DB::raw('IF(mrn.image_type="mobile_listing_ios_experience",mrn.file,"") as ios_image'),
-									'mrn1.file as ios_image','mrn2.file as android_image',
+									//'mrn1.file as ios_image','mrn2.file as android_image',
 									'loc.name as location_name','flags.name as flag_name',
 									'pp.post_tax_price','pp.price'
 									)
-							->groupBy('p.id')
+							->groupBy('p.id')//->toSql(); echo $queryResult; die();
 							->get();							
 							
 		//array to store the information from the DB
@@ -491,7 +493,7 @@ use Config;
 											'price' => $row->price,
 											'post_tax_price' => $row->post_tax_price,
 											'location' => $row->location_name,
-											'flag' => $row->flag_name,
+											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
 											'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 											'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 										);
