@@ -187,7 +187,7 @@ class ReservationDetails extends Model {
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrResponse['status'] = Config::get('constants.API_FAIL');
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
 			$arrResponse['msg'] = 'Sorry. No Such record exists.';
 		}
 		
