@@ -421,8 +421,10 @@ use Config;
 												'rating' => $row->rating,
 												'location' => $row->location_name,
 												'flag' => $row->flag_name,
-												'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-												'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+												'images' => array(
+																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																 )
 											);
 			}
 		}
@@ -470,14 +472,14 @@ use Config;
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
-									//DB::raw('IF(mrn.image_type="mobile_listing_android_experience",mrn.file,"") as android_image'),
-									//DB::raw('IF(mrn.image_type="mobile_listing_ios_experience",mrn.file,"") as ios_image'),
-									//'mrn1.file as ios_image','mrn2.file as android_image',
-									'loc.name as location_name','flags.name as flag_name',
+									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),
+									'mrn1.file as ios_image','mrn2.file as android_image',
+									'flags.name as flag_name',
 									'pp.post_tax_price','pp.price'
 									)
-							->groupBy('p.id')//->toSql(); echo $queryResult; die();
+							->groupBy('p.id')
 							->get();							
 							
 		//array to store the information from the DB
@@ -494,8 +496,11 @@ use Config;
 											'post_tax_price' => $row->post_tax_price,
 											'location' => $row->location_name,
 											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
-											'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
-											'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+											'short_description' => $row->short_description ,
+											'images' => array(
+																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+															 )
 										);
 			}
 		}
