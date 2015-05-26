@@ -479,8 +479,10 @@ class Reservation {
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_ERROR');
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
 			$arrData['msg'] = 'No matching record found.';
+			$arrData['data']['pastReservationCount'] = 0;  
+			$arrData['data']['upcomingReservationCount'] = 0; 
 		}
 		return $arrData;
 	}
