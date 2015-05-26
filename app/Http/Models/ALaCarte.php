@@ -470,6 +470,7 @@ use Config;
 							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
 							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
 							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
+							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
 							->where('vl.vendor_id', $vendorID)							
 							->where('p.status', 'Publish')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
@@ -482,7 +483,8 @@ use Config;
 									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),
 									'mrn1.file as ios_image','mrn2.file as android_image',
 									'flags.name as flag_name',
-									'pp.post_tax_price','pp.price'
+									'pp.post_tax_price','pp.price',
+									'pp.tax', 'pt.type_name as price_type'
 									)
 							->groupBy('p.id')
 							->get();							
@@ -499,6 +501,8 @@ use Config;
 											'rating' => $row->rating,
 											'price' => $row->price,
 											'post_tax_price' => $row->post_tax_price,
+											'tax' => $row->tax,
+											'price_type' => $row->price_type,
 											'location' => $row->location_name,
 											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
 											'short_description' => $row->short_description ,
