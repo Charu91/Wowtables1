@@ -484,7 +484,7 @@ use Config;
 									'mrn1.file as ios_image','mrn2.file as android_image',
 									'flags.name as flag_name',
 									'pp.post_tax_price','pp.price',
-									'pp.tax', 'pt.type_name as price_type'
+									'pp.taxes', 'pt.type_name as price_type'
 									)
 							->groupBy('p.id')
 							->get();							
@@ -501,7 +501,7 @@ use Config;
 											'rating' => $row->rating,
 											'price' => $row->price,
 											'post_tax_price' => $row->post_tax_price,
-											'tax' => $row->tax,
+											'taxes' => $row->taxes,
 											'price_type' => $row->price_type,
 											'location' => $row->location_name,
 											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
