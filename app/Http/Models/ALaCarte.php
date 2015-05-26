@@ -15,6 +15,8 @@ use Config;
  */
  class ALaCarte {
  	
+ 	static $arrRules = array('vendorID' => 'exists:vendors,id');
+
 	/**
 	 * Reads the details of the LaCarte matching the
 	 * passed name.
@@ -399,7 +401,7 @@ use Config;
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
 								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
 								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
-                				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
+                				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),                				
 								'loc.name as location_name',
 								DB::raw('IFNULL(flags.name,"") AS flag_name'),
 								'mrn1.file as ios_image',
@@ -410,9 +412,11 @@ use Config;
 		
 		//array to store the information from the DB
 		$data = array();
+		$data['status']=Config::get('constants.API_SUCCESS');
+
 		if($queryResult) {
 			foreach($queryResult as $row) {
-				$data['data']['branch'][] = array(
+				$data['data']['alacarte'][] = array(
 												'vl_id' => $row->vl_id,
 												'name' => $row->name,
 												'cuisine' => $row->cuisine,
@@ -421,7 +425,7 @@ use Config;
 												'rating' => $row->rating,
 												'location' => $row->location_name,
 												'flag' => $row->flag_name,
-												'images' => array(
+												'image' => array(
 																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 																 )
@@ -429,8 +433,9 @@ use Config;
 			}
 		}
 		
+		$data['alacarteCount']=count($data['data']['alacarte']);
 		$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-		
+		$data['experienceCount']=count($data['data']['experience']);
 		return $data;
 	}
 
@@ -497,13 +502,13 @@ use Config;
 											'location' => $row->location_name,
 											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
 											'short_description' => $row->short_description ,
-											'images' => array(
+											'image' => array(
 																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 															 )
 										);
 			}
-		}
+		}		
 		return $data;							
 	}
  }
