@@ -42,7 +42,7 @@ class AuthorizeMiddleware {
 		}
 		$response=array();
 		$response['status'] = Config::get('constants.API_ERROR');				
-		$response['msg']= "Not a valid request";
+		$response['msg']= "Please login into your Wowtables account.";
 			
 			return response()->json($response, 200);
 		}
