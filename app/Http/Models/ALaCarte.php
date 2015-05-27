@@ -115,16 +115,16 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
-																'bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
-																'designation' => "has reviewed this"//(is_null($queryResult->designation)) ? "" : $queryResult->designation
+																'curator_name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'curator_bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
+																'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
+																'curator_designation' => "has reviewed this",//(is_null($queryResult->designation)) ? "" : $queryResult->designation
+																'suggestions' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
-									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
-									'curator_tips' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips,									
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,																	
 								);
 			
 			//reading the review details
