@@ -31,7 +31,7 @@ class ResetPasswordController extends Controller {
 
         if($validator->fails()){
             $message=$validator->messages();
-            $errorMessage=" Not a valid email";
+            $errorMessage="";
             foreach($data as $key => $value) {
                 if($message->has($key)) {
                     $errorMessage .= $message->first($key).'\n';
