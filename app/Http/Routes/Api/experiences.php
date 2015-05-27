@@ -1,4 +1,5 @@
 <?php
+/*
 
 Route::get('experiences', [
     'uses' => 'Api\ExperiencesController@index',
@@ -16,4 +17,14 @@ Route::get('experiences/{id}', [
     'domain' => env('API_URL')
 ]);
 
-Route::resource('experience','Api\ExperiencesController@show');
+*/
+
+Route::get('experience/{id}', array(
+    'uses' => 'Api\ExperiencesController@show',
+    'as' => 'ApiExperienceDetails',
+    'middleware' => 'wow.api',
+    'where' => array('id' => '\d+'),
+    'domain' => env('API_URL')
+   ));
+
+//Route::resource('experience','Api\ExperiencesController@show');
