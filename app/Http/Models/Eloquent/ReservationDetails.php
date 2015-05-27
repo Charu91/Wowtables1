@@ -96,12 +96,19 @@ class ReservationDetails extends Model {
 		#saving the information into the DB
 		$savedData = $reservation->save();
 		
-		if($savedData) {
+		if($savedData) {			
+			
+			$reservation_id = ReservationDetails::where('user_id', '=', $userID)
+													  ->where('reservation_date', '=', $arrData['reservationDate'])
+													  ->where('reservation_time', '=', $arrData['reservationTime'])
+													  ->select('id')
+													  ->first();				
+
 			if($arrData['reservationType'] == 'alacarte') {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 				
-				
+				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
 				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
@@ -116,6 +123,7 @@ class ReservationDetails extends Model {
 					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
 				}				
 				
+				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $productDetail['name'];
 				$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
