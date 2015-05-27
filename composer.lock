@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "2.8.5",
+            "version": "2.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ec34eddcff0b7385afdb474ce3705580f7116294"
+                "reference": "f7a45e68187bc29d82b710b753fda47839a73d98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ec34eddcff0b7385afdb474ce3705580f7116294",
-                "reference": "ec34eddcff0b7385afdb474ce3705580f7116294",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f7a45e68187bc29d82b710b753fda47839a73d98",
+                "reference": "f7a45e68187bc29d82b710b753fda47839a73d98",
                 "shasum": ""
             },
             "require": {
@@ -71,7 +71,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2015-05-18 23:19:07"
+            "time": "2015-05-21 20:09:31"
         },
         {
             "name": "classpreloader/classpreloader",

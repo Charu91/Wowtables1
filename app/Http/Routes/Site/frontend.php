@@ -104,6 +104,20 @@ Route::get('/{city}/experiences/{experience}/',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/experiences/thankyou/{orderid}',[
+    'uses' => 'Site\ExperienceController@thankyou',
+    //'where' => '*',
+    'as' => 'experienceThankyou',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/alacarte/thankyou/{orderid}',[
+    'uses' => 'Site\AlacarteController@thankyou',
+    //'where' => '*',
+    'as' => 'alacarteThankyou',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::post('orders/expcheckout',[
     'uses' => 'Site\ExperienceController@exporder',
     'as' => 'experience.expcheckout',

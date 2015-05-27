@@ -944,7 +944,9 @@ class AlacarteModel{
       $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
       $arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
       $arrResponse['data']['partySize'] = $arrData['partySize'];
-      //$arrResponse['data']['reward_point'] = $productDetail['reward_point']; 
+      $arrResponse['data']['reservationID'] = $reservationId;
+      $arrResponse['data']['reservation_type'] = "A la carte";
+      //$arrResponse['data']['reward_point'] = $productDetail['reward_point'];
       return $arrResponse;
     }
     
@@ -971,6 +973,30 @@ class AlacarteModel{
     
     return $arrData;
   }
+
+    public function getOutlet($vendorLocationID){
+        $queryResult = \DB::table('vendor_locations as vl')
+            ->leftJoin('locations as l','vl.location_id','=','l.id')
+            ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+            ->where('vl.id',$vendorLocationID)
+            ->select('l.name', 'v.name as vendor_name')
+            ->first();
+
+
+        return $queryResult;
+
+    }
+
+    public function getLocationDetails($vendorLocationID){
+        $queryResult = \DB::table('vendor_locations as vl')
+            ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+            ->where('vl.id',$vendorLocationID)
+            ->select('vla.address','vla.latitude','vla.longitude')
+            ->first();
+
+
+        return $queryResult;
+    }
     
 }
 

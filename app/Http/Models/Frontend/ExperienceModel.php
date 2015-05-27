@@ -1085,7 +1085,9 @@ class ExperienceModel {
       $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
       $arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
       $arrResponse['data']['partySize'] = $arrData['partySize'];
-      //$arrResponse['data']['reward_point'] = $productDetail['reward_point']; 
+      $arrResponse['data']['reservationID'] = $reservationId;
+      $arrResponse['data']['reservation_type'] = $reservation['reservation_type'];
+      //$arrResponse['data']['reward_point'] = $productDetail['reward_point'];
       return $arrResponse;
     }
     
@@ -1142,13 +1144,31 @@ class ExperienceModel {
           ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
           ->leftJoin('products as p','pvl.product_id','=','p.id')
           ->where('pvl.id',$vendorLocationID)
-          ->select('l.name', 'pvl.descriptive_title' , 'p.name as product_name', 'v.name as vendor_name')
+          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
           ->first();
 
 
       return $queryResult;
 
   }
+
+  public function getLocationDetails($vendorLocationID){
+      $queryResult = \DB::table('product_vendor_locations as pvl')
+          ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+          ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+          ->where('pvl.id',$vendorLocationID)
+          ->select('vla.address','vla.latitude','vla.longitude')
+          ->first();
+
+
+      return $queryResult;
+  }
+
+    public function fetchDetails($id){
+        $userDetails = DB::table('users')->where('id', $id)->first();
+
+        return $userDetails;
+    }
 
 
 }
