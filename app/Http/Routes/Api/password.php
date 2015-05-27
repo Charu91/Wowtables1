@@ -1,6 +1,6 @@
 <?php
-Route::post('resetPassword', 'Api\PasswordController@createPassword');
+Route::post('forgotPassword', 'Api\ResetPasswordController@forgotPasswordRequest');
 
-Route::get('resetPassword/{token}', 'Api\PasswordController@verifyResetToken');
+Route::get('forgotPassword/{token}', 'Api\ResetPasswordController@verifyResetToken');
 
-Route::put('resetPassword', 'Api\PasswordController@updatePassword');
+Route::put('forgotPassword', 'Api\ResetPasswordController@newPassword');

@@ -5,20 +5,34 @@ use WowTables\Http\Models\Password;
 use Request;
 use Validator;
 use Config;
-class PasswordController extends Controller {
+/**
+ * Controller class PasswordController.
+ *
+ * @package  Wowtables
+ * @version  1.0.0
+ * @since    1.0.0
+ * @author   Parth Shukla <parthshukla@ahex.co.in>
+ */
+class ResetPasswordController extends Controller {
 
-	//Function to create password reset string and send the mail to user
-	public function createPassword() {
+	/**
+     * Method to create new token for forgot password request.
+     *
+     * @access  public
+     * @return  response
+     * @since   1.0.0
+     */
+	public function forgotPasswordRequest() {
 
-		$email = Request::all();
+		$data = Request::all();
 
-		//Validation user's profile data
-        $validator = Validator::make($email,Password::$arrPasswordRule);
+		//validating user submitted data
+        $validator = Validator::make($data,Password::$arrPasswordRule);
 
         if($validator->fails()){
             $message=$validator->messages();
             $errorMessage=" Not a valid email";
-            foreach($email as $key => $value) {
+            foreach($data as $key => $value) {
                 if($message->has($key)) {
                     $errorMessage .= $message->first($key).'\n';
                 }
@@ -28,15 +42,21 @@ class PasswordController extends Controller {
             return response()->json($arrResponse,200);
         }
         else{
-            return response()->json(Password::requestPassword($email),200);
+            return response()->json(Password::requestPassword($data),200);
         }       
 
 	}
+
 	//-----------------------------------------------------------------
 
-
-	//Function to update new password of the user
-	public function updatePassword() {
+    /**
+     * Updates the user existing password.
+     *
+     * @access  public
+     * @return  response
+     * @since   1.0.0
+     */
+	public function newPassword() {
 
 		$data = Request::all();
 
@@ -45,8 +65,8 @@ class PasswordController extends Controller {
 
         if($validator->fails()){
             $message=$validator->messages();
-            $errorMessage="Password not matched. Try again...";
             foreach($data as $key => $value) {
+                $errorMessage = '';
                 if($message->has($key)) {
                     $errorMessage .= $message->first($key).'\n ';
                 }
@@ -64,14 +84,45 @@ class PasswordController extends Controller {
         }        
 
 	}
-	//-----------------------------------------------------------------
 
-
-
-    //Function to verify token
-    public function verifyResetToken($token) {
-        return response()->json(Password::verifyToken($token),200);        
-    }
     //-----------------------------------------------------------------
 
+    /**
+     * Verifies the token submitted by the user.
+     * 
+     * @access  public
+     * @param   string  $token
+     * @return  response
+     * @since   1.0.0
+     */
+    public function verifyResetToken($token) {
+
+        $data=array('token' => $token );
+
+        $validator = Validator::make($data,Password::$arrPasswordToken);
+
+        if($validator->fails()){
+            $message=$validator->messages();
+            foreach($data as $key => $value) {
+                $errorMessage = '';
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            $arrResponse['status'] = Config::get('constants.API_ERROR');
+            $arrResponse['msg'] = $errorMessage;
+            return response()->json($arrResponse,200);
+        }
+        else{
+
+                $arrResponse['status'] = Config::get('constants.API_SUCCESS');
+                $arrResponse['msg'] = 'Valid Token.';
+                $arrResponse['data']['token'] = $token;            
+        }           
+
+        return response()->json($arrResponse,200);        
+    }
+
 }
+//end of class ResetPasswordRequest
+//end of file ResetPasswordRequest.php
