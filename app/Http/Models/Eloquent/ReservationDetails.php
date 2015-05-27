@@ -45,7 +45,7 @@ class ReservationDetails extends Model {
 	 * @return	boolean
 	 * @since	1.0.0
 	 */
-	public static function addReservationDetails($arrData, $userID) {
+	public static function addReservationDetails($arrData, $userID, $userType='website_user') {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
@@ -96,12 +96,19 @@ class ReservationDetails extends Model {
 		#saving the information into the DB
 		$savedData = $reservation->save();
 		
-		if($savedData) {
+		if($savedData) {			
+			
+			$reservation_id = ReservationDetails::where('user_id', '=', $userID)
+													  ->where('reservation_date', '=', $arrData['reservationDate'])
+													  ->where('reservation_time', '=', $arrData['reservationTime'])
+													  ->select('id')
+													  ->first();				
+
 			if($arrData['reservationType'] == 'alacarte') {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 				
-				
+				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
 				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
@@ -116,6 +123,7 @@ class ReservationDetails extends Model {
 					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
 				}				
 				
+				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $productDetail['name'];
 				$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
@@ -187,7 +195,7 @@ class ReservationDetails extends Model {
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrResponse['status'] = Config::get('constants.API_FAIL');
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
 			$arrResponse['msg'] = 'Sorry. No Such record exists.';
 		}
 		
@@ -353,10 +361,11 @@ class ReservationDetails extends Model {
 						->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
 						->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
-						->where('pvl.vendor_location_id',$productVendorLocationID)
-						->where('pa.alias','reward_points_per_reservation')
+						->where('pvl.id',$productVendorLocationID)
+                        ->where('pa.alias','reward_points_per_reservation')
 						->select('products.id','products.name','pai.attribute_value as reward_point')
-						->first();
+                        ->first();
+
 		
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;

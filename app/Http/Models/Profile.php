@@ -10,7 +10,18 @@ use Config;
  */
 class Profile {
 
-    protected $table = 'users';
+    static $arrRules = array(
+                            'access_token' => 'required|exists:user_devices,access_token',
+                            'full_name' => 'required||max:64'  ,
+                            'phone_number' => 'required',
+                            'zip_code'  => 'required',
+                            'location_id'  => 'required',
+                            'dob' => 'required|date',
+                            'gender' => 'required|in:Male,Female'
+                           );
+    //-------------------------------------------------------------
+
+    static $arrMyProfileRule=array( 'access_token' => 'required|exists:user_devices,access_token');
 
     /**
      * Get the Profile details of the user

@@ -1,7 +1,8 @@
 <?php namespace WowTables\Http\Controllers;
-
+use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Http\Request;
 use WowTables\Http\Models\Locations;
+use DB;
 /**
  * Class AdminLocationsController
  * @package WowTables\Http\Controllers
@@ -29,7 +30,31 @@ class AdminLocationsController extends Controller {
      */
     public function index(Request $request, Locations $locations)
     {
+
         return response()->json($locations->fetch($request->all()));
+    }
+
+    /**
+     * Fetch the list of Locations
+     *
+     * @Get("/", as="AdminLocationsIndex")
+     */
+    public function locationUpdate($id, Encrypter $encrypter)
+    {
+        //echo $id;
+        $token = $encrypter->encrypt(csrf_token());
+        //$locations = DB::table('locations')->where('id', '=', $id)->first();
+        $query="SELECT ld.`id` AS `location_id` , ld.`name` AS `location` , ld.`slug` AS `slug` , IF( la.`id` = ld.`id` , '', la.`id` ) AS `parent_id` , IF( la.`id` = ld.`id` , '', la.`name` ) AS `parent` , CAST( ld.type AS CHAR ) AS `location_type`
+                FROM locations_tree AS `lt`
+                INNER JOIN locations AS `ld` ON lt.`descendant` = ld.`id`
+                INNER JOIN locations AS `la` ON lt.`ancestor` = la.`id`
+                WHERE (lt.`length` =1 OR ld.`type` = 'Country') AND ld.id = '$id'";
+        $locations = DB::select($query);
+        /*print_r($locations);
+        echo $locations['0']->location_id;
+        exit;*/
+        return view('admin.settings.locationsupdate', ['_token' => $token,'locations'=>$locations]);
+        //return response()->json($locations->fetch($request->all()));
     }
 
     /**
@@ -60,6 +85,41 @@ class AdminLocationsController extends Controller {
                 $input['location_parent_id']
             )
         );
+    }
+
+    /**
+     * Add a new Location with or without a parent
+     *
+     * @Post("/", as="AdminLocationStore")
+     */
+    public function updateSave(Request $request, Locations $locations)
+    {
+
+        $input = $request->all();
+       /* print_r($input);
+        exit;*/
+        return response()->json(
+            $locations->update(
+                $input['location_name'],
+                $input['location_id'],
+                $input['slug'],
+                $input['location_type'],
+                $input['location_parent_id']
+            )
+        );
+    }
+
+    /**
+     * Add a new Location with or without a parent
+     *
+     * @Post("/", as="AdminLocationStore")
+     */
+    public function locationRemove(Request $request, Locations $locations, $id)
+    {
+
+       $remove = DB::update("update locations set `visible`='0' where id ='$id'");
+
+       return redirect('admin/settings/locations')->with('message', 'Record removed successfully.');
     }
 
     /**

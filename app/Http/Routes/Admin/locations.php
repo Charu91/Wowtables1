@@ -33,6 +33,14 @@ Route::post('admin/locations/', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('admin/locationsupdate/', [
+    'uses' => 'AdminLocationsController@updateSave',
+    'as' => 'AdminLocationUpdateStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('admin/locations/{id}', [
     'uses' => 'AdminLocationsController@edit',
     'as' => 'AdminLocationEdit',
@@ -44,6 +52,22 @@ Route::get('admin/locations/{id}', [
 Route::put('admin/locations/{id}', [
     'uses' => 'AdminLocationsController@update',
     'as' => 'AdminLocationUpdate',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/settings/locations/update/{id}', [
+    'uses' => 'AdminLocationsController@locationUpdate',
+    'as' => 'AdminLocationUpdate',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/settings/locations/remove/{id}', [
+    'uses' => 'AdminLocationsController@locationRemove',
+    'as' => 'AdminLocationRemove',
     'middleware' => [],
     'where' => [],
     'domain' => env('WEBSITE_URL'),

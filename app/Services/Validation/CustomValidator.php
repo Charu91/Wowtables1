@@ -28,6 +28,7 @@ class CustomValidator extends Validator {
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
 							->where('rd.reservation_date','=',$reservationDate)
 							->where('ud.access_token',$accessToken)
+							->whereIn('rd.reservation_status',['new', 'edited'])
 							->select('rd.id',
 									DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
 									)
@@ -96,7 +97,33 @@ class CustomValidator extends Validator {
 			}
 		}				
 		return TRUE;
-	}	
+	}
+
+	//-----------------------------------------------------------------
+
+	/**
+	 * Checks whether the token is valid and active or not	 
+	 * 
+	 * @access	public
+	 * @param	$attribute
+	 * @return	boolean
+	 * @since	1.0.0
+	 */
+	public function validatePasswordResetToken($attribute, $value, $parameter) {
+		
+		$token=DB::table('password_request as pr')
+                        ->where('pr.request_token',$value)
+                        ->where('pr.status','=','active')
+                        ->select('user_id')
+                        ->first(); 
+            if($token){
+            		return TRUE;
+            }
+            else{
+            	 	return FALSE;
+            }
+
+	}
 	
 }
 //end of class CustomValidator

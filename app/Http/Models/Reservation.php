@@ -127,7 +127,7 @@ class Reservation {
 		foreach ($queryResult as $row) {
 			$arrLocLmt[] = array(
 									'experience_id' => $row->experience_id,
-									'vl_id' => $row->id, 
+									'vl_id' => $row->pvl_id,
 									'area' => $row->area, 
 									'min_people' => (is_null($row->min_people_per_reservation)) ? '' : $row->min_people_per_reservation, 
 									'max_people' => (is_null($row->max_people_per_reservation)) ? '' : $row->max_people_per_reservation, 
@@ -367,7 +367,7 @@ class Reservation {
 	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-						->leftJoin('product_vendor_locations as pvl','pvl.vendor_location_id','=','rd.product_vendor_location_id')
+						->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
 						->leftJoin('products','products.id','=','pvl.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
 						->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
@@ -391,7 +391,9 @@ class Reservation {
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
 									 'ploc.name as product_locality','pvla.address as product_address',
 									 'vloc.name as vendor_locality', 'vvla.address as vendor_address')
-						->groupBy('rd.id')
+						->orderBy('rd.reservation_date','asc')
+						->orderBy('rd.reservation_time','asc')
+						->groupBy('rd.id') 
 						->get();
 		//echo $queryResult->toSql();
 		
@@ -447,7 +449,7 @@ class Reservation {
 									'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
 									'type' => $row->reservation_type,
 									'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
-									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_id,
+									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
 									'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
 									'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
 									'guest_name' => $row->guest_name,
@@ -477,8 +479,10 @@ class Reservation {
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_ERROR');
+			$arrData['status'] = Config::get('constants.API_SUCCESS');
 			$arrData['msg'] = 'No matching record found.';
+			$arrData['data']['pastReservationCount'] = 0;  
+			$arrData['data']['upcomingReservationCount'] = 0; 
 		}
 		return $arrData;
 	}

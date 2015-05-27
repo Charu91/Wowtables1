@@ -164,6 +164,39 @@
             });
         });
 
+          $('#updateLocation').on('click', function(){
+
+            var $this = $(this)
+            //  , $btn = $this.button('loading');
+            var location_id = $('#location_id').val();
+            $.ajax({
+                url: '/admin/locationsupdate',
+                method: 'POST',
+                data: {
+                    location_name: locationNameInput.val(),
+                    location_id:location_id,
+                    slug: locationSlugInput.val(),
+                    location_type: locationTypeSelect.val(),
+                    location_parent_id: (locationParentSelect.val() !== undefined)? locationParentSelect.val():null
+                },
+                headers: {
+                    'X-XSRF-TOKEN': token
+                }
+            }).done(function(data){
+                if(data.status === 'success'){
+                    oTable.ajax.reload();
+                    //resetLocationForm()
+                    window.location.href='/admin/settings/locations/';
+                }else{
+                    alert('There was a problem saving the location')
+                }
+                //$btn.button('reset');
+            }).fail(function(jqXHR){
+                console.log(jqXHR);
+                //$btn.button('reset');
+            });
+        });
+
         $('#resetLocationForm').on('click', function(){
             resetLocationForm();
         });
@@ -180,3 +213,11 @@
         }
     });
 })(jQuery);
+
+function removeLocation(id)
+{
+ if(confirm('Are you sure you want to delete location with id '+id+'?'))
+            {
+                 window.location.href='/admin/settings/locations/remove/'+id;
+            }
+}

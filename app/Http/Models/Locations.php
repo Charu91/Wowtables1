@@ -30,7 +30,7 @@ class Locations {
                 FROM locations_tree AS `lt`
                 INNER JOIN locations AS `ld` ON lt.`descendant` = ld.`id`
                 INNER JOIN locations AS `la` ON lt.`ancestor` = la.`id`
-                WHERE (lt.`length` = 1 OR ld.`type` = ?)
+                WHERE (lt.`length` = 1 OR ld.`type` = ?) and ld.`visible` = "1"
             ';
 
             $params = ['Country'];
@@ -84,7 +84,7 @@ class Locations {
                         $location->parent,
                         "
                             <a
-                                href='javascript:void(0);'
+                                href='/admin/settings/locations/update/{$location->location_id}'
                                 title='edit''
                                 data-location_id='{$location->location_id}'
                                 data-location_parent_id='{$location->parent_id}'
@@ -92,7 +92,7 @@ class Locations {
                                 <i class='fa fa-edit'></i>
                             </a>
                             &nbsp;|&nbsp;
-                            <a href='javascript:void(0);' title='remove'>
+                            <a href='javascript:void(0);' onClick='removeLocation({$location->location_id});' title='remove'>
                                 <i class='fa fa-trash-o'></i>
                             </a>
                         "
@@ -132,6 +132,7 @@ class Locations {
      */
     public function add($name, $slug, $type, $parent_id = null)
     {
+
         if($type === 'Country'){
             if(is_null($parent_id)){
 
@@ -186,22 +187,27 @@ class Locations {
         }else{
             $parent_type = DB::table('locations')->where('id', $parent_id)->pluck('type');
 
-            if($parent_type){
-                if($parent_type === $this->hierarchy[$type]){
-                    $slug_exists = DB::table('locations')->where('name', $name)->orWhere('slug', $slug)->count();
-
-                    if(!$slug_exists){
+            if($parent_type)
+            {
+                if($parent_type === $this->hierarchy[$type])
+                {
+                    $slug_exists = DB::table('locations')->where('name', $name)->Where('type', $type)->count();
+                    /*$slug_exists = DB::table('locations')->where('name', $name)->orWhere('slug', $slug);
+                    print_r($slug_exists1);*/
+                    if(!$slug_exists)
+                    {
                         $query = '
                             SELECT count(*) as `location_mapping_exists`
                             FROM locations_tree
-                            WHERE ancestor = ? AND descendant = (
+                            WHERE ancestor = ? AND descendant = ANY(
                               SELECT id FROM locations WHERE name = ?
                             )
                         ';
 
                         $location_map_exists = DB::select($query, [$parent_id, $name]);
 
-                        if($location_map_exists){
+                        if($location_map_exists)
+                        {
 
                             DB::beginTransaction();
 
@@ -209,7 +215,8 @@ class Locations {
                                 ['name' => $name, 'slug' => $slug, 'type' => $type]
                             );
 
-                            if($location_id){
+                            if($location_id)
+                            {
                                 $query = "
                                     INSERT INTO locations_tree (`ancestor`, `descendant`, `length`)
                                     SELECT t.`ancestor`, {$location_id}, t.`length`+1
@@ -231,7 +238,8 @@ class Locations {
                                         'message' => 'There was a problem inserting the location mapping'
                                     ];
                                 }
-                            }else{
+                            }else
+                            {
                                 DB::rollback();
                                 return [
                                     'status' => 'failure',
@@ -239,25 +247,30 @@ class Locations {
                                 ];
                             }
 
-                        }else{
+                        }else
+                        {
                             return [
                                 'status' => 'failure',
                                 'message' => 'The location name and parent map you entered already exists. Please try a different one'
                             ];
                         }
-                    }else{
+                    }else
+                    {
                         return [
                             'status' => 'failure',
                             'message' => 'The slug you mentioned already exists'
                         ];
                     }
-                }else{
+                }else
+                {
                     return [
                         'status' => 'failure',
                         'message' => 'The parent used is not of the valid type. Please choose a '. $this->hierarchy[$type]. ' for the parent'
                     ];
                 }
-            }else{
+            }
+            else
+            {
                 return [
                     'status' => 'failure',
                     'message' => 'The parent you chose does not exist. Please try again'
@@ -279,9 +292,154 @@ class Locations {
      *
      * @return array
      */
-    public function update($location_id, $name, $slug, $type, $parent_id = null)
+    public function update($name, $location_id, $slug, $type, $parent_id = null)
     {
+           if($type === 'Country'){
+            if(is_null($parent_id)){
 
+                $country_slug_exists = DB::table('locations')->where('name', $name)->orWhere('slug', $slug)->count();
+
+                if(!$country_slug_exists){
+
+                    DB::beginTransaction();
+
+                    /*$country_id = DB::table('locations')->insertGetId(
+                        ['name' => $name, 'slug' => $slug, 'type' => $type]
+                    );*/
+                    $location_id = DB::update("update locations set `name`='$name',`slug`='$slug',`type`='$type' where id ='$location_id'");
+
+                    if($location_id){
+                        /*$location_mapping = DB::table('locations_tree')->insert(
+                            ['ancestor' => $country_id, 'descendant' => $country_id, 'length' => 0]
+                        );*/
+
+                        if($location_id){
+                            DB::commit();
+                            return [ 'status' => 'success' ];
+                        }else{
+                            DB::rollback();
+                            return [
+                                'status' => 'failure',
+                                'message' => 'There was a problem inserting the country mapping'
+                            ];
+                        }
+                    }else{
+                        DB::rollback();
+                        return [
+                            'status' => 'failure',
+                            'message' => 'There was a problem inserting the country'
+                        ];
+                    }
+
+                }else{
+                    return [
+                        'status' => 'failure',
+                        'message' => 'The coutry name or slug you mentioned already exists'
+                    ];
+                }
+
+
+            }else{
+                return [
+                    'status' => 'failure',
+                    'message' => 'Invalid parent entered. The country cannot have a parent'
+                ];
+            }
+
+        }else{
+            $parent_type = DB::table('locations')->where('id', $parent_id)->pluck('type');
+
+            if($parent_type)
+            {
+                if($parent_type === $this->hierarchy[$type])
+                {
+                    $slug_exists = DB::table('locations')->where('name', $name)->Where('type', $type)->count();
+                    /*$slug_exists = DB::table('locations')->where('name', $name)->orWhere('slug', $slug);
+                    print_r($slug_exists1);*/
+                    if(!$slug_exists)
+                    {
+                        $query = '
+                            SELECT count(*) as `location_mapping_exists`
+                            FROM locations_tree
+                            WHERE ancestor = ? AND descendant = ANY(
+                              SELECT id FROM locations WHERE name = ?
+                            )
+                        ';
+
+                        $location_map_exists = DB::select($query, [$parent_id, $name]);
+
+                        if($location_map_exists)
+                        {
+
+                            DB::beginTransaction();
+
+                            /*$location_id = DB::table('locations')->insertGetId(
+                                ['name' => $name, 'slug' => $slug, 'type' => $type]
+                            );*/
+                            $location_id = DB::update("update locations set `name`='$name',`slug`='$slug',`type`='$type' where id ='$location_id'");
+
+                            if($location_id)
+                            {
+                                /*$query = "
+                                    INSERT INTO locations_tree (`ancestor`, `descendant`, `length`)
+                                    SELECT t.`ancestor`, {$location_id}, t.`length`+1
+                                    FROM locations_tree AS t
+                                    WHERE t.`descendant` = {$parent_id}
+                                    UNION ALL
+                                    SELECT {$location_id}, {$location_id}, 0
+                                ";
+
+                                $location_mapping = DB::insert($query);*/
+
+                                if($location_id){
+                                    DB::commit();
+                                    return [ 'status' => 'success' ];
+                                }else{
+                                    DB::rollback();
+                                    return [
+                                        'status' => 'failure',
+                                        'message' => 'There was a problem inserting the location mapping'
+                                    ];
+                                }
+                            }else
+                            {
+                                DB::rollback();
+                                return [
+                                    'status' => 'failure',
+                                    'message' => 'There was a problem inserting the location'
+                                ];
+                            }
+
+                        }else
+                        {
+                            return [
+                                'status' => 'failure',
+                                'message' => 'The location name and parent map you entered already exists. Please try a different one'
+                            ];
+                        }
+                    }else
+                    {
+                        return [
+                            'status' => 'failure',
+                            'message' => 'The slug you mentioned already exists'
+                        ];
+                    }
+                }else
+                {
+                    return [
+                        'status' => 'failure',
+                        'message' => 'The parent used is not of the valid type. Please choose a '. $this->hierarchy[$type]. ' for the parent'
+                    ];
+                }
+            }
+            else
+            {
+                return [
+                    'status' => 'failure',
+                    'message' => 'The parent you chose does not exist. Please try again'
+                ];
+            }
+        }
     }
 
     /**

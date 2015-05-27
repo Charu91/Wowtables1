@@ -175,7 +175,7 @@ use Validator;
 				$arrResponse = Reservation::validateReservationData($data);
 				
 				if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-						$arrResponse = ReservationDetails::addReservationDetails($data,$userID);			
+						$arrResponse = ReservationDetails::addReservationDetails($data,$userID, 'mobile_user');
 					}
 				}
 				else {

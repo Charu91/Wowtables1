@@ -15,6 +15,8 @@ use Config;
  */
  class ALaCarte {
  	
+ 	static $arrRules = array('vendorID' => 'exists:vendors,id');
+
 	/**
 	 * Reads the details of the LaCarte matching the
 	 * passed name.
@@ -113,16 +115,16 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
-																'bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
-																'designation' => "has reviewed this"//(is_null($queryResult->designation)) ? "" : $queryResult->designation
+																'curator_name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'curator_bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
+																'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
+																'curator_designation' => "has reviewed this",//(is_null($queryResult->designation)) ? "" : $queryResult->designation
+																'suggestions' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
-									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
-									'curator_tips' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips,									
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,																	
 								);
 			
 			//reading the review details
@@ -399,7 +401,7 @@ use Config;
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
 								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
 								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
-                				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
+                				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),                				
 								'loc.name as location_name',
 								DB::raw('IFNULL(flags.name,"") AS flag_name'),
 								'mrn1.file as ios_image',
@@ -410,9 +412,11 @@ use Config;
 		
 		//array to store the information from the DB
 		$data = array();
+		$data['status']=Config::get('constants.API_SUCCESS');
+
 		if($queryResult) {
 			foreach($queryResult as $row) {
-				$data['data']['branch'][] = array(
+				$data['data']['alacarte'][] = array(
 												'vl_id' => $row->vl_id,
 												'name' => $row->name,
 												'cuisine' => $row->cuisine,
@@ -421,14 +425,17 @@ use Config;
 												'rating' => $row->rating,
 												'location' => $row->location_name,
 												'flag' => $row->flag_name,
-												'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-												'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+												'image' => array(
+																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																 )
 											);
 			}
 		}
 		
+		$data['alacarteCount']=count($data['data']['alacarte']);
 		$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-		
+		$data['experienceCount']=count($data['data']['experience']);
 		return $data;
 	}
 
@@ -453,27 +460,31 @@ use Config;
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
 							->leftJoin('product_attributes as pa', 'pa.id', '=', 'pat.product_attribute_id')
 							->leftJoin('product_pricing as pp', 'pp.product_id', '=', 'p.id')
-							->leftJoin('product_reviews as pr', 'pr.product_id', '=', 'p.id')
+							->leftJoin('product_reviews AS pr', function($join){
+                														$join->on('p.id', '=', 'pr.product_id')
+                    													->on('pr.status','=', DB::raw('"Approved"'));
+                    												})
 							->leftJoin('locations as loc','loc.id','=','vl.location_id')
 							->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
 							->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
 							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
 							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
 							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
-							->where('vl.vendor_id', $vendorID)
-							->where('pr.status','Approved')
+							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
+							->where('vl.vendor_id', $vendorID)							
 							->where('p.status', 'Publish')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
 							->where('mrn2.image_type', 'mobile_listing_android_experience')						
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
-									//DB::raw('IF(mrn.image_type="mobile_listing_android_experience",mrn.file,"") as android_image'),
-									//DB::raw('IF(mrn.image_type="mobile_listing_ios_experience",mrn.file,"") as ios_image'),
+									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),
 									'mrn1.file as ios_image','mrn2.file as android_image',
-									'loc.name as location_name','flags.name as flag_name',
-									'pp.post_tax_price','pp.price'
+									'flags.name as flag_name',
+									'pp.post_tax_price','pp.price',
+									'pp.taxes', 'pt.type_name as price_type'
 									)
 							->groupBy('p.id')
 							->get();							
@@ -490,13 +501,18 @@ use Config;
 											'rating' => $row->rating,
 											'price' => $row->price,
 											'post_tax_price' => $row->post_tax_price,
+											'taxes' => $row->taxes,
+											'price_type' => $row->price_type,
 											'location' => $row->location_name,
-											'flag' => $row->flag_name,
-											'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
-											'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
+											'short_description' => $row->short_description ,
+											'image' => array(
+																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+															 )
 										);
 			}
-		}
+		}		
 		return $data;							
 	}
  }
