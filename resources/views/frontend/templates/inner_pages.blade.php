@@ -664,9 +664,8 @@ if (strpos($url,'alacarte') !== false) {
 
 <div class="container deal-listing primary">
     <div class="row">
-        
-        <div class="clearfix"></div>
 
+        <div class="clearfix"></div>
 
 
  @yield('content')

@@ -246,6 +246,7 @@ class HomePageController extends Controller {
         }
 
          $res = User::where('email',Input::get('email'))->get()->toArray();
+
         if(count($res)>=1){
             echo "This email address is already registered with WowTables.com ";               
         }else{
@@ -274,6 +275,8 @@ class HomePageController extends Controller {
             $registerinfo = $this->customermodel->register($users);
             $last_id = $registerinfo['user_id'];
 
+
+
             // update membership_number
             // update email_whitelist
             if($registerinfo['state'] === 'success'){
@@ -288,6 +291,8 @@ class HomePageController extends Controller {
                     } else {
                         $set_reg_page= "http://www.wowtables.com/registration";
                     }
+
+
 
                     $newdata = array(
                         'id'  => $last_id,
@@ -314,6 +319,13 @@ We add new experiences from the best restaurants in Mumbai,Pune,Delhi,Bengaluru 
 
 Happy Dining,
 The WowTables Team";
+
+                $city_name      = Location::where(['Type' => 'City', 'id' => $users['city']])->pluck('name');
+                if(empty($city_name))
+                {
+                    $city_name = 'mumbai';
+                }
+
 
 					/*Mail::raw($mailbody, function($message) use ($users)
 					{
@@ -355,7 +367,8 @@ The WowTables Team";
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
-                    $city = $users['city'];
+                    //$city = $users['city'];
+                    $city = $city_name;
                         $mergeVars = array(
                             'GROUPINGS' => array(
                                 array(
@@ -376,5 +389,22 @@ The WowTables Team";
             }
            
         }
+    }
+
+    public function forgot_password(){
+
+        $mailbody =  "User - ".$email.";<br/>Hi {$user[1]['full_name']},<br>
+            We have received a forgot password request from you. If you have sent the request, please use the link below to set a new password.
+            <br /><a href='".base_url()."users/setpassword/".$user_id."/".$rand."'>".base_url()."users/setpassword/".$user_id."/".$rand."</a><br />
+            If you have not sent the request then you do not need to do anything.<br />
+            <br>Thanks & Regards<br>
+            The WowTables Team";
+
+        Mail::raw($mailbody, function($message) use ($users)
+        {
+            $message->from('info@wowtables.com', 'WowTables by GourmetItUp');
+
+            $message->to($users['email_address'])->subject('Registration with WowTables');
+        });
     }
 }

@@ -206,7 +206,7 @@
 								->groupBy('products.id')
 								->select('products.id','products.name as title','pat.attribute_value as description',
 											'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
-											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
+											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image','pp.taxes', 
 											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
 											'locations.name as location_name');
 
@@ -284,7 +284,7 @@
 													'description' => $row->description,
 													'short_description' => $row->short_description,
 													'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
-													'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
+													'taxes' => $row->taxes,
 													'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
 													'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
 													'tax' => (is_null($row->tax)) ? "": $row->tax,

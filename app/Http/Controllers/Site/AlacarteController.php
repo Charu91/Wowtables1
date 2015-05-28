@@ -1,5 +1,6 @@
 <?php namespace WowTables\Http\Controllers\Site;
 
+use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Controllers\Controller;
 use App;
 use Cookie;
@@ -17,12 +18,20 @@ use Hash;
 use DB;
 use Auth;
 use Redirect;
+use Mail;
+use WowTables\Http\Models\Frontend\ExperienceModel;
+use Mailchimp;
 
 class AlacarteController extends Controller {
+
+    protected $listId = '986c01a26a';
 	
-	function __construct(Request $request, AlacarteModel $alacarte_model){
+	function __construct(RestaurantLocationsRepository $repository, Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp){
         $this->request = $request;
         $this->alacarte_model = $alacarte_model;
+        $this->experiences_model = $experiences_model;
+        $this->repository = $repository;
+        $this->mailchimp = $mailchimp;
     }
 
     function index(){
@@ -296,8 +305,13 @@ class AlacarteController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']          = Input::get('add_ons');
         //$dataPost['access_token'] = Session::get('id');
+        $outlet = $this->alacarte_model->getOutlet($dataPost['vendorLocationID']);
 
-       
+        $locationDetails = $this->alacarte_model->getLocationDetails($dataPost['vendorLocationID']);
+
+        $vendorDetails = $this->repository->getByRestaurantLocationId($dataPost['vendorLocationID']);
+
+        //echo "<pre>"; print_r($locationDetails); die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -328,13 +342,112 @@ class AlacarteController extends Controller {
         }
         else {
             $userID = Session::get('id');
-        
+            $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+
+            //Start MailChimp
+            if(!empty($getUsersDetails)){
+
+                $merge_vars = array(
+                    'MERGE1'=>$dataPost['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$getUsersDetails->alacarte_bookings + 1,
+                    'MERGE13'=>$dataPost['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+                );
+                $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+            }
+            //End MailChimp
+            $getReservationID = '';
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->alacarte_model->validateReservationData($dataPost);
             
             if($arrResponse['status'] == 'success') {
-                    $arrResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);            
+                    $reservationResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);
+                $getReservationID = $reservationResponse['data']['reservationID'];
+                    $zoho_data = array(
+                        'Name' => $dataPost['guestName'],
+                        'Email_ids' => $dataPost['guestEmail'],
+                        'Contact' => $dataPost['phone'],
+                        'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
+                        'No_of_People' => $dataPost['partySize'],
+                        'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
+                        'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
+                        //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Occasion' => $dataPost['specialRequest'],
+                        'Type' => "Alacarte",
+                        'API_added' => 'Yes',
+                        //'GIU_Membership_ID' => '1001010',
+                        'Outlet' => $outlet->name,
+                        //'Points_Notes'=>'test',
+                        'AR_Confirmation_ID'=>'0',
+                        'Auto_Reservation'=>'Not available',
+                        //'telecampaign' => $campaign_id,
+                        //'total_no_of_reservations'=> '1',
+                        'Calling_option' => 'No'
+                    );
+                    //echo "<pre>"; print_r($zoho_data);
+                    $zoho_res = $this->zoho_add_booking($zoho_data);
+                    $zoho_success = $zoho_res->result->form->add->status;
+                    //echo "<pre>"; print_r($zoho_success); die;
+                    if($zoho_success[0] != "Success"){
+                        //$this->email->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                        //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
+                        //$this->email->to($list);
+                        //$this->email->subject('Urgent: Zoho reservation posting error');
+                        $mailbody = 'A'.sprintf("%06d",$arrResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                        $mailbody .= 'Reservation Details<br>';
+                        foreach($zoho_data as $key => $val){
+                            $name = str_replace('_',' ',$key);
+                            $mailbody .= $name.' '.$val.'<br>';
+                        }
+
+                        Mail::raw($mailbody, function($message) use ($zoho_data)
+                        {
+                            $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                        });
+                    }
+
+                $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
+                                                'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
+                                                'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
+                                                'venue' => $outlet->vendor_name,
+                                                'username' => $dataPost['guestName']
+                                            );
+
+                //echo "<pre>"; print_r($mergeReservationsArray); die;
+
+                Mail::send('site.pages.restaurant_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=>$dataPost,
+                    'productDetails'=>$vendorDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to(Input::get('email'))->subject('Your WowTables Reservation');
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                });
+
+                Mail::send('site.pages.restaurant_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=>$dataPost,
+                    'productDetails'=>$vendorDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to(Input::get('email'))->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                });
+
+
                 }
             }
             else {
@@ -356,7 +469,32 @@ class AlacarteController extends Controller {
         $arrResponse['current_city']           = strtolower($city_name);
         $arrResponse['current_city_id']        = $city_id;
 
-        return response()->view('frontend.pages.thankyou',$arrResponse);
+        $arrResponse['restaurant_name'] = $outlet->vendor_name;
+        $arrResponse['reservation_date'] = $dataPost['reservationDate'];
+        $arrResponse['reservation_time'] = $dataPost['reservationTime'];
+        $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
+        $arrResponse['guests'] = $dataPost['partySize'];
+        $arrResponse['terms_and_conditions'] = $vendorDetails['attributes']['terms_and_conditions'];
+        $arrResponse['address'] = $locationDetails->address;
+        $arrResponse['lat'] = $locationDetails->latitude;
+        $arrResponse['long'] = $locationDetails->longitude;
+        $arrResponse['city'] = $arrResponse['current_city'];
+        //echo "<pre>"; print_r($arrResponse); die;
+        //return response()->view('frontend.pages.thankyou',$arrResponse);
+        return Redirect::to('/alacarte/thankyou/A'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
+    }
+
+    public function thankyou($response){
+        //echo "orderid == ".$orderID;
+        $result1= Session::get('response');
+        session_start();
+        $result= $_SESSION["result"]=$result1;
+        $data['current_city'] = $result['current_city'];
+        $data['current_city_id'] = $result['current_city_id'];
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $data['cities'] = $cities;
+        return view('frontend.pages.alacarte_thankyou',$data,['result'=>$result]);
+        //echo "dsf<pre>"; print_r($result); echo "asc<pre>";
     }
 
     public function alaorderexists()
@@ -375,5 +513,25 @@ class AlacarteController extends Controller {
 
         $arrData = $this->alacarte_model->validateReservationData($dataPost);
         echo json_encode($arrData);
+    }
+
+    public function zoho_add_booking($data)
+    {
+        $ch = curl_init();
+        $config = array(
+            //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+            'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+            'scope' => 'creatorapi',
+        );
+        $curlConfig = array(
+            CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/add/",
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS     => $config + $data,
+        );
+        curl_setopt_array($ch, $curlConfig);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return	simplexml_load_string($result);
     }
 }
