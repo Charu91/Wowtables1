@@ -110,7 +110,7 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['vl_id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
@@ -125,7 +125,7 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $productDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/experience/'.$productDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
@@ -259,7 +259,42 @@ class ReservationDetails extends Model {
  		
 			#saving the information into the DB
 			$savedData = $reservation->save();
-			
+			//Added on 28.5.15
+			$resultData = Self::where('id', $arrData['reservationID'])
+						->select('reservation_type','product_vendor_location_id','vendor_location_id')
+						->first();
+
+			//print_r($resultData['product_vendor_location_id']);
+			//print_r($resultData['vendor_location_id']);  
+			//die();
+
+			if($resultData['reservation_type']=='alacarte'){
+				//reading the resturants detail
+				$aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
+
+				$arrResponse['data']['reservation_id'] = $arrData['reservationID']; 
+				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
+				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['vl_id'];
+				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+				$arrResponse['data']['partySize'] = $arrData['partySize'];
+				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
+
+			}
+			else if($resultData['reservationType'] == 'experience'){
+				//reading the product detail
+				$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
+
+				$arrResponse['data']['reservation_id'] = $arrData['reservationID']; 
+				$arrResponse['data']['name'] = $productDetail['name'];
+				$arrResponse['data']['url'] = URL::to('/').'/experience/'.$productDetail['id'];
+				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+				$arrResponse['data']['partySize'] = $arrData['partySize'];
+				$arrResponse['data']['reward_point'] = $productDetail['reward_point'];
+
+			}			
+
 			$arrResponse['status'] = ($savedData) ? Config::get('constants.API_SUCCESS'): Config::get('constants.API_FAILED');
 			
 		}
@@ -331,10 +366,11 @@ class ReservationDetails extends Model {
 						->join('vendor_attributes as va','va.id','=','vai.vendor_attribute_id')
 						->where('vl.id',$vendorLocationID)
 						->where('va.alias','reward_points_per_reservation')
-						->select('vendors.id','vendors.name','vai.attribute_value as reward_point')
+						->select('vendors.id','vendors.name','vai.attribute_value as reward_point','vl.id as vl_id')
 						->first();
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;
+			$arrData['vl_id']=$queryResult->vl_id;
 			$arrData['name'] = $queryResult->name;
 			$arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
 		}
