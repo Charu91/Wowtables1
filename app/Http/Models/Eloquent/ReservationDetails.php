@@ -141,12 +141,10 @@ class ReservationDetails extends Model {
 					                    //'telecampaign' => $campaign_id,
 					                    //'total_no_of_reservations'=> '1',
 					                    'Calling_option' => 'No'
-                					  );			
-							
-							//print_r($zoho_data); die();
+                					  );	
+										 
 				//Calling zoho api method
-				$zoho_res = Self::zohoAddBooking($zoho_data);
-					//print_r($zoho_res); die("hi..");
+				$zoho_res = Self::zohoAddBooking($zoho_data);					 
 				//Call zoho send mail method
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 						
@@ -187,10 +185,9 @@ class ReservationDetails extends Model {
 					                    //'total_no_of_reservations'=> '1',
 					                    'Calling_option' => 'No'
                 						);
-						//print_r($zoho_data); die();
+
 				//Calling zoho api method
 				$zoho_res = Self::zohoAddBooking($zoho_data);
-
 				//Call zoho send mail method
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 			}
@@ -322,15 +319,12 @@ class ReservationDetails extends Model {
  		
 			#saving the information into the DB
 			$savedData = $reservation->save();
-			//Added on 28.5.15
+			 
 			$resultData = Self::where('id', $arrData['reservationID'])
 						->select('reservation_type','product_vendor_location_id','vendor_location_id')
 						->first();
 
-			//print_r($resultData['product_vendor_location_id']);
-			//print_r($resultData['vendor_location_id']);  
-			//die();
-
+			
 			if($resultData['reservation_type']=='alacarte'){
 				//reading the resturants detail
 				$aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
@@ -426,11 +420,18 @@ class ReservationDetails extends Model {
 		$queryResult = \DB::table('vendors')
 						->join('vendor_locations as vl','vl.vendor_id','=','vendors.id')
 						->leftJoin('vendor_location_attributes_integer as vai','vai.vendor_location_id','=','vl.id')
+						->join(DB::raw('vendor_location_attributes_text as vlat'), 'vlat.vendor_location_id', '=', 'vl.id')
+						->join(DB::raw('vendor_attributes as va1'), 'va1.id', '=', 'vlat.vendor_attribute_id')
 						->join('vendor_attributes as va','va.id','=','vai.vendor_attribute_id')
 						->join('locations as l', 'l.id', '=', 'vl.location_id') 
 						->where('vl.id',$vendorLocationID)
 						->where('va.alias','reward_points_per_reservation')
-						->select('vendors.id','vendors.name','vai.attribute_value as reward_point','vl.id as vl_id', 'l.name as location')
+						->select(
+								'vendors.id','vendors.name', 'l.name as location',
+								'vai.attribute_value as reward_point','vl.id as vl_id',								
+								DB::raw('MAX(IF(va1.alias = "short_description", vlat.attribute_value, "")) AS short_description'),
+								DB::raw('MAX(IF(va1.alias = "terms_and_conditions", vlat.attribute_value, "")) AS terms_conditions')
+								)
 						->first();
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;
@@ -438,6 +439,8 @@ class ReservationDetails extends Model {
 			$arrData['name'] = $queryResult->name;
 			$arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
 			$arrData['location'] = $queryResult->location;
+			$arrData['short_description'] = $queryResult->short_description;
+			$arrData['terms_conditions'] = $queryResult->terms_conditions;
 		}
 		
 		return $arrData;
@@ -463,6 +466,9 @@ class ReservationDetails extends Model {
 						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')						
 						->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
 
+						->leftJoin(DB::raw('product_attributes_text as pat3'),'pat3.product_id','=','products.id')
+						->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
+
 						->leftJoin('product_attributes_text as pat', 'pat.product_id', '=', 'products.id')
 						->join('product_attributes as pa2','pa2.id','=','pat.product_attribute_id')
 
@@ -471,7 +477,12 @@ class ReservationDetails extends Model {
 						->where('pvl.id',$productVendorLocationID)
                         ->where('pa.alias','reward_points_per_reservation')
                         ->where('pa2.alias', 'short_description')
-						->select('products.id','products.name','pai.attribute_value as reward_point', 'l.name as location', 'pat.attribute_value as short_description')
+						->select('products.id','products.name','pai.attribute_value as reward_point', 
+								'l.name as location', 'pat.attribute_value as short_description',
+								 //DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+ 								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
+ 								 DB::raw('MAX(IF(pa3.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
+								)
                         ->first();
 
 		
@@ -481,8 +492,9 @@ class ReservationDetails extends Model {
 			$arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
 			$arrData['location'] = $queryResult->location;
 			$arrData['short_description'] = $queryResult->short_description;
+			$arrData['terms_and_conditions'] = $queryResult->terms_and_conditions;
+			$arrData['experience_includes'] = $queryResult->experience_includes;			
 		}
-		
 		return $arrData;
 	} 
 	
@@ -592,7 +604,7 @@ class ReservationDetails extends Model {
 		        CURLOPT_POSTFIELDS     => $config + $data,
 		    );		   
 
-		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
+		    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
 		    curl_setopt_array($ch, $curlConfig);
 		    $result = curl_exec($ch);		   
 		    curl_close($ch);			    	
@@ -612,9 +624,7 @@ class ReservationDetails extends Model {
 
 	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {	
 
-		//print_r($arrData); die();	
-
-        $zoho_success = $zoho_res->result->form->add->status;		
+		$zoho_success = $zoho_res->result->form->add->status;		
         if($zoho_success[0] != "Success") {
 
             $mailbody = 'E'.sprintf("%06d",$reservation_id).' reservation has not been posted to zoho. Please fix manually.<br><br>';
@@ -633,158 +643,177 @@ class ReservationDetails extends Model {
                     });
         }
 
-  //       //Added on 29.05.15    $zoho_data
-  //       if($arrData['reservationType'] == 'alacarte') {
+         
+        if($arrData['reservationType'] == 'alacarte') {
 
-  //       	//====================================
-  //        	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
-  //           $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
-              		
-  //   		// $vendorDetails =  self::getByRestaurantLocationId($arrData['vendorLocationID']);    		
-    		
-  //   		$reservationResponse['status'] = 'success';
-  //   		$reservationResponse['data']= array('reservation_type' => 'event');
-  //   		//$reservationResponse['data']['reservation_type']=='event';
-  //   		//======================================    		
-  //       	$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
-  //                   'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
-  //                   'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
-  //                   'venue' => $outlet->vendor_name,
-  //                   'username' => $zoho_data['Name']
-  //               );
-
-  //               //echo "<pre>"; print_r($mergeReservationsArray); die;        	
-  //       				$post_data =	$arrData;  //Added on 30/05/15
-        		
-  //               Mail::send('site.pages.restaurant_reservation',[
-  //                   'location_details'=> $locationDetails,
-  //                   'outlet'=> $outlet,
-  //                   'post_data'=> $post_data,
-  //                   'productDetails'=>"",//$vendorDetails,
-  //                   'reservationResponse'=>$reservationResponse,
-  //               ], function($message) use ($arrData){
-  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-
-  //                   $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');
-  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
-
-  //               });
-
-  //               Mail::send('site.pages.restaurant_reservation',[
-  //                   'location_details'=> $locationDetails,
-  //                   'outlet'=> $outlet,
-  //                   'post_data'=> $post_data,
-  //                   'productDetails'=>"",//$vendorDetails,
-  //                   'reservationResponse'=>$reservationResponse,
-  //               ], function($message) use ($mergeReservationsArray, $arrData){
-  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-
-  //                   $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                     
-  //               });
-  //       }
-  //       else if($arrData['reservationType'] == 'experience') {
-
-
-  //       	//====================================
-  //            $locationDetails = self::getExperienceLocationDetails($arrData['vendorLocationID']);    	 
-  //   		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);    		 
-  //   		 // $productDetails = self::getByExperienceId($outlet->product_id);      		    	 
+        	//====================================
+         	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+            $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);             		
     		 
-  //   		 $reservationResponse['status'] = 'success';
-  //   		//======================================
+    		$vendorDetailsTemp =  self::readVendorDetailByLocationID($arrData['vendorLocationID']);     		
     		
-  //       		$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
-  //                   'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
-  //                   'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
-  //                   'venue' => $outlet->vendor_name,
-  //                   'username' => $zoho_data['Name']
-  //               );
 
-  //               //echo "<pre>"; print_r($mergeReservationsArray); die;                    	
+    		$vendorDetails['attributes']= array('short_description' => $vendorDetailsTemp['short_description'], 
+    							  				'terms_and_conditions' => $vendorDetailsTemp['terms_conditions']
+    							  				);	
+    		
+    		$reservationResponse['status'] = 'success';
+    		$reservationResponse['data']= array('reservation_type' => 'A la carte', 
+    											'reservationID' => $reservation_id
+    										   );
+    		       		
+    		//======================================    		
+        	$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
+                    'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
+                    'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
+                    'venue' => $outlet->vendor_name,
+                    'username' => $zoho_data['Name']
+                );
 
-  //               Mail::send('site.pages.restaurant_reservation',[
-  //                   'location_details'=> $locationDetails,
-  //                   'outlet'=> $outlet,
-  //                   'post_data'=> $arrData,
-  //                   'productDetails'=>"",//$productDetails,
-  //                   'reservationResponse'=>$reservationResponse,
-  //               ], function($message) use ($arrData){
-  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                //echo "<pre>"; print_r($mergeReservationsArray); die;        	
+        				$post_data =	$arrData;   
+        		
+                Mail::send('site.pages.restaurant_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=> $post_data,
+                    'productDetails'=>$vendorDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray, $arrData){                
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-  //                   $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');                    
-  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 
-  //               });
+                });
+                	
+                Mail::send('site.pages.restaurant_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=> $post_data,
+                    'productDetails'=> $vendorDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray, $arrData){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                     
+                });
+        }
+        else if($arrData['reservationType'] == 'experience') {
+
+
+        	//====================================
+             $locationDetails = self::getExperienceLocationDetails($arrData['vendorLocationID']);    	 
+    		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);   		 
+
+    		 $productDetailsTemp =  self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);     		
+    		
+    		 	
+    		 $productDetails['attributes']= array(
+    		 									'experience_includes' => $productDetailsTemp['experience_includes'],
+    		 									'short_description' => $productDetailsTemp['short_description'], 
+    							  				'terms_and_conditions' => $productDetailsTemp['terms_and_conditions']
+    							  				);
+    		 
+    		$reservationResponse['status'] = 'success';
+    		$reservationResponse['data']= array('reservation_type' => 'Experience', 
+    											'reservationID' => $reservation_id
+    										   );     		 
+    		
+    		//======================================
+    		
+        		$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
+                    'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
+                    'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
+                    'venue' => $outlet->vendor_name,
+                    'username' => $zoho_data['Name']
+                );
+
+                //echo "<pre>"; print_r($mergeReservationsArray); die;                    	
+
+                Mail::send('site.pages.experience_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=> $arrData,
+                    'productDetails'=>$productDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray, $arrData){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');                    
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+
+                });
 
 
 
-  //               Mail::send('site.pages.restaurant_reservation',[
-  //                   'location_details'=> $locationDetails,
-  //                   'outlet'=> $outlet,
-  //                   'post_data'=> $arrData,
-  //                   'productDetails'=>"",//$productDetails,
-  //                   'reservationResponse'=>$reservationResponse,
-  //               ], function($message) use ($mergeReservationsArray, $arrData){
-  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-  //                   $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                    
-  //               });
+                Mail::send('site.pages.experience_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=> $arrData,
+                    'productDetails'=>$productDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray, $arrData){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                    $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                    
+                });
 
                 
 
-  //       }
+        }
      }
 
-  //   public static function getAlacarteOutlet($vendorLocationID){
-  //       $queryResult = DB::table('vendor_locations as vl')
-  //           ->leftJoin('locations as l','vl.location_id','=','l.id')
-  //           ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
-  //           ->where('vl.id',$vendorLocationID)
-  //           ->select('l.name', 'v.name as vendor_name')
-  //           ->first();
+    public static function getAlacarteOutlet($vendorLocationID){
+        $queryResult = DB::table('vendor_locations as vl')
+            ->leftJoin('locations as l','vl.location_id','=','l.id')
+            ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+            ->where('vl.id',$vendorLocationID)
+            ->select('l.name', 'v.name as vendor_name')
+            ->first();
 
 
-  //       return $queryResult;
+        return $queryResult;
 
-  //   }
+    }
 
-  //   public static function getAlacarteLocationDetails($vendorLocationID){
-  //       $queryResult = DB::table('vendor_locations as vl')
-  //           ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
-  //           ->where('vl.id',$vendorLocationID)
-  //           ->select('vla.address','vla.latitude','vla.longitude')
-  //           ->first();
-
-
-  //       return $queryResult;
-  //   }
-
-  //     public static function getExperienceOutlet($vendorLocationID){
-  //     $queryResult = DB::table('product_vendor_locations as pvl')
-  //         ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
-  //         ->leftJoin('locations as l','vl.location_id','=','l.id')
-  //         ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
-  //         ->leftJoin('products as p','pvl.product_id','=','p.id')
-  //         ->where('pvl.id',$vendorLocationID)
-  //         ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
-  //         ->first();
+    public static function getAlacarteLocationDetails($vendorLocationID){
+        $queryResult = DB::table('vendor_locations as vl')
+            ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+            ->where('vl.id',$vendorLocationID)
+            ->select('vla.address','vla.latitude','vla.longitude')
+            ->first();
 
 
-  //     return $queryResult;
+        return $queryResult;
+    }
 
-  // 	}
+      public static function getExperienceOutlet($vendorLocationID){
+      $queryResult = DB::table('product_vendor_locations as pvl')
+          ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+          ->leftJoin('locations as l','vl.location_id','=','l.id')
+          ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+          ->leftJoin('products as p','pvl.product_id','=','p.id')
+          ->where('pvl.id',$vendorLocationID)
+          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
+          ->first();
 
-  // public static function getExperienceLocationDetails($vendorLocationID){
-  //     $queryResult = DB::table('product_vendor_locations as pvl')
-  //         ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
-  //         ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
-  //         ->where('pvl.id',$vendorLocationID)
-  //         ->select('vla.address','vla.latitude','vla.longitude')
-  //         ->first();
 
-  //     return $queryResult;
-  // 	}    
+      return $queryResult;
+
+  	}
+
+  public static function getExperienceLocationDetails($vendorLocationID){
+      $queryResult = DB::table('product_vendor_locations as pvl')
+          ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+          ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+          ->where('pvl.id',$vendorLocationID)
+          ->select('vla.address','vla.latitude','vla.longitude')
+          ->first();
+
+      return $queryResult;
+  	}    
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
