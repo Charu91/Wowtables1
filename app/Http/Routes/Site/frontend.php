@@ -7,6 +7,14 @@ Route::get('/', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/registration', [
+    'uses' => 'Site\HomePageController@home',
+    'as' => 'SiteRegistration',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 Route::get('/exp/lists/{city?}',[
     'uses' => 'Site\ExperienceController@lists',
@@ -130,6 +138,12 @@ Route::post('orders/check_exporder_exists',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('users/forgot_password',[
+    'uses' => 'Site\HomePageController@forgot_password',
+    'as' => 'websiteForgotPassword',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 Route::post('orders/restaurant_checkout',[
     'uses' => 'Site\AlacarteController@alaorder',
@@ -167,3 +181,49 @@ Route::get('/alacarte_custom_search/new_custom_search',[
     'as' => 'alacarte.new_custom_search',
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('forgotPassword/{token}/{userid}',[
+    'uses' => 'Site\HomePageController@verifyResetToken',
+    'as' => 'websiteVerifyPasswordToken',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('users/save_changed_pass',[
+    'uses' => 'Site\HomePageController@newPassword',
+    'as' => 'websiteSetNewPassword',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/login', [
+    'uses' => 'Site\SessionsController@loginView',
+    'as' => 'login_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/login', [
+    'uses' => 'Site\SessionsController@login',
+    'as' => 'login_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::get('/register', [
+    'uses' => 'Site\RegistrationsController@registerView',
+    'as' => 'register_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/register', [
+    'uses' => 'Site\RegistrationsController@register',
+    'as' => 'register_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+
