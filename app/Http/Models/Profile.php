@@ -31,22 +31,26 @@ class Profile {
      * @param	array $token
      * @since	1.0.0
      */
-        public static function getUserProfile($token) {
+        public static function getUserProfile($token) {  
 
             $queryProfileResult = DB::table('users as u')
-                                        ->join('user_attributes_date as uad','u.id','=','uad.user_id')
-                                        ->join('user_attributes as ua','uad.user_attribute_id','=','ua.id')
-                                        ->join('locations as l','l.id','=','u.location_id')
-                                        ->join('user_attributes_singleselect as uas','u.id','=','uas.user_id')
-                                        ->join('user_attributes_select_options as uaso','uas.user_attributes_select_option_id','=','uaso.id')
-                                        ->join('user_attributes as ua2','uaso.user_attribute_id','=','ua2.id')
-                                        ->join('user_attributes_integer as uai','uai.user_id','=','u.id')
-                                        ->join('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
-                                        ->join('user_devices as ud','u.id','=','ud.user_id')
+                                        ->leftjoin('user_attributes_date as uad','u.id','=','uad.user_id')
+                                        ->leftjoin('user_attributes as ua', function($join) {
+                                                                                            $join->on('uad.user_attribute_id','=','ua.id')
+                                                                                                 ->where('ua.alias','=','date_of_birth'); 
+                                                                                        })
+                                        ->leftjoin('locations as l','l.id','=','u.location_id')
+                                        ->leftjoin('user_attributes_singleselect as uas','u.id','=','uas.user_id')
+                                        ->leftjoin('user_attributes_select_options as uaso','uas.user_attributes_select_option_id','=','uaso.id')
+                                        ->leftjoin('user_attributes as ua2', function($join) {
+                                                                                                $join->on('uaso.user_attribute_id','=','ua2.id')
+                                                                                                     ->where('ua2.alias','=','gender');
+                                                                                         })
+                                        ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
+                                        ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
+                                        ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
                                         //->where('u.id',$userID)
-                                        ->where('ud.access_token',$token)
-                                        ->where('ua.alias','date_of_birth')
-                                        ->where('ua2.alias','gender')
+                                        ->where('ud.access_token',$token)                                        
                                         ->select('u.id as user_id','u.full_name','u.email','phone_number','u.zip_code',
                                                 'uaso.option as gender','l.id as location_id','l.name as location','ud.access_token',
                                                 DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
@@ -55,13 +59,14 @@ class Profile {
                                                DB::raw('date(uad.attribute_value) as dob'))
                                         ->groupby('u.id')
                                         ->first();
+                                       
+                                     
 
             //Read all the preferred locations
             $preferredLocations=Profile::getUserPreferences($token);
 
-            //Read all the AREAS related to user's location
-            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);
-            //print_r($cityAreas); die();
+            //Read all the AREAS related to user's location            
+            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);            
 
             //array to contain the response to be sent back to client
             $arrResponse = array();

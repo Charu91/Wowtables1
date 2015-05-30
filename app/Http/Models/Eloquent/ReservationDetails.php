@@ -5,6 +5,10 @@ use Config;
 use Illuminate\Database\Eloquent\Model;
 use URL;
 use WowTables\Http\Models\Eloquent\ReservationAddonsVariantsDetails;
+use Mail;
+use DB;
+use WowTables\Http\Models\Eloquent\Products\Product;
+use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 
 /**
  * Model class Reservation.
@@ -14,7 +18,8 @@ use WowTables\Http\Models\Eloquent\ReservationAddonsVariantsDetails;
  * @since		1.0.0
  * @author		Parth Shukla <parthshukla@ahex.co.in>
  */
-class ReservationDetails extends Model {
+class ReservationDetails extends Model {	
+	
 	
 	/**
 	 * Table to be used by this model.
@@ -110,11 +115,41 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['vl_id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
-				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];				
+				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
+
+				$zoho_data = array(
+					                    'Name' => $arrData['guestName'],
+					                    'Email_ids' => $arrData['guestEmail'],
+					                    'Contact' => $arrData['phone'],
+					                    'Experience_Title' => $aLaCarteDetail['name'].' - Ala Carte',
+					                    'No_of_People' => $arrData['partySize'],
+					                    'Date_of_Visit' => date('d-M-Y', strtotime($arrData['reservationDate'])),
+					                    'Time' => date("G:ia", strtotime($arrData['reservationTime'])),
+					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Type' => "Alacarte",
+					                    'API_added' => 'Yes',
+					                    //'GIU_Membership_ID' => '1001010',
+					                    'Outlet' => $aLaCarteDetail['location'],
+					                    //'Points_Notes'=>'test',
+					                    'AR_Confirmation_ID'=>'0',
+					                    'Auto_Reservation'=>'Not available',
+					                    //'telecampaign' => $campaign_id,
+					                    //'total_no_of_reservations'=> '1',
+					                    'Calling_option' => 'No'
+                					  );			
+							
+							//print_r($zoho_data); die();
+				//Calling zoho api method
+				$zoho_res = Self::zohoAddBooking($zoho_data);
+					//print_r($zoho_res); die("hi..");
+				//Call zoho send mail method
+				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
+						
 			}
 			else if($arrData['reservationType'] == 'experience') {
 				
@@ -125,11 +160,39 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
 				$arrResponse['data']['name'] = $productDetail['name'];
-				$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
+				$arrResponse['data']['url'] = URL::to('/').'/experience/'.$productDetail['id'];
 				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
-				$arrResponse['data']['reward_point'] = $productDetail['reward_point'];				
+				$arrResponse['data']['reward_point'] = $productDetail['reward_point'];	
+
+				$zoho_data = array(
+					                    'Name' => $arrData['guestName'],
+					                    'Email_ids' => $arrData['guestEmail'],
+					                    'Contact' => $arrData['phone'],
+					                    'Experience_Title' => $productDetail['name'].' - '.$productDetail['short_description'],
+					                    'No_of_People' => $arrData['partySize'],
+					                    'Date_of_Visit' => date('d-M-Y', strtotime($arrData['reservationDate'])),
+					                    'Time' => date("G:ia", strtotime($arrData['reservationTime'])),
+					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Type' => "Experience",
+					                    'API_added' => 'Yes',
+					                    //'GIU_Membership_ID' => '1001010',
+					                    'Outlet' => $productDetail['location'],
+					                    //'Points_Notes'=>'test',
+					                    'AR_Confirmation_ID'=>'0',
+					                    'Auto_Reservation'=>'Not available',
+					                    //'telecampaign' => $campaign_id,
+					                    //'total_no_of_reservations'=> '1',
+					                    'Calling_option' => 'No'
+                						);
+						//print_r($zoho_data); die();
+				//Calling zoho api method
+				$zoho_res = Self::zohoAddBooking($zoho_data);
+
+				//Call zoho send mail method
+				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 			}
 			else {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
@@ -259,7 +322,42 @@ class ReservationDetails extends Model {
  		
 			#saving the information into the DB
 			$savedData = $reservation->save();
-			
+			//Added on 28.5.15
+			$resultData = Self::where('id', $arrData['reservationID'])
+						->select('reservation_type','product_vendor_location_id','vendor_location_id')
+						->first();
+
+			//print_r($resultData['product_vendor_location_id']);
+			//print_r($resultData['vendor_location_id']);  
+			//die();
+
+			if($resultData['reservation_type']=='alacarte'){
+				//reading the resturants detail
+				$aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
+
+				$arrResponse['data']['reservation_id'] = $arrData['reservationID']; 
+				$arrResponse['data']['name'] = $aLaCarteDetail['name'];
+				$arrResponse['data']['url'] = URL::to('/').'/alacarte/'.$aLaCarteDetail['vl_id'];
+				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+				$arrResponse['data']['partySize'] = $arrData['partySize'];
+				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
+
+			}
+			else if($resultData['reservationType'] == 'experience'){
+				//reading the product detail
+				$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
+
+				$arrResponse['data']['reservation_id'] = $arrData['reservationID']; 
+				$arrResponse['data']['name'] = $productDetail['name'];
+				$arrResponse['data']['url'] = URL::to('/').'/experience/'.$productDetail['id'];
+				$arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+				$arrResponse['data']['partySize'] = $arrData['partySize'];
+				$arrResponse['data']['reward_point'] = $productDetail['reward_point'];
+
+			}			
+
 			$arrResponse['status'] = ($savedData) ? Config::get('constants.API_SUCCESS'): Config::get('constants.API_FAILED');
 			
 		}
@@ -329,14 +427,17 @@ class ReservationDetails extends Model {
 						->join('vendor_locations as vl','vl.vendor_id','=','vendors.id')
 						->leftJoin('vendor_location_attributes_integer as vai','vai.vendor_location_id','=','vl.id')
 						->join('vendor_attributes as va','va.id','=','vai.vendor_attribute_id')
+						->join('locations as l', 'l.id', '=', 'vl.location_id') 
 						->where('vl.id',$vendorLocationID)
 						->where('va.alias','reward_points_per_reservation')
-						->select('vendors.id','vendors.name','vai.attribute_value as reward_point')
+						->select('vendors.id','vendors.name','vai.attribute_value as reward_point','vl.id as vl_id', 'l.name as location')
 						->first();
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;
+			$arrData['vl_id']=$queryResult->vl_id;
 			$arrData['name'] = $queryResult->name;
 			$arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
+			$arrData['location'] = $queryResult->location;
 		}
 		
 		return $arrData;
@@ -359,11 +460,18 @@ class ReservationDetails extends Model {
 		
 		$queryResult = \DB::table('products')
 						->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
-						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
+						->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')						
 						->join('product_attributes as pa','pa.id','=','pai.product_attribute_id')
+
+						->leftJoin('product_attributes_text as pat', 'pat.product_id', '=', 'products.id')
+						->join('product_attributes as pa2','pa2.id','=','pat.product_attribute_id')
+
+						->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id')
+						->join('locations as l', 'l.id', '=', 'vl.location_id')
 						->where('pvl.id',$productVendorLocationID)
                         ->where('pa.alias','reward_points_per_reservation')
-						->select('products.id','products.name','pai.attribute_value as reward_point')
+                        ->where('pa2.alias', 'short_description')
+						->select('products.id','products.name','pai.attribute_value as reward_point', 'l.name as location', 'pat.attribute_value as short_description')
                         ->first();
 
 		
@@ -371,6 +479,8 @@ class ReservationDetails extends Model {
 			$arrData['id'] = $queryResult->id;
 			$arrData['name'] = $queryResult->name;
 			$arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
+			$arrData['location'] = $queryResult->location;
+			$arrData['short_description'] = $queryResult->short_description;
 		}
 		
 		return $arrData;
@@ -455,7 +565,226 @@ class ReservationDetails extends Model {
 			//writing data to reservation_addons_variants_details table
 			ReservationAddonsVariantsDetails::insert($arrInsertData);
 		}
-	}  
+	}
+	//-----------------------------------------------------------------
+
+	/**
+	 * Sends api request to zoho
+	 * 
+	 * @access	public
+	 * @static
+	 * @param	array
+	 * @param	$data
+	 * @since	1.0.0
+	 */
+	public static function zohoAddBooking($data) {
+
+		    $ch = curl_init();
+		    $config = array(
+		        //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+		        'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+		        'scope' => 'creatorapi',
+		    );
+		    $curlConfig = array(
+		        CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/add/",
+		        CURLOPT_POST           => true,
+		        CURLOPT_RETURNTRANSFER => true,
+		        CURLOPT_POSTFIELDS     => $config + $data,
+		    );		   
+
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
+		    curl_setopt_array($ch, $curlConfig);
+		    $result = curl_exec($ch);		   
+		    curl_close($ch);			    	
+		    return simplexml_load_string($result);		    
+		}
+		//-----------------------------------------------------------------
+
+	/**
+	 * Sends mail based on response from the zoho
+	 * 
+	 * @access	public
+	 * @static
+	 * @param	array
+	 * @param	$data
+	 * @since	1.0.0
+	 */  
+
+	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {	
+
+		//print_r($arrData); die();	
+
+        $zoho_success = $zoho_res->result->form->add->status;		
+        if($zoho_success[0] != "Success") {
+
+            $mailbody = 'E'.sprintf("%06d",$reservation_id).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+            $mailbody .= 'Reservation Details<br>';
+            foreach($zoho_data as $key => $val){
+                        $name = str_replace('_',' ',$key);
+                        $mailbody .= $name.' '.$val.'<br>';
+                    }
+
+            Mail::raw($mailbody, function($message) use ($zoho_data)
+                    {
+                        $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                        $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                        $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                    });
+        }
+
+  //       //Added on 29.05.15    $zoho_data
+  //       if($arrData['reservationType'] == 'alacarte') {
+
+  //       	//====================================
+  //        	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+  //           $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
+              		
+  //   		// $vendorDetails =  self::getByRestaurantLocationId($arrData['vendorLocationID']);    		
+    		
+  //   		$reservationResponse['status'] = 'success';
+  //   		$reservationResponse['data']= array('reservation_type' => 'event');
+  //   		//$reservationResponse['data']['reservation_type']=='event';
+  //   		//======================================    		
+  //       	$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
+  //                   'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
+  //                   'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
+  //                   'venue' => $outlet->vendor_name,
+  //                   'username' => $zoho_data['Name']
+  //               );
+
+  //               //echo "<pre>"; print_r($mergeReservationsArray); die;        	
+  //       				$post_data =	$arrData;  //Added on 30/05/15
+        		
+  //               Mail::send('site.pages.restaurant_reservation',[
+  //                   'location_details'=> $locationDetails,
+  //                   'outlet'=> $outlet,
+  //                   'post_data'=> $post_data,
+  //                   'productDetails'=>"",//$vendorDetails,
+  //                   'reservationResponse'=>$reservationResponse,
+  //               ], function($message) use ($arrData){
+  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+  //                   $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');
+  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+
+  //               });
+
+  //               Mail::send('site.pages.restaurant_reservation',[
+  //                   'location_details'=> $locationDetails,
+  //                   'outlet'=> $outlet,
+  //                   'post_data'=> $post_data,
+  //                   'productDetails'=>"",//$vendorDetails,
+  //                   'reservationResponse'=>$reservationResponse,
+  //               ], function($message) use ($mergeReservationsArray, $arrData){
+  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+  //                   $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                     
+  //               });
+  //       }
+  //       else if($arrData['reservationType'] == 'experience') {
+
+
+  //       	//====================================
+  //            $locationDetails = self::getExperienceLocationDetails($arrData['vendorLocationID']);    	 
+  //   		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);    		 
+  //   		 // $productDetails = self::getByExperienceId($outlet->product_id);      		    	 
+    		 
+  //   		 $reservationResponse['status'] = 'success';
+  //   		//======================================
+    		
+  //       		$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
+  //                   'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
+  //                   'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
+  //                   'venue' => $outlet->vendor_name,
+  //                   'username' => $zoho_data['Name']
+  //               );
+
+  //               //echo "<pre>"; print_r($mergeReservationsArray); die;                    	
+
+  //               Mail::send('site.pages.restaurant_reservation',[
+  //                   'location_details'=> $locationDetails,
+  //                   'outlet'=> $outlet,
+  //                   'post_data'=> $arrData,
+  //                   'productDetails'=>"",//$productDetails,
+  //                   'reservationResponse'=>$reservationResponse,
+  //               ], function($message) use ($arrData){
+  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+  //                   $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');                    
+  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+
+  //               });
+
+
+
+  //               Mail::send('site.pages.restaurant_reservation',[
+  //                   'location_details'=> $locationDetails,
+  //                   'outlet'=> $outlet,
+  //                   'post_data'=> $arrData,
+  //                   'productDetails'=>"",//$productDetails,
+  //                   'reservationResponse'=>$reservationResponse,
+  //               ], function($message) use ($mergeReservationsArray, $arrData){
+  //                   $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+  //                   $message->to($arrData['guestEmail'])->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+  //                   //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                    
+  //               });
+
+                
+
+  //       }
+     }
+
+  //   public static function getAlacarteOutlet($vendorLocationID){
+  //       $queryResult = DB::table('vendor_locations as vl')
+  //           ->leftJoin('locations as l','vl.location_id','=','l.id')
+  //           ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+  //           ->where('vl.id',$vendorLocationID)
+  //           ->select('l.name', 'v.name as vendor_name')
+  //           ->first();
+
+
+  //       return $queryResult;
+
+  //   }
+
+  //   public static function getAlacarteLocationDetails($vendorLocationID){
+  //       $queryResult = DB::table('vendor_locations as vl')
+  //           ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+  //           ->where('vl.id',$vendorLocationID)
+  //           ->select('vla.address','vla.latitude','vla.longitude')
+  //           ->first();
+
+
+  //       return $queryResult;
+  //   }
+
+  //     public static function getExperienceOutlet($vendorLocationID){
+  //     $queryResult = DB::table('product_vendor_locations as pvl')
+  //         ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+  //         ->leftJoin('locations as l','vl.location_id','=','l.id')
+  //         ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
+  //         ->leftJoin('products as p','pvl.product_id','=','p.id')
+  //         ->where('pvl.id',$vendorLocationID)
+  //         ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
+  //         ->first();
+
+
+  //     return $queryResult;
+
+  // 	}
+
+  // public static function getExperienceLocationDetails($vendorLocationID){
+  //     $queryResult = DB::table('product_vendor_locations as pvl')
+  //         ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
+  //         ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
+  //         ->where('pvl.id',$vendorLocationID)
+  //         ->select('vla.address','vla.latitude','vla.longitude')
+  //         ->first();
+
+  //     return $queryResult;
+  // 	}    
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php

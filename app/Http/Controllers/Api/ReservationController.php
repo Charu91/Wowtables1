@@ -227,7 +227,7 @@ use Validator;
 		$arrRule['reservationTime'] = 'required|OutsidePrevReservationTimeRange: reservationDate, reservationID'; 
 		
 		 */
-		 
+		 //print_r($data); die();
 		 //validating user data
 		 $validator = Validator::make($data,Reservation::$arrRules); 
 		 
@@ -249,9 +249,7 @@ use Validator;
 			$arrResponse = Reservation::validateEditReservationData($data);
 		
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-				if(ReservationDetails::updateReservationDetail($data)) {
-					$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-				}
+				$arrResponse = ReservationDetails::updateReservationDetail($data);
 			} 
 			 
 		 }				
