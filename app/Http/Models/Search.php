@@ -283,7 +283,7 @@
 													'name' => $row->title,
 													'description' => $row->description,
 													'short_description' => $row->short_description,
-													'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
+													'price' => $row->price,
 													'taxes' => $row->taxes,
 													'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
 													'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,

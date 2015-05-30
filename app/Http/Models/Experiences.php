@@ -126,7 +126,7 @@ class Experiences {
 										'image' => $arrImage,
 										'type' => $expResult->type,
 										'reward_points' => $expResult->reward_points,
-										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
+										'price' => $expResult->price ,
 										'taxes' => $expResult->taxes,
 										'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
 										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
