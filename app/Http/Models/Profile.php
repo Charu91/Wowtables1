@@ -59,16 +59,14 @@ class Profile {
                                                DB::raw('date(uad.attribute_value) as dob'))
                                         ->groupby('u.id')
                                         ->first();
-                                       //echo  $queryProfileResult->toSql; die();
+                                       
                                      
 
             //Read all the preferred locations
             $preferredLocations=Profile::getUserPreferences($token);
 
-            //Read all the AREAS related to user's location
-            die($queryProfileResult->location_id);
-            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);
-            print_r($cityAreas); die();
+            //Read all the AREAS related to user's location            
+            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);            
 
             //array to contain the response to be sent back to client
             $arrResponse = array();
