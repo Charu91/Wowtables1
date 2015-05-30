@@ -141,10 +141,12 @@ class ReservationDetails extends Model {
 					                    //'telecampaign' => $campaign_id,
 					                    //'total_no_of_reservations'=> '1',
 					                    'Calling_option' => 'No'
-                					  );	
-										 
+                					  );			
+							
+							//print_r($zoho_data); die();
 				//Calling zoho api method
-				$zoho_res = Self::zohoAddBooking($zoho_data);					 
+				$zoho_res = Self::zohoAddBooking($zoho_data);
+					//print_r($zoho_res); die("hi..");
 				//Call zoho send mail method
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 						
@@ -185,9 +187,10 @@ class ReservationDetails extends Model {
 					                    //'total_no_of_reservations'=> '1',
 					                    'Calling_option' => 'No'
                 						);
-
+						//print_r($zoho_data); die();
 				//Calling zoho api method
 				$zoho_res = Self::zohoAddBooking($zoho_data);
+
 				//Call zoho send mail method
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 			}
@@ -319,12 +322,15 @@ class ReservationDetails extends Model {
  		
 			#saving the information into the DB
 			$savedData = $reservation->save();
-			 
+			//Added on 28.5.15
 			$resultData = Self::where('id', $arrData['reservationID'])
 						->select('reservation_type','product_vendor_location_id','vendor_location_id')
 						->first();
 
-			
+			//print_r($resultData['product_vendor_location_id']);
+			//print_r($resultData['vendor_location_id']);  
+			//die();
+
 			if($resultData['reservation_type']=='alacarte'){
 				//reading the resturants detail
 				$aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
@@ -604,7 +610,7 @@ class ReservationDetails extends Model {
 		        CURLOPT_POSTFIELDS     => $config + $data,
 		    );		   
 
-		    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
+		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
 		    curl_setopt_array($ch, $curlConfig);
 		    $result = curl_exec($ch);		   
 		    curl_close($ch);			    	
@@ -624,7 +630,9 @@ class ReservationDetails extends Model {
 
 	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {	
 
-		$zoho_success = $zoho_res->result->form->add->status;		
+		//print_r($arrData); die();	
+
+        $zoho_success = $zoho_res->result->form->add->status;		
         if($zoho_success[0] != "Success") {
 
             $mailbody = 'E'.sprintf("%06d",$reservation_id).' reservation has not been posted to zoho. Please fix manually.<br><br>';
@@ -643,13 +651,14 @@ class ReservationDetails extends Model {
                     });
         }
 
-         
+        //Added on 29.05.15    $zoho_data
         if($arrData['reservationType'] == 'alacarte') {
 
         	//====================================
          	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
-            $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);             		
-    		 
+            $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
+              		
+    		// $vendorDetails =  self::getByRestaurantLocationId($arrData['vendorLocationID']); 
     		$vendorDetailsTemp =  self::readVendorDetailByLocationID($arrData['vendorLocationID']);     		
     		
 
@@ -661,7 +670,13 @@ class ReservationDetails extends Model {
     		$reservationResponse['data']= array('reservation_type' => 'A la carte', 
     											'reservationID' => $reservation_id
     										   );
-    		       		
+    		
+
+    		// $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
+      // 		$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
+      // 		$arrResponse['data']['partySize'] = $arrData['partySize'];
+      // 		$arrResponse['data']['reservationID'] = $reservation_id;
+      // 		$arrResponse['data']['reservation_type'] = "A la carte";    		
     		//======================================    		
         	$mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservation_id),
                     'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
@@ -671,7 +686,7 @@ class ReservationDetails extends Model {
                 );
 
                 //echo "<pre>"; print_r($mergeReservationsArray); die;        	
-        				$post_data =	$arrData;   
+        				$post_data =	$arrData;  //Added on 30/05/15
         		
                 Mail::send('site.pages.restaurant_reservation',[
                     'location_details'=> $locationDetails,
@@ -705,7 +720,8 @@ class ReservationDetails extends Model {
 
         	//====================================
              $locationDetails = self::getExperienceLocationDetails($arrData['vendorLocationID']);    	 
-    		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);   		 
+    		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);    		 
+    		 // $productDetails = self::getByExperienceId($outlet->product_id); 
 
     		 $productDetailsTemp =  self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);     		
     		
@@ -716,10 +732,12 @@ class ReservationDetails extends Model {
     							  				'terms_and_conditions' => $productDetailsTemp['terms_and_conditions']
     							  				);
     		 
+
     		$reservationResponse['status'] = 'success';
     		$reservationResponse['data']= array('reservation_type' => 'Experience', 
     											'reservationID' => $reservation_id
-    										   );     		 
+    										   );     	    	 
+    		 
     		
     		//======================================
     		
