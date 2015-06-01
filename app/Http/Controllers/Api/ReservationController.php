@@ -151,6 +151,9 @@ use Validator;
 		
 		//reading data input by the user
 		$data =  $this->request->all();
+
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
+		
 		
 		//validating user data
 		$validator = Validator::make($data,Reservation::$arrRules);
@@ -183,7 +186,7 @@ use Validator;
 					$arrResponse['msg'] = 'Not a valid request.';	
 				}
 			}
-					
+				
 		return response()->json($arrResponse,200);
 	}
 	
@@ -249,7 +252,8 @@ use Validator;
 			$arrResponse = Reservation::validateEditReservationData($data);
 		
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-				$arrResponse = ReservationDetails::updateReservationDetail($data);
+				$arrResponse 
+				= ReservationDetails::updateReservationDetail($data);
 			} 
 			 
 		 }				
