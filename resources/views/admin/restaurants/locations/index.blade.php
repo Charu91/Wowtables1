@@ -40,7 +40,7 @@
                     <tr>
                         <th>{!! $location->id !!}</th>
                         <th>{!! $location->vendor->name !!}</th>
-                        <th>{!! $location->location->name !!}</th>
+                        {{--<th>{!! $location->location->name !!}</th>--}}
                         <th>{!! $location->slug !!}</th>
                         <th>{!! $location->status !!}</th>
                         <th>{!! $location->created_at->format('d-m-Y') !!}</th>
