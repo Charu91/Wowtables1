@@ -75,7 +75,7 @@ class Profile {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
                 $arrResponse['data']=array(
                                             'user_id' => $queryProfileResult->user_id,
-                                            'access_token' => $queryProfileResult->access_token,
+                                            //'access_token' => $queryProfileResult->access_token,
                                             'full_name' => $queryProfileResult->full_name,
                                             'email' => $queryProfileResult->email,
                                             'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,

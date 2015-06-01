@@ -1,5 +1,5 @@
 <?php
-Route::get('api/profile/{token}',
+Route::get('api/profile',
 			array(
 				'uses' => 'Api\ProfileController@show',
 				'as' => '',
@@ -26,7 +26,7 @@ Route::post('api/profile/preferred_area',
 				'domain' => env('WEBSITE_URL'),
 			));
 			
-Route::get('api/profile/preferred_area/{token}',
+Route::get('api/profile/preferred_area',
 			array(
 				'uses' => 'Api\ProfileController@getPreferredArea',
 				'as' => '',
