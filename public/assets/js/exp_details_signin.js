@@ -294,6 +294,8 @@ $(document).ready(function() {
                     forgotemail: forgotmail
                 },
                 success: function(e) {
+                    //console.log("response == "+e);
+                    //alert("response == "+e);
                     $("#f_response").html(e);
                     $("#f_response").removeClass("hidden")
                 }

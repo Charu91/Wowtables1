@@ -149,7 +149,7 @@ class ExperienceController extends Controller {
             return redirect()->route('experience.lists',[$redirect_url]);
         }
 
-        
+
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
         
         $arrSubmittedData['city_id'] = $city_id;

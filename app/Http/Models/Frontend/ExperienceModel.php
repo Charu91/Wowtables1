@@ -563,8 +563,8 @@ class ExperienceModel {
                   DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
                   DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
                   DB::raw('MAX(IF(pa.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes'),
-                  
-                  'media.file as experience_image', 'curators.name as curator_name', 
+
+                  'media.file as experience_image', 'curators.name as curator_name',
                   'curators.bio as curator_bio', 'curators.designation',
                   'cm.file as curator_image',
                   'pvl.id as product_vendor_location_id',
@@ -587,8 +587,8 @@ class ExperienceModel {
 
     //running the query to get the results
     //echo $queryExperience->toSql();
-    $expResult = $queryExperience->first();   
-    
+    $expResult = $queryExperience->first();
+
     //array to store the experience details
     $arrExpDetails = array();
     

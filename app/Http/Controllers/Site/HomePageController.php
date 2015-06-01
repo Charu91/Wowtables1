@@ -13,6 +13,7 @@ use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Frontend\RegpageModel;
 use WowTables\Http\Models\Frontend\CustomerModel;
 use WowTables\Http\Requests\Site\CustomerLoginUserRequest;
+use WowTables\Http\Models\Password;
 use Input;
 use Validator;
 use Hash;
@@ -393,18 +394,131 @@ The WowTables Team";
 
     public function forgot_password(){
 
-        $mailbody =  "User - ".$email.";<br/>Hi {$user[1]['full_name']},<br>
-            We have received a forgot password request from you. If you have sent the request, please use the link below to set a new password.
-            <br /><a href='".base_url()."users/setpassword/".$user_id."/".$rand."'>".base_url()."users/setpassword/".$user_id."/".$rand."</a><br />
-            If you have not sent the request then you do not need to do anything.<br />
-            <br>Thanks & Regards<br>
-            The WowTables Team";
+        $data['email'] = $_POST['forgotemail'];
+        $validator = Validator::make($data,Password::$arrPasswordRule);
 
-        Mail::raw($mailbody, function($message) use ($users)
+        if($validator->fails()){
+            $message=$validator->messages();
+            $errorMessage="";
+            foreach($data as $key => $value) {
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n';
+                }
+            }
+            echo '<p style="color: #eab803;">The email address you have entered is not registered on WowTables. Please use an alternative email address to login or call our concierge for assistance.</p>';
+        }
+        else{
+            Password::requestWebsitePassword($data);
+
+            echo '<p style="color: #eab803;">Please check your email for a forgot password link</p>';
+        }
+    }
+
+    public function newPassword() {
+        //echo "sd"; //die;
+        $data = $this->request->all();
+        //echo "<pre>"; print_r($data); //die;
+        //Validation user's profile data
+        $validator = Validator::make($data,Password::$arrWebsitePasswordConfirm);
+
+        if($validator->fails()){
+            $message=$validator->messages();
+            foreach($data as $key => $value) {
+                $errorMessage = '';
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            $arrResponse['status'] = Config::get('constants.API_ERROR');
+            $arrResponse['msg'] = $errorMessage;
+            //return response()->json($arrResponse,200);
+            if($arrResponse['status'] == "FAIL"){
+                return view('frontend.pages.invalid_request',$arrResponse);
+            }
+        }
+        else{
+
+            //print_r($data['password']) ; die('..Ready Here');
+            $arrData['password']=$data['password'];
+            $arrData['token']=$data['token'];
+            //echo "<pre>"; print_r($arrData); die;
+            $response = Password::updatePasswordDatabase($arrData);
+
+            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+            $arrResponse['cities'] = $cities;
+
+            $city_id    = Input::get('city');
+            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+            if(empty($city_name))
+            {
+                $city_name = 'mumbai';
+            }
+
+            $arrResponse['allow_guest']            ='Yes';
+            $arrResponse['current_city']           = strtolower($city_name);
+
+            $arrResponse['current_city_id']        = $city_id;
+
+            if($response['status'] == "OK"){
+                return view('frontend.pages.success_forgot_password',$arrResponse);
+            } else {
+                return view('frontend.pages.invalid_request',$arrResponse);
+            }
+
+
+
+
+        }
+
+    }
+
+
+    public function verifyResetToken($token,$id) {
+        //echo "sadsad"; die;
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
         {
-            $message->from('info@wowtables.com', 'WowTables by GourmetItUp');
+            $city_name = 'mumbai';
+        }
 
-            $message->to($users['email_address'])->subject('Registration with WowTables');
-        });
+        $arrResponse['allow_guest']            ='Yes';
+        $arrResponse['current_city']           = strtolower($city_name);
+
+        $arrResponse['current_city_id']        = $city_id;
+        $data=array('token' => $token );
+
+        $validator = Validator::make($data,Password::$arrPasswordToken);
+        //echo "<pre>"; print_r($validator); die;
+        if($validator->fails()){
+
+            $message=$validator->messages();
+            foreach($data as $key => $value) {
+                $errorMessage = '';
+                if($message->has($key)) {
+                    $errorMessage .= $message->first($key).'\n ';
+                }
+            }
+            $arrResponse['status'] = Config::get('constants.API_ERROR');
+            $arrResponse['msg'] = $errorMessage;
+            //return response()->json($arrResponse,200);
+            if($arrResponse['status'] == "FAIL"){
+                return view('frontend.pages.invalid_request',$arrResponse);
+            }
+
+        }
+        else{
+
+            $getUserDetails = $this->customermodel->getUserDetailsFromToken($token);
+            //echo "<pre>"; print_r($getUserDetails); die;
+            return view('frontend.pages.forgot_password',$arrResponse,[
+                'data'=>$getUserDetails
+            ]);
+        }
+
+        //return response()->json($arrResponse,200);
     }
 }
