@@ -63,6 +63,8 @@ class ProfileController extends Controller {
         //read data input by the user
         $data = Request::all();
 
+        $data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
+
         //print_r($data); die();
         //Validation user's profile data
         $validator = Validator::make($data,Profile::$arrRules);
