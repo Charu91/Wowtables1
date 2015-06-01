@@ -27,7 +27,7 @@
                 <tr>
                     <th>Id</th>
                     <th>Restaurant Name</th>
-                    <th>Location Name</th>
+                    {{--<th>Location Name</th>--}}
                     <th>Slug</th>
                     <th>Status</th>
                     <th>Created At</th>
