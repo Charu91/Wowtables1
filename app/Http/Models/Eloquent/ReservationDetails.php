@@ -132,7 +132,7 @@ class ReservationDetails extends Model {
 					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
-					                    'API_added' => 'Yes',
+					                    'API_added' => 'Mobile',
 					                    //'GIU_Membership_ID' => '1001010',
 					                    'Outlet' => $aLaCarteDetail['location'],
 					                    //'Points_Notes'=>'test',
@@ -177,7 +177,7 @@ class ReservationDetails extends Model {
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
-					                    'API_added' => 'Yes',
+					                    'API_added' => 'Mobile',
 					                    //'GIU_Membership_ID' => '1001010',
 					                    'Outlet' => $productDetail['location'],
 					                    //'Points_Notes'=>'test',
@@ -600,7 +600,8 @@ class ReservationDetails extends Model {
 		    $ch = curl_init();
 		    $config = array(
 		        //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-		        'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+		        //'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+		        'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
 		        'scope' => 'creatorapi',
 		    );
 		    $curlConfig = array(
@@ -613,7 +614,7 @@ class ReservationDetails extends Model {
 		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
 		    curl_setopt_array($ch, $curlConfig);
 		    $result = curl_exec($ch);		   
-		    curl_close($ch);			    	
+		    curl_close($ch);    	    	
 		    return simplexml_load_string($result);		    
 		}
 		//-----------------------------------------------------------------
@@ -656,6 +657,7 @@ class ReservationDetails extends Model {
 
         	//====================================
          	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+         	
             $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
               		
     		// $vendorDetails =  self::getByRestaurantLocationId($arrData['vendorLocationID']); 
@@ -730,8 +732,7 @@ class ReservationDetails extends Model {
     		 									'experience_includes' => $productDetailsTemp['experience_includes'],
     		 									'short_description' => $productDetailsTemp['short_description'], 
     							  				'terms_and_conditions' => $productDetailsTemp['terms_and_conditions']
-    							  				);
-    		 
+    							  				);    		 
 
     		$reservationResponse['status'] = 'success';
     		$reservationResponse['data']= array('reservation_type' => 'Experience', 
