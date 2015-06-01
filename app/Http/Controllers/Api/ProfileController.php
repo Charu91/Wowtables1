@@ -16,7 +16,9 @@ class ProfileController extends Controller {
      * @return	json
      * @since	1.0.0
      */
-    public function show($token) {
+    public function show() {
+
+        $token=$_SERVER['HTTP_X_WOW_TOKEN'];
 
         //array to store response
         $arrResponse=array();
@@ -109,8 +111,9 @@ class ProfileController extends Controller {
      * @return	json
      * @since	1.0.0
      */
-    public function getPreferredArea($token) {
+    public function getPreferredArea() {
 
+        $token=$_SERVER['HTTP_X_WOW_TOKEN'];
         $area = Request::all();
         return response()->json(Profile::getUserPreferences($token),200);
     }
