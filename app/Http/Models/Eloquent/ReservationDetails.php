@@ -65,15 +65,13 @@ class ReservationDetails extends Model {
 		$reservation->reservation_type = $arrData['reservationType'];
 		$reservation->order_amount = 0;
 		$reservation->user_id = $userID;
+		$reservation->added_by = $userType;
 		
 		//setting up the variables that may be present
 		if(isset($arrData['specialRequest'])) {
 			$reservation->special_request = $arrData['specialRequest'];
-		}
+		}	
 		
-		if(isset($arrData['addedBy'])) {
-			$reservation->added_by = $arrData['addedBy'];
-		}
 		
 		if(isset($arrData['giftCardID'])) {
 			$reservation->giftcard_id = $arrData['giftCardID'];
