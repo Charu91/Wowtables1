@@ -789,7 +789,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="tab-content" style="border-top:1px dashed #c2c2c2;margin-top:20px;">
             <div class="tab-pane fade in active" id="signin">
             <div id="signinForm-wrap" style="  padding-top: 20px !important;">
-              <form role="form" method="POST" action="{{URL::to('/')}}/users/login">
+              <form role="form" method="POST" >
                 <div class="form-group">
                   <input type="email" class="form-control" id="email1" placeholder="Enter email" name="email">
                   <label class="control-label error-code text-danger" id="email_error_1">Please enter a valid email address</label>
@@ -800,7 +800,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <label class="control-label error-code text-danger" id="password_error_1">Please enter a password.</label>
                   <p class="text-right pass-forget"><a href="javascript:void(0)" class="forgot-pass-link">Forgot Password?</a></p>
                 </div>                      
-                <button type="submit" class="btn btn-warning btn-block wowtable_enter_btn" id="login">ENTER</button>
+                <button type="button" class="btn btn-warning btn-block wowtable_enter_btn" id="logine">ENTER</button>
               </form>
               </div>
               <div id="forgotpassForm">
@@ -835,9 +835,13 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                 <div class="form-group">
                   <select class="form-control" name="city" id="city">
                     <option value="-1">Choose A City</option>
-                       <?php foreach ($cities as $cur_city => $city_name_data): ?>
-                          <option value="<?php echo strtolower($city_name_data);?>"><?php echo ucfirst($city_name_data);?></option>                          
-                        <?php endforeach; ?>
+                        <?php foreach ($cities as $city => $visibility): ?>
+                                
+                                    <?php if ($visibility != 'hidden'): ?>
+                                        
+                                    <option value="<?php echo $city?>"><?php echo ucfirst($visibility);?></option>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                   </select>
                   <label class="control-label error-code text-danger" id="city_error">Please pick a city</label>
                 </div>                      
@@ -955,19 +959,19 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav block-list foot-menu">
-                  <li class=""><a href="{{URL::to('/')}}/about-us">About Us</a></li>
+                  <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
                   <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                  <li><a href="{{URL::to('/')}}/press">Press</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
                   <li><a href="#">Careers</a></li>
                   <li><a href="#">Partner With Us</a></li>
                   <li><a href="#">How It Works</a></li>
-                  <li><a href="{{URL::to('/')}}/faq">FAQ</a></li>
-                  <li><a href="{{URL::to('/')}}/contact-us">Contact Us</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
           <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                  <li><a href="{{URL::to('/')}}/gift-cards">Gift cards</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
                   <li><a href="#">Corporate Solutions</a></li>
                   <li><a href="#">Parties & Private Events</a></li>
-                  <li><a href="{{URL::to('/')}}/redeem-rewards">Gourmet Rewards</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
                   <li><a href="#">Terms of Use</a></li>
                   <li><a href="#">Privacy Statement</a></li>
                 </ul>
@@ -977,22 +981,22 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="col-md-3 col-sm-6 hidden-xs">
             <h4 class="foot-widget-title">Company</h4>
               <ul class="block-list foot-menu">
-                <li><a href="{{URL::to('/')}}/about-us">About Us</a></li>
+                <li><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
                 <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                <li><a href="{{URL::to('/')}}/press">Press</a></li>
-                <li><a href="{{URL::to('/')}}/careers">Careers</a></li>
-                <li><a href="{{URL::to('/')}}/restaurant-partnerships">Restaurateurs</a></li>
-                <li><a href="{{URL::to('/')}}/advertising">Brand Partnerships</a></li>  
+                <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
+                <li><a href="{{URL::to('/')}}/pages/careers">Careers</a></li>
+                <li><a href="{{URL::to('/')}}/pages/restaurant-partnerships">Restaurateurs</a></li>
+                <li><a href="{{URL::to('/')}}/pages/advertising">Brand Partnerships</a></li>  
               </ul>
           </div>          
           <div class="col-md-3 col-sm-6 hidden-xs">
             <h4 class="foot-widget-title">Help</h4>
               <ul class="block-list foot-menu">
                <!-- <li><a href="#">How It Works</a></li> -->
-                <li><a href="{{URL::to('/')}}/faq">FAQ</a></li>
-                <li><a href="{{URL::to('/')}}/contact-us">Contact Us</a></li>
+                <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
                <!-- <li><a href="{{URL::to('/')}}/sitemap">Sitemap</a></li>-->
-        <li><a href="{{URL::to('/')}}/sitemap">Sitemap</a></li>
+        <li><a href="{{URL::to('/')}}/pages/sitemap">Sitemap</a></li>
               </ul>
           </div>
           <div class="clearfix visible-sm"></div>
@@ -1000,12 +1004,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
             <h4 class="foot-widget-title">More</h4>
               <ul class="block-list foot-menu">
         <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                <li><a href="{{URL::to('/')}}/gift-cards">Gift cards</a></li>
-                <li><a href="{{URL::to('/')}}/corporate">Corporate Solutions</a></li>
-                <li><a href="{{URL::to('/')}}/event-planning">Parties & Private Events</a></li>
-                <li><a href="{{URL::to('/')}}/redeem-rewards">Gourmet Rewards</a></li>
-                <li><a href="{{URL::to('/')}}/terms-of-use">Terms of Use</a></li>
-                <li><a href="{{URL::to('/')}}/privacy-policy">Privacy Statement</a></li>
+                <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
+                <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
+                <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
+                <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
+                <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
+                <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
               </ul>
           </div>
           <div class="col-md-3 col-sm-6">

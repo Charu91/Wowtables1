@@ -193,6 +193,225 @@ class ExperienceController extends Controller {
         return response()->view('frontend.pages.experiencelist',$data);
     }
 
+   /**
+     * Mumbai jain collection
+     *
+     * @param $city
+     * @return view
+     */
+    public function collection($collection="")
+    {
+
+        //this code is start in header and footer page.
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');        
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+
+        $commonmodel = new CommonModel();
+        $arrResponse['allCuisines']  = $commonmodel->getAllCuisines();
+        $arrResponse['allAreas']  =   $commonmodel->getAllAreas();
+        $arrResponse['allPrices']  = $commonmodel->getAllPrices();
+
+        $arrResponse['dropdowns_opt']  = 1; //1 for disp
+        //this code is start in header and footer page.
+        $collectionQuery ="SELECT tags.`id`, tags.`name` , tags.`slug` , tags.`collection` , tags.`description` , tags.`seo_title` , tags.`seo_meta_description` , tags.`seo_meta_keywords` , 
+                            media_resized_new.`file`, media_resized_new.`height`, media_resized_new.`width`, media_resized_new.`image_type`
+                            FROM tags
+                            INNER JOIN media_resized_new ON tags.`web_media_id` = media_resized_new.`media_id`
+                            WHERE tags.`slug` = 'kailash-test'
+                            AND tags.`status` = 'available'";
+        
+        $collectionResult = DB::select($collectionQuery);
+        //exclusiveexperiences query
+        $exclusiveExperiences = DB::select("SELECT t.name, p.name AS productname,p.slug AS slug, pat.attribute_value, pa.name as productattrname, pp.price, pt.type_name, mrn.file,f.name as flagname,f.color,p.id,l.name as cityname
+                                            FROM tags AS t
+                                            INNER JOIN product_tag_map AS ptm ON t.id = ptm.tag_id
+                                            INNER JOIN products AS p ON p.id = ptm.product_id
+                                            INNER JOIN product_attributes_text AS pat ON pat.product_id = p.id
+                                            INNER JOIN product_attributes AS pa ON pa.id = pat.product_attribute_id
+                                            INNER JOIN product_pricing AS pp ON pp.product_id = p.id
+                                            INNER JOIN price_types AS pt ON pt.id = pp.price_type
+                                            INNER JOIN product_media_map AS pmm ON pmm.product_id = p.id
+                                            INNER JOIN media_resized_new AS mrn ON mrn.media_id = pmm.media_id
+                                            inner join product_flag_map as pfm on pfm.product_id = p.id
+                                            inner join flags as f on pfm.flag_id = f.id
+                                            inner join product_vendor_locations as pvl on pvl.product_id = p.id
+                                            inner join vendor_location_address as vla on vla.vendor_location_id= pvl.vendor_location_id
+                                            inner join locations as l on l.id = vla.city_id
+                                            WHERE t.slug = '$collection'
+                                            AND t.status = 'available'
+                                            AND pa.alias = 'short_description'
+                                            AND pmm.media_type = 'listing'");
+            
+        
+            //close code by product review and rating.
+            $arrProduct = array('59','63','62');
+             $arrRatings = $this->findRatingByProduct($arrProduct);
+             foreach($exclusiveExperiences as $row) {
+                
+                $arrData['data'][]=array(
+                          'name'=>$row->name,
+                          'productname'=>$row->productname,
+                          'slug'=>$row->slug,
+                          'attribute_value'=>$row->attribute_value,
+                          'productattrname'=>$row->productattrname,
+                          'price'=>$row->price,
+                          'type_name'=>$row->type_name,
+                          'file'=>$row->file,
+                          'flagname'=>$row->flagname,
+                          'color'=>$row->color,
+                          'id'=>$row->id,
+                          'cityname'=>strtolower($row->cityname),
+                          'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+                          'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+                          'full_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['full_stars']:0,
+                          'half_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['half_stars']:0,
+                          'blank_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['blank_stars']:0,
+                    );
+             }
+             //end exclusiveexperiences query
+             $alaCartaArData = array();
+             $arrData =array();
+             //start query a lart cart query
+              $alacartQuery = DB::select("SELECT t.name AS tagsname, t.slug AS tagsslug, vl.slug AS vendorlocationslug,
+                                         v.name AS vendorlocations,v.id, l.name AS city,l.slug, mrn.file AS imagename, 
+                                         vl.pricing_level, vlat.attribute_value,f.name as flagname,
+                                         f.color,la.name as locationarea,vaso.option
+                                            FROM tags AS t
+                                            INNER JOIN vendor_locations_tags_map AS vltm ON t.id = vltm.tag_id
+                                            INNER JOIN vendor_locations AS vl ON vl.id = vltm.vendor_location_id
+                                            INNER JOIN vendors AS v ON v.id = vl.vendor_id
+                                            INNER JOIN vendor_location_address AS vla ON vla.vendor_location_id = vl.id
+                                            INNER JOIN locations AS l ON l.id = vla.city_id
+                                            INNER JOIN vendor_locations_media_map AS vlmm ON vlmm.vendor_location_id = vl.id
+                                            INNER JOIN media_resized_new AS mrn ON mrn.media_id = vlmm.media_id
+                                            INNER JOIN vendor_location_attributes_text AS vlat ON vlat.vendor_location_id = vl.id
+                                            INNER JOIN vendor_attributes AS va ON va.id = vlat.vendor_attribute_id
+                                            INNER JOIN vendor_locations_flags_map AS vlfm ON vlfm.vendor_location_id = vl.id
+                                            INNER JOIN flags AS f ON f.id = vlfm.flag_id
+                                            INNER JOIN locations AS la ON la.id = vla.area_id
+                                            INNER JOIN vendor_location_attributes_multiselect AS vlam ON vlam.vendor_location_id = vl.id
+                                            INNER JOIN vendor_attributes_select_options AS vaso ON vaso.id = vlam.vendor_attributes_select_option_id
+                                            WHERE t.slug = '$collection'
+                                            AND t.status = 'available'
+                                            AND mrn.image_type = 'listing'
+                                            AND va.alias = 'short_description'");
+             /*print_r($arrData);
+             foreach ($arrData['data'] as $data)
+             {
+                echo $data['slug'];
+             }*/
+            // exit;
+             foreach($alacartQuery as $row2) 
+             {
+                 $alaCartaArData['data'][]=array(
+                          'tagsname'=>$row2->tagsname,
+                          'tagsslug'=>$row2->tagsslug,
+                          'vendorlocationslug'=>$row2->vendorlocationslug,
+                          'id'=>$row2->id,
+                          'vendorlocationsName'=>$row2->vendorlocations,
+                          'city'=>$row2->city,
+                          'imagename'=>$row2->imagename,
+                          'pricing_level'=>$row2->pricing_level,
+                          'attribute_value'=>$row2->attribute_value,
+                          'flagname'=>$row2->flagname,
+                          'color'=>$row2->color,
+                          'locationarea'=>$row2->locationarea,
+                          'option'=>$row2->option,
+                          'review_detail' => $this->getVendorLocationRatingDetails($row2->id)
+                          /*'id'=>$row->id,
+                          'cityname'=>strtolower($row->cityname),
+                          'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
+                          'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
+                          'full_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['full_stars']:0,
+                          'half_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['half_stars']:0,
+                          'blank_stars' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['blank_stars']:0,*/
+                    );
+             }
+             /*print_r($alaCartaArData);
+             exit;*/
+
+         return view('frontend.pages.collection',$arrResponse)
+                    ->with('collectionResult', $collectionResult)
+                    ->with('exclusiveExperiences',$exclusiveExperiences)
+                    ->with('arrData',$arrData)
+                    ->with('alaCartaArData',$alaCartaArData);
+    }
+
+    public static function getVendorLocationRatingDetails($vendorLocationID, $start = NULL, $limit = NULL) {
+        $strQuery = DB::table(DB::raw('vendor_location_reviews as vlr'))
+                        ->join('users','users.id','=', 'vlr.user_id')
+                        ->where('vlr.vendor_location_id',$vendorLocationID)
+                        ->where('status','Approved')
+                        ->select('users.id','users.full_name','vlr.review','vlr.rating','vlr.created_at');
+        if(!empty($start) && !empty($limit)) {
+            $strQuery = $strQuery->skip($start)->take($limit);
+        }
+        
+        //executing the query
+        $queryResult = $strQuery->get();        
+        
+        //array to store the result
+        $arrReviewDetail = array();
+        
+        //initializing the results
+        if($queryResult) {
+            foreach($queryResult as $row) {
+                $arrReviewDetail[] = array(
+                                        'id' => $row->id,
+                                        'name' => $row->full_name,
+                                        'image' => "",
+                                        'review' => $row->review,
+                                        'rating' => $row->rating,
+                                        'created_at' => $row->created_at
+                                    );
+            }
+        }
+        return $arrReviewDetail;
+    }
+
+    public function findRatingByProduct($arrProduct){
+        
+            $queryResult = DB::table('product_reviews')
+                ->whereIN('product_id',$arrProduct)
+                ->groupBy('product_id')
+                ->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings,product_id'))
+                ->get();
+          //array to store the result
+          $arrRating = array();
+
+          //reading the results
+          foreach($queryResult as $row) 
+          {
+
+            $num_of_full_starts = round($row->avg_rating,1);// number of full stars
+            $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+            $number_of_blank_starts = 5-($row->avg_rating); //number of white stars
+
+            $arrRating[$row->product_id] = array(
+                            'averageRating' => $row->avg_rating,
+                            'totalRating' => $row->total_ratings,
+                            'full_stars' => $num_of_full_starts,
+                            'half_stars' => $num_of_half_starts,
+                            'blank_stars' => $number_of_blank_starts
+                            );
+            }
+
+            return $arrRating;
+            //print_r($arrRating);
+
+    }
+
     public function sorting(){
         $city_id    = Input::get('city');
         $sortby     = Input::get('sortby');
