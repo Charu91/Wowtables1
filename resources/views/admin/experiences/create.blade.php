@@ -171,7 +171,7 @@
                 <div class="form-group">
                     <label for="pricing[taxes]" class="col-sm-3 control-label">Taxes<span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing[taxes]',[''=>'Select Value','Inclusive-Taxes'=>'Inclusive-Taxes','Exclusive-Taxes'=>'Exclusive-Taxes'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('pricing[taxes]',[''=>'Select Value','Taxes Applicable'=>'Taxes Applicable','Inclusive of Taxes'=>'Inclusive of Taxes'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
