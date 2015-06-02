@@ -136,7 +136,7 @@ class Experiences {
                                                                         'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
                                                                         'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
                                                                         'curator_image' => (is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
-                                                                        'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation
+                                                                        'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
                                                                         'suggestions' => (is_null($expResult->tips)) ? "": $expResult->tips,
                                                                       ),
 										'menu' => $expResult->menu,
