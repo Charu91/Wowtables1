@@ -11,6 +11,7 @@ function getURLParameters(e) {
     return t
 }
 $(document).ready(function() {
+
     $(".tooltip1").tooltip();
     email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     $("input[name='email1']").focus(function() {
@@ -85,7 +86,7 @@ $(document).ready(function() {
             return false
         } else {
             $.ajax({
-                url: "/registration/check_email",
+                url: "/users/checkemail",
                 data: {
                     email: email_address.val(),
                     gothrough: "gothrough"
@@ -107,9 +108,9 @@ $(document).ready(function() {
                     } else {
                         var t = getURLParameters($(location).attr("href"));
                         if (t.utm_source && t.utm_medium && t.utm_campaign) {
-                            var n = "/registration/register?utm_source=" + t.utm_source + "&utm_medium=" + t.utm_medium + "&utm_campaign=" + t.utm_campaign
+                            var n = "/users/register?utm_source=" + t.utm_source + "&utm_medium=" + t.utm_medium + "&utm_campaign=" + t.utm_campaign
                         } else {
-                            var n = "/registration/register"
+                            var n = "/users/register"
                         }
                         yourcity = $("#city option:selected").val();
                         var r = $("#year_bd").val() + "-" + $("#month_bd").val() + "-" + $("#day_bd").val();
@@ -124,7 +125,9 @@ $(document).ready(function() {
 								reg_page : window.location.href,
                             },
                             success: function(e) {
-                                var t = "";
+                                //alert(yourcity);
+                                window.location = "/exp/lists/?signup=true";
+                                /*var t = "";
                                 var n = $("#url").val();
                                 if (e == 1) {
                                     t = $("#slug").val();
@@ -136,7 +139,7 @@ $(document).ready(function() {
                                     }else {
                                         window.location = n + "experience/lists/?signup=true"
                                     }
-                                } else {}
+                                } else {}*/
                             }
                         })
                     }
@@ -211,7 +214,7 @@ $(document).ready(function() {
             })
         }
     });
-    $("#login").click(function(e) { 
+    $("#logine").click(function(e) { 
         e.preventDefault();
         login = $("#email1").val();
         psw = $("#pass1").val();
@@ -245,6 +248,7 @@ $(document).ready(function() {
             $("#password_error_1").css("display", "none")
         }
         if (logerror == 0) {
+           
             $.ajax({
                 url: "/users/check_user",
                 type: "POST",
@@ -252,14 +256,13 @@ $(document).ready(function() {
                     email: login,
                     password: psw
                 },
-                dataType: "json",
+               
                 async: false,
-                success: function(response) {
+                success: function(response) {                    
                     console.log("asd = "+response);
-                    var data = jQuery.parseJSON(response);
-                    console.log("state = "+data);
-
-                    if (data.state == "failure") {
+                    var obj = jQuery.parseJSON( response );
+                    //alert( obj.state );
+                    if (obj.state == "failure") {
                         logerror++;
 
                         var error_text = "Incorrect password/email. Please try again."
@@ -276,7 +279,8 @@ $(document).ready(function() {
         if (logerror > 0) {
             return false
         } else {
-            $("#login").closest("form").submit()
+            //$("#login").closest("form").submit()
+            location.reload(); 
         }
     });
     $("#forgot_password").submit(function(e) {

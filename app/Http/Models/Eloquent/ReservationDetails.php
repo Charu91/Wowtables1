@@ -65,15 +65,13 @@ class ReservationDetails extends Model {
 		$reservation->reservation_type = $arrData['reservationType'];
 		$reservation->order_amount = 0;
 		$reservation->user_id = $userID;
+		$reservation->added_by = $userType;
 		
 		//setting up the variables that may be present
 		if(isset($arrData['specialRequest'])) {
 			$reservation->special_request = $arrData['specialRequest'];
-		}
+		}	
 		
-		if(isset($arrData['addedBy'])) {
-			$reservation->added_by = $arrData['addedBy'];
-		}
 		
 		if(isset($arrData['giftCardID'])) {
 			$reservation->giftcard_id = $arrData['giftCardID'];
@@ -132,7 +130,7 @@ class ReservationDetails extends Model {
 					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
-					                    'API_added' => 'Yes',
+					                    'API_added' => 'Mobile',
 					                    //'GIU_Membership_ID' => '1001010',
 					                    'Outlet' => $aLaCarteDetail['location'],
 					                    //'Points_Notes'=>'test',
@@ -177,7 +175,7 @@ class ReservationDetails extends Model {
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
-					                    'API_added' => 'Yes',
+					                    'API_added' => 'Mobile',
 					                    //'GIU_Membership_ID' => '1001010',
 					                    'Outlet' => $productDetail['location'],
 					                    //'Points_Notes'=>'test',
@@ -600,7 +598,8 @@ class ReservationDetails extends Model {
 		    $ch = curl_init();
 		    $config = array(
 		        //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-		        'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+		        //'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+		        'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
 		        'scope' => 'creatorapi',
 		    );
 		    $curlConfig = array(
@@ -613,7 +612,7 @@ class ReservationDetails extends Model {
 		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
 		    curl_setopt_array($ch, $curlConfig);
 		    $result = curl_exec($ch);		   
-		    curl_close($ch);			    	
+		    curl_close($ch);    	    	
 		    return simplexml_load_string($result);		    
 		}
 		//-----------------------------------------------------------------
@@ -656,6 +655,7 @@ class ReservationDetails extends Model {
 
         	//====================================
          	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+         	
             $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
               		
     		// $vendorDetails =  self::getByRestaurantLocationId($arrData['vendorLocationID']); 
@@ -730,8 +730,8 @@ class ReservationDetails extends Model {
     		 									'experience_includes' => $productDetailsTemp['experience_includes'],
     		 									'short_description' => $productDetailsTemp['short_description'], 
     							  				'terms_and_conditions' => $productDetailsTemp['terms_and_conditions']
-    							  				);
-    		 
+    							  				);    
+    						 
 
     		$reservationResponse['status'] = 'success';
     		$reservationResponse['data']= array('reservation_type' => 'Experience', 
@@ -831,7 +831,20 @@ class ReservationDetails extends Model {
           ->first();
 
       return $queryResult;
-  	}    
+  	} 
+
+  	public static function getUserLastReservation($user_id) {
+
+  		$queryResult=DB::table('reservation_details as rd')
+  							->where('user_id',$user_id)
+  							->select('id', 'reservation_date', 'reservation_time')
+  							->groupBy('reservation_date')
+  							->groupBy('reservation_time')
+  							->orderBy('reservation_date')
+  							->orderBy('reservation_time')
+  							->first();
+  		return $queryResult;  							
+  	} 
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php

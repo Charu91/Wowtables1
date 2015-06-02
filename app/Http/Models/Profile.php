@@ -2,6 +2,7 @@
 
 use DB;
 use Config;
+use WowTables\Http\Models\Eloquent\ReservationDetails;
 
 /**
  * Model class Profile
@@ -11,7 +12,7 @@ use Config;
 class Profile {
 
     static $arrRules = array(
-                            'access_token' => 'required|exists:user_devices,access_token',
+                            //'access_token' => 'required|exists:user_devices,access_token',
                             'full_name' => 'required||max:64'  ,
                             'phone_number' => 'required',
                             'zip_code'  => 'required',
@@ -71,6 +72,9 @@ class Profile {
             //array to contain the response to be sent back to client
             $arrResponse = array();
 
+            $lastReservationDetail=ReservationDetails::getUserLastReservation($queryProfileResult->user_id);
+            //print_r($lastReservationDetail); die("Hmmm..");
+
             if($queryProfileResult) {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
                 $arrResponse['data']=array(
@@ -90,6 +94,8 @@ class Profile {
                                             'dob' => $queryProfileResult->dob,
                                             'selectedPreferences' => $preferredLocations['data'],
                                             'areas' => $cityAreas['data'],
+                                            'last_reservation_date' => (empty($lastReservationDetail->reservation_date)) ? "" : $lastReservationDetail->reservation_date,
+                                            'last_reservation_time' => (empty($lastReservationDetail->reservation_time)) ? "" : $lastReservationDetail->reservation_time
                                           );
             }
             else {
@@ -148,11 +154,12 @@ class Profile {
      */
         public static function updateProfile($data){
 
-            $id=DB::table('user_devices as ud')
+            $userID = DB::table('user_devices as ud')
                         ->join('users as u','u.id','=','ud.user_id')
                         ->where('ud.access_token',$data['access_token'])
                         ->select('ud.user_id')
                         ->first();
+                            
             //print_r($id); die();
             //updating data in users table
             $userTableData = array(
@@ -161,9 +168,9 @@ class Profile {
                                     'zip_code' => $data['zip_code'],
                                     'location_id' => $data['location_id'],
                                     'updated_at' => date('Y-m-d H:i:s'),
-                                  );
+                                  );  
             DB::table('users')
-                ->where('id', $id->user_id)
+                ->where('id', $userID->user_id)
                 ->update($userTableData);
 
 
@@ -176,16 +183,29 @@ class Profile {
             }
 
 
-            DB::table('user_attributes_date')
-                        ->where('user_id', $id->user_id)
-                        ->where('user_attribute_id',$arrAttribute['date_of_birth'])
-                        ->update(array('attribute_value' => $data['dob']));
+            $dobUpdate = DB::table('user_attributes_date')
+                        		->where('user_id', $userID->user_id)
+                        		->where('user_attribute_id',$arrAttribute['date_of_birth'])
+                        		->update(array('attribute_value' => $data['dob']));
+			
+			if(!$dobUpdate) {
+				//adding data to the table
+				DB::table('user_attributes_date')
+						->insert(array(
+							'user_id'           => $userID->user_id,
+							'user_attribute_id' => $arrAttribute['date_of_birth'],
+							'attribute_value'   => $data['dob'],
+							'created_at'        => date('Y-m-d H:i:s'),
+							'updated_at'        => date('Y-m-d H:i:s')
+						));
+			}
 
 
             $queryGenderValue = DB::table('user_attributes_select_options')
                                             -> select('id','option')
                                             -> where('user_attribute_id', $arrAttribute['gender'])
                                             -> get();
+			
 
             //array having options and id as key value pair
             $arrGender = array();
@@ -196,10 +216,21 @@ class Profile {
             }
 
             //updating user gender
-            DB::table('user_attributes_singleselect')
-                        ->where('user_id',$id->user_id)
-                        ->whereIn('user_attributes_select_option_id',$arrGenderId)
-                        ->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
+            $genderUpdate = DB::table('user_attributes_singleselect')
+                        		->where('user_id',$userID->user_id)
+                        		->whereIn('user_attributes_select_option_id',$arrGenderId)
+                        		->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
+			
+			if( !$genderUpdate) {
+				//adding data to the table
+				DB::table('user_attributes_singleselect')
+						->insert(array(
+							'user_id'           				=> $userID->user_id,
+							'user_attributes_select_option_id'  => $arrGender[$data['gender']],
+							'created_at'                        => date('Y-m-d H:i:s'),
+							'updated_at'                        => date('Y-m-d H:i:s')
+						));
+			}
 
             //array to contain the response to be sent back to client
             $arrResponse = array();

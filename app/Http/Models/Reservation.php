@@ -34,7 +34,7 @@ class Reservation {
 									'phone' => 'required',
 									'reservationType' => 'required|in:experience,alacarte,event',
 									'specialRequest' => 'max:512',
-									'access_token' => 'required|exists:user_devices,access_token',
+									//'access_token' => 'required|exists:user_devices,access_token',
 									'reservationID' => 'sometimes|required|exists:reservation_details,id'
 								) ;
 								

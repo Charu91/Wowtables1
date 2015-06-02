@@ -181,8 +181,9 @@ class CustomerModel {
         ';
 
         $user = DB::select($query, [$email]);
-        
+         
         if($user){
+          
             if($user[0]->type === 'old_site'){
                 if(md5($password) === $user[0]->old_password){
                     $password = bcrypt($password);
@@ -247,13 +248,14 @@ class CustomerModel {
                     ];
                 }
 
-            }
+            } 
         }else{
             return [
                 'state' => 'failure',
                 'message' => 'The email address has not been registered with us'
             ];
         }
+       
     }
 
     /**
