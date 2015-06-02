@@ -494,8 +494,8 @@ class User {
                     return [
                         'code' => 500,
                         'data' => [
-                            'action' => 'Insert the user device or update if exists',
-                            'message' => 'There was an issue processing your request. Please try again'
+                            'action' => 'Insert the user device or update if exists.',
+                            'message' => 'There was an issue processing your request. Please try again.'
                         ]
                     ];
                 }
@@ -504,8 +504,8 @@ class User {
                 return [
                     'code' => 500,
                     'data' => [
-                        'action' => 'Inserting the newly registered user to the DB',
-                        'message' => 'There was an issue processing your request. Please try again'
+                        'action' => 'Inserting the newly registered user to the DB.',
+                        'message' => 'There was an issue processing your request. Please try again.'
                     ]
                 ];
             }
@@ -514,8 +514,8 @@ class User {
             return [
                 'code' => 225,
                 'data' => [
-                    'action' => 'Check if email already is registered with WowTables',
-                    'message' => 'You are already registered with WowTables. Please sign in instead'
+                    'action' => 'Check if email already is registered with WowTables.',
+                    'message' => 'You are already registered with WowTables. Please sign in instead.'
                 ]
             ];
         }

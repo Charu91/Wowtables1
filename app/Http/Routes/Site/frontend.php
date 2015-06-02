@@ -7,6 +7,14 @@ Route::get('/', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/registration', [
+    'uses' => 'Site\HomePageController@home',
+    'as' => 'SiteRegistration',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 Route::get('/exp/lists/{city?}',[
     'uses' => 'Site\ExperienceController@lists',
@@ -115,6 +123,20 @@ Route::get('/{city}/experiences/{experience}/',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/experiences/thankyou/{orderid}',[
+    'uses' => 'Site\ExperienceController@thankyou',
+    //'where' => '*',
+    'as' => 'experienceThankyou',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/alacarte/thankyou/{orderid}',[
+    'uses' => 'Site\AlacarteController@thankyou',
+    //'where' => '*',
+    'as' => 'alacarteThankyou',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::post('orders/expcheckout',[
     'uses' => 'Site\ExperienceController@exporder',
     'as' => 'experience.expcheckout',
@@ -124,6 +146,12 @@ Route::post('orders/expcheckout',[
 Route::post('orders/check_exporder_exists',[
     'uses' => 'Site\ExperienceController@exporderexists',
     'as' => 'experience.exporderexists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('users/forgot_password',[
+    'uses' => 'Site\HomePageController@forgot_password',
+    'as' => 'websiteForgotPassword',
     'domain' => env('WEBSITE_URL'),
 ]);
 
@@ -165,11 +193,54 @@ Route::get('/alacarte_custom_search/new_custom_search',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-
-
 /*Route::get('/pages/about-us',[
     'uses' => 'Site\ExperienceController@aboutUs',
     'as' => 'websiteCollection',
     'domain' => env('WEBSITE_URL'),
 ]);*/
+
+Route::get('forgotPassword/{token}/{userid}',[
+    'uses' => 'Site\HomePageController@verifyResetToken',
+    'as' => 'websiteVerifyPasswordToken',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('users/save_changed_pass',[
+    'uses' => 'Site\HomePageController@newPassword',
+    'as' => 'websiteSetNewPassword',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/login', [
+    'uses' => 'Site\SessionsController@loginView',
+    'as' => 'login_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/login', [
+    'uses' => 'Site\SessionsController@login',
+    'as' => 'login_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::get('/register', [
+    'uses' => 'Site\RegistrationsController@registerView',
+    'as' => 'register_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/register', [
+    'uses' => 'Site\RegistrationsController@register',
+    'as' => 'register_path',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 

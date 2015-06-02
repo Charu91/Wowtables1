@@ -1,10 +1,12 @@
 <?php
 
-Route::resource('alacarte', 'Api\ALaCarteController');
+//Route::resource('alacarte', 'Api\ALaCarteController');
 
-Route::get('api/alacarte/{id}',['uses' => 'Api\ALaCarteController@show',
-								'as' => '',
-								'middleware' => 'wow.api',
-								'where' => [],
-    							'domain' => env('WEBSITE_URL'),
-    							]);
+Route::get('alacarte/{id}',
+				array(
+					'uses' => 'Api\ALaCarteController@show',
+					'as' => '',
+					'middleware' => 'wow.api',
+					'where' => array(),
+    				'domain' => env('WEBSITE_URL'),
+    			));

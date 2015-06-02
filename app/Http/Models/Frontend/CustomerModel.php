@@ -1081,4 +1081,20 @@ class CustomerModel {
         $rewards = DB::table('rewards_details')->where('user_id', $id);
         return $rewards->get();
     }
+
+    public function getLocationName($cityId){
+        $cityDetails = DB::table('location')->where('id', $cityId);
+        return $cityDetails->get();
+    }
+
+    public function getUserDetailsFromToken($token){
+        $queryResult = \DB::table('password_request as pr')
+            ->join('users as u','pr.user_id','=','u.id')
+            ->where('pr.request_token',$token)
+            ->select('u.id','u.email','u.full_name','pr.request_token')
+            ->first();
+
+
+        return $queryResult;
+    }
 }

@@ -65,7 +65,7 @@ class Experiences {
 							->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
 							->where('pa3.alias','menu')
 							->select('products.id','products.name','products.type','pp.price','pp.tax',
-                                    'pcm.curator_tips as tips',
+                                    'pcm.curator_tips as tips', 'pp.taxes',
 									'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
 									DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
@@ -126,8 +126,8 @@ class Experiences {
 										'image' => $arrImage,
 										'type' => $expResult->type,
 										'reward_points' => $expResult->reward_points,
-										'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
-										'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
+										'price' => $expResult->price ,
+										'taxes' => $expResult->taxes,
 										'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
 										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,

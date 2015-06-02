@@ -31,22 +31,26 @@ class Profile {
      * @param	array $token
      * @since	1.0.0
      */
-        public static function getUserProfile($token) {
+        public static function getUserProfile($token) {  
 
             $queryProfileResult = DB::table('users as u')
-                                        ->join('user_attributes_date as uad','u.id','=','uad.user_id')
-                                        ->join('user_attributes as ua','uad.user_attribute_id','=','ua.id')
-                                        ->join('locations as l','l.id','=','u.location_id')
-                                        ->join('user_attributes_singleselect as uas','u.id','=','uas.user_id')
-                                        ->join('user_attributes_select_options as uaso','uas.user_attributes_select_option_id','=','uaso.id')
-                                        ->join('user_attributes as ua2','uaso.user_attribute_id','=','ua2.id')
-                                        ->join('user_attributes_integer as uai','uai.user_id','=','u.id')
-                                        ->join('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
-                                        ->join('user_devices as ud','u.id','=','ud.user_id')
+                                        ->leftjoin('user_attributes_date as uad','u.id','=','uad.user_id')
+                                        ->leftjoin('user_attributes as ua', function($join) {
+                                                                                            $join->on('uad.user_attribute_id','=','ua.id')
+                                                                                                 ->where('ua.alias','=','date_of_birth'); 
+                                                                                        })
+                                        ->leftjoin('locations as l','l.id','=','u.location_id')
+                                        ->leftjoin('user_attributes_singleselect as uas','u.id','=','uas.user_id')
+                                        ->leftjoin('user_attributes_select_options as uaso','uas.user_attributes_select_option_id','=','uaso.id')
+                                        ->leftjoin('user_attributes as ua2', function($join) {
+                                                                                                $join->on('uaso.user_attribute_id','=','ua2.id')
+                                                                                                     ->where('ua2.alias','=','gender');
+                                                                                         })
+                                        ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
+                                        ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
+                                        ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
                                         //->where('u.id',$userID)
-                                        ->where('ud.access_token',$token)
-                                        ->where('ua.alias','date_of_birth')
-                                        ->where('ua2.alias','gender')
+                                        ->where('ud.access_token',$token)                                        
                                         ->select('u.id as user_id','u.full_name','u.email','phone_number','u.zip_code',
                                                 'uaso.option as gender','l.id as location_id','l.name as location','ud.access_token',
                                                 DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
@@ -55,13 +59,14 @@ class Profile {
                                                DB::raw('date(uad.attribute_value) as dob'))
                                         ->groupby('u.id')
                                         ->first();
+                                       
+                                     
 
             //Read all the preferred locations
             $preferredLocations=Profile::getUserPreferences($token);
 
-            //Read all the AREAS related to user's location
-            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);
-            //print_r($cityAreas); die();
+            //Read all the AREAS related to user's location            
+            $cityAreas=Locations::readCityArea($queryProfileResult->location_id);            
 
             //array to contain the response to be sent back to client
             $arrResponse = array();
@@ -70,7 +75,7 @@ class Profile {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
                 $arrResponse['data']=array(
                                             'user_id' => $queryProfileResult->user_id,
-                                            'access_token' => $queryProfileResult->access_token,
+                                            //'access_token' => $queryProfileResult->access_token,
                                             'full_name' => $queryProfileResult->full_name,
                                             'email' => $queryProfileResult->email,
                                             'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,
@@ -143,7 +148,7 @@ class Profile {
      */
         public static function updateProfile($data){
 
-            $id=DB::table('user_devices as ud')
+            $userID = DB::table('user_devices as ud')
                         ->join('users as u','u.id','=','ud.user_id')
                         ->where('ud.access_token',$data['access_token'])
                         ->select('ud.user_id')
@@ -158,7 +163,7 @@ class Profile {
                                     'updated_at' => date('Y-m-d H:i:s'),
                                   );
             DB::table('users')
-                ->where('id', $id->user_id)
+                ->where('id', $userID->user_id)
                 ->update($userTableData);
 
 
@@ -171,16 +176,29 @@ class Profile {
             }
 
 
-            DB::table('user_attributes_date')
-                        ->where('user_id', $id->user_id)
-                        ->where('user_attribute_id',$arrAttribute['date_of_birth'])
-                        ->update(array('attribute_value' => $data['dob']));
+            $dobUpdate = DB::table('user_attributes_date')
+                        		->where('user_id', $userID->user_id)
+                        		->where('user_attribute_id',$arrAttribute['date_of_birth'])
+                        		->update(array('attribute_value' => $data['dob']));
+			
+			if(!$dobUpdate) {
+				//adding data to the table
+				DB::table('user_attributes_date')
+						->insert(array(
+							'user_id'           => $userID->user_id,
+							'user_attribute_id' => $arrAttribute['date_of_birth'],
+							'attribute_value'   => $data['dob'],
+							'created_at'        => date('Y-m-d H:i:s'),
+							'updated_at'        => date('Y-m-d H:i:s')
+						));
+			}
 
 
             $queryGenderValue = DB::table('user_attributes_select_options')
                                             -> select('id','option')
                                             -> where('user_attribute_id', $arrAttribute['gender'])
                                             -> get();
+			
 
             //array having options and id as key value pair
             $arrGender = array();
@@ -191,10 +209,21 @@ class Profile {
             }
 
             //updating user gender
-            DB::table('user_attributes_singleselect')
-                        ->where('user_id',$id->user_id)
-                        ->whereIn('user_attributes_select_option_id',$arrGenderId)
-                        ->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
+            $genderUpdate = DB::table('user_attributes_singleselect')
+                        		->where('user_id',$userID->user_id)
+                        		->whereIn('user_attributes_select_option_id',$arrGenderId)
+                        		->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
+			
+			if( !$genderUpdate) {
+				//adding data to the table
+				DB::table('user_attributes_singleselect')
+						->insert(array(
+							'user_id'           				=> $userID->user_id,
+							'user_attributes_select_option_id'  => $arrGender[$data['gender']],
+							'created_at'                        => date('Y-m-d H:i:s'),
+							'updated_at'                        => date('Y-m-d H:i:s')
+						));
+			}
 
             //array to contain the response to be sent back to client
             $arrResponse = array();

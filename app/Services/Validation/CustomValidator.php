@@ -97,7 +97,33 @@ class CustomValidator extends Validator {
 			}
 		}				
 		return TRUE;
-	}	
+	}
+
+	//-----------------------------------------------------------------
+
+	/**
+	 * Checks whether the token is valid and active or not	 
+	 * 
+	 * @access	public
+	 * @param	$attribute
+	 * @return	boolean
+	 * @since	1.0.0
+	 */
+	public function validatePasswordResetToken($attribute, $value, $parameter) {
+		
+		$token=DB::table('password_request as pr')
+                        ->where('pr.request_token',$value)
+                        ->where('pr.status','=','active')
+                        ->select('user_id')
+                        ->first(); 
+            if($token){
+            		return TRUE;
+            }
+            else{
+            	 	return FALSE;
+            }
+
+	}
 	
 }
 //end of class CustomValidator

@@ -1,5 +1,6 @@
 <?php namespace WowTables\Http\Controllers\Site;
 
+use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Controllers\Controller;
 use App;
 use Cookie;
@@ -13,18 +14,23 @@ use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Frontend\CommonModel;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 use Input;
-use WowTables\Http\Models\Eloquent\User;
 use Validator;
 use Hash;
 use DB;
 use Auth;
 use Redirect;
+use Mail;
+use Mailchimp;
 
 class ExperienceController extends Controller {
-	
-	function __construct(Request $request, ExperienceModel $experiences_model){
+
+    protected $listId = '986c01a26a';
+
+	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp){
         $this->request = $request;
         $this->experiences_model = $experiences_model;
+        $this->repository = $repository;
+        $this->mailchimp = $mailchimp;
     }
 
     function index(){
@@ -143,7 +149,7 @@ class ExperienceController extends Controller {
             return redirect()->route('experience.lists',[$redirect_url]);
         }
 
-        
+
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
         
         $arrSubmittedData['city_id'] = $city_id;
@@ -578,9 +584,15 @@ class ExperienceController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']              = Input::get('add_ons');
         //$dataPost['access_token'] = Session::get('id');
+        //echo "<pre>"; print_r($dataPost); //die;
+        $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
+        //echo "<pre>"; print_r($locationDetails); die;
         $outlet = $this->experiences_model->getOutlet($dataPost['vendorLocationID']);
         //echo "<pre>"; print_r($outlet);
-        //echo "<pre>"; print_r($dataPost); die;
+
+        //die;
+        $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+        //echo "<pre>"; print_r($productDetails); die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -611,37 +623,113 @@ class ExperienceController extends Controller {
         }
         else {
             $userID = Session::get('id');
+            //echo "userid == ".$userID;
+            $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+
+            //Start MailChimp
+            if(!empty($getUsersDetails)){
+
+                $merge_vars = array(
+                    'MERGE1'=>$dataPost['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$getUsersDetails->experience_bookings + 1,
+                    'MERGE13'=>$dataPost['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+                );
+                $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+            }
+            //End MailChimp
         
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
             
             if($arrResponse['status'] == 'success') {
-                    $arrResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
-                $zoho_data = array(
-                    'Name' => 'Rushikesh Joshi',
-                    'Email_ids' => 'tech@gourmetitup.com',
-                    'Contact' => '9699985906',
-                    'Experience_Title' => 'Gastronomical - Gastronomical Brunch',
-                    'No_of_People' => '2',
-                    'Date_of_Visit' => date('d-M-Y'),
-                    'Time' => '10:00PM',
-                    'Alternate_ID' =>  'E0001',//sprintf("%06d",$this->data['order_id1']);
-                    'Refferal' => 'google add',
-                    'Occasion' => 'This is a test',
-                    'Type' => 'Experience',
-                    'API_added' => 'Yes',
-                    'GIU_Membership_ID' => '1001010',
-                    'Outlet' => 'Lower Parel',
-                    'Points_Notes'=>'test',
-                    'AR_Confirmation_ID'=>'0',
-                    'Auto_Reservation'=>'Not available',
-                    //'telecampaign' => $campaign_id,
-                    'total_no_of_reservations'=> '1',
-                    'Calling_option' => 'No'
-                );
-                $zoho_res = $this->zoho_add_booking($zoho_data);
-                $zoho_success = $zoho_res->result->form->add->status;
+                    /*$getUsersDetails = $this->user->fetchDetails($userID);
+                    echo "<pre>"; print_r($getUsersDetails); die;*/
+                    $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                    //echo "<pre>"; print_r($arrResponse); die;
+                    $zoho_data = array(
+                        'Name' => $dataPost['guestName'],
+                        'Email_ids' => $dataPost['guestEmail'],
+                        'Contact' => $dataPost['phone'],
+                        'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
+                        'No_of_People' => $dataPost['partySize'],
+                        'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
+                        'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
+                        //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Occasion' => $dataPost['specialRequest'],
+                        'Type' => "Experience",
+                        'API_added' => 'Yes',
+                        //'GIU_Membership_ID' => '1001010',
+                        'Outlet' => $outlet->name,
+                        //'Points_Notes'=>'test',
+                        'AR_Confirmation_ID'=>'0',
+                        'Auto_Reservation'=>'Not available',
+                        //'telecampaign' => $campaign_id,
+                        //'total_no_of_reservations'=> '1',
+                        'Calling_option' => 'No'
+                    );
+                    //echo "<pre>"; print_r($zoho_data);
+                    $zoho_res = $this->zoho_add_booking($zoho_data);
+                    $zoho_success = $zoho_res->result->form->add->status;
+                    //echo "<pre>"; print_r($zoho_success); die;
+                    if($zoho_success[0] != "Success"){
+                        //$this->email->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                        //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
+                        //$this->email->to($list);
+                        //$this->email->subject('Urgent: Zoho reservation posting error');
+                        $mailbody = 'E'.sprintf("%06d",$arrResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                        $mailbody .= 'Reservation Details<br>';
+                        foreach($zoho_data as $key => $val){
+                            $name = str_replace('_',' ',$key);
+                            $mailbody .= $name.' '.$val.'<br>';
+                        }
+
+                        Mail::raw($mailbody, function($message) use ($zoho_data)
+                        {
+                            $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                        });
+                    }
+
+                $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
+                                                'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
+                                                'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
+                                                'venue' => $outlet->vendor_name,
+                                                'username' => $dataPost['guestName']
+                                            );
+
+                    Mail::send('site.pages.experience_reservation',[
+                            'location_details'=> $locationDetails,
+                            'outlet'=> $outlet,
+                            'post_data'=>$dataPost,
+                            'productDetails'=>$productDetails,
+                            'reservationResponse'=>$reservationResponse,
+                        ], function($message){
+                        $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                        $message->to(Input::get('email'))->subject('Your WowTables Reservation');
+                        //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                    });
+                $dataPost['admin']  = "yes";
+                Mail::send('site.pages.experience_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=>$dataPost,
+                    'productDetails'=>$productDetails,
+                    'reservationResponse'=>$reservationResponse,
+                ], function($message) use ($mergeReservationsArray){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to(Input::get('email'))->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                });
+
+
                 }
             }
             else {
@@ -661,9 +749,49 @@ class ExperienceController extends Controller {
 
         $arrResponse['allow_guest']            ='Yes'; 
         $arrResponse['current_city']           = strtolower($city_name);
+
         $arrResponse['current_city_id']        = $city_id;
 
-        return response()->view('frontend.pages.thankyou',$arrResponse);
+        //return response()->view('frontend.pages.thankyou',$arrResponse);
+        //view('frontend.pages.thankyou',$arrResponse);
+        //$experienceOrderId = '#E'.$mergeReservationsArray['order_id'];
+        //echo '/experiences/thankyou/E'.$mergeReservationsArray['order_id']; print_r($arrResponse);
+        //return redirect('/experiences/thankyou/E'.$mergeReservationsArray['order_id'],$arrResponse);
+        //echo "<pre>"; print_r($arrResponse); //die;
+        $arrResponse['restaurant_name'] = $outlet->vendor_name;
+        $arrResponse['experience_title'] = $outlet->product_name;
+        $arrResponse['experience_description'] = $productDetails['attributes']['short_description'];
+        $arrResponse['reservation_date'] = $dataPost['reservationDate'];
+        $arrResponse['reservation_time'] = $dataPost['reservationTime'];
+        $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
+        $arrResponse['guests'] = $dataPost['partySize'];
+        $arrResponse['experience_includes'] = $productDetails['attributes']['experience_includes'];
+        $arrResponse['terms_and_conditions'] = $productDetails['attributes']['terms_and_conditions'];
+        $arrResponse['address'] = $locationDetails->address;
+        $arrResponse['lat'] = $locationDetails->latitude;
+        $arrResponse['long'] = $locationDetails->longitude;
+        $arrResponse['city'] = $arrResponse['current_city'];
+        $arrResponse['slug'] = $outlet->slug;
+        //echo "<pre>"; print_r($arrResponse); die;
+        return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
+    }
+
+    public function thankyou($response){
+        //echo "orderid == ".$orderID;
+
+
+        $result1= Session::get('response');
+
+        session_start();
+        $result= $_SESSION["result"]=$result1;
+        //print_r($a);
+        //exit;
+        $data['current_city'] = $result['current_city'];
+        $data['current_city_id'] = $result['current_city_id'];
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $data['cities'] = $cities;
+        return view('frontend.pages.experience_thankyou',$data,['result'=>$result]);
+        //echo "dsf<pre>"; print_r($result); echo "asc<pre>";
     }
 
     public function exporderexists()
