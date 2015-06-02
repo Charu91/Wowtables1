@@ -49,6 +49,8 @@ class SessionsController extends Controller {
      */
     public function logout()
     {
+        //echo 'hello';
+        //Auth::logout();
         $this->user->logout();
 
         return redirect()->route('SiteHomePage');

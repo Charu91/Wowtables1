@@ -39,9 +39,9 @@ Route::post('/users/checkemail', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::post('/users/check_user', [
+Route::post('users/check_user', [
     'uses' => 'Site\HomePageController@check_user',
-    'as' => '',
+    'as' => 'usercheck',
     'middleware' => ['guest'],
     'where' => [],
     'domain' => env('WEBSITE_URL'),
@@ -71,10 +71,21 @@ Route::get('/home', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('pages/{pages}',[
+    'uses' => 'Site\StaticPagesController@pages',
+    'as' => 'aboutus',
+    'domain' => env('WEBSITE_URL'),
+])->where(['pages' => '.*']);
 
 Route::get('/{city}/',[
     'uses' => 'Site\ExperienceController@lists',
     'as' => 'experience.lists',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/collection/{collectionName}',[
+    'uses' => 'Site\ExperienceController@collection',
+    'as' => 'websiteCollection',
     'domain' => env('WEBSITE_URL'),
 ]);
 
@@ -125,7 +136,7 @@ Route::post('orders/restaurant_checkout',[
 
 Route::post('orders/check_alaorder_exists',[
     'uses' => 'Site\AlacarteController@alaorderexists',
-    'as' => 'alacarte.alaorderexists',
+    'as' => 'alacarte.alaordmumbaierexists',
     'domain' => env('WEBSITE_URL'),
 ]);
 
@@ -153,3 +164,12 @@ Route::get('/alacarte_custom_search/new_custom_search',[
     'as' => 'alacarte.new_custom_search',
     'domain' => env('WEBSITE_URL'),
 ]);
+
+
+
+/*Route::get('/pages/about-us',[
+    'uses' => 'Site\ExperienceController@aboutUs',
+    'as' => 'websiteCollection',
+    'domain' => env('WEBSITE_URL'),
+]);*/
+

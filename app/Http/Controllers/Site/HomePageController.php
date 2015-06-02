@@ -76,7 +76,7 @@ class HomePageController extends Controller {
 
         if(Cookie::get('inform_rebranding') == null)
 		{
-			return response()->view('frontend.pages.home',$data)->withCookie(cookie('inform_rebranding', true, 1440));
+			return response()->view('frontend.pages.home',$data);
 		}
 		else{
 			return response()->view('frontend.pages.home',$data);
@@ -116,7 +116,8 @@ class HomePageController extends Controller {
 	{
 		$customerLoginUserRequest = new CustomerLoginUserRequest();
 		$login = $this->customermodel->login($this->request->input('email'), $this->request->input('password'), $this->request->input('remember_me') ? 1 :0);
-
+       /* echo print_r($login);
+        exit;*/
         if($login['state'] === 'success'){
 			$user_array  =  Auth::user();
             $userdata = array(
@@ -214,13 +215,34 @@ class HomePageController extends Controller {
         }
     }
 
-    public function check_user()
+    public function check_user(Request $request)
     {
-
+        /*if($request->ajax()){
+                return "AJAX";
+            }
+            return "HTTP";
+            exit;*/
         $customerLoginUserRequest = new CustomerLoginUserRequest();
         $all_res = $this->customermodel->login($this->request->input('email'), $this->request->input('password'), $this->request->input('remember_me') ? 1 :0);
-        //echo "<pre>"; print_r($all_res); die;
-        echo json_encode($all_res);
+        //echo "<pre>"; print_r($all_res); exit;
+          if($all_res['state'] === 'success'){
+            $user_array  =  Auth::user();
+            $userdata = array(
+                'id'  => $user_array->id,
+                'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+                'email'     => $user_array->email,
+                'full_name' =>$user_array->full_name,
+                'user_role' =>$user_array->role_id,
+                'phone'     =>$user_array->phone_number,
+                'city_id'   =>$user_array->location_id,
+                'facebook_id'=>@$user_array->fb_token,
+                'exp'=>"10",
+                'logged_in' => TRUE,
+            );
+            Session::put($userdata);
+        }
+        $encval = json_encode($all_res);
+        return $encval;
     }
 
     public function register()
@@ -338,7 +360,7 @@ The WowTables Team";
                     //Start MailChimp
                     //require_once 'MCAPI.class.php'; //specify the proper path
 
-                    $merge_vars = array(
+                  /*  $merge_vars = array(
                         'NAME'         =>     isset($users['full_name'] )? $users['full_name']: '',
                         'SIGNUPTP'     =>     isset($facebook_id)? 'Facebook': 'Email',
                         'BDATE'     =>    isset($users['dob'])? $users['dob']: '',
@@ -349,9 +371,9 @@ The WowTables Team";
                         'MERGE18'=>$_GET["utm_source"],
                         'MERGE19'=>$_GET["utm_medium"],
                         'MERGE20'=>$_GET["utm_campaign"]
-                    );
+                    );*/
 
-                    $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                    //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
@@ -365,7 +387,7 @@ The WowTables Team";
                             )
                         );
                 //echo "asd , ";
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                //$this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
 
                     //End MailChimp
                      echo 1;
