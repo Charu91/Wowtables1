@@ -70,8 +70,7 @@ class ReservationDetails extends Model {
 		//setting up the variables that may be present
 		if(isset($arrData['specialRequest'])) {
 			$reservation->special_request = $arrData['specialRequest'];
-		}	
-		
+		}		
 		
 		if(isset($arrData['giftCardID'])) {
 			$reservation->giftcard_id = $arrData['giftCardID'];
@@ -696,8 +695,6 @@ class ReservationDetails extends Model {
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                     $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');
-                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
-
                 });
                 	
                 Mail::send('site.pages.restaurant_reservation',[
@@ -709,7 +706,7 @@ class ReservationDetails extends Model {
                 ], function($message) use ($mergeReservationsArray, $arrData){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | '. $arrData['phone']);
+                    $message->to('concierge@wowtables.com')->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | App');
                     $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                     
                 });
         }
@@ -718,8 +715,7 @@ class ReservationDetails extends Model {
 
         	//====================================
              $locationDetails = self::getExperienceLocationDetails($arrData['vendorLocationID']);    	 
-    		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);    		 
-    		 // $productDetails = self::getByExperienceId($outlet->product_id); 
+    		 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']); 
 
     		 $productDetailsTemp =  self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);     		
     		
@@ -735,18 +731,13 @@ class ReservationDetails extends Model {
     		$reservationResponse['data']= array('reservation_type' => 'Experience', 
     											'reservationID' => $reservation_id
     										   );     	    	 
-    		 
-    		
-    		//======================================
-    			$formattedRsvID = '#E-'. sprintf("%06d",$reservation_id);	//Formatted Order ID
-        		$mergeReservationsArray = array('order_id'=> $formattedRsvID,
+    		$formattedRsvID = '#E-'. sprintf("%06d",$reservation_id);	//Formatted Order ID
+        	$mergeReservationsArray = array('order_id'=> $formattedRsvID,
                     'reservation_date'=> date('d-F-Y',strtotime($arrData['reservationDate'])),
                     'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
                     'venue' => $outlet->vendor_name,
                     'username' => $zoho_data['Name']
-                );
-
-                //echo "<pre>"; print_r($mergeReservationsArray); die;                    	
+               );
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
@@ -756,13 +747,8 @@ class ReservationDetails extends Model {
                     'reservationResponse'=>$reservationResponse,
                 ], function($message) use ($mergeReservationsArray, $arrData){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-
                     $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');                    
-                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
-
                 });
-
-
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
@@ -772,11 +758,9 @@ class ReservationDetails extends Model {
                     'reservationResponse'=>$reservationResponse,
                 ], function($message) use ($mergeReservationsArray, $arrData){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | '. $arrData['phone']);
+                    $message->to('concierge@wowtables.com')->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | App');
                     $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                    
-                });
-
-                
+                });               
 
         }
      }
