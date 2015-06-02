@@ -271,7 +271,10 @@ use Validator;
 	 * @return	response
 	 * @since	1.0.0
 	 */
-	public function reservationRecord($access_token) {	
+	public function reservationRecord() {	
+
+		$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];
+
 		$userID = UserDevices::getUserDetailsByAccessToken($access_token);
 		if($userID) {
 			$arrResponse = Reservation::getReservationRecord($userID);
