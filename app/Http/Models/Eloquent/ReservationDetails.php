@@ -709,7 +709,7 @@ class ReservationDetails extends Model {
                 ], function($message) use ($mergeReservationsArray, $arrData){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | '. $arrData['phone']);
                     $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                     
                 });
         }
@@ -772,7 +772,7 @@ class ReservationDetails extends Model {
                     'reservationResponse'=>$reservationResponse,
                 ], function($message) use ($mergeReservationsArray, $arrData){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    $message->to($arrData['guestEmail'])->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | '. $arrData['phone']);
                     $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');                    
                 });
 
