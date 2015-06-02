@@ -2,6 +2,7 @@
 
 use DB;
 use Config;
+use WowTables\Http\Models\Eloquent\ReservationDetails;
 
 /**
  * Model class Profile
@@ -11,7 +12,7 @@ use Config;
 class Profile {
 
     static $arrRules = array(
-                            'access_token' => 'required|exists:user_devices,access_token',
+                            //'access_token' => 'required|exists:user_devices,access_token',
                             'full_name' => 'required||max:64'  ,
                             'phone_number' => 'required',
                             'zip_code'  => 'required',
@@ -71,6 +72,9 @@ class Profile {
             //array to contain the response to be sent back to client
             $arrResponse = array();
 
+            $lastReservationDetail=ReservationDetails::getUserLastReservation($queryProfileResult->user_id);
+            //print_r($lastReservationDetail); die("Hmmm..");
+
             if($queryProfileResult) {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
                 $arrResponse['data']=array(
@@ -90,6 +94,8 @@ class Profile {
                                             'dob' => $queryProfileResult->dob,
                                             'selectedPreferences' => $preferredLocations['data'],
                                             'areas' => $cityAreas['data'],
+                                            'last_reservation_date' => (empty($lastReservationDetail->reservation_date)) ? "" : $lastReservationDetail->reservation_date,
+                                            'last_reservation_time' => (empty($lastReservationDetail->reservation_time)) ? "" : $lastReservationDetail->reservation_time
                                           );
             }
             else {
@@ -153,6 +159,7 @@ class Profile {
                         ->where('ud.access_token',$data['access_token'])
                         ->select('ud.user_id')
                         ->first();
+                            
             //print_r($id); die();
             //updating data in users table
             $userTableData = array(
@@ -161,7 +168,7 @@ class Profile {
                                     'zip_code' => $data['zip_code'],
                                     'location_id' => $data['location_id'],
                                     'updated_at' => date('Y-m-d H:i:s'),
-                                  );
+                                  );  
             DB::table('users')
                 ->where('id', $id->user_id)
                 ->update($userTableData);

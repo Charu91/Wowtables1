@@ -732,7 +732,8 @@ class ReservationDetails extends Model {
     		 									'experience_includes' => $productDetailsTemp['experience_includes'],
     		 									'short_description' => $productDetailsTemp['short_description'], 
     							  				'terms_and_conditions' => $productDetailsTemp['terms_and_conditions']
-    							  				);    		 
+    							  				);    
+    						 
 
     		$reservationResponse['status'] = 'success';
     		$reservationResponse['data']= array('reservation_type' => 'Experience', 
@@ -832,7 +833,20 @@ class ReservationDetails extends Model {
           ->first();
 
       return $queryResult;
-  	}    
+  	} 
+
+  	public static function getUserLastReservation($user_id) {
+
+  		$queryResult=DB::table('reservation_details as rd')
+  							->where('user_id',$user_id)
+  							->select('id', 'reservation_date', 'reservation_time')
+  							->groupBy('reservation_date')
+  							->groupBy('reservation_time')
+  							->orderBy('reservation_date')
+  							->orderBy('reservation_time')
+  							->first();
+  		return $queryResult;  							
+  	} 
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
