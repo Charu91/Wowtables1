@@ -607,15 +607,15 @@ class RestaurantLocation extends VendorLocation{
                                         ];
                                     }
                                 }else{
-                                    foreach ($value as $singleValue) {
-                                        if($singleValue != "" || $singleValue != " "){
+                                    if($value != "") {
+                                        foreach ($value as $singleValue) {
+
                                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                                 'vendor_location_id' => $vendor_location_id,
                                                 'vendor_attribute_id' => $attributeIdMap[$attribute],
                                                 'attribute_value' => $singleValue
                                             ];
                                         }
-
                                     }
                                 }
                             }else{
