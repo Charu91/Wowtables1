@@ -678,14 +678,14 @@ class RestaurantLocation extends VendorLocation{
         if($locations){
             $addressInsert = DB::table('vendor_location_address')->insert([
                 'vendor_location_id' => $vendor_location_id,
-                'address' => $address['address'],
-                'pin_code' => $address['pin_code'],
-                'area_id' => $locations->area_id,
-                'city_id' => $locations->city_id,
-                'state_id' => $locations->state_id,
-                'country_id' => $locations->country_id,
-                'latitude' => $address['latitude'],
-                'longitude' => $address['longitude']
+                'address' => (isset($address['address']) && $address['address'] != "" ? $address['address'] : ''),
+                'pin_code' => (isset($address['pin_code']) && $address['pin_code'] != "" ? $address['pin_code'] : ''),
+                'area_id' => (isset($locations->area_id) && $locations->area_id != "" ? $locations->area_id : ''),
+                'city_id' => (isset($locations->city_id) && $locations->city_id != "" ? $locations->city_id : ''),
+                'state_id' => (isset($locations->state_id) && $locations->state_id != "" ? $locations->state_id : ''),
+                'country_id' => (isset($locations->country_id) && $locations->country_id != "" ? $locations->country_id : ''),
+                'latitude' => (isset($address['latitude']) && $address['latitude'] != "" ? $address['latitude'] : ''),
+                'longitude' => (isset($address['longitude']) && $address['longitude'] != "" ? $address['longitude'] : '')
             ]);
 
             if($addressInsert){
@@ -710,15 +710,15 @@ class RestaurantLocation extends VendorLocation{
     {
         $location_attributes_insert = [
             'vendor_location_id' => $vendor_location_id,
-            'min_people_per_reservation' => $location_attributes['min_people_per_reservation'],
-            'max_people_per_reservation' => $location_attributes['max_people_per_reservation'],
-            'max_reservations_per_time_slot' => $location_attributes['max_reservations_per_time_slot'],
-            'max_reservations_per_day' => $location_attributes['max_reservations_per_day'],
-            'off_peak_hour_discount_min_covers' => $location_attributes['off_peak_hour_discount_min_covers'],
-            'max_people_per_day' => $location_attributes['max_people_per_day'],
-            'minimum_reservation_time_buffer' => $location_attributes['minimum_reservation_time_buffer'],
-            'maximum_reservation_time_buffer' => $location_attributes['maximum_reservation_time_buffer'],
-            'min_people_increments' => $location_attributes['min_people_increments_per_reservation']
+            'min_people_per_reservation' => (isset($location_attributes['min_people_per_reservation']) && $location_attributes['min_people_per_reservation'] != "" ? $location_attributes['min_people_per_reservation'] : 0),
+            'max_people_per_reservation' => (isset($location_attributes['min_people_per_reservation']) && $location_attributes['max_people_per_reservation'] != "" ? $location_attributes['max_people_per_reservation'] : 0),
+            'max_reservations_per_time_slot' => (isset($location_attributes['max_reservations_per_time_slot']) && $location_attributes['max_reservations_per_time_slot'] != "" ? $location_attributes['max_reservations_per_time_slot'] : 0),
+            'max_reservations_per_day' => (isset($location_attributes['max_reservations_per_day']) && $location_attributes['max_reservations_per_day'] != "" ? $location_attributes['max_reservations_per_day'] : 0),
+            'off_peak_hour_discount_min_covers' => (isset($location_attributes['off_peak_hour_discount_min_covers']) && $location_attributes['off_peak_hour_discount_min_covers'] != "" ? $location_attributes['off_peak_hour_discount_min_covers'] : 0),
+            'max_people_per_day' => (isset($location_attributes['max_people_per_day']) && $location_attributes['max_people_per_day'] != "" ? $location_attributes['max_people_per_day'] : 0),
+            'minimum_reservation_time_buffer' => (isset($location_attributes['minimum_reservation_time_buffer']) && $location_attributes['minimum_reservation_time_buffer'] != "" ? $location_attributes['minimum_reservation_time_buffer'] : 0),
+            'maximum_reservation_time_buffer' => (isset($location_attributes['maximum_reservation_time_buffer']) && $location_attributes['maximum_reservation_time_buffer'] != "" ? $location_attributes['maximum_reservation_time_buffer'] : 0),
+            'min_people_increments' => (isset($location_attributes['min_people_increments_per_reservation']) && $location_attributes['min_people_increments_per_reservation'] != "" ? $location_attributes['min_people_increments_per_reservation'] : 0),
         ];
 
 
