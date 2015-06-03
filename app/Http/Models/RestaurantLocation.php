@@ -588,7 +588,7 @@ class RestaurantLocation extends VendorLocation{
 
                 foreach($attributes as $attribute => $value){
                     if($value != "" || $value != " "){
-                        echo "attr <pre>"; print_r($attribute); echo ", value = ,".$value.", <br/>";
+                        //echo "attr <pre>"; print_r($attribute); echo ", value = ,".$value.", <br/>";
                         if(isset($attributeIdMap[$attribute])){
                             if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
@@ -635,15 +635,15 @@ class RestaurantLocation extends VendorLocation{
                 $attributeInserts = true;
 
                 foreach($attribute_inserts as $table => $insertData){
-                    echo "table <pre>"; print_r($table); echo " , insert data = "; print_r($insertData);
-                    /*$restauranrAttrInsert = DB::table($table)->insert($insertData);
+                    //echo "table <pre>"; print_r($table); echo " , insert data = "; print_r($insertData);
+                    $restauranrAttrInsert = DB::table($table)->insert($insertData);
 
                     if(!$restauranrAttrInsert){
                         $attributeInserts = false;
                         break;
-                    }*/
+                    }
                 }
-                die;
+                //die;
                 if($attributeInserts){
                     return ['status' => 'success'];
                 }else{
