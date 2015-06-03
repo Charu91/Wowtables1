@@ -165,7 +165,7 @@ class ReservationDetails extends Model {
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
 					                    'Contact' => $arrData['phone'],
-					                    'Experience_Title' => $productDetail['name'].' - '.$productDetail['short_description'],
+					                    'Experience_Title' => $productDetail['vendor_name'].' - '.$productDetail['descriptive_title'],
 					                    'No_of_People' => $arrData['partySize'],
 					                    'Date_of_Visit' => date('d-M-Y', strtotime($arrData['reservationDate'])),
 					                    'Time' => date("G:ia", strtotime($arrData['reservationTime'])),
@@ -474,12 +474,15 @@ class ReservationDetails extends Model {
 						->join('product_attributes as pa2','pa2.id','=','pat.product_attribute_id')
 
 						->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id')
+
+						->join('vendors as v', 'v.id', '=', 'vl.vendor_id')						
 						->join('locations as l', 'l.id', '=', 'vl.location_id')
 						->where('pvl.id',$productVendorLocationID)
                         ->where('pa.alias','reward_points_per_reservation')
                         ->where('pa2.alias', 'short_description')
 						->select('products.id','products.name','pai.attribute_value as reward_point', 
 								'l.name as location', 'pat.attribute_value as short_description',
+								'v.name as vendor_name','pvl.descriptive_title',
 								 //DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
  								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
  								 DB::raw('MAX(IF(pa3.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
@@ -494,7 +497,9 @@ class ReservationDetails extends Model {
 			$arrData['location'] = $queryResult->location;
 			$arrData['short_description'] = $queryResult->short_description;
 			$arrData['terms_and_conditions'] = $queryResult->terms_and_conditions;
-			$arrData['experience_includes'] = $queryResult->experience_includes;			
+			$arrData['experience_includes'] = $queryResult->experience_includes;
+			$arrData['vendor_name'] = $queryResult->vendor_name;
+			$arrData['descriptive_title'] = $queryResult->descriptive_title;			
 		}
 		return $arrData;
 	} 
