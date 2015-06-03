@@ -684,8 +684,8 @@ class RestaurantLocation extends VendorLocation{
                 'city_id' => (isset($locations->city_id) && $locations->city_id != "" ? $locations->city_id : ''),
                 'state_id' => (isset($locations->state_id) && $locations->state_id != "" ? $locations->state_id : ''),
                 'country_id' => (isset($locations->country_id) && $locations->country_id != "" ? $locations->country_id : ''),
-                'latitude' => (isset($address['latitude']) && $address['latitude'] != "" ? $address['latitude'] : ''),
-                'longitude' => (isset($address['longitude']) && $address['longitude'] != "" ? $address['longitude'] : '')
+                'latitude' => (isset($address['latitude']) && $address['latitude'] != "" ? $address['latitude'] : 0),
+                'longitude' => (isset($address['longitude']) && $address['longitude'] != "" ? $address['longitude'] : 0)
             ]);
 
             if($addressInsert){
