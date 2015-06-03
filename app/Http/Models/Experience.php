@@ -136,13 +136,16 @@ class Experience extends Product{
                 $attributeInserts = true;
 
                 foreach($attribute_inserts as $table => $insertData){
-                    $productAttrInsert = DB::table($table)->insert($insertData);
+                    echo "<br/> table <pre>"; print_r($table); echo "insert_data"; print_r($insertData);
+                    /*$productAttrInsert = DB::table($table)->insert($insertData);
 
                     if(!$productAttrInsert){
                         $attributeInserts = false;
                         break;
-                    }
+                    }*/
                 }
+
+                die;
 
                 if($attributeInserts){
                     return ['status' => 'success'];
