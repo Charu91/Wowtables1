@@ -83,13 +83,13 @@ class Experience extends Product{
                         if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
 
-                        if($attributesMap[$attribute]['type'] === 'single-select'){
+                        if($attributesMap[$attribute]['type'] === 'single-select' && $value != ""){
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                 'product_id' => $productId,
                                 'product_attributes_select_option_id' => $value
                             ];
                         }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                            if($attributesMap[$attribute]['type'] === 'multi-select'){
+                            if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
                                 foreach ($value as $singleValue) {
                                     $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                         'product_id' => $productId,
