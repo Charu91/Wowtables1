@@ -588,7 +588,7 @@ class RestaurantLocation extends VendorLocation{
 
                 foreach($attributes as $attribute => $value){
                     if($value != "" || $value != " "){
-                        echo "attr <pre>"; print_r($attribute); echo ", value = ".$value." <br/>";
+                        echo "attr <pre>"; print_r($attribute); echo ", value = ,".$value.", <br/>";
                         if(isset($attributeIdMap[$attribute])){
                             if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
