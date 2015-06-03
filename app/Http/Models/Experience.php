@@ -81,7 +81,7 @@ class Experience extends Product{
                 foreach($attributes as $attribute => $value){
 
                     if($value != "" && $value != " ") {
-                        echo "<br/>attribute<pre>"; print_r($attribute); echo ", value ="; print_r($value); echo " ;";
+                        //echo "<br/>attribute<pre>"; print_r($attribute); echo ", value ="; print_r($value); echo " ;";
                         if(isset($attributeIdMap[$attribute])){
                             if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
@@ -138,16 +138,16 @@ class Experience extends Product{
                 $attributeInserts = true;
 
                 foreach($attribute_inserts as $table => $insertData){
-                    echo "<br/> table <pre>"; print_r($table); echo "insert_data"; print_r($insertData);
-                    /*$productAttrInsert = DB::table($table)->insert($insertData);
+                    //echo "<br/> table <pre>"; print_r($table); echo "insert_data"; print_r($insertData);
+                    $productAttrInsert = DB::table($table)->insert($insertData);
 
                     if(!$productAttrInsert){
                         $attributeInserts = false;
                         break;
-                    }*/
+                    }
                 }
 
-                die;
+                //die;
 
                 if($attributeInserts){
                     return ['status' => 'success'];
