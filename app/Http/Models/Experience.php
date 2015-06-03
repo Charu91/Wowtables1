@@ -97,13 +97,16 @@ class Experience extends Product{
                                     ];
                                 }
                             }else{
-                                foreach ($value as $singleValue) {
-                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $productId,
-                                        'product_attribute_id' => $attributeIdMap[$attribute],
-                                        'attribute_value' => $singleValue
-                                    ];
+                                if($value != ""){
+                                    foreach ($value as $singleValue) {
+                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                            'product_id' => $productId,
+                                            'product_attribute_id' => $attributeIdMap[$attribute],
+                                            'attribute_value' => $singleValue
+                                        ];
+                                    }
                                 }
+
                             }
                         }else{
                             if($attribute === 'menu' && $value != ""){
