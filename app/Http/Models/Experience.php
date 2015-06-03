@@ -56,7 +56,7 @@ class Experience extends Product{
             return [
                 'status' => 'failure',
                 'action' => 'Check if Experience exists based on the id',
-                'message' => 'Could not find the Experiecne you are trying to delete. Try again or contact the sys admin'
+                'message' => 'Could not find the Experience you are trying to delete. Try again or contact the sys admin'
             ];
         }
     }
@@ -106,7 +106,7 @@ class Experience extends Product{
                                 }
                             }
                         }else{
-                            if($attribute === 'menu'){
+                            if($attribute === 'menu' && $value != ""){
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                     'product_id' => $productId,
                                     'product_attribute_id' => $attributeIdMap[$attribute],
@@ -142,7 +142,7 @@ class Experience extends Product{
                     DB::rollBack();
                     return [
                         'status' => 'failure',
-                        'action' => 'Inserting the Restaurant Location attributes into the DB'
+                        'action' => 'Inserting the Experience attributes into the DB'
                     ];
                 }
             }else{
