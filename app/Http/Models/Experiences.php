@@ -215,7 +215,7 @@ class Experiences {
 							->leftJoin('locations', 'locations.id','=','vla.area_id')
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
-							->where('pvl.id','!=',$pvlID)
+							//->where('pvl.id','!=',$pvlID)
 							->get();
 		
 		//array to hold location details
