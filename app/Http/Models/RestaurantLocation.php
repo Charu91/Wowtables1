@@ -609,7 +609,6 @@ class RestaurantLocation extends VendorLocation{
                                 }else{
                                     if($value != "") {
                                         foreach ($value as $singleValue) {
-
                                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                                 'vendor_location_id' => $vendor_location_id,
                                                 'vendor_attribute_id' => $attributeIdMap[$attribute],
@@ -619,7 +618,7 @@ class RestaurantLocation extends VendorLocation{
                                     }
                                 }
                             }else{
-                                if($value != "" || $value != " "){
+                                if($value != ""){
                                     $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                         'vendor_location_id' => $vendor_location_id,
                                         'vendor_attribute_id' => $attributeIdMap[$attribute],
