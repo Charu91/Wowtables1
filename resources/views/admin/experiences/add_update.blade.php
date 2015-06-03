@@ -372,7 +372,8 @@
 				</div>
 				{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}
 				<hr/>
-				{!! Form::textarea('attributes[old_menu_markdown]',$experience['attributes']['menu_markdown'],['class'=>'form-control','readonly'=>'readonly','id'=>'oldMarkdownSyntax']) !!}
+				<?php $experience_old_menu_markdown = (isset($experience['attributes']['menu_markdown']) && $experience['attributes']['menu_markdown'] != "" ? $experience['attributes']['menu_markdown'] : '') ?>
+				{!! Form::textarea('attributes[old_menu_markdown]',$experience_old_menu_markdown,['class'=>'form-control','readonly'=>'readonly','id'=>'oldMarkdownSyntax']) !!}
 				{!! Form::textarea('attributes[old_menu]',null,['class'=>'form-control','readonly'=>'readonly','id'=>'oldExpMenu']) !!}
 			</div>
 
