@@ -396,7 +396,7 @@
 						{{! $set_cuisines = (isset($experience['attributes']['cuisines']) && $experience['attributes']['cuisines'] !="" ? $experience['attributes']['cuisines'] : ' ') }}
 						{!! Form::select('attributes[cuisines][]',$cuisines,$set_cuisines,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
 					</div>
-				</div> 
+				</div>
 				<div class="form-group">
 					<label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
 					<div class="col-sm-6">
