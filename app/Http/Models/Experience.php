@@ -103,7 +103,7 @@ class Experience extends Product{
                                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                                 'product_id' => $productId,
                                                 'product_attribute_id' => $attributeIdMap[$attribute],
-                                                'attribute_value' => $singleValue
+                                                'attribute_value' => ($singleValue != "" ? $singleValue : '')
                                             ];
                                         }
                                     }
