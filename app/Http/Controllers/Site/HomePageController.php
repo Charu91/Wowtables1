@@ -373,7 +373,7 @@ The WowTables Team";
                     //Start MailChimp
                     //require_once 'MCAPI.class.php'; //specify the proper path
 
-                  /*  $merge_vars = array(
+                    $merge_vars = array(
                         'NAME'         =>     isset($users['full_name'] )? $users['full_name']: '',
                         'SIGNUPTP'     =>     isset($facebook_id)? 'Facebook': 'Email',
                         'BDATE'     =>    isset($users['dob'])? $users['dob']: '',
@@ -384,9 +384,9 @@ The WowTables Team";
                         'MERGE18'=>$_GET["utm_source"],
                         'MERGE19'=>$_GET["utm_medium"],
                         'MERGE20'=>$_GET["utm_campaign"]
-                    );*/
+                    );
 
-                    //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                    $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
@@ -401,7 +401,7 @@ The WowTables Team";
                             )
                         );
                 //echo "asd , ";
-                //$this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
 
                     //End MailChimp
                      echo 1;

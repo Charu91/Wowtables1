@@ -53,6 +53,11 @@
             , $addonCommissionOn = $('#addonCommissionOn')
             , $addonShortDescription = $('#addonShortDescription')
             , $addonsMenu = $('#addonsMenu')
+            , $experiencePriceTypes = $('#experiencePriceTypes')
+            , $experienceTaxes = $('#experienceTaxes')
+            , $experienceCommissionOn = $('#experienceCommissionOn')
+            , $experienceFlags = $('#experienceFlags')
+            , $experienceCurators = $('#experienceCurators')
 
 
 
@@ -64,6 +69,32 @@
             $(this).text($(this).text() == 'Add New Addon' ? 'Cancel Addon' : 'Add New Addon');
             $(this).hide();
             $cancelUpdateExperienceAddonBtn.show();
+        });
+
+        $experiencePriceTypes.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+        $experienceTaxes.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+        $experienceCommissionOn.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+        $experienceFlags.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+        $experienceCurators.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
         });
 
         $experienceAddonForm.hide();

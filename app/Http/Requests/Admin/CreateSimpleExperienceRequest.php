@@ -78,20 +78,20 @@ class CreateSimpleExperienceRequest extends Request {
         } else {
             //$rules['attributes.prepayment_allowed'] = 'boolean';
             //$rules['attributes.allow_gift_card_redemptions'] = 'boolean';
-            $rules['attributes.reward_points_per_reservation'] = 'integer';
-            $rules['attributes.cuisines'] = 'productcuisinesarray';
+            //$rules['attributes.reward_points_per_reservation'] = 'integer';
+            //$rules['attributes.cuisines'] = 'productcuisinesarray';
 
-            $rules['attributes.start_date'] = 'date_format:Y-m-d';
-            $rules['attributes.end_date'] = 'date_format:Y-m-d';
+            //$rules['attributes.start_date'] = 'date_format:Y-m-d';
+            //$rules['attributes.end_date'] = 'date_format:Y-m-d';
 
-            $rules['pricing.price'] = 'numeric';
-            $rules['pricing.post_tax_price'] = 'numeric';
-            $rules['pricing.tax'] = 'numeric';
-            $rules['pricing.commission'] = 'numeric';
-            $rules['pricing.commission_on'] = 'in:Pre-Tax,Post-Tax';
+            //$rules['pricing.price'] = 'numeric';
+            //$rules['pricing.post_tax_price'] = 'numeric';
+            //$rules['pricing.tax'] = 'numeric';
+            //$rules['pricing.commission'] = 'numeric';
+            //$rules['pricing.commission_on'] = 'in:Pre-Tax,Post-Tax';
 
-            $rules['media.listing_image'] = 'exists:media,id';
-            $rules['media.gallery_images'] = 'galleryarray';
+            //$rules['media.listing_image'] = 'exists:media,id';
+            //$rules['media.gallery_images'] = 'galleryarray';
         }
 
         $rules['addons'] = 'array';

@@ -56,7 +56,7 @@ class Experience extends Product{
             return [
                 'status' => 'failure',
                 'action' => 'Check if Experience exists based on the id',
-                'message' => 'Could not find the Experiecne you are trying to delete. Try again or contact the sys admin'
+                'message' => 'Could not find the Experience you are trying to delete. Try again or contact the sys admin'
             ];
         }
     }
@@ -83,13 +83,13 @@ class Experience extends Product{
                         if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
 
-                        if($attributesMap[$attribute]['type'] === 'single-select'){
+                        if($attributesMap[$attribute]['type'] === 'single-select' && $value != ""){
                             $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                 'product_id' => $productId,
                                 'product_attributes_select_option_id' => $value
                             ];
                         }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                            if($attributesMap[$attribute]['type'] === 'multi-select'){
+                            if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
                                 foreach ($value as $singleValue) {
                                     $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                         'product_id' => $productId,
@@ -97,16 +97,19 @@ class Experience extends Product{
                                     ];
                                 }
                             }else{
-                                foreach ($value as $singleValue) {
-                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $productId,
-                                        'product_attribute_id' => $attributeIdMap[$attribute],
-                                        'attribute_value' => $singleValue
-                                    ];
+                                if($value != ""){
+                                    foreach ($value as $singleValue) {
+                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                            'product_id' => $productId,
+                                            'product_attribute_id' => $attributeIdMap[$attribute],
+                                            'attribute_value' => $singleValue
+                                        ];
+                                    }
                                 }
+
                             }
                         }else{
-                            if($attribute === 'menu'){
+                            if($attribute === 'menu' && $value != ""){
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                     'product_id' => $productId,
                                     'product_attribute_id' => $attributeIdMap[$attribute],
@@ -114,11 +117,13 @@ class Experience extends Product{
                                     //'attribute_value' => $value
                                 ];
                             }else{
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'product_id' => $productId,
-                                    'product_attribute_id' => $attributeIdMap[$attribute],
-                                    'attribute_value' => $value
-                                ];
+                                if($value != "") {
+                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                        'product_id' => $productId,
+                                        'product_attribute_id' => $attributeIdMap[$attribute],
+                                        'attribute_value' => $value
+                                    ];
+                                }
                             }
 
                         }
@@ -142,7 +147,7 @@ class Experience extends Product{
                     DB::rollBack();
                     return [
                         'status' => 'failure',
-                        'action' => 'Inserting the Restaurant Location attributes into the DB'
+                        'action' => 'Inserting the Experience attributes into the DB'
                     ];
                 }
             }else{
@@ -332,17 +337,15 @@ class Experience extends Product{
     protected function savePricing($productId, $pricing){
         $pricing_insert_data = [
             'product_id' => $productId,
-            'price' => isset($pricing['price']) ? $pricing['price'] : null,
-            'tax' => isset($pricing['tax'])? $pricing['tax'] : null,
-            'post_tax_price' => isset($pricing['post_tax_price'])? $pricing['post_tax_price'] : null,
-            'commission' => isset($pricing['commission'])? $pricing['commission'] : null,
+            'price' => isset($pricing['price']) && $pricing['price'] != "" ? $pricing['price'] : 0.00,
+            'tax' => isset($pricing['tax']) && $pricing['tax'] != "" ? $pricing['tax'] : 0.00,
+            'post_tax_price' => isset($pricing['post_tax_price']) && $pricing['post_tax_price'] ? $pricing['post_tax_price'] : 0.00,
+            'commission' => isset($pricing['commission']) && $pricing['commission'] ? $pricing['commission'] : 0.00,
             'price_type' => $pricing['price_types'],
-            'taxes' => isset($pricing['taxes'])? $pricing['taxes'] : "Inclusive-Taxes",
+            'taxes' => isset($pricing['taxes']) && $pricing['taxes'] ? $pricing['taxes'] : "Taxes Applicable",
+            'commission_on' => isset($pricing['commission_on']) && $pricing['commission_on'] ? $pricing['commission_on'] : "Post-Tax",
         ];
 
-        if(isset($data['commission_on'])){
-            $pricing_insert_data['commission_on'] = $pricing['commission_on'];
-        }
 
         $pricingInsert = DB::table('product_pricing')->insert($pricing_insert_data);
 
