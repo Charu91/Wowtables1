@@ -381,14 +381,14 @@
 				<div class="form-group">
 					<label for="attributes[start_date]" class="col-sm-3 control-label">Start Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						<?php $set_start_date = ($experience['attributes']['start_date'] != "-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') ?>
+						<?php $set_start_date = (isset($experience['attributes']['start_date']) && $experience['attributes']['start_date'] != "-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') ?>
 						{!! Form::text('attributes[start_date]',$set_start_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[end_date]" class="col-sm-3 control-label">End Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						<?php $set_end_date = ($experience['attributes']['end_date'] !="-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['end_date'])) : ' ') ?>
+						<?php $set_end_date = (isset($experience['attributes']['end_date']) && $experience['attributes']['end_date'] !="-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['end_date'])) : ' ') ?>
 						{!! Form::text('attributes[end_date]',$set_end_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
