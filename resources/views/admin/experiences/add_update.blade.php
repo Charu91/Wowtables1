@@ -2,6 +2,12 @@
 
 @section('content')
 	<header class="page-header">
+		<style type="text/css">
+			.multiselect-container{
+				z-index: 9999;
+			}
+
+		</style>
 		<h2>Create Experience</h2>
 		<div class="right-wrapper pull-right">
 			<ol class="breadcrumbs">

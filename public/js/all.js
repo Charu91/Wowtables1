@@ -49546,6 +49546,25 @@ function removeLocation(id)
             defaultTime: false
         });
 
+        $('#restaurantPriceIndicator').multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+
+
+        $('#restaurantsFlags').multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+
+        $('#restaurantsGuestCurator').multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+
 
         /*$('#addNewRestaurantLocationForm').submit(function(e){
             e.preventDefault();
