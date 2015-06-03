@@ -79,8 +79,9 @@ class Experience extends Product{
                 $attribute_inserts = [];
 
                 foreach($attributes as $attribute => $value){
-                    echo "<br/>attribute<pre>"; print_r($attribute); echo ", value "; print_r($value);
-                    if($value != "") {
+
+                    if($value != "" && $value != " ") {
+                        echo "<br/>attribute<pre>"; print_r($attribute); echo ", value ="; print_r($value); echo " ;";
                         if(isset($attributeIdMap[$attribute])){
                             if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
