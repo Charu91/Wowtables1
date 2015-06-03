@@ -115,11 +115,11 @@ use Config;
 																"longitude" => $queryResult->longitude																
 															),
 									'curator_information' => array(
-																'curator_name' => "Deepa Jain",//(is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
-																'curator_bio' => "",//(is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
-																'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
-																'curator_designation' => "has reviewed this",//(is_null($queryResult->designation)) ? "" : $queryResult->designation
-																'suggestions' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips
+																'curator_name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
+																'curator_bio' => (is_null($queryResult->curator_bio)) ? "" : $queryResult->curator_bio,
+																'curator_image' => (is_null($queryResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL'). $queryResult->curator_image,
+																'curator_designation' => (is_null($queryResult->designation)) ? "" : $queryResult->designation,
+																'suggestions' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips,
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
 									'similar_option' => $arrSimilarVendor,
