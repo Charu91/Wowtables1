@@ -381,28 +381,28 @@
 				<div class="form-group">
 					<label for="attributes[start_date]" class="col-sm-3 control-label">Start Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						{{! $set_start_date = ($experience['attributes']['start_date'] != "-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') }}
+						<?php $set_start_date = ($experience['attributes']['start_date'] != "-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') ?>
 						{!! Form::text('attributes[start_date]',$set_start_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[end_date]" class="col-sm-3 control-label">End Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						{{! $set_end_date = ($experience['attributes']['end_date'] !="-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['end_date'])) : ' ') }}
+						<?php $set_end_date = ($experience['attributes']['end_date'] !="-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['end_date'])) : ' ') ?>
 						{!! Form::text('attributes[end_date]',$set_end_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[cuisine][]" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_cuisines = (isset($experience['attributes']['cuisines']) && $experience['attributes']['cuisines'] !="" ? $experience['attributes']['cuisines'] : ' ') }}
+						<?php $set_cuisines = (isset($experience['attributes']['cuisines']) && $experience['attributes']['cuisines'] !="" ? $experience['attributes']['cuisines'] : ' ') ?>
 						{!! Form::select('attributes[cuisines][]',$cuisines,$set_cuisines,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_flags = (isset($experienceFlags->flag_id) && $experienceFlags->flag_id !="" ? $experienceFlags->flag_id : ' ')}}
+						<?php $set_flags = (isset($experienceFlags->flag_id) && $experienceFlags->flag_id !="" ? $experienceFlags->flag_id : ' ') ?>
 						<?php $a = array_unshift($flags_list,'Select'); ?>
 						{!! Form::select('flags',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}
 						{{--{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
@@ -411,7 +411,7 @@
 				<div class="form-group">
 					<label for="tags" class="col-sm-3 control-label">Tags <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_tags = (isset($experienceTags->tag_id) && $experienceTags->tag_id !="" ? $experienceTags->tag_id : ' ')}}
+						<?php $set_tags = (isset($experienceTags->tag_id) && $experienceTags->tag_id !="" ? $experienceTags->tag_id : ' ') ?>
 						{!! Form::select('tags[]',$tags_list,$set_tags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
 					</div>
 				</div>
@@ -419,7 +419,7 @@
 					<label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
 					<div class="col-sm-6">
 						{{--{!! Form::select('curators',$curator_list,$experienceCurator->curator_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
-						{{! $set_curators = (isset($experienceCurator->curator_id) && $experienceCurator->curator_id !="" ? $experienceCurator->curator_id : ' ')}}
+						<?php $set_curators = (isset($experienceCurator->curator_id) && $experienceCurator->curator_id !="" ? $experienceCurator->curator_id : ' ') ?>
 						<?php $a = array_unshift($curator_list,'Select'); ?>
 						{!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}
 						{{--{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
