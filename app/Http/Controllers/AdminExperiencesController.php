@@ -144,7 +144,7 @@ class AdminExperiencesController extends Controller {
         }
         $experienceMediaArray = array('listing'=>$listing_media_array,'gallery'=>$gallery_media_array,'mobile'=>$mobile_array);
 
-        //echo "<pre>"; print_r($experienceCurator); die;
+        //echo "<pre>"; print_r($experience); die;
 
         return view('admin.experiences.add_update',[
                         'experience'=>$experience,
