@@ -79,60 +79,66 @@ class Experience extends Product{
                 $attribute_inserts = [];
 
                 foreach($attributes as $attribute => $value){
-                    if(isset($attributeIdMap[$attribute])){
-                        if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
-                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
 
-                        if($attributesMap[$attribute]['type'] === 'single-select' && $value != ""){
-                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                'product_id' => $productId,
-                                'product_attributes_select_option_id' => $value
-                            ];
-                        }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                            if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
-                                foreach ($value as $singleValue) {
-                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $productId,
-                                        'product_attributes_select_option_id' => $singleValue
-                                    ];
-                                }
-                            }else{
-                                if($value != ""){
+                    if($value != "" && $value != " ") {
+                        //echo "<br/>attribute<pre>"; print_r($attribute); echo ", value ="; print_r($value); echo " ;";
+                        if(isset($attributeIdMap[$attribute])){
+                            if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
+
+                            if($attributesMap[$attribute]['type'] === 'single-select' && $value != ""){
+                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                    'product_id' => $productId,
+                                    'product_attributes_select_option_id' => $value
+                                ];
+                            }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
+                                if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
                                     foreach ($value as $singleValue) {
                                         $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                             'product_id' => $productId,
+                                            'product_attributes_select_option_id' => $singleValue
+                                        ];
+                                    }
+                                }else{
+                                    if($value != ""){
+                                        foreach ($value as $singleValue) {
+                                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                                'product_id' => $productId,
+                                                'product_attribute_id' => $attributeIdMap[$attribute],
+                                                'attribute_value' => ($singleValue != "" ? $singleValue : '')
+                                            ];
+                                        }
+                                    }
+
+                                }
+                            }else{
+                                if($attribute === 'menu' && $value != ""){
+                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                        'product_id' => $productId,
+                                        'product_attribute_id' => $attributeIdMap[$attribute],
+                                        'attribute_value' => $this->parseMenu($value)
+                                        //'attribute_value' => $value
+                                    ];
+                                }else{
+                                    if($value != "" || $value != " ") {
+                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                            'product_id' => $productId,
                                             'product_attribute_id' => $attributeIdMap[$attribute],
-                                            'attribute_value' => $singleValue
+                                            'attribute_value' => $value
                                         ];
                                     }
                                 }
 
                             }
-                        }else{
-                            if($attribute === 'menu' && $value != ""){
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'product_id' => $productId,
-                                    'product_attribute_id' => $attributeIdMap[$attribute],
-                                    'attribute_value' => $this->parseMenu($value)
-                                    //'attribute_value' => $value
-                                ];
-                            }else{
-                                if($value != "") {
-                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                        'product_id' => $productId,
-                                        'product_attribute_id' => $attributeIdMap[$attribute],
-                                        'attribute_value' => $value
-                                    ];
-                                }
-                            }
-
                         }
                     }
+
                 }
 
                 $attributeInserts = true;
 
                 foreach($attribute_inserts as $table => $insertData){
+                    //echo "<br/> table <pre>"; print_r($table); echo "insert_data"; print_r($insertData);
                     $productAttrInsert = DB::table($table)->insert($insertData);
 
                     if(!$productAttrInsert){
@@ -140,6 +146,8 @@ class Experience extends Product{
                         break;
                     }
                 }
+
+                //die;
 
                 if($attributeInserts){
                     return ['status' => 'success'];
