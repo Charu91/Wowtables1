@@ -162,7 +162,8 @@
 				<div class="form-group">
 					<label for="attributes[reward_points_per_reservation]" class="col-sm-3 control-label">Reward Points per Reservation <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('attributes[reward_points_per_reservation]',$experience['attributes']['reward_points_per_reservation'],['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_rewards_points =  (isset($experience['attributes']['reward_points_per_reservation']) && $experience['attributes']['reward_points_per_reservation'] != "" ? $experience['attributes']['reward_points_per_reservation'] : '0'); ?>
+						{!! Form::text('attributes[reward_points_per_reservation]',$experience_rewards_points,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
