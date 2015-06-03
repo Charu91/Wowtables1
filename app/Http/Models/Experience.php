@@ -337,13 +337,13 @@ class Experience extends Product{
     protected function savePricing($productId, $pricing){
         $pricing_insert_data = [
             'product_id' => $productId,
-            'price' => isset($pricing['price']) ? $pricing['price'] : 0.00,
-            'tax' => isset($pricing['tax'])? $pricing['tax'] : 0.00,
-            'post_tax_price' => isset($pricing['post_tax_price'])? $pricing['post_tax_price'] : 0.00,
-            'commission' => isset($pricing['commission'])? $pricing['commission'] : 0.00,
+            'price' => isset($pricing['price']) && $pricing['price'] != "" ? $pricing['price'] : 0.00,
+            'tax' => isset($pricing['tax']) && $pricing['tax'] != "" ? $pricing['tax'] : 0.00,
+            'post_tax_price' => isset($pricing['post_tax_price']) && $pricing['post_tax_price'] ? $pricing['post_tax_price'] : 0.00,
+            'commission' => isset($pricing['commission']) && $pricing['commission'] ? $pricing['commission'] : 0.00,
             'price_type' => $pricing['price_types'],
-            'taxes' => isset($pricing['taxes'])? $pricing['taxes'] : "Taxes Applicable",
-            'commission_on' => isset($pricing['commission_on'])? $pricing['commission_on'] : "Post-Tax",
+            'taxes' => isset($pricing['taxes']) && $pricing['taxes'] ? $pricing['taxes'] : "Taxes Applicable",
+            'commission_on' => isset($pricing['commission_on']) && $pricing['commission_on'] ? $pricing['commission_on'] : "Post-Tax",
         ];
 
 
