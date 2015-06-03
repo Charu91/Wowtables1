@@ -356,7 +356,7 @@
                 <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
-                        <?php $a = array_unshift($curator_list,'Select'); ?>
+                        <?php $a = array_unshift($curator_list,'Select'); ?> 
                         {!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','id'=>'restaurantsGuestCurator']) !!}
                         {{--{!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
