@@ -3,6 +3,12 @@
 @section('content')
     <header class="page-header">
         <h2>Edit Restaurant Location</h2>
+        <style type="text/css">
+            .multiselect-container{
+                z-index: 9999;
+            }
+
+        </style>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
                 <li>
@@ -25,9 +31,7 @@
             <li class="active">
                 <a href="#basic_details" data-toggle="tab" class="text-center">Basic Details</a>
             </li>
-            <li>
-                <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
-            </li>
+
             <li>
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
             </li>
@@ -43,12 +47,15 @@
             <li>
                 <a href="#block_schedules_tab" data-toggle="tab" class="text-center">Block Dates</a>
             </li>
-            <li>
-                <a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>
-            </li>
+            {{--<li>--}}
+                {{--<a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>--}}
+            {{--</li>--}}
 
             <li>
                 <a href="#contact_details" data-toggle="tab" class="text-center">Contact Details</a>
+            </li>
+            <li>
+                <a href="#seo_details" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
         </ul>
 
@@ -73,35 +80,35 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attributes[descriptive_title]" class="col-sm-3 control-label">Descriptive Title <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[short_description]',$restaurant['attributes']['short_description'],['rows'=>'5','class'=>'form-control','required'=>'']) !!}
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="a_la_carte" id="a_la_carte" {{(isset($restaurant['RestaurantLocation']->a_la_carte) && $restaurant['RestaurantLocation']->a_la_carte == 1  ? "checked = checked" : "") }} value="1">
+                            <label  for="a_la_carte">Allow Alacarte Reservations</label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Location Info <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[restaurant_info]',$restaurant['attributes']['restaurant_info'],['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
-                    </div>
-                </div>
+                @include('partials.forms.locations_edit')
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 <div class="form-group">
                     <label for="attributes[seo_title]" class="col-sm-3 control-label">SEO Title <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_title]',$restaurant['attributes']['seo_title'],['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+                        <?php $restaurant_seo_title =  (isset($restaurant['attributes']['seo_title']) && $restaurant['attributes']['seo_title'] != "" ? $restaurant['attributes']['seo_title'] : ''); ?>
+                        {!! Form::text('attributes[seo_title]',$restaurant_seo_title,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[seo_meta_description]" class="col-sm-3 control-label">SEO Meta Description <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[seo_meta_description]',$restaurant['attributes']['seo_meta_description'],['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+                        <?php $restaurant_seo_meta_description =  (isset($restaurant['attributes']['seo_meta_description']) && $restaurant['attributes']['seo_meta_description'] != "" ? $restaurant['attributes']['seo_meta_description'] : ''); ?>
+                        {!! Form::textarea('attributes[seo_meta_description]',$restaurant_seo_meta_description,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[seo_meta_keywords]" class="col-sm-3 control-label">SEO Keywords <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[seo_meta_keywords]',$restaurant['attributes']['seo_meta_keywords'],['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
+                        <?php $restaurant_seo_meta_keywords =  (isset($restaurant['attributes']['seo_meta_keywords']) && $restaurant['attributes']['seo_meta_keywords'] != "" ? $restaurant['attributes']['seo_meta_keywords'] : ''); ?>
+                        {!! Form::text('attributes[seo_meta_keywords]',$restaurant_seo_meta_keywords,['class'=>'form-control','data-role'=>'tagsinput','data-tag-class'=>'label label-primary']) !!}
                     </div>
                 </div>
             </div>
@@ -134,31 +141,36 @@
                             <div class="form-group">
                                 <label for="location_attributes[min_people_per_reservation]" class="col-sm-6 control-label">Minimum People Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[min_people_per_reservation]',$restaurantLocationLimits->min_people_per_reservation,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_min_people_reservation =  (isset($restaurantLocationLimits->min_people_per_reservation) && $restaurantLocationLimits->min_people_per_reservation != "" ? $restaurantLocationLimits->min_people_per_reservation : ''); ?>
+                                    {!! Form::text('location_attributes[min_people_per_reservation]',$restaurant_min_people_reservation,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[max_people_per_reservation]" class="col-sm-6 control-label">Maximum People Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[max_people_per_reservation]',$restaurantLocationLimits->max_people_per_reservation,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_max_people_per_reservation =  (isset($restaurantLocationLimits->max_people_per_reservation) && $restaurantLocationLimits->max_people_per_reservation != "" ? $restaurantLocationLimits->max_people_per_reservation : ''); ?>
+                                    {!! Form::text('location_attributes[max_people_per_reservation]',$restaurant_max_people_per_reservation,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[max_reservations_per_time_slot]" class="col-sm-6 control-label">Default Max Tables Per Time Slot </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[max_reservations_per_time_slot]',$restaurantLocationLimits->max_reservations_per_time_slot,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_max_reservations_per_time_slot =  (isset($restaurantLocationLimits->max_reservations_per_time_slot) && $restaurantLocationLimits->max_reservations_per_time_slot != "" ? $restaurantLocationLimits->max_reservations_per_time_slot : ''); ?>
+                                    {!! Form::text('location_attributes[max_reservations_per_time_slot]',$restaurant_max_reservations_per_time_slot,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[max_reservations_per_day]" class="col-sm-6 control-label">Max covers <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[max_reservations_per_day]',$restaurantLocationLimits->max_reservations_per_day,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_max_reservations_per_day =  (isset($restaurantLocationLimits->max_reservations_per_day) && $restaurantLocationLimits->max_reservations_per_day != "" ? $restaurantLocationLimits->max_reservations_per_day : ''); ?>
+                                    {!! Form::text('location_attributes[max_reservations_per_day]',$restaurant_max_reservations_per_day,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[off_peak_hour_discount_min_covers]" class="col-sm-6 control-label">Min Covers Per Table (Off Peak) <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[off_peak_hour_discount_min_covers]',$restaurantLocationLimits->off_peak_hour_discount_min_covers,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_off_peak_hour_discount_min_covers =  (isset($restaurantLocationLimits->off_peak_hour_discount_min_covers) && $restaurantLocationLimits->off_peak_hour_discount_min_covers != "" ? $restaurantLocationLimits->off_peak_hour_discount_min_covers : ''); ?>
+                                    {!! Form::text('location_attributes[off_peak_hour_discount_min_covers]',$restaurant_off_peak_hour_discount_min_covers,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>
@@ -168,25 +180,29 @@
                             <div class="form-group">
                                 <label for="location_attributes[max_people_per_day]" class="col-sm-6 control-label">Maximum Tables Per Day </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[max_people_per_day]',$restaurantLocationLimits->max_people_per_day,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_max_people_per_day =  (isset($restaurantLocationLimits->max_people_per_day) && $restaurantLocationLimits->max_people_per_day != "" ? $restaurantLocationLimits->max_people_per_day : ''); ?>
+                                    {!! Form::text('location_attributes[max_people_per_day]',$restaurant_max_people_per_day,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[minimum_reservation_time_buffer]" class="col-sm-6 control-label">Min Advance Reservation Time (hrs) </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[minimum_reservation_time_buffer]',$restaurantLocationLimits->minimum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_minimum_reservation_time_buffer =  (isset($restaurantLocationLimits->minimum_reservation_time_buffer) && $restaurantLocationLimits->minimum_reservation_time_buffer != "" ? $restaurantLocationLimits->minimum_reservation_time_buffer : ''); ?>
+                                    {!! Form::text('location_attributes[minimum_reservation_time_buffer]',$restaurant_minimum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[maximum_reservation_time_buffer]" class="col-sm-6 control-label">Max Advance Reservation Time (hrs) </label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[maximum_reservation_time_buffer]',$restaurantLocationLimits->maximum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_maximum_reservation_time_buffer =  (isset($restaurantLocationLimits->maximum_reservation_time_buffer) && $restaurantLocationLimits->maximum_reservation_time_buffer != "" ? $restaurantLocationLimits->maximum_reservation_time_buffer : ''); ?>
+                                    {!! Form::text('location_attributes[maximum_reservation_time_buffer]',$restaurant_maximum_reservation_time_buffer,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="location_attributes[min_people_increments_per_reservation]" class="col-sm-6 control-label">Min People Increments Per Reservation <span class="required">*</span></label>
                                 <div class="col-sm-6">
-                                    {!! Form::text('location_attributes[min_people_increments_per_reservation]',$restaurantLocationLimits->min_people_increments,['class'=>'form-control','required'=>'']) !!}
+                                    <?php $restaurant_min_people_increments =  (isset($restaurantLocationLimits->min_people_increments) && $restaurantLocationLimits->min_people_increments != "" ? $restaurantLocationLimits->min_people_increments : ''); ?>
+                                    {!! Form::text('location_attributes[min_people_increments_per_reservation]',$restaurant_min_people_increments,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
                         </div>
@@ -463,43 +479,38 @@
             </div>
             <div id="alacarte_tab" class="tab-pane mt-lg">
                 <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="a_la_carte" id="a_la_carte" {{(isset($restaurant['RestaurantLocation']->a_la_carte) && $restaurant['RestaurantLocation']->a_la_carte == 1  ? "checked = checked" : "") }} value="1">
-                            <label  for="a_la_carte">Allow Alacarte Reservations</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="attributes[commission_per_cover]" class="col-sm-3 control-label">Commission per Cover <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[commission_per_cover]',$restaurant['attributes']['commission_per_cover'],['class'=>'form-control','required'=>'']) !!}
+                        <?php $restaurant_commission_per_cover =  (isset($restaurant['attributes']['commission_per_cover']) && $restaurant['attributes']['commission_per_cover'] != "" ? $restaurant['attributes']['commission_per_cover'] : ''); ?>
+                        {!! Form::text('attributes[commission_per_cover]',$restaurant_commission_per_cover,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[reward_points_per_reservation]" class="col-sm-3 control-label">Reward Points per Reservation <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::text('attributes[reward_points_per_reservation]',$restaurant['attributes']['reward_points_per_reservation'],['class'=>'form-control','required'=>'']) !!}
+                        <?php $restaurant_reward_points_per_reservation =  (isset($restaurant['attributes']['reward_points_per_reservation']) && $restaurant['attributes']['reward_points_per_reservation'] != "" ? $restaurant['attributes']['reward_points_per_reservation'] : ''); ?>
+                        {!! Form::text('attributes[reward_points_per_reservation]',$restaurant_reward_points_per_reservation,['class'=>'form-control','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],$restaurant['RestaurantLocation']->pricing_level,['class'=>'form-control','data-plugin-selectTwo'=>'']) !!}
+                        <?php $restaurant_pricing_level =  (isset($restaurant['RestaurantLocation']->pricing_level) && $restaurant['RestaurantLocation']->pricing_level != "" ? $restaurant['RestaurantLocation']->pricing_level : ''); ?>
+                        {!! Form::select('pricing_level',['0'=>'Select','Low'=>'Low','Medium'=>'Medium','High'=>'High'],$restaurant_pricing_level,['class'=>'form-control','id'=>'restaurantPriceIndicator']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="cuisine" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {{--{!! Form::select('attributes[cuisines][]',$cuisines,$restaurant['attributes']['cuisines'],['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'multiple','required'=>'']) !!}--}}
-                        {{! $set_cuisines = (isset($restaurant['attributes']['cuisines']) && $restaurant['attributes']['cuisines'] !="" ? $restaurant['attributes']['cuisines'] : ' ') }}
+                        <?php $set_cuisines = (isset($restaurant['attributes']['cuisines']) && $restaurant['attributes']['cuisines'] !="" ? $restaurant['attributes']['cuisines'] : ' ') ?>
                         {!! Form::select('attributes[cuisines][]',$cuisines,$set_cuisines,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="collections" class="col-sm-3 control-label">Collections <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {{! $set_tags = (isset($restaurantLocationTags) && $restaurantLocationTags !="" ? $restaurantLocationTags : ' ')}}
+                        <?php $set_tags = (isset($restaurantLocationTags) && $restaurantLocationTags !="" ? $restaurantLocationTags : ' ') ?>
                         {!! Form::select('attributes[collections][]',$tags_list,$set_tags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
                         {{--{!! Form::select('attributes[collections][]',$tags_list,$restaurantLocationTags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'','required'=>'']) !!}--}}
                     </div>
@@ -507,51 +518,74 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags </label>
                     <div class="col-sm-6">
-                        {{! $set_flags = (isset($restaurantLocationFlags->flag_id) && $restaurantLocationFlags->flag_id !="" ? $restaurantLocationFlags->flag_id : ' ')}}
-                        {!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}
+                        <?php $set_flags = (isset($restaurantLocationFlags->flag_id) && $restaurantLocationFlags->flag_id !="" ? $restaurantLocationFlags->flag_id : ' ');
+                              $a = array_unshift($flags_list,'Select');
+                        ?>
+                            {!! Form::select('attributes[flags]',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'restaurantsFlags']) !!}
+                        {{--{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                         {{--{!! Form::text('attributes[flags]',$restaurantLocationFlags->flag_id,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
-                        {{! $set_curators = (isset($restaurantLocationCurators->curator_id) && $restaurantLocationCurators->curator_id !="" ? $restaurantLocationCurators->curator_id : ' ')}}
-                        {!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}
+                        <?php $set_curators = (isset($restaurantLocationCurators->curator_id) && $restaurantLocationCurators->curator_id !="" ? $restaurantLocationCurators->curator_id : ' ');
+                              $a = array_unshift($curator_list,'Select');
+                        ?>
+                            {!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'restaurantsGuestCurator']) !!}
+                        {{--{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                         {{--{!! Form::text('curators',$restaurantLocationCurators->curator_id,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
                     <div class="col-sm-6">
-                        {{! $set_curators_tips = (isset($restaurantLocationCurators->curator_tips) && $restaurantLocationCurators->curator_tips !="" ? $restaurantLocationCurators->curator_tips : ' ')}}
+                        <?php $set_curators_tips = (isset($restaurantLocationCurators->curator_tips) && $restaurantLocationCurators->curator_tips !="" ? $restaurantLocationCurators->curator_tips : ' ') ?>
                         {!! Form::textarea('curator_tips',$set_curators_tips,['class'=>'form-control redactor-text','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[descriptive_title]" class="col-sm-3 control-label">Descriptive Title <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        <?php $restaurant_short_description = (isset($restaurant['attributes']['short_description']) && $restaurant['attributes']['short_description'] !="" ? $restaurant['attributes']['short_description'] : '') ?>
+                        {!! Form::textarea('attributes[short_description]',$restaurant_short_description,['rows'=>'5','class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Location Info <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        <?php $restaurant_info = (isset($restaurant['attributes']['restaurant_info']) && $restaurant['attributes']['restaurant_info'] !="" ? $restaurant['attributes']['restaurant_info'] : '') ?>
+                        {!! Form::textarea('attributes[restaurant_info]',$restaurant_info,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[menu_picks]',$restaurant['attributes']['menu_picks'],['class'=>'form-control redactor-text','required'=>'']) !!}
+                        <?php $restaurant_menu_picks = (isset($restaurant['attributes']['menu_picks']) && $restaurant['attributes']['menu_picks'] !="" ? $restaurant['attributes']['menu_picks'] : '') ?>
+                        {!! Form::textarea('attributes[menu_picks]',$restaurant_menu_picks,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[expert_tips]" class="col-sm-3 control-label">Expert Tips <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[expert_tips]',$restaurant['attributes']['expert_tips'],['class'=>'form-control redactor-text','required'=>'']) !!}
+                        <?php $restaurant_expert_tips = (isset($restaurant['attributes']['expert_tips']) && $restaurant['attributes']['expert_tips'] !="" ? $restaurant['attributes']['expert_tips'] : '') ?>
+                        {!! Form::textarea('attributes[expert_tips]',$restaurant_expert_tips,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="attributes[terms_and_conditions]" class="col-sm-3 control-label">Terms & Conditions <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::textarea('attributes[terms_and_conditions]',$restaurant['attributes']['terms_and_conditions'],['class'=>'form-control redactor-text','required'=>'']) !!}
+                        <?php $restaurant_terms_and_conditions = (isset($restaurant['attributes']['terms_and_conditions']) && $restaurant['attributes']['terms_and_conditions'] !="" ? $restaurant['attributes']['terms_and_conditions'] : '') ?>
+                        {!! Form::textarea('attributes[terms_and_conditions]',$restaurant_terms_and_conditions,['class'=>'form-control redactor-text','required'=>'']) !!}
                     </div>
                 </div>
             </div>
             <div id="alacarte_peak_tab" class="tab-pane mt-lg">
                 Coming Soon.
             </div>
-            <div id="location_details" class="tab-pane mt-lg">
-                @include('partials.forms.locations_edit')
-            </div>
+            {{--<div id="location_details" class="tab-pane mt-lg">--}}
+                {{--@include('partials.forms.locations_edit')--}}
+            {{--</div>--}}
             <div id="block_schedules_tab" class="tab-pane mt-lg">
                 <section class="panel">
                     <header class="panel-heading">
