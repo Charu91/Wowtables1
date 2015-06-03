@@ -599,7 +599,7 @@ class RestaurantLocation extends VendorLocation{
                                     'vendor_attributes_select_option_id' => $value
                                 ];
                             }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                                if($attributesMap[$attribute]['type'] === 'multi-select'){
+                                if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
                                     foreach ($value as $singleValue) {
                                         $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                             'vendor_location_id' => $vendor_location_id,
@@ -608,19 +608,25 @@ class RestaurantLocation extends VendorLocation{
                                     }
                                 }else{
                                     foreach ($value as $singleValue) {
-                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                            'vendor_location_id' => $vendor_location_id,
-                                            'vendor_attribute_id' => $attributeIdMap[$attribute],
-                                            'attribute_value' => $singleValue
-                                        ];
+                                        if($singleValue != "" || $singleValue != " "){
+                                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                                'vendor_location_id' => $vendor_location_id,
+                                                'vendor_attribute_id' => $attributeIdMap[$attribute],
+                                                'attribute_value' => $singleValue
+                                            ];
+                                        }
+
                                     }
                                 }
                             }else{
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'vendor_location_id' => $vendor_location_id,
-                                    'vendor_attribute_id' => $attributeIdMap[$attribute],
-                                    'attribute_value' => $value
-                                ];
+                                if($value != "" || $value != " "){
+                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                        'vendor_location_id' => $vendor_location_id,
+                                        'vendor_attribute_id' => $attributeIdMap[$attribute],
+                                        'attribute_value' => $value
+                                    ];
+                                }
+
                             }
                         }
                     }
