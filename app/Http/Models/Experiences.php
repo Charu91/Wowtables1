@@ -211,8 +211,10 @@ class Experiences {
 	 */
 	public static function getProductLocations($productID, $pvlID) {
 		$queryResult = 	DB::table('product_vendor_locations as pvl')	
-							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
-							->leftJoin('locations', 'locations.id','=','vla.area_id')
+							//->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
+							->leftJoin('vendor_locations as vl', 'vl.id','=','pvl.vendor_location_id')
+							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+							->leftJoin('locations', 'locations.id','=','vl.location_id')							
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
 							//->where('pvl.id','!=',$pvlID)
