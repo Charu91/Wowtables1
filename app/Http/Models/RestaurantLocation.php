@@ -588,6 +588,7 @@ class RestaurantLocation extends VendorLocation{
 
                 foreach($attributes as $attribute => $value){
                     if($value != "" || $value != " "){
+                        //echo "attr <pre>"; print_r($attribute); echo ", value = ,".$value.", <br/>";
                         if(isset($attributeIdMap[$attribute])){
                             if(!isset($attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']]))
                                 $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']] = [];
@@ -598,7 +599,7 @@ class RestaurantLocation extends VendorLocation{
                                     'vendor_attributes_select_option_id' => $value
                                 ];
                             }else if($attributesMap[$attribute]['value'] === 'multi' && is_array($value)) {
-                                if($attributesMap[$attribute]['type'] === 'multi-select'){
+                                if($attributesMap[$attribute]['type'] === 'multi-select' && $value != ""){
                                     foreach ($value as $singleValue) {
                                         $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
                                             'vendor_location_id' => $vendor_location_id,
@@ -606,20 +607,25 @@ class RestaurantLocation extends VendorLocation{
                                         ];
                                     }
                                 }else{
-                                    foreach ($value as $singleValue) {
-                                        $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                            'vendor_location_id' => $vendor_location_id,
-                                            'vendor_attribute_id' => $attributeIdMap[$attribute],
-                                            'attribute_value' => $singleValue
-                                        ];
+                                    if($value != "") {
+                                        foreach ($value as $singleValue) {
+                                            $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                                'vendor_location_id' => $vendor_location_id,
+                                                'vendor_attribute_id' => $attributeIdMap[$attribute],
+                                                'attribute_value' => $singleValue
+                                            ];
+                                        }
                                     }
                                 }
                             }else{
-                                $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
-                                    'vendor_location_id' => $vendor_location_id,
-                                    'vendor_attribute_id' => $attributeIdMap[$attribute],
-                                    'attribute_value' => $value
-                                ];
+                                if($value != ""){
+                                    $attribute_inserts[$typeTableAliasMap[$attributesMap[$attribute]['type']]['table']][] = [
+                                        'vendor_location_id' => $vendor_location_id,
+                                        'vendor_attribute_id' => $attributeIdMap[$attribute],
+                                        'attribute_value' => $value
+                                    ];
+                                }
+
                             }
                         }
                     }
@@ -629,6 +635,7 @@ class RestaurantLocation extends VendorLocation{
                 $attributeInserts = true;
 
                 foreach($attribute_inserts as $table => $insertData){
+                    //echo "table <pre>"; print_r($table); echo " , insert data = "; print_r($insertData);
                     $restauranrAttrInsert = DB::table($table)->insert($insertData);
 
                     if(!$restauranrAttrInsert){
@@ -636,7 +643,7 @@ class RestaurantLocation extends VendorLocation{
                         break;
                     }
                 }
-
+                //die;
                 if($attributeInserts){
                     return ['status' => 'success'];
                 }else{
@@ -671,14 +678,14 @@ class RestaurantLocation extends VendorLocation{
         if($locations){
             $addressInsert = DB::table('vendor_location_address')->insert([
                 'vendor_location_id' => $vendor_location_id,
-                'address' => $address['address'],
-                'pin_code' => $address['pin_code'],
-                'area_id' => $locations->area_id,
-                'city_id' => $locations->city_id,
-                'state_id' => $locations->state_id,
-                'country_id' => $locations->country_id,
-                'latitude' => $address['latitude'],
-                'longitude' => $address['longitude']
+                'address' => (isset($address['address']) && $address['address'] != "" ? $address['address'] : ''),
+                'pin_code' => (isset($address['pin_code']) && $address['pin_code'] != "" ? $address['pin_code'] : ''),
+                'area_id' => (isset($locations->area_id) && $locations->area_id != "" ? $locations->area_id : ''),
+                'city_id' => (isset($locations->city_id) && $locations->city_id != "" ? $locations->city_id : ''),
+                'state_id' => (isset($locations->state_id) && $locations->state_id != "" ? $locations->state_id : ''),
+                'country_id' => (isset($locations->country_id) && $locations->country_id != "" ? $locations->country_id : ''),
+                'latitude' => (isset($address['latitude']) && $address['latitude'] != "" ? $address['latitude'] : 0),
+                'longitude' => (isset($address['longitude']) && $address['longitude'] != "" ? $address['longitude'] : 0)
             ]);
 
             if($addressInsert){
@@ -703,15 +710,15 @@ class RestaurantLocation extends VendorLocation{
     {
         $location_attributes_insert = [
             'vendor_location_id' => $vendor_location_id,
-            'min_people_per_reservation' => $location_attributes['min_people_per_reservation'],
-            'max_people_per_reservation' => $location_attributes['max_people_per_reservation'],
-            'max_reservations_per_time_slot' => $location_attributes['max_reservations_per_time_slot'],
-            'max_reservations_per_day' => $location_attributes['max_reservations_per_day'],
-            'off_peak_hour_discount_min_covers' => $location_attributes['off_peak_hour_discount_min_covers'],
-            'max_people_per_day' => $location_attributes['max_people_per_day'],
-            'minimum_reservation_time_buffer' => $location_attributes['minimum_reservation_time_buffer'],
-            'maximum_reservation_time_buffer' => $location_attributes['maximum_reservation_time_buffer'],
-            'min_people_increments' => $location_attributes['min_people_increments_per_reservation']
+            'min_people_per_reservation' => (isset($location_attributes['min_people_per_reservation']) && $location_attributes['min_people_per_reservation'] != "" ? $location_attributes['min_people_per_reservation'] : 0),
+            'max_people_per_reservation' => (isset($location_attributes['min_people_per_reservation']) && $location_attributes['max_people_per_reservation'] != "" ? $location_attributes['max_people_per_reservation'] : 0),
+            'max_reservations_per_time_slot' => (isset($location_attributes['max_reservations_per_time_slot']) && $location_attributes['max_reservations_per_time_slot'] != "" ? $location_attributes['max_reservations_per_time_slot'] : 0),
+            'max_reservations_per_day' => (isset($location_attributes['max_reservations_per_day']) && $location_attributes['max_reservations_per_day'] != "" ? $location_attributes['max_reservations_per_day'] : 0),
+            'off_peak_hour_discount_min_covers' => (isset($location_attributes['off_peak_hour_discount_min_covers']) && $location_attributes['off_peak_hour_discount_min_covers'] != "" ? $location_attributes['off_peak_hour_discount_min_covers'] : 0),
+            'max_people_per_day' => (isset($location_attributes['max_people_per_day']) && $location_attributes['max_people_per_day'] != "" ? $location_attributes['max_people_per_day'] : 0),
+            'minimum_reservation_time_buffer' => (isset($location_attributes['minimum_reservation_time_buffer']) && $location_attributes['minimum_reservation_time_buffer'] != "" ? $location_attributes['minimum_reservation_time_buffer'] : 0),
+            'maximum_reservation_time_buffer' => (isset($location_attributes['maximum_reservation_time_buffer']) && $location_attributes['maximum_reservation_time_buffer'] != "" ? $location_attributes['maximum_reservation_time_buffer'] : 0),
+            'min_people_increments' => (isset($location_attributes['min_people_increments_per_reservation']) && $location_attributes['min_people_increments_per_reservation'] != "" ? $location_attributes['min_people_increments_per_reservation'] : 0),
         ];
 
 

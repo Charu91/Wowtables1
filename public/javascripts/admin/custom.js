@@ -223,13 +223,14 @@ $(document).ready(function(){
     });
 
     $("#restaurant_seo_tab").click(function(){
-       var rest_name = $("#select2-chosen-12").text();
-        var location_name = $("#select2-chosen-14").text();
-        var cuisine = $("#s2id_autogen3").text();
+       var rest_name = $('.select-restaurant').select2('data').text;
+        var location_name =  $('.select-location').select2('data').text;
+        var cuisine = $(".restaurantCuisines").text();
+        //console.log("cuisine = "+cuisine);
         var cuisine_split = cuisine.split(" ");
         var cusines_array = [];
         $.each(cuisine_split,function(key,val){
-            console.log("key = "+key+" , value = "+val);
+            //console.log("key = "+key+" , value = "+val);
             if(val != ""){
                 cusines_array.push(val);
             }
@@ -242,9 +243,11 @@ $(document).ready(function(){
             success: function(response){
                 var data = jQuery.parseJSON(response);
                 if(rest_name != "" && location_name != "" && cuisine != "" && data.ancestor_name != ""){
+                    //console.log("if not null , "+rest_name+' , '+data.ancestor_name+" , "+location_name+" , "+cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
                     $("#restaurant_seo_title").val(rest_name+' , '+data.ancestor_name+" , "+location_name);
                     $("#seo_meta_description").val(cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
                 } else {
+                    //console.log("if null");
                     $("#restaurant_seo_title").val('');
                     $("#seo_meta_description").val('');
                 }

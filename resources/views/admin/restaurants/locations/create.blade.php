@@ -336,7 +336,7 @@
                 <div class="form-group">
                     <label for="cuisines" class="col-sm-3 control-label">Cuisines </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate restaurantCuisines','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
