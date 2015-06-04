@@ -202,6 +202,7 @@
 								//->orWhere('pa3.alias','cuisines')
 								->where('vla.city_id',$arrData['city_id'])
 								->where('products.visible',1)
+								->where('products.status','=','publish')
 								->whereIN('products.type',array('simple','complex'))
 								->groupBy('products.id')
 								->select('products.id','products.name as title','pat.attribute_value as description',
