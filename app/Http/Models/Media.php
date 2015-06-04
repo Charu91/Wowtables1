@@ -151,7 +151,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type = "listing"';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type = "listing" ORDER BY id DESC LIMIT 10';
 
             $images = DB::select($query);
 
@@ -193,7 +193,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type = "gallery"';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type = "gallery" ORDER BY id DESC LIMIT 10';
 
             $images = DB::select($query);
 
@@ -208,7 +208,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_alacarte","mobile_listing_ios_alacarte") and width = 1080 and height = 590';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_alacarte","mobile_listing_ios_alacarte") and width = 1080 and height = 590 ORDER BY id DESC LIMIT 10';
 
             $images = DB::select($query);
 
@@ -223,7 +223,7 @@ class Media {
         $totalMediaCount = DB::table('media_resized_new')->count();
 
         if($totalMediaCount){
-            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_experience","mobile_listing_ios_experience") and width = 1080 and height = 662';
+            $query = 'SELECT * FROM media_resized_new WHERE image_type in("mobile_listing_android_experience","mobile_listing_ios_experience") and width = 1080 and height = 662 ORDER BY id DESC LIMIT 10';
 
             $images = DB::select($query);
 
