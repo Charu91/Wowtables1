@@ -15,7 +15,7 @@ use Config;
  */
  class ALaCarte {
  	
- 	static $arrRules = array('vendorID' => 'exists:vendors,id');
+ 	 	static $arrRules = array('vendorID' => 'exists:vendors,id');
 
 	/**
 	 * Reads the details of the LaCarte matching the
@@ -62,7 +62,7 @@ use Config;
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 								'loc4.name as country', 'loc5.name as locality', 'curators.name as curator_name', 'curators.bio as curator_bio',
 								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
-								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips')						
+								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips', 'vla.city_id')						
 						->first();
 						
 		if($queryResult) {
@@ -73,7 +73,13 @@ use Config;
 			$arrVendorCuisine = Self::getVendorLocationCuisine(array($queryResult->vl_id));
 			
 			//reading the similar vendors
-			$arrSimilarVendor =  Self::getSimilarALaCarte(array('location_id' => $queryResult->area_id, 'pricing_level' => $queryResult->pricing_level));
+			$arrSimilarVendor =  Self::getSimilarALaCarte(array('location_id' => $queryResult->area_id, 
+																'pricing_level' => $queryResult->pricing_level,
+																'city_id' => $queryResult->city_id
+															    ));
+			$arrSimilarAlacarteFilters = $arrSimilarVendor; //print_r($filters); die("hmm");
+			
+			$arrResultAlacarte = Self::fetchListings($arrSimilarAlacarteFilters); //print_r($arrResult); die("hmm");
 			
 			//initializing the values for experience
 			if(Self::isExperienceAvailable($queryResult->vl_id)) {
@@ -122,7 +128,8 @@ use Config;
 																'suggestions' => (is_null($queryResult->curator_tips)) ? "":$queryResult->curator_tips,
 															),
 									'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
-									'similar_option' => $arrSimilarVendor,
+									'similar_option' => $arrSimilarAlacarteFilters, //$arrSimilarVendor,
+									'similar_option' => $arrResultAlacarte, // Added on 4.6.15
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
 									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,																	
 								);
@@ -156,73 +163,23 @@ use Config;
 	 * @param	array $arrData
 	 * @since	1.0.0
 	 */
-	public static function getSimilarALaCarte($arrData) {
-		$strQuery = DB::table(DB::raw('vendor_locations as vl'))
-					->join('vendors','vendors.id','=','vl.vendor_id')
-					->join(DB::raw('locations as loc'), 'loc.id', '=', 'vl.location_id')
-					->join(DB::raw('vendor_media_map as vmm'), 'vmm.vendor_id', '=', 'vendors.id')
-					->leftJoin('media','media.id','=', 'vmm.media_id')
-					->where('vl.a_la_carte','=',1)
-					->where('vmm.media_type','=','listing')
-					->where('loc.id','=', $arrData['location_id']);
-		
-		//adding filter info			
-		if($arrData['pricing_level'] == "High") {
-			$strQuery->where('vl.pricing_level', 'High')
-					->where('vl.pricing_level', 'Medium')
-					->where('vl.pricing_level', 'Low');
+	public static function getSimilarALaCarte($arrData) { 
+		//print_r($arrData); die();		 
+		$queryResult = DB::table('locations as l')
+								->leftJoin('locations_tree as lt', 'l.id', '=', 'descendant')
+								->where('lt.ancestor',$arrData['location_id'])
+								->where('lt.length',1)
+								->select('l.id as location_id','l.name', 'l.type')
+								->get();
+		$filters=array('area' => array());
+		foreach ($queryResult as $row) {
+					$filters['area'][] = $row->location_id;												
 		}
-		elseif($arrData['pricing_level'] == "Medium") {
-			$strQuery->where('vl.pricing_level', 'Medium')
-							->where('vl.pricing_level', 'Low');
-		}
-		else {
-			$strQuery->where('vl.pricing_level', 'Low');
-		}
-		
-		#executing the query
-		$queryResult = $strQuery->select('vl.id', 'vendors.name', 'vl.pricing_level',
-									DB::raw('loc.name as location_name,vl.slug as vendor_slug')
-									//DB::raw('media.file as image')
-									)
-									->get();
-									
-		//array to hold the vendors information
-		$arrVendorInformation = array();		
-		//array to hold the vendor ids
-		$arrVendorId = array();		
-		//array to hold vendor reviews
-		$arrReview = array();		
-		//array to hold vendor cuisines
-		$arrVendorCuisine = array();
-		
-		if($queryResult) {
-			foreach($queryResult as $row) {
-				$arrVendorId[] = $row->id;
-			}
-			
-			//getting vendors review details
-			$arrReview = Review::findRatingByVendorLocation($arrVendorId);
-			
-			//getting vendors available cuisine
-			$arrVendorCuisine = $this->getVendorLocationCuisine($arrVendorId);
-			
-			foreach($queryResult as $row) {
-				$arrVendorInformation = array(
-											'id' => $row->id,
-											'title' => $row->title,
-											'rating' => (array_key_exists($row->vl_id, $arrReview)) ? $arrReview[$row->vl_id]['averageRating']:0,
-											'review_count' => (array_key_exists($row->vl_id, $arrReview)) ? $arrReview[$row->vl_id]['totalRating']:0,
-											'pricing_level' => $row->pricing_level,
-											'location' => $row->location_name,
-											'url' => URL::to('/').$row->vendor_location_slug,
-											'image' => "",//(!empty($row->image)) ? Config::get('constants.IMAGE_URL').$row->image:NULL,
-											'cuisine' => (array_key_exists($row->id, $arrVendorCuisine)) ? $arrVendorCuisine[$row->id]:array()
-										);
-			}
-		}
-		
-		return $arrVendorInformation;	
+
+		$filters['city_id'] = $arrData['city_id'];
+		$filters['pricing_level'] = $arrData['pricing_level'];
+
+		return $filters;			
 	}
 
 	//-----------------------------------------------------------------
@@ -515,6 +472,122 @@ use Config;
 		}		
 		return $data;							
 	}
+
+	public static function fetchListings(array $filters, $items_per_page = 10, $sort_by = 'Latest', $pagenum = null ){
+        if(!$pagenum) $pagenum = 1;
+
+        $offset = ($pagenum - 1) * $items_per_page;
+
+        $select = DB::table('vendor_locations AS vl')
+            ->join('vendors AS v', 'v.id', '=', 'vl.vendor_id')
+            ->join('vendor_types AS vt', 'vt.id', '=', 'v.vendor_type_id')
+            ->join('vendor_location_address AS vladd', 'vl.id', '=', 'vladd.vendor_location_id')
+            ->join('locations AS l', 'l.id', '=', 'vl.location_id')
+            ->join('locations AS la', 'la.id', '=', 'vladd.area_id')
+            ->join('locations AS lc', 'lc.id', '=', 'vladd.city_id')
+            /*->join('vendor_locations_media_map AS vmm', function($join){
+                $join->on('vmm.vendor_location_id', '=', 'vl.id')
+                    ->on('vmm.order','=', DB::raw('0'))
+                    ->on('vmm.media_type', '=', DB::raw('"gallery"'));
+            })
+            ->join('media_resized AS mr', function($join){
+                $join->on('vmm.media_id', '=', 'mr.media_id')
+                    ->on('mr.width','=', DB::raw('600'))
+                    ->on('mr.height', '=', DB::raw('400'));
+            })// Make the width and height dynamic
+            ->join('media AS m', 'm.id', '=', 'mr.media_id') */
+            ->join('vendor_location_attributes_varchar AS vlav', 'vl.id', '=', 'vlav.vendor_location_id')
+            ->join('vendor_attributes AS va', 'va.id', '=', 'vlav.vendor_attribute_id')
+            ->leftJoin('vendor_location_attributes_multiselect AS vlam', 'vl.id', '=', 'vlam.vendor_location_id')
+            ->leftJoin('vendor_attributes AS vamso', function($join){
+                $join->on('va.id', '=', 'vlav.vendor_attribute_id')
+                    ->on('vamso.alias','=', DB::raw('"cuisines"'));
+            })
+            ->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            ->leftJoin('vendor_location_booking_schedules AS vlbs', 'vlbs.vendor_location_id', '=', 'vl.id')
+            ->leftJoin('vendor_location_blocked_schedules AS vlbls', 'vlbls.vendor_location_id', '=', 'vl.id')
+            ->leftJoin('schedules AS s', 'vlbs.schedule_id', '=', 's.id')
+            ->leftJoin('time_slots AS ts', 's.time_slot_id', '=', 'ts.id')
+            ->leftJoin('vendor_locations_tags_map AS vltm', 'vl.id', '=', 'vltm.vendor_location_id')
+            ->leftJoin('vendor_location_reviews AS vlr', function($join){
+                $join->on('vl.id', '=', 'vlr.vendor_location_id')
+                    ->on('vlr.status','=', DB::raw('"Approved"'));
+            })
+			->leftJoin(DB::raw('vendor_locations_flags_map as vlfm'),'vlfm.vendor_location_id','=','vl.id')
+			->leftJoin('flags','flags.id','=','vlfm.flag_id')
+            ->select(
+                DB::raw('SQL_CALC_FOUND_ROWS vl.id'),
+                'v.name AS restaurant',
+                'l.name AS locality',
+                'la.name AS area',
+                'la.id as area_id',
+                'vl.pricing_level',
+                //'mr.file AS image',
+                //'m.alt AS image_alt',
+                //'m.title AS image_title',
+                'l.id as location_id',
+                DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
+                DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
+                DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
+                DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
+                DB::raw('IFNULL(flags.name,"") AS flag_name'),
+                DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine')
+            )
+            ->where('vt.type', DB::raw('"Restaurants"'))
+            ->where('v.status', DB::raw('"Publish"'))
+            ->where('v.publish_time', '<', DB::raw('NOW()'))
+            ->where('lc.id', $filters['city_id'])
+            ->where('vl.a_la_carte', 1)
+			->where('vl.status','Active')
+            ->groupBy('vl.id');
+           // ->skip($offset)->take($items_per_page);
+
+
+        if(isset($filters['area'])){
+        	$select->whereIn('l.id', $filters['area']);
+            //$this->filters['areas']['active'] = $filters['area'];
+        }
+
+        if(isset($filters['pricing_level'])){
+        	if(strtolower($filters['pricing_level']) == 'high') {
+        		$select->whereIn('vl.pricing_level',array('Low','Medium','High'));
+        	}
+			elseif(strtolower($filters['pricing_level']) == "medium") {
+				$select->whereIn('vl.pricing_level',array('Low','Medium'));
+			}
+			elseif(strtolower($filters['pricing_level']) == "low") {
+				$select->whereIn('vl.pricing_level',array('Low'));
+			}
+            
+            //$this->filters['pricing_level']['active'] = $filters['pricing_level'];
+        }
+               
+
+       
+		//echo $select->toSql();
+        $listing = $select->take(5)->get();
+
+        //return response()->json($listing,200);
+        $result = array('data' => array());
+        foreach ($listing as $row) {
+        	$result['data'][] = array( 'id' => $row->id,
+        								'restaurant' => $row->restaurant,
+        								'locality' => $row->locality,
+        								'area' => $row->area,
+        								'area_id' => $row->area_id,
+        								'pricing_level' => $row->pricing_level,
+        								'location_id' => $row->location_id,
+        								'short_description' => $row->short_description,
+        								'off_peak_available' => $row->off_peak_available,
+        								'total_reviews' => $row->total_reviews,
+        								'rating' => $row->rating,
+        								'flag_name' => $row->flag_name,
+        								'cuisine' => $row->cuisine
+        							  );
+        }
+        
+        return $result['data']; 
+    }
  }
 //end of class LaCarte
 //end of file WowTables\Http\Models\LaCarte.php
