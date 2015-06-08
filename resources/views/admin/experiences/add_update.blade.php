@@ -380,12 +380,16 @@
 					<div class="form-group">
 						<label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
 						<div class="col-sm-8">
-							{!! Form::textarea('attributes[menu]',null,['rows'=>'30','class'=>'form-control','id'=>'expMenu']) !!}
+							{!! Form::textarea('attributes[menu]',null,['class'=>'form-control','id'=>'expMenu']) !!}
 						</div>
 					</div>
 				</div>
-				{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}
 				<hr/>
+				<h4>New Menu</h4>
+				{{--{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}--}}
+				{!! Form::textarea('attributes[menu_markdown]','',['class'=>'form-control','readonly'=>'readonly','id'=>'expMarkdownMenu']) !!}
+				<hr/>
+				<h4>Old Menu</h4>
 				<?php $experience_old_menu_markdown = (isset($experience['attributes']['menu_markdown']) && $experience['attributes']['menu_markdown'] != "" ? $experience['attributes']['menu_markdown'] : '') ?>
 				{!! Form::textarea('attributes[old_menu_markdown]',$experience_old_menu_markdown,['class'=>'form-control','readonly'=>'readonly','id'=>'oldMarkdownSyntax']) !!}
 				{!! Form::textarea('attributes[old_menu]',null,['class'=>'form-control','readonly'=>'readonly','id'=>'oldExpMenu']) !!}

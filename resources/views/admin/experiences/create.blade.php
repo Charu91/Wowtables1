@@ -303,11 +303,11 @@
                     <div class="form-group">
                         <label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
                         <div class="col-sm-8">
-                            {!! Form::textarea('attributes[menu]',null,['rows'=>'30','class'=>'form-control','required'=>'','id'=>'expMenu']) !!}
+                            {!! Form::textarea('attributes[menu]',null,['class'=>'form-control','required'=>'','id'=>'expMenu']) !!}
                         </div>
                     </div>
                 </div>
-                {!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}
+                {!! Form::textarea('attributes[menu_markdown]','',['class'=>'form-control','readonly'=>'readonly','id'=>'expMarkdownMenu']) !!}
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">

@@ -226,7 +226,7 @@
             $('#experienceMenuHolder').show();
             $('#expMenu').val(htmlmenu);
             $('#expMarkdownMenu').val(menu);
-            $('#expMenuBtn').hide();
+            //$('#expMenuBtn').hide();
         });
 
         $('#insertAddonsMenu').on('click',function(){
