@@ -376,6 +376,8 @@
 						<a id="expMenuBtn" data-target="#markdownmodal" data-toggle="modal" class="btn btn-primary">Create Experience Menu</a>
 					</div>
 				</div>
+				<hr/>
+				<h4>New Menu</h4>
 				<div id="experienceMenuHolder">
 					<div class="form-group">
 						<label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
@@ -384,8 +386,6 @@
 						</div>
 					</div>
 				</div>
-				<hr/>
-				<h4>New Menu</h4>
 				{{--{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}--}}
 				{!! Form::textarea('attributes[menu_markdown]','',['class'=>'form-control','readonly'=>'readonly','id'=>'expMarkdownMenu']) !!}
 				<hr/>
