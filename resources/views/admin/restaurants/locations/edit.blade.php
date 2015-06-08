@@ -519,9 +519,15 @@
                     <label for="flags" class="col-sm-3 control-label">Flags </label>
                     <div class="col-sm-6">
                         <?php $set_flags = (isset($restaurantLocationFlags->flag_id) && $restaurantLocationFlags->flag_id !="" ? $restaurantLocationFlags->flag_id : ' ');
-                              $a = array_unshift($flags_list,'Select');
+                              //$a = array_unshift($flags_list,'Select');
                         ?>
-                            {!! Form::select('attributes[flags]',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'restaurantsFlags']) !!}
+                            <select name="attributes[flags]" class='form-control populate' id='restaurantsFlags'>
+                                <option value="0">Select</option>
+                                <?php foreach($flags_list as $key => $value){ ?>
+                                <option <?php echo (($set_flags == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                            {{--{!! Form::select('attributes[flags]',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'restaurantsFlags']) !!}--}}
                         {{--{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                         {{--{!! Form::text('attributes[flags]',$restaurantLocationFlags->flag_id,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
@@ -530,9 +536,15 @@
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
                         <?php $set_curators = (isset($restaurantLocationCurators->curator_id) && $restaurantLocationCurators->curator_id !="" ? $restaurantLocationCurators->curator_id : ' ');
-                              $a = array_unshift($curator_list,'Select');
+                              //$a = array_unshift($curator_list,'Select');
                         ?>
-                            {!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'restaurantsGuestCurator']) !!}
+                            <select name="curators" class='form-control populate' id='restaurantsGuestCurator'>
+                                <option value="0">Select</option>
+                                <?php foreach($curator_list as $key => $value){ ?>
+                                <option <?php echo (($set_curators == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                            {{--{!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'restaurantsGuestCurator']) !!}--}}
                         {{--{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                         {{--{!! Form::text('curators',$restaurantLocationCurators->curator_id,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>

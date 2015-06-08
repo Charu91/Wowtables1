@@ -649,7 +649,7 @@ class ExperienceController extends Controller {
                     /*$getUsersDetails = $this->user->fetchDetails($userID);
                     echo "<pre>"; print_r($getUsersDetails); die;*/
                     $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
-                    //echo "<pre>"; print_r($arrResponse); die;
+                    //echo "<pre>"; print_r($reservationResponse); die;
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],
                         'Email_ids' => $dataPost['guestEmail'],
@@ -680,19 +680,21 @@ class ExperienceController extends Controller {
                         //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
                         //$this->email->to($list);
                         //$this->email->subject('Urgent: Zoho reservation posting error');
-                        $mailbody = 'E'.sprintf("%06d",$arrResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                        $mailbody = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
                         $mailbody .= 'Reservation Details<br>';
                         foreach($zoho_data as $key => $val){
                             $name = str_replace('_',' ',$key);
                             $mailbody .= $name.' '.$val.'<br>';
                         }
 
-                        Mail::raw($mailbody, function($message) use ($zoho_data)
+                        Mail::send('site.pages.zoho_posting_error',[
+                            'zoho_data'=> $mailbody,
+                        ], function($message) use ($zoho_data)
                         {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                            $message->to('tech@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
                         });
                     }
 
@@ -816,7 +818,7 @@ class ExperienceController extends Controller {
         $ch = curl_init();
         $config = array(
             //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-            'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+            'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
             'scope' => 'creatorapi',
         );
         $curlConfig = array(
@@ -828,6 +830,7 @@ class ExperienceController extends Controller {
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
         curl_close($ch);
+        //echo $result; die;
         return	simplexml_load_string($result);
     }
 }
