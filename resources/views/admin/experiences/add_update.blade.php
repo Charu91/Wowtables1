@@ -203,8 +203,16 @@
 					<label for="pricing[price_types]" class="col-sm-3 control-label">Price Types<span class="required">*</span></label>
 					<div class="col-sm-6">
 						<?php $experience_price_type = (isset($experiencePricing->price_type) && $experiencePricing->price_type != "" ? $experiencePricing->price_type : '') ?>
-							<?php $a = array_unshift($price_type_list,'Select'); ?>
-						{!! Form::select('pricing[price_types]',$price_type_list,$experience_price_type,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}
+							<?php //echo $experience_price_type;//$a = array_unshift($price_type_list,'Select'); ?>
+							<select name="pricing[price_types]" class='form-control populate' id='experiencePriceTypes'>
+								<option value="0">Select</option>
+								<?php foreach($price_type_list as $key => $value){ ?>
+									<option <?php echo (($experience_price_type == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>">
+										<?php echo $value?>
+									</option>
+								<?php } ?>
+							</select>
+						{{--{!! Form::select('pricing[price_types]',$price_type_list,$experience_price_type,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}--}}
 					</div>
 				</div>
 				<div class="form-group">
@@ -409,8 +417,14 @@
 					<label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
 					<div class="col-sm-6">
 						<?php $set_flags = (isset($experienceFlags->flag_id) && $experienceFlags->flag_id !="" ? $experienceFlags->flag_id : ' ') ?>
-						<?php $a = array_unshift($flags_list,'Select'); ?>
-						{!! Form::select('flags',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}
+						<?php //$a = array_unshift($flags_list,'Select'); ?>
+							<select name="flags" class='form-control populate' id='experienceFlags'>
+								<option value="0">Select</option>
+								<?php foreach($flags_list as $key => $value){ ?>
+								<option <?php echo (($set_flags == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+								<?php } ?>
+							</select>
+						{{--{!! Form::select('flags',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}--}}
 						{{--{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
 					</div>
 				</div>
@@ -426,8 +440,14 @@
 					<div class="col-sm-6">
 						{{--{!! Form::select('curators',$curator_list,$experienceCurator->curator_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
 						<?php $set_curators = (isset($experienceCurator->curator_id) && $experienceCurator->curator_id !="" ? $experienceCurator->curator_id : ' ') ?>
-						<?php $a = array_unshift($curator_list,'Select'); ?>
-						{!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}
+						<?php //$a = array_unshift($curator_list,'Select'); ?>
+						<select name="curators" class='form-control populate' id='experienceCurators'>
+							<option value="0">Select</option>
+							<?php foreach($curator_list as $key => $value){ ?>
+							<option <?php echo (($set_curators == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+							<?php } ?>
+						</select>
+						{{--{!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}--}}
 						{{--{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
 					</div>
 				</div>

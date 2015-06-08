@@ -45,7 +45,7 @@ class Password {
             //creating a new token
             $response = self::savePasswordRequest($data);
             //sending mail
-            self::sendMail($response);
+            self::sendWebsiteMail($response);
 
             $arrResponse=array();
             $arrResponse['status'] = Config::get('constants.API_SUCCESS');

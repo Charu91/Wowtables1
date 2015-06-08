@@ -403,7 +403,9 @@ class AlacarteController extends Controller {
                             $mailbody .= $name.' '.$val.'<br>';
                         }
 
-                        Mail::raw($mailbody, function($message) use ($zoho_data)
+                        Mail::send('site.pages.zoho_posting_error',[
+                            'zoho_data'=> $mailbody,
+                        ], function($message) use ($zoho_data)
                         {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -520,7 +522,7 @@ class AlacarteController extends Controller {
         $ch = curl_init();
         $config = array(
             //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-            'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
+            'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
             'scope' => 'creatorapi',
         );
         $curlConfig = array(

@@ -171,8 +171,16 @@
                 <div class="form-group">
                     <label for="pricing[price_types]" class="col-sm-3 control-label">Price Types<span class="required">*</span></label>
                     <div class="col-sm-6">
-                        <?php $a = array_unshift($price_type_list,'Select'); ?>
-                        {!! Form::select('pricing[price_types]',$price_type_list,null,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}
+                        <?php //$a = array_unshift($price_type_list,'Select'); ?>
+
+                        <select name="pricing[price_types]" class='form-control populate' id='experiencePriceTypes'>
+                            <option value="0">Select</option>
+                            <?php foreach($price_type_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                            <?php } ?>
+                        </select>
+
+                        {{--{!! Form::select('pricing[price_types]',$price_type_list,null,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -323,8 +331,14 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        <?php $a = array_unshift($flags_list,'Select'); ?>
-                        {!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}
+                        <?php //$a = array_unshift($flags_list,'Select'); ?>
+                            <select name="flags" class='form-control populate' id='experienceFlags'>
+                                <option value="0">Select</option>
+                                <?php foreach($flags_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}--}}
                         {{--{!! Form::text('flags',null,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
                 </div>
@@ -337,8 +351,14 @@
                 <div class="form-group">
                     <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        <?php $a = array_unshift($curator_list,'Select'); ?>
-                        {!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}
+                        <?php //$a = array_unshift($curator_list,'Select'); ?>
+                            <select name="curators" class='form-control populate' id='experienceCurators'>
+                                <option value="0">Select</option>
+                                <?php foreach($curator_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}--}}
                         {{--{!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
