@@ -69,7 +69,7 @@ class RegistrationsController extends Controller {
         $arrResponse['current_city']           = strtolower($city_name);
         $arrResponse['current_city_id']        = $city_id;
         //this code is start in header and footer page.
-       $userID = 1;
+       $userID = Session::get('id');
 		if($userID) {
 			$arrReservation = ReservationModel::getReservationRecord($userID);
 		}
