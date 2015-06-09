@@ -118,6 +118,12 @@ class ReservationDetails extends Model {
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
 				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
 
+				//Increment the Reservation count by 1
+				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
+				
+				//Insert record for new reward point
+				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point']);	 		
+
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
@@ -160,6 +166,13 @@ class ReservationDetails extends Model {
 				$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
 				$arrResponse['data']['partySize'] = $arrData['partySize'];
 				$arrResponse['data']['reward_point'] = $productDetail['reward_point'];	
+
+				//Increment the Reservation count by 1
+				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
+				
+				//Insert record for new reward point
+				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point']);	 
+				
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -487,8 +500,7 @@ class ReservationDetails extends Model {
  								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
  								 DB::raw('MAX(IF(pa3.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
 								)
-                        ->first();
-
+                        ->first(); 
 		
 		if($queryResult) {
 			$arrData['id'] = $queryResult->id;
@@ -631,7 +643,7 @@ class ReservationDetails extends Model {
 
 	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {	
 
-		//print_r($arrData); die();	
+		
 
         $zoho_success = $zoho_res->result->form->add->status;		
         if($zoho_success[0] != "Success") {
@@ -652,11 +664,11 @@ class ReservationDetails extends Model {
                     });
         }
 
-        //Added on 29.05.15    $zoho_data
+        
         if($arrData['reservationType'] == 'alacarte') {
 
         	//====================================
-         	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+         	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']); 
          	
             $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
               		
@@ -670,14 +682,8 @@ class ReservationDetails extends Model {
     		$reservationResponse['status'] = 'success';
     		$reservationResponse['data']= array('reservation_type' => 'A la carte', 
     											'reservationID' => $reservation_id
-    										   );
-    		
-
-    		// $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
-      // 		$arrResponse['data']['reservationTime'] = $arrData['reservationTime'];
-      // 		$arrResponse['data']['partySize'] = $arrData['partySize'];
-      // 		$arrResponse['data']['reservationID'] = $reservation_id;
-      // 		$arrResponse['data']['reservation_type'] = "A la carte";    		
+    										   );    		
+   		
     		//======================================  
     		$formattedRsvID = '#A-'. sprintf("%06d",$reservation_id);  	//Formatted Order ID	
         	$mergeReservationsArray = array('order_id'=> $formattedRsvID,
@@ -688,7 +694,7 @@ class ReservationDetails extends Model {
                 );
 
                 //echo "<pre>"; print_r($mergeReservationsArray); die;        	
-        				$post_data =	$arrData;  //Added on 30/05/15
+        				$post_data =	$arrData;  
         		
                 Mail::send('site.pages.restaurant_reservation',[
                     'location_details'=> $locationDetails,
@@ -709,7 +715,7 @@ class ReservationDetails extends Model {
                     'post_data'=> $post_data,
                     'productDetails'=> $vendorDetails,
                     'reservationResponse'=>$reservationResponse,
-                ], function($message) use ($mergeReservationsArray, $arrData){
+                ], function($message) use ($mergeReservationsArray, $arrData, $emails){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                     $message->to('concierge@wowtables.com')->subject('NR - '.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username'].' | App');
@@ -781,9 +787,7 @@ class ReservationDetails extends Model {
             ->select('l.name', 'v.name as vendor_name')
             ->first();
 
-
         return $queryResult;
-
     }
 
     public static function getAlacarteLocationDetails($vendorLocationID){
@@ -792,7 +796,6 @@ class ReservationDetails extends Model {
             ->where('vl.id',$vendorLocationID)
             ->select('vla.address','vla.latitude','vla.longitude')
             ->first();
-
 
         return $queryResult;
     }
@@ -807,12 +810,10 @@ class ReservationDetails extends Model {
           ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
           ->first();
 
-
       return $queryResult;
-
   	}
 
-  public static function getExperienceLocationDetails($vendorLocationID){
+  	public static function getExperienceLocationDetails($vendorLocationID){
       $queryResult = DB::table('product_vendor_locations as pvl')
           ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
           ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
@@ -834,7 +835,109 @@ class ReservationDetails extends Model {
   							->orderBy('reservation_time')
   							->first();
   		return $queryResult;  							
+  	}
+
+  	/**
+	 * Increment the reservation count at every new reservation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function incrementReservationCount($userID, $reservationType ) {  		
+
+  		if ( $reservationType == 'alacarte') {
+  				$attrID = DB::table('user_attributes as ua')
+										->where('ua.alias', '=', 'a_la_carte_reservation') 
+										->select('id')
+										->first();										
+
+				$reservationId = DB::table('user_attributes_integer as uai')
+												->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+												->where('uai.user_id', $userID)												
+												->where('ua.alias', '=', 'a_la_carte_reservation')
+												->select('uai.user_id')
+												->first();				 
+
+				if($reservationId) {
+	  						$reservationCountStatus = DB::table('user_attributes_integer as uai')
+													->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+													->where('uai.user_id', $userID)												
+													->where('ua.alias', '=', 'a_la_carte_reservation')
+													->increment('attribute_value', 1);
+				} 
+				else {			
+							$reservationCountStatus = DB::table('user_attributes_integer')												
+													->insert([															
+																'user_id' => $userID, 
+																'user_attribute_id' => $attrID->id,
+																'attribute_value' => 1,
+																'created_at' => date('Y-m-d H:i:s'),
+																'updated_at' => date('Y-m-d H:i:s')															
+															]);
+				}
+		} 
+		else if ( $reservationType == 'experience') {
+
+			$attrID = DB::table('user_attributes as ua')
+										->where('ua.alias', '=', 'bookings_made') 
+										->select('id')
+										->first();
+			$reservationId = DB::table('user_attributes_integer as uai')
+												->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+												->where('uai.user_id', $userID)												
+												->where('ua.alias', '=', 'bookings_made')
+												->select('uai.user_id')
+												->first();				
+
+			if($reservationId) {
+	  						$reservationCountStatus = DB::table('user_attributes_integer as uai')
+													->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+													->where('uai.user_id', $userID)												
+													->where('ua.alias', '=', 'bookings_made')
+													->increment('attribute_value', 1);
+			} 
+			else {			
+
+							$reservationCountStatus = DB::table('user_attributes_integer')												
+													->insert([															
+																'user_id' => $userID, 
+																'user_attribute_id' => $attrID->id,
+																'attribute_value' => 1,
+																'created_at' => date('Y-m-d H:i:s'),
+																'updated_at' => date('Y-m-d H:i:s')															
+															]);
+			}
+		}
+  			
+  		
+		return $reservationCountStatus;
   	} 
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Store reward point for every new reservation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function storeRewardPoint($userID, $rewardPoints) {
+  		$attrID = DB::table('user_attributes as ua')
+										->where('ua.alias', '=', 'points_earned')
+										->select('id')
+										->first();
+						
+				$storeRewardPointStatus = DB::table('user_attributes_integer')												
+												->insert([															
+															'user_id' => $userID, 
+															'user_attribute_id' => $attrID->id,
+															'attribute_value' => $rewardPoints,
+															'created_at' => date('Y-m-d H:i:s'),
+															'updated_at' => date('Y-m-d H:i:s')															
+														]);								
+		return $storeRewardPointStatus;
+  	}
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
