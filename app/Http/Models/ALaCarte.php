@@ -364,8 +364,8 @@ use Config;
 								'mrn1.file as ios_image',
 								'mrn2.file as android_image'
 								)
-						->groupBy('vl.id')
-						->get();
+						->groupBy('vl.id')->toSql();  echo $queryResult; die();
+						//->get();
 		
 		//array to store the information from the DB
 		$data = array();
@@ -388,11 +388,19 @@ use Config;
 																 )
 											);
 			}
+			$data['alacarteCount']=count($data['data']['alacarte']);
+			$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
+			$data['experienceCount']=count($data['data']['experience']);
+		}
+		else {
+				$data['data']['alacarte'] = array();
+				$data['alacarteCount'] = 0;
+				$data['data']['experience'] = array();
+				$data['experienceCount'] = 0;
+				$data['no_result_msg'] = 'No matching result found.';
 		}
 		
-		$data['alacarteCount']=count($data['data']['alacarte']);
-		$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-		$data['experienceCount']=count($data['data']['experience']);
+		
 		return $data;
 	}
 
