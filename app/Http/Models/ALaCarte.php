@@ -364,8 +364,8 @@ use Config;
 								'mrn1.file as ios_image',
 								'mrn2.file as android_image'
 								)
-						->groupBy('vl.id')->toSql();  echo $queryResult; die();
-						//->get();
+						->groupBy('vl.id')
+						->get();
 		
 		//array to store the information from the DB
 		$data = array();
