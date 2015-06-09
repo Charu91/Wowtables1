@@ -243,4 +243,54 @@ Route::post('/register', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/users/myreservations', [
+    'uses' => 'Site\RegistrationsController@reservationRecord',
+    'as' => 'reservationRecord',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/orders/cancel_reservation', [
+    'uses' => 'Site\RegistrationsController@reservationCancel',
+    'as' => 'reservationCancel',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::get('/users/get_reservetion/{id}', [
+    'uses' => 'Site\RegistrationsController@changeReserve',
+    'as' => 'changeReserve',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/orders/edit_reservetion', [
+    'uses' => 'Site\RegistrationsController@updateReservetion',
+    'as' => 'updateReservetion',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/timedataload', [
+    'uses' => 'Site\RegistrationsController@timedataload',
+    'as' => 'timedataload',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/party_sizeajax', [
+    'uses' => 'Site\RegistrationsController@partysizeajax',
+    'as' => 'partysizeajax',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+
+
 
