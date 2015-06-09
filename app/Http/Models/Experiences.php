@@ -133,10 +133,10 @@ class Experiences {
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
 										'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
                                         'curator_information' => array(
-                                                                        'curator_name' => "Deepa Jain",//(is_null($expResult->curator_name)) ? "":$expResult->curator_name,
-                                                                        'curator_bio' => "",//(is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
-                                                                        'curator_image' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/deepa_jain.jpg',//(is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
-                                                                        'curator_designation' => "has reviewed this",//(is_null($expResult->designation)) ? "":$expResult->designation
+                                                                        'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
+                                                                        'curator_bio' => (is_null($expResult->curator_bio)) ? "":$expResult->curator_bio,
+                                                                        'curator_image' => (is_null($expResult->curator_image)) ? "" : Config::get('constants.API_MOBILE_IMAGE_URL').$expResult->curator_image,
+                                                                        'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
                                                                         'suggestions' => (is_null($expResult->tips)) ? "": $expResult->tips,
                                                                       ),
 										'menu' => $expResult->menu,
@@ -211,11 +211,13 @@ class Experiences {
 	 */
 	public static function getProductLocations($productID, $pvlID) {
 		$queryResult = 	DB::table('product_vendor_locations as pvl')	
-							->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
-							->leftJoin('locations', 'locations.id','=','vla.area_id')
+							//->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
+							->leftJoin('vendor_locations as vl', 'vl.id','=','pvl.vendor_location_id')
+							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+							->leftJoin('locations', 'locations.id','=','vl.location_id')							
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
-							->where('pvl.id','!=',$pvlID)
+							//->where('pvl.id','!=',$pvlID)
 							->get();
 		
 		//array to hold location details

@@ -2,6 +2,12 @@
 
 @section('content')
     <header class="page-header">
+        <style type="text/css">
+            .multiselect-container{
+                z-index: 9999;
+            }
+
+        </style>
         <h2>Create Restaurant Location</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
@@ -37,9 +43,9 @@
             <li>
                 <a href="#block_dates" data-toggle="tab" class="text-center">Block Dates </a>
             </li>
-            <li>
-                <a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>
-            </li>
+            {{--<li>--}}
+                {{--<a href="#location_details" data-toggle="tab" class="text-center">Location Details</a>--}}
+            {{--</li>--}}
             <li>
                 <a href="#contact_details" data-toggle="tab" class="text-center">Contact Details</a>
             </li>
@@ -68,17 +74,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="attributes[short_description]" class="col-sm-3 control-label">Descriptive Title <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[short_description]',null,['rows'=>'5','class'=>'form-control','required'=>'']) !!}
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1">
+                            <label for="a_la_carte">Allow Alacarte Reservations </label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Location Info <span class="required">*</span></label>
-                    <div class="col-sm-6">
-                        {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
-                    </div>
-                </div>
+                @include('partials.forms.locations')
             </div>
             <div id="seo_details" class="tab-pane mt-lg">
                 <div class="form-group">
@@ -313,14 +316,6 @@
             </div>
             <div id="alacarte_tab" class="tab-pane mt-lg">
                 <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <div class="checkbox-custom checkbox-primary">
-                            <input type="checkbox" name="a_la_carte" id="a_la_carte" value="1">
-                            <label for="a_la_carte">Allow Alacarte Reservations </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="attributes[commission_per_cover]" class="col-sm-3 control-label">Commission per Cover <span class="required">*</span></label>
                     <div class="col-sm-6">
                         {!! Form::text('attributes[commission_per_cover]',null,['class'=>'form-control','required'=>'']) !!}
@@ -335,13 +330,13 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Price Indicator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing_level',['Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control','data-plugin-selectTwo'=>'']) !!}
+                        {!! Form::select('pricing_level',['0'=>'Select','Low'=>'Low','Medium'=>'Medium','High'=>'High'],null,['class'=>'form-control','id'=>'restaurantPriceIndicator']) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="cuisines" class="col-sm-3 control-label">Cuisines </label>
                     <div class="col-sm-6">
-                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
+                        {!! Form::select('attributes[cuisines][]',$cuisines,null,['class'=>'form-control populate restaurantCuisines','data-plugin-selectTwo'=>'','multiple'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -353,15 +348,29 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags </label>
                     <div class="col-sm-6">
-                        {{--{!! Form::select('attributes[flags]',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'']) !!}--}}
-                        {!! Form::text('attributes[flags]',null,['class'=>'form-control populate flags-select-box flagsList']) !!}
+                        <?php //$a = array_unshift($flags_list,'Select'); ?>
+                            <select name="attributes[flags]" class='form-control populate' id='restaurantsFlags'>
+                                <option value="0">Select</option>
+                                <?php foreach($flags_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('attributes[flags]',$flags_list,null,['class'=>'form-control populate','id'=>'restaurantsFlags']) !!}--}}
+                        {{--{!! Form::text('attributes[flags]',null,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
-                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate curatorsList','data-plugin-selectTwo'=>'']) !!}--}}
-                        {!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}
+                        <?php //$a = array_unshift($curator_list,'Select'); ?>
+                            <select name="curators" class='form-control populate' id='restaurantsGuestCurator'>
+                                <option value="0">Select</option>
+                                <?php foreach($curator_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','id'=>'restaurantsGuestCurator']) !!}--}}
+                        {{--{!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -391,6 +400,18 @@
                 </div>
                 ------->
                 <div class="form-group">
+                    <label for="attributes[short_description]" class="col-sm-3 control-label">Short Description <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[short_description]',null,['rows'=>'5','class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[restaurant_info]" class="col-sm-3 control-label">Location Info <span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        {!! Form::textarea('attributes[restaurant_info]',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="attributes[menu_picks]" class="col-sm-3 control-label">Menu Picks </label>
                     <div class="col-sm-6">
                         {!! Form::textarea('attributes[menu_picks]',null,['class'=>'form-control redactor-text','required'=>'']) !!}
@@ -409,9 +430,9 @@
                     </div>
                 </div>
             </div>
-            <div id="location_details" class="tab-pane mt-lg">
-                @include('partials.forms.locations')
-            </div>
+            {{--<div id="location_details" class="tab-pane mt-lg">--}}
+                {{--@include('partials.forms.locations')--}}
+            {{--</div>--}}
             <div id="contact_details" class="tab-pane mt-lg">
                 <section class="panel">
                     <header class="panel-heading">

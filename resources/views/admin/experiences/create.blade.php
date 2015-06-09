@@ -2,6 +2,12 @@
 
 @section('content')
     <header class="page-header">
+        <style type="text/css">
+            .multiselect-container{
+                z-index: 9999;
+            }
+
+        </style>
         <h2>Create Experience</h2>
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
@@ -165,13 +171,22 @@
                 <div class="form-group">
                     <label for="pricing[price_types]" class="col-sm-3 control-label">Price Types<span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing[price_types]',$price_type_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        <?php //$a = array_unshift($price_type_list,'Select'); ?>
+
+                        <select name="pricing[price_types]" class='form-control populate' id='experiencePriceTypes'>
+                            <option value="0">Select</option>
+                            <?php foreach($price_type_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                            <?php } ?>
+                        </select>
+
+                        {{--{!! Form::select('pricing[price_types]',$price_type_list,null,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="pricing[taxes]" class="col-sm-3 control-label">Taxes<span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing[taxes]',[''=>'Select Value','Inclusive-Taxes'=>'Inclusive-Taxes','Exclusive-Taxes'=>'Exclusive-Taxes'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('pricing[taxes]',[''=>'Select Value','Taxes Applicable'=>'Taxes Applicable','Inclusive of Taxes'=>'Inclusive of Taxes'],null,['class'=>'form-control populate','id'=>'experienceTaxes','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -183,7 +198,7 @@
                 <div class="form-group">
                     <label for="pricing[commission_on]" class="col-sm-3 control-label">Commission On <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('pricing[commission_on]',[''=>'Select Value','Pre-Tax'=>'Pre-Tax','Post-Tax'=>'Post-Tax'],null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+                        {!! Form::select('pricing[commission_on]',[''=>'Select Value','Pre-Tax'=>'Pre-Tax','Post-Tax'=>'Post-Tax'],null,['class'=>'form-control populate','id'=>'experienceCommissionOn','required'=>'']) !!}
                     </div>
                 </div>
             </div>
@@ -288,11 +303,11 @@
                     <div class="form-group">
                         <label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
                         <div class="col-sm-8">
-                            {!! Form::textarea('attributes[menu]',null,['rows'=>'30','class'=>'form-control','required'=>'','id'=>'expMenu']) !!}
+                            {!! Form::textarea('attributes[menu]',null,['class'=>'form-control','required'=>'','id'=>'expMenu']) !!}
                         </div>
                     </div>
                 </div>
-                {!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}
+                {!! Form::textarea('attributes[menu_markdown]','',['class'=>'form-control','readonly'=>'readonly','id'=>'expMarkdownMenu']) !!}
             </div>
             <div id="miscellaneous_tab" class="tab-pane mt-lg">
                 <div class="form-group">
@@ -316,8 +331,15 @@
                 <div class="form-group">
                     <label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {{--{!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
-                        {!! Form::text('flags',null,['class'=>'form-control populate flags-select-box flagsList']) !!}
+                        <?php //$a = array_unshift($flags_list,'Select'); ?>
+                            <select name="flags" class='form-control populate' id='experienceFlags'>
+                                <option value="0">Select</option>
+                                <?php foreach($flags_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('flags',$flags_list,null,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}--}}
+                        {{--{!! Form::text('flags',null,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -329,8 +351,15 @@
                 <div class="form-group">
                     <label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
-                        {!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}
+                        <?php //$a = array_unshift($curator_list,'Select'); ?>
+                            <select name="curators" class='form-control populate' id='experienceCurators'>
+                                <option value="0">Select</option>
+                                <?php foreach($curator_list as $key => $value){ ?>
+                                <option value="<?php echo $key?>"><?php echo $value?></option>
+                                <?php } ?>
+                            </select>
+                        {{--{!! Form::select('curators',$curator_list,null,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}--}}
+                        {{--{!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
                 <div class="form-group">

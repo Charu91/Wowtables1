@@ -37,7 +37,7 @@ class SimpleExperience extends Experience {
                 }
             }
 
-            if(!empty($data['media'])){
+            if(!empty($data['media']) && !empty($data['media']['listing_image']) && (!empty($data['media']['gallery_images']) && $data['media']['gallery_images'][0] != "") && !empty($data['media']['mobile'])){
                 $mediaSaved = $this->saveMedia($experienceId, $data['media']);
 
                 if($mediaSaved['status'] !== 'success'){
@@ -159,26 +159,25 @@ class SimpleExperience extends Experience {
         $mobile_listing_images = $data['media']['mobile'];
 
         if(empty($listing_image)){
-            $listing_image_array = $data['old_media']['listing_image'];
+            $listing_image_array = (isset($data['old_media']['listing_image']) && $data['old_media']['listing_image'] != "" ? $data['old_media']['listing_image'] : '' );
         }else{
             $listing_image_array = $data['media']['listing_image'];
         }
 
         if($gallery_images[0] == ""){
-            $gallery_image_array = $data['old_media']['gallery_images'];
+            $gallery_image_array = (isset($data['old_media']['gallery_images']) && $data['old_media']['gallery_images'] != "" ? $data['old_media']['gallery_images'] : '' );
         }else{
             $gallery_image_array = $data['media']['gallery_images'];
         }
         if(empty($mobile_listing_images)){
-            $mobile_listing_image_array = $data['old_media']['mobile'];
+            $mobile_listing_image_array = (isset($data['old_media']['mobile']) && $data['old_media']['mobile'] != "" ? $data['old_media']['mobile'] : '' );
         }else{
             $mobile_listing_image_array = $data['media']['mobile'];
         }
 
         $new_media['media'] = ['listing_image'=>$listing_image_array,'gallery_images'=>$gallery_image_array,'mobile'=>$mobile_listing_image_array];
         //echo "<pre>"; print_r($new_media['media']); die;
-
-        if(!empty($new_media['media'])){
+        if(!empty($new_media['media']) && !empty($new_media['media']['listing_image']) && (!empty($new_media['media']['gallery_images']) && $new_media['media']['gallery_images'][0] != "") && !empty($new_media['media']['mobile'])){
             $mediaSaved = $this->saveMedia($experienceId, $new_media['media']);
 
             if($mediaSaved['status'] !== 'success'){

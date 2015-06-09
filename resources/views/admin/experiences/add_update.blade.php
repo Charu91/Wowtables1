@@ -2,6 +2,12 @@
 
 @section('content')
 	<header class="page-header">
+		<style type="text/css">
+			.multiselect-container{
+				z-index: 9999;
+			}
+
+		</style>
 		<h2>Create Experience</h2>
 		<div class="right-wrapper pull-right">
 			<ol class="breadcrumbs">
@@ -68,25 +74,29 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[experience_info]">Experience Info <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[experience_info]',$experience['attributes']['experience_info'],['rows'=>'10','class'=>'form-control','id'=>'experienceInfo','required'=>'']) !!}
+						<?php $experience_info = (isset($experience['attributes']['experience_info']) && $experience['attributes']['experience_info'] != "" ? $experience['attributes']['experience_info'] : ''); ?>
+						{!! Form::textarea('attributes[experience_info]',$experience_info,['rows'=>'10','class'=>'form-control','id'=>'experienceInfo','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[experience_includes]">Experience Includes <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[experience_includes]',$experience['attributes']['experience_includes'],['rows'=>'10','class'=>'form-control','id'=>'experienceIncludes','required'=>'']) !!}
+						<?php $experience_includes = (isset($experience['attributes']['experience_includes']) && $experience['attributes']['experience_includes'] != "" ? $experience['attributes']['experience_includes'] : ''); ?>
+						{!! Form::textarea('attributes[experience_includes]',$experience_includes,['rows'=>'10','class'=>'form-control','id'=>'experienceIncludes','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[short_description]">Short Description <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[short_description]',$experience['attributes']['short_description'],['class'=>'form-control','rows'=>'3','required'=>'']) !!}
+						<?php $experience_short_description = (isset($experience['attributes']['short_description']) && $experience['attributes']['short_description'] != "" ? $experience['attributes']['short_description'] : ''); ?>
+						{!! Form::textarea('attributes[short_description]',$experience_short_description,['class'=>'form-control','rows'=>'3','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[terms_and_conditions]">Terms & Conditions <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[terms_and_conditions]',$experience['attributes']['terms_and_conditions'],['rows'=>'5','class'=>'form-control','id'=>'terms_conditions','required'=>'']) !!}
+						<?php $experience_terms_and_conditions = (isset($experience['attributes']['terms_and_conditions']) && $experience['attributes']['terms_and_conditions'] != "" ? $experience['attributes']['terms_and_conditions'] : ''); ?>
+						{!! Form::textarea('attributes[terms_and_conditions]',$experience_terms_and_conditions,['rows'=>'5','class'=>'form-control','id'=>'terms_conditions','required'=>'']) !!}
 					</div>
 				</div>
 			</div>
@@ -95,20 +105,23 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[seo_title]">SEO Title <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('attributes[seo_title]',$experience['attributes']['seo_title'],['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+						<?php $experience_seo_title = (isset($experience['attributes']['seo_title']) && $experience['attributes']['seo_title'] != "" ? $experience['attributes']['seo_title'] : ''); ?>
+						{!! Form::text('attributes[seo_title]',$experience_seo_title,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[seo_meta_description]">SEO Meta Description <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[seo_meta_desciption]',$experience['attributes']['seo_meta_desciption'],['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+						<?php $experience_seo_meta_desciption = (isset($experience['attributes']['seo_meta_desciption']) && $experience['attributes']['seo_meta_desciption'] != "" ? $experience['attributes']['seo_meta_desciption'] : ''); ?>
+						{!! Form::textarea('attributes[seo_meta_desciption]',$experience_seo_meta_desciption,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="attributes[seo_meta_keywords]">SEO Keywords <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('attributes[seo_meta_keywords]',$experience['attributes']['seo_meta_keywords'],['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
+						<?php $experience_seo_meta_keywords = (isset($experience['attributes']['seo_meta_keywords']) && $experience['attributes']['seo_meta_keywords'] != "" ? $experience['attributes']['seo_meta_keywords'] : ''); ?>
+						{!! Form::text('attributes[seo_meta_keywords]',$experience_seo_meta_keywords,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}
 					</div>
 				</div>
 
@@ -155,13 +168,15 @@
 				<div class="form-group">
 					<label for="attributes[reward_points_per_reservation]" class="col-sm-3 control-label">Reward Points per Reservation <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('attributes[reward_points_per_reservation]',$experience['attributes']['reward_points_per_reservation'],['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_rewards_points =  (isset($experience['attributes']['reward_points_per_reservation']) && $experience['attributes']['reward_points_per_reservation'] != "" ? $experience['attributes']['reward_points_per_reservation'] : '0'); ?>
+						{!! Form::text('attributes[reward_points_per_reservation]',$experience_rewards_points,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[price]" class="col-sm-3 control-label">Price <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('pricing[price]',$experiencePricing->price,['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_price =  (isset($experiencePricing->price) && $experiencePricing->price != "" ? $experiencePricing->price : '0'); ?>
+						{!! Form::text('pricing[price]',$experience_price,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<!--<div class="form-group">
@@ -173,37 +188,52 @@
 				<div class="form-group">
 					<label for="pricing[post_tax_price]" class="col-sm-3 control-label">Post Tax Price <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('pricing[post_tax_price]',$experiencePricing->post_tax_price,['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_post_tax_price = (isset($experiencePricing->post_tax_price) && $experiencePricing->post_tax_price != "" ? $experiencePricing->post_tax_price : '') ?>
+						{!! Form::text('pricing[post_tax_price]',$experience_post_tax_price,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[tax]" class="col-sm-3 control-label">Tax<span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('pricing[tax]',$experiencePricing->tax,['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_tax = (isset($experiencePricing->tax) && $experiencePricing->tax != "" ? $experiencePricing->tax : '') ?>
+						{!! Form::text('pricing[tax]',$experience_tax,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[price_types]" class="col-sm-3 control-label">Price Types<span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::select('pricing[price_types]',$price_type_list,$experiencePricing->price_type,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+						<?php $experience_price_type = (isset($experiencePricing->price_type) && $experiencePricing->price_type != "" ? $experiencePricing->price_type : '') ?>
+							<?php //echo $experience_price_type;//$a = array_unshift($price_type_list,'Select'); ?>
+							<select name="pricing[price_types]" class='form-control populate' id='experiencePriceTypes'>
+								<option value="0">Select</option>
+								<?php foreach($price_type_list as $key => $value){ ?>
+									<option <?php echo (($experience_price_type == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>">
+										<?php echo $value?>
+									</option>
+								<?php } ?>
+							</select>
+						{{--{!! Form::select('pricing[price_types]',$price_type_list,$experience_price_type,['class'=>'form-control populate','id'=>'experiencePriceTypes','required'=>'']) !!}--}}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[taxes]" class="col-sm-3 control-label">Taxes<span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::select('pricing[taxes]',[''=>'Select Value','Inclusive-Taxes'=>'Inclusive-Taxes','Exclusive-Taxes'=>'Exclusive-Taxes'],$experiencePricing->taxes,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+						<?php $experience_taxes = (isset($experiencePricing->taxes) && $experiencePricing->taxes != "" ? $experiencePricing->taxes : '') ?>
+						{!! Form::select('pricing[taxes]',[''=>'Select Value','Taxes Applicable'=>'Taxes Applicable','Inclusive of Taxes'=>'Inclusive of Taxes'],$experience_taxes,['class'=>'form-control populate','id'=>'experienceTaxes','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[commission]" class="col-sm-3 control-label">Commissions Per Cover<span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::text('pricing[commission]',$experiencePricing->commission,['class'=>'form-control','required'=>'']) !!}
+						<?php $experience_commission = (isset($experiencePricing->commission) && $experiencePricing->commission != "" ? $experiencePricing->commission : '') ?>
+						{!! Form::text('pricing[commission]',$experience_commission,['class'=>'form-control','required'=>'']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="pricing[commission_on]" class="col-sm-3 control-label">Commission On <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{!! Form::select('pricing[commission_on]',[''=>'Select Value','Pre-Tax'=>'Pre-Tax','Post-Tax'=>'Post-Tax'],$experiencePricing->commission_on,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
+						<?php $experience_commission_on = (isset($experiencePricing->commission_on) && $experiencePricing->commission_on != "" ? $experiencePricing->commission_on : '') ?>
+						{!! Form::select('pricing[commission_on]',[''=>'Select Value','Pre-Tax'=>'Pre-Tax','Post-Tax'=>'Post-Tax'],$experience_commission_on,['class'=>'form-control populate','id'=>'experienceCommissionOn','required'=>'']) !!}
 					</div>
 				</div>
 			</div>
@@ -346,17 +376,22 @@
 						<a id="expMenuBtn" data-target="#markdownmodal" data-toggle="modal" class="btn btn-primary">Create Experience Menu</a>
 					</div>
 				</div>
+				<hr/>
+				<h4>New Menu</h4>
 				<div id="experienceMenuHolder">
 					<div class="form-group">
 						<label for="attributes[menu]" class="col-sm-2 control-label">Experience Menu <span class="required">*</span></label>
 						<div class="col-sm-8">
-							{!! Form::textarea('attributes[menu]',null,['rows'=>'30','class'=>'form-control','id'=>'expMenu']) !!}
+							{!! Form::textarea('attributes[menu]',null,['class'=>'form-control','id'=>'expMenu']) !!}
 						</div>
 					</div>
 				</div>
-				{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}
+				{{--{!! Form::hidden('attributes[menu_markdown]','',['id'=>'expMarkdownMenu']) !!}--}}
+				{!! Form::textarea('attributes[menu_markdown]','',['class'=>'form-control','readonly'=>'readonly','id'=>'expMarkdownMenu']) !!}
 				<hr/>
-				{!! Form::textarea('attributes[old_menu_markdown]',$experience['attributes']['menu_markdown'],['class'=>'form-control','readonly'=>'readonly','id'=>'oldMarkdownSyntax']) !!}
+				<h4>Old Menu</h4>
+				<?php $experience_old_menu_markdown = (isset($experience['attributes']['menu_markdown']) && $experience['attributes']['menu_markdown'] != "" ? $experience['attributes']['menu_markdown'] : '') ?>
+				{!! Form::textarea('attributes[old_menu_markdown]',$experience_old_menu_markdown,['class'=>'form-control','readonly'=>'readonly','id'=>'oldMarkdownSyntax']) !!}
 				{!! Form::textarea('attributes[old_menu]',null,['class'=>'form-control','readonly'=>'readonly','id'=>'oldExpMenu']) !!}
 			</div>
 
@@ -364,36 +399,43 @@
 				<div class="form-group">
 					<label for="attributes[start_date]" class="col-sm-3 control-label">Start Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						{{! $set_start_date = (isset($experience['attributes']['start_date']) && $experience['attributes']['start_date'] !="" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') }}
+						<?php $set_start_date = (isset($experience['attributes']['start_date']) && $experience['attributes']['start_date'] != "-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') ?>
 						{!! Form::text('attributes[start_date]',$set_start_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[end_date]" class="col-sm-3 control-label">End Date <span class="required">*</span></label>
 					<div class="col-sm-2">
-						{{! $set_start_date = (isset($experience['attributes']['start_date']) && $experience['attributes']['start_date'] !="" ? date('Y-m-d', strtotime($experience['attributes']['start_date'])) : ' ') }}
-						{!! Form::text('attributes[end_date]',date('Y-m-d', strtotime($experience['attributes']['end_date'])),['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
+						<?php $set_end_date = (isset($experience['attributes']['end_date']) && $experience['attributes']['end_date'] !="-0001-11-30 00:00:00" ? date('Y-m-d', strtotime($experience['attributes']['end_date'])) : ' ') ?>
+						{!! Form::text('attributes[end_date]',$set_end_date,['class'=>'form-control addDatepicker','placeholder'=>'Select Start Date']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[cuisine][]" class="col-sm-3 control-label">Cuisines <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_cuisines = (isset($experience['attributes']['cuisines']) && $experience['attributes']['cuisines'] !="" ? $experience['attributes']['cuisines'] : ' ') }}
+						<?php $set_cuisines = (isset($experience['attributes']['cuisines']) && $experience['attributes']['cuisines'] !="" ? $experience['attributes']['cuisines'] : ' ') ?>
 						{!! Form::select('attributes[cuisines][]',$cuisines,$set_cuisines,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="flags" class="col-sm-3 control-label">Flags <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_flags = (isset($experienceFlags->flag_id) && $experienceFlags->flag_id !="" ? $experienceFlags->flag_id : ' ')}}
-						{{--{!! Form::select('flags',$flags_list,$experienceFlags->flag_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
-						{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}
+						<?php $set_flags = (isset($experienceFlags->flag_id) && $experienceFlags->flag_id !="" ? $experienceFlags->flag_id : ' ') ?>
+						<?php //$a = array_unshift($flags_list,'Select'); ?>
+							<select name="flags" class='form-control populate' id='experienceFlags'>
+								<option value="0">Select</option>
+								<?php foreach($flags_list as $key => $value){ ?>
+								<option <?php echo (($set_flags == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+								<?php } ?>
+							</select>
+						{{--{!! Form::select('flags',$flags_list,$set_flags,['class'=>'form-control populate','id'=>'experienceFlags','required'=>'']) !!}--}}
+						{{--{!! Form::text('attributes[flags]',$set_flags,['class'=>'form-control populate flags-select-box flagsList']) !!}--}}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="tags" class="col-sm-3 control-label">Tags <span class="required">*</span></label>
 					<div class="col-sm-6">
-						{{! $set_tags = (isset($experienceTags->tag_id) && $experienceTags->tag_id !="" ? $experienceTags->tag_id : ' ')}}
+						<?php $set_tags = (isset($experienceTags->tag_id) && $experienceTags->tag_id !="" ? $experienceTags->tag_id : ' ') ?>
 						{!! Form::select('tags[]',$tags_list,$set_tags,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
 					</div>
 				</div>
@@ -401,14 +443,23 @@
 					<label for="curator" class="col-sm-3 control-label">Guest Curator <span class="required">*</span></label>
 					<div class="col-sm-6">
 						{{--{!! Form::select('curators',$curator_list,$experienceCurator->curator_id,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}--}}
-						{{! $set_curators = (isset($experienceCurator->curator_id) && $experienceCurator->curator_id !="" ? $experienceCurator->curator_id : ' ')}}
-						{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}
+						<?php $set_curators = (isset($experienceCurator->curator_id) && $experienceCurator->curator_id !="" ? $experienceCurator->curator_id : ' ') ?>
+						<?php //$a = array_unshift($curator_list,'Select'); ?>
+						<select name="curators" class='form-control populate' id='experienceCurators'>
+							<option value="0">Select</option>
+							<?php foreach($curator_list as $key => $value){ ?>
+							<option <?php echo (($set_curators == $key) ? 'Selected = "Selected"' : '');?> value="<?php echo $key?>"><?php echo $value?></option>
+							<?php } ?>
+						</select>
+						{{--{!! Form::select('curators',$curator_list,$set_curators,['class'=>'form-control populate','id'=>'experienceCurators','required'=>'']) !!}--}}
+						{{--{!! Form::text('curators',$set_curators,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="attributes[curator_tip]" class="col-sm-3 control-label">Curator Tips </label>
 					<div class="col-sm-6">
-						{!! Form::textarea('attributes[curator_tip]',$experience['attributes']['curator_tip'],['class'=>'form-control redactor-text','required'=>'']) !!}
+						<?php $experience_curator_tip = (isset($experience['attributes']['curator_tip']) && $experience['attributes']['curator_tip'] != "" ? $experience['attributes']['curator_tip'] : '') ?>
+						{!! Form::textarea('attributes[curator_tip]',$experience_curator_tip,['class'=>'form-control redactor-text','required'=>'']) !!}
 					</div>
 				</div>
 			</div>

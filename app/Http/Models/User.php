@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
 use Rhumsaa\Uuid\Uuid;
 use Illuminate\Contracts\Hashing\Hasher;
+use Hash;
 
 /**
  * Class User
@@ -521,18 +522,47 @@ class User {
         }
     }
 
-    public function mobileLogin(array $data)
-    {
+    /**
+     *
+     */
+    public function mobileLogin(array $data) { 
+
+      $validUserFlag = FALSE;
+
         DB::beginTransaction();
 
         $user = DB::table('users')
-                        ->select('password', 'id', 'location_id', 'phone_number','full_name')
+                        ->select('password', 'old_password', 'id', 'location_id', 'phone_number','full_name', 'role_id', 'fb_token', 'type')
                         ->where('email', $data['email'])
                         ->first();
+        if($user) {
+          if($user->type == "old_site" && empty($user->password) && $user->old_password == md5($data['password']) ) {
+               
+                //Updating old password to new password
+                $password = Hash::make($data['password']);              
+                $query = DB::table('users')
+                              ->where('id', $user->id)
+                              ->update(['password' => $password,
+                                        'updated_at' => date('Y-m-d H:i:s')
+                                        ]);
+                $validUserFlag = TRUE;                
+            }
+            else if($this->hasher->check($data['password'], $user->password)){
+              $validUserFlag = TRUE;                
+            }
+            else {
+                DB::rollBack();
+                return [
+                    'code' => 227,
+                    'data' => [
+                        'action' => 'Check if the email address and password match',
+                        'message' => 'There is an email password mismatch. Please check an try again'
+                    ]
+                ];
+            }
 
-        if ($user) {
-            if($this->hasher->check($data['password'], $user->password)){
-
+            if($validUserFlag) {
+                //create the token for the user
                 $access_token = Uuid::uuid1()->toString();
                 $access_token_expiry = time() + (360 * 24 * 60 * 60);
 
@@ -607,17 +637,10 @@ class User {
 
                     ];
                 }
-            }else{
-                DB::rollBack();
-                return [
-                    'code' => 227,
-                    'data' => [
-                        'action' => 'Check if the email address and password match',
-                        'message' => 'There is an email password mismatch. Please check an try again'
-                    ]
-                ];
             }
-        } else {
+        }
+       
+        else {
             DB::rollBack();
             return [
                 'code' => 226,
@@ -1084,4 +1107,5 @@ class User {
         $rewards = DB::table('rewards_details')->where('user_id', $id);
         return $rewards->get();
     }
+              
 }

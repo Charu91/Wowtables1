@@ -50,8 +50,7 @@ class UpdateRestaurantLocationRequest extends Request {
         //$rules['a_la_carte'] = 'boolean';
         $rules['status'] = 'required|in:Active,Inactive';
 
-
-        if($this->has('status') && $this->get('status') === 'Active'){
+        if(($this->has('status') && $this->get('status') === 'Active') && ($this->has('a_la_carte') && $this->get('a_la_carte') === '1')){
             $rules['pricing_level'] = 'required|in:Low,Medium,High';
             $rules['attributes.restaurant_info'] = 'required';
             $rules['attributes.short_description'] = '';
@@ -76,14 +75,42 @@ class UpdateRestaurantLocationRequest extends Request {
             $rules['address.pin_code'] = 'required';
             $rules['address.latitude'] = 'required|numeric';
             $rules['address.longitude'] = 'required|numeric';
+        }
+
+
+        //if($this->has('status') && $this->get('status') === 'Active'){
+            /*$rules['pricing_level'] = 'required|in:Low,Medium,High';
+            $rules['attributes.restaurant_info'] = 'required';
+            $rules['attributes.short_description'] = '';
+            $rules['attributes.terms_and_conditions'] = 'required';
+            $rules['attributes.menu_picks'] = 'required';
+            $rules['attributes.expert_tips'] = 'required';
+            $rules['attributes.seo_title'] = 'required';
+            $rules['attributes.seo_meta_description'] = 'required';
+            $rules['attributes.seo_meta_keywords'] = 'required';
+            $rules['location_attributes.min_people_per_reservation'] = 'required|integer';
+            $rules['location_attributes.max_people_per_reservation'] = 'required|integer';
+            $rules['location_attributes.min_people_increments_per_reservation'] = 'required|integer';
+            $rules['location_attributes.max_reservations_per_day'] = 'required|integer';
+            $rules['location_attributes.max_reservations_per_time_slot'] = 'integer';
+            $rules['location_attributes.minimum_reservation_time_buffer'] = 'integer';
+            $rules['location_attributes.maximum_reservation_time_buffer'] = 'integer';
+            $rules['attributes.commission_per_cover'] = 'required|numeric';
+            $rules['attributes.allow_gift_card_redemptions'] = 'boolean';
+            $rules['attributes.reward_points_per_reservation'] = 'required|integer';
+            $rules['attributes.cuisines'] = 'vendorcuisinesarray';
+            $rules['address.address'] = 'required';
+            $rules['address.pin_code'] = 'required';
+            $rules['address.latitude'] = 'required|numeric';
+            $rules['address.longitude'] = 'required|numeric';*/
 
             //$rules['schedules'] = 'required|array';
 
             //$rules['media.listing_image'] = 'required|exists:media,id';
             //$rules['media.gallery_images'] = 'required|galleryarray';
 
-        }else{
-            $rules['pricing_level'] = 'in:Low,Medium,High';
+        //}else{
+            /*$rules['pricing_level'] = 'in:Low,Medium,High';
             $rules['attributes.seo_meta_keywords'] = 'required';
             $rules['location_attributes.min_people_per_reservation'] = 'integer';
             $rules['location_attributes.max_people_per_reservation'] = 'integer';
@@ -96,13 +123,13 @@ class UpdateRestaurantLocationRequest extends Request {
             $rules['attributes.reward_points_per_reservation'] = 'integer';
             $rules['attributes.cuisines'] = 'vendorcuisinesarray';
             $rules['address.latitude'] = 'numeric';
-            $rules['address.longitude'] = 'numeric';
+            $rules['address.longitude'] = 'numeric';*/
 
             //$rules['schedules'] = 'array';
 
             //$rules['media.listing_image'] = 'exists:media,id';
             //$rules['media.gallery_images'] = 'galleryarray';
-        }
+        //}
 
         /*if($this->has('schedules') && is_array($this->get('schedules'))){
             $schedule_ids = DB::table('schedules')->lists('id');
