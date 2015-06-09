@@ -445,9 +445,10 @@
                 <div class="panel-heading">
                   <h4 class="panel-title">
                     <a href="javascript:" style="text-decoration: none;">
-                      Select Time
+                      Select Time 
                     </a>
-                    <strong><a id="ac_time_edit2" class="<?=($hasOrder) ? '' : 'hidden';?>" data-toggle="collapse" data-parent="#ac_accordion" href="#ac_collapseThree" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder) ? $order['time'] : ''; ?></span> EDIT</a></strong>
+                    <strong>
+                      <a id="ac_time_edit2" class="<?=($hasOrder) ? '' : 'hidden';?>" data-toggle="collapse" data-parent="#ac_accordion" href="#ac_collapseThree" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color: #fff;"><?=($hasOrder) ? $order['time'] : ''; ?></span> EDIT</a></strong>
                   </h4>
                 </div>
                 <div id="ac_collapseThree" class="panel-collapse collapse">
@@ -980,7 +981,7 @@
                     /*Time display container*/
                       var location_id = $('#ac_locations2').val();
                       var schedule = allschedule[location_id];
-                      //console.log(schedule);
+                      console.log(location_id);
                       if(schedule != undefined)
                       {
                         for(key_sch in schedule[datestrInNewFormat])

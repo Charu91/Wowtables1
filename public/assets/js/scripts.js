@@ -395,27 +395,14 @@ $(document).ready(function() {
     $("#cancel_current").click(function(e) {
         e.preventDefault();
         $(".cancel_loader").show();
-        if ($("#reserv_type").val() == "alacarte") {
-            $.ajax({
-                url: "/orders/ac_cancel_reservation",
-                type: "post",
-                data: {
-                    reserv_id: reserv
-                },
-                success: function(e) {
-                    if (e == 1) {
-                        $(".cancel_reserv_form").addClass("hide");
-                        $(".cancel_reserv_confirmation").removeClass("hide");
-                        $(".cancel_loader").hide()
-                    }
-                }
-            })
-        } else {
+         var reserv_typee = $('#reserv_typee').val();
+         
             $.ajax({
                 url: "/orders/cancel_reservation",
                 type: "post",
                 data: {
-                    reserv_id: reserv
+                    reserv_id:   reserv,
+                    reserv_type: reserv_typee 
                 },
                 success: function(e) {
                     if (e == 1) {
@@ -425,7 +412,6 @@ $(document).ready(function() {
                     }
                 }
             })
-        }
     });
     var dtp = "";
     $("#myres_div #change_reservation").click(function() {
@@ -437,6 +423,11 @@ $(document).ready(function() {
         var bd_time = new Array;
         var bd_time_end = new Array;
         res_id = $(this).parent().next().next().val();
+       // alert(res_id);
+        var vendor_id = $(this).attr('href');
+        $('#vendor_id').val(vendor_id);
+        //alert(vendor_id);
+        //alert(res_id);
         var now = new Date($("#now").val());
         cur_day = now.getDate();
         cur_month = now.getMonth() + 1;
@@ -448,9 +439,37 @@ $(document).ready(function() {
         var g = 1;
         $.ajax({
             type: "GET",
-            dataType: "json",
+           dataType: "json",
             url: "/users/get_reservetion/" + res_id,
             success: function(data) {
+                
+                $('#party_edit1').show();
+               var prev_reserv_date = data["convert_date"];
+               var reservation_time = data["convert_time"];
+               var no_of_persons    = data["no_of_persons"];
+               var last_reservation_date = data["last_reservation_date"];
+               var last_reservation_time = data["last_reservation_time"];
+               $('#myselect_person').text(no_of_persons);
+               $('#myselect_date').text(prev_reserv_date);
+               $('#myselect_time').text(reservation_time);
+               $('#res_id').val(res_id);
+               $('#last_reserv_date').val(last_reservation_date);
+               $('#last_reserv_time').val(last_reservation_time);
+
+               $.ajax({
+                  url: "/users/party_sizeajax",
+                  type: "post",
+                  data: {
+                     
+                      vendor_id: vendor_id
+                  },
+                  success: function(e) {
+                     console.log(e);
+                     $('#party_size1').html(e);
+                  }
+               });
+                /*
+                
                 if (data.block_dates.length > 0) {
                     $.each(data.block_dates, function(e, t) {
                         var n = t["block_time"].split("-");
@@ -709,7 +728,7 @@ $(document).ready(function() {
                     $("#date_edit").removeClass("hidden");
                     $("#party_edit").removeClass("hidden");
                     $("#location_edit").removeClass("hidden")
-                })
+                })*/
             }
         })
     });
@@ -962,9 +981,9 @@ $(document).ready(function() {
         if (outlet == "") {
             outlet = $("input[name=address_keyword]").val()
         }
-        party_size = $("#party_edit span").text();
-        edit_date = $("#changed_date").val();
-        edit_time = $("#time_edit span").text();
+        party_size = $("#myselect_person").text();
+        edit_date = $("#myselect_date").text();
+        edit_time = $("#myselect_time").text();
         alcohol = $("#alcoholedit").val();
         non_veg = $("#nonveg").val();
         last_reserv_date = $("#last_reserv_date").val();
@@ -978,7 +997,7 @@ $(document).ready(function() {
             $("#save_changes").addClass("hidden")
         } else {
             $(".change_loader").show();
-            if ($("#reserv_type").val() == "alacarte") {
+            /*if ($("#reserv_type").val() == "alacarte") {
                 $.ajax({
                     url: "/orders/ac_edit_reservetion",
                     type: "post",
@@ -1004,7 +1023,7 @@ $(document).ready(function() {
                         }
                     }
                 })
-            } else {
+            } else {*/
                 $.ajax({
                     url: "/orders/edit_reservetion",
                     type: "post",
@@ -1024,13 +1043,14 @@ $(document).ready(function() {
                     },
                     success: function(e) {
                         if (e == 1) {
+                            $("#reserv_table").css("display", "none");
                             $(".change_reserv_form").addClass("hide");
                             $(".change_reserv_confirmation").removeClass("hide");
                             $(".change_loader").hide()
                         }
                     }
                 })
-            }
+            //}
         }
     });
     $(".close_modal").click(function() {
@@ -1263,10 +1283,13 @@ $(document).ready(function() {
         }
     });
     $(document).on("click", ".time", function() {
+
         $("#hours").find(".time_active").removeClass("time_active");
         $(this).addClass("time_active");
         $("#time_edit span").text($(this).text());
         $("#booking_time").val($(this).text());
+        var mybookTime = $("#booking_time").val(); //kailash
+        $('#myselect_time').text(mybookTime);  //kailash
         $("#time_edit").removeClass("hidden");
         timehide = 1;
         $("#time_edit").click();
