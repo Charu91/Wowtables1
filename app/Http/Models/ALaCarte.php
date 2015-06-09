@@ -388,9 +388,17 @@ use Config;
 																 )
 											);
 			}
-			$data['alacarteCount']=count($data['data']['alacarte']);
-			$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-			$data['experienceCount']=count($data['data']['experience']);
+			if(array_key_exists('data', $data)) { 
+				$data['alacarteCount']=count($data['data']['alacarte']);
+				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
+				$data['experienceCount']=count($data['data']['experience']);
+			} else {
+				$data['data']['alacarte'] = array();
+				$data['alacarteCount'] = 0;
+				$data['data']['experience'] = array();
+				$data['experienceCount'] = 0;
+				$data['no_result_msg'] = 'No matching result found.';
+			}
 		}
 		else {
 				$data['data']['alacarte'] = array();
