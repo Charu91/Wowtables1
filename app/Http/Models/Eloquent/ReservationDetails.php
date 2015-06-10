@@ -263,6 +263,8 @@ class ReservationDetails extends Model {
 			$reservation = Self::find($reservationID);
 			$reservation->reservation_status = 'cancel';
 			$reservation->save();
+
+			$cancelReward = self::cancelRewardPoint( $reservationID );
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
@@ -937,6 +939,39 @@ class ReservationDetails extends Model {
 															'deleted_at' 		=> date('Y-m-d H:i:s')																
 														 ]);								
 		return $storeRewardPointStatus;
+  	}
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Decrement the reservation count at every cancellation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function decrementReservationCount( $reservationID ) { 
+
+  	}
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Remove reward point for every reservation cancellation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function cancelRewardPoint( $reservationID ) {
+
+  		$rewardID = DB::table('reward_points_earned')
+  								->where('reservation_id', $reservationID)
+  								->select('id')
+  								->first();
+
+  		$rewardCancelStatus = DB::table('reward_points_earned')
+  									->where('id', $rewardID->id)
+            						->update(['status' => 'cancelled']);
+        return $rewardCancelStatus;
   	}
 }
 //end of class Reservation
