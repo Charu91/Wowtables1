@@ -7,7 +7,7 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 /**
  * Model class Profile
  *
- * @package WowTables\Http\Models
+ * @package WowTables
  */
 class Profile {
 
@@ -49,6 +49,7 @@ class Profile {
                                                                                          })
                                         ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
                                         ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
+                                        ->leftjoin('user_attributes as ua4', 'ua4.id','=','uad.user_attribute_id')
                                         ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
                                         //->where('u.id',$userID)
                                         ->where('ud.access_token',$token)                                        
@@ -57,7 +58,8 @@ class Profile {
                                                 DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
                                                 DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),
                                                 DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
-                                               DB::raw('date(uad.attribute_value) as dob'))
+                                                DB::raw('MAX(IF(ua4.alias = "date_of_birth", date(uad.attribute_value), 0)) AS dob'),
+                                                DB::raw('MAX(IF(ua4.alias = "anniversary_date", date(uad.attribute_value), 0)) AS anniversary_date'))
                                         ->groupby('u.id')
                                         ->first();
                                        
@@ -92,6 +94,7 @@ class Profile {
                                             'points_remaining' => $queryProfileResult->points_earned - $queryProfileResult->points_spent,
                                             'bookings_made' => $queryProfileResult->bookings_made,
                                             'dob' => $queryProfileResult->dob,
+                                            'anniversary_date' => $queryProfileResult->anniversary_date,
                                             'selectedPreferences' => $preferredLocations['data'],
                                             'areas' => $cityAreas['data'],
                                             'last_reservation_date' => (empty($lastReservationDetail->reservation_date)) ? "" : $lastReservationDetail->reservation_date,
@@ -182,24 +185,59 @@ class Profile {
                 $arrAttribute[$row->alias] = $row->id;
             }
 
+            $dobID = DB::table('user_attributes_date')
+                                ->where('user_id', 53)
+                                ->whereIn('user_attribute_id', array($arrAttribute['date_of_birth'], $arrAttribute['anniversary_date']))
+                                ->select('id', 'user_attribute_id')
+                                ->get();
 
-            $dobUpdate = DB::table('user_attributes_date')
-                        		->where('user_id', $userID->user_id)
-                        		->where('user_attribute_id',$arrAttribute['date_of_birth'])
-                        		->update(array('attribute_value' => $data['dob']));
-			
-			if(!$dobUpdate) {
-				//adding data to the table
-				DB::table('user_attributes_date')
-						->insert(array(
-							'user_id'           => $userID->user_id,
-							'user_attribute_id' => $arrAttribute['date_of_birth'],
-							'attribute_value'   => $data['dob'],
-							'created_at'        => date('Y-m-d H:i:s'),
-							'updated_at'        => date('Y-m-d H:i:s')
-						));
-			}
+            $updateDOBFlag = FALSE;
+            $updateAnniversary = FALSE;
 
+
+            foreach($dobID as $row ) {              
+                if ( $row->user_attribute_id == $arrAttribute['date_of_birth'] ) {
+
+                    $dobUpdate = DB::table('user_attributes_date')
+                                    ->where('id', $row->id)                               
+                                    ->update(['attribute_value' => $data['dob']]); 
+                    $updateDOBFlag = TRUE;             
+
+                }
+                else if ( $row->user_attribute_id == $arrAttribute['anniversary_date'] && array_key_exists('anniversary_date', $data)) {
+
+                    $anniversaryDate = DB::table('user_attributes_date')
+                                                ->where('id', $row->id)                                                
+                                                ->update(['attribute_value' => $data['anniversary_date']]);
+                    $updateAnniversary = TRUE;
+
+                }
+            }
+           
+            if(!$updateDOBFlag) {
+                        //adding data to the table
+                        DB::table('user_attributes_date')
+                                ->insert(array(
+                                    'user_id'           => $userID->user_id,
+                                    'user_attribute_id' => $arrAttribute['date_of_birth'],
+                                    'attribute_value'   => $data['dob'],
+                                    'created_at'        => date('Y-m-d H:i:s'),
+                                    'updated_at'        => date('Y-m-d H:i:s')
+                                ));
+                    }
+
+            if(!$updateAnniversary && array_key_exists('anniversary_date', $data)) {
+                        //adding data to the table
+                        DB::table('user_attributes_date')
+                                ->insert(array(
+                                    'user_id'           => $userID->user_id,
+                                    'user_attribute_id' => $arrAttribute['anniversary_date'],
+                                    'attribute_value'   => $data['anniversary_date'],
+                                    'created_at'        => date('Y-m-d H:i:s'),
+                                    'updated_at'        => date('Y-m-d H:i:s')
+                                ));
+                    }
+                    
 
             $queryGenderValue = DB::table('user_attributes_select_options')
                                             -> select('id','option')
