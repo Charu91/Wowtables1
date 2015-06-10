@@ -211,14 +211,15 @@ $(document).ready(function(){
         data: localitiesList
     });
 
-    $("#experience_name").on('blur',function(){
+    $("#experience_seo_details_tab").click(function(){
         console.log("called");
-        var v = $(this).val();
+        var v = $("#experience_name").val();
+        var seo_title = 'WowTables: '+v;
+        var seo_desc = 'Reserve '+v+'. Exclusive curated set menus for fine dining. Find information, address, maps, photos, menu and reviews';
 
         if(v != ""){
-            $("#experience_seo_title").val(v);
-            $("#seo_meta_desciption").val(v);
-            $(".seo_meta_keywords").val(v);
+            $("#experience_seo_title").val(seo_title);
+            $("#seo_meta_desciption").val(seo_desc);
         }
     });
 
@@ -244,8 +245,9 @@ $(document).ready(function(){
                 var data = jQuery.parseJSON(response);
                 if(rest_name != "" && location_name != "" && cuisine != "" && data.ancestor_name != ""){
                     //console.log("if not null , "+rest_name+' , '+data.ancestor_name+" , "+location_name+" , "+cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
-                    $("#restaurant_seo_title").val(rest_name+' , '+data.ancestor_name+" , "+location_name);
-                    $("#seo_meta_description").val(cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
+                    $("#restaurant_seo_title").val('WowTables: '+rest_name+' , '+location_name+" , "+data.ancestor_name);
+                    //$("#seo_meta_description").val(cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
+                    $("#seo_meta_description").val("Reserve a table at "+rest_name+". Enjoy "+cusines_array[0]+" cuisine in "+location_name+" , "+data.ancestor_name+". Find information, curator's suggestions, maps, address, photos and reviews");
                 } else {
                     //console.log("if null");
                     $("#restaurant_seo_title").val('');
