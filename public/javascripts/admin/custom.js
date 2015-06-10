@@ -247,7 +247,7 @@ $(document).ready(function(){
                     //console.log("if not null , "+rest_name+' , '+data.ancestor_name+" , "+location_name+" , "+cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
                     $("#restaurant_seo_title").val('WowTables: '+rest_name+', '+location_name+", "+data.ancestor_name);
                     //$("#seo_meta_description").val(cusines_array[0]+' cuisine in '+data.ancestor_name+' , '+location_name);
-                    $("#seo_meta_description").val("Reserve a table at "+rest_name+". Enjoy "+cusines_array[0]+" cuisine in "+location_name+" , "+data.ancestor_name+". Find information, curator's suggestions, maps, address, photos and reviews");
+                    $("#seo_meta_description").val("Reserve a table at "+rest_name+". Enjoy "+cusines_array[0]+" cuisine in "+location_name+", "+data.ancestor_name+". Find information, curator's suggestions, maps, address, photos and reviews");
                 } else {
                     //console.log("if null");
                     $("#restaurant_seo_title").val('');
