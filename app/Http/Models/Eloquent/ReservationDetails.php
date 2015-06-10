@@ -94,6 +94,7 @@ class ReservationDetails extends Model {
 			$reservation->points_awarded = $productDetail['reward_point'];
 			$reservation->vendor_location_id = 0;
 			$reservation->product_vendor_location_id = $arrData['vendorLocationID'];
+
 		}
 		#saving the information into the DB
 		$savedData = $reservation->save();
@@ -122,7 +123,7 @@ class ReservationDetails extends Model {
 				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
 				
 				//Insert record for new reward point
-				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point']);	 		
+				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);	 		
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -171,7 +172,7 @@ class ReservationDetails extends Model {
 				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
 				
 				//Insert record for new reward point
-				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point']);	 
+				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point'], $reservation_id['id']);	 
 				
 
 				$zoho_data = array(
@@ -262,6 +263,8 @@ class ReservationDetails extends Model {
 			$reservation = Self::find($reservationID);
 			$reservation->reservation_status = 'cancel';
 			$reservation->save();
+
+			$cancelReward = self::cancelRewardPoint( $reservationID );
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
@@ -922,21 +925,53 @@ class ReservationDetails extends Model {
 	 * @return	integer
 	 * @since	1.0.0
 	 */
-  	public static function storeRewardPoint($userID, $rewardPoints) {
-  		$attrID = DB::table('user_attributes as ua')
-										->where('ua.alias', '=', 'points_earned')
-										->select('id')
-										->first();
-						
-				$storeRewardPointStatus = DB::table('user_attributes_integer')												
+  	public static function storeRewardPoint($userID, $rewardPoints, $reservationID ) {
+  								
+		$storeRewardPointStatus = DB::table('reward_points_earned')												
 												->insert([															
-															'user_id' => $userID, 
-															'user_attribute_id' => $attrID->id,
-															'attribute_value' => $rewardPoints,
-															'created_at' => date('Y-m-d H:i:s'),
-															'updated_at' => date('Y-m-d H:i:s')															
-														]);								
+															'user_id' 			=> $userID,															
+															'reservation_id' 	=> $reservationID,
+															'points_earned' 	=> $rewardPoints, 
+															'status' 			=> 'approved', 
+															'description' 		=> 'Reservation made',															
+															'created_at' 		=> date('Y-m-d H:i:s'),
+															'updated_at' 		=> date('Y-m-d H:i:s'),
+															'deleted_at' 		=> date('Y-m-d H:i:s')																
+														 ]);								
 		return $storeRewardPointStatus;
+  	}
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Decrement the reservation count at every cancellation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function decrementReservationCount( $reservationID ) { 
+
+  	}
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Remove reward point for every reservation cancellation.
+	 * 
+	 * @access	public
+	 * @return	integer
+	 * @since	1.0.0
+	 */
+  	public static function cancelRewardPoint( $reservationID ) {
+
+  		$rewardID = DB::table('reward_points_earned')
+  								->where('reservation_id', $reservationID)
+  								->select('id')
+  								->first();
+
+  		$rewardCancelStatus = DB::table('reward_points_earned')
+  									->where('id', $rewardID->id)
+            						->update(['status' => 'cancelled']);
+        return $rewardCancelStatus;
   	}
 }
 //end of class Reservation
