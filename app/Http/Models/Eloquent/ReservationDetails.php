@@ -264,7 +264,11 @@ class ReservationDetails extends Model {
 			$reservation->reservation_status = 'cancel';
 			$reservation->save();
 
+			//Remove the points earned for the cancelled reservation
 			$cancelReward = self::cancelRewardPoint( $reservationID );
+
+			//Decrement the reservation count
+			$cancelRewardCount = self::decrementReservationCount( $reservationID );
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
@@ -951,6 +955,27 @@ class ReservationDetails extends Model {
 	 */
   	public static function decrementReservationCount( $reservationID ) { 
 
+  		$queryResult = DB::table('reservation_details')
+  								->where('id', $reservationID )
+  								->select('reservation_type', 'user_id')
+  								->first();  
+
+  		if( $queryResult->reservation_type == "alacarte" ) { 
+  					$decrementReservationCountStatus = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $queryResult->user_id)												
+															->where('ua.alias', '=', 'a_la_carte_reservation')
+															->decrement('attribute_value', 1);
+  		}
+  		else if ( $queryResult->reservation_type == "experience" ) {
+  					$decrementReservationCountStatus = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $queryResult->user_id)												
+															->where('ua.alias', '=', 'bookings_made')
+															->decrement('attribute_value', 1);
+  		}
+
+  		return $decrementReservationCountStatus; 
   	}
   	//-----------------------------------------------------------------
 
