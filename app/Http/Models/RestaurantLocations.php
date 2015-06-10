@@ -449,7 +449,7 @@ class RestaurantLocations extends VendorLocations{
 	public function getVendorImages($arrVendorLocation) {
 		//query to read media details
 		$queryImages = DB::table('vendor_locations_media_map as vlmm')
-						->leftJoin(' media_resized_new as mrn','mrn.media_id' ,'=', 'vlmm.media_id')
+						->leftJoin('media_resized_new as mrn','mrn.media_id' ,'=', 'vlmm.media_id')
 						->whereIn('vlmm.vendor_location_id',$arrVendorLocation)
 						->where('vlmm.media_type','mobile')
 						->select('mrn.id','mrn.file as image','mrn.image_type','vlmm.vendor_location_id')
