@@ -84,15 +84,16 @@ class RegistrationsController extends Controller {
 		exit;*/
 		//return response()->json($arrResponse,200);   
 		//$aLaCarteID = DB::table('vendor_locations')->where('slug',$alaslug)->first()->id; //@kailash
-        $aLaCarteID 		 = '97';
+        /*$aLaCarteID 		 = '97';
         $arrALaCarte 		 = $this->alacarte_model->getALaCarteDetails($aLaCarteID);
 		$data['reserveData'] = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates'] = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
-        $data['schedule']    = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID); 
-        	
+        $data['schedule']    = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);*/ 
+        /*	print_r($arrReservation);
+        	exit;*/
         return view('frontend.pages.myreservation',$arrResponse)
-        			->with('arrReservation',$arrReservation)
-        			->with('data',$data);
+        			->with('arrReservation',$arrReservation);
+        			/*->with('data',$data);*/
 	}
 
 	/**
