@@ -350,7 +350,7 @@ class AlacarteController extends Controller {
                 $merge_vars = array(
                     'MERGE1'=>$dataPost['guestName'],
                     'MERGE10'=>date('m/d/Y'),
-                    'MERGE11'=>$getUsersDetails->alacarte_bookings + 1,
+                    //'MERGE11'=>$getUsersDetails->alacarte_bookings + 1,
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
