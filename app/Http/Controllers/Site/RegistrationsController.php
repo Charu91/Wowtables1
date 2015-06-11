@@ -255,6 +255,42 @@ class RegistrationsController extends Controller {
 	}
 
 
+	/**
+	 * Handles requst for displaying the my account reservation.
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @param	string	$access_token
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function myAccount()
+	{
+		$user_array = Session::all();
+		//$userID =Session::get('id');
+		//this code is start in header and footer page.
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');        
+        $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+        //this code is start in header and footer page.
+       $userID = Session::get('id');
+		
+		
+        	
+        return view('frontend.pages.myaccount',$arrResponse);
+	}
+
+
 
 
 }

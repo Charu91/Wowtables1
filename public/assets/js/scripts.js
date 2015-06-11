@@ -334,6 +334,12 @@ $(document).ready(function() {
         yearRange: "-100:+0",
         format: "yyyy-mm-dd"
     });
+     $("#aniversary_date").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+0",
+        format: "yyyy-mm-dd"
+    });
     $("#close_changes,#cancel").click(function() {
         $("#clear_location").remove();
         $("#clear_meal").remove()

@@ -58,7 +58,7 @@ Route::get('admin/users/{id}/create_reward', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::put('admin/users/{id}', [
+Route::post('admin/users/{id}', [
     'uses' => 'AdminUsersController@update',
     'as' => 'AdminUserUpdate',
     'middleware' => [],

@@ -9,7 +9,12 @@ use WowTables\Http\Models\User;
 use WowTables\Core\Repositories\Users\UserRepository;
 use WowTables\Http\Requests\Admin\CreateUserRequest;
 use WowTables\Http\Requests\CreateRewardRequest;
-
+use WowTables\Http\Models\Eloquent\Location;
+use WowTables\Http\Models\Profile;
+use Validator;
+use Redirect;
+use Request as RequestData;
+use DB;
 /**
  * Class AdminUsersController
  * @package WowTables\Http\Controllers
@@ -128,9 +133,15 @@ class AdminUsersController extends Controller {
 	 */
 	public function edit($id)
 	{
-		$user = $this->userRepo->getByUserId($id);
-
-        return view('admin.users.edit',['user'	=> $user]);
+		//$user = $this->userRepo->getByUserId($id);
+		$cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+		$data=Profile::getUserProfileWeb($id);
+		$role = DB::table('roles')
+                    -> select('id','name')
+                    -> get();
+           /*		print_r($role);
+		exit;*/
+        return view('admin.users.edit',['data'	=> $data])->with('cities',$cities)->with('role',$role);
 	}
 
 	/**
@@ -142,7 +153,34 @@ class AdminUsersController extends Controller {
 	 */
 	public function update($id)
 	{
-		dd($this->request->all());
+		$data = RequestData::all();
+				$rules = array(
+        		'full_name' => 'required',
+				'role_id' => 'required',
+				'phone_number' => 'required',
+				'date_of_birth' => 'required',
+				'gender' => 'required',
+				'location_id' => 'required',
+				'newsletter_frequency' => 'required'			
+			);
+
+			$message = array(
+				'required' => 'The :attribute is required', 
+			);
+
+			$validation = Validator::make($data, $rules, $message);
+
+			if($validation->fails())
+			{
+				return Redirect::to("admin/users/$id/edit")->withErrors($validation);
+			}
+			else
+			{
+        	$arrResponse=Profile::updateProfileWebAdmin($data, $id);
+        	return Redirect::to('/admin/users')
+		                ->with('flash_notice', '');
+		     }
+
 	}
 
 	/**
