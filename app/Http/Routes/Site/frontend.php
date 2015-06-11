@@ -291,6 +291,30 @@ Route::post('/users/party_sizeajax', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/users/myaccount', [
+    'uses' => 'Site\ProfileController@myProfile',
+    'as' => 'myProfile',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::get('/users/updateinfo', [
+    'uses' => 'Site\ProfileController@updateInfo',
+    'as' => 'updateinfo',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/updateUserinfo', [
+    'uses' => 'Site\ProfileController@updateUserinfo',
+    'as' => 'updateUserinfo',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 
 
 

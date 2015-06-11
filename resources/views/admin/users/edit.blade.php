@@ -20,76 +20,84 @@
 		</div>
 	</header>
 
-	{!! Form::model($user['user'],['route' => ['AdminUserUpdate',$user['user']['id']],'method'=>'PUT']) !!}
+	<form method="POST" action="{{URL::to('/')}}/admin/users/{{$data['data']['user_id']}}" accept-charset="UTF-8">
 
 	<section class="panel">
 		<header class="panel-heading">
 			<h2 class="panel-title">Edit User</h2>
+		
 		</header>
 		<div class="panel-body">
 			<div class="form-group  col-lg-6">
-				{!! Form::label('full_name','Full Name',['class'=>'control-label']) !!}
-				{!! Form::text('full_name',null,['class'=>'form-control']) !!}
+				<label for="full_name" class="control-label">Full Name</label>
+				<input class="form-control" name="full_name" type="text" value="{{$data['data']['full_name']}}" id="full_name">
 			</div>
 			<div class="form-group  col-lg-6">
-				{!! Form::label('email','Email Address',['class'=>'control-label']) !!}
-				{!! Form::text('email',null,['class'=>'form-control']) !!}
+				<label for="email" class="control-label">Email Address</label>
+				<input type="email" name="email" class="form-control" id="inputEmail3" placeholder="Email" disabled="disabled" value="{{$data['data']['email']}}">
 			</div>
 			<div class="form-group  col-lg-6">
-				{!! Form::label('location','Location',['class'=>'control-label']) !!}
-				{!! Form::select('location_id',$locations_list,$user['user']['location_id'],['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
+				<label for="location" class="control-label">City</label>
+				<select name="location_id" class="form-control" required>
+                <?php
+                foreach ($cities as $key => $city) 
+                {
+
+                    echo '<option value="'.$key.'">'.$city.'</option>'; 
+                } 
+                ?>
+                </select>
 			</div>
 			<div class="form-group  col-lg-6">
-				{!! Form::label('phone_number','Phone Number',['class'=>'control-label']) !!}
-				{!! Form::text('phone_number',null,['class'=>'form-control']) !!}
+				<label for="phone_number" class="control-label">Phone Number</label>
+				<input type="text" name="phone_number" id="phone" class="form-control" value="{{$data['data']['phone_number']}}" value="" required>
 			</div>
 			<div class="form-group  col-lg-6">
-				{!! Form::label('role_id','Role',['class'=>'control-label']) !!}
-				{!! Form::select('role_id',$roles_list,$user['user']['role_id'],['class'=>'form-control', 'data-plugin-selectTwo'=>'']) !!}
+				<label for="role_id" class="control-label">Role</label>
+				<select class="form-control" id="role_id" name="role_id">
+					<?php foreach ($role as $roleData) 
+					{
+			           	
+			           	echo '<option value="'.$roleData->id.'">'.$roleData->name.'</option>';
+			        } ?>
+				</select>
 			</div>
 			<div class="form-group  col-lg-6">
-				{!! Form::label('newsletter_frequency','Email Preferences',['class'=>'control-label']) !!}
-				{!! Form::select('newsletter_frequency',['Daily'=>'Daily','Weekly'=>'Weekly','Never'=>'Never'],$user['user']['newsletter_frequency'],['class'=>'form-control']) !!}
+				<label for="newsletter_frequency" class="control-label">Email Preferences</label>
+				<select class="form-control" id="newsletter_frequency" name="newsletter_frequency">
+					<option value="Daily" selected="selected">Daily</option>
+					<option value="Weekly">Weekly</option><option value="Never">Never</option></select>
 			</div>
 		</div>
 	</section>
 
-	@if( $user['attributes'] )
+	<!-- @/*if( $user['attributes'] )*/ -->
 	<section class="panel">
 		<header class="panel-heading">
 			<h2 class="panel-title">User's Attributes</h2>
 		</header>
 		<div class="panel-body">
-			@foreach($user['attributes'] as $name=>$value)
-				<div class="form-group  col-lg-6">
-					@if($value instanceof \Carbon\Carbon)
-						{!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-						{!! Form::text('attributes['.$name.']',\Carbon\Carbon::parse($value)->format('Y-m-d'),['class'=>'form-control datepicker']) !!}
-					@endif
-					@if(is_bool($value))
-						<div class="checkbox-custom checkbox-primary">
-							{!! Form::checkbox('attributes['.$name.']',$value,$value) !!}
-							{!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-						</div>
-					@endif
-					@if(is_integer($value) || is_int($value) || is_float($value) || is_string($value))
-						{!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-						{!! Form::text('attributes['.$name.']',$value,['class'=>'form-control']) !!}
-					@endif
-					@if(is_array($value))
-						{!! Form::label('attributes['.$name.']',ucwords(str_replace('_',' ',$name)),['class'=>'control-label']) !!}
-						{!! Form::select('attributes['.$name.']',$value,$value,['class'=>'form-control', 'data-plugin-selectTwo'=>'','multiple'=>'']) !!}
-					@endif
-				</div>
-			@endforeach
+		
+			<div class="form-group  col-lg-6">
+				<label for="attributes[date_of_birth]" class="control-label">Date Of Birth</label>
+				<input class="form-control datepicker" name="date_of_birth" type="text" value="{{$data['data']['dob']}}" id="attributes[date_of_birth]">
+			</div>
+			<div class="form-group  col-lg-6">
+			<label for="attributes[gender]" class="control-label">Gender</label>
+			<br>
+			<input type="radio" name="gender" id="gender1" value="Male" checked="checked" required>
+                Male
+            <input type="radio" name="gender" id="gender2" value="Female" required>
+            Female
+			</div>
 			<div id="addUserAttributeHolder"></div>
 		</div>
 		<footer class="panel-footer">
-			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
+			<!-- <a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a> -->
 		</footer>
 	</section>
-	@else
-	<section class="panel">
+	<!-- @/*else*/ -->
+	<!-- <section class="panel">
 		<header class="panel-heading">
 			<a class="btn btn-primary" id="newUserAttributeBtn">Add New Attribute</a>
 			<h2 class="panel-title pull-right">User's Attributes</h2>
@@ -97,11 +105,11 @@
 		<div class="panel-body">
 			<div id="addUserAttributeHolder"></div>
 		</div>
-	</section>
+	</section> -->
 
-	@endif
+	<!-- @/*endif*/ -->
 
-	{!! Form::submit('Update User',['class'=>'btn btn-primary']) !!}
+	<input class="btn btn-primary" type="submit" value="Update User">
 	{!! Form::close() !!}
 	</section>
 
