@@ -204,7 +204,7 @@ class RestaurantLocation extends VendorLocation{
         //delete all existing attributes
         $query = '
             DELETE vlab, vlad, vlaf, vlai, vlam, vlas, vlat, vlav,
-                  vlbls, vlbs, vlbtrl, vlc, vlcm, vlmm, vla, vltm,vlfm
+                  vlbls, vlbs, vlbtrl, vlc, vlcm, vlmm, vla, vltm,vlfm,vll
             FROM vendor_locations AS `vl`
             LEFT JOIN vendor_location_attributes_boolean AS `vlab` ON vlab.vendor_location_id = vl.`id`
             LEFT JOIN vendor_location_attributes_date AS `vlad` ON vlad.vendor_location_id = vl.`id`
@@ -223,11 +223,12 @@ class RestaurantLocation extends VendorLocation{
             LEFT JOIN vendor_location_address AS `vla` ON vla.vendor_location_id = vl.`id`
             LEFT JOIN vendor_locations_tags_map AS `vltm` ON vltm.vendor_location_id = vl.`id`
             LEFT JOIN vendor_locations_flags_map AS `vlfm` ON vlfm.vendor_location_id = vl.`id`
+            LEFT JOIN vendor_locations_limits AS `vll` ON vll.vendor_location_id = vl.`id`
             WHERE vl.id = ?
         ';
 
         DB::delete($query, [$vendor_location_id]);
-
+        DB::commit();
         /*$vendorLocationUpdateData = [
             'slug' => $data['slug'],
             'location_id' => $data['location_id'],
@@ -278,6 +279,15 @@ class RestaurantLocation extends VendorLocation{
             if($schedulesSaved['status'] !== 'success'){
                 $schedulesSaved['message'] = 'Could not create the Restaurant Location Schedules. Contact the system admin';
                 return $schedulesSaved;
+            }
+        }
+
+        if(!empty($data['location_attributes'])){
+            $LocationAttributesSaved = $this->saveLocationAttributes($vendor_location_id, $data['location_attributes']);
+
+            if($LocationAttributesSaved['status'] !== 'success'){
+                $LocationAttributesSaved['message'] = 'Could not create the Restaurant Location Attributes. Contact the system admin';
+                return $LocationAttributesSaved;
             }
         }
 
@@ -398,7 +408,6 @@ class RestaurantLocation extends VendorLocation{
             }
         }
 
-        DB::commit();
         return ['status' => 'success'];
 
     }
