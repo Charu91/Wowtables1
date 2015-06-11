@@ -550,7 +550,7 @@ agm.cpkbandra@jsmcorp.in
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <link href="http://wowtables.app/css/ui-lightness/jquery-ui-1.10.0.custom.css?ver=1.0.2" rel='stylesheet' type="text/css"> 
+    <link href="{{URL::to('/')}}/css/ui-lightness/jquery-ui-1.10.0.custom.css?ver=1.0.2" rel='stylesheet' type="text/css"> 
     <script type="text/javascript">
        //code for floating reservation button
       $(function() {
