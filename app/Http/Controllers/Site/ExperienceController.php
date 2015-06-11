@@ -626,7 +626,7 @@ class ExperienceController extends Controller {
             //echo "userid == ".$userID;
             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
-            //Start MailChimp
+           /* //Start MailChimp
             if(!empty($getUsersDetails)){
 
                 $merge_vars = array(
@@ -639,7 +639,7 @@ class ExperienceController extends Controller {
                 $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
-            //End MailChimp
+            //End MailChimp*/
         
             if($userID > 0) {
                 //validating the information submitted by users
