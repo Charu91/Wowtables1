@@ -38,7 +38,7 @@
                 <a href="#basic_details" data-toggle="tab" class="text-center">Basic Details</a>
             </li>
             <li>
-                <a href="#seo_details" id="seo_details_tab" data-toggle="tab" class="text-center">SEO Details</a>
+                <a href="#seo_details" id="experience_seo_details_tab" data-toggle="tab" class="text-center">SEO Details</a>
             </li>
             <li>
                 <a href="#media_tab" data-toggle="tab" class="text-center">Media</a>
