@@ -9,6 +9,7 @@ use Mail;
 use DB;
 use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
+use Mailchimp;
 
 /**
  * Model class Reservation.
@@ -19,8 +20,7 @@ use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
  * @author		Parth Shukla <parthshukla@ahex.co.in>
  */
 class ReservationDetails extends Model {	
-	
-	
+
 	/**
 	 * Table to be used by this model.
 	 * 
@@ -50,7 +50,7 @@ class ReservationDetails extends Model {
 	 * @return	boolean
 	 * @since	1.0.0
 	 */
-	public static function addReservationDetails($arrData, $userID, $userType='website_user') {
+	public static function addReservationDetails($arrData, $userID, $userType='website_user', $objMailChimp) {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
@@ -123,7 +123,10 @@ class ReservationDetails extends Model {
 				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
 				
 				//Insert record for new reward point
-				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);	 		
+				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);
+
+				//Mail by mailchimp
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );	 		
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -174,6 +177,8 @@ class ReservationDetails extends Model {
 				//Insert record for new reward point
 				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point'], $reservation_id['id']);	 
 				
+				//Mail by mailchimp
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -993,10 +998,71 @@ class ReservationDetails extends Model {
   								->select('id')
   								->first();
 
-  		$rewardCancelStatus = DB::table('reward_points_earned')
+  		if($rewardID) {
+  			$rewardCancelStatus = DB::table('reward_points_earned')
   									->where('id', $rewardID->id)
             						->update(['status' => 'cancelled']);
+  		}
+  		else {
+  				$rewardCancelStatus = 0;
+  		}
+
         return $rewardCancelStatus;
+  	}
+  	//-----------------------------------------------------------------
+
+  	/**
+	 * Send mail by mailchimp for every reservation .
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
+  	public static function mailByMailChimp( $arrData, $userID ,$objMailChimp) {
+
+  		$listId = '986c01a26a';
+
+  		if($arrData['reservationType'] == "alacarte") {
+
+  				$reservation = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $userID)												
+															->where('ua.alias', '=', 'a_la_carte_reservation')
+															->select('attribute_value as count')
+															->first();
+
+  				$merge_vars = array(
+                    'MERGE1'=>$arrData['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$reservation->count,
+                    'MERGE13'=>$arrData['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate']))
+                );
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+                $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+  		}
+  		else if ($arrData['reservationType'] == "experience") {
+
+  				$reservation = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $userID)												
+															->where('ua.alias', '=', 'bookings_made')
+															->select('attribute_value as count')
+															->first();
+
+  				$merge_vars = array(
+                    'MERGE1'=>$arrData['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$reservation->count,
+                    'MERGE13'=>$arrData['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate']))
+                );
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+                $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+  		}
+
   	}
 }
 //end of class Reservation
