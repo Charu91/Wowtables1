@@ -400,6 +400,7 @@ class AlacarteModel{
     }
 
     public  function getALaCarteDetails( $aLaCarteID ) {
+        $arrData = array();
         $queryResult = DB::table(DB::raw('vendor_locations as vl'))
                         ->join('vendors','vendors.id','=','vl.vendor_id')
                         ->join(DB::raw('vendor_location_attributes_text as vlat1'), 'vlat1.vendor_location_id', '=', 'vl.id')
