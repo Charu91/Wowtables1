@@ -228,7 +228,7 @@ class ExperienceController extends Controller {
                             media_resized_new.`file`, media_resized_new.`height`, media_resized_new.`width`, media_resized_new.`image_type`
                             FROM tags
                             INNER JOIN media_resized_new ON tags.`web_media_id` = media_resized_new.`media_id`
-                            WHERE tags.`slug` = 'kailash-test'
+                            WHERE tags.`slug` = '$collection'
                             AND tags.`status` = 'available'";
         
         $collectionResult = DB::select($collectionQuery);
