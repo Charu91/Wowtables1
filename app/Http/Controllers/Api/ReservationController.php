@@ -12,6 +12,7 @@ use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\ReservationDetails;
 use WowTables\Http\Models\UserDevices;
 use Validator;
+use Mailchimp;
 
 
 /**
@@ -31,14 +32,18 @@ use Validator;
 	 * @since	1.0.0
 	 */
 	protected $request;
+
+	protected $mailchimp;
+	protected $listId = '986c01a26a';
 	
 	//-----------------------------------------------------------------
 	
 	/**
 	 * 
 	 */
-	public function __construct(Request $request) {
+	public function __construct(Request $request, Mailchimp $mailchimp) {
 		$this->request = $request;
+		$this->mailchimp = $mailchimp;
 	}
 	
 	//-----------------------------------------------------------------
@@ -178,7 +183,7 @@ use Validator;
 				$arrResponse = Reservation::validateReservationData($data);
 				
 				if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-						$arrResponse = ReservationDetails::addReservationDetails($data,$userID, 'mobile_user');
+						$arrResponse = ReservationDetails::addReservationDetails($data,$userID, 'mobile_user', $this->mailchimp);
 					}
 				}
 				else {
