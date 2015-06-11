@@ -114,6 +114,7 @@ class ProfileController extends Controller {
 		
        	$userID = Session::get('id');
 		$data = Request::all();
+		
 			$rules = array(
         		'full_name' => 'required',
 				'zip_code' => 'required',

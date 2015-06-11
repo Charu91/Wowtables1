@@ -438,21 +438,24 @@ $queryProfileResult = DB::table('users as u')
                         ));
             }
 
-            $anversiryUpdate = DB::table('user_attributes_date')
-                                ->where('user_id', $userID)
-                                ->where('user_attribute_id',$arrAttribute['anniversary_date'])
-                                ->update(array('attribute_value' => date('Y-m-d H:i:s',strtotime($data['aniversary_date']))));
-            
-            if(!$anversiryUpdate) {
-                //adding data to the table
-                DB::table('user_attributes_date')
-                        ->insert(array(
-                            'user_id'           => $userID,
-                            'user_attribute_id' => $arrAttribute['anniversary_date'],
-                            'attribute_value'   => date('Y-m-d H:i:s',strtotime($data['aniversary_date'])),
-                            'created_at'        => date('Y-m-d H:i:s'),
-                            'updated_at'        => date('Y-m-d H:i:s')
-                        ));
+            if($data['aniversary_date']!='0000-00-00')
+            {
+                $anversiryUpdate = DB::table('user_attributes_date')
+                                    ->where('user_id', $userID)
+                                    ->where('user_attribute_id',$arrAttribute['anniversary_date'])
+                                    ->update(array('attribute_value' => date('Y-m-d H:i:s',strtotime($data['aniversary_date']))));
+                
+                if(!$anversiryUpdate) {
+                    //adding data to the table
+                    DB::table('user_attributes_date')
+                            ->insert(array(
+                                'user_id'           => $userID,
+                                'user_attribute_id' => $arrAttribute['anniversary_date'],
+                                'attribute_value'   => date('Y-m-d H:i:s',strtotime($data['aniversary_date'])),
+                                'created_at'        => date('Y-m-d H:i:s'),
+                                'updated_at'        => date('Y-m-d H:i:s')
+                            ));
+                }
             }
 
 

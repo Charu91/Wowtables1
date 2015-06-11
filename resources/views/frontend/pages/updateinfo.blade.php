@@ -74,7 +74,16 @@
          <div class="form-group">
             <label class="col-sm-3 control-label">Anniversary Date:</label>
             <div class="col-sm-9">
-                <input type="text" name="aniversary_date" id="aniversary_date" class="form-control" readonly="readonly" value="{{$data['data']['anniversary_date']}}" required>
+              <?php if($data['data']['anniversary_date']=='0' || $data['data']['anniversary_date']=="")
+                    {
+                      $aniversaryDate = '0000-00-00';
+                    }
+                    else
+                    {
+                      $aniversaryDate = $data['data']['anniversary_date'];
+                    }
+                    ?>
+                <input type="text" name="aniversary_date" id="aniversary_date" class="form-control" readonly="readonly" value="{{$aniversaryDate}}" required>
             </div>
          </div>
          <div class="form-group">
