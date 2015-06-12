@@ -557,7 +557,7 @@ class ExperienceModel {
               ->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
               ->where('pa3.alias','menu')
               ->select('products.id','products.name','products.type','pp.price','pp.tax','products.slug',
-                'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+                'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 'pp.taxes',
                   DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
                   DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
                   DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
@@ -588,6 +588,7 @@ class ExperienceModel {
     //running the query to get the results
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
+      //echo "<pre>"; print_r($expResult); die;
 
     //array to store the experience details
     $arrExpDetails = array();
@@ -611,8 +612,8 @@ class ExperienceModel {
                     'terms_and_condition' => $expResult->terms_and_conditions,
                     'image' => $arrImage,
                     'type' => $expResult->type,
-                    'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
-                    'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
+                    'price' => $expResult->price,
+                    'taxes' => (is_null($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable',
                     'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
                     'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
                     'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,

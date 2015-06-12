@@ -510,7 +510,7 @@ $last_url_item = count($url)-1;
                         <div class="row star-info">
                           <div class="col-xs-8">
                             <ul class="list-inline">
-                            <?php $reviews['rating'];
+                            <p><?php $reviews['rating'];
                               $avar = 5 - $reviews['rating'];
                             ?></p>
                            <?PHP          
@@ -629,7 +629,7 @@ $last_url_item = count($url)-1;
                      </div>
                 </div>
              <?php elseif(!empty($arrExperience['data']['location']) && count($arrExperience['data']['location']) == 1): ?>    
-                <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">   
+                <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">
              <?php endif; ?>
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
@@ -709,7 +709,9 @@ $last_url_item = count($url)-1;
                   $schedule = $schedule_times;
                 endif;
                                 foreach($schedule[$week] as $time=>$hours):?>
-                                  <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="<?=$time?>" style="padding:2px"><?=strtoupper($time);?></label> 
+                                  <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="<?=$time?>" style="padding:2px">
+                                      <?=strtoupper($time);?>
+                                  </label>
                          <?php   
                                 endforeach;
                           endif;
@@ -889,7 +891,7 @@ $last_url_item = count($url)-1;
              data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="/images/question_icon_small_display.png"></a>
             </li>
             <?php } else {?>
-      			<li>- WowTables Gift Cards cannot be used for this experience</li>
+      			{{--<li>- WowTables Gift Cards cannot be used for this experience</li>--}}
       			<?php } ?>
             </ul> 
             

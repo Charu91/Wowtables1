@@ -21,16 +21,18 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
+use WowTables\Http\Models\User;
 
 class ExperienceController extends Controller {
 
     protected $listId = '986c01a26a';
 
-	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp){
+	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp, User $user){
         $this->request = $request;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
         $this->mailchimp = $mailchimp;
+        $this->user = $user;
     }
 
     function index(){
@@ -77,7 +79,7 @@ class ExperienceController extends Controller {
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
-             
+         //echo "<prE>"; print_r($data['arrExperience']); die;
        /*echo '<pre>';
        //print_r( $time_range);
        print_r( $data['arrExperience']);
@@ -583,6 +585,9 @@ class ExperienceController extends Controller {
         $dataPost['reservationType'] = 'experience';
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']              = Input::get('add_ons');
+        $userID = Session::get('id');
+        $userDetails = $this->user->fetch($userID);
+        echo "<pre>"; print_r($userDetails); die;
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); //die;
         $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
@@ -622,11 +627,11 @@ class ExperienceController extends Controller {
            return redirect()->back()->withErrors($validator);          
         }
         else {
-            $userID = Session::get('id');
+
             //echo "userid == ".$userID;
             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
-           /* //Start MailChimp
+            //Start MailChimp
             if(!empty($getUsersDetails)){
 
                 $merge_vars = array(
@@ -639,7 +644,7 @@ class ExperienceController extends Controller {
                 $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
-            //End MailChimp*/
+            //End MailChimp
         
             if($userID > 0) {
                 //validating the information submitted by users
