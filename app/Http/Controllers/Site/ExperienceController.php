@@ -95,8 +95,8 @@ class ExperienceController extends Controller {
         $data['allPrices']  = $commonmodel->getAllPrices();
 
         $data['dropdowns_opt']  = 1; //1 for disp
-
-
+        
+        
         return response()->view('frontend.pages.experiencedetails',$data);
     }
 
@@ -583,9 +583,14 @@ class ExperienceController extends Controller {
         $dataPost['phone'] = Input::get('phone');
         $dataPost['reservationType'] = 'experience';
         $dataPost['specialRequest'] = Input::get('special');
-        $dataPost['addon']              = Input::get('add_ons');
+
+        $dataPost['addon']          = Input::get('add_ons');
+        $dataPost['giftCardID']     = Input::get('giftcard_id');
+
+        
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
+
 
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); //die;

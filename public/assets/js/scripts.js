@@ -992,6 +992,8 @@ $(document).ready(function() {
         edit_time = $("#myselect_time").text();
         alcohol = $("#alcoholedit").val();
         non_veg = $("#nonveg").val();
+        vendor_details =$('#vendor_id').val();
+
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
         last_reserv_outlet = $("#last_reserv_outlet").val();
@@ -1037,6 +1039,7 @@ $(document).ready(function() {
                         reserv_id: res_id,
                         address: address,
                         party_size: party_size,
+                        vendor_details:vendor_details,
                         edit_date: edit_date,
                         edit_time: edit_time,
                         alcohol: alcohol,

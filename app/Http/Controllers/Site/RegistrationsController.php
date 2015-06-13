@@ -126,7 +126,7 @@ class RegistrationsController extends Controller {
 		else
 		{
 		$data['schedule'] = $this->experiences_model->getExperienceLocationSchedule($product_id);
-		$vendorId = $product_id;
+		$vendorId = $vendor_id;
 		}
 		return view('frontend.pages.myreservationajax',$data)
         			->with('data',$data)->with('dateText',$dateText)
@@ -165,8 +165,8 @@ class RegistrationsController extends Controller {
 		else
 		{
 		$data['reserveData']  = $this->experiences_model->getExperienceLimit($product_id);
-		$min_people = $data['reserveData'][$product_id]['min_people'];
- 		$max_people = $data['reserveData'][$product_id ]['max_people'];
+		$min_people = $data['reserveData'][$vendor_id]['min_people'];
+ 		$max_people = $data['reserveData'][$vendor_id ]['max_people'];
  		 echo '<select name="qty" id="party_size1"  class="pull-right space hidden">
                             <option value="0">SELECT</option>';
                              for($i=$min_people;$i<=$max_people;$i++)
@@ -271,7 +271,11 @@ class RegistrationsController extends Controller {
 	 */
 	public function updateReservetion()
 	{
-		//echo "<prE>"; print_r(Input::all()); die;
+
+		$vendor_details = $this->request->input('vendor_details');
+		$array = explode(',', $vendor_details);
+		$reserveType = $array['0'];
+
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
 		$edit_date = $this->request->input('edit_date');

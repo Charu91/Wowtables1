@@ -574,6 +574,33 @@ $last_url_item = count($url)-1;
               <?php endif;*/?>
             </ul>
           </div>
+          <?php
+         $mealOptions = (is_array($arrExperience['data']['addons']) && count($arrExperience['data']['addons'])>0)?count($arrExperience['data']['addons']):0;
+           if ($mealOptions)
+           {      
+          ?>
+          <div class="widget price-box">
+                        <h3 class="text-center">ADD ONS</span></h3>
+            <p class="text-center"><small></small></p>
+                        <h4></h4>
+           <ul>
+           <?php 
+          foreach($arrExperience['data']['addons'] as $addons)
+          {
+            ?>
+           <ul>
+            <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
+            <li><?php echo $addons['short_description'];?></li>
+            <li>Rs. <?php echo $addons['price'];?> With Tax Rs. {{$addons['post_tax_price']}}</li>
+          </ul>
+          <hr>
+          <?php
+          }
+          ?>
+        </ul>
+          </div>
+
+      <?php }?>
       
       <?php 
       //Reservation start
@@ -824,6 +851,10 @@ $last_url_item = count($url)-1;
                     <div class="input-group">
                       <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
                       <input type="text" name="special" id="special" class="form-control" placeholder="(Optional) Special Requests">
+                    </div><br> 
+                     <div class="input-group">
+                      <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
+                      <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)">
                     </div> 
                     <div class="reservation_errors"></div>
                     <div class="reservation_errors" id="error_people"></div> 
