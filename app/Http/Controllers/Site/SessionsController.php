@@ -4,7 +4,7 @@ use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\User;
 use WowTables\Http\Requests\Site\CustomerLoginUserRequest;
 use Illuminate\Http\Request;
-
+use Session;
 class SessionsController extends Controller {
 
 
@@ -49,10 +49,10 @@ class SessionsController extends Controller {
      */
     public function logout()
     {
-        //echo 'hello';
+       
         //Auth::logout();
         $this->user->logout();
-
+        Session::flush();
         return redirect()->route('SiteHomePage');
     }
 }
