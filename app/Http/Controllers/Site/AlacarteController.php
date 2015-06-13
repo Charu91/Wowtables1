@@ -253,9 +253,9 @@ class AlacarteController extends Controller {
         {
             $arrSubmittedData['maxPrice']  = $price_end_with;
         }
-        
+
         $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);       
-                
+
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
             $data['resultCount'] = $searchResult['resultCount'];
@@ -408,7 +408,7 @@ class AlacarteController extends Controller {
                         //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
                         //$this->email->to($list);
                         //$this->email->subject('Urgent: Zoho reservation posting error');
-                        $mailbody = 'A'.sprintf("%06d",$arrResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                        $mailbody = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
                         $mailbody .= 'Reservation Details<br>';
                         foreach($zoho_data as $key => $val){
                             $name = str_replace('_',' ',$key);
