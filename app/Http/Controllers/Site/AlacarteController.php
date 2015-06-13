@@ -21,6 +21,7 @@ use Redirect;
 use Mail;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 use Mailchimp;
+use WowTables\Http\Models\Profile;
 
 class AlacarteController extends Controller {
 
@@ -252,9 +253,9 @@ class AlacarteController extends Controller {
         {
             $arrSubmittedData['maxPrice']  = $price_end_with;
         }
-        
+
         $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);       
-                
+
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
             $data['resultCount'] = $searchResult['resultCount'];
@@ -305,13 +306,16 @@ class AlacarteController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']          = Input::get('add_ons');
         //$dataPost['access_token'] = Session::get('id');
+        $userID = Session::get('id');
+        $userData = Profile::getUserProfileWeb($userID);
+
         $outlet = $this->alacarte_model->getOutlet($dataPost['vendorLocationID']);
 
         $locationDetails = $this->alacarte_model->getLocationDetails($dataPost['vendorLocationID']);
 
         $vendorDetails = $this->repository->getByRestaurantLocationId($dataPost['vendorLocationID']);
-
-        //echo "<pre>"; print_r($locationDetails); die;
+        //echo "sfa = ".$vendorDetails['attributes']['reward_points_per_reservation'];
+        //echo "<pre>"; print_r($vendorDetails); die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -341,7 +345,7 @@ class AlacarteController extends Controller {
            return redirect()->back()->withErrors($validator);          
         }
         else {
-            $userID = Session::get('id');
+
             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
             //Start MailChimp
@@ -350,7 +354,7 @@ class AlacarteController extends Controller {
                 $merge_vars = array(
                     'MERGE1'=>$dataPost['guestName'],
                     'MERGE10'=>date('m/d/Y'),
-                    //'MERGE11'=>$getUsersDetails->alacarte_bookings + 1,
+                    'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
@@ -365,6 +369,14 @@ class AlacarteController extends Controller {
             
             if($arrResponse['status'] == 'success') {
                     $reservationResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);
+
+                $rewardsPoints = $vendorDetails['attributes']['reward_points_per_reservation'];
+                $bookingsMade = $userData['data']['a_la_carte_reservation'] + 1;
+                $type = "new";
+                $reservationType = "alacarte";
+                $lastOrderId = $reservationResponse['data']['reservationID'];
+
+                Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
                 $getReservationID = $reservationResponse['data']['reservationID'];
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],
@@ -396,7 +408,7 @@ class AlacarteController extends Controller {
                         //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
                         //$this->email->to($list);
                         //$this->email->subject('Urgent: Zoho reservation posting error');
-                        $mailbody = 'A'.sprintf("%06d",$arrResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                        $mailbody = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
                         $mailbody .= 'Reservation Details<br>';
                         foreach($zoho_data as $key => $val){
                             $name = str_replace('_',' ',$key);

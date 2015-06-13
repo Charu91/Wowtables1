@@ -50,7 +50,7 @@ exit;*/
                 <span class="lead col-md-8">
                   <?php if($data['type']=='experience')
                   {
-
+                     echo $data['name'];
                   } 
                   else
                   {
@@ -214,7 +214,7 @@ agm.cpkbandra@jsmcorp.in
                 <span class="lead col-md-8">
                   <?php if($data['type']=='experience')
                   {
-
+                    echo $data['name'];
                   } 
                   else
                   {

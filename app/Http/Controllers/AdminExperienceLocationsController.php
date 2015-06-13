@@ -103,7 +103,7 @@ class AdminExperienceLocationsController extends Controller {
 
         $productLocationBlockTimeLimits = $this->experienceLocation->populateProductLocationBlockTimeLimits($id);
 
-        $availableSchedules = $this->formatSchedules($this->experienceLocation->available_time_slots('00:30','22:30'))['schedules'];
+        $availableSchedules = $this->formatSchedules($this->experienceLocation->available_time_slots('00:00','23:30'))['schedules'];
 
         $productLocationSchedules = ProductLocationsBookingSchedule::where('product_vendor_location_id',$id)->lists('schedule_id');
 

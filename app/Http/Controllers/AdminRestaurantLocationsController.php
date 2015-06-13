@@ -122,9 +122,13 @@ class AdminRestaurantLocationsController extends Controller {
 
 		$vendorLocationCurators = $this->repository->populateVendorLocationCurators($id);
 
-		$availableSchedules = $this->formatSchedules($this->schedules->available_time_slots('8:00','22:00'))['schedules'];
+		$availableSchedules = $this->formatSchedules($this->schedules->available_time_slots('00:00','23:30'))['schedules'];
+
 
 		$restaurantSchedules = VendorLocationBookingSchedule::where('vendor_location_id',$id)->lists('off_peak_schedule','schedule_id');
+
+		//echo "<pre>"; print_r($restaurantSchedules); die;
+
 
 		$schedules = array_keys($restaurantSchedules);
 

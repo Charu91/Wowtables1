@@ -768,7 +768,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="tab-content" style="border-top:1px dashed #c2c2c2;margin-top:20px;">
             <div class="tab-pane fade in active" id="signin">
             <div id="signinForm-wrap" style="  padding-top: 20px !important;">
-              <form role="form" method="POST" action="{{URL::to('/')}}/users/login">
+              <form role="form" method="POST" >
                 <div class="form-group">
                   <input type="email" class="form-control" id="email1" placeholder="Enter email" name="email">
                   <label class="control-label error-code text-danger" id="email_error_1">Please enter a valid email address</label>
@@ -779,7 +779,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <label class="control-label error-code text-danger" id="password_error_1">Please enter a password.</label>
                   <p class="text-right pass-forget"><a href="javascript:void(0)" class="forgot-pass-link">Forgot Password?</a></p>
                 </div>                      
-                <button type="submit" class="btn btn-warning btn-block wowtable_enter_btn" id="login">ENTER</button>
+                <button type="submit" class="btn btn-warning btn-block wowtable_enter_btn" id="logine">ENTER</button>
               </form>
               </div>
               <div id="forgotpassForm">
@@ -815,7 +815,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <select class="form-control" name="city" id="city">
                     <option value="-1">Choose A City</option>
                        <?php foreach ($cities as $cur_city => $city_name_data): ?>
-                          <option value="<?php echo strtolower($city_name_data);?>"><?php echo ucfirst($city_name_data);?></option>                          
+                          <option value="<?php echo $cur_city;?>"><?php echo ucfirst($city_name_data);?></option>                          
                         <?php endforeach; ?>
                   </select>
                   <label class="control-label error-code text-danger" id="city_error">Please pick a city</label>

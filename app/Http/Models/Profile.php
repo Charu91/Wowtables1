@@ -33,7 +33,7 @@ class Profile {
      * @param	array $token
      * @since	1.0.0
      */
-        public static function getUserProfile($token) {  
+            public static function getUserProfile($token) {
 
             $queryProfileResult = DB::table('users as u')
                                         ->leftjoin('user_attributes_date as uad','u.id','=','uad.user_id')
@@ -147,6 +147,8 @@ $queryProfileResult = DB::table('users as u')
                             DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
                             DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),
                             DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
+                            DB::raw('MAX(IF(ua3.alias = "membership_number", uai.attribute_value, 0)) AS membership_number'),
+                            DB::raw('MAX(IF(ua3.alias = "a_la_carte_reservation", uai.attribute_value, 0)) AS a_la_carte_reservation'),
                             DB::raw('MAX(IF(ua4.alias = "date_of_birth", date(uad.attribute_value), 0)) AS dob'),
                             DB::raw('MAX(IF(ua4.alias = "anniversary_date", date(uad.attribute_value), 0)) AS anniversary_date'))
                     ->groupby('u.id')
@@ -182,6 +184,8 @@ $queryProfileResult = DB::table('users as u')
                                     'points_spent' => $queryProfileResult->points_spent,
                                     'points_remaining' => $queryProfileResult->points_earned - $queryProfileResult->points_spent,
                                     'bookings_made' => $queryProfileResult->bookings_made,
+                                    'membership_number' => $queryProfileResult->membership_number,
+                                    'a_la_carte_reservation' => $queryProfileResult->a_la_carte_reservation,
                                     'dob' => $queryProfileResult->dob,
                                     'anniversary_date' => $queryProfileResult->anniversary_date,
                                     'newsletter_frequency' => $queryProfileResult->newsletter_frequency,
@@ -639,6 +643,93 @@ $queryProfileResult = DB::table('users as u')
         return $arrResponse;
     }
     //-----------------------------------------------------------------
+
+    public static function updateReservationInUsers($points,$type,$bookings,$reservationType,$userID,$lastOrderId){
+        $queryAttribute = DB::table('user_attributes') -> select('id','alias') -> get();
+
+        //array having attribute alias and id as key value pair
+        $arrAttribute = array();
+        foreach($queryAttribute as $row) {
+            $arrAttribute[$row->alias] = $row->id;
+        }
+
+        if($type == "new"){
+
+            DB::table('reward_points_earned')
+                ->insert(array(
+                    'user_id'         => $userID,
+                    'reservation_id'  => $lastOrderId,
+                    'points_earned'   => $points,
+                    'status'          => 'approved',
+                    'description'     => 'Reservation Made',
+                    'created_at'      => date('Y-m-d H:i:s'),
+                    'updated_at'      => date('Y-m-d H:i:s')
+                ));
+
+
+            $pointsEarned = DB::table('user_attributes_integer')
+                ->where('user_id', $userID)
+                ->where('user_attribute_id',$arrAttribute['points_earned'])
+                ->update(array('attribute_value' => $points));
+
+            if(!$pointsEarned) {
+                //adding data to the table
+                DB::table('user_attributes_integer')
+                    ->insert(array(
+                        'user_id'           => $userID,
+                        'user_attribute_id' => $arrAttribute['points_earned'],
+                        'attribute_value'   => $points,
+                        'created_at'        => date('Y-m-d H:i:s'),
+                        'updated_at'        => date('Y-m-d H:i:s')
+                    ));
+            }
+
+            if($reservationType == "experience"){
+
+                $bookingsMade = DB::table('user_attributes_integer')
+                    ->where('user_id', $userID)
+                    ->where('user_attribute_id',$arrAttribute['bookings_made'])
+                    ->update(array('attribute_value' => $bookings));
+
+                if(!$bookingsMade) {
+                    //adding data to the table
+                    DB::table('user_attributes_integer')
+                        ->insert(array(
+                            'user_id'           => $userID,
+                            'user_attribute_id' => $arrAttribute['bookings_made'],
+                            'attribute_value'   => $bookings,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ));
+                }
+
+            }
+
+            if($reservationType == "alacarte"){
+
+                $bookingsMade = DB::table('user_attributes_integer')
+                    ->where('user_id', $userID)
+                    ->where('user_attribute_id',$arrAttribute['a_la_carte_reservation'])
+                    ->update(array('attribute_value' => $bookings));
+
+                if(!$bookingsMade) {
+                    //adding data to the table
+                    DB::table('user_attributes_integer')
+                        ->insert(array(
+                            'user_id'           => $userID,
+                            'user_attribute_id' => $arrAttribute['a_la_carte_reservation'],
+                            'attribute_value'   => $bookings,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ));
+                }
+
+            }
+
+        }
+
+
+    }
 
 }
 //end of class Profile.

@@ -510,7 +510,7 @@ $last_url_item = count($url)-1;
                         <div class="row star-info">
                           <div class="col-xs-8">
                             <ul class="list-inline">
-                            <?php $reviews['rating'];
+                            <p><?php $reviews['rating'];
                               $avar = 5 - $reviews['rating'];
                             ?></p>
                            <?PHP          
@@ -574,6 +574,33 @@ $last_url_item = count($url)-1;
               <?php endif;*/?>
             </ul>
           </div>
+          <?php
+         $mealOptions = (is_array($arrExperience['data']['addons']) && count($arrExperience['data']['addons'])>0)?count($arrExperience['data']['addons']):0;
+           if ($mealOptions)
+           {      
+          ?>
+          <div class="widget price-box">
+                        <h3 class="text-center">ADD ONS</span></h3>
+            <p class="text-center"><small></small></p>
+                        <h4></h4>
+           <ul>
+           <?php 
+          foreach($arrExperience['data']['addons'] as $addons)
+          {
+            ?>
+           <ul>
+            <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
+            <li><?php echo $addons['short_description'];?></li>
+            <li>Rs. <?php echo $addons['price'];?> With Tax Rs. {{$addons['post_tax_price']}}</li>
+          </ul>
+          <hr>
+          <?php
+          }
+          ?>
+        </ul>
+          </div>
+
+      <?php }?>
       
       <?php 
       //Reservation start
@@ -629,7 +656,7 @@ $last_url_item = count($url)-1;
                      </div>
                 </div>
              <?php elseif(!empty($arrExperience['data']['location']) && count($arrExperience['data']['location']) == 1): ?>    
-                <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">   
+                <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">
              <?php endif; ?>
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
@@ -709,7 +736,9 @@ $last_url_item = count($url)-1;
                   $schedule = $schedule_times;
                 endif;
                                 foreach($schedule[$week] as $time=>$hours):?>
-                                  <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="<?=$time?>" style="padding:2px"><?=strtoupper($time);?></label> 
+                                  <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="<?=$time?>" style="padding:2px">
+                                      <?=strtoupper($time);?>
+                                  </label>
                          <?php   
                                 endforeach;
                           endif;
@@ -822,6 +851,10 @@ $last_url_item = count($url)-1;
                     <div class="input-group">
                       <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
                       <input type="text" name="special" id="special" class="form-control" placeholder="(Optional) Special Requests">
+                    </div><br> 
+                     <div class="input-group">
+                      <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
+                      <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)">
                     </div> 
                     <div class="reservation_errors"></div>
                     <div class="reservation_errors" id="error_people"></div> 
@@ -889,7 +922,7 @@ $last_url_item = count($url)-1;
              data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="/images/question_icon_small_display.png"></a>
             </li>
             <?php } else {?>
-      			<li>- WowTables Gift Cards cannot be used for this experience</li>
+      			{{--<li>- WowTables Gift Cards cannot be used for this experience</li>--}}
       			<?php } ?>
             </ul> 
             
