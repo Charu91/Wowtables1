@@ -245,6 +245,8 @@ class ExperienceModel {
         
         //array to store location IDs
         $arrLocationId = array();
+
+          //echo "<pre>"; print_r($experienceResult); die;
         
         foreach($experienceResult as $row) {
           $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
@@ -256,12 +258,12 @@ class ExperienceModel {
                           'name' => $row->title,
                           'description' => $row->description,
                           'short_description' => $row->short_description,
-                          'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
+                          'price' => $row->price,
                           'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
                           'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
                           'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
                           'tax' => (is_null($row->tax)) ? "": $row->tax,
-                          'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
+                          'price_type' => $row->price_type,
                           'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
                           'image' => (array_key_exists($row->id, $arrImage))? $arrImage[$row->id] : "",
                           'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
