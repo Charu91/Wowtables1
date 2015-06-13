@@ -245,6 +245,8 @@ class ExperienceModel {
         
         //array to store location IDs
         $arrLocationId = array();
+
+          //echo "<pre>"; print_r($experienceResult); die;
         
         foreach($experienceResult as $row) {
           $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
@@ -256,12 +258,12 @@ class ExperienceModel {
                           'name' => $row->title,
                           'description' => $row->description,
                           'short_description' => $row->short_description,
-                          'price' => (is_null($row->post_tax_price))? $row->price:$row->post_tax_price,
+                          'price' => $row->price,
                           'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
                           'pre_tax_price' => (is_null($row->price)) ? "" : $row->price,
                           'post_tax_price' => (is_null($row->post_tax_price)) ? "" : $row->post_tax_price,
                           'tax' => (is_null($row->tax)) ? "": $row->tax,
-                          'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
+                          'price_type' => $row->price_type,
                           'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
                           'image' => (array_key_exists($row->id, $arrImage))? $arrImage[$row->id] : "",
                           'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
@@ -557,7 +559,7 @@ class ExperienceModel {
               ->leftJoin(DB::raw('product_attributes as pa3'), 'pa3.id','=','pat3.product_attribute_id')
               ->where('pa3.alias','menu')
               ->select('products.id','products.name','products.type','pp.price','pp.tax','products.slug',
-                'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 
+                'pt.type_name as price_type', 'pp.is_variable','pp.post_tax_price', 'pp.taxes',
                   DB::raw('MAX(IF(pa.alias = "experience_info", pat.attribute_value, "")) AS experience_info'),
                   DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
                   DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
@@ -588,6 +590,7 @@ class ExperienceModel {
     //running the query to get the results
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
+      //echo "<pre>"; print_r($expResult); die;
 
     //array to store the experience details
     $arrExpDetails = array();
@@ -611,8 +614,8 @@ class ExperienceModel {
                     'terms_and_condition' => $expResult->terms_and_conditions,
                     'image' => $arrImage,
                     'type' => $expResult->type,
-                    'price' => (is_null($expResult->post_tax_price)) ? $expResult->price : $expResult->post_tax_price,
-                    'taxes' => (is_null($expResult->post_tax_price)) ? 'exclusive':'inclusive',
+                    'price' => $expResult->price,
+                    'taxes' => (is_null($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable',
                     'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
                     'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
                     'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
@@ -1067,8 +1070,8 @@ class ExperienceModel {
     //reading the product detail
     $productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
     $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'0';
-    $reservation['vendor_location_id']         = $arrData['vendorLocationID'];
-    $reservation['product_vendor_location_id'] = $productDetail['vendor_location_id'];
+    $reservation['vendor_location_id']         = 0;
+    $reservation['product_vendor_location_id'] = $arrData['vendorLocationID'];
 
     #saving the information into the DB
     $reservationId = DB::table('reservation_details')->insertGetId($reservation);

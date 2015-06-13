@@ -21,6 +21,7 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
+use WowTables\Http\Models\Profile;
 
 class ExperienceController extends Controller {
 
@@ -77,7 +78,7 @@ class ExperienceController extends Controller {
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
-             
+         //echo "<prE>"; print_r($data['arrExperience']); die;
        /*echo '<pre>';
        //print_r( $time_range);
        print_r( $data['arrExperience']);
@@ -582,8 +583,15 @@ class ExperienceController extends Controller {
         $dataPost['phone'] = Input::get('phone');
         $dataPost['reservationType'] = 'experience';
         $dataPost['specialRequest'] = Input::get('special');
+
         $dataPost['addon']          = Input::get('add_ons');
         $dataPost['giftCardID']     = Input::get('giftcard_id');
+
+        
+        $userID = Session::get('id');
+        $userData = Profile::getUserProfileWeb($userID);
+
+
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); //die;
         $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
@@ -593,6 +601,7 @@ class ExperienceController extends Controller {
 
         //die;
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+
         //echo "<pre>"; print_r($productDetails); die;
 
         $arrRules = array(
@@ -623,24 +632,24 @@ class ExperienceController extends Controller {
            return redirect()->back()->withErrors($validator);          
         }
         else {
-            $userID = Session::get('id');
+
             //echo "userid == ".$userID;
             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
-           /* //Start MailChimp
+            //Start MailChimp
             if(!empty($getUsersDetails)){
 
                 $merge_vars = array(
                     'MERGE1'=>$dataPost['guestName'],
                     'MERGE10'=>date('m/d/Y'),
-                    //'MERGE11'=>$getUsersDetails->experience_bookings + 1,
+                    'MERGE11'=>$userData['data']['bookings_made'] + 1,
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
                 $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
-            //End MailChimp*/
+            //End MailChimp
         
             if($userID > 0) {
                 //validating the information submitted by users
@@ -650,6 +659,13 @@ class ExperienceController extends Controller {
                     /*$getUsersDetails = $this->user->fetchDetails($userID);
                     echo "<pre>"; print_r($getUsersDetails); die;*/
                     $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                    $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+                    $bookingsMade = $userData['data']['bookings_made'] + 1;
+                    $type = "new";
+                    $reservationType = "experience";
+                    $lastOrderId = $reservationResponse['data']['reservationID'];
+
+                    Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
                     //echo "<pre>"; print_r($reservationResponse); die;
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],
