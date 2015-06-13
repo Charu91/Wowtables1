@@ -86,7 +86,8 @@ class RestaurantLocations extends VendorLocations{
                 $join->on('va.id', '=', 'vlav.vendor_attribute_id')
                     ->on('vamso.alias','=', DB::raw('"cuisines"'));
             })
-            ->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            //->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            ->leftJoin('product_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id') //Added on 13.6.15
             ->leftJoin('vendor_location_booking_schedules AS vlbs', 'vlbs.vendor_location_id', '=', 'vl.id')
             ->leftJoin('vendor_location_blocked_schedules AS vlbls', 'vlbls.vendor_location_id', '=', 'vl.id')
             ->leftJoin('schedules AS s', 'vlbs.schedule_id', '=', 's.id')
@@ -310,7 +311,8 @@ class RestaurantLocations extends VendorLocations{
 
         $cuisines = DB::table('vendor_location_attributes_multiselect AS vlam')
             ->join('vendor_locations AS vl', 'vl.id', '=', 'vlam.vendor_location_id')
-            ->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            //->leftJoin('vendor_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            ->leftJoin('product_attributes_select_options AS vaso', 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
             ->leftJoin('vendor_attributes AS vamso', function($join){
                 $join->on('vamso.id', '=', 'vaso.vendor_attribute_id')
                     ->on('vamso.alias', '=', DB::raw('"cuisines"'));
@@ -479,8 +481,8 @@ class RestaurantLocations extends VendorLocations{
 	 */
 	public function initializeRestaurantFilters($arrVendorLocation) {
 		//query to read cuisines
-		$queryCuisine = DB::table('vendor_attributes_select_options as vaso')
-								->join('vendor_attributes as va','va.id','=','vaso.vendor_attribute_id')
+		$queryCuisine = DB::table('product_attributes_select_options as vaso')
+								->join('product_attributes as va','va.id','=','vaso.product_attribute_id')
 								->join('vendor_location_attributes_multiselect as vlam','vlam.vendor_attributes_select_option_id','=','vaso.id')
 								->where('va.alias','cuisines')
 								->whereIn('vlam.vendor_location_id',$arrVendorLocation)
