@@ -517,7 +517,8 @@ class ExperienceModel {
                     );
   }
 
-  public function find($experienceID) {
+  public function find($experienceID,$cityID) {
+      //echo " exp == ".$experienceID.", city = ".$cityID;
     //query to read product type
     $queryType = DB::table('products')
             ->where('id',$experienceID)
@@ -590,6 +591,7 @@ class ExperienceModel {
     //running the query to get the results
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
+
       //echo "<pre>"; print_r($expResult); die;
 
     //array to store the experience details
@@ -599,7 +601,7 @@ class ExperienceModel {
       //getting the reviews for the particular experience
         $arrReviews = Self::readProductReviews($expResult->id);
         $arrCuisines = Self::getExperienceCuisine($expResult->id);
-        $arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id);
+        $arrLocation = Self::getProductLocations($expResult->id, $expResult->product_vendor_location_id,$cityID);
         $arrImage = Self::getProductImages($expResult->id);  
         //reading all the addons associated with the product
         $arrAddOn = self::readExperienceAddOns($expResult->id);    
@@ -721,14 +723,16 @@ class ExperienceModel {
    * @return  array
    * @since 1.0.0
    */
-  public static function getProductLocations($productID) {
-    $queryResult =    DB::table('product_vendor_locations as pvl')  
+  public static function getProductLocations($productID,$product_vendor_location_id,$cityID) {
+      //echo "product_id == ".$productID." , city = ".$cityID; die;
+    $queryResult =    DB::table('product_vendor_locations as pvl')
               ->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
               ->leftJoin('locations as l1', 'l1.id','=','vla.area_id')
               ->leftJoin('locations as l2', 'l2.id','=','vla.city_id')
               ->leftJoin('locations as l3', 'l3.id','=','vla.state_id')
               ->select('pvl.id as vendor_location_id','l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
               ->where('pvl.product_id',$productID)
+              ->where('vla.city_id',$cityID)
               ->get();
     
     //array to hold location details
