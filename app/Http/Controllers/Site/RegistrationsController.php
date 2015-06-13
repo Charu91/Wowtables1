@@ -20,15 +20,19 @@ use Hash;
 use DB;
 use Auth;
 use Redirect;
+use Mailchimp;
+use WowTables\Http\Models\Profile;
 
 class RegistrationsController extends Controller {
 
+	protected $listId = '986c01a26a';
 
-	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model)
+	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp)
 	{
 		$this->request = $request;
 		$this->alacarte_model = $alacarte_model;
 		$this->experiences_model = $experiences_model;
+		$this->mailchimp = $mailchimp;
 	}
 
 	public function registerView()
@@ -186,10 +190,38 @@ class RegistrationsController extends Controller {
 	{
 		$reservationID = $this->request->input('reserv_id');
 		$reservationType = $this->request->input('reserv_type');
+		echo "reservationID == ".$reservationID." , reservationType == ".$reservationType; die;
 		$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
+		$userID = Session::get('id');
+		$userData = Profile::getUserProfileWeb($userID);
+
+		$zoho_data  = array(
+			'Loyalty_Points_Awarded'=>0,
+			'Order_completed'=>'User Cancelled',
+		);
+		$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
 		if($arrResponse['status']=='ok')
 		{
+			if($reservationType == "experience"){
+				$setBookingKey = 'MERGE11';
+				$setBookingsValue = $userData['data']['bookings_made'];
+
+			} elseif($reservationType == "alacarte"){
+				$setBookingKey = 'MERGE26';
+				$setBookingsValue = $userData['data']['a_la_carte_reservation'];
+			}
+			if(!empty($userData)){
+
+				$merge_vars = array(
+					$setBookingKey=>$setBookingsValue - 1,
+				);
+				$this->mailchimp->lists->subscribe($this->listId, $userData['data']['email'],$merge_vars,"html",true,true );
+				//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+			}
+
+
+
 			echo '1';
 		}
 	}
@@ -239,6 +271,7 @@ class RegistrationsController extends Controller {
 	 */
 	public function updateReservetion()
 	{
+		//echo "<prE>"; print_r(Input::all()); die;
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
 		$edit_date = $this->request->input('edit_date');
@@ -249,6 +282,32 @@ class RegistrationsController extends Controller {
 		$year = $datearray["2"];
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
+
+		$zoho_data = array(
+			'Name' => $data['order']['1']['order_by_name'],
+			'Email_ids' => $data['order']['1']['order_by_email'],
+			'Contact' => $data['order']['1']['order_by_phone'],
+			'Experience_Title' => $data['experience_id'][1]['venue'].' - '.$data['experience_id'][1]['descriptive_title'],
+			'No_of_People' => $data['order']['1']['no_of_tickets'],
+			'Date_of_Visit' =>  date('d-M-Y', strtotime($time[0])),
+			'Time' => $time[1],
+			'Loyalty_Points_Awarded' => $data['experience_id'][1]['reward_points']*$data['experience_id'][1]['multiplier'],
+			'Alternate_ID' =>  'E'.sprintf("%06d",$order_id),
+			'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
+			'Occasion' => $occasion,
+			'Type' => $data['experience_id']['1']['is_event']==0 ? 'Experience' : 'Event',
+			'API_added' => 'Yes',
+			'GIU_Membership_ID' => $email_cookie['membership_number'],
+			'Outlet' => $data['order'][1]['outlet'],
+			'Points_Notes'=>$data['bonus_reason'],
+			'AR_Confirmation_ID'=>$data['order']['1']['confirmation_id'],
+			'Auto_Reservation'=>$auto_reservation[$data['order']['1']['auto_reservation']],
+			'telecampaign' => $campaign_id,
+			'telecampaign_date' => ((isset($campaign_date) && $campaign_date != '') ? date('d-M-Y', strtotime($campaign_date)) : ''),
+		);
+
+		$zoho_res = $this->zoho_add_booking($zoho_data);
+		$zoho_success = $zoho_res->result->form->add->status;
 
 		DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',reservation_status='edited' where id = '$reserv_id'");
    		
@@ -291,7 +350,25 @@ class RegistrationsController extends Controller {
         return view('frontend.pages.myaccount',$arrResponse);
 	}
 
-
+	public function zoho_edit_booking($order_id,$data){
+		$ch = curl_init();
+		$config = array(
+			//'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+			'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+			'scope' => 'creatorapi',
+			'criteria'=>'Alternate_ID='.$order_id,
+		);
+		$curlConfig = array(
+			CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/update/",
+			CURLOPT_POST           => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_POSTFIELDS     => $config + $data,
+		);
+		curl_setopt_array($ch, $curlConfig);
+		$result = curl_exec($ch);
+		//  out($result);die;
+		curl_close($ch);
+	}
 
 
 }
