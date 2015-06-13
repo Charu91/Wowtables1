@@ -815,7 +815,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <select class="form-control" name="city" id="city">
                     <option value="-1">Choose A City</option>
                        <?php foreach ($cities as $cur_city => $city_name_data): ?>
-                          <option value="<?php echo strtolower($city_name_data);?>"><?php echo ucfirst($city_name_data);?></option>                          
+                          <option value="<?php echo $cur_city;?>"><?php echo ucfirst($city_name_data);?></option>                          
                         <?php endforeach; ?>
                   </select>
                   <label class="control-label error-code text-danger" id="city_error">Please pick a city</label>

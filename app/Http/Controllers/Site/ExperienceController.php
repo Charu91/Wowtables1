@@ -94,8 +94,8 @@ class ExperienceController extends Controller {
         $data['allPrices']  = $commonmodel->getAllPrices();
 
         $data['dropdowns_opt']  = 1; //1 for disp
-
-
+        
+        
         return response()->view('frontend.pages.experiencedetails',$data);
     }
 
@@ -228,7 +228,7 @@ class ExperienceController extends Controller {
                             media_resized_new.`file`, media_resized_new.`height`, media_resized_new.`width`, media_resized_new.`image_type`
                             FROM tags
                             INNER JOIN media_resized_new ON tags.`web_media_id` = media_resized_new.`media_id`
-                            WHERE tags.`slug` = 'kailash-test'
+                            WHERE tags.`slug` = '$collection'
                             AND tags.`status` = 'available'";
         
         $collectionResult = DB::select($collectionQuery);
@@ -582,7 +582,8 @@ class ExperienceController extends Controller {
         $dataPost['phone'] = Input::get('phone');
         $dataPost['reservationType'] = 'experience';
         $dataPost['specialRequest'] = Input::get('special');
-        $dataPost['addon']              = Input::get('add_ons');
+        $dataPost['addon']          = Input::get('add_ons');
+        $dataPost['giftCardID']     = Input::get('giftcard_id');
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); //die;
         $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
