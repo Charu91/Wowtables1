@@ -21,18 +21,17 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
-use WowTables\Http\Models\User;
+use WowTables\Http\Models\Profile;
 
 class ExperienceController extends Controller {
 
     protected $listId = '986c01a26a';
 
-	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp, User $user){
+	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp){
         $this->request = $request;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
         $this->mailchimp = $mailchimp;
-        $this->user = $user;
     }
 
     function index(){
@@ -586,8 +585,8 @@ class ExperienceController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']              = Input::get('add_ons');
         $userID = Session::get('id');
-        $userDetails = $this->user->fetch($userID);
-        echo "<pre>"; print_r($userDetails); die;
+        $userData = Profile::getUserProfileWeb($userID);
+
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); //die;
         $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
@@ -597,6 +596,7 @@ class ExperienceController extends Controller {
 
         //die;
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+
         //echo "<pre>"; print_r($productDetails); die;
 
         $arrRules = array(
@@ -637,7 +637,7 @@ class ExperienceController extends Controller {
                 $merge_vars = array(
                     'MERGE1'=>$dataPost['guestName'],
                     'MERGE10'=>date('m/d/Y'),
-                    //'MERGE11'=>$getUsersDetails->experience_bookings + 1,
+                    'MERGE11'=>$userData['data']['bookings_made'] + 1,
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
@@ -654,6 +654,13 @@ class ExperienceController extends Controller {
                     /*$getUsersDetails = $this->user->fetchDetails($userID);
                     echo "<pre>"; print_r($getUsersDetails); die;*/
                     $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                    $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+                    $bookingsMade = $userData['data']['bookings_made'] + 1;
+                    $type = "new";
+                    $reservationType = "experience";
+                    $lastOrderId = $reservationResponse['data']['reservationID'];
+
+                    Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
                     //echo "<pre>"; print_r($reservationResponse); die;
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],
