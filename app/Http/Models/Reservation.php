@@ -439,6 +439,21 @@ class Reservation {
 						$arrSchedule = Schedules::getVendorLocationSchedule($row->vendor_location_id, $day);
 					}
 				}
+
+				if( empty($row->vendor_name) && empty($row->product_name) ) {
+					$name = "";
+					$product_id = "";
+					$address = "";
+					$locality = "";
+				}
+				else {
+					$name = (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name;
+					$product_id = ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id;
+					$address = (empty($row->product_address)) ? $row->vendor_address : $row->product_address;
+					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;		
+
+				}
+
 				$arrDatum = array(
 									'id' => $row->id,
 									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
@@ -446,9 +461,9 @@ class Reservation {
 									'date' => (empty($row->reservation_date)) ? "" : $row->reservation_date,
 									'time' => (empty($row->reservation_time)) ? "" : $row->reservation_time,
 									'no_of_persons' => (empty($row->no_of_persons)) ? "" : $row->no_of_persons,
-									'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
+									'name' => $name,
 									'type' => (empty($row->reservation_type)) ? "" : $row->reservation_type,
-									'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
+									'product_id' => $product_id,
 									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
 									'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
 									'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
@@ -459,9 +474,8 @@ class Reservation {
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
-														'address' => (empty($row->product_address)) ? $row->vendor_address : $row->product_address,
-														'locality' => (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality,
-														
+														'address' => $address,
+														'locality' => $locality,														
 													),
 									'addons' => (empty($arrAddOn)) ? "" : $arrAddOn,
 								);
