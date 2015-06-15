@@ -205,7 +205,7 @@ class RegistrationsController extends Controller {
 			'Loyalty_Points_Awarded'=>0,
 			'Order_completed'=>'User Cancelled',
 		);
-		//$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
+		$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
 		$rewardsPoints = '';
 		$type = '';

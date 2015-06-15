@@ -711,8 +711,8 @@ class ExperienceController extends Controller {
                         {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                            $message->to('tech@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
                         });
                     }
 
