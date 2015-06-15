@@ -25,12 +25,30 @@ class StaticPagesController extends Controller {
 
 	public function home()
 	{
+		/*Auth::user()->email;
+		exit;*/
+		$userRole = Auth::user()->role_id;
+		if($userRole=='13')
+		{
+			return Redirect::to('/mumbai');
+		}
+		else
+		{
 		return view('site.pages.home');
+		}
 	}
 
 	public function loggedInHome()
 	{
+		$userRole = Auth::user()->role_id;
+		if($userRole=='13')
+		{
+			return Redirect::to('/mumbai');
+		}
+		else
+		{
 		return view('site.users.home');
+		}
 	}
 
 	public function pages($pages="")
