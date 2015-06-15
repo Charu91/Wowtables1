@@ -428,9 +428,13 @@ $queryProfileResult = DB::table('users as u')
             $dobUpdate = DB::table('user_attributes_date')
                                 ->where('user_id', $userID)
                                 ->where('user_attribute_id',$arrAttribute['date_of_birth'])
-                                ->update(array('attribute_value' => $data['dob']));
+                                ->update(array('attribute_value' => date('Y-m-d H:i:s',strtotime($data['dob']))));
             
-            if(!$dobUpdate) {
+            if($data['dob'] =='0') {
+               
+            }
+            else
+            {
                 //adding data to the table
                 DB::table('user_attributes_date')
                         ->insert(array(
@@ -440,8 +444,9 @@ $queryProfileResult = DB::table('users as u')
                             'created_at'        => date('Y-m-d H:i:s'),
                             'updated_at'        => date('Y-m-d H:i:s')
                         ));
-            }
 
+            }
+            
             if($data['aniversary_date']!='0000-00-00')
             {
                 $anversiryUpdate = DB::table('user_attributes_date')
