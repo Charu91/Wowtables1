@@ -125,7 +125,17 @@
                     </div>
                 </div>
                 <div class="query-contact widget">
-                    <p>Got a question? <br/> Call our Concierge at 9619551387</p>
+                    <p>Got a question? <br/> Call our Concierge at 9619551387
+                         <?php
+                            $arrdata = DB::table('codes')->where('view_pages', 'thankyou')
+                              ->select('code')
+                              ->get();
+                              foreach ($arrdata as $value) 
+                              {
+                                echo $value->code;
+                              }
+                        ?>
+                    </p>
                 </div>
                 <div class="widget social-box">
                     <ul class="clearfix" style="list-style: none; display: flex;">

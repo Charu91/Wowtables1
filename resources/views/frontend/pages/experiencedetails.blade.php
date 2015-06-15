@@ -579,8 +579,9 @@ $last_url_item = count($url)-1;
            if ($mealOptions)
            {      
           ?>
-          <div class="widget price-box">
-                        <h3 class="text-center">ADD ONS</span></h3>
+          <hr>
+          <div class="widget price-box" style="margin-top: -20px;">
+                        <h3 class="text-center" style="color:#FA7B47">ADD ONS</span></h3>
             <p class="text-center"><small></small></p>
                         <h4></h4>
            <ul>
@@ -591,7 +592,7 @@ $last_url_item = count($url)-1;
            <ul>
             <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
             <li><?php echo $addons['short_description'];?></li>
-            <li>Rs. <?php echo $addons['price'];?> With Tax Rs. {{$addons['post_tax_price']}}</li>
+            <li>Rs. <?php echo $addons['price'];?> <small><br>per person, taxes applicable(additonal to actual cost)</small></li>
           </ul>
           <hr>
           <?php
