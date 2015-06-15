@@ -416,9 +416,8 @@ $queryProfileResult = DB::table('users as u')
             
 
 
-            //$queryAttribute = DB::table('user_attributes') -> select('id','alias') -> get();
-               $queryAttribute = DB::select("SELECT id,alias FROM user_attributes");
-            print_r($queryAttribute);
+            $queryAttribute = DB::table('user_attributes') -> select('id','alias') -> get();
+
             //array having attribute alias and id as key value pair
             $arrAttribute = array();
             foreach($queryAttribute as $row) {
@@ -447,9 +446,9 @@ $queryProfileResult = DB::table('users as u')
                         ));
 
             }
-
-            print_r($arrAttribute);
-            exit;
+            /*print_r($arrAttribute);
+            exit;*/
+            
             if($data['aniversary_date']!='0000-00-00')
             {
                 $anversiryUpdate = DB::table('user_attributes_date')
