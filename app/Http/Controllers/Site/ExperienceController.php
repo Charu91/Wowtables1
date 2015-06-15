@@ -79,7 +79,7 @@ class ExperienceController extends Controller {
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
         //echo "city id = ".$city_id; die;
-         //echo "<prE>"; print_r($data['arrExperience']); die;
+//         echo "<prE>"; print_r($data['arrExperience']); die;
        /*echo '<pre>';
        //print_r( $time_range);
        print_r( $data['arrExperience']);
@@ -680,7 +680,7 @@ class ExperienceController extends Controller {
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Experience",
                         'API_added' => 'Yes',
-                        //'GIU_Membership_ID' => '1001010',
+                        'GIU_Membership_ID' => $userData['data']['membership_number'],
                         'Outlet' => $outlet->name,
                         //'Points_Notes'=>'test',
                         'AR_Confirmation_ID'=>'0',
