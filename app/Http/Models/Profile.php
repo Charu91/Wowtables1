@@ -175,7 +175,7 @@ $queryProfileResult = DB::table('users as u')
                                     //'access_token' => $queryProfileResult->access_token,
                                     'full_name' => $queryProfileResult->full_name,
                                     'email' => $queryProfileResult->email,
-                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,
+                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
                                     'zip_code' => $queryProfileResult->zip_code,
                                     'gender' => $queryProfileResult->gender,
                                     'location_id' => $queryProfileResult->location_id,
