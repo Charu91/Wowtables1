@@ -417,7 +417,8 @@ $queryProfileResult = DB::table('users as u')
 
 
             $queryAttribute = DB::table('user_attributes') -> select('id','alias') -> get();
-
+            
+            print_r($queryAttribute);
             //array having attribute alias and id as key value pair
             $arrAttribute = array();
             foreach($queryAttribute as $row) {
