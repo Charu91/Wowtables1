@@ -227,33 +227,6 @@ class ReservationModel extends Model {
               ->where('reservation_status','!=','cancel')
               ->first()->toArray();
     
-    $user_id = $queryResult['user_id'];
-    $arrdata = DB::table('users')->where('id', $user_id)
-                  ->select('experience_bookings','alacarte_bookings')
-                  ->get();
-    $alacarte_bookings = $arrdata[0]->alacarte_bookings;
-    $experience_bookings = $arrdata[0]->experience_bookings;
-
-    if($reservationType=="experience")
-    { 
-  
-         if($experience_bookings>0)
-        {
-          $experienceMinus = $experience_bookings -1;
-          $update = DB::update("update users set alacarte_bookings='$experienceMinus' where id = '$user_id'");
-        }
-    
-    } 
-    else
-    { 
-   
-        if($alacarte_bookings>0)
-        {
-          $alacarteMinus = $alacarte_bookings -1;
-          $update = DB::update("update users set alacarte_bookings='$alacarteMinus' where id = '$user_id'");
-        }
-    }
-    
   
     if($queryResult) {
       $reservation = Self::find($reservationID);

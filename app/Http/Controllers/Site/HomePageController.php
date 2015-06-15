@@ -403,7 +403,7 @@ The WowTables Team";
                             )
                         );
                 //echo "asd , ";
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                //$this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
 
                     //End MailChimp
                      echo 1;
