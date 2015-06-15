@@ -61,10 +61,16 @@ exit;*/
                 <ul class="col-md-4 list-inline text-right">
                                               <li><a href="<?php echo $data['type'].','.$data['vl_id'].','.$data['product_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a></li>
                                     <li>
-                  <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#cancelModal" id="cancel_reservation">Cancel</a>
+                  <?php if($data['type'] == "experience"){
+                          $change_id = "cancel_reservation";
+                        } else if($data['type'] == "alacarte"){
+                          $change_id = "ac_cancel_reservation";
+                        }
+                  ?>                    
+                  <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#cancelModal" id="<?php echo $change_id;?>" data-reserve-type="{{$data['type']}}">Cancel</a>
                   </li>
                   <input type="hidden" value="{{$data['id']}}"> 
-                  <input type="hidden" value="{{$data['type']}}" id="reserv_typee"> 
+                  <input type="hidden" value="{{$data['type']}}" class="reserv_typee"> 
                 </ul>
               </div>              
             </div>
