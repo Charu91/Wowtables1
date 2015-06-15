@@ -422,8 +422,8 @@ class RegistrationsController extends Controller {
 				'Contact' => $userData['data']['phone_number'],
 				'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
 				'No_of_People' => $party_size,
-				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
-				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
+				'Time' => date("g:ia", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -451,7 +451,7 @@ class RegistrationsController extends Controller {
 							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
 
 			);
-			echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
+			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
 				'outlet'=> $outlet,
@@ -496,8 +496,8 @@ class RegistrationsController extends Controller {
 				'Contact' => $userData['data']['phone_number'],
 				'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
 				'No_of_People' => $party_size,
-				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
-				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
+				'Time' => date("g:i a", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -527,7 +527,7 @@ class RegistrationsController extends Controller {
 			);
 
 
-			echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
+			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
 				'outlet'=> $outlet,
