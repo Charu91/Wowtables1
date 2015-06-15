@@ -96,9 +96,39 @@ class ExperienceController extends Controller {
         $data['allPrices']  = $commonmodel->getAllPrices();
 
         $data['dropdowns_opt']  = 1; //1 for disp
+
+        $seo_title = $data['arrExperience']['data']['seo_title'];
+        $meta_desc = $data['arrExperience']['data']['seo_meta_desciption'];
+        $meta_keywords = $data['arrExperience']['data']['seo_meta_keywords'];
+        if($seo_title=='')
+        {
+          $seoTitleDetails = 'WowTables : '.$data['arrExperience']['data']['name'];
+        }
+        else
+        {
+          $seoTitleDetails = $seo_title;
+        }
+
+        if($meta_desc=='')
+        {
+          $metaDescDetails = 'Reserve : '.$data['arrExperience']['data']['name']. 
+                 'Exclusive curated set menus for fine dining. Find information, address,
+                  maps, photos, menu and reviews';
+        }
+        else
+        {
+          $metaDescDetails = $meta_desc;
+        }
+
         
+        $meta_information = array('seo_title'      => $seoTitleDetails,
+                                   'meta_desc'     => $metaDescDetails, 
+                                   'meta_keywords' => $meta_keywords);
         
-        return response()->view('frontend.pages.experiencedetails',$data);
+       /* print_r($data);
+        exit;*/
+        return view('frontend.pages.experiencedetails',$data)
+                        ->with('meta_information', $meta_information);
     }
 
 

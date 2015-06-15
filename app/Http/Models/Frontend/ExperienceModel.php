@@ -566,6 +566,9 @@ class ExperienceModel {
                   DB::raw('MAX(IF(pa.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
                   DB::raw('MAX(IF(pa.alias = "menu", pat.attribute_value, "")) AS menu'),
                   DB::raw('MAX(IF(pa.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes'),
+                  DB::raw('MAX(IF(pa.alias = "seo_meta_desciption", pat.attribute_value, "")) AS seo_meta_desciption'),
+                  DB::raw('MAX(IF(pa.alias = "seo_title", pat.attribute_value, "")) AS seo_title'),
+                  DB::raw('MAX(IF(pa.alias = "seo_meta_keywords", pat.attribute_value, "")) AS seo_meta_keywords'),
 
                   'media.file as experience_image', 'curators.name as curator_name',
                   'curators.bio as curator_bio', 'curators.designation',
@@ -592,7 +595,7 @@ class ExperienceModel {
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
 
-      //echo "<pre>"; print_r($expResult); die;
+      /*echo "<pre>"; print_r($expResult); die;*/
 
     //array to store the experience details
     $arrExpDetails = array();
@@ -614,6 +617,9 @@ class ExperienceModel {
                     'experience_includes' => $expResult->experience_includes,
                     'short_description' => $expResult->short_description,
                     'terms_and_condition' => $expResult->terms_and_conditions,
+                    'seo_meta_desciption' => $expResult->seo_meta_desciption,
+                    'seo_title' => $expResult->seo_title,
+                    'seo_meta_keywords' => $expResult->seo_meta_keywords,
                     'image' => $arrImage,
                     'type' => $expResult->type,
                     'price' => $expResult->price,
