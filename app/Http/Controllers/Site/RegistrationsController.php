@@ -299,7 +299,7 @@ class RegistrationsController extends Controller {
 					);
 
 					//$email = ["email"["email":]];
-					//$this->mailchimp->lists->subscribe($this->listId, $userData['data']['email'],$merge_vars,"html",true,true );
+					$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",true,true );
 					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 
 				}
@@ -435,7 +435,7 @@ class RegistrationsController extends Controller {
 				'Order_completed'=>'User Changed',
 			);
 
-			//$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
+			$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
 
 			$dataPost = array('reservation_type'=> $reserveType,
 				              'reservationID' => $reserv_id,
@@ -509,7 +509,7 @@ class RegistrationsController extends Controller {
 				'Order_completed'=>'User Changed',
 			);
 
-			//$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
+			$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
 
 			$dataPost = array('reservation_type'=> $reserveType,
 				'reservationID' => $reserv_id,
