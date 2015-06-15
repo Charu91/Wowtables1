@@ -386,7 +386,7 @@ class AlacarteController extends Controller {
                         'No_of_People' => $dataPost['partySize'],
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
-                        //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Alacarte",
                         'API_added' => 'Yes',
