@@ -197,7 +197,7 @@ class RegistrationsController extends Controller {
 		$reservationID = $this->request->input('reserv_id');
 		$reservationType = $this->request->input('reserv_type');
 		//echo "reservationID == ".$reservationID." , reservationType == ".$reservationType; die;
-		//$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
+		$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
 		$userID = Session::get('id');
 		$userData = Profile::getUserProfileWeb($userID);
 
@@ -207,14 +207,19 @@ class RegistrationsController extends Controller {
 		);
 		//$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
+		$rewardsPoints = '';
+		$type = '';
+		$bookingsMade = '';
+		$lastOrderId = '';
+
 		$arrReservationDetails = DB::table('reservation_details')->where('id', $reservationID)
 			->select('reservation_date','reservation_time','no_of_persons','product_vendor_location_id','vendor_location_id')
 			->get();
 
 		//echo "<pre>"; print_r($arrReservationDetails); //die;
 
-		//if($arrResponse['status']=='ok')
-		//{
+		if($arrResponse['status']=='ok')
+		{
 
 			if($reservationType == "experience"){
 
@@ -288,16 +293,19 @@ class RegistrationsController extends Controller {
 
 			}
 
-		echo "<pre>"; print_r($dataPost); die;
-		if(!empty($userData)){
+			if(!empty($userData)){
+					$merge_vars = array(
+						$setBookingKey=>$setBookingsValue - 1,
+					);
 
-				$merge_vars = array(
-					$setBookingKey=>$setBookingsValue - 1,
-				);
-				$this->mailchimp->lists->subscribe($this->listId, $userData['data']['email'],$merge_vars,"html",true,true );
-				//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
-			}
-		Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+					//$email = ["email"["email":]];
+					//$this->mailchimp->lists->subscribe($this->listId, $userData['data']['email'],$merge_vars,"html",true,true );
+					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+
+				}
+
+			Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
 			], function($message) use ($dataPost){
@@ -313,14 +321,14 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to(Input::get('email'))->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
-				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+				$message->to('concierge@wowtables.com')->subject('CR - '.$dataPost['order_id'].' | '.date('d-F-Y',strtotime($dataPost['reservationDate'])).' , '.date('g:i a',strtotime($dataPost['reservationTime'])).' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 
 
 
 			echo '1';
-		//}
+		}
 	}
 
 	/**
@@ -376,6 +384,7 @@ class RegistrationsController extends Controller {
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
 		$edit_date = $this->request->input('edit_date');
+		$edit_date1 = $this->request->input('last_reserv_date');
 		$datearray=explode(" ",$edit_date);
 		$date = trim(str_replace(range('a','z'),'',$datearray["0"]));
 		$remove_comma = trim(str_replace(',','',$datearray["1"]));
@@ -404,7 +413,9 @@ class RegistrationsController extends Controller {
 
 			$locationDetails = $this->experiences_model->getLocationDetails($arrProductVendorLocationId[0]->product_vendor_location_id);
 
-
+			//echo "<prE>"; print_r($productDetails);
+			//echo "<br/>----outlet-----<prE>"; print_r($outlet);
+			//echo "<br/>----locationDetails-----<prE>"; print_r($locationDetails);
 			$zoho_data = array(
 				'Name' => $userData['data']['full_name'],
 				'Email_ids' => $userData['data']['email'],
@@ -429,18 +440,18 @@ class RegistrationsController extends Controller {
 			$dataPost = array('reservation_type'=> $reserveType,
 				              'reservationID' => $reserv_id,
 				              'partySize' => $party_size,
-							  'reservationDate'=> $edit_date,
+							  'reservationDate'=> $edit_date1,
 							  'reservationTime'=> $this->request->input('edit_time'),
 				              'guestName'=>$userData['data']['full_name'],
 							  'guestEmail'=>$userData['data']['email'],
 				              'guestPhoneNo'=>$userData['data']['phone_number'],
 							  'order_id'=> sprintf("%06d",$reserv_id),
 				              'venue' => $outlet->vendor_name,
-							  'reservation_date'=> date('d-F-Y',strtotime($edit_date)),
+							  'reservation_date'=> date('d-F-Y',strtotime($edit_date1)),
 							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
 
 			);
-
+			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
 				'outlet'=> $outlet,
@@ -462,8 +473,8 @@ class RegistrationsController extends Controller {
 				], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
-				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 
 		} else if($reserveType == "alacarte"){
@@ -503,14 +514,14 @@ class RegistrationsController extends Controller {
 			$dataPost = array('reservation_type'=> $reserveType,
 				'reservationID' => $reserv_id,
 				'partySize' => $party_size,
-				'reservationDate'=> $edit_date,
+				'reservationDate'=> $edit_date1,
 				'reservationTime'=> $this->request->input('edit_time'),
 				'guestName'=>$userData['data']['full_name'],
 				'guestEmail'=>$userData['data']['email'],
 				'guestPhoneNo'=>$userData['data']['phone_number'],
 				'order_id'=> sprintf("%06d",$reserv_id),
 				'venue' => $outlet->vendor_name,
-				'reservation_date'=> date('d-F-Y',strtotime($edit_date)),
+				'reservation_date'=> date('d-F-Y',strtotime($edit_date1)),
 				'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
 
 			);
@@ -538,8 +549,8 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
-				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 		}
 
