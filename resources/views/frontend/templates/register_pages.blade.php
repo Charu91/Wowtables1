@@ -173,7 +173,16 @@ if(isset($_REQUEST['gclid'])){
               <p class="copyright">&copy; All Rights reserved | Wowtables</p>
             </div>
             <div class="col-md-8 col-sm-8">
-              <p class="pull-right concierge-info"><a href="#header">Login</a> to make a reservation online or Call our Concierge for assistance at 09619551387</p> 
+              <p class="pull-right concierge-info"><a href="#header">Login</a> to make a reservation online or Call our Concierge for assistance at 09619551387
+                 <?php
+                $arrdata = DB::table('codes')->where('view_pages', 'registration')
+                  ->select('code')
+                  ->get();
+                  foreach ($arrdata as $value) {
+                    echo $value->code;
+                  }
+                ?>
+              </p> 
               <a style="float: right;" href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>
             </div>
           </div>

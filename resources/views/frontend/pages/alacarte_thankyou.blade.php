@@ -148,5 +148,13 @@
         </div>
     </div>
 
-
+ <?php
+    $arrdata = DB::table('codes')->where('view_pages', 'thankyou')
+      ->select('code')
+      ->get();
+      foreach ($arrdata as $value) 
+      {
+        echo $value->code;
+      }
+    ?>
 @endsection
