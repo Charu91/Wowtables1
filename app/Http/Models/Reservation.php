@@ -395,7 +395,7 @@ class Reservation {
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();
-		//echo $queryResult->toSql();
+		//echo $queryResult->toSql(); 
 		
 		//array to store the information
 		$arrData = array();
@@ -442,20 +442,20 @@ class Reservation {
 				$arrDatum = array(
 									'id' => $row->id,
 									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
-									'status' => $row->reservation_status,
-									'date' => $row->reservation_date,
-									'time' => $row->reservation_time,
-									'no_of_persons' => $row->no_of_persons,
+									'status' => (empty($row->reservation_status)) ? "" : $row->reservation_status,
+									'date' => (empty($row->reservation_date)) ? "" : $row->reservation_date,
+									'time' => (empty($row->reservation_time)) ? "" : $row->reservation_time,
+									'no_of_persons' => (empty($row->no_of_persons)) ? "" : $row->no_of_persons,
 									'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
-									'type' => $row->reservation_type,
+									'type' => (empty($row->reservation_type)) ? "" : $row->reservation_type,
 									'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
 									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
 									'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
 									'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
-									'guest_name' => $row->guest_name,
-									'guest_email' => $row->guest_email,
-									'guest_phone' => $row->guest_phone,
-									'reward_point' => $row->points_awarded,
+									'guest_name' => (empty($row->guest_name)) ? "" : $row->guest_name,
+									'guest_email' => (empty($row->guest_email)) ? "" : $row->guest_email,
+									'guest_phone' => (empty($row->guest_phone)) ? "" : $row->guest_phone,
+									'reward_point' => (empty($row->points_awarded)) ? "" : $row->points_awarded,
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
@@ -463,7 +463,7 @@ class Reservation {
 														'locality' => (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality,
 														
 													),
-									'addons' => $arrAddOn,
+									'addons' => (empty($arrAddOn)) ? "" : $arrAddOn,
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp ) {
