@@ -50,7 +50,7 @@ class ReservationDetails extends Model {
 	 * @return	boolean
 	 * @since	1.0.0
 	 */
-	public static function addReservationDetails($arrData, $userID, $userType='website_user', $objMailChimp) {
+	public static function addReservationDetails($arrData, $userID, $objMailChimp, $userType='website_user') {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
