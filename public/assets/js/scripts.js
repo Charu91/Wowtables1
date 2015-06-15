@@ -399,7 +399,7 @@ $(document).ready(function() {
         $("#party_edit").removeClass("hidden")
     });
     $("#cancel_current").click(function(e) {
-        alert("sad");
+        
         e.preventDefault();
         $(".cancel_loader").show();
          var reserv_typee = $('#reserv_type').val();
