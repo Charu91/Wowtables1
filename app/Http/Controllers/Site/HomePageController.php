@@ -388,7 +388,7 @@ The WowTables Team";
                         'MERGE20'=> isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
                     );
 
-                    $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                    //$this->mailchimp->lists->subscribe($this->listId, $_POST['email'],$merge_vars,"html",false,true );
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
@@ -403,7 +403,7 @@ The WowTables Team";
                             )
                         );
                 //echo "asd , ";
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                //$this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
 
                     //End MailChimp
                      echo 1;

@@ -79,7 +79,7 @@ class ExperienceController extends Controller {
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
         //echo "city id = ".$city_id; die;
-         //echo "<prE>"; print_r($data['arrExperience']); die;
+//         echo "<prE>"; print_r($data['arrExperience']); die;
        /*echo '<pre>';
        //print_r( $time_range);
        print_r( $data['arrExperience']);
@@ -677,7 +677,7 @@ class ExperienceController extends Controller {
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
-                $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
             //End MailChimp
@@ -706,11 +706,11 @@ class ExperienceController extends Controller {
                         'No_of_People' => $dataPost['partySize'],
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
-                        //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Experience",
                         'API_added' => 'Yes',
-                        //'GIU_Membership_ID' => '1001010',
+                        'GIU_Membership_ID' => $userData['data']['membership_number'],
                         'Outlet' => $outlet->name,
                         //'Points_Notes'=>'test',
                         'AR_Confirmation_ID'=>'0',
@@ -741,8 +741,8 @@ class ExperienceController extends Controller {
                         {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                            $message->to('tech@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
                         });
                     }
 

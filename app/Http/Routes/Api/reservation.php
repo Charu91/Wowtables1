@@ -50,7 +50,7 @@
 					'domain' => env('WEBSITE_URL'),
 				));
  
- Route::get('api/reservation/my_reservation/{access_token}',
+ Route::get('api/reservation/my_reservation/{access_token?}',
  				array(
  					'uses' => 'Api\ReservationController@reservationRecord',
 					'as' => '',

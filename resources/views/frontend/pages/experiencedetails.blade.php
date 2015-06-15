@@ -848,15 +848,16 @@ $last_url_item = count($url)-1;
                       <span class="input-group-addon " style="color: black;"><i class="glyphicon glyphicon-earphone"></i></span>
                       <input type="text" name="phone" id="phone" class="form-control" placeholder="MOBILE" value="<?=(isset($user_data['phone']))? $user_data['phone']:''; ?>">
                     </div>
-                    <div class="reservation_errors" id="error_phone"></div> 
+                    <div class="reservation_errors" id="error_phone"></div>
+                      <div class="input-group">
+                          <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
+                          <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)">
+                      </div><br>
                     <div class="input-group">
                       <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
                       <input type="text" name="special" id="special" class="form-control" placeholder="(Optional) Special Requests">
-                    </div><br> 
-                     <div class="input-group">
-                      <span class="input-group-addon" style="color: black;"><i class="glyphicon glyphicon-plus"></i></span>
-                      <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)">
-                    </div> 
+                    </div>
+
                     <div class="reservation_errors"></div>
                     <div class="reservation_errors" id="error_people"></div> 
                     <div class="text-center">

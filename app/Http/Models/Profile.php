@@ -175,7 +175,7 @@ $queryProfileResult = DB::table('users as u')
                                     //'access_token' => $queryProfileResult->access_token,
                                     'full_name' => $queryProfileResult->full_name,
                                     'email' => $queryProfileResult->email,
-                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,
+                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
                                     'zip_code' => $queryProfileResult->zip_code,
                                     'gender' => $queryProfileResult->gender,
                                     'location_id' => $queryProfileResult->location_id,
@@ -672,22 +672,52 @@ $queryProfileResult = DB::table('users as u')
                 ));
 
 
-            $pointsEarned = DB::table('user_attributes_integer')
-                ->where('user_id', $userID)
-                ->where('user_attribute_id',$arrAttribute['points_earned'])
-                ->update(array('attribute_value' => $points));
+            if($reservationType == "experience"){
 
-            if(!$pointsEarned) {
-                //adding data to the table
-                DB::table('user_attributes_integer')
-                    ->insert(array(
-                        'user_id'           => $userID,
-                        'user_attribute_id' => $arrAttribute['points_earned'],
-                        'attribute_value'   => $points,
-                        'created_at'        => date('Y-m-d H:i:s'),
-                        'updated_at'        => date('Y-m-d H:i:s')
-                    ));
+                $bookingsMade = DB::table('user_attributes_integer')
+                    ->where('user_id', $userID)
+                    ->where('user_attribute_id',$arrAttribute['bookings_made'])
+                    ->update(array('attribute_value' => $bookings));
+
+                if(!$bookingsMade) {
+                    //adding data to the table
+                    DB::table('user_attributes_integer')
+                        ->insert(array(
+                            'user_id'           => $userID,
+                            'user_attribute_id' => $arrAttribute['bookings_made'],
+                            'attribute_value'   => $bookings,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ));
+                }
+
             }
+
+            if($reservationType == "alacarte"){
+
+                $bookingsMade = DB::table('user_attributes_integer')
+                    ->where('user_id', $userID)
+                    ->where('user_attribute_id',$arrAttribute['a_la_carte_reservation'])
+                    ->update(array('attribute_value' => $bookings));
+
+                if(!$bookingsMade) {
+                    //adding data to the table
+                    DB::table('user_attributes_integer')
+                        ->insert(array(
+                            'user_id'           => $userID,
+                            'user_attribute_id' => $arrAttribute['a_la_carte_reservation'],
+                            'attribute_value'   => $bookings,
+                            'created_at'        => date('Y-m-d H:i:s'),
+                            'updated_at'        => date('Y-m-d H:i:s')
+                        ));
+                }
+
+            }
+
+        } else if($type == "cancel"){
+
+            DB::update("update reward_points_earned set status='cancelled' where reservation_id = '$lastOrderId'");
+
 
             if($reservationType == "experience"){
 
