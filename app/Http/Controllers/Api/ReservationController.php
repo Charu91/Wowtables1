@@ -183,7 +183,7 @@ use Mailchimp;
 				$arrResponse = Reservation::validateReservationData($data);
 				
 				if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-						$arrResponse = ReservationDetails::addReservationDetails($data,$userID, 'mobile_user', $this->mailchimp);
+						$arrResponse = ReservationDetails::addReservationDetails($data,$userID, $this->mailchimp, 'mobile_user');
 					}
 				}
 				else {
