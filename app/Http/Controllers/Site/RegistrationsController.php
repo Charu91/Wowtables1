@@ -20,19 +20,25 @@ use Hash;
 use DB;
 use Auth;
 use Redirect;
+use Mail;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+use Response;
 use Mailchimp;
 use WowTables\Http\Models\Profile;
+use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
+use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 
 class RegistrationsController extends Controller {
 
 	protected $listId = '986c01a26a';
 
-	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp)
+	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp,RestaurantLocationsRepository $restaurantLocationsRepository,ExperiencesRepository $experiencesRepository,ExperienceModel $experiences_model)
 	{
 		$this->request = $request;
 		$this->alacarte_model = $alacarte_model;
 		$this->experiences_model = $experiences_model;
 		$this->mailchimp = $mailchimp;
+		$this->restaurantLocationsRepository = $restaurantLocationsRepository;
+		$this->experiencesRepository = $experiencesRepository;
 	}
 
 	public function registerView()
@@ -190,8 +196,8 @@ class RegistrationsController extends Controller {
 	{
 		$reservationID = $this->request->input('reserv_id');
 		$reservationType = $this->request->input('reserv_type');
-		echo "reservationID == ".$reservationID." , reservationType == ".$reservationType; die;
-		$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
+		//echo "reservationID == ".$reservationID." , reservationType == ".$reservationType; die;
+		//$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
 		$userID = Session::get('id');
 		$userData = Profile::getUserProfileWeb($userID);
 
@@ -199,19 +205,91 @@ class RegistrationsController extends Controller {
 			'Loyalty_Points_Awarded'=>0,
 			'Order_completed'=>'User Cancelled',
 		);
-		$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
+		//$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
-		if($arrResponse['status']=='ok')
-		{
+		$arrReservationDetails = DB::table('reservation_details')->where('id', $reservationID)
+			->select('reservation_date','reservation_time','no_of_persons','product_vendor_location_id','vendor_location_id')
+			->get();
+
+		//echo "<pre>"; print_r($arrReservationDetails); //die;
+
+		//if($arrResponse['status']=='ok')
+		//{
+
 			if($reservationType == "experience"){
+
 				$setBookingKey = 'MERGE11';
 				$setBookingsValue = $userData['data']['bookings_made'];
 
-			} elseif($reservationType == "alacarte"){
+
+				$arrProductID = DB::table('product_vendor_locations')->where('id', $arrReservationDetails[0]->product_vendor_location_id)
+					->select('product_id','vendor_location_id')
+					->get();
+
+				$productDetails = $this->experiencesRepository->getByExperienceId($arrProductID[0]->product_id);
+
+				$outlet = $this->experiences_model->getOutlet($arrReservationDetails[0]->product_vendor_location_id);
+
+				//$locationDetails = $this->experiences_model->getLocationDetails($arrReservationDetails[0]->product_vendor_location_id);
+				//echo "<br/>---- productdetails---<pre>"; print_r($productDetails);
+				//echo "<br/>---- outlet---<pre>"; print_r($outlet);
+				$rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+				$bookingsMade = $userData['data']['bookings_made'] - 1;
+				$type = "cancel";
+				$reservationType = "experience";
+				$lastOrderId = $reservationID;
+
+				$dataPost = array('reservation_type'=> $reservationType,
+					'reservationID' => $reservationID,
+					'partySize' => $arrReservationDetails[0]->no_of_persons,
+					'reservationDate'=> $arrReservationDetails[0]->reservation_date,
+					'reservationTime'=> $arrReservationDetails[0]->reservation_time,
+					'guestName'=>$userData['data']['full_name'],
+					'guestEmail'=>$userData['data']['email'],
+					'guestPhoneNo'=>$userData['data']['phone_number'],
+					'order_id'=> "#E".sprintf("%06d",$reservationID),
+					'venue' => $outlet->vendor_name,
+				);
+
+
+			} else if($reservationType == "alacarte"){
+
 				$setBookingKey = 'MERGE26';
 				$setBookingsValue = $userData['data']['a_la_carte_reservation'];
+
+
+				$outlet = $this->alacarte_model->getOutlet($arrReservationDetails[0]->vendor_location_id);
+
+				$locationDetails = $this->alacarte_model->getLocationDetails($arrReservationDetails[0]->vendor_location_id);
+
+				$vendorDetails = $this->restaurantLocationsRepository->getByRestaurantLocationId($arrReservationDetails[0]->vendor_location_id);
+				//echo "<br/>---- vendorDetails---<pre>"; print_r($vendorDetails);
+				//echo "<br/>---- outlet---<pre>"; print_r($outlet);
+
+				$rewardsPoints = $vendorDetails['attributes']['reward_points_per_reservation'];
+				$bookingsMade = $userData['data']['a_la_carte_reservation'] - 1;
+				$type = "cancel";
+				$reservationType = "alacarte";
+				$lastOrderId = $reservationID;
+
+				$dataPost = array('reservation_type'=> $reservationType,
+					'reservationID' => $reservationID,
+					'partySize' => $arrReservationDetails[0]->no_of_persons,
+					'reservationDate'=> $arrReservationDetails[0]->reservation_date,
+					'reservationTime'=> $arrReservationDetails[0]->reservation_time,
+					'guestName'=>$userData['data']['full_name'],
+					'guestEmail'=>$userData['data']['email'],
+					'guestPhoneNo'=>$userData['data']['phone_number'],
+					'order_id'=> "#A".sprintf("%06d",$reservationID),
+					'venue' => $outlet->vendor_name,
+				);
+
+
+
 			}
-			if(!empty($userData)){
+
+		echo "<pre>"; print_r($dataPost); die;
+		if(!empty($userData)){
 
 				$merge_vars = array(
 					$setBookingKey=>$setBookingsValue - 1,
@@ -219,11 +297,30 @@ class RegistrationsController extends Controller {
 				$this->mailchimp->lists->subscribe($this->listId, $userData['data']['email'],$merge_vars,"html",true,true );
 				//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 			}
+		Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+			Mail::send('site.pages.cancel_reservation',[
+				'post_data'=>$dataPost,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+
+
+			Mail::send('site.pages.cancel_reservation',[
+				'post_data'=>$dataPost,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to(Input::get('email'))->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
 
 
 
 			echo '1';
-		}
+		//}
 	}
 
 	/**
@@ -275,7 +372,7 @@ class RegistrationsController extends Controller {
 		$vendor_details = $this->request->input('vendor_details');
 		$array = explode(',', $vendor_details);
 		$reserveType = $array['0'];
-
+		//echo "sd = ".$reserveType; die;
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
 		$edit_date = $this->request->input('edit_date');
@@ -287,33 +384,166 @@ class RegistrationsController extends Controller {
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
-		$zoho_data = array(
-			'Name' => $data['order']['1']['order_by_name'],
-			'Email_ids' => $data['order']['1']['order_by_email'],
-			'Contact' => $data['order']['1']['order_by_phone'],
-			'Experience_Title' => $data['experience_id'][1]['venue'].' - '.$data['experience_id'][1]['descriptive_title'],
-			'No_of_People' => $data['order']['1']['no_of_tickets'],
-			'Date_of_Visit' =>  date('d-M-Y', strtotime($time[0])),
-			'Time' => $time[1],
-			'Loyalty_Points_Awarded' => $data['experience_id'][1]['reward_points']*$data['experience_id'][1]['multiplier'],
-			'Alternate_ID' =>  'E'.sprintf("%06d",$order_id),
-			'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
-			'Occasion' => $occasion,
-			'Type' => $data['experience_id']['1']['is_event']==0 ? 'Experience' : 'Event',
-			'API_added' => 'Yes',
-			'GIU_Membership_ID' => $email_cookie['membership_number'],
-			'Outlet' => $data['order'][1]['outlet'],
-			'Points_Notes'=>$data['bonus_reason'],
-			'AR_Confirmation_ID'=>$data['order']['1']['confirmation_id'],
-			'Auto_Reservation'=>$auto_reservation[$data['order']['1']['auto_reservation']],
-			'telecampaign' => $campaign_id,
-			'telecampaign_date' => ((isset($campaign_date) && $campaign_date != '') ? date('d-M-Y', strtotime($campaign_date)) : ''),
-		);
-
-		$zoho_res = $this->zoho_add_booking($zoho_data);
-		$zoho_success = $zoho_res->result->form->add->status;
-
 		DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',reservation_status='edited' where id = '$reserv_id'");
+
+		$userID = Session::get('id');
+		$userData = Profile::getUserProfileWeb($userID);
+
+		if($reserveType == "experience"){
+			$arrProductVendorLocationId = DB::table('reservation_details')->where('id', $reserv_id)
+				->select('product_vendor_location_id')
+				->get();
+
+			$arrProductID = DB::table('product_vendor_locations')->where('id', $arrProductVendorLocationId[0]->product_vendor_location_id)
+				->select('product_id','vendor_location_id')
+				->get();
+
+			$productDetails = $this->experiencesRepository->getByExperienceId($arrProductID[0]->product_id);
+
+			$outlet = $this->experiences_model->getOutlet($arrProductVendorLocationId[0]->product_vendor_location_id);
+
+			$locationDetails = $this->experiences_model->getLocationDetails($arrProductVendorLocationId[0]->product_vendor_location_id);
+
+
+			$zoho_data = array(
+				'Name' => $userData['data']['full_name'],
+				'Email_ids' => $userData['data']['email'],
+				'Contact' => $userData['data']['phone_number'],
+				'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
+				'No_of_People' => $party_size,
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
+				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
+				'Type' => 'Experience',
+				'API_added' => 'Yes',
+				'GIU_Membership_ID' =>$userData['data']['membership_number'],
+				'Outlet' => $outlet->name,
+				//'Points_Notes'=>$this->data['bonus_reason'],
+				'AR_Confirmation_ID'=>'0',
+				'Auto_Reservation'=>'Not available',
+				'Order_completed'=>'User Changed',
+			);
+
+			//$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
+
+			$dataPost = array('reservation_type'=> $reserveType,
+				              'reservationID' => $reserv_id,
+				              'partySize' => $party_size,
+							  'reservationDate'=> $edit_date,
+							  'reservationTime'=> $this->request->input('edit_time'),
+				              'guestName'=>$userData['data']['full_name'],
+							  'guestEmail'=>$userData['data']['email'],
+				              'guestPhoneNo'=>$userData['data']['phone_number'],
+							  'order_id'=> sprintf("%06d",$reserv_id),
+				              'venue' => $outlet->vendor_name,
+							  'reservation_date'=> date('d-F-Y',strtotime($edit_date)),
+							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
+
+			);
+
+			Mail::send('site.pages.edit_experience_reservation',[
+				'location_details'=> $locationDetails,
+				'outlet'=> $outlet,
+				'post_data'=>$dataPost,
+				'productDetails'=>$productDetails,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+
+
+			Mail::send('site.pages.edit_experience_reservation',[
+				'location_details'=> $locationDetails,
+				'outlet'=> $outlet,
+				'post_data'=>$dataPost,
+				'productDetails'=>$productDetails,
+				], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+
+		} else if($reserveType == "alacarte"){
+
+			$arrVendorLocationID = DB::table('reservation_details')->where('id', $reserv_id)
+				->select('vendor_location_id')
+				->get();
+
+			$outlet = $this->alacarte_model->getOutlet($arrVendorLocationID[0]->vendor_location_id);
+
+			$locationDetails = $this->alacarte_model->getLocationDetails($arrVendorLocationID[0]->vendor_location_id);
+
+			$vendorDetails = $this->restaurantLocationsRepository->getByRestaurantLocationId($arrVendorLocationID[0]->vendor_location_id);
+
+
+			$zoho_data = array(
+				'Name' => $userData['data']['full_name'],
+				'Email_ids' => $userData['data']['email'],
+				'Contact' => $userData['data']['phone_number'],
+				'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
+				'No_of_People' => $party_size,
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
+				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
+				'Type' => 'Experience',
+				'API_added' => 'Yes',
+				'GIU_Membership_ID' =>$userData['data']['membership_number'],
+				'Outlet' => $outlet->name,
+				//'Points_Notes'=>$this->data['bonus_reason'],
+				'AR_Confirmation_ID'=>'0',
+				'Auto_Reservation'=>'Not available',
+				'Order_completed'=>'User Changed',
+			);
+
+			//$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
+
+			$dataPost = array('reservation_type'=> $reserveType,
+				'reservationID' => $reserv_id,
+				'partySize' => $party_size,
+				'reservationDate'=> $edit_date,
+				'reservationTime'=> $this->request->input('edit_time'),
+				'guestName'=>$userData['data']['full_name'],
+				'guestEmail'=>$userData['data']['email'],
+				'guestPhoneNo'=>$userData['data']['phone_number'],
+				'order_id'=> sprintf("%06d",$reserv_id),
+				'venue' => $outlet->vendor_name,
+				'reservation_date'=> date('d-F-Y',strtotime($edit_date)),
+				'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
+
+			);
+
+
+
+			Mail::send('site.pages.edit_restaurant_reservation',[
+				'location_details'=> $locationDetails,
+				'outlet'=> $outlet,
+				'post_data'=>$dataPost,
+				'productDetails'=>$vendorDetails,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+
+
+			Mail::send('site.pages.edit_restaurant_reservation',[
+				'location_details'=> $locationDetails,
+				'outlet'=> $outlet,
+				'post_data'=>$dataPost,
+				'productDetails'=>$vendorDetails,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['username']);
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+		}
+
+
    		
    		echo '1';
 	}

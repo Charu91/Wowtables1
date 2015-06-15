@@ -390,7 +390,7 @@ class AlacarteController extends Controller {
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Alacarte",
                         'API_added' => 'Yes',
-                        //'GIU_Membership_ID' => '1001010',
+                        'GIU_Membership_ID' => $userData['data']['membership_number'],
                         'Outlet' => $outlet->name,
                         //'Points_Notes'=>'test',
                         'AR_Confirmation_ID'=>'0',
