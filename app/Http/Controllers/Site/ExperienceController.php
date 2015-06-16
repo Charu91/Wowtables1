@@ -316,13 +316,7 @@ class ExperienceController extends Controller {
                     );
              }
 
-             print_r($arrData);
-             foreach ($arrData['data'] as $key=>$data)
-                {
-                  echo $data['cityname'];
-                  echo '<br>';
-                  }
-             exit;
+            
              //end exclusiveexperiences query
              $alaCartaArData = array();
              

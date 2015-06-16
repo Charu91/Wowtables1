@@ -10,12 +10,13 @@ else
 ?>
 
 <?php 
+
 /*print_r($arrData);
-foreach ($arrData as $data)
-             		{
-             			echo $data['cityname'];
-             			}
-exit;*/
+foreach ($arrData['data'] as $key=>$data)
+                {
+                  echo $data['cityname'];
+                  echo '<br>';
+                  };*/
 /*print_r($alaCartaArData);
 exit;*/
 ?>
@@ -53,7 +54,7 @@ else{?>
 			<h3 style="padding-bottom:10px;margin-left:15px;">Exclusive Dining Experiences: </h3>
 			<ul class="experience-grid">
 				<?php
-				foreach ($arrData as $data)
+				foreach ($arrData['data'] as $key=>$data)
              		{
 
 				?>
