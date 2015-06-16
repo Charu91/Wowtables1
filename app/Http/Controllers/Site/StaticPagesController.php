@@ -28,7 +28,7 @@ class StaticPagesController extends Controller {
 		/*Auth::user()->email;
 		exit;*/
 		$userRole = Auth::user()->role_id;
-		if($userRole=='13')
+		if($userRole=='13' && $userRole=='12' && $userRole=='1')
 		{
 			return Redirect::to('/mumbai');
 		}

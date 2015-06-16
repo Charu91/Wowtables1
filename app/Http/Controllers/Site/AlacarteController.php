@@ -175,8 +175,39 @@ class AlacarteController extends Controller {
         $data['allAreas']  =   $commonmodel->getAllAreas();
         $data['allPrices']  = $commonmodel->getAllPrices();
         $data['dropdowns_opt']  = 0; //1 for disp
+        
 
-        return response()->view('frontend.pages.alacartedetails',$data);
+        $seo_title = $data['arrALaCarte']['data']['seo_title'];
+        $meta_desc = $data['arrALaCarte']['data']['seo_meta_description'];
+        $meta_keywords = $data['arrALaCarte']['data']['seo_meta_keywords'];
+        if($seo_title=='')
+        {
+          $seoTitleDetails = 'WowTables: '.$data['arrALaCarte']['data']['title'].', '.$data['arrALaCarte']['data']['location_address']['city'].', '.$data['arrALaCarte']['data']['location_address']['area'];
+        }
+        else
+        {
+          $seoTitleDetails = $seo_title;
+        }
+
+        if($meta_desc=='')
+        {
+          $metaDescDetails = 'Reserve a table at '.$data['arrALaCarte']['data']['title']. 
+                 'Enjoy in '.$data['arrALaCarte']['data']['location_address']['area']. ', '. $data['arrALaCarte']['data']['location_address']['city'].' Find information, curators suggestions, maps, address, photos and reviews';
+        }
+        else
+        {
+          $metaDescDetails = $meta_desc;
+        }
+
+        
+        $meta_information = array('seo_title'      => $seoTitleDetails,
+                                   'meta_desc'     => $metaDescDetails, 
+                                   'meta_keywords' => $meta_keywords);
+        //print_r($meta_information);
+        //exit;
+
+        return view('frontend.pages.alacartedetails',$data)
+                    ->with('meta_information', $meta_information);
     }
 
     public function search_filter()

@@ -452,6 +452,59 @@ class AlacarteModel{
             //reading vendor-cuisine
             $arrVendorCuisine = Self::getVendorLocationCuisine(array($queryResult->vl_id));
             
+            //reading vendor-cuisine
+            $seo_meta_description = DB::select("SELECT vat.attribute_value AS seo_meta_description
+                                        FROM vendor_attributes_text AS vat
+                                        LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                        WHERE vat.vendor_id = '$queryResult->vendor_id'
+                                        AND va.alias = 'seo_meta_description'");
+
+           //reading vendor-cuisine
+            $seo_meta_keywords  = DB::select("SELECT vat.attribute_value AS seo_meta_keywords
+                                  FROM vendor_attributes_text AS vat
+                                  LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                  WHERE vat.vendor_id = '$queryResult->vendor_id'
+                                  AND va.alias = 'seo_meta_keywords'");
+
+            //reading vendor-cuisine
+            $seo_title = DB::select("SELECT vat.attribute_value AS seo_title
+                                  FROM vendor_attributes_text AS vat
+                                  LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                  WHERE vat.vendor_id = '$queryResult->vendor_id'
+                                  AND va.alias = 'seo_title'");
+         /* $seoDetails = array('seo_meta_description' =>$seo_meta_description,
+                               'seo_meta_keywords'=>$seo_meta_keywords,'seo_title'=>$seo_title);
+          print_r($seo_title);
+          echo $seo_meta_description['0']->seo_meta_description;*/
+          
+          if(empty($seo_meta_description))
+          {
+            $seoMetaDesc = '';
+          }
+          else
+          {
+              $seoMetaDesc = $seo_meta_description['0']->seo_meta_description;
+          }
+
+           if(empty($seo_meta_keywords))
+          {
+            $seoMetaKey = '';
+          }
+          else
+          {
+              $seoMetaKey = $seo_meta_keywords['0']->seo_meta_keywords;
+          }
+
+          if(empty($seo_title))
+          {
+            $seoTitle = '';
+          }
+          else
+          {
+              $seoTitle = $seo_title['0']->seo_title;
+          }
+          /*exit;*/
+
             //reading the similar vendors
             $arrSimilarVendor =  Self::getSimilarALaCarte(array('location_id' => $queryResult->area_id, 'pricing_level' => $queryResult->pricing_level));
             
@@ -477,6 +530,9 @@ class AlacarteModel{
                                     'resturant_information' => $queryResult->resturant_info,
                                     'short_description' => $queryResult->short_description,
                                     'terms_and_condition' => $queryResult->terms_conditions,
+                                    'seo_meta_description' => $seoMetaDesc,
+                                    'seo_meta_keywords' => $seoMetaKey,
+                                    'seo_title' => $seoTitle,
                                     'pricing' => $queryResult->pricing_level,
                                     'image' => $arrImage,                                   
                                     'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
