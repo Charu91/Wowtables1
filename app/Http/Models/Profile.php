@@ -682,6 +682,8 @@ $queryProfileResult = DB::table('users as u')
             $arrAttribute[$row->alias] = $row->id;
         }
 
+
+
         if($type == "new"){
 
             DB::table('reward_points_earned')
@@ -694,6 +696,12 @@ $queryProfileResult = DB::table('users as u')
                     'created_at'      => date('Y-m-d H:i:s'),
                     'updated_at'      => date('Y-m-d H:i:s')
                 ));
+
+
+
+            $q = "UPDATE users SET points_earned = points_earned + ".$points." WHERE id = ?";
+
+            DB::update($q,[$userID]);
 
 
             if($reservationType == "experience"){
@@ -742,6 +750,10 @@ $queryProfileResult = DB::table('users as u')
 
             DB::update("update reward_points_earned set status='cancelled' where reservation_id = '$lastOrderId'");
 
+            $q = "UPDATE users SET points_spent = points_spent + ".$points." WHERE id = ?";
+
+            DB::update($q,[$userID]);
+
 
             if($reservationType == "experience"){
 
@@ -787,6 +799,43 @@ $queryProfileResult = DB::table('users as u')
 
         }
 
+
+    }
+
+    public static function updatePointsManually($points,$description,$user_id,$status){
+
+        if($status == "add_points"){
+            DB::table('reward_points_earned')
+                ->insert(array(
+                    'user_id'         => $user_id,
+                    'reservation_id'  => 0,
+                    'points_earned'   => $points,
+                    'status'          => 'approved',
+                    'description'     => $description,
+                    'created_at'      => date('Y-m-d H:i:s'),
+                    'updated_at'      => date('Y-m-d H:i:s')
+                ));
+
+
+            $q = "UPDATE users SET points_earned = points_earned + ".$points." WHERE id = ?";
+
+            DB::update($q,[$user_id]);
+
+        } else if($status == "redeem_points" || $status == "remove_points"){
+
+            DB::table('reward_points_redeemed')
+                ->insert(array(
+                    'user_id'         => $user_id,
+                    'points_redeemed'   => $points,
+                    'description'     => $description,
+                    'created_at'      => date('Y-m-d H:i:s'),
+                    'updated_at'      => date('Y-m-d H:i:s')
+                ));
+
+            $q = "UPDATE users SET points_spent = points_spent + ".$points." WHERE id = ?";
+
+            DB::update($q,[$user_id]);
+        }
 
     }
 

@@ -583,7 +583,7 @@ if (strpos($url,'alacarte') !== false) {
               } ?>
               <li class="dropdown">
                 <?php if($uname != "Guest") {?>
-                  <a href="javascript:void(0);{{URL::to('/')}}/users/myaccount" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php //echo @$user['points_earned']-@$user['points_spent']; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a> 
+                  <a href="javascript:void(0);{{URL::to('/')}}/users/myaccount" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
                 <?php }?>
                 <?php if(isset($user_data['full_name']) && $user_data['full_name'] !='Guest'): ?>
                   <ul class="dropdown-menu wowtables_dropdown_menu">
@@ -1506,7 +1506,8 @@ var google_remarketing_only = true;
                         cant_select_table.addClass('hidden');   
                     }
                     $('#booking_date').val(dateText);
-                    $('#date_edit1 span').text(formatDate(dateText));
+                    //$('#date_edit1 span').text(formatDate(dateText));
+                    $('#date_edit1 span').text("date comes here");
                     $('#date_edit1').click();
                     timehide=0;
                     $('#time_edit1').click();    
