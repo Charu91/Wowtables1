@@ -356,6 +356,7 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
       $(this).addClass('active');
   });
 </script>
+
     <script type="text/javascript" src="https://www.curebit.com/javascripts/api/all-0.4.js?ver=1.0.2"></script>
 <script type="text/javascript">
   $(document).ready(function(){
@@ -1039,6 +1040,80 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                     echo $value->code;
                   }*/
                 ?>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1717133-12', 'gourmetitup.com');
+  ga('send', 'pageview');
+
+</script>
+<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+<script type='text/javascript'>
+document.write(unescape("%3Cscript%20src='"+
+(document.location.protocol=='https:'?
+"https://clicktalecdn.sslcs.cdngc.net/www07/ptc/17b8ec97-b2d4-4809-ae36-b15d4088ca9e.js":
+"http://cdn.clicktale.net/www07/ptc/17b8ec97-b2d4-4809-ae36-b15d4088ca9e.js")+"'%20type='text/javascript'%3E%3C/script%3E"));
+</script>
+<!-- begin SnapEngage code -->
+<script type="text/javascript">
+  (function() {
+    var se = document.createElement('script'); se.type = 'text/javascript'; se.async = true;
+    se.src = '//commondatastorage.googleapis.com/code.snapengage.com/js/73f5004b-0538-4182-a8dc-ba74b178db61.js';
+    var done = false;
+    se.onload = se.onreadystatechange = function() {
+      if (!done&&(!this.readyState||this.readyState==='loaded'||this.readyState==='complete')) {
+        done = true;
+        // Place your SnapEngage JS API code below
+        // SnapEngage.allowChatSound(true); // Example JS API: Enable sounds for Visitors. 
+      }
+    };
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(se, s);
+  })();
+</script>
+<!-- end SnapEngage code -->  
+  <script type="text/javascript">
+      var heap=heap||[];heap.load=function(a){window._heapid=a;var b=document.createElement("script");b.type="text/javascript",b.async=!0,b.src=("https:"===document.location.protocol?"https:":"http:")+"//cdn.heapanalytics.com/js/heap.js";var c=document.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c);var d=function(a){return function(){heap.push([a].concat(Array.prototype.slice.call(arguments,0)))}},e=["identify","track"];for(var f=0;f<e.length;f++)heap[e[f]]=d(e[f])};
+      heap.load("966329605");
+    </script><script>(function() {
+  var _fbq = window._fbq || (window._fbq = []);
+  if (!_fbq.loaded) {
+    var fbds = document.createElement('script');
+    fbds.async = true;
+    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(fbds, s);
+    _fbq.loaded = true;
+  }
+  _fbq.push(['addPixelId', '1491404511074517']);
+})();
+window._fbq = window._fbq || [];
+window._fbq.push(['track', 'PixelInitialized', {}]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1491404511074517&amp;ev=NoScript" /></noscript><script>(function() {
+  var _fbq = window._fbq || (window._fbq = []);
+  if (!_fbq.loaded) {
+    var fbds = document.createElement('script');
+    fbds.async = true;
+    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(fbds, s);
+    _fbq.loaded = true;
+  }
+  _fbq.push(['addPixelId', '886637294682125']);
+})();
+window._fbq = window._fbq || [];
+window._fbq.push(['track', 'PixelInitialized', {}]);
+</script>
+<noscript>
+<img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=886637294682125&amp;ev=PixelInitialized" /></noscript>
+
               </p> 
         <a style="float: right;" href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>
             </div>
