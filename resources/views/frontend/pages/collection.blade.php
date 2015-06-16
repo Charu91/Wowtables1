@@ -10,13 +10,12 @@ else
 ?>
 
 <?php 
-print_r($arrData);
+/*print_r($arrData);
 foreach ($arrData as $data)
              		{
              			echo $data['cityname'];
-             			echo '<br>';
              			}
-exit;
+exit;*/
 /*print_r($alaCartaArData);
 exit;*/
 ?>
