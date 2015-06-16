@@ -624,15 +624,16 @@ class ExperienceController extends Controller {
 
 
         //$dataPost['access_token'] = Session::get('id');
-        //echo "<pre>"; print_r($dataPost); //die;
+        //echo "<pre>"; print_r($dataPost); die;
         $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
-        //echo "<pre>"; print_r($locationDetails); die;
+        //echo "<pre>"; print_r($locationDetails); //die;
         $outlet = $this->experiences_model->getOutlet($dataPost['vendorLocationID']);
         //echo "<pre>"; print_r($outlet);
 
         //die;
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
-
+        $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
+        $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
         //echo "<pre>"; print_r($productDetails); die;
 
         $arrRules = array(

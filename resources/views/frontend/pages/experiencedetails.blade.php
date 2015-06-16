@@ -594,7 +594,7 @@ $last_url_item = count($url)-1;
             <li><?php echo $addons['short_description'];?></li>
             <li>Rs. <?php echo $addons['price'];?> <small><br>per person, taxes applicable(additonal to actual cost)</small></li>
           </ul>
-          <hr>
+          <hr> <br/>
           <?php
           }
           ?>

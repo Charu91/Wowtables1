@@ -1080,8 +1080,9 @@ class ExperienceModel {
     //reading the product detail
     $productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
     $reservation['points_awarded']             = isset($productDetail['reward_point'])?$productDetail['reward_point']:'0';
-    $reservation['vendor_location_id']         = 0;
+    $reservation['vendor_location_id']         = $arrData['vendor_location_id'];
     $reservation['product_vendor_location_id'] = $arrData['vendorLocationID'];
+    $reservation['product_id'] = $arrData['product_id'];
 
     #saving the information into the DB
     $reservationId = DB::table('reservation_details')->insertGetId($reservation);
@@ -1157,7 +1158,7 @@ class ExperienceModel {
           ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
           ->leftJoin('products as p','pvl.product_id','=','p.id')
           ->where('pvl.id',$vendorLocationID)
-          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
+          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id','pvl.vendor_location_id as vendor_location_id')
           ->first();
 
 
