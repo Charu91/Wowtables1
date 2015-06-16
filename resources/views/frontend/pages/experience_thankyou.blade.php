@@ -33,7 +33,7 @@
                                     </li>
                                     <li>
                                         <p class="text-warning"><em>Time</em></p>
-                                        <p><strong>{{date("G:ia", strtotime($result['reservation_time']))}}</strong></p>
+                                        <p><strong>{{date("g:i A", strtotime($result['reservation_time']))}}</strong></p>
                                     </li>
                                     <li>
                                         <p class="text-warning"><em>Number of Guests</em></p>
