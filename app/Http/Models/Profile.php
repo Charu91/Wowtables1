@@ -446,6 +446,8 @@ $queryProfileResult = DB::table('users as u')
                         ));
 
             }
+            /*print_r($arrAttribute);
+            exit;*/
             
             if($data['aniversary_date']!='0000-00-00')
             {
