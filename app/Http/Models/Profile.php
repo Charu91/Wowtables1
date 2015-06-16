@@ -289,36 +289,38 @@ $queryProfileResult = DB::table('users as u')
             $updateAnniversary = FALSE;
 
 
-            foreach($dobID as $row ) {              
-                if ( $row->user_attribute_id == $arrAttribute['date_of_birth'] ) {
+            if(!empty($arrAttribute['date_of_birth'])) {
+                            foreach($dobID as $row ) {              
+                                if ( $row->user_attribute_id == $arrAttribute['date_of_birth'] ) {
 
-                    $dobUpdate = DB::table('user_attributes_date')
-                                    ->where('id', $row->id)                               
-                                    ->update(['attribute_value' => $data['dob']]); 
-                    $updateDOBFlag = TRUE;             
+                                    $dobUpdate = DB::table('user_attributes_date')
+                                                    ->where('id', $row->id)                               
+                                                    ->update(['attribute_value' => $data['dob']]); 
+                                    $updateDOBFlag = TRUE;             
 
-                }
-                else if ( $row->user_attribute_id == $arrAttribute['anniversary_date'] && array_key_exists('anniversary_date', $data)) {
+                                }
+                                else if ( $row->user_attribute_id == $arrAttribute['anniversary_date'] && array_key_exists('anniversary_date', $data)) {
 
-                    $anniversaryDate = DB::table('user_attributes_date')
-                                                ->where('id', $row->id)                                                
-                                                ->update(['attribute_value' => $data['anniversary_date']]);
-                    $updateAnniversary = TRUE;
+                                    $anniversaryDate = DB::table('user_attributes_date')
+                                                                ->where('id', $row->id)                                                
+                                                                ->update(['attribute_value' => $data['anniversary_date']]);
+                                    $updateAnniversary = TRUE;
 
-                }
-            }
+                                }
+                            }
            
-            if(!$updateDOBFlag) {
-                        //adding data to the table
-                        DB::table('user_attributes_date')
-                                ->insert(array(
-                                    'user_id'           => $userID->user_id,
-                                    'user_attribute_id' => $arrAttribute['date_of_birth'],
-                                    'attribute_value'   => $data['dob'],
-                                    'created_at'        => date('Y-m-d H:i:s'),
-                                    'updated_at'        => date('Y-m-d H:i:s')
-                                ));
-                    }
+                            if(!$updateDOBFlag) {
+                                        //adding data to the table
+                                        DB::table('user_attributes_date')
+                                                ->insert(array(
+                                                    'user_id'           => $userID->user_id,
+                                                    'user_attribute_id' => $arrAttribute['date_of_birth'],
+                                                    'attribute_value'   => $data['dob'],
+                                                    'created_at'        => date('Y-m-d H:i:s'),
+                                                    'updated_at'        => date('Y-m-d H:i:s')
+                                                ));
+                            }
+            }
 
             if(!$updateAnniversary && array_key_exists('anniversary_date', $data)) {
                         //adding data to the table
@@ -339,7 +341,6 @@ $queryProfileResult = DB::table('users as u')
                                             -> where('user_attribute_id', $arrAttribute['gender'])
                                             -> get();
             
-
                 //array having options and id as key value pair
                 $arrGender = array();
                 $arrGenderId = array();
