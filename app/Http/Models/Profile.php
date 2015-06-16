@@ -76,7 +76,7 @@ class Profile {
             $arrResponse = array();
 
             $lastReservationDetail=ReservationDetails::getUserLastReservation($queryProfileResult->user_id);
-            //print_r($lastReservationDetail); die("Hmmm..");
+            //print_r($lastReservationDetail);  
 
             if($queryProfileResult) {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
@@ -85,7 +85,7 @@ class Profile {
                                             //'access_token' => $queryProfileResult->access_token,
                                             'full_name' => $queryProfileResult->full_name,
                                             'email' => $queryProfileResult->email,
-                                            'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,
+                                            'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
                                             'zip_code' => $queryProfileResult->zip_code,
                                             'gender' => $queryProfileResult->gender,
                                             'location_id' => $queryProfileResult->location_id,
@@ -166,7 +166,7 @@ $queryProfileResult = DB::table('users as u')
     $arrResponse = array();
 
     $lastReservationDetail=ReservationDetails::getUserLastReservation($queryProfileResult->user_id);
-    //print_r($lastReservationDetail); die("Hmmm..");
+    //print_r($lastReservationDetail);  
 
     if($queryProfileResult) {
         $arrResponse['status'] = Config::get('constants.API_SUCCESS');
@@ -175,7 +175,7 @@ $queryProfileResult = DB::table('users as u')
                                     //'access_token' => $queryProfileResult->access_token,
                                     'full_name' => $queryProfileResult->full_name,
                                     'email' => $queryProfileResult->email,
-                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
+                                    'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : $queryProfileResult->phone_number,
                                     'zip_code' => $queryProfileResult->zip_code,
                                     'gender' => $queryProfileResult->gender,
                                     'location_id' => $queryProfileResult->location_id,
@@ -257,7 +257,7 @@ $queryProfileResult = DB::table('users as u')
                         ->select('ud.user_id')
                         ->first();
                             
-            //print_r($id); die();
+            
             //updating data in users table
             $userTableData = array(
                                     'full_name' => $data['full_name'],
