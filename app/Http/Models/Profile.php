@@ -14,7 +14,7 @@ class Profile {
 
     static $arrRules = array(
                             //'access_token' => 'required|exists:user_devices,access_token',
-                            'full_name'     => 'required||max:64'  ,
+                            'full_name'     => 'max:64',
                             'phone_number'  => 'required',
                             'zip_code'      => 'max:45',
                             'location_id'   => 'required',
@@ -260,12 +260,29 @@ $queryProfileResult = DB::table('users as u')
             
             //updating data in users table
             $userTableData = array(
-                                    'full_name' => $data['full_name'],
-                                    'phone_number' => $data['phone_number'],
-                                    'zip_code' => $data['zip_code'],
-                                    'location_id' => $data['location_id'],
+                                    //'full_name' => $data['full_name'],
+                                    //'phone_number' => $data['phone_number'],
+                                    //'zip_code' => $data['zip_code'],
+                                    //'location_id' => $data['location_id'],
                                     'updated_at' => date('Y-m-d H:i:s'),
-                                  );  
+                                  );
+
+            if(array_key_exists('full_name', $data) && !empty($data['full_name']) ) {
+                $userTableData['full_name'] = $data['full_name'];
+            }
+
+            if(array_key_exists('phone_number', $data) && !empty($data['phone_number']) ) {
+                $userTableData['phone_number'] = $data['phone_number'];
+            }
+
+            if(array_key_exists('zip_code', $data) && !empty($data['zip_code']) ) {
+                $userTableData['zip_code'] = $data['zip_code'];
+            }
+
+            if(array_key_exists('location_id', $data) && !empty($data['location_id']) ) {
+                $userTableData['location_id'] = $data['location_id'];
+            }
+
             DB::table('users')
                 ->where('id', $userID->user_id)
                 ->update($userTableData);
