@@ -78,14 +78,10 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="details">
-                            <ul>
-                                {{$result['experience_includes']}}
-                            </ul>
+                            <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$result['experience_includes']);?>
                         </div>
                         <div class="tab-pane fade" id="terms">
-                            <ul>
-                                {{$result['terms_and_conditions']}}
-                            </ul>
+                            <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$result['terms_and_conditions']);?>
                         </div>
                     </div>
 
