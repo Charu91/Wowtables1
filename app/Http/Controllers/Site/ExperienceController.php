@@ -285,7 +285,8 @@ class ExperienceController extends Controller {
                                             AND pa.alias = 'short_description'
                                             AND pmm.media_type = 'listing'");
             
-        
+         // print_r($exclusiveExperiences);
+          //exit;
             //close code by product review and rating.
             $arrProduct = array('59','63','62');
              $arrRatings = $this->findRatingByProduct($arrProduct);
@@ -313,7 +314,7 @@ class ExperienceController extends Controller {
              }
              //end exclusiveexperiences query
              $alaCartaArData = array();
-             $arrData =array();
+             
              //start query a lart cart query
               $alacartQuery = DB::select("SELECT t.name AS tagsname, t.slug AS tagsslug, vl.slug AS vendorlocationslug,
                                          v.name AS vendorlocations,v.id, l.name AS city,l.slug, mrn.file AS imagename, 
@@ -372,7 +373,8 @@ class ExperienceController extends Controller {
              }
              /*print_r($alaCartaArData);
              exit;*/
-
+             print_r($arrData);
+             exit;
          return view('frontend.pages.collection',$arrResponse)
                     ->with('collectionResult', $collectionResult)
                     ->with('exclusiveExperiences',$exclusiveExperiences)
