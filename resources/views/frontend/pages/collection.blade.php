@@ -9,7 +9,16 @@ else
 	$set_user_id = 0;
 ?>
 
-
+<?php 
+/*print_r($arrData);
+foreach ($arrData as $data)
+             		{
+             			echo $data['cityname'];
+             			}
+exit;*/
+/*print_r($alaCartaArData);
+exit;*/
+?>
 
 <!--==============Top Section closed=================-->
 <div class="container deal-listing variant featured-variant">
@@ -34,13 +43,19 @@ else
 </div>
 </div>
 
+<?php if(empty($arrData))
+{
+
+}
+else{?>
 <div class="clearfix"></div>
 
 			<h3 style="padding-bottom:10px;margin-left:15px;">Exclusive Dining Experiences: </h3>
 			<ul class="experience-grid">
 				<?php
-				foreach ($arrData['data'] as $data)
+				foreach ($arrData as $data)
              		{
+
 				?>
 			
 			  <li class="col-md-4 col-sm-4">
@@ -105,8 +120,19 @@ else
 
 </div>
 </div>
+<?php }?>
+<?php //exit;?>
    <!--==============close Experiences code=================-->
-   <?php //print_r($alaCartaArData); ?>
+
+   <?php //print_r($alaCartaArData);
+   if(empty($alaCartaArData))
+   {
+
+   }
+   else{
+
+
+    ?>
 <!-- start code form alacart product-->
 <!--==============Top Section closed=================-->
 <div class="container deal-listing variant featured-variant">
@@ -202,7 +228,7 @@ else
 </div>
 </div>
    <!--==============Close alacart view code =================-->
-
+<?php } ?>
 
 
 @endsection
