@@ -96,9 +96,39 @@ class ExperienceController extends Controller {
         $data['allPrices']  = $commonmodel->getAllPrices();
 
         $data['dropdowns_opt']  = 1; //1 for disp
+
+        $seo_title = $data['arrExperience']['data']['seo_title'];
+        $meta_desc = $data['arrExperience']['data']['seo_meta_desciption'];
+        $meta_keywords = $data['arrExperience']['data']['seo_meta_keywords'];
+        if($seo_title=='')
+        {
+          $seoTitleDetails = 'WowTables : '.$data['arrExperience']['data']['name'];
+        }
+        else
+        {
+          $seoTitleDetails = $seo_title;
+        }
+
+        if($meta_desc=='')
+        {
+          $metaDescDetails = 'Reserve : '.$data['arrExperience']['data']['name']. 
+                 'Exclusive curated set menus for fine dining. Find information, address,
+                  maps, photos, menu and reviews';
+        }
+        else
+        {
+          $metaDescDetails = $meta_desc;
+        }
+
         
+        $meta_information = array('seo_title'      => $seoTitleDetails,
+                                   'meta_desc'     => $metaDescDetails, 
+                                   'meta_keywords' => $meta_keywords);
         
-        return response()->view('frontend.pages.experiencedetails',$data);
+       /* print_r($data);
+        exit;*/
+        return view('frontend.pages.experiencedetails',$data)
+                        ->with('meta_information', $meta_information);
     }
 
 
@@ -647,7 +677,7 @@ class ExperienceController extends Controller {
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
-                $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
             //End MailChimp
@@ -676,7 +706,7 @@ class ExperienceController extends Controller {
                         'No_of_People' => $dataPost['partySize'],
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
-                        //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Experience",
                         'API_added' => 'Yes',
@@ -711,8 +741,8 @@ class ExperienceController extends Controller {
                         {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                            $message->to('tech@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                            $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
                         });
                     }
 

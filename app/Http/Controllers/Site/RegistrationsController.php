@@ -205,7 +205,7 @@ class RegistrationsController extends Controller {
 			'Loyalty_Points_Awarded'=>0,
 			'Order_completed'=>'User Cancelled',
 		);
-		//$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
+		$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
 		$rewardsPoints = '';
 		$type = '';
@@ -299,7 +299,7 @@ class RegistrationsController extends Controller {
 					);
 
 					//$email = ["email"["email":]];
-					$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",true,true );
+					//$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",true,true );
 					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 
 				}
@@ -422,8 +422,8 @@ class RegistrationsController extends Controller {
 				'Contact' => $userData['data']['phone_number'],
 				'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
 				'No_of_People' => $party_size,
-				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
-				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
+				'Time' => date("g:ia", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -496,8 +496,8 @@ class RegistrationsController extends Controller {
 				'Contact' => $userData['data']['phone_number'],
 				'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
 				'No_of_People' => $party_size,
-				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date)),
-				'Time' => date("G:ia", strtotime($this->request->input('edit_time'))),
+				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
+				'Time' => date("g:i a", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -527,7 +527,7 @@ class RegistrationsController extends Controller {
 			);
 
 
-
+			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
 				'outlet'=> $outlet,

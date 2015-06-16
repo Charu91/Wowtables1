@@ -358,7 +358,7 @@ class AlacarteController extends Controller {
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
-                $this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
             //End MailChimp
@@ -386,7 +386,7 @@ class AlacarteController extends Controller {
                         'No_of_People' => $dataPost['partySize'],
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
-                        //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+                        'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Alacarte",
                         'API_added' => 'Yes',
@@ -422,7 +422,7 @@ class AlacarteController extends Controller {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                             $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
                         });
                     }
 
