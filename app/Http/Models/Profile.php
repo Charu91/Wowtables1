@@ -14,11 +14,11 @@ class Profile {
 
     static $arrRules = array(
                             //'access_token' => 'required|exists:user_devices,access_token',
-                            'full_name'     => 'required||max:64'  ,
-                            'phone_number'  => 'required',
+                            'full_name'     => 'max:64',
+                            'phone_number'  => 'max:10',
                             'zip_code'      => 'max:45',
-                            'location_id'   => 'required',
-                            'dob'           => ' date',
+                            'location_id'   => 'integer',
+                            'dob'           => 'date',
                             'gender'        => 'in:Male,Female'
                            );
     //-------------------------------------------------------------
@@ -260,12 +260,29 @@ $queryProfileResult = DB::table('users as u')
             
             //updating data in users table
             $userTableData = array(
-                                    'full_name' => $data['full_name'],
-                                    'phone_number' => $data['phone_number'],
-                                    'zip_code' => $data['zip_code'],
-                                    'location_id' => $data['location_id'],
+                                    //'full_name' => $data['full_name'],
+                                    //'phone_number' => $data['phone_number'],
+                                    //'zip_code' => $data['zip_code'],
+                                    //'location_id' => $data['location_id'],
                                     'updated_at' => date('Y-m-d H:i:s'),
-                                  );  
+                                  );
+            //Checking for empty values
+            if(array_key_exists('full_name', $data) && !empty(trim($data['full_name'])) ) {
+                $userTableData['full_name'] = $data['full_name'];
+            }
+
+            if(array_key_exists('phone_number', $data) && !empty(trim($data['phone_number'])) ) {
+                $userTableData['phone_number'] = $data['phone_number'];
+            }
+
+            if(array_key_exists('zip_code', $data) && !empty(trim($data['zip_code'])) ) {
+                $userTableData['zip_code'] = $data['zip_code'];
+            }
+
+            if(array_key_exists('location_id', $data) && !empty(trim($data['location_id'])) ) {
+                $userTableData['location_id'] = $data['location_id'];
+            }
+            
             DB::table('users')
                 ->where('id', $userID->user_id)
                 ->update($userTableData);
@@ -289,7 +306,8 @@ $queryProfileResult = DB::table('users as u')
             $updateAnniversary = FALSE;
 
 
-            if(!empty($arrAttribute['date_of_birth'])) {
+            if(array_key_exists('dob', $data) && !empty($data['dob'])) {
+                    if(!empty($arrAttribute['date_of_birth'])) {
                             foreach($dobID as $row ) {              
                                 if ( $row->user_attribute_id == $arrAttribute['date_of_birth'] ) {
 
@@ -320,6 +338,7 @@ $queryProfileResult = DB::table('users as u')
                                                     'updated_at'        => date('Y-m-d H:i:s')
                                                 ));
                             }
+                        }
             }
 
             if(!$updateAnniversary && array_key_exists('anniversary_date', $data)) {

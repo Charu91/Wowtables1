@@ -65,6 +65,10 @@ class ProfileController extends Controller {
 
         $data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
 
+        if(array_key_exists('gender', $data) && !empty($data['gender']) ) {
+            $data['gender'] = ucfirst($data['gender']);
+        }
+
         //print_r($data); die();
         //Validation user's profile data
         $validator = Validator::make($data,Profile::$arrRules);
@@ -72,13 +76,13 @@ class ProfileController extends Controller {
         if($validator->fails()){
             $message=$validator->messages();
             $errorMessage="";
-            foreach($data as $key => $value) {
+            foreach(Profile::$arrRules as $key => $value) {
                 if($message->has($key)) {
                     $errorMessage .= $message->first($key).'\n ';
                 }
             }
             $arrResponse['status'] = Config::get('constants.API_ERROR');
-            $arrResponse['msg'] = $errorMessage;
+            $arrResponse['msg'] = $errorMessage;  
         }
         else{
             $arrResponse=Profile::updateProfile($data);
