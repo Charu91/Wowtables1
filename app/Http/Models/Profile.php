@@ -76,7 +76,7 @@ class Profile {
             $arrResponse = array();
 
             $lastReservationDetail=ReservationDetails::getUserLastReservation($queryProfileResult->user_id);
-            //print_r($lastReservationDetail); die("Hmmm..");
+            //print_r($lastReservationDetail); die("Hm");
 
             if($queryProfileResult) {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
