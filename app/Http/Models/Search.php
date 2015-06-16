@@ -215,8 +215,8 @@
 			//adding filter for cuisines if cuisines are present
 			if(isset($arrData['cuisine'])) {
 				$experienceQuery->join('product_attributes_multiselect as pam','pam.product_id','=','products.id')
-								->join('product_attributes_select_options as paso','paso.id','=','pam.product_attributes_select_option_id')
-								->whereIn('paso.id',$arrData['cuisine']);
+								->join('vendor_attributes_select_options as vaso','vaso.id','=','pam.product_attributes_select_option_id')
+								->whereIn('vaso.id',$arrData['cuisine']);
 			}
 
 			//adding filter for locations if locations are present
@@ -428,12 +428,12 @@
 	 */
 	public function initializeExperienceFilters($arrProduct) {
 		//query to read cuisines
-		$queryCuisine = DB::table('product_attributes_select_options as paso')
-								->join('product_attributes as pa','pa.id','=','paso.product_attribute_id')
-								->join('product_attributes_multiselect as pam','pam.product_attributes_select_option_id','=','paso.id')
-								->where('pa.alias','cuisines')
+		$queryCuisine = DB::table('vendor_attributes_select_options as vaso')
+								->join('vendor_attributes as va','va.id','=','vaso.vendor_attribute_id')
+								->join('product_attributes_multiselect as pam','pam.product_attributes_select_option_id','=','vaso.id')
+								->where('va.alias','cuisines')
 								->whereIn('pam.product_id',$arrProduct)
-								->select('paso.id','paso.option','pam.product_id')
+								->select('vaso.id','vaso.option','pam.product_id')
 								->get();
 		
 		#setting up the cuisines filter information
