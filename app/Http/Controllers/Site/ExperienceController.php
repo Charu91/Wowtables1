@@ -287,6 +287,7 @@ class ExperienceController extends Controller {
             
          // print_r($exclusiveExperiences);
           //exit;
+            $arrData = array();
             //close code by product review and rating.
             $arrProduct = array('59','63','62');
              $arrRatings = $this->findRatingByProduct($arrProduct);
