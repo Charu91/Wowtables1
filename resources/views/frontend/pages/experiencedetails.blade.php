@@ -648,6 +648,7 @@ $last_url_item = count($url)-1;
                              <a href="javascript:" style="text-decoration: none;">
                                 Location</a>  
                                 <select name="address" id='locations1' class="pull-right space">
+                                    <option value="">--Select Location--</option>
                                 <?php
                                 foreach($arrExperience['data']['location'] as $key =>$listData): ?>
                                     <option value="<?php echo $listData['vendor_location_id'];?>" ><?php echo $listData['area'];?></option>
