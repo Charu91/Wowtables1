@@ -14,12 +14,12 @@ class Profile {
 
     static $arrRules = array(
                             //'access_token' => 'required|exists:user_devices,access_token',
-                            'full_name' => 'required||max:64'  ,
-                            'phone_number' => 'required',
-                            'zip_code'  => 'required',
-                            'location_id'  => 'required',
-                            'dob' => 'required|date',
-                            'gender' => 'required|in:Male,Female'
+                            'full_name'     => 'required||max:64'  ,
+                            'phone_number'  => 'required',
+                            'zip_code'      => 'max:45',
+                            'location_id'   => 'required',
+                            'dob'           => ' date',
+                            'gender'        => 'in:Male,Female'
                            );
     //-------------------------------------------------------------
 
@@ -333,36 +333,38 @@ $queryProfileResult = DB::table('users as u')
                     }
                     
 
-            $queryGenderValue = DB::table('user_attributes_select_options')
+            if( array_key_exists('gender', $data) && !empty(trim($data['gender']))) {
+                $queryGenderValue = DB::table('user_attributes_select_options')
                                             -> select('id','option')
                                             -> where('user_attribute_id', $arrAttribute['gender'])
                                             -> get();
-			
+            
 
-            //array having options and id as key value pair
-            $arrGender = array();
-            $arrGenderId = array();
-            foreach( $queryGenderValue as $row) {
-                $arrGender[$row->option] = $row->id;
-                $arrGenderId[] = $row->id;
+                //array having options and id as key value pair
+                $arrGender = array();
+                $arrGenderId = array();
+                foreach( $queryGenderValue as $row) {
+                    $arrGender[$row->option] = $row->id;
+                    $arrGenderId[] = $row->id;
+                }
+                 
+                //updating user gender
+                $genderUpdate = DB::table('user_attributes_singleselect')
+                                    ->where('user_id',$userID->user_id)
+                                    ->whereIn('user_attributes_select_option_id',$arrGenderId)
+                                    ->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
+                
+                if( !$genderUpdate) {
+                    //adding data to the table 
+                    DB::table('user_attributes_singleselect')
+                            ->insert(array(
+                                'user_id'                           => $userID->user_id,
+                                'user_attributes_select_option_id'  => $arrGender[$data['gender']],
+                                'created_at'                        => date('Y-m-d H:i:s'),
+                                'updated_at'                        => date('Y-m-d H:i:s')
+                            ));
+                }
             }
-
-            //updating user gender
-            $genderUpdate = DB::table('user_attributes_singleselect')
-                        		->where('user_id',$userID->user_id)
-                        		->whereIn('user_attributes_select_option_id',$arrGenderId)
-                        		->update(array('user_attributes_select_option_id' => $arrGender[$data['gender']]));
-			
-			if( !$genderUpdate) {
-				//adding data to the table
-				DB::table('user_attributes_singleselect')
-						->insert(array(
-							'user_id'           				=> $userID->user_id,
-							'user_attributes_select_option_id'  => $arrGender[$data['gender']],
-							'created_at'                        => date('Y-m-d H:i:s'),
-							'updated_at'                        => date('Y-m-d H:i:s')
-						));
-			}
 
             //array to contain the response to be sent back to client
             $arrResponse = array();
