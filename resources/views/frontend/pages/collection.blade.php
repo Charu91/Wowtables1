@@ -10,12 +10,13 @@ else
 ?>
 
 <?php 
-/*print_r($arrData);
+print_r($arrData);
 foreach ($arrData as $data)
              		{
              			echo $data['cityname'];
+             			echo '<br>';
              			}
-exit;*/
+exit;
 /*print_r($alaCartaArData);
 exit;*/
 ?>
@@ -79,7 +80,7 @@ else{?>
 						<?php }?>
 				 
 			   </div>
-			   <div class="deal-desc" id="desc_tag_exp">
+			   <div class="deal-desc" id="desc_tag_exp" style="margin-bottom:103px !important;">
 				  <p id="dummy_text">{{$data['short_description']}} </p>
 			   </div>
 			   <div class="white_background1_exp">
