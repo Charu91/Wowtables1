@@ -1220,13 +1220,13 @@ $last_url_item = count($url)-1;
           $("#choose_date").datepicker("destroy");
          
           $("#choose_date").datepicker({
-             dateFormat: 'yy-mm-dd',
+             dateFormat: 'yy-m-dd',
              minDate: 'new Date()',
              beforeShowDay: disableAllTheseDays,
              onSelect: function(dateText, inst) 
              {
                     var d = $.datepicker.parseDate("yy-m-dd",  dateText);
-                   
+                    //console.log("d == "+d);
                     var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
                     var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
                     var txt2 = '';
@@ -1281,7 +1281,7 @@ $last_url_item = count($url)-1;
                     $('#booking_date').val(dateText);
 
 
-                    
+                    console.log("datetext == "+formatDate(dateText));
                     $('#date_edit1 span').text(formatDate(dateText));
                     $('#date_edit1').click();
                     timehide=0;

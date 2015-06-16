@@ -961,7 +961,7 @@ class ExperienceModel {
     if($schedules) {
       foreach($schedules as $row) {
 
-        $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = $row->time;
+        $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = date('g:i A',strtotime($row->time));
         
       }
     }
