@@ -284,7 +284,7 @@ class ExperienceController extends Controller {
                                             LEFT JOIN locations as l on l.id = vla.city_id
                                             WHERE t.slug = '$collection'
                                             AND t.status = 'available'
-                                            group by t.slug");
+                                            group by p.id");
             
          // print_r($exclusiveExperiences);
           //exit;
