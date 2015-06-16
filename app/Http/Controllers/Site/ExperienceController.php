@@ -265,25 +265,26 @@ class ExperienceController extends Controller {
         
         $collectionResult = DB::select($collectionQuery);
         //exclusiveexperiences query
-        $exclusiveExperiences = DB::select("SELECT t.name, p.name AS productname,p.slug AS slug, pat.attribute_value, pa.name as productattrname, pp.price, pt.type_name, mrn.file,f.name as flagname,f.color,p.id,l.name as cityname
+        $exclusiveExperiences = DB::select("SELECT t.name, t.slug,p.name AS productname,p.slug AS slug, pat.attribute_value, 
+                                            pa.name as productattrname, pp.price, pt.type_name, mrn.file,f.name as flagname,f.color,p.id,
+                                            l.name as cityname,MAX(IF(pa.alias = 'short_description', pat.attribute_value, '')) AS short_description
                                             FROM tags AS t
-                                            INNER JOIN product_tag_map AS ptm ON t.id = ptm.tag_id
-                                            INNER JOIN products AS p ON p.id = ptm.product_id
-                                            INNER JOIN product_attributes_text AS pat ON pat.product_id = p.id
-                                            INNER JOIN product_attributes AS pa ON pa.id = pat.product_attribute_id
-                                            INNER JOIN product_pricing AS pp ON pp.product_id = p.id
-                                            INNER JOIN price_types AS pt ON pt.id = pp.price_type
-                                            INNER JOIN product_media_map AS pmm ON pmm.product_id = p.id
-                                            INNER JOIN media_resized_new AS mrn ON mrn.media_id = pmm.media_id
-                                            inner join product_flag_map as pfm on pfm.product_id = p.id
-                                            inner join flags as f on pfm.flag_id = f.id
-                                            inner join product_vendor_locations as pvl on pvl.product_id = p.id
-                                            inner join vendor_location_address as vla on vla.vendor_location_id= pvl.vendor_location_id
-                                            inner join locations as l on l.id = vla.city_id
+                                            LEFT JOIN product_tag_map AS ptm ON t.id = ptm.tag_id
+                                            LEFT JOIN products AS p ON p.id = ptm.product_id
+                                            LEFT JOIN product_attributes_text AS pat ON pat.product_id = p.id
+                                            LEFT JOIN product_attributes AS pa ON pa.id = pat.product_attribute_id
+                                            LEFT JOIN product_pricing AS pp ON pp.product_id = p.id
+                                            LEFT JOIN price_types AS pt ON pt.id = pp.price_type
+                                            LEFT JOIN product_media_map AS pmm ON pmm.product_id = p.id
+                                            LEFT JOIN media_resized_new AS mrn ON mrn.media_id = pmm.media_id
+                                            LEFT JOIN product_flag_map as pfm on pfm.product_id = p.id
+                                            LEFT JOIN flags as f on pfm.flag_id = f.id
+                                            LEFT JOIN product_vendor_locations as pvl on pvl.product_id = p.id
+                                            LEFT JOIN vendor_location_address as vla on vla.vendor_location_id= pvl.vendor_location_id
+                                            LEFT JOIN locations as l on l.id = vla.city_id
                                             WHERE t.slug = '$collection'
                                             AND t.status = 'available'
-                                            AND pa.alias = 'short_description'
-                                            AND pmm.media_type = 'listing'");
+                                            group by t.slug");
             
          // print_r($exclusiveExperiences);
           //exit;
@@ -298,6 +299,7 @@ class ExperienceController extends Controller {
                           'productname'=>$row->productname,
                           'slug'=>$row->slug,
                           'attribute_value'=>$row->attribute_value,
+                          'short_description'=>$row->short_description,
                           'productattrname'=>$row->productattrname,
                           'price'=>$row->price,
                           'type_name'=>$row->type_name,

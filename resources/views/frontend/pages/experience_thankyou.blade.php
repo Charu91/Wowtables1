@@ -15,7 +15,7 @@
                         <div class="alert alert-info">
                             <strong>Next Steps:</strong> Our concierge desk will send you an email as well as an SMS once your reservation has been accepted by the restaurant/venue.
                             <p>Most reservations are confirmed within 15 minutes but might take longer if the restaurant is unavailable at this time.</p>
-                            <p>If you would like to modify or cancel this reservation, please visit the <a href="users/myreservations">My Reservations</a> page.</p>
+                            <p>If you would like to modify or cancel this reservation, please visit the <a href="<?=URL::to('/users/myreservations');?>">My Reservations</a> page.</p>
                         </div>
 
                         <p class="lead">
@@ -49,7 +49,7 @@
                                     </li>
                                     <li>
                                         <p class="text-warning"><em>Experience</em></p>
-                                        <p><strong><a href="{{$result['city']}}/experiences/{{$result['slug']}}">View Details</a></strong></p>
+                                        <p><strong><a href="<?=URL::to('/');?>/{{$result['city']}}/experiences/{{$result['slug']}}">View Details</a></strong></p>
                                     </li>
 
                                 </ul>

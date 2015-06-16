@@ -79,8 +79,8 @@ else{?>
 						<?php }?>
 				 
 			   </div>
-			   <div class="deal-desc" id="desc_tag_exp">
-				  <p id="dummy_text">{{$data['attribute_value']}} </p>
+			   <div class="deal-desc" id="desc_tag_exp" style="margin-bottom:103px !important;">
+				  <p id="dummy_text">{{$data['short_description']}} </p>
 			   </div>
 			   <div class="white_background1_exp">
 				  <div class="row">

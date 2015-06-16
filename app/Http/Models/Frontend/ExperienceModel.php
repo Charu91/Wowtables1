@@ -835,6 +835,7 @@ class ExperienceModel {
             ->leftJoin('price_types as pt','pt.id','=','pp.price_type')
             ->where('p.product_parent_id',$experienceID)
             ->where('p.type','addon')
+            ->where('p.status','Publish')
             ->where('pa1.alias','short_description')
             ->where('pa2.alias','menu')
             ->where('pa3.alias','reservation_title')

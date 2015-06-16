@@ -648,6 +648,7 @@ $last_url_item = count($url)-1;
                              <a href="javascript:" style="text-decoration: none;">
                                 Location</a>  
                                 <select name="address" id='locations1' class="pull-right space">
+                                    <option value="">--Select Location--</option>
                                 <?php
                                 foreach($arrExperience['data']['location'] as $key =>$listData): ?>
                                     <option value="<?php echo $listData['vendor_location_id'];?>" ><?php echo $listData['area'];?></option>
@@ -874,29 +875,7 @@ $last_url_item = count($url)-1;
                 <p class="hidden" id="cant_do_reserv2">If you have any queries please call our concierge desk.</p> 
                 <div class="text-center select-all-data hidden" id="select_all_data">Please select all data</div>
                 <a  data-page_loc="Reservation Widget" class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && (isset($allow_guest) && $allow_guest == "Yes")) ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='select_table_exp'>SELECT TABLE</a>
-                <?php //if($restaurant[0]['allow_reserv'] == 1): ?>
-                  <p class="text-center or-reservation <?php //=($hasOrder)? '' : 'hidden';?>" id="or_reservation">OR</p>
-                  <!--<p class="text-center"><a id="jump2-alacarte"><small>Make An A la carte Reservation at <br><span><?php //echo ucfirst($arrExperience['data']['name'])?></span><br><span>(<?php //echo $restaurant[0]["reward_points"] ?> Gourmet Points)</span></small></a></p>-->
-               <p class="text-center">
-              <?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
-                <a class="alacarte_reservation_text" href="<?php echo URL::to();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
-                <small>Make An A la carte Reservation at <br>
-                  <span>
-                    <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
-                  </span>
-                </small>
-              </a>
-              <?php } else { ?>
-                <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
-                  <small>Make An A la carte Reservation at <br>
-                    <span>
-                      <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
-                    </span>
-                  </small>
-                </a>
-              <?php } ?>
-            </p>
-                <?php //endif ?>
+                                <?php //endif ?>
               </div>
                 <input type="hidden" id="slug" value="<?php echo $arrExperience['data']['slug']; ?>">
                 <input type="hidden" name="time" id="fulltime">
