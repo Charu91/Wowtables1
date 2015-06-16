@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use WowTables\Http\Requests\LoginUserRequest;
 use Illuminate\Contracts\Encryption\Encrypter;
 use WowTables\Http\Models\User;
+use Session;
 
 /**
  * Class AdminController
@@ -90,7 +91,7 @@ class AdminController extends Controller {
     public function logout(){
 
         $this->user->logout();
-
+        Session::flush();
         return redirect()->route('AdminLoginView');
     }
 }

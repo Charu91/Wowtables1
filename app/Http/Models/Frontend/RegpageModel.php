@@ -27,7 +27,7 @@ class RegpageModel extends Model {
         if($id)
         {
             $query = Self::join('media_resized_new as media','regpage_images.media_id','=','media.media_id')
-            		->where('media.image_type', 'listing')
+            		->where('media.image_type', 'registration')
                     ->where('id', $id)
             		->get();
 
@@ -36,7 +36,7 @@ class RegpageModel extends Model {
         else
         {
             $query = Self::join('media_resized_new as media','regpage_images.media_id','=','media.media_id')
-            		->where('media.image_type', 'listing')
+            		->where('media.image_type', 'registration')
                     ->get();
 
             $result = $query->toArray();
