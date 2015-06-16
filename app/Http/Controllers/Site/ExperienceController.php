@@ -294,7 +294,7 @@ class ExperienceController extends Controller {
              $arrRatings = $this->findRatingByProduct($arrProduct);
              foreach($exclusiveExperiences as $row) {
                 
-                $arrData['data']=array(
+                $arrData['data'][]=array(
                           'name'=>$row->name,
                           'productname'=>$row->productname,
                           'slug'=>$row->slug,
@@ -316,7 +316,7 @@ class ExperienceController extends Controller {
                     );
              }
 
-
+            
              //end exclusiveexperiences query
              $alaCartaArData = array();
              
