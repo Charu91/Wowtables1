@@ -266,7 +266,7 @@ $queryProfileResult = DB::table('users as u')
                                     //'location_id' => $data['location_id'],
                                     'updated_at' => date('Y-m-d H:i:s'),
                                   );
-
+            //Checking for empty values
             if(array_key_exists('full_name', $data) && !empty(trim($data['full_name'])) ) {
                 $userTableData['full_name'] = $data['full_name'];
             }
