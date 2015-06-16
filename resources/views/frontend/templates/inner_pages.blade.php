@@ -1032,12 +1032,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
             <div class="col-md-8 col-sm-8">
               <p class="pull-right concierge-info">Login to make a reservation online or Call our Concierge for assistance at 09619551387
                 <?php
-                $arrdata = DB::table('codes')->where('view_pages', 'all')
+                /*$arrdata = DB::table('codes')->where('view_pages', 'all')
                   ->select('code')
                   ->get();
                   foreach ($arrdata as $value) {
                     echo $value->code;
-                  }
+                  }*/
                 ?>
               </p> 
         <a style="float: right;" href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>

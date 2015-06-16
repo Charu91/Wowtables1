@@ -61,7 +61,7 @@ use WowTables\Http\Models\RestaurantLocations;
 		
 		if(array_key_exists('filters', $input)) {
 			
-			$arrSubmittedData = $input['filters'];
+			$arrSubmittedData = $input['filters'];  
 			
 			//validating the input data
 			$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);
@@ -69,7 +69,7 @@ use WowTables\Http\Models\RestaurantLocations;
 			if($arrReturn['status'] == Config::get('constants.API_ERROR')) {				
 				//validation failed
 				$arrResult['status'] = $arrReturn['status'];
-				$arrResult['error'] = $arrReturn['msg'];			
+				$arrResult['msg'] = $arrReturn['msg'];			
 			} else {							
 				//reading the matching experiences details from the DB
 				$searchResult = $this->search->findMatchingExperience($arrSubmittedData);		
@@ -131,7 +131,7 @@ use WowTables\Http\Models\RestaurantLocations;
              if($arrReturn['status'] == Config::get('constants.API_ERROR')) {
                  //validation failed
                  $arrResult['status'] = $arrReturn['status'];
-                 $arrResult['error'] = $arrReturn['msg'];
+                 $arrResult['msg'] = $arrReturn['msg'];
              } else {
                  //reading the matching experiences details from the DB
                  $searchResult = $this->search->findMatchingExperience($arrSubmittedData);

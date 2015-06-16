@@ -37,7 +37,7 @@ class ProfileController extends Controller {
                 }
             }
             $arrResponse['status'] = Config::get('constants.API_ERROR');
-            $arrResponse['error'] = $errorMessage;
+            $arrResponse['msg'] = $errorMessage;
         }
         else{
             $arrResponse=Profile::getUserProfile($token);
@@ -78,7 +78,7 @@ class ProfileController extends Controller {
                 }
             }
             $arrResponse['status'] = Config::get('constants.API_ERROR');
-            $arrResponse['error'] = $errorMessage;
+            $arrResponse['msg'] = $errorMessage;
         }
         else{
             $arrResponse=Profile::updateProfile($data);
