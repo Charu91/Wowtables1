@@ -267,7 +267,7 @@ class ExperienceController extends Controller {
         //exclusiveexperiences query
         $exclusiveExperiences = DB::select("SELECT t.name, t.slug,p.name AS productname,p.slug AS slug, pat.attribute_value, 
                                             pa.name as productattrname, pp.price, pt.type_name, mrn.file,f.name as flagname,f.color,p.id,
-                                            l.name as cityname
+                                            l.name as cityname,MAX(IF(pa.alias = 'short_description', pat.attribute_value, '')) AS short_description
                                             FROM tags AS t
                                             LEFT JOIN product_tag_map AS ptm ON t.id = ptm.tag_id
                                             LEFT JOIN products AS p ON p.id = ptm.product_id
@@ -299,6 +299,7 @@ class ExperienceController extends Controller {
                           'productname'=>$row->productname,
                           'slug'=>$row->slug,
                           'attribute_value'=>$row->attribute_value,
+                          'short_description'=>$row->short_description,
                           'productattrname'=>$row->productattrname,
                           'price'=>$row->price,
                           'type_name'=>$row->type_name,
