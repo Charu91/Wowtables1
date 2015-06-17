@@ -59,6 +59,7 @@ class StaticPagesController extends Controller {
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
+        $arrResponse['user']   = Auth::user(); 
 
         $city_id    = Input::get('city');        
         $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
