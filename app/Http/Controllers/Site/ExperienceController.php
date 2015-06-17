@@ -712,7 +712,7 @@ class ExperienceController extends Controller {
                         'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
                         'No_of_People' => $dataPost['partySize'],
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
-                        'Time' => date("G:ia", strtotime($dataPost['reservationTime'])),
+                        'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                         'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                         'Occasion' => $dataPost['specialRequest'],
                         'Type' => "Experience",
