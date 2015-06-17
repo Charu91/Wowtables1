@@ -143,9 +143,9 @@ $queryProfileResult = DB::table('users as u')
                     //->where('u.id',$userID)
                     ->where('u.id',$id)                                        
                     ->select('u.id as user_id','u.full_name','u.email','phone_number','u.zip_code','u.newsletter_frequency',
-                            'uaso.option as gender','l.id as location_id','l.name as location','ud.access_token',
-                            DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
-                            DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),
+                            'uaso.option as gender','l.id as location_id','l.name as location','ud.access_token','u.points_earned as points_earned','u.points_spent as points_spent',
+                            /*DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
+                            DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),*/
                             DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
                             DB::raw('MAX(IF(ua3.alias = "membership_number", uai.attribute_value, 0)) AS membership_number'),
                             DB::raw('MAX(IF(ua3.alias = "a_la_carte_reservation", uai.attribute_value, 0)) AS a_la_carte_reservation'),

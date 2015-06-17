@@ -90,7 +90,7 @@ class ReservationModel extends Model {
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `vvla`.`latitude` as `latitude`,
                                       `vvla`.`longitude` as `longitude`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id 
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name 
                                     from `reservation_details` as `rd` 
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
                                     left join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `rd`.`product_id` and pvl.vendor_location_id = `rd`.`vendor_location_id` 
@@ -105,6 +105,7 @@ class ReservationModel extends Model {
                                     left join `vendor_location_address` as `pvla` on `pvla`.`vendor_location_id` = `pvl`.`vendor_location_id` 
                                     left join `vendor_location_address` as `vvla` on `vvla`.`vendor_location_id` = `rd`.`vendor_location_id` 
                                     left join `locations` as `vloc` on `vloc`.`id` = `vl`.`location_id`
+                                    left join `locations` as `vloc1` on `vloc1`.`id` = vvla.city_id
                                      where `rd`.`user_id` = $userID and `reservation_status` in ('new', 'edited') 
                                     group by `rd`.`id` order by `rd`.`reservation_date` asc, `rd`.`reservation_time` asc");
     //echo $queryResult->toSql();
@@ -175,7 +176,7 @@ class ReservationModel extends Model {
                   'product_slug' => $row->product_slug,
                   'address' => (empty($row->product_address)) ? $row->vendor_address : $row->product_address,
                   'locality' => (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality,
-                  'city' => $row->city,
+                  'city' => $row->city_name,
                   'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
                   'day_schedule' => $arrSchedule,
                   'addons' => $arrAddOn,
