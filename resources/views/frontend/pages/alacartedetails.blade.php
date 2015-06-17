@@ -50,7 +50,7 @@
            
               
             </table>
-            
+
             <div id="deal-detail-carousel" class="carousel slide" data-ride="carousel">
               <!-- Wrapper for slides -->
               <div class="carousel-inner">

@@ -390,7 +390,7 @@ class AlacarteModel{
                     $arrImage[$row->image_type] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
                 }
                 if($row->image_type = 'gallery') {
-                    $arrImage['gallery'][] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
+                    $arrImage['gallery'][] = Config::get('constants.API_GALLERY_IMAGE_URL').$row->image;
                 }
             }
         }
