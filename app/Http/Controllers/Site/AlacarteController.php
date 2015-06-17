@@ -177,9 +177,9 @@ class AlacarteController extends Controller {
         $data['dropdowns_opt']  = 0; //1 for disp
         
 
-        $seo_title = $data['arrALaCarte']['data']['seo_title'];
-        $meta_desc = $data['arrALaCarte']['data']['seo_meta_description'];
-        $meta_keywords = $data['arrALaCarte']['data']['seo_meta_keywords'];
+        $seo_title = (isset($data['arrALaCarte']['data']['seo_title']) && $data['arrALaCarte']['data']['seo_title'] != "" ? $data['arrALaCarte']['data']['seo_title'] : 'Wowtables');
+        $meta_desc = (isset($data['arrALaCarte']['data']['seo_meta_description']) && $data['arrALaCarte']['data']['seo_meta_description'] != "" ? $data['arrALaCarte']['data']['seo_meta_description'] : 'Wowtables');
+        $meta_keywords = (isset($data['arrALaCarte']['data']['seo_meta_keywords']) && $data['arrALaCarte']['data']['seo_meta_keywords'] != "" ? $data['arrALaCarte']['data']['seo_meta_keywords'] : 'Wowtables');
         if($seo_title=='')
         {
           $seoTitleDetails = 'WowTables: '.$data['arrALaCarte']['data']['title'].', '.$data['arrALaCarte']['data']['location_address']['city'].', '.$data['arrALaCarte']['data']['location_address']['area'];
