@@ -56,7 +56,7 @@
               <div class="carousel-inner">
                 
                 <div class="item active">
-                  <img  itemprop="photo" src="<?php echo isset($arrALaCarte['data']['image']['listing'])?$arrALaCarte['data']['image']['listing']:'';?>" alt="deal1">
+                  <img  itemprop="photo" src="<?php echo isset($arrALaCarte['data']['image']['gallery'][0])?$arrALaCarte['data']['image']['gallery'][0]:'';?>" alt="deal1">
                 </div>
 
                 <?php $i=2;

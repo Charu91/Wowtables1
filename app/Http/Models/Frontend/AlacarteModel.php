@@ -376,7 +376,7 @@ class AlacarteModel{
         $queryImages = DB::table('media_resized_new as mrn')
                         ->leftJoin('vendor_locations_media_map as vlmm','vlmm.media_id','=','mrn.media_id')
                         ->where('vlmm.vendor_location_id',$vendorLocationID)
-                        ->where('vlmm.media_type','listing')
+                        ->where('vlmm.media_type','gallery')
                         ->select('mrn.id','mrn.file as image','mrn.image_type')
                         ->groupBy('mrn.id')
                         ->get();
@@ -390,7 +390,7 @@ class AlacarteModel{
                     $arrImage[$row->image_type] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
                 }
                 if($row->image_type = 'gallery') {
-                    $arrImage['gallery'][] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
+                    $arrImage['gallery'][] = Config::get('constants.API_GALLERY_IMAGE_URL').$row->image;
                 }
             }
         }
