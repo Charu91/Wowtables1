@@ -536,6 +536,7 @@ class AlacarteController extends Controller {
         $result= $_SESSION["result"]=$result1;
         $data['current_city'] = $result['current_city'];
         $data['current_city_id'] = $result['current_city_id'];
+        $data['user']   = Auth::user();
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
         return view('frontend.pages.alacarte_thankyou',$data,['result'=>$result]);

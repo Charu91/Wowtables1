@@ -1104,8 +1104,16 @@ class User {
     }
 
     public function get_all_records($id){
-        $rewards = DB::table('rewards_details')->where('user_id', $id);
+        $rewards = DB::table('users')->where('id', $id)->select('points_earned','points_spent');
         return $rewards->get();
     }
-              
+    public function get_all_points_earned($id){
+        $rewards = DB::table('reward_points_earned')->where('user_id', $id)->where('status','approved')->select('points_earned','description');
+        return $rewards->get();
+    }
+    public function get_all_points_spent($id){
+        $rewards = DB::table('reward_points_redeemed')->where('user_id', $id)->select('points_redeemed','description');
+        return $rewards->get();
+    }
+
 }

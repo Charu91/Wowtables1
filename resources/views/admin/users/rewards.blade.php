@@ -24,12 +24,13 @@
     <header class="panel-heading">
         <h2 class="panel-title">Add Reward</h2>
     </header>
+        <?php $total_points = $users->points_earned - $users->points_spent ;?>
      {!! Form::open(['route'=>'AdminUserStoreReward','novalidate'=>'novalidate']) !!}
     <div class="panel-body">
         <div class="form-group">
             {!! Form::label('total_points','Total points',['class'=>'col-sm-4 control-label']) !!}
             <div class="col-sm-8">
-                {!! Form::text('total_rewards',$users->total_points,['class'=>'form-control','required'=>'','readonly'=>'readonly']) !!}
+                {!! Form::text('total_rewards',$total_points,['class'=>'form-control','required'=>'','readonly'=>'readonly']) !!}
             </div>
         </div>
         <div class="form-group">
@@ -68,40 +69,41 @@
    </footer>
    {!! Form::close() !!}
 </section>
-<section class="panel col-lg-8 col-lg-offset-2">
+<section class="panel col-lg-8 col-lg-offset-2"> <h3>Points Earned</h3>
     <div class="panel-body">
         <table class="table table-striped table-responsive mb-none" id="usersTable">
             <thead>
             <tr>
-                <th>Id</th>
                 <th>Points</th>
-                <th>Points Type</th>
                 <th>Description</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($rewards as $reward)
-                @if($reward->points_earned != 0)
-                    {{--*/
-                        $points = $reward->points_earned;
-                        $type = "Added";
-                    /*--}}
-                @elseif($reward->points_redeemed != 0)
-                    {{--*/
-                        $points = $reward->points_redeemed;
-                        $type = "Redeemed";
-                    /*--}}
-                @elseif($reward->points_removed != 0)
-                    {{--*/
-                        $points = $reward->points_removed;
-                        $type = "Removed";
-                    /*--}}
-                @endif
+            @foreach($points_earned as $pe)
                 <tr>
-                    <th>{!! $reward->id !!}</th>
-                    <th>{!! $points !!}</th>
-                    <th>{!! $type !!}</th>
-                    <th>{!! $reward->description !!}</th>
+                    <th>{!! $pe->points_earned !!}</th>
+                    <th>{!! $pe->description !!}</th>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel col-lg-8 col-lg-offset-2"> <h3>Points Spent</h3>
+    <div class="panel-body">
+        <table class="table table-striped table-responsive mb-none" id="usersTable">
+            <thead>
+            <tr>
+                <th>Points</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($points_spent as $ps)
+                <tr>
+                    <th>{!! $ps->points_redeemed !!}</th>
+                    <th>{!! $ps->description !!}</th>
                 </tr>
             @endforeach
             </tbody>

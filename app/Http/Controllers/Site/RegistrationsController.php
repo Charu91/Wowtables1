@@ -67,7 +67,7 @@ class RegistrationsController extends Controller {
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
-
+		$arrResponse['user']   = Auth::user();
         $city_id    = Input::get('city');        
         $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -423,7 +423,7 @@ class RegistrationsController extends Controller {
 				'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
 				'No_of_People' => $party_size,
 				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
-				'Time' => date("g:ia", strtotime($this->request->input('edit_time'))),
+				'Time' => date("g:i A", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -497,7 +497,7 @@ class RegistrationsController extends Controller {
 				'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
 				'No_of_People' => $party_size,
 				'Date_of_Visit' => date('d-M-Y', strtotime($edit_date1)),
-				'Time' => date("g:i a", strtotime($this->request->input('edit_time'))),
+				'Time' => date("g:i A", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
 				'API_added' => 'Yes',
@@ -575,8 +575,8 @@ class RegistrationsController extends Controller {
 		//$userID =Session::get('id');
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
-        $arrResponse['cities'] = $cities;
-
+		$data['cities'] = $cities;
+		$data['user']   = Auth::user();
         $city_id    = Input::get('city');        
         $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -584,15 +584,15 @@ class RegistrationsController extends Controller {
             $city_name = 'mumbai';
         }
 
-        $arrResponse['allow_guest']            ='Yes'; 
-        $arrResponse['current_city']           = strtolower($city_name);
-        $arrResponse['current_city_id']        = $city_id;
+		$data['allow_guest']            ='Yes';
+		$data['current_city']           = strtolower($city_name);
+		$data['current_city_id']        = $city_id;
         //this code is start in header and footer page.
        $userID = Session::get('id');
 		
 		
         	
-        return view('frontend.pages.myaccount',$arrResponse);
+        return view('frontend.pages.myaccount',$data);
 	}
 
 	public function zoho_edit_booking($order_id,$data){

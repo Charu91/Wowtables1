@@ -202,36 +202,23 @@ class AdminUsersController extends Controller {
         $users = \WowTables\Http\Models\Eloquent\User::find($id);
 
         $rewards = $this->user->get_all_records($id);
-        return view('admin.users.rewards',['user_id'=>$id,'rewards'=>$rewards,'users'=>$users]);
+
+		$points_earned = $this->user->get_all_points_earned($id);
+		$points_spent = $this->user->get_all_points_spent($id);
+
+        return view('admin.users.rewards',['user_id'=>$id,'rewards'=>$rewards,'users'=>$users,'points_earned'=>$points_earned,'points_spent'=>$points_spent]);
     }
 
     public function store_rewards(CreateRewardRequest $request)
     {
-        $reward = new Reward();
-        $users = \WowTables\Http\Models\Eloquent\User::find($this->request->get('user_id'));
 
-        $reward->user_id = $this->request->get('user_id');
-        if($this->request->get('status') == "add_points"){
-            $reward->points_earned = $this->request->get('points');
-            $reward->points_redeemed = 0;
-            $reward->points_removed = 0;
-            $users->total_points = $users->total_points + $this->request->get('points');
-        } else if($this->request->get('status') == "redeem_points"){
-            $reward->points_earned = 0;
-            $reward->points_removed = 0;
-            $reward->points_redeemed = $this->request->get('points');;
-            $users->total_points = $users->total_points - $this->request->get('points');
-        } else if($this->request->get('status') == "remove_points"){
-            $reward->points_earned = 0;
-            $reward->points_redeemed = 0;
-            $reward->points_removed = $this->request->get('points');;
-            $users->total_points = $users->total_points - $this->request->get('points');
-        }
+		$points = $this->request->get('points');
+		$description = $this->request->get('short_description');
+		$user_id = $this->request->get('user_id');
+		$status = $this->request->get('status');
 
-        $reward->description = $this->request->get('short_description');
+		Profile::updatePointsManually($points,$description,$user_id,$status);
 
-        $reward->save();
-        $users->save();
 
         flash()->success('The Reward has been created successfully');
 
