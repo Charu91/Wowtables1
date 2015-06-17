@@ -782,8 +782,8 @@ class ExperienceController extends Controller {
                 ], function($message) use ($mergeReservationsArray){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                    $message->to(Input::get('email'))->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                    //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                    $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
                 });
 
 
