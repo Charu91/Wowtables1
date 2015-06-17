@@ -1185,8 +1185,8 @@ $last_url_item = count($url)-1;
             $('#locations1').change(function(){
               $('#party_edit1').trigger('click'); 
               
-               loadPartySelect();
-               loadDatePicker();
+              /* loadPartySelect();
+               loadDatePicker();*/
             });
 
 
