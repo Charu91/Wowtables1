@@ -159,7 +159,7 @@ class ReservationModel extends Model {
                   'dayname' => $row->dayname,
                   'time' => $row->reservation_time,
                   'no_of_persons' => $row->no_of_persons,
-                  'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
+                  'name' => (empty($row->vendor_name)) ? $row->product_name : $row->product_name,
                   'type' => $row->reservation_type,
                   'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
                   //'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
