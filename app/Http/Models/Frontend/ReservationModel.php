@@ -41,9 +41,14 @@ class ReservationModel extends Model {
    * @since 1.0.0
    */
   public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
-    $queryResult = DB::table('reservation_details as rd')
+    /*$queryResult = DB::table('reservation_details as rd')
             ->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-            ->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
+            //->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
+            //->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','rd.product_id and pvl.vendor_location_id = rd.vendor_location_id')
+            ->leftJoin('product_vendor_locations as pvl', function($join){
+                $join->on('pvl.product_id', '=', 'rd.product_id');
+                $join->on(DB::raw('(  and pvl.vendor_location_id = rd.vendor_location_id)'));
+              })
             ->leftJoin('products','products.id','=','pvl.product_id')
             ->leftJoin('vendors','vendors.id','=','vl.vendor_id')
             ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
@@ -68,11 +73,40 @@ class ReservationModel extends Model {
                    'ploc.name as product_locality','pvla.address as product_address',
                    'vloc.name as vendor_locality', 'vvla.address as vendor_address', 
                    'vvla.latitude as latitude', 'vvla.longitude as longitude', 'products.slug as product_slug',
-                   'ploc.name as city',DB::raw('DAYNAME(rd.reservation_date) as dayname'))
+                   'ploc.name as city',DB::raw('DAYNAME(rd.reservation_date) as dayname'),'pvl.id as product_vendor_location_id')
             ->orderBy('rd.reservation_date','asc')
             ->orderBy('rd.reservation_time','asc')
             ->groupBy('rd.id') 
-            ->get();
+            ->get();*/
+
+         $queryResult = DB::select("select `rd`.`id`, `rd`.`user_id`, `rd`.`reservation_status`, `rd`.`reservation_date`, `rd`.`reservation_time`, `rd`.`no_of_persons`,
+                                   `products`.`name` as `product_name`, `vendors`.`id` as `vendor_id`, `vendors`.`name` as `vendor_name`,
+                                    `rd`.`reservation_type`, `products`.`id` as `product_id`, `rd`.`vendor_location_id`,
+                                     `rd`.`product_vendor_location_id`,
+                                   `rd`.`special_request`, `rd`.`giftcard_id`, `rd`.`guest_name`, 
+                                   `rd`.`guest_name`, `rd`.`guest_email`, `rd`.`guest_phone`, 
+                                   `rd`.`points_awarded`, MAX(IF(pa.alias='short_description', pat.attribute_value,'')) AS product_short_description,
+                                    MAX(IF(va.alias='short_description', vlat.attribute_value, ''))AS vendor_short_description, `ploc`.`name` as `product_locality`,
+                                     `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
+                                     `vvla`.`address` as `vendor_address`, `vvla`.`latitude` as `latitude`,
+                                      `vvla`.`longitude` as `longitude`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id 
+                                    from `reservation_details` as `rd` 
+                                    left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
+                                    left join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `rd`.`product_id` and pvl.vendor_location_id = `rd`.`vendor_location_id` 
+                                    left join `products` on `products`.`id` = `pvl`.`product_id` 
+                                    left join `vendors` on `vendors`.`id` = `vl`.`vendor_id` 
+                                    left join `product_attributes_text` as `pat` on `pat`.`product_id` = `products`.`id` 
+                                    left join `product_attributes` as `pa` on `pa`.`id` = `pat`.`product_attribute_id` 
+                                    left join `vendor_location_attributes_text` as `vlat` on `vlat`.`vendor_location_id` = `vl`.`id` 
+                                    left join `vendor_attributes` as `va` on `va`.`id` = `vlat`.`vendor_attribute_id` 
+                                    left join `vendor_locations` as `vl2` on `vl2`.`id` = `pvl`.`vendor_location_id` 
+                                    left join `locations` as `ploc` on `ploc`.`id` = `vl2`.`location_id` 
+                                    left join `vendor_location_address` as `pvla` on `pvla`.`vendor_location_id` = `pvl`.`vendor_location_id` 
+                                    left join `vendor_location_address` as `vvla` on `vvla`.`vendor_location_id` = `rd`.`vendor_location_id` 
+                                    left join `locations` as `vloc` on `vloc`.`id` = `vl`.`location_id`
+                                     where `rd`.`user_id` = $userID and `reservation_status` in ('new', 'edited') 
+                                    group by `rd`.`id` order by `rd`.`reservation_date` asc, `rd`.`reservation_time` asc");
     //echo $queryResult->toSql();
     
     //array to store the information
@@ -125,10 +159,11 @@ class ReservationModel extends Model {
                   'dayname' => $row->dayname,
                   'time' => $row->reservation_time,
                   'no_of_persons' => $row->no_of_persons,
-                  'name' => (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name,
+                  'name' => (empty($row->vendor_name)) ? $row->product_name : $row->product_name,
                   'type' => $row->reservation_type,
                   'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
-                  'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
+                  //'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
+                  'vl_id' => $row->product_vendor_location_id,
                   'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
                   'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
                   'guest_name' => $row->guest_name,
