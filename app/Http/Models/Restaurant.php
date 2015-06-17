@@ -80,7 +80,7 @@ class Restaurant extends Vendor{
     {
         DB::beginTransaction();
 
-        $vendorTypeId = DB::table('vendor_types')->where('type','Restaurants')->pluck('id');
+        //$vendorTypeId = DB::table('vendor_types')->where('type','Restaurants')->pluck('id');
 
         if(DB::table('vendors')->where('id', $restaurant_id)->count()){
             //delete all existing attributes
@@ -98,29 +98,15 @@ class Restaurant extends Vendor{
                 WHERE v.id = ?
             ';*/
 
-            $query = '
+            /*$query = '
                 DELETE
                 FROM vendors
                 WHERE vendors.id = ?
             ';
 
-            DB::delete($query, [$restaurant_id]);
+            DB::delete($query, [$restaurant_id]);*/
 
-            //$vendorUpdateData = ['name' => $data['name'], 'slug' => $data['slug'], 'status' => $data['status']];
-            $vendorUpdateData = ['name' => $data['name'],'slug' => $data['name'],'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
-
-            if($data['status'] === 'Publish'){
-                if(isset($data['publish_date']) && isset($data['publish_time'])){
-                    $vendorUpdateData['publish_time'] = $data['publish_date'].' '.$data['publish_time'];
-                }else{
-                    $vendorUpdateData['publish_time'] = DB::raw('NOW()');
-                }
-            }
-
-            //DB::table('vendors')->where('id', $restaurant_id)->update($vendorUpdateData);
-            $restaurantId = DB::table('vendors')->insertGetId($vendorUpdateData);
-
-            if($restaurantId){
+            if(DB::table('vendors')->where('id', $restaurant_id)->update(array('name' => $data['name']))){
                 DB::commit();
                 return [
                     'status' => 'success',
@@ -134,6 +120,24 @@ class Restaurant extends Vendor{
                     'message' => 'Could not find the restaurant you are trying to update. Try again or contact the sys admin'
                 ];
             }
+
+
+
+            //$vendorUpdateData = ['name' => $data['name'], 'slug' => $data['slug'], 'status' => $data['status']];
+            /*$vendorUpdateData = ['name' => $data['name'],'slug' => $data['name'],'vendor_type_id' => $vendorTypeId, 'status' => $data['status']];
+
+            if($data['status'] === 'Publish'){
+                if(isset($data['publish_date']) && isset($data['publish_time'])){
+                    $vendorUpdateData['publish_time'] = $data['publish_date'].' '.$data['publish_time'];
+                }else{
+                    $vendorUpdateData['publish_time'] = DB::raw('NOW()');
+                }
+            }*/
+
+            //DB::table('vendors')->where('id', $restaurant_id)->update($vendorUpdateData);
+            //$restaurantId = DB::table('vendors')->insertGetId($vendorUpdateData);
+
+
 
             /*if(count($data['attributes'])){
                 $AttributesSaved = $this->saveAttributes($restaurant_id, $data['attributes']);
