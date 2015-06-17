@@ -1,4 +1,4 @@
-@extends('frontend.templates.inner_pages')
+@extends('frontend.templates.details_pages')
 
 @section('content')
 
