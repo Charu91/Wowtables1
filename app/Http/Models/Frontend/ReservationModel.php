@@ -165,6 +165,8 @@ class ReservationModel extends Model {
                   'product_id' => ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id,
                   //'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
                   'vl_id' => $row->product_vendor_location_id,
+                  'vendor_name' => $row->vendor_name,
+                  'vendor_location_id' => $row->vendor_location_id,
                   'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
                   'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
                   'guest_name' => $row->guest_name,

@@ -51,15 +51,28 @@ exit;*/
                   <?php if($data['type']=='experience')
                   {
                      echo $data['name'];
+
                   } 
                   else
                   {
-                    echo $data['name'] .' : '.'A la carte Reservation';
+                    echo $data['vendor_name'] .' : '.'A la carte Reservation';
                   }
                   ?>
                 </span>
                 <ul class="col-md-4 list-inline text-right">
-                                              <li><a href="<?php echo $data['type'].','.$data['vl_id'].','.$data['product_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a></li>
+              <?php if($data['type']=='experience')
+                    {?>
+                  <li>
+                  <a href="<?php echo $data['type'].','.$data['vl_id'].','.$data['product_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a>
+                </li>
+                    <?php 
+                  }else if($data['type'] == "alacarte")
+                    {?>
+                    <li>
+                  <a href="<?php echo $data['type'].','.$data['vendor_location_id'].','.$data['vendor_location_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a>
+                </li>
+
+                    <?php }?>
                                     <li>
                   <?php if($data['type'] == "experience"){
                           $change_id = "cancel_reservation";
