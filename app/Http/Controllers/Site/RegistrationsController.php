@@ -67,7 +67,7 @@ class RegistrationsController extends Controller {
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
-
+		$arrResponse['user']   = Auth::user();
         $city_id    = Input::get('city');        
         $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -575,8 +575,8 @@ class RegistrationsController extends Controller {
 		//$userID =Session::get('id');
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
-        $arrResponse['cities'] = $cities;
-
+		$data['cities'] = $cities;
+		$data['user']   = Auth::user();
         $city_id    = Input::get('city');        
         $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -584,15 +584,15 @@ class RegistrationsController extends Controller {
             $city_name = 'mumbai';
         }
 
-        $arrResponse['allow_guest']            ='Yes'; 
-        $arrResponse['current_city']           = strtolower($city_name);
-        $arrResponse['current_city_id']        = $city_id;
+		$data['allow_guest']            ='Yes';
+		$data['current_city']           = strtolower($city_name);
+		$data['current_city_id']        = $city_id;
         //this code is start in header and footer page.
        $userID = Session::get('id');
 		
 		
         	
-        return view('frontend.pages.myaccount',$arrResponse);
+        return view('frontend.pages.myaccount',$data);
 	}
 
 	public function zoho_edit_booking($order_id,$data){
