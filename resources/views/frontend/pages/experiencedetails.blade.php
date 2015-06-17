@@ -1180,21 +1180,21 @@ $last_url_item = count($url)-1;
     				});
 
             /*reservation strat*/
-            loadDatePicker();
+            //loadDatePicker();
 
             $('#locations1').change(function(){
               $('#party_edit1').trigger('click'); 
               
-               loadPartySelect();
-               loadDatePicker();
+              /* loadPartySelect();
+               loadDatePicker();*/
             });
 
 
              /*reservation over*/
-		   });
+		   
 
-       function loadPartySelect()
-       {
+       /*function loadPartySelect()
+       {*/
           var location_id = $('#locations1').val();
           var jsondata = reserveminmax[location_id];
           //console.log(jsondata);
@@ -1214,9 +1214,9 @@ $last_url_item = count($url)-1;
             }
           }
 
-        }
+       /* }*/
 
-       function loadDatePicker() {
+       /*function loadDatePicker() {*/
           $("#choose_date").datepicker("destroy");
          
           $("#choose_date").datepicker({
@@ -1289,8 +1289,8 @@ $last_url_item = count($url)-1;
               }
           });
         $( "#choose_date" ).datepicker("refresh");
-      }
+      /*}*/
 
-
+});
   </script>
 @endsection
