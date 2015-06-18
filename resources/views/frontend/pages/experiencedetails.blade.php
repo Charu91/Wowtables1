@@ -646,7 +646,7 @@ $last_url_item = count($url)-1;
                         <div class="panel-heading">
                           <h4 class="panel-title">
                              <a href="javascript:" style="text-decoration: none;">
-                                Location</a>  
+                                Location<?php //print_r($arrExperience['data']['location']);?></a>  
                                 <select name="address" id='locations1' class="pull-right space">
                                     <option value="">--Select Location--</option>
                                 <?php
