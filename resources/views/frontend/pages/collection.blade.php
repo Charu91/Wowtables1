@@ -1,4 +1,4 @@
-@extends('frontend.templates.inner_pages')
+@extends('frontend.templates.details_pages')
 
 @section('content')
 
@@ -35,7 +35,7 @@ exit;*/
 <div class="col-md-12 listing-cover-desc">
       <div class="row">
 <div class="col-md-4 col-sm-4"><?php //print_r($exclusiveExperiences);?>
-  <p class="lead intro-tag text-center">The {{$collectionResult['0']->name}} in Mumbai</p>
+  <p class="lead intro-tag text-center">{{$collectionResult['0']->name}}</p>
 </div>
 <div class="col-md-8 col-sm-8">
   				<!-- <p>A selection of experiences that are perfect for our Jain members. Get ready to enjoy Jain set meals at some of the top restaurants in Mumbai. </p> -->
