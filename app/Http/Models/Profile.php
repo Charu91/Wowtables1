@@ -140,6 +140,7 @@ $queryProfileResult = DB::table('users as u')
                     ->leftjoin('user_attributes_varchar as uav','uav.user_id','=','u.id')
                     ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
                     ->leftjoin('user_attributes as ua4', 'ua4.id','=','uad.user_attribute_id')
+                    ->leftjoin('user_attributes as ua5', 'ua5.id','=','uav.user_attribute_id')
                     ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
                     //->where('u.id',$userID)
                     ->where('u.id',$id)                                        
@@ -148,7 +149,7 @@ $queryProfileResult = DB::table('users as u')
                             /*DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
                             DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),*/
                             DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
-                            DB::raw('MAX(IF(ua3.alias = "membership_number", uai.attribute_value, 0)) AS membership_number'),
+                            DB::raw('MAX(IF(ua5.alias = "membership_number", uai.attribute_value, 0)) AS membership_number'),
                             DB::raw('MAX(IF(ua3.alias = "a_la_carte_reservation", uai.attribute_value, 0)) AS a_la_carte_reservation'),
                             DB::raw('MAX(IF(ua4.alias = "date_of_birth", date(uad.attribute_value), 0)) AS dob'),
                             DB::raw('MAX(IF(ua4.alias = "anniversary_date", date(uad.attribute_value), 0)) AS anniversary_date'))
