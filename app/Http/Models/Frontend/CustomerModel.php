@@ -216,26 +216,26 @@ class CustomerModel {
                             }
                             echo "return succes , ";
 
-                            return [ 'state' => 'success'];
+                            //return [ 'state' => 'success'];
                         }else{
                             echo "is update is not true return failure , ";
-                            return [
+                            /*return [
                                 'state' => 'failure',
                                 'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
-                            ];
+                            ];*/
                         }
                     }else{
-                        return [
+                        /* return [
                             'state' => 'failure',
                             'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
-                        ];
+                        ];*/
                     }
                 }else{
                     echo "if password is not same return error, ";
-                    return [
+                    /*return [
                         'state' => 'failure',
                         'message' => 'The email address and password did not match'
-                    ];
+                    ];*/
                 }
             }else{
                 echo "if type is not old_site , ";
@@ -254,22 +254,22 @@ class CustomerModel {
                         }
                     }
                     echo "return success , ";
-                    return [ 'state' => 'success'];
+                    //return [ 'state' => 'success'];
                 } else {
                     echo "authentice the user failed throw error";
-                    return [
+                    /*return [
                         'state' => 'failure',
                         'message' => 'The email address and password did not match'
-                    ];
+                    ];*/
                 }
 
             } 
         }else{
             echo "if users is not true , ";
-            return [
+            /*return [
                 'state' => 'failure',
                 'message' => 'The email address has not been registered with us'
-            ];
+            ];*/
         }
        die;
     }
