@@ -182,34 +182,43 @@ class CustomerModel {
 
         $user = DB::select($query, [$email]);
 
-        echo "<pre>"; print_r($user); die;
+        echo "<pre>"; print_r($user); //die;
          
         if($user){
-          
+          echo "if users is true , ";
             if($user[0]->type === 'old_site'){
+                echo "if type is old_site , ";
                 if(md5($password) === $user[0]->old_password){
+                    echo "checking the password is same, ";
                     $password = bcrypt($password);
+                    echo "converting password to bcrypt , ";
                     $new_site_user_update = DB::update(
                         'UPDATE users SET password = ?, type = ? WHERE id = ?',
                         [$password, 'new_site', $user[0]->id]
                     );
-
+                    echo "updating the password and type , ";
                     if($new_site_user_update){
+                        echo "is update is true , ";
                         if($this->auth->loginUsingId($user[0]->id, $remember)){
+                            echo "authenciate the user , ";
                             $this->role = $user[0]->role;
                             $this->full_name = $user[0]->full_name;
                             if($user[0]->action){
+                                echo "if user of action , ";
                                 foreach($user as $userPermission){
+                                    echo "in users permissions , ";
                                     if(!isset($this->permissions[$userPermission->resource]))
                                         $this->permissions[$userPermission->resource] = [];
 
                                     $this->permissions[$userPermission->resource][] = $userPermission->action;
                                 }
+                                echo "out of foreach , ";
                             }
-
+                            echo "return succes , ";
 
                             return [ 'state' => 'success'];
                         }else{
+                            echo "is update is not true return failure , ";
                             return [
                                 'state' => 'failure',
                                 'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
@@ -222,28 +231,32 @@ class CustomerModel {
                         ];
                     }
                 }else{
+                    echo "if password is not same return error, ";
                     return [
                         'state' => 'failure',
                         'message' => 'The email address and password did not match'
                     ];
                 }
             }else{
-
+                echo "if type is not old_site , ";
                 if ($this->auth->attempt(['email' => $email, 'password' => $password], $remember)) {
-
+                    echo "authentice the user";
                     $this->role = $user[0]->role;
                     $this->full_name = $user[0]->full_name;
 
                     if($user[0]->action){
+                        echo "if user of action exist , ";
                         foreach($user as $userPermission){
+                            echo "user permissions foreach loop , ";
                             if(!isset($this->permissions[$userPermission->resource]))
                                 $this->permissions[$userPermission->resource] = [];
                             $this->permissions[$userPermission->resource][] = $userPermission->action;
                         }
                     }
-
+                    echo "return success , ";
                     return [ 'state' => 'success'];
                 } else {
+                    echo "authentice the user failed throw error";
                     return [
                         'state' => 'failure',
                         'message' => 'The email address and password did not match'
@@ -252,12 +265,13 @@ class CustomerModel {
 
             } 
         }else{
+            echo "if users is not true , ";
             return [
                 'state' => 'failure',
                 'message' => 'The email address has not been registered with us'
             ];
         }
-       
+       die;
     }
 
     /**
