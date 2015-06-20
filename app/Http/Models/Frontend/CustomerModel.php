@@ -181,6 +181,8 @@ class CustomerModel {
         ';
 
         $user = DB::select($query, [$email]);
+
+        echo "<pre>"; print_r($user); die;
          
         if($user){
           
