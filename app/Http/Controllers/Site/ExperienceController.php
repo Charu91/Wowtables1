@@ -627,7 +627,7 @@ class ExperienceController extends Controller {
         
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
-        echo "<pre>"; print_r($userData); die;
+        //echo "<pre>"; print_r($userData); die;
 
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); die;
