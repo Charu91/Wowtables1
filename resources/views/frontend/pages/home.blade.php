@@ -482,14 +482,14 @@
               }
               else { 
                   var pageUrl = "<?php echo $currentPageUrl;?>";
-                  $.ajax({
+                  /*$.ajax({
                         url: "{{URL::to('/')}}/login/registration_page_url",
                         type: "POST",
                         dataType: "json",
                         data:{page_url: pageUrl},
                         success: function(d) {
                         }
-                    });
+                    });*/
                   $("#fbSelectCity").modal('toggle');
               }
              //$("#fbSelectCity").modal('toggle');
