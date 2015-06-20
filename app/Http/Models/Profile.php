@@ -137,6 +137,7 @@ $queryProfileResult = DB::table('users as u')
                                                                                  ->where('ua2.alias','=','gender');
                                                                      })
                     ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
+                    ->leftjoin('user_attributes_varchar as uav','uav.user_id','=','u.id')
                     ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
                     ->leftjoin('user_attributes as ua4', 'ua4.id','=','uad.user_attribute_id')
                     ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
