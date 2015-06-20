@@ -183,8 +183,8 @@
                   <p class="text-center wowtables_text_align">BOOK EXCLUSIVE FINE DINING EXPERIENCES AT THE BEST RESTAURANTS</p>
                 </div>
                
-                <a href='javascript:void(0)' id="FBLogin" type="submit" ><span class="fbicon"></span>Log in with Facebook</a>
-                <!-- <a href='javascript:void(0)' id="FBLogin" type="submit" onclick=popup()><span class="fbicon"></span>Log in with Facebook</a> -->
+                <!-- <a href='javascript:void(0)' id="FBLogin" type="submit" ><span class="fbicon"></span>Log in with Facebook</a> -->
+                <a href='javascript:void(0)' id="FBLogin" type="submit" onclick=popup()><span class="fbicon"></span>Log in with Facebook</a>
                
               <div class="form-slide-wrapper" <?=(!empty($errors->has()))? 'style="left:-320px;"' : '' ;?>>
                   <div id="signupForm" >
