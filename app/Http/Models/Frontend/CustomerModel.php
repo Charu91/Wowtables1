@@ -323,6 +323,8 @@ class CustomerModel {
 
         $user = DB::select($query, [$token, $email]);
 
+        echo "<prE>"; print_r($user); die;
+
         if(!$user){
             $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
 
