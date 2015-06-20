@@ -7,22 +7,11 @@ class ExperienceLocation {
     public function create($data)
     {
         DB::beginTransaction();
-        $location_count = count($data['restaurant_location_id']);
+        //$location_count = count($data['restaurant_location_id']);
 
         $productVendorLocationLastID = '';
-        if($location_count > 1){
-            foreach($data['restaurant_location_id'] as $key => $location_id){
-                $productVendorLocationInsertData = [
-                    'product_id' => $data['experience_id'],
-                    'vendor_location_id' => $location_id,
-                    'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
-                    'descriptive_title' => $data['descriptive_title'],
-                    'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
-                    'status' => $data['status']
-                ];
+        /*if($location_count > 1){
 
-                $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
-            }
 
 
         }else if($location_count == 1){
@@ -36,59 +25,76 @@ class ExperienceLocation {
             ];
 
             $productVendorLocationLastID = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
-        }
+        }*/
 
 
-        $productVendorLocationId = $productVendorLocationLastID;
+        //$productVendorLocationId = $productVendorLocationLastID;
 
         //echo "last id == ".$productVendorLocationId; die;
+        //echo "<prE>"; print_r($data); die;
 
-        if($productVendorLocationId){
-            if(!empty($data['attributes'])){
-                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['attributes']);
-
-                if($AttributesSaved['status'] !== 'success'){
-                    $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
-                    return $AttributesSaved;
-                }
-            }
-
-            if(!empty($data['schedules'])){
-                $schedulesSaved = $this->saveSchedules($productVendorLocationId, $data['schedules']);
-
-                if($schedulesSaved['status'] !== 'success'){
-                    $schedulesSaved['message'] = 'Could not create the Experience Location Schedules. Contact the system admin';
-                    return $schedulesSaved;
-                }
-            }
-
-            if(!empty($data['block_dates'])){
-                $blockSchedulesSaved = $this->saveBlockDates($productVendorLocationId, $data['block_dates']);
-
-                if($blockSchedulesSaved['status'] !== 'success'){
-                    $blockSchedulesSaved['message'] = 'Could not create the Experience Location Block Schedules. Contact the system admin';
-                    return $blockSchedulesSaved;
-                }
-            }
-
-            if(!empty($data['reset_time_range_limits'])){
-                $resetTimeRangeLimtsSaved = $this->saveTimeRangeLimits($productVendorLocationId, $data['reset_time_range_limits']);
-
-                if($resetTimeRangeLimtsSaved['status'] !== 'success'){
-                    $resetTimeRangeLimtsSaved['message'] = 'Could not create the Experience Location Time Range Limits. Contact the system admin';
-                    return $resetTimeRangeLimtsSaved;
-                }
-            }
-
-            DB::commit();
-            return ['status' => 'success'];
-        }else{
-            DB::rollBack();
-            return [
-                'status' => 'failure',
-                'action' => 'Create the restaurant based with the assigned params',
-                'message' => 'Could not create the Restaurant. Contact the system admin'
+        foreach($data['restaurant_location_id'] as $key => $location_id) {
+            $productVendorLocationInsertData = [
+                'product_id' => $data['experience_id'],
+                'vendor_location_id' => $location_id,
+                'location_parent_id' => ($productVendorLocationLastID ? $productVendorLocationLastID : 0),
+                'descriptive_title' => $data['descriptive_title'],
+                'show_status' => (isset($data['show_status']) && $data['show_status'] != "" ? $data['show_status'] : 'show_in_all'),
+                'status' => $data['status']
             ];
+
+            echo "location_id - ".$location_id." , ";
+
+            /*$productVendorLocationId = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
+
+
+            if ($productVendorLocationId) {
+                if (!empty($data['attributes'])) {
+                    $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['attributes']);
+
+                    if ($AttributesSaved['status'] !== 'success') {
+                        $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
+                        return $AttributesSaved;
+                    }
+                }
+
+                if (!empty($data['schedules'])) {
+                    $schedulesSaved = $this->saveSchedules($productVendorLocationId, $data['schedules']);
+
+                    if ($schedulesSaved['status'] !== 'success') {
+                        $schedulesSaved['message'] = 'Could not create the Experience Location Schedules. Contact the system admin';
+                        return $schedulesSaved;
+                    }
+                }
+
+                if (!empty($data['block_dates'])) {
+                    $blockSchedulesSaved = $this->saveBlockDates($productVendorLocationId, $data['block_dates']);
+
+                    if ($blockSchedulesSaved['status'] !== 'success') {
+                        $blockSchedulesSaved['message'] = 'Could not create the Experience Location Block Schedules. Contact the system admin';
+                        return $blockSchedulesSaved;
+                    }
+                }
+
+                if (!empty($data['reset_time_range_limits'])) {
+                    $resetTimeRangeLimtsSaved = $this->saveTimeRangeLimits($productVendorLocationId, $data['reset_time_range_limits']);
+
+                    if ($resetTimeRangeLimtsSaved['status'] !== 'success') {
+                        $resetTimeRangeLimtsSaved['message'] = 'Could not create the Experience Location Time Range Limits. Contact the system admin';
+                        return $resetTimeRangeLimtsSaved;
+                    }
+                }
+
+                DB::commit();
+                return ['status' => 'success'];
+            } else {
+                DB::rollBack();
+                return [
+                    'status' => 'failure',
+                    'action' => 'Create the restaurant based with the assigned params',
+                    'message' => 'Could not create the Restaurant. Contact the system admin'
+                ];
+            }*/
         }
     }
 

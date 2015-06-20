@@ -87,7 +87,7 @@ class Password {
             $password=bcrypt($arrData['password']);
 
             User::where('id', '=', $user['user_id'])
-                                    ->update([ 'password' => $password ]);
+                                    ->update([ 'password' => $password , 'type' => 'new_site']);
 
             PasswordRequest::where('request_token', '=', $arrData ['token'])
                                         ->update(['status' => 'used']);
