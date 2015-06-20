@@ -125,7 +125,7 @@ class ExperienceController extends Controller {
                                    'meta_desc'     => $metaDescDetails, 
                                    'meta_keywords' => $meta_keywords);
         
-       /* print_r($data);
+        /*print_r($data);
         exit;*/
         return view('frontend.pages.experiencedetails',$data)
                         ->with('meta_information', $meta_information);
