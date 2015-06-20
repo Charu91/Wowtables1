@@ -435,7 +435,7 @@ class RegistrationsController extends Controller {
 				'Order_completed'=>'User Changed',
 			);
 
-			echo "<pre>"; print_r($zoho_data);
+			//echo "<pre>"; print_r($zoho_data);
 
 			$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
 
