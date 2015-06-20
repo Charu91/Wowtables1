@@ -466,7 +466,7 @@
    <script type="text/javascript">
 
     function popup(){
-        myWindow=window.open("{{URL::to('/')}}/login/index", "_blank", "scrollbars=1,resizable=1,height=300,width=450"); 
+        myWindow=window.open("{{URL::to('/')}}/users/login/", "_blank", "scrollbars=1,resizable=1,height=300,width=450");
         myWindow.moveTo(500, 200); 
         myWindow.focus();
         intervalID = window.setInterval(checkWindow, 500);
