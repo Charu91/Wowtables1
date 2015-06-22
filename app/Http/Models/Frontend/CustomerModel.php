@@ -274,7 +274,7 @@ class CustomerModel {
     public function register($users=array())
     {
        
-        $full_name = ($users['full_name'])?$users['full_name']:$users['email_address'];
+        $full_name = ($users['full_name'])?$users['full_name']:'';
         $email = $users['email_address'];
         $password = $users['password'];
         $city =$users['city'];
@@ -292,6 +292,13 @@ class CustomerModel {
         $user = $this->auth->loginUsingId($user_id);
 
         if($user){
+
+            DB::table('user_attributes_varchar')->insert([
+                'user_id' => $user_id,
+                'user_attribute_id' => 7,
+                'attribute_value' => '1'.str_pad($user_id, 6, '0', STR_PAD_LEFT),
+            ]);
+
             return [
                 'state' => 'success',
                 'user'  => $user,
