@@ -684,7 +684,7 @@ class ExperienceController extends Controller {
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
-                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
             //End MailChimp
@@ -702,8 +702,12 @@ class ExperienceController extends Controller {
                     $type = "new";
                     $reservationType = "experience";
                     $lastOrderId = $reservationResponse['data']['reservationID'];
-
+                    //echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
                     Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+                    DB::table('users')
+                        ->where('id', $userID)
+                        ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
+
                     //echo "<pre>"; print_r($reservationResponse); die;
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],

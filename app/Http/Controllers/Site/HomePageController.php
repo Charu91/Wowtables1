@@ -22,20 +22,24 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
-use Socialize;
+use Laravel\Socialite\Contracts\Factory as Socialize;
+use WowTables\Http\Models\Facebook;
 
 class HomePageController extends Controller {
 
     protected $listId = '986c01a26a';
 
     protected $socialize;
+    protected $facebook;
 
     function __construct(CustomerModel $customermodel, Request $request, 
-                                Mailchimp $mailchimp, Socialize $socialize){
+                                Mailchimp $mailchimp, Socialize $socialize, 
+                                Facebook $facebook){
          $this->customermodel = $customermodel;
          $this->request = $request;
          $this->mailchimp = $mailchimp;
          $this->socialize = $socialize;
+         $this->facebook = $facebook;
     }
 
 	public function home()
@@ -393,7 +397,7 @@ The WowTables Team";
                         'MERGE20'=> isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
                     );
 
-                    //$this->mailchimp->lists->subscribe($this->listId, $_POST['email'],$merge_vars,"html",false,true );
+                    $this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
@@ -561,6 +565,40 @@ The WowTables Team";
      * @since    1.0.0
      */ 
     function fbLogin() {
-        return $this->Socialize->with('facebook')->redirect();
+        return $this->socialize->with('facebook')->redirect();
+    }
+
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    function fbCallback() {
+        $user = $this->socialize->with('facebook')->user();
+        
+        $token = $user->getId();
+
+        //reading user values
+        $full_name = $user->getName();
+        $email = $user->getEmail();
+
+        //$queryFind = User::where('email', $email)->first();
+
+        $queryResult = $this->facebook->fb_login($token, $email, $full_name);
+
+        return $queryResult;
+    }
+
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    public function fbAddCity($cityName) {
+        $this->facebook->addUserCity($cityName);
+
+        return response()->json('',200);
     }
 }
+//end of class HomePageController
+//end of file HomePageController.php

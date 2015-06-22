@@ -1341,7 +1341,7 @@ var google_remarketing_only = true;
 <script type="text/javascript">
 
  function popup(){ 
-    myWindow=window.open("{{URL::to('/')}}//login/index","_blank","scrollbars=1,resizable=1,height=300,width=450");
+    myWindow=window.open("{{URL::to('/')}}/users/facebook","_blank","scrollbars=1,resizable=1,height=300,width=450");
     myWindow.moveTo(500,200);myWindow.focus();intervalID=window.setInterval(checkWindow,500)}
 
      function checkWindow() {
@@ -1351,7 +1351,7 @@ var google_remarketing_only = true;
       //setCookie('add_event_mixpanel','yes',1);
             myWindow.close();
             myWindow.clearInterval(intervalID);
-              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0){
+              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0 || myWindow.location.href.indexOf("bangalore") >= 0){
                 window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";
                 
                 }

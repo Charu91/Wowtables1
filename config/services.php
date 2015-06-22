@@ -37,7 +37,7 @@ return [
 	'facebook' => [
 		'client_id' => '487953444640436',
 		'client_secret' => '42d70c39fa7fb565ccedfcf453357929',
-		'redirect' => ''
+		'redirect' => 'http://dev.wowtables.com/users/fbCallback',
 	]
 
 ];
