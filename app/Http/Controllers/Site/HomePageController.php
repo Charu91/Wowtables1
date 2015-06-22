@@ -22,15 +22,20 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
+use Socialite;
 
 class HomePageController extends Controller {
 
     protected $listId = '986c01a26a';
 
-    function __construct(CustomerModel $customermodel,Request $request , Mailchimp $mailchimp){
+    protected $socialite;
+
+    function __construct(CustomerModel $customermodel, Request $request, 
+                                Mailchimp $mailchimp, Socialite $socialite){
          $this->customermodel = $customermodel;
          $this->request = $request;
          $this->mailchimp = $mailchimp;
+         $this->socialite = $socialite;
     }
 
 	public function home()
@@ -544,5 +549,18 @@ The WowTables Team";
         }
 
         //return response()->json($arrResponse,200);
+    }
+
+    //-----------------------------------------------------------------
+
+    /**
+     * Handles request for login through facebook.
+     *
+     * @access   public
+     * @return
+     * @since    1.0.0
+     */ 
+    function fbLogin() {
+        return $this->Socialite->with('facebook')->redirect();
     }
 }
