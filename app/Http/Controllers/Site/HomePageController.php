@@ -23,19 +23,23 @@ use Redirect;
 use Mail;
 use Mailchimp;
 use Laravel\Socialite\Contracts\Factory as Socialize;
+use WowTables\Http\Models\Facebook;
 
 class HomePageController extends Controller {
 
     protected $listId = '986c01a26a';
 
     protected $socialize;
+    protected $facebook;
 
     function __construct(CustomerModel $customermodel, Request $request, 
-                                Mailchimp $mailchimp, Socialize $socialize){
+                                Mailchimp $mailchimp, Socialize $socialize, 
+                                Facebook $facebook){
          $this->customermodel = $customermodel;
          $this->request = $request;
          $this->mailchimp = $mailchimp;
          $this->socialize = $socialize;
+         $this->facebook = $facebook;
     }
 
 	public function home()
@@ -568,6 +572,17 @@ The WowTables Team";
 
     function fbCallback() {
         $user = $this->socialize->with('facebook')->user();
-        print_r($user); die();
+        
+        $token = $user->getId();
+
+        //reading user values
+        $full_name = $user->getName();
+        $email = $user->getEmail();
+
+        //$queryFind = User::where('email', $email)->first();
+
+        $queryResult = $this->facebook->fb_login($token, $email, $full_name);
+
+        return $queryResult;
     }
 }
