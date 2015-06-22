@@ -30,6 +30,7 @@ class HomePageController extends Controller {
     protected $listId = '986c01a26a';
 
     protected $socialize;
+    protected $facebook;
 
     function __construct(CustomerModel $customermodel, Request $request, 
                                 Mailchimp $mailchimp, Socialize $socialize, 
