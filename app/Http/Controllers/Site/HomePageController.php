@@ -22,7 +22,7 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
-use Socialize;
+use Laravel\Socialite\Contracts\Factory as Socialize;
 
 class HomePageController extends Controller {
 
