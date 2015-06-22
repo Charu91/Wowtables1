@@ -516,10 +516,10 @@
             <div class="panel panel-default">
               <!-- List group -->
               <ul class="list-group">
-                <li class="list-group-item"><a href="#" data-dismiss="modal">Mumbai</a></li>
-                <li class="list-group-item"><a href="#" data-dismiss="modal">Delhi</a></li>
-                <li class="list-group-item"><a href="#" data-dismiss="modal">Pune</a></li>
-                <li class="list-group-item"><a href="#" data-dismiss="modal">Bangalore</a></li>
+                <li class="list-group-item"><a href="{{URL::to('/mumbai')}}" data-dismiss="modal">Mumbai</a></li>
+                <li class="list-group-item"><a href="{{URL::to('/delhi')}}" data-dismiss="modal">Delhi</a></li>
+                <li class="list-group-item"><a href="{{URL::to('/pune')}}" data-dismiss="modal">Pune</a></li>
+                <li class="list-group-item"><a href="{{URL::to('/bangalore')}}" data-dismiss="modal">Bangalore</a></li>
               </ul>
             </div>
           </div>
@@ -554,7 +554,8 @@
             myWindow.close();
             myWindow.clearInterval(intervalID);
               if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0 || myWindow.location.href.indexOf("bangalore") >= 0){
-                location.reload();
+                //location.reload();
+                console.log('IF Section');
                  // window.location.href = "{{URL::to('/')}}/"+mumbai;
               }
               else { 
