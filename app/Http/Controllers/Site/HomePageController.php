@@ -561,6 +561,6 @@ The WowTables Team";
      * @since    1.0.0
      */ 
     function fbLogin() {
-        return $this->Socialize->with('facebook')->redirect();
+        return $this->socialize->with('facebook')->redirect();
     }
 }
