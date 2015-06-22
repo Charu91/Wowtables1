@@ -573,7 +573,7 @@ The WowTables Team";
     function fbCallback() {
         $user = $this->socialize->with('facebook')->user();
         
-        $token = $user->token;
+        $token = $user->getId();
 
         //reading user values
         $full_name = $user->getName();
