@@ -8,7 +8,7 @@ use Illuminate\Auth\Authenticatable;
  * Class Facebook
  * @package WowTables\Http\Models
  */
-class User {
+class Facebook {
 
 	use Authenticatable;
 
