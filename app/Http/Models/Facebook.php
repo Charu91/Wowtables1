@@ -87,6 +87,13 @@ class Facebook {
                 'role_id'   => $gourmetRoleId
             ]);
 
+            //Adding user membershipId to the database
+            DB::table('user_attributes_varchar')->insert([
+               'user_id' => $user_id,
+               'user_attribute_id' => 7,
+               'attribute_value' => '1'.str_pad($user_id, 6, '0', STR_PAD_LEFT),
+           ]); 
+
             if($this->auth->loginUsingId($user_id)){
                 $this->role = 'Gourmet';
 
