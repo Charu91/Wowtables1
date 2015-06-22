@@ -181,12 +181,16 @@ class CustomerModel {
         ';
 
         $user = DB::select($query, [$email]);
+        
          
         if($user){
-          
+
             if($user[0]->type === 'old_site'){
+
                 if(md5($password) === $user[0]->old_password){
+
                     $password = bcrypt($password);
+
                     $new_site_user_update = DB::update(
                         'UPDATE users SET password = ?, type = ? WHERE id = ?',
                         [$password, 'new_site', $user[0]->id]
@@ -255,7 +259,7 @@ class CustomerModel {
                 'message' => 'The email address has not been registered with us'
             ];
         }
-       
+
     }
 
     /**
@@ -322,6 +326,8 @@ class CustomerModel {
         ';
 
         $user = DB::select($query, [$token, $email]);
+
+        echo "<prE>"; print_r($user); die;
 
         if(!$user){
             $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');

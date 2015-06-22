@@ -42,9 +42,9 @@
                             <td>{{$experienceLocationDetail->vendor_name}}</td>
                             <td>{{$experienceLocationDetail->status}}</td>
                             <td>
-                                {!! link_to_route('AdminExperienceLocationsEdit','Edit',$experienceLocationDetail->product_vendor_last_id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']) !!}
+                                {!! link_to_route('AdminExperienceLocationsEdit','Edit',$experienceLocationDetail->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']) !!}
                                 &nbsp;|&nbsp;
-                                <a data-experience-id="{!! $experienceLocationDetail->product_vendor_last_id !!}" class="btn btn-xs btn-danger delete-experience">Delete</a>
+                                <a data-experience-id="{!! $experienceLocationDetail->id !!}" class="btn btn-xs btn-danger delete-experience">Delete</a>
                             </td>
                         </tr>
                     @endforeach
