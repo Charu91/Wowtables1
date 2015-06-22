@@ -739,7 +739,7 @@ class ExperienceModel {
               ->select('pvl.id as vendor_location_id','l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
               ->where('pvl.product_id',$productID)
               ->where('vla.city_id',$cityID)
-              ->where('vla.status','Active')
+              ->where('pvl.status','Active')
               ->get();
     
     //array to hold location details
