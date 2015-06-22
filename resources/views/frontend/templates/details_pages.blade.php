@@ -1324,7 +1324,7 @@ var google_remarketing_only = true;
       //setCookie('add_event_mixpanel','yes',1);
             myWindow.close();
             myWindow.clearInterval(intervalID);
-              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0){
+              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0 || myWindow.location.href.indexOf("bangalore") >= 0){
                 window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";
                 
                 }
