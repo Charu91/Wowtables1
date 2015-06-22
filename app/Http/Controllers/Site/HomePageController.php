@@ -563,4 +563,11 @@ The WowTables Team";
     function fbLogin() {
         return $this->socialize->with('facebook')->redirect();
     }
+
+    //-----------------------------------------------------------------
+
+    function fbCallback() {
+        $user = $thi->socialize::with('facebook')->user();
+        print_r($user); die();
+    }
 }
