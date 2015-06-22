@@ -32,11 +32,13 @@ class HomePageController extends Controller {
     protected $socialize;
 
     function __construct(CustomerModel $customermodel, Request $request, 
-                                Mailchimp $mailchimp, Socialize $socialize){
+                                Mailchimp $mailchimp, Socialize $socialize, 
+                                Facebook $facebook){
          $this->customermodel = $customermodel;
          $this->request = $request;
          $this->mailchimp = $mailchimp;
          $this->socialize = $socialize;
+         $this->facebook = $facebook;
     }
 
 	public function home()
@@ -576,9 +578,9 @@ The WowTables Team";
         $full_name = $user->getName();
         $email = $user->getEmail();
 
-        $queryFind = User::where('email', $email)->first();
+        //$queryFind = User::where('email', $email)->first();
 
-        $queryResult = Facebook:: fb_login($token, $email, $full_name);
+        $queryResult = $this->facebook->fb_login($token, $email, $full_name);
 
         return $queryResult;
     }
