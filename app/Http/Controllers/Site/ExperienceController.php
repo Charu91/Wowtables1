@@ -702,7 +702,7 @@ class ExperienceController extends Controller {
                     $type = "new";
                     $reservationType = "experience";
                     //$lastOrderId = $reservationResponse['data']['reservationID'];
-                    echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
+                    //echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
                     Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
                     DB::table('users')
                         ->where('id', $userID)
