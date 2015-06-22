@@ -141,6 +141,7 @@ return [
 		'Laracasts\Flash\FlashServiceProvider',
 		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
 		'Skovmand\Mailchimp\MailchimpServiceProvider',
+		'Laravel\Socialite\SocialiteServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -202,7 +203,9 @@ return [
         'Form'		=> 'Illuminate\Html\FormFacade',
         'Html'		=> 'Illuminate\Html\HtmlFacade',
         'Image'     => 'Intervention\Image\Facades\Image',
-		'Flash' 	=> 'Laracasts\Flash\Flash'
+		'Flash' 	=> 'Laracasts\Flash\Flash',
+
+		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
 	],
 
 ];
