@@ -684,7 +684,7 @@ class ExperienceController extends Controller {
                     'MERGE13'=>$dataPost['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
                 );
-                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $_POST['email']],$merge_vars,"html",false,true );
+                $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
             }
             //End MailChimp
