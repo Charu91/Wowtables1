@@ -6,3 +6,11 @@ Route::get('/users/facebook', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('/users/fbCallback', [
+    'uses' => 'Site\HomePageController@fbCallback',
+    'as' => '',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
