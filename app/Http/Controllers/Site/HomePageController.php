@@ -22,7 +22,7 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
-use Socialize;
+use Laravel\Socialite\Contracts\Factory as Socialize;
 
 class HomePageController extends Controller {
 
@@ -561,6 +561,13 @@ The WowTables Team";
      * @since    1.0.0
      */ 
     function fbLogin() {
-        return $this->Socialize->with('facebook')->redirect();
+        return $this->socialize->with('facebook')->redirect();
+    }
+
+    //-----------------------------------------------------------------
+
+    function fbCallback() {
+        $user = $this->socialize->with('facebook')->user();
+        print_r($user); die();
     }
 }

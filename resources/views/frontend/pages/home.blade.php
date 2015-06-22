@@ -546,7 +546,7 @@
         myWindow=window.open("{{URL::to('/')}}/users/facebook", "_blank", "scrollbars=1,resizable=1,height=300,width=450");
         myWindow.moveTo(500, 200); 
         myWindow.focus();
-        intervalID = window.setInterval(checkWindow, 500);
+        //intervalID = window.setInterval(checkWindow, 500);
     }
     function checkWindow() {
       try {
