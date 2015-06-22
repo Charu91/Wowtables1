@@ -291,6 +291,22 @@ Route::post('/users/party_sizeajax', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::post('/users/myreserv_locality', [
+    'uses' => 'Site\RegistrationsController@myReservLocality',
+    'as' => 'myReservLocality',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/productVendorLoad', [
+    'uses' => 'Site\RegistrationsController@productVendorLoad',
+    'as' => 'productVendorLoad',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::get('/users/myaccount', [
     'uses' => 'Site\ProfileController@myProfile',
     'as' => 'myProfile',
