@@ -696,13 +696,13 @@ class ExperienceController extends Controller {
             if($arrResponse['status'] == 'success') {
                     /*$getUsersDetails = $this->user->fetchDetails($userID);
                     echo "<pre>"; print_r($getUsersDetails); die;*/
-                    $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                    //$reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
                     $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
                     $bookingsMade = $userData['data']['bookings_made'] + 1;
                     $type = "new";
                     $reservationType = "experience";
-                    $lastOrderId = $reservationResponse['data']['reservationID'];
-
+                    //$lastOrderId = $reservationResponse['data']['reservationID'];
+                    echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
                     Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
                     DB::table('users')
                         ->where('id', $userID)
