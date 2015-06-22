@@ -1,5 +1,5 @@
 <?php
-Route::post('/users/facebook', [
+Route::get('/users/facebook', [
     'uses' => 'Site\HomePageController@fbLogin',
     'as' => '',
     'middleware' => ['guest'],
