@@ -433,6 +433,9 @@ $(document).ready(function() {
        // alert(res_id);
         var vendor_id = $(this).attr('href');
         $('#vendor_id').val(vendor_id);
+        var reserve_type_array = vendor_id.split(',');
+        var reserve_type = reserve_type_array[0];
+
         //alert(vendor_id);
         //alert(res_id);
         var now = new Date($("#now").val());
@@ -462,6 +465,28 @@ $(document).ready(function() {
                $('#res_id').val(res_id);
                $('#last_reserv_date').val(last_reservation_date);
                $('#last_reserv_time').val(last_reservation_time);
+
+               if(reserve_type == 'experience')
+               {
+                var product_id = reserve_type_array[2];
+                var city_id = reserve_type_array[3];
+                var vendor_location_id = reserve_type_array[1];
+                    $.ajax({
+                      url: "/users/myreserv_locality",
+                      type: "post",
+                      data: {
+                         
+                          product_id: product_id,
+                          city_id:city_id,
+                          res_id:res_id,
+                          vendor_location_id:vendor_location_id
+                      },
+                      success: function(e) {
+                         console.log(e);
+                         $('#my_locality').html(e);
+                      }
+                   });
+                }
 
                $.ajax({
                   url: "/users/party_sizeajax",
@@ -994,6 +1019,7 @@ $(document).ready(function() {
         alcohol = $("#alcoholedit").val();
         non_veg = $("#nonveg").val();
         vendor_details =$('#vendor_id').val();
+        locality_val =$('#locality_val').val();
 
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
@@ -1039,6 +1065,7 @@ $(document).ready(function() {
                     data: {
                         reserv_id: res_id,
                         address: address,
+                        locality_val:locality_val,
                         party_size: party_size,
                         vendor_details:vendor_details,
                         edit_date: edit_date,
@@ -1194,6 +1221,7 @@ $(document).ready(function() {
 	/*** end alacarte*/
 
     $("#party_edit1").click(function() {
+        $('#save_changes').show();
         if ($("#collapseTwo").hasClass("in")) {
             $("#date_edit1").click();
             if ($("#date_edit1 span").text() != "") {

@@ -90,7 +90,7 @@ class ReservationModel extends Model {
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `vvla`.`latitude` as `latitude`,
                                       `vvla`.`longitude` as `longitude`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name 
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id 
                                     from `reservation_details` as `rd` 
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
                                     left join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `rd`.`product_id` and pvl.vendor_location_id = `rd`.`vendor_location_id` 
@@ -179,6 +179,7 @@ class ReservationModel extends Model {
                   'address' => (empty($row->product_address)) ? $row->vendor_address : $row->product_address,
                   'locality' => (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality,
                   'city' => $row->city_name,
+                  'city_id' => $row->city_id,
                   'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
                   'day_schedule' => $arrSchedule,
                   'addons' => $arrAddOn,
