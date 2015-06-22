@@ -49,8 +49,8 @@ class Handler extends ExceptionHandler {
         }
         else
         {
-            //return parent::render($request, $e);
-            return response()->view('errors.'.'404', [], '404');  //this code redirect any code to 404 re
+            return parent::render($request, $e);
+            //return response()->view('errors.'.'404', [], '404');  //this code redirect any code to 404 re
         }
 	}
 
