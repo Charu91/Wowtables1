@@ -97,6 +97,27 @@ class Facebook {
             if($this->auth->loginUsingId($user_id)){
                 $this->role = 'Gourmet';
 
+                //setting up the session
+                $user_array  =  Auth::user();
+                $userdata = array(
+                                'id'  => $user_array->id,
+                                'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+                                'email'     => $user_array->email,
+                                'full_name' =>$user_array->full_name,
+                                'user_role' =>$user_array->role_id,
+                                'phone'     =>$user_array->phone_number,
+                                'city_id'   =>$user_array->location_id,
+                                'facebook_id'=>@$user_array->fb_token,
+                                'exp'=>"10",
+                                'logged_in' => TRUE,
+                            );
+            Session::put($userdata);
+
+            $order = unserialize(Cookie::get('order'));    
+
+
+
+
                 return ['state' => 'success', 'location' => false];
             }else{
                 return [
@@ -146,6 +167,26 @@ class Facebook {
                     'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
                 ];
             }
+        }
+    }
+
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    public functio addUserCity($cityName) {
+        $resultCity = DB::table('locations')
+                        ->where('name', '=',$cityName)
+                        ->select('id')->first();
+
+        if($resultCity) {
+            //reading user id from session
+            $userId = Session::get('id');
+
+            $userResult = DB::table('user')->where('id','=',$userId)
+                            ->update(['location_id' => $resultCity->id]);
+
         }
     }
 
