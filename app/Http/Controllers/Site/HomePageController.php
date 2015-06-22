@@ -22,20 +22,20 @@ use Auth;
 use Redirect;
 use Mail;
 use Mailchimp;
-use Socialite;
+use Socialize;
 
 class HomePageController extends Controller {
 
     protected $listId = '986c01a26a';
 
-    protected $socialite;
+    protected $socialize;
 
     function __construct(CustomerModel $customermodel, Request $request, 
-                                Mailchimp $mailchimp, Socialite $socialite){
+                                Mailchimp $mailchimp, Socialize $socialize){
          $this->customermodel = $customermodel;
          $this->request = $request;
          $this->mailchimp = $mailchimp;
-         $this->socialite = $socialite;
+         $this->socialize = $socialize;
     }
 
 	public function home()
@@ -561,6 +561,6 @@ The WowTables Team";
      * @since    1.0.0
      */ 
     function fbLogin() {
-        return $this->Socialite->with('facebook')->redirect();
+        return $this->Socialize->with('facebook')->redirect();
     }
 }
