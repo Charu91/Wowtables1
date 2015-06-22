@@ -125,7 +125,7 @@ class ExperienceController extends Controller {
                                    'meta_desc'     => $metaDescDetails, 
                                    'meta_keywords' => $meta_keywords);
         
-        /*print_r($data);
+        /*echo"<pre>";print_r($data);
         exit;*/
         return view('frontend.pages.experiencedetails',$data)
                         ->with('meta_information', $meta_information);
@@ -627,7 +627,7 @@ class ExperienceController extends Controller {
         
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
-        echo "<pre>"; print_r($userData); die;
+        //echo "<pre>"; print_r($userData); die;
 
         //$dataPost['access_token'] = Session::get('id');
         //echo "<pre>"; print_r($dataPost); die;
