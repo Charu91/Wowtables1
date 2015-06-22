@@ -513,7 +513,7 @@ agm.cpkbandra@jsmcorp.in
                 <h4 class="panel-title text-center" style="margin-bottom: 20px;color:#fff;">
                    We have received your cancel request.
                 </h4>
-                <div class="text-center">+6*/
+                <div class="text-center">
                 <a  class="btn btn-warning close_modal" href="javascript:" data-dismiss="modal">Close This</a>
                 </div>
           </div>
