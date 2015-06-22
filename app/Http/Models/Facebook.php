@@ -175,7 +175,7 @@ class Facebook {
     /**
      *
      */
-    public functio addUserCity($cityName) {
+    public function addUserCity($cityName) {
         $resultCity = DB::table('locations')
                         ->where('name', '=',$cityName)
                         ->select('id')->first();
