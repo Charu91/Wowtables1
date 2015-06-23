@@ -1330,15 +1330,24 @@ var google_remarketing_only = true;
               else { 
                   $('#redirectloginModal').modal('hide');
           var pageUrl = "<?php echo $current_page_url;?>";
-          $.ajax({
+         /* $.ajax({
             url: "{{URL::to('/')}}/login/registration_page_url",
             type: "POST",
             dataType: "json",
             data:{page_url: pageUrl},
             success: function(d) {
             }
-          });
-                  $("#fbSelectCity").modal('toggle');
+          }); */
+              $.get('getMyCity/city',function(response) {
+                    var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
+                  /* $("#fbSelectCity").modal('toggle'); */
         }
         /*var uID = "< ?php echo $this->session->userdata['id'];?>";
         var eID = "< ?php echo $this->session->userdata['email'];?>"; 
