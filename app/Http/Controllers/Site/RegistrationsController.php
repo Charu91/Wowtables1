@@ -734,6 +734,38 @@ class RegistrationsController extends Controller {
         return view('frontend.pages.myaccount',$arrResponse);
 	}
 
+	/**
+	 * Handles requst for displaying the complete_signup.
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @param	string	$access_token
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function completeSignup()
+	{
+		$data = array(
+                'email'=>$_GET['email'],
+                'phone'=>$_GET['phone_number'],
+                'cityName'=>$_GET['city']
+            );
+		//print_r($data);
+		$cities = Location::where(['Type' => 'City', 'visible' =>1,'name' =>$data['cityName']])->pluck('id');
+		
+		$data['city'] = $cities;
+		$count = count($cities);
+		if($count=='0')
+		{
+			die("City name doesn't exist.");
+			exit;
+		}
+		else
+		{
+			return view('frontend.pages.completesignup',$data);
+		}
+	}
+
 	public function zoho_edit_booking($order_id,$data){
 		$ch = curl_init();
 		$config = array(

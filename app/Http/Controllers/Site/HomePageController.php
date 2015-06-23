@@ -292,7 +292,7 @@ class HomePageController extends Controller {
             $users['full_name'] 	= Input::get('full_name'); 
             $login_type				= Input::get('login_type');
             $reg_page 				= Input::get('reg_page');
- 			
+ 			$usr_phone              = Input::get('phone');
 
             $gourmetRoleId = DB::table('roles')->where('name', 'Gourmet')->pluck('id');
             $users['role_id'] = $gourmetRoleId;
@@ -323,8 +323,14 @@ class HomePageController extends Controller {
                     } else {
                         $set_reg_page= "http://www.wowtables.com/registration";
                     }
-
-
+                    $usr_email = Input::get('email');
+                    
+                    if($usr_phone!="")
+                    {
+                        DB::update("update users set phone_number ='$usr_phone' where email = '$usr_email'");  
+                    }
+                    
+                    
 
                     $newdata = array(
                         'id'  => $last_id,
