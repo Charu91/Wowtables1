@@ -4,6 +4,7 @@ use DB;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
 use Session;
+use Cookie;
 
 /**
  * Class Facebook
