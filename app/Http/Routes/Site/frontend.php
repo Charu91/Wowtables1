@@ -243,6 +243,14 @@ Route::post('/register', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/users/completesignup', [
+    'uses' => 'Site\RegistrationsController@completeSignup',
+    'as' => 'completeSignup',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::get('/users/myreservations', [
     'uses' => 'Site\RegistrationsController@reservationRecord',
     'as' => 'reservationRecord',

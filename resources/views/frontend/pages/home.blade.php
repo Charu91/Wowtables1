@@ -549,7 +549,9 @@
         intervalID = window.setInterval(checkWindow, 500);
     }
     function checkWindow() {
+
       try {
+
         if(myWindow.location.href.indexOf("wowtables.com") >= 0){
             myWindow.close();
             myWindow.clearInterval(intervalID);
@@ -569,7 +571,16 @@
                         success: function(d) {
                         }
                     });*/
-                  /*$("#fbSelectCity").modal('toggle');*/
+                  $.get('getMyCity',function(response) {
+                    var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
+
               }
              //$("#fbSelectCity").modal('toggle');
              /* var city = '< ?="$facebook";?>';
@@ -811,7 +822,7 @@
                 $.ajax({
 
                   type:'GET',
-                  url:'users/addCity/'+city_name,
+                  url:'fbAddCity/'+city_name,
                   /*data:{city:city_name}, */
                   success:function(data){
                       window.location.href = "{{URL::to('/')}}/"+city_name;

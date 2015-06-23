@@ -4,6 +4,7 @@ use DB;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Auth\Authenticatable;
 use Session;
+use Cookie;
 
 /**
  * Class Facebook
@@ -165,7 +166,7 @@ class Facebook {
             if($this->auth->loginUsingId($user[0]->id)) {
                 $this->role = 'Gourmet';
 
-                $user_array  =  Auth::user();
+                $user_array  =  $this->auth->user();
                 $userdata = array(
                                 'id'  => $user_array->id,
                                 'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
@@ -207,10 +208,34 @@ class Facebook {
             //reading user id from session
             $userId = Session::get('id');
 
-            $userResult = DB::table('user')->where('id','=',$userId)
+            $userResult = DB::table('users')->where('id','=',$userId)
                             ->update(['location_id' => $resultCity->id]);
 
         }
+    }
+
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    public function readUserCity() {
+        //reading the values form the session
+        $userId = Session::get('id');
+        $cityId = Session::get('city_id');
+
+
+        $resultCity = DB::table('locations')
+                            ->join('users', 'users.location_id','=','locations.id')
+                            ->where('users.id',$userId)
+                            ->where('locations.id', $cityId)
+                            ->select('slug')
+                            ->first();
+        if ($resultCity) {
+            return $resultCity->slug;
+        } 
+
+        return false;
     }
 
 }

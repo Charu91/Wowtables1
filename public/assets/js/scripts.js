@@ -449,8 +449,13 @@ $(document).ready(function() {
         var g = 1;
         $.ajax({
             type: "GET",
-           dataType: "json",
+            dataType: "json",
+            timeout: 3000,
             url: "/users/get_reservetion/" + res_id,
+            beforeSend:function()
+                    {
+                    $("#load_layer").show();
+                    },
             success: function(data) {
                 
                 $('#party_edit1').show();
@@ -474,6 +479,7 @@ $(document).ready(function() {
                     $.ajax({
                       url: "/users/myreserv_locality",
                       type: "post",
+                      timeout: 3000,
                       data: {
                          
                           product_id: product_id,
@@ -481,24 +487,47 @@ $(document).ready(function() {
                           res_id:res_id,
                           vendor_location_id:vendor_location_id
                       },
+                      beforeSend:function()
+                        {
+                        $("#load_layer").show();
+                        },
                       success: function(e) {
                          console.log(e);
                          $('#my_locality').html(e);
-                      }
+                      },
+                        error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
                    });
                 }
 
                $.ajax({
                   url: "/users/party_sizeajax",
                   type: "post",
+                  timeout: 3000,
                   data: {
                      
                       vendor_id: vendor_id
                   },
+                  beforeSend:function()
+                    {
+                    $("#load_layer").show();
+                    },
                   success: function(e) {
                      console.log(e);
                      $('#party_size1').html(e);
-                  }
+                  },
+                  error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
                });
                 /*
                 
@@ -761,6 +790,13 @@ $(document).ready(function() {
                     $("#party_edit").removeClass("hidden");
                     $("#location_edit").removeClass("hidden")
                 })*/
+            },
+            error: function(x, t, m) 
+            {
+                if(t==="timeout") 
+                {
+                    alert("Got timeout! Please reload page again.");
+                } 
             }
         })
     });

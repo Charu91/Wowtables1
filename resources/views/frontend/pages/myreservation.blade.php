@@ -396,7 +396,7 @@ agm.cpkbandra@jsmcorp.in
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content" style="background: #EAB703 !important;">
-            <div id="load_layer" class="change_loader">
+            <div id="load_layer" class="change_loader" >
             <img src="/images/loading.gif">
             </div>
           <div class="modal-header" style="margin-top:-7px !important;">
@@ -689,6 +689,10 @@ agm.cpkbandra@jsmcorp.in
                       product_id:  product_id,
                       locality_change_val: locality_change_val
                   },
+                  beforeSend:function()
+                        {
+                        $("#load_layer").show();
+                        },
                   success: function(e) {
                      console.log(e);
                      $('#get_locality').html(e);
@@ -722,6 +726,10 @@ agm.cpkbandra@jsmcorp.in
                       vendor_id: vendor_id,
                       last_reserv_time:last_reserv_time
                   },
+                  beforeSend:function()
+                        {
+                        $("#load_layer").show();
+                        },
                   success: function(e) {
                      //console.log(e);
                      $('#timeajax').html(e);
@@ -790,6 +798,10 @@ agm.cpkbandra@jsmcorp.in
                               dateText:dateText,
                               vendor_id:vendor_id,
                               last_reserv_time:last_reserv_time
+                          },
+                          beforeSend:function()
+                          {
+                          $("#load_layer").show();
                           },
                           success: function(e) {
                              //console.log(e);
