@@ -570,7 +570,7 @@ if (strpos($url,'alacarte') !== false) {
            <div class="col-md-8 col-sm-9 col-xs-8 pull-right head-links wowtables_hide_refer_menu">
             <ul class="nav navbar-nav navbar-right wowtables_border_color wowtables_tablet_size">
               <li>
-                <a href="{{URL::to('/')}}/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
+                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
               </li>
               <?php if(isset($user_data['full_name']) && $user_data['full_name']=='Guest')
               {
@@ -1357,7 +1357,7 @@ var google_remarketing_only = true;
               else { 
                   $('#redirectloginModal').modal('hide');
           var pageUrl = "<?php echo $current_page_url;?>";
-          $.ajax({
+         /* $.ajax({
             url: "{{URL::to('/')}}/login/registration_page_url",
             type: "POST",
             dataType: "json",
@@ -1365,7 +1365,17 @@ var google_remarketing_only = true;
             success: function(d) {
             }
           });
-                  $("#fbSelectCity").modal('toggle');
+*/
+                  /*$("#fbSelectCity").modal('toggle'); */
+                  $.get('getMyCity/city',function(response) {
+                    var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
         }
         /*var uID = "< ?php echo $this->session->userdata['id'];?>";
         var eID = "< ?php echo $this->session->userdata['email'];?>"; 
