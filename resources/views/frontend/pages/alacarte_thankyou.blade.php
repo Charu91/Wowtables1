@@ -173,7 +173,7 @@
             // prints out _addItem for each
             pageTracker._addItem(
                     "<?php echo 'A'.$result['order_id'];?>", // transaction ID - necessary to associate item with transaction
-                    "E<?php echo $result['order_id']; ?>",               // SKU/code - required
+                    "<?php echo 'A'.$result['order_id']; ?>",               // SKU/code - required
                     "<?php echo $result['city'].' - '.$result['restaurant_name'].' - A la carte Reservation'; ?>",    // product name
                     "Tickets",                                            // category or variation
                     "0",             // unit price - required
