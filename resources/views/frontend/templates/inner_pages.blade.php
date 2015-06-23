@@ -1357,7 +1357,7 @@ var google_remarketing_only = true;
               else { 
                   $('#redirectloginModal').modal('hide');
           var pageUrl = "<?php echo $current_page_url;?>";
-          $.ajax({
+         /* $.ajax({
             url: "{{URL::to('/')}}/login/registration_page_url",
             type: "POST",
             dataType: "json",
@@ -1365,7 +1365,17 @@ var google_remarketing_only = true;
             success: function(d) {
             }
           });
-                  $("#fbSelectCity").modal('toggle');
+*/
+                  /*$("#fbSelectCity").modal('toggle'); */
+                  $.get('getMyCity/city',function(response) {
+                    var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
         }
         /*var uID = "< ?php echo $this->session->userdata['id'];?>";
         var eID = "< ?php echo $this->session->userdata['email'];?>"; 
