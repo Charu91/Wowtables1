@@ -571,7 +571,7 @@
                         success: function(d) {
                         }
                     });*/
-                  $.get('getUserCity',function(response) {
+                  $.get('getMyCity',function(response) {
                     var city = response.city;
         if(city.length > 0) {
             window.location.href = "{{URL::to('/')}}/"+city;
