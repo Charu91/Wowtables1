@@ -30,10 +30,9 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="robots" content="noindex,nofollow" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>{!! $meta_information['seo_title'] or 'WowTables : Exclusive fine dining meals & experiences in your city' !!}</title>
+<title>{!! $meta_information['seo_title'] or 'WowTables: Exclusive fine dining meals & experiences in your city' !!}</title>
 <meta name="title" content="{!! $seo_title or 'WowTables' !!}">
 <meta name="description" content="{!! $meta_information['meta_desc'] or 'Search, discover, reserve & experience fine dining in Mumbai, Delhi, Bangalore & Pune' !!}">
 <meta name="keywords" content="{!! $meta_information['meta_keywords'] or 'WowTables' !!}">    

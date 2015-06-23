@@ -45,8 +45,8 @@ return [
         ],*/
 
         'web_collection' => [
-            'height' => 250,
-            'width' => 959
+            'height' => 294,
+            'width' => 940
         ],
 
 
