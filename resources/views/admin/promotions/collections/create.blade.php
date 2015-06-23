@@ -73,7 +73,7 @@
         <div class="mt-lg mb-lg ml-lg form-group">
             <div class="col-md-5">
                 <span class="required">*</span>
-                <button data-media-select="1" data-gallery-position="4" data-media-type="mobile_listing_image" type="button" class="btn btn-success media-modal-btn media-modal-btn-mobile-listing-experience" ><span class="fa fa-plus"></span>&nbsp;Mobile Images (1)</button>
+                <button data-media-select="1" data-gallery-position="4" data-media-type="mobile_listing_image" type="button" class="btn btn-success media-modal-btn-mobile-listing-experience" ><span class="fa fa-plus"></span>&nbsp;Mobile Images (1)</button>
             </div>
             <div data-gallery-position="4" class="popup-gallery">
                 @if( Input::old('media.mobile_listing_image') )
