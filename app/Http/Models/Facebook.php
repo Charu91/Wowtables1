@@ -100,7 +100,8 @@ class Facebook {
                 $this->role = 'Gourmet';
 
                 //setting up the session
-                $user_array  =  Auth::user();
+                //$user_array  =  Auth::user();
+                $user_array  =  $this->auth->user();
                 $userdata = array(
                                 'id'  => $user_array->id,
                                 'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
