@@ -454,7 +454,7 @@ $(document).ready(function() {
             url: "/users/get_reservetion/" + res_id,
             beforeSend:function()
                     {
-                    $("#load_layer").show();
+                    $("#myselect_person").html('<img src="/images/loading.gif">');
                     },
             success: function(data) {
                 
@@ -489,7 +489,7 @@ $(document).ready(function() {
                       },
                       beforeSend:function()
                         {
-                        $("#load_layer").show();
+                        $("#my_locality").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
                         },
                       success: function(e) {
                          console.log(e);
@@ -515,7 +515,7 @@ $(document).ready(function() {
                   },
                   beforeSend:function()
                     {
-                    $("#load_layer").show();
+                    $("#party_size1").html('<img src="/images/loading.gif">');
                     },
                   success: function(e) {
                      console.log(e);
