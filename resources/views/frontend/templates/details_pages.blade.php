@@ -578,7 +578,7 @@ if (strpos($url,'alacarte') !== false) {
                     $logout = Cookie::get('token');
                     if(isset($user_array['facebook_id']) && !empty($user_array['facebook_id'])){
                     ?>
-                    <li><a href="<?php echo $logout;?>">Logout</a></li>
+                    <li><a href="{{URL::to('/')}}/logout">Logout</a></li>
                     <?PHP } else {?>
                     <li><a href="{{URL::to('/')}}/logout">Logout</a></li>          
                     <?PHP } ?>
