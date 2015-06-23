@@ -165,7 +165,7 @@ class Facebook {
             if($this->auth->loginUsingId($user[0]->id)) {
                 $this->role = 'Gourmet';
 
-                $user_array  =  Auth::user();
+                $user_array  =  $this->auth->user();
                 $userdata = array(
                                 'id'  => $user_array->id,
                                 'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
