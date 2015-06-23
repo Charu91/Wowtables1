@@ -208,7 +208,7 @@ class Facebook {
             //reading user id from session
             $userId = Session::get('id');
 
-            $userResult = DB::table('user')->where('id','=',$userId)
+            $userResult = DB::table('users')->where('id','=',$userId)
                             ->update(['location_id' => $resultCity->id]);
 
         }
