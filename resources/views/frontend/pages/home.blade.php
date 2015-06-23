@@ -569,7 +569,7 @@
                         success: function(d) {
                         }
                     });*/
-                  /*$("#fbSelectCity").modal('toggle');*/
+                  $("#fbSelectCity").modal('toggle');
               }
              //$("#fbSelectCity").modal('toggle');
              /* var city = '< ?="$facebook";?>';
