@@ -148,6 +148,52 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol ) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try{
+            var pageTracker = _gat._getTracker("UA-1717133-12");
+            pageTracker._trackPageview();
+            pageTracker._addTrans(
+                    "<?php echo 'A'.$result['order_id'];?>", // transaction ID - required
+                    "WowTables",                            // affiliation or store name
+                    "0",   // total - required
+                    "0",                                      // tax
+                    "0",                                      // shipping
+                    "<?php echo $result['city']; ?>",  // city
+                    "<?php echo $result['city']; ?>",  // state or province
+                    "India"                                   // country
+            );
+
+
+            // add item might be called for every item in the shopping cart
+            // where your ecommerce engine loops through each item in the cart and
+            // prints out _addItem for each
+            pageTracker._addItem(
+                    "<?php echo 'A'.$result['order_id'];?>", // transaction ID - necessary to associate item with transaction
+                    "<?php echo 'A'.$result['order_id']; ?>",               // SKU/code - required
+                    "<?php echo $result['city'].' - '.$result['restaurant_name'].' - A la carte Reservation'; ?>",    // product name
+                    "Tickets",                                            // category or variation
+                    "0",             // unit price - required
+                    "<?php echo $result['guests']; ?>"            // quantity - required
+            );
+
+            pageTracker._trackTrans();                       //submits transaction to the Analytics servers
+        } catch(err) {}
+
+        /*$(document).ready(function(){
+         var order_id = "<?php //echo $setReservationVariable.''.sprintf("%06d",$rows[1]['id']); ?>";
+         var purchase_value = "<?php //echo $rows[1]['ord_amount']; ?>";
+         var email = "<?php //echo $rows['1']['order_by_email']; ?>";
+
+         $.ajax({
+         url: "http://www.ref-r.com/campaign/t1/settings?bid_e=D604D097C8F8B0C4D3A75B7D7F4772E0&bid=4944&t=420&orderID="+order_id+"&purchaseValue="+purchase_value+"&email="+email,
+         });
+         });*/
+    </script>
+
  <?php
     $arrdata = DB::table('codes')->where('view_pages', 'thankyou')
       ->select('code')
