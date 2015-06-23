@@ -114,21 +114,22 @@ class Facebook {
                             );
             Session::put($userdata);
 
-            $order = unserialize(Cookie::get('order'));    
-
-
-
+            $order = unserialize(Cookie::get('order'));
 
                 return ['state' => 'success', 'location' => false];
-            }else{
+
+            } 
+            else{
                 return [
                     'state' => 'failure',
                     'message' => 'Sorry we had a problem. Please try again or contact us of still unsuccessful'
                 ];
             }
-        }else{
-            if($user[0]->fb_token_exists){
-                if($user[0]->location_id){
+        }
+        else{
+            if($user[0]->fb_token_exists) { 
+
+                if($user[0]->location_id) {
                     $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
 
                     if($location_slug){
@@ -136,10 +137,12 @@ class Facebook {
                     }else{
                         $retarr = ['status' => 'success', 'location' => false];
                     }
-                }else{
+                } 
+                else {
                     $retarr = ['status' => 'success', 'location' => false];
                 }
-            }else if($user[0]->email_exists){
+            }
+            else if($user[0]->email_exists) {
                 DB::table('users')->where('id', $user[0]->id)->update([
                     'fb_token' =>  $token,
                     'full_name' => $full_name
@@ -153,13 +156,32 @@ class Facebook {
                     }else{
                         $retarr = ['status' => 'success', 'location' => false];
                     }
-                }else{
+                } 
+                else{
                     $retarr = ['status' => 'success', 'location' => false];
                 }
             }
 
-            if($this->auth->loginUsingId($user[0]->id)){
+            if($this->auth->loginUsingId($user[0]->id)) {
                 $this->role = 'Gourmet';
+
+                $user_array  =  Auth::user();
+                $userdata = array(
+                                'id'  => $user_array->id,
+                                'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+                                'email'     => $user_array->email,
+                                'full_name' =>$user_array->full_name,
+                                'user_role' =>$user_array->role_id,
+                                'phone'     =>$user_array->phone_number,
+                                'city_id'   =>$user_array->location_id,
+                                'facebook_id'=>@$user_array->fb_token,
+                                'exp'=>"10",
+                                'logged_in' => TRUE,
+                            );
+            Session::put($userdata);
+
+            $order = unserialize(Cookie::get('order'));
+
 
                 return $retarr;
             }else{

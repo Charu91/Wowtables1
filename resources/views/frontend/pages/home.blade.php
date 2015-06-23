@@ -559,6 +559,7 @@
                  // window.location.href = "{{URL::to('/')}}/"+mumbai;
               }
               else { 
+                console.log('else section');
                   var pageUrl = "<?php echo $currentPageUrl;?>";
                   /*$.ajax({
                         url: "{{URL::to('/')}}/login/registration_page_url",
@@ -568,7 +569,7 @@
                         success: function(d) {
                         }
                     });*/
-                  $("#fbSelectCity").modal('toggle');
+                  /*$("#fbSelectCity").modal('toggle');*/
               }
              //$("#fbSelectCity").modal('toggle');
              /* var city = '< ?="$facebook";?>';
