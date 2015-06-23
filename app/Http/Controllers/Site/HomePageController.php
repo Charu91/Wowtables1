@@ -602,8 +602,20 @@ The WowTables Team";
 
     //-----------------------------------------------------------------
 
+    /**
+     *
+     */
     public function fbGetCityURL() {
+        $result = $this->facebook->readUserCity();
 
+        if($result) {
+            $arrResponse['city'] = $result;
+        }
+        else {
+            $arrResponse['city'] = '';
+        }
+
+        return response()->json($arrResponse,200);
     }
 }
 //end of class HomePageController

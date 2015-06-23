@@ -549,7 +549,20 @@
         intervalID = window.setInterval(checkWindow, 500);
     }
     function checkWindow() {
+
+      $.post('userCity',function(response) {
+        var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
+
+
       try {
+
         if(myWindow.location.href.indexOf("wowtables.com") >= 0){
             myWindow.close();
             myWindow.clearInterval(intervalID);

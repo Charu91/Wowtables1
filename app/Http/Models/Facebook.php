@@ -214,4 +214,28 @@ class Facebook {
         }
     }
 
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    public function readUserCity() {
+        //reading the values form the session
+        $userId = Session::get('id');
+        $cityId = Session::get('city_id');
+
+
+        $resultCity = DB::table('locations')
+                            ->join('users', 'users.location_id','=','locations.id')
+                            ->where('users.id',$userId)
+                            ->where('locations.id', $cityId)
+                            ->select('slug')
+                            ->first();
+        if ($resultCity) {
+            return $resultCity->slug;
+        } 
+
+        return false;
+    }
+
 }
