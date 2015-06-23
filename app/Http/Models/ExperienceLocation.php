@@ -119,17 +119,27 @@ class ExperienceLocation {
 
         //echo "<pre>"; print_r($productID); die;
 
-        $query = '
-            DELETE pvlbs, pvlbls, pvlbtrl
+        /*$query = '
+            DELETE pvlbs, pvlbls, pvlbtrl,pvll
             FROM product_vendor_locations AS `pvl`
             LEFT JOIN product_vendor_location_booking_schedules AS `pvlbs` ON pvlbs.`product_vendor_location_id` = pvl.`id`
             LEFT JOIN product_vendor_location_block_schedules AS `pvlbls` ON pvlbls.`product_vendor_location_id` = pvl.`id`
             LEFT JOIN product_vendor_location_booking_time_range_limits AS `pvlbtrl` ON pvlbtrl.`product_vendor_location_id` = pvl.`id`
             LEFT JOIN product_vendor_locations_limits AS `pvll` ON pvll.`product_vendor_location_id` = pvl.`id`
             WHERE pvl.id = ?
-        ';
+        ';*/
 
-        DB::delete($query, [$productVendorLocationId]);
+        $pvl = 'DELETE FROM product_vendor_locations WHERE id = ?';
+        $pvlbs = 'DELETE FROM product_vendor_location_booking_schedules WHERE product_vendor_location_id = ?';
+        $pvlbls = 'DELETE FROM product_vendor_location_block_schedules WHERE product_vendor_location_id = ?';
+        $pvlbtrl = 'DELETE FROM product_vendor_location_booking_time_range_limits WHERE product_vendor_location_id = ?';
+        $pvll = 'DELETE FROM product_vendor_locations_limits WHERE product_vendor_location_id = ?';
+
+        DB::delete($pvl, [$productVendorLocationId]);
+        DB::delete($pvlbs, [$productVendorLocationId]);
+        DB::delete($pvlbls, [$productVendorLocationId]);
+        DB::delete($pvlbtrl, [$productVendorLocationId]);
+        DB::delete($pvll, [$productVendorLocationId]);
 
         //$q1 = 'SELECT product_id from product_vendor_locations WHERE id = ?';
 
