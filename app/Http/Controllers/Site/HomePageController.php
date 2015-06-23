@@ -605,6 +605,12 @@ The WowTables Team";
 
         return response()->json('',200);
     }
+
+    //-----------------------------------------------------------------
+
+    public function fbGetCityURL() {
+
+    }
 }
 //end of class HomePageController
 //end of file HomePageController.php

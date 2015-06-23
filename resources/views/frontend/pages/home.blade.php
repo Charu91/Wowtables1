@@ -569,7 +569,7 @@
                         success: function(d) {
                         }
                     });*/
-                  /*$("#fbSelectCity").modal('toggle');*/
+                  $("#fbSelectCity").modal('toggle');
               }
              //$("#fbSelectCity").modal('toggle');
              /* var city = '< ?="$facebook";?>';
@@ -811,7 +811,7 @@
                 $.ajax({
 
                   type:'GET',
-                  url:'users/addCity/'+city_name,
+                  url:'fbAddCity/'+city_name,
                   /*data:{city:city_name}, */
                   success:function(data){
                       window.location.href = "{{URL::to('/')}}/"+city_name;
