@@ -691,7 +691,7 @@ agm.cpkbandra@jsmcorp.in
                   },
                   beforeSend:function()
                         {
-                        $("#load_layer").show();
+                        $("#get_locality").html('<img src="/images/loading.gif">');
                         },
                   success: function(e) {
                      console.log(e);
@@ -728,7 +728,7 @@ agm.cpkbandra@jsmcorp.in
                   },
                   beforeSend:function()
                         {
-                        $("#load_layer").show();
+                        $("#timeajax").html('<img src="/images/loading.gif">');
                         },
                   success: function(e) {
                      //console.log(e);
@@ -801,7 +801,7 @@ agm.cpkbandra@jsmcorp.in
                           },
                           beforeSend:function()
                           {
-                          $("#load_layer").show();
+                          $("#timeajax").html('<img src="/images/loading.gif">');
                           },
                           success: function(e) {
                              //console.log(e);

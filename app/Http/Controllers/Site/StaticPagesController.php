@@ -29,7 +29,7 @@ class StaticPagesController extends Controller {
 		exit;*/
 		$userRole = Auth::user()->role_id;
 
-		if($userRole=='13' || $userRole=='12' || $userRole=='1')
+		if($userRole=='1' || $userRole=='2' || $userRole=='3' || $userRole=='4')
 		{
 			return Redirect::to('/mumbai');
 		}
@@ -42,7 +42,7 @@ class StaticPagesController extends Controller {
 	public function loggedInHome()
 	{
 		$userRole = Auth::user()->role_id;
-		if($userRole=='13' || $userRole=='12' || $userRole=='1')
+		if($userRole=='1' || $userRole=='2' || $userRole=='3' || $userRole=='4')
 		{
 			return Redirect::to('/mumbai');
 		}
