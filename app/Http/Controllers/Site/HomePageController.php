@@ -595,9 +595,16 @@ The WowTables Team";
      *
      */
     public function fbAddCity($cityName) {
+        die('Hello World');
         $this->facebook->addUserCity($cityName);
 
         return response()->json('',200);
+    }
+
+    //-----------------------------------------------------------------
+
+    public function fbGetCityURL() {
+
     }
 }
 //end of class HomePageController
