@@ -20,7 +20,7 @@ Route::get('fbAddCity/{cityName}',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('userCity/{cityName}',[
+Route::get('userCity',[
     'uses' => 'Site\HomePageController@fbGetCityURL',
     'as' => '',
     'where' => [],
