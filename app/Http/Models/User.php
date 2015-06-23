@@ -277,6 +277,13 @@ class User {
             'role_id' => $gourmetRoleId
         ]);
 
+        //Adding user membershipId to the database
+            DB::table('user_attributes_varchar')->insert([
+               'user_id' => $user_id,
+               'user_attribute_id' => 7,
+               'attribute_value' => '1'.str_pad($user_id, 6, '0', STR_PAD_LEFT),
+           ]);
+
         $user = $this->auth->loginUsingId($user_id);
 
         if($user){
@@ -436,6 +443,13 @@ class User {
                 												'phone_number' => $data['phone_number'],
                 												'full_name' => $data['full_name']
             								));
+
+            //Adding user membershipId to the database
+            DB::table('user_attributes_varchar')->insert([
+               'user_id' => $userInsertId,
+               'user_attribute_id' => 7,
+               'attribute_value' => '1'.str_pad($userInsertId, 6, '0', STR_PAD_LEFT),
+           ]);
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();
@@ -679,6 +693,13 @@ class User {
                 'fb_token' => $data['token'],
                 'role_id' => $gourmetRoleId
             ]);
+
+            //Adding user membershipId to the database
+            DB::table('user_attributes_varchar')->insert([
+               'user_id' => $user_id,
+               'user_attribute_id' => 7,
+               'attribute_value' => '1'.str_pad($user_id, 6, '0', STR_PAD_LEFT),
+           ]);
 
             $location_id = null;
             $phone_number = null;

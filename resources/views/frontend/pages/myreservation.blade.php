@@ -50,7 +50,7 @@ exit;*/
                 <span class="lead col-md-8">
                   <?php if($data['type']=='experience')
                   {
-                     echo $data['name'];
+                     echo $data['vendor_name'].' : '.$data['name'];
 
                   } 
                   else
@@ -63,7 +63,7 @@ exit;*/
               <?php if($data['type']=='experience')
                     {?>
                   <li>
-                  <a href="<?php echo $data['type'].','.$data['vl_id'].','.$data['product_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a>
+                  <a href="<?php echo $data['type'].','.$data['vl_id'].','.$data['product_id'].','.$data['city_id'];?>" class="btn btn-defaulbt tn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#editModal" id="change_reservation">Change</a>
                 </li>
                     <?php 
                   }else if($data['type'] == "alacarte")
@@ -233,7 +233,7 @@ agm.cpkbandra@jsmcorp.in
                 <span class="lead col-md-8">
                   <?php if($data['type']=='experience')
                   {
-                    echo $data['name'];
+                    echo $data['vendor_name'].' : '.$data['name'];
                   } 
                   else
                   {
@@ -405,8 +405,11 @@ agm.cpkbandra@jsmcorp.in
           </div>
           <div class="modal-body">
            <div id="reserv_table">
-                        
-                           <div class="panel panel-default">
+                       
+            <div id="my_locality">
+            </div>
+
+              <div class="panel panel-default">
                 <div class="panel-heading active">
                   <h4 class="panel-title">
                      <a href="javascript:" style="text-decoration: none;">
@@ -421,7 +424,6 @@ agm.cpkbandra@jsmcorp.in
                         <strong><a id="party_edit1" href="javascript:"  style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_person"></span> EDIT</a></strong>
                   </h4>
                 </div>
-             
               </div>
               <div class="panel panel-default">
                 <div class="panel-heading" >
@@ -474,7 +476,7 @@ agm.cpkbandra@jsmcorp.in
               </div>
           </div>
             <div class="change_reserv_confirmation hide" >
-                 <h4 class="panel-title" style="margin-bottom: 20px;color:#fff;">
+                 <h4 class="panel-title" style="margin-bottom: 20px;">
                     We have received your table change request. You will receive a confirmation mail & SMS from our concierge soon.
                 </h4>
                 <div class="text-center">
@@ -513,7 +515,7 @@ agm.cpkbandra@jsmcorp.in
                 <h4 class="panel-title text-center" style="margin-bottom: 20px;color:#fff;">
                    We have received your cancel request.
                 </h4>
-                <div class="text-center">+6*/
+                <div class="text-center">
                 <a  class="btn btn-warning close_modal" href="javascript:" data-dismiss="modal">Close This</a>
                 </div>
           </div>
@@ -657,12 +659,51 @@ agm.cpkbandra@jsmcorp.in
             /*reservation strat*/
            // loadDatePicker();
 
+           /*$('#locality_select').on('click', function(){
+            alert(1);
+              //$('#locality').show();
+            });*/
+
+           $("body").delegate("#locality_select", "click", function() {
+              $('#locality').show();
+              $('#locality_select').hide();
+                  });
+
+            $("body").delegate("#locality", "change", function() {
+              //alert(1);
+              var locality_change_val = $(this).val();
+              var locality_select_txt = $(this).find('option:selected').text();
+              if(locality_change_val !='0')
+              {
+                //$('#locality_val').val(locality_change_val);
+                $('#myselect_locality').text(locality_select_txt);
+                $('#save_changes').show();
+              }
+              $('#locality').hide();
+              $('#locality_select').show();
+              var product_id = $('#my_product_id').val();
+              $.ajax({
+                  url: "/users/productVendorLoad",
+                  type: "post",
+                  data: {
+                      product_id:  product_id,
+                      locality_change_val: locality_change_val
+                  },
+                  success: function(e) {
+                     console.log(e);
+                     $('#get_locality').html(e);
+                  }
+               });
+
+                  });
+
             $('#locations1').change(function(){
               $('#party_edit1').trigger('click'); 
               
                loadPartySelect();
                loadDatePicker();
             });
+
 
 
              /*reservation over*/
@@ -813,5 +854,12 @@ agm.cpkbandra@jsmcorp.in
       /*}*/
     });
 
+  </script>
+  <script type="text/javascript">
+  /*function test()
+  {
+    //document.getElementById("locality").className = "hidden";
+    document.getElementById("locality").style.visibility = "visible";
+  }*/
   </script>
 @endsection

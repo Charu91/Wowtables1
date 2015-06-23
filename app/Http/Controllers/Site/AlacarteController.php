@@ -408,6 +408,9 @@ class AlacarteController extends Controller {
                 $lastOrderId = $reservationResponse['data']['reservationID'];
 
                 Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+                DB::table('users')
+                    ->where('id', $userID)
+                    ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
                 $getReservationID = $reservationResponse['data']['reservationID'];
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],

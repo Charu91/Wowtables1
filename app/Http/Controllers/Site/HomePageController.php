@@ -570,6 +570,9 @@ The WowTables Team";
 
     //-----------------------------------------------------------------
 
+    /**
+     *
+     */
     function fbCallback() {
         $user = $this->socialize->with('facebook')->user();
         
@@ -585,4 +588,17 @@ The WowTables Team";
 
         return $queryResult;
     }
+
+    //-----------------------------------------------------------------
+
+    /**
+     *
+     */
+    public function fbAddCity($cityName) {
+        $this->facebook->addUserCity($cityName);
+
+        return response()->json('',200);
+    }
 }
+//end of class HomePageController
+//end of file HomePageController.php

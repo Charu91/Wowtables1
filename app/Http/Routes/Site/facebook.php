@@ -14,3 +14,11 @@ Route::get('/users/fbCallback', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::get('users/addCity/{cityName}',[
+    'uses' => 'Site\HomePageController@fbAddCity',
+    'as' => '',
+    'middleware' => ['guest'],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
