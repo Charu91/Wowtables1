@@ -113,7 +113,6 @@ class AdminExperienceLocationsController extends Controller {
         $productID = '';
         $productDescriptiveTitle = '';
         $productStatus = '';
-        $productShowStatus = '';
         //echo "<pre>"; print_r($productLocationDetails); die;
         foreach($productLocationDetails as $productLocationDetail){
             $productID = $productLocationDetail->product_id;
