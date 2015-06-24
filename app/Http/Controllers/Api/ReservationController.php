@@ -207,7 +207,7 @@ use Mailchimp;
 	public function cancelReservation() {
 		$reservationID = $this->request->input('reservationID');
 		
-		$arrResponse = ReservationDetails::cancelReservation($reservationID);
+		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp);
 		
 		return response()->json($arrResponse,200);		
 	}
