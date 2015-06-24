@@ -1206,8 +1206,7 @@ class ReservationDetails extends Model {
 				);
 			}
 			
-			echo 'before';
-
+		
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
 			], function($message) use ($dataPost){
@@ -1216,8 +1215,7 @@ class ReservationDetails extends Model {
 				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
-
-			echo 'after';
+			
 
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
