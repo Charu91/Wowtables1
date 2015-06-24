@@ -1128,7 +1128,7 @@ class ReservationDetails extends Model {
 		}
   		return $arrResult; 
   	}
-  	//-----------------------------------------------------------------
+  	//-------------------------------------------------------------------
 
   	public static function zohoSendMailCancel( $reservationID) {
 		$arrReservationDetails = DB::table('reservation_details')->where('id', $reservationID)->first();
@@ -1141,6 +1141,8 @@ class ReservationDetails extends Model {
 		$res_data = self::zohoEditBooking('E'.sprintf("%06d",$reservationID),$zoho_data);
 		
 		$userData = Profile::getUserProfileWeb($arrReservationDetails->user_id);
+
+		$dataPost = array();
 
 		if ($reservationID) {
 			if($arrReservationDetails->reservation_type == "experience"){
@@ -1204,6 +1206,8 @@ class ReservationDetails extends Model {
 				);
 			}
 			
+			echo 'before';
+
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
 			], function($message) use ($dataPost){
@@ -1213,6 +1217,7 @@ class ReservationDetails extends Model {
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
+			echo 'after';
 
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
@@ -1227,7 +1232,7 @@ class ReservationDetails extends Model {
 	}
 	//-----------------------------------------------------------------
 	
-	public static function zohoEditBooking($order_id,$data){
+	public static function zohoEditBooking($order_id,$data){  
 		$ch = curl_init();
 		$config = array(
 			//'authtoken' => 'e56a38dab1e09933f2a1183818310629',
@@ -1241,9 +1246,9 @@ class ReservationDetails extends Model {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_POSTFIELDS     => $config + $data,
 		);
-
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  //------Added to ignore ssl----
+		
 		curl_setopt_array($ch, $curlConfig);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  //------Added to ignore ssl----
 		$result = curl_exec($ch);
 
 		//  out($result);die;
