@@ -210,8 +210,7 @@ class AlacarteController extends Controller {
 
         if($meta_keywords=='')
         {
-          $metaKeyDetails = 'Reserve a table at '.$data['arrALaCarte']['data']['title']. 
-                 'Enjoy in '.$data['arrALaCarte']['data']['location_address']['area']. ', '. $data['arrALaCarte']['data']['location_address']['city'].' Find information, curators suggestions, maps, address, photos and reviews';
+          $metaKeyDetails = 'WowTables: '.$data['arrALaCarte']['data']['title'].', '.$data['arrALaCarte']['data']['location_address']['city'].', '.$data['arrALaCarte']['data']['location_address']['area'];
         }
         else
         {
