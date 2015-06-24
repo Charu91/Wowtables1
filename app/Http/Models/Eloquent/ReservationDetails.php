@@ -1119,7 +1119,7 @@ class ReservationDetails extends Model {
 					);
 
 					//$email = ["email"["email":]];
-					//$this->mailchimp->lists->subscribe($this->listId, ["email"=>$userData['data']['email']],$merge_vars,"html",true,true );
+					///$this->mailchimp->lists->subscribe($this->listId, ["email"=>$userData['data']['email']],$merge_vars,"html",true,true );
 					$this->mailchimp->lists->subscribe($listId, ["email"=>$userResult->email],$merge_vars,"html",true,true );
 					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 		}
