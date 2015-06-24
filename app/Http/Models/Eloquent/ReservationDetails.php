@@ -255,7 +255,7 @@ class ReservationDetails extends Model {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function cancelReservation($reservationID) {
+	public static function cancelReservation($reservationID, $objMailChimp) {
 		//array to hold response
 		$arrResponse = array();
 		
@@ -276,7 +276,7 @@ class ReservationDetails extends Model {
 			$cancelRewardCount = self::decrementReservationCount( $reservationID );
 
 			//Send mail for cancel reservation
-			$mailchimpStatus = self::sendMailchimp( $reservationID );
+			$mailchimpStatus = self::sendMailchimp( $reservationID, $objMailChimp);
 
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
@@ -1077,7 +1077,7 @@ class ReservationDetails extends Model {
 	 * @return	 
 	 * @since	1.0.0
 	 */
-  		public static function sendMailchimp( $reservationID ) { 
+  		public static function sendMailchimp( $reservationID, $objMailChimp ) { 
 
   		$listId = '986c01a26a';
   		$queryResult = DB::table('reservation_details')
@@ -1120,7 +1120,7 @@ class ReservationDetails extends Model {
 
 					//$email = ["email"["email":]];
 					///$this->mailchimp->lists->subscribe($this->listId, ["email"=>$userData['data']['email']],$merge_vars,"html",true,true );
-					$this->mailchimp->lists->subscribe($listId, ["email"=>$userResult->email],$merge_vars,"html",true,true );
+					$objMailChimp->lists->subscribe($listId, ["email"=>$userResult->email],$merge_vars,"html",true,true );
 					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 		}
   		return $arrResult; 
