@@ -1138,15 +1138,18 @@ class ExperienceModel {
     $arrInsertData = array();
     
     foreach($arrAddon as $prod_id => $qty) {
-      $arrInsertData[] = array(
-                  'reservation_id' => $reservationID,
-                  'no_of_persons' => $qty,
-                  'options_id' => $prod_id,
-                  'option_type' => 'addon',
-                  'reservation_type' => 'experience',
-                  'created_at' => date('Y-m-d H:i:m'),
-                  'updated_at' => date('Y-m-d H:i:m'),
-                );
+        if($qty > 0){
+            $arrInsertData[] = array(
+                'reservation_id' => $reservationID,
+                'no_of_persons' => $qty,
+                'options_id' => $prod_id,
+                'option_type' => 'addon',
+                'reservation_type' => 'experience',
+                'created_at' => date('Y-m-d H:i:m'),
+                'updated_at' => date('Y-m-d H:i:m'),
+            );
+        }
+
     }
     
     //writing data to reservation_addons_variants_details table
@@ -1185,6 +1188,7 @@ class ExperienceModel {
 
         return $userDetails;
     }
+    
 
 
 }

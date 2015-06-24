@@ -624,7 +624,24 @@ class ExperienceController extends Controller {
         $dataPost['addon']          = Input::get('add_ons');
         $dataPost['giftCardID']     = Input::get('giftcard_id');
 
-        
+        echo "<pre>"; print_r($dataPost);
+        $addonsText = '';
+        foreach($dataPost['addon'] as $prod_id => $qty) {
+            if($qty > 0){
+                echo "prod id = ".$prod_id." , qty = ".$qty;
+                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+
+                echo "<pre>"; print_r($addonsDetails);
+                $addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
+            }
+
+        }
+        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+        $special_request = isset($dataPost['specialRequest']) && $dataPost['specialRequest'] != "" ? "Spl Req: ".$dataPost['specialRequest'] : "";
+        $dataPost['addons_special_request'] = $finalAddontext." ".$special_request;
+
+        //echo $finalSpecialRequest;
+        //die;
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
         //echo "<pre>"; print_r($userData); die;
@@ -718,7 +735,7 @@ class ExperienceController extends Controller {
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                         'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-                        'Occasion' => $dataPost['specialRequest'],
+                        'Occasion' => $dataPost['addons_special_request'],
                         'Type' => "Experience",
                         'API_added' => 'Yes',
                         'GIU_Membership_ID' => $userData['data']['membership_number'],
@@ -728,7 +745,8 @@ class ExperienceController extends Controller {
                         'Auto_Reservation'=>'Not available',
                         //'telecampaign' => $campaign_id,
                         //'total_no_of_reservations'=> '1',
-                        'Calling_option' => 'No'
+                        'Calling_option' => 'No',
+                        'gift_card_id_from_reservation' => $dataPost['giftCardID']
                     );
                     //echo "<pre>"; print_r($zoho_data);
                     $zoho_res = $this->zoho_add_booking($zoho_data);

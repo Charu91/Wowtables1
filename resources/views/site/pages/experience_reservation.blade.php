@@ -103,9 +103,14 @@
                                     <div style="margin: 5px 0; color: #000"><?php echo $exp_short_desc;?></div>
 
                                     <?php
-                                    $special = trim($post_data['specialRequest']);
+                                    $special = trim($post_data['addons_special_request']);
                                     if(!empty($special)): ?>
                                     <div style="margin: 5px 0; color: #000">Special requests: <?php echo $special;?></div>
+                                    <?php endif; ?>
+                                    <?php
+                                    $giftcardID = trim($post_data['giftCardID']);
+                                    if(!empty($giftcardID)): ?>
+                                        <div style="margin: 5px 0; color: #000">Gift Card ID: <?php echo $giftcardID;?></div>
                                     <?php endif; ?>
                                     <div style="margin: 5px 0; color: #000">Venue: <?php echo $exp_venue;?></div>
                                     <div style="margin: 5px 0; color: #000">Address: <?php echo $exp_address;?></div>
