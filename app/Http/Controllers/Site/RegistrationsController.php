@@ -99,7 +99,7 @@ class RegistrationsController extends Controller {
 		$data['reserveData'] = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates'] = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
         $data['schedule']    = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);*/ 
-        /*	print_r($arrReservation);
+        	/*print_r($arrReservation);
         	exit;*/
         return view('frontend.pages.myreservation',$arrResponse)
         			->with('arrReservation',$arrReservation);
@@ -184,6 +184,131 @@ class RegistrationsController extends Controller {
 		}
 		
 	}
+
+
+	/**
+	 * Handles requests for partysizeajax a reservation.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function productVendorLoad()
+	{
+		$product_id = $this->request->input('product_id');
+		$locality_change_val = $this->request->input('locality_change_val');
+		$selectVendorLocationIdQuery = DB::select("SELECT vendor_location_id
+													FROM product_vendor_locations
+													WHERE product_id = '$product_id'
+													AND id = '$locality_change_val'");
+
+		$selectVendorLocationId = $selectVendorLocationIdQuery[0]->vendor_location_id;
+		echo '<input type="hidden" id="locality_val" value="'.$selectVendorLocationId.'">';
+	}
+
+	/**
+	 * Handles requests for myReservLocality a reservation.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function myReservLocality()
+	{
+		$product_id = $this->request->input('product_id');
+		$city_id = $this->request->input('city_id');
+		$res_id = $this->request->input('res_id');
+		$vendor_location_id = $this->request->input('vendor_location_id');
+		$selectArea = DB::select("SELECT `pvl`.`id` AS `vendor_location_id` , `l1`.`name` AS area
+					FROM `product_vendor_locations` AS `pvl`
+					LEFT JOIN vendor_location_address AS vla ON `vla`.`vendor_location_id` = `pvl`.`vendor_location_id`
+					LEFT JOIN `locations` AS `l1` ON `l1`.`id` = `vla`.`area_id`
+					LEFT JOIN `locations` AS `l2` ON `l2`.`id` = `vla`.`city_id`
+					LEFT JOIN `locations` AS `l3` ON `l3`.`id` = `vla`.`state_id`
+					WHERE `pvl`.`product_id` = '$product_id'
+					AND `vla`.`city_id` = '$city_id'
+					AND `pvl`.`id` = '$vendor_location_id'");
+		//print_r($selectArea);
+		$areaId = $selectArea[0]->vendor_location_id;
+		$areaName = $selectArea[0]->area;
+		//exit;
+		$selectVendorLocationIdQuery = DB::select("SELECT vendor_location_id FROM reservation_details WHERE id = '$res_id'");
+		$selectVendorLocationId = $selectVendorLocationIdQuery[0]->vendor_location_id;
+
+		$arrLocation = Self::getProductLocations($product_id, $city_id);
+		//print_r($arrLocation);
+		if(count($arrLocation)>1)
+		{?>
+			<div class="panel panel-default">
+                <div class="panel-heading active">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Select Location<input type="hidden" value="<?php echo $product_id;?>" id="my_product_id"> <span id="get_locality"><input type="hidden" id="locality_val" value="<?php echo $selectVendorLocationId;?>"></span></a>
+                      <a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"></a>
+		              <select name="locality" id="locality"  class="pull-right space" style="display:none;">
+		                    <option value="0">SELECT</option>
+		                 
+		            	  <?php
+		                        foreach($arrLocation as $key =>$listData): ?>
+		             			<option value="<?php echo $listData['vendor_location_id'];?>" <?php if($areaId==$listData['vendor_location_id']) {echo 'selected';}?> ><?php echo $listData['area'];?></option>
+		                        <?php endforeach; ?>
+
+		             </select>
+                        <strong><a id="locality_select" href="javascript:"  style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;" >
+                        	<span style="color:#756554 !important;" id="myselect_locality"><?php echo $areaName;?></span> EDIT</a></strong>
+                  </h4>
+                </div>
+              </div>
+		
+		<?php }
+	}
+
+	//-----------------------------------------------------------------
+  
+  /**
+   * Returns the locations where product can be found.
+   * 
+   * @static  true
+   * @access  public
+   * @param integer $productID
+   * @return  array
+   * @since 1.0.0
+   */
+  public static function getProductLocations($productID,$cityID) {
+      //echo "product_id == ".$productID." , city = ".$cityID; die;
+    $queryResult =    DB::table('product_vendor_locations as pvl')
+              ->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
+              ->leftJoin('locations as l1', 'l1.id','=','vla.area_id')
+              ->leftJoin('locations as l2', 'l2.id','=','vla.city_id')
+              ->leftJoin('locations as l3', 'l3.id','=','vla.state_id')
+              ->select('pvl.id as vendor_location_id','l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
+              ->where('pvl.product_id',$productID)
+              ->where('vla.city_id',$cityID)
+              ->get();
+    
+    //array to hold location details
+    $arrLocation = array();
+    if($queryResult) {
+      foreach($queryResult as $row) {
+
+        $arrLocation[] = array(
+                  "vendor_location_id" => $row->vendor_location_id,
+                  "address_line" => $row->address,
+                  "area" => $row->area,
+                  "city" => $row->city,
+                  "pincode" => $row->pin_code,
+                  "state" => $row->state_name,                                                                
+                  //"country" => $row->country,
+                  "latitude" => $row->latitude,
+                  "longitude" => $row->longitude 
+
+                );
+      }
+    }   
+    return $arrLocation;
+  }
+  
+  //-----------------------------------------------------------------
 
 	/**
 	 * Handles requests for cancelling a reservation.
@@ -383,6 +508,7 @@ class RegistrationsController extends Controller {
 		//echo "sd = ".$reserveType; die;
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
+		$locality_val = $this->request->input('locality_val');
 		$edit_date = $this->request->input('edit_date');
 		$edit_date1 = $this->request->input('last_reserv_date');
 		$datearray=explode(" ",$edit_date);
@@ -393,7 +519,18 @@ class RegistrationsController extends Controller {
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
-		DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',reservation_status='edited' where id = '$reserv_id'");
+		if($locality_val=="" || $locality_val=='0')
+		{
+			//echo 'null';
+			DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',reservation_status='edited' where id = '$reserv_id'");
+		}
+		else
+		{
+			//echo 'value is present';
+			DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',vendor_location_id='$locality_val',reservation_status='edited' where id = '$reserv_id'");
+		}
+		//exit;
+		
 
 		$userID = Session::get('id');
 		$userData = Profile::getUserProfileWeb($userID);
@@ -595,6 +732,38 @@ class RegistrationsController extends Controller {
 		
         	
         return view('frontend.pages.myaccount',$arrResponse);
+	}
+
+	/**
+	 * Handles requst for displaying the complete_signup.
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @param	string	$access_token
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function completeSignup()
+	{
+		$data = array(
+                'email'=>$_GET['email'],
+                'phone'=>$_GET['phone_number'],
+                'cityName'=>$_GET['city']
+            );
+		//print_r($data);
+		$cities = Location::where(['Type' => 'City', 'visible' =>1,'name' =>$data['cityName']])->pluck('id');
+		
+		$data['city'] = $cities;
+		$count = count($cities);
+		if($count=='0')
+		{
+			die("City name doesn't exist.");
+			exit;
+		}
+		else
+		{
+			return view('frontend.pages.completesignup',$data);
+		}
 	}
 
 	public function zoho_edit_booking($order_id,$data){

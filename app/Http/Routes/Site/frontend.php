@@ -243,6 +243,14 @@ Route::post('/register', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/users/completesignup', [
+    'uses' => 'Site\RegistrationsController@completeSignup',
+    'as' => 'completeSignup',
+    'middleware' => ['guest'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::get('/users/myreservations', [
     'uses' => 'Site\RegistrationsController@reservationRecord',
     'as' => 'reservationRecord',
@@ -286,6 +294,22 @@ Route::post('/users/timedataload', [
 Route::post('/users/party_sizeajax', [
     'uses' => 'Site\RegistrationsController@partysizeajax',
     'as' => 'partysizeajax',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/myreserv_locality', [
+    'uses' => 'Site\RegistrationsController@myReservLocality',
+    'as' => 'myReservLocality',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/productVendorLoad', [
+    'uses' => 'Site\RegistrationsController@productVendorLoad',
+    'as' => 'productVendorLoad',
     'middleware' => ['auth'],
     'where' =>[],
     'domain' => env('WEBSITE_URL')

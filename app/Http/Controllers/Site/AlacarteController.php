@@ -177,16 +177,25 @@ class AlacarteController extends Controller {
         $data['dropdowns_opt']  = 0; //1 for disp
         
 
-        $seo_title = (isset($data['arrALaCarte']['data']['seo_title']) && $data['arrALaCarte']['data']['seo_title'] != "" ? $data['arrALaCarte']['data']['seo_title'] : 'Wowtables');
-        $meta_desc = (isset($data['arrALaCarte']['data']['seo_meta_description']) && $data['arrALaCarte']['data']['seo_meta_description'] != "" ? $data['arrALaCarte']['data']['seo_meta_description'] : 'Wowtables');
-        $meta_keywords = (isset($data['arrALaCarte']['data']['seo_meta_keywords']) && $data['arrALaCarte']['data']['seo_meta_keywords'] != "" ? $data['arrALaCarte']['data']['seo_meta_keywords'] : 'Wowtables');
+        //$seo_title = (isset($data['arrALaCarte']['data']['seo_title']) && $data['arrALaCarte']['data']['seo_title'] != "" ? $data['arrALaCarte']['data']['seo_title'] : 'Wowtables');
+        //$meta_desc = (isset($data['arrALaCarte']['data']['seo_meta_description']) && $data['arrALaCarte']['data']['seo_meta_description'] != "" ? $data['arrALaCarte']['data']['seo_meta_description'] : 'Wowtables');
+        //$meta_keywords = (isset($data['arrALaCarte']['data']['seo_meta_keywords']) && $data['arrALaCarte']['data']['seo_meta_keywords'] != "" ? $data['arrALaCarte']['data']['seo_meta_keywords'] : 'Wowtables');
+        /*print_r($data['arrALaCarte']['data']['location_address']);
+        exit;*/
+        $seo_title     = $data['arrALaCarte']['data']['seo_title'];
+        $meta_desc     = $data['arrALaCarte']['data']['seo_meta_description'];
+        $meta_keywords = $data['arrALaCarte']['data']['seo_meta_keywords'];
         if($seo_title=='')
         {
           $seoTitleDetails = 'WowTables: '.$data['arrALaCarte']['data']['title'].', '.$data['arrALaCarte']['data']['location_address']['city'].', '.$data['arrALaCarte']['data']['location_address']['area'];
+          /*print_r($seoTitleDetails);
+          exit;*/
         }
         else
         {
           $seoTitleDetails = $seo_title;
+          /*print_r($seoTitleDetails);
+          exit;*/
         }
 
         if($meta_desc=='')
@@ -199,12 +208,21 @@ class AlacarteController extends Controller {
           $metaDescDetails = $meta_desc;
         }
 
+        if($meta_keywords=='')
+        {
+          $metaKeyDetails = 'WowTables: '.$data['arrALaCarte']['data']['title'].', '.$data['arrALaCarte']['data']['location_address']['city'].', '.$data['arrALaCarte']['data']['location_address']['area'];
+        }
+        else
+        {
+          $metaKeyDetails = $meta_keywords;
+        }
+
         
         $meta_information = array('seo_title'      => $seoTitleDetails,
                                    'meta_desc'     => $metaDescDetails, 
-                                   'meta_keywords' => $meta_keywords);
-        //print_r($meta_information);
-        //exit;
+                                   'meta_keywords' => $metaKeyDetails);
+       /* print_r($meta_information);
+        exit;*/
 
         return view('frontend.pages.alacartedetails',$data)
                     ->with('meta_information', $meta_information);
@@ -408,6 +426,9 @@ class AlacarteController extends Controller {
                 $lastOrderId = $reservationResponse['data']['reservationID'];
 
                 Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+                DB::table('users')
+                    ->where('id', $userID)
+                    ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
                 $getReservationID = $reservationResponse['data']['reservationID'];
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],

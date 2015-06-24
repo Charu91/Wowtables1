@@ -160,6 +160,7 @@ class AdminExperienceLocationsController extends Controller {
     public function update($id, UpdateExperienceLocationRequest $updateExperienceLocationRequest)
     {
         $input = $this->request->all();
+        //echo "id = ".$id." <br/> <pre>"; print_r($input); die;
         //dd($input);
         $experienceLocationUpdate = $this->experienceLocation->update($id, $input);
 

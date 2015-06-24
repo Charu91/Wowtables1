@@ -700,8 +700,7 @@ $queryProfileResult = DB::table('users as u')
                 ));
 
 
-
-            $q = "UPDATE users SET points_earned = points_earned + ".$points." WHERE id = ?";
+            $q = "UPDATE users SET points_earned = points_earned + ".$points." WHERE id = 1";
 
             DB::update($q,[$userID]);
 

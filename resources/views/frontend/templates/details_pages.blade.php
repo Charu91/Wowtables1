@@ -35,9 +35,8 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="robots" content="noindex,nofollow" />
 <title>{!! $meta_information['seo_title'] or 'WowTables : Exclusive fine dining meals & experiences in your city' !!}</title>
-<meta name="title" content="{!! $seo_title or 'WowTables' !!}">
+<meta name="title" content="{!! $meta_information['seo_title'] or 'WowTables' !!}">
 <meta name="description" content="{!! $meta_information['meta_desc'] or 'Search, discover, reserve & experience fine dining in Mumbai, Delhi, Bangalore & Pune' !!}">
 <meta name="keywords" content="{!! $meta_information['meta_keywords'] or 'WowTables' !!}">    
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -552,7 +551,7 @@ if (strpos($url,'alacarte') !== false) {
            <div class="col-md-8 col-sm-9 col-xs-8 pull-right head-links wowtables_hide_refer_menu">
             <ul class="nav navbar-nav navbar-right wowtables_tablet_size">
               <li>
-                <a href="{{URL::to('/')}}/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
+                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
               </li>
               <?php if(isset($user_data['full_name']) && $user_data['full_name']=='Guest')
               {
@@ -579,7 +578,7 @@ if (strpos($url,'alacarte') !== false) {
                     $logout = Cookie::get('token');
                     if(isset($user_array['facebook_id']) && !empty($user_array['facebook_id'])){
                     ?>
-                    <li><a href="<?php echo $logout;?>">Logout</a></li>
+                    <li><a href="{{URL::to('/')}}/logout">Logout</a></li>
                     <?PHP } else {?>
                     <li><a href="{{URL::to('/')}}/logout">Logout</a></li>          
                     <?PHP } ?>
@@ -1314,7 +1313,7 @@ var google_remarketing_only = true;
 <script type="text/javascript">
 
  function popup(){ 
-    myWindow=window.open("{{URL::to('/')}}//login/index","_blank","scrollbars=1,resizable=1,height=300,width=450");
+    myWindow=window.open("{{URL::to('/')}}/users/facebook","_blank","scrollbars=1,resizable=1,height=300,width=450");
     myWindow.moveTo(500,200);myWindow.focus();intervalID=window.setInterval(checkWindow,500)}
 
      function checkWindow() {
@@ -1324,22 +1323,31 @@ var google_remarketing_only = true;
       //setCookie('add_event_mixpanel','yes',1);
             myWindow.close();
             myWindow.clearInterval(intervalID);
-              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0){
+              if(myWindow.location.href.indexOf("mumbai") >= 0 || myWindow.location.href.indexOf("delhi") >= 0 || myWindow.location.href.indexOf("pune") >= 0 || myWindow.location.href.indexOf("bangalore") >= 0){
                 window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";
                 
                 }
               else { 
                   $('#redirectloginModal').modal('hide');
           var pageUrl = "<?php echo $current_page_url;?>";
-          $.ajax({
+         /* $.ajax({
             url: "{{URL::to('/')}}/login/registration_page_url",
             type: "POST",
             dataType: "json",
             data:{page_url: pageUrl},
             success: function(d) {
             }
-          });
-                  $("#fbSelectCity").modal('toggle');
+          }); */
+              $.get('getMyCity/city',function(response) {
+                    var city = response.city;
+        if(city.length > 0) {
+            window.location.href = "{{URL::to('/')}}/"+city;
+        }
+        else {
+          $("#fbSelectCity").modal('toggle');
+        }
+        }, 'json');
+                  /* $("#fbSelectCity").modal('toggle'); */
         }
         /*var uID = "< ?php echo $this->session->userdata['id'];?>";
         var eID = "< ?php echo $this->session->userdata['email'];?>"; 
@@ -1654,8 +1662,8 @@ var google_remarketing_only = true;
       $(".list-group-item").click(function(){
               var city_name = $(this).text().toLowerCase();
                 $.ajax({
-                  type:'POST',
-                  url:'{{URL::to('/')}}/login/index/'+city_name,
+                  type:'GET',
+                  url:'users/addCity/'+city_name,
                   data:{city:city_name},
                   success:function(data){
                           window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";

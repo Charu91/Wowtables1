@@ -237,7 +237,7 @@ class ExperienceController extends Controller {
         //this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
-
+        $arrResponse['user']   = Auth::user(); 
         $city_id    = Input::get('city');        
         $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -702,8 +702,12 @@ class ExperienceController extends Controller {
                     $type = "new";
                     $reservationType = "experience";
                     $lastOrderId = $reservationResponse['data']['reservationID'];
-
+                    //echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
                     Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+                    DB::table('users')
+                        ->where('id', $userID)
+                        ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
+
                     //echo "<pre>"; print_r($reservationResponse); die;
                     $zoho_data = array(
                         'Name' => $dataPost['guestName'],

@@ -433,6 +433,9 @@ $(document).ready(function() {
        // alert(res_id);
         var vendor_id = $(this).attr('href');
         $('#vendor_id').val(vendor_id);
+        var reserve_type_array = vendor_id.split(',');
+        var reserve_type = reserve_type_array[0];
+
         //alert(vendor_id);
         //alert(res_id);
         var now = new Date($("#now").val());
@@ -446,8 +449,13 @@ $(document).ready(function() {
         var g = 1;
         $.ajax({
             type: "GET",
-           dataType: "json",
+            dataType: "json",
+            timeout: 3000,
             url: "/users/get_reservetion/" + res_id,
+            beforeSend:function()
+                    {
+                    $("#myselect_person").html('<img src="/images/loading.gif">');
+                    },
             success: function(data) {
                 
                 $('#party_edit1').show();
@@ -463,17 +471,63 @@ $(document).ready(function() {
                $('#last_reserv_date').val(last_reservation_date);
                $('#last_reserv_time').val(last_reservation_time);
 
+               if(reserve_type == 'experience')
+               {
+                var product_id = reserve_type_array[2];
+                var city_id = reserve_type_array[3];
+                var vendor_location_id = reserve_type_array[1];
+                    $.ajax({
+                      url: "/users/myreserv_locality",
+                      type: "post",
+                      timeout: 3000,
+                      data: {
+                         
+                          product_id: product_id,
+                          city_id:city_id,
+                          res_id:res_id,
+                          vendor_location_id:vendor_location_id
+                      },
+                      beforeSend:function()
+                        {
+                        $("#my_locality").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
+                        },
+                      success: function(e) {
+                         console.log(e);
+                         $('#my_locality').html(e);
+                      },
+                        error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
+                   });
+                }
+
                $.ajax({
                   url: "/users/party_sizeajax",
                   type: "post",
+                  timeout: 3000,
                   data: {
                      
                       vendor_id: vendor_id
                   },
+                  beforeSend:function()
+                    {
+                    $("#party_size1").html('<img src="/images/loading.gif">');
+                    },
                   success: function(e) {
                      console.log(e);
                      $('#party_size1').html(e);
-                  }
+                  },
+                  error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
                });
                 /*
                 
@@ -736,6 +790,13 @@ $(document).ready(function() {
                     $("#party_edit").removeClass("hidden");
                     $("#location_edit").removeClass("hidden")
                 })*/
+            },
+            error: function(x, t, m) 
+            {
+                if(t==="timeout") 
+                {
+                    alert("Got timeout! Please reload page again.");
+                } 
             }
         })
     });
@@ -994,6 +1055,7 @@ $(document).ready(function() {
         alcohol = $("#alcoholedit").val();
         non_veg = $("#nonveg").val();
         vendor_details =$('#vendor_id').val();
+        locality_val =$('#locality_val').val();
 
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
@@ -1039,6 +1101,7 @@ $(document).ready(function() {
                     data: {
                         reserv_id: res_id,
                         address: address,
+                        locality_val:locality_val,
                         party_size: party_size,
                         vendor_details:vendor_details,
                         edit_date: edit_date,
@@ -1194,6 +1257,7 @@ $(document).ready(function() {
 	/*** end alacarte*/
 
     $("#party_edit1").click(function() {
+        $('#save_changes').show();
         if ($("#collapseTwo").hasClass("in")) {
             $("#date_edit1").click();
             if ($("#date_edit1 span").text() != "") {
