@@ -477,7 +477,7 @@ class Reservation {
 														'address' => $address,
 														'locality' => $locality,														
 													),
-									'addons' => (empty($arrAddOn)) ? "" : $arrAddOn,
+									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp ) {
