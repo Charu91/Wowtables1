@@ -274,6 +274,10 @@ class ReservationDetails extends Model {
 
 			//Decrement the reservation count
 			$cancelRewardCount = self::decrementReservationCount( $reservationID );
+
+			//Send mail for cancel reservation
+			$mailchimpStatus = self::sendMailchimp( $reservationID );
+
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 		}
@@ -1064,6 +1068,65 @@ class ReservationDetails extends Model {
   		}
 
   	}
+  	//------------------------------------------------------------------------
+
+  	/**
+	 * Send mail by mailchimp for every cancelled reservation .
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
+  		public static function sendMailchimp( $reservationID ) { 
+
+  		$listId = '986c01a26a';
+  		$queryResult = DB::table('reservation_details')
+  								->where('id', $reservationID)
+  								->select('reservation_type', 'user_id')
+  								->first();  
+
+  		if( $queryResult->reservation_type == "alacarte" ) { 
+  					$arrResult = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $queryResult->user_id)												
+															->where('ua.alias', '=', 'a_la_carte_reservation')
+															->select('uai.attribute_value')
+															->first();
+					$setBookingKey = 'MERGE26';					
+					
+  		}
+  		else if ( $queryResult->reservation_type == "experience" ) {
+  					$arrResult = DB::table('user_attributes_integer as uai')
+															->join('user_attributes as ua', 'uai.user_attribute_id', '=', 'ua.id')
+															->where('uai.user_id', $queryResult->user_id)												
+															->where('ua.alias', '=', 'bookings_made')
+															->select('uai.attribute_value')
+															->first();;
+					$setBookingKey = 'MERGE11';
+															 
+  		}
+		
+		$userResult = DB::table('reservation_details')
+										->join('users', 'users.id', '=', 'reservation_details.user_id' )
+										->where('reservation_details.id', $reservationID)
+										->select('users.email')
+										->first();
+		
+		if($queryResult) {
+				$merge_vars = array(
+						$setBookingKey => $arrResult->attribute_value,
+						//$setBookingKey => $setBookingsValue - 1,
+					);
+
+					//$email = ["email"["email":]];
+					//$this->mailchimp->lists->subscribe($this->listId, ["email"=>$userData['data']['email']],$merge_vars,"html",true,true );
+					$this->mailchimp->lists->subscribe($listId, ["email"=>$userResult->email],$merge_vars,"html",true,true );
+					//$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+		}
+  		return $arrResult; 
+  	}
+  	//-----------------------------------------------------------------
+
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
