@@ -10,7 +10,7 @@ use DB;
 use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use Mailchimp;
-
+use WowTables\Http\Models\Profile;
 /**
  * Model class Reservation.
  * 
@@ -275,8 +275,11 @@ class ReservationDetails extends Model {
 			//Decrement the reservation count
 			$cancelRewardCount = self::decrementReservationCount( $reservationID );
 
-			//Send mail for cancel reservation
+			//Call mailChimp for cancel reservation
 			$mailchimpStatus = self::sendMailchimp( $reservationID, $objMailChimp);
+
+			//Send mail by Zoho for cancel reservation
+			$zohoCancel = self::zohoSendMailCancel($reservationID);
 
 			
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
@@ -1127,6 +1130,126 @@ class ReservationDetails extends Model {
   	}
   	//-----------------------------------------------------------------
 
+  	public static function zohoSendMailCancel( $reservationID) {
+		$arrReservationDetails = DB::table('reservation_details')->where('id', $reservationID)->first();
+		
+		$zoho_data  = array(
+			'Loyalty_Points_Awarded'=>0,
+			'Order_completed'=>'User Cancelled',
+		);
+		//$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
+		$res_data = self::zohoEditBooking('E'.sprintf("%06d",$reservationID),$zoho_data);
+		
+		$userData = Profile::getUserProfileWeb($arrReservationDetails->user_id);
+
+		if ($reservationID) {
+			if($arrReservationDetails->reservation_type == "experience"){
+
+				$setBookingKey = 'MERGE11';
+				$setBookingsValue = $userData['data']['bookings_made'];
+
+
+				//$arrProductID = DB::table('product_vendor_locations')->where('id', $arrReservationDetails[0]->product_vendor_location_id)
+				//	->select('product_id','vendor_location_id')
+				//	->get();
+
+				//$productDetails = $this->experiencesRepository->getByExperienceId($arrProductID[0]->product_id);
+
+				//$outlet = $this->experiences_model->getOutlet($arrReservationDetails[0]->product_vendor_location_id);
+				$outlet = self::getExperienceOutlet($arrReservationDetails->product_vendor_location_id); 
+
+				//$locationDetails = $this->experiences_model->getLocationDetails($arrReservationDetails[0]->product_vendor_location_id);
+				//echo "<br/>---- productdetails---<pre>"; print_r($productDetails);
+				//echo "<br/>---- outlet---<pre>"; print_r($outlet);				
+
+				$dataPost = array('reservation_type'=> $arrReservationDetails->reservation_type,
+					'reservationID' => $reservationID,
+					'partySize' => $arrReservationDetails->no_of_persons,
+					'reservationDate'=> $arrReservationDetails->reservation_date,
+					'reservationTime'=> $arrReservationDetails->reservation_time,
+					'guestName'=>$userData['data']['full_name'],
+					'guestEmail'=>$userData['data']['email'],
+					'guestPhoneNo'=>$userData['data']['phone_number'],
+					'order_id'=> "#E".sprintf("%06d",$reservationID),
+					'venue' => $outlet->vendor_name,
+				);
+
+
+			} else if($arrReservationDetails->reservation_type == "alacarte"){
+
+				$setBookingKey = 'MERGE26';
+				$setBookingsValue = $userData['data']['a_la_carte_reservation'];
+
+
+				//$outlet = $this->alacarte_model->getOutlet($arrReservationDetails[0]->vendor_location_id);
+				$outlet = self::getAlacarteOutlet($arrReservationDetails->vendor_location_id); 
+
+				//$locationDetails = $this->alacarte_model->getLocationDetails($arrReservationDetails[0]->vendor_location_id);
+
+				//$vendorDetails = $this->restaurantLocationsRepository->getByRestaurantLocationId($arrReservationDetails[0]->vendor_location_id);
+				//echo "<br/>---- vendorDetails---<pre>"; print_r($vendorDetails);
+				//echo "<br/>---- outlet---<pre>"; print_r($outlet);
+				
+
+				$dataPost = array('reservation_type'=> $arrReservationDetails->reservation_type,
+					'reservationID' => $reservationID,
+					'partySize' => $arrReservationDetails->no_of_persons,
+					'reservationDate'=> $arrReservationDetails->reservation_date,
+					'reservationTime'=> $arrReservationDetails->reservation_time,
+					'guestName'=>$userData['data']['full_name'],
+					'guestEmail'=>$userData['data']['email'],
+					'guestPhoneNo'=>$userData['data']['phone_number'],
+					'order_id'=> "#A".sprintf("%06d",$reservationID),
+					'venue' => $outlet->vendor_name,
+				);
+			}
+			
+			Mail::send('site.pages.cancel_reservation',[
+				'post_data'=>$dataPost,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+			});
+
+
+			Mail::send('site.pages.cancel_reservation',[
+				'post_data'=>$dataPost,
+			], function($message) use ($dataPost){
+				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+				$message->to('concierge@wowtables.com')->subject('CR - '.$dataPost['order_id'].' | '.date('d-F-Y',strtotime($dataPost['reservationDate'])).' , '.date('g:i a',strtotime($dataPost['reservationTime'])).' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+			});
+		}
+		
+	}
+	//-----------------------------------------------------------------
+	
+	public static function zohoEditBooking($order_id,$data){
+		$ch = curl_init();
+		$config = array(
+			//'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+			'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+			'scope' => 'creatorapi',
+			'criteria'=>'Alternate_ID='.$order_id,
+		);
+		$curlConfig = array(
+			CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/update/",
+			CURLOPT_POST           => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_POSTFIELDS     => $config + $data,
+		);
+
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  //------Added to ignore ssl----
+		curl_setopt_array($ch, $curlConfig);
+		$result = curl_exec($ch);
+
+		//  out($result);die;
+		curl_close($ch);
+	}
+	//-----------------------------------------------------------------
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
