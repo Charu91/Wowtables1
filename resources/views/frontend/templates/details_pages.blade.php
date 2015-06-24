@@ -36,7 +36,7 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>{!! $meta_information['seo_title'] or 'WowTables : Exclusive fine dining meals & experiences in your city' !!}</title>
-<meta name="title" content="{!! $seo_title or 'WowTables' !!}">
+<meta name="title" content="{!! $meta_information['seo_title'] or 'WowTables' !!}">
 <meta name="description" content="{!! $meta_information['meta_desc'] or 'Search, discover, reserve & experience fine dining in Mumbai, Delhi, Bangalore & Pune' !!}">
 <meta name="keywords" content="{!! $meta_information['meta_keywords'] or 'WowTables' !!}">    
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
