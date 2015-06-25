@@ -769,6 +769,7 @@ class ReservationDetails extends Model {
                     'venue' => $outlet->vendor_name,
                     'username' => $zoho_data['Name']
                );
+        	$arrData['addons_special_request'] = "";
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
