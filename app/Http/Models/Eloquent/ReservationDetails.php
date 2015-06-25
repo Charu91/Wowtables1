@@ -647,7 +647,7 @@ class ReservationDetails extends Model {
 		        CURLOPT_POSTFIELDS     => $config + $data,
 		    );		   
 
-		    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
+		    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  ////------Added to ignore----
 		    curl_setopt_array($ch, $curlConfig);
 		    $result = curl_exec($ch);		   
 		    curl_close($ch);    	    	
@@ -1252,7 +1252,7 @@ class ReservationDetails extends Model {
 		);
 		
 		curl_setopt_array($ch, $curlConfig);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  //------Added to ignore ssl----
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);  //------Added to ignore ssl----
 		$result = curl_exec($ch);
 
 		//  out($result);die;
@@ -1448,11 +1448,8 @@ class ReservationDetails extends Model {
 				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
 				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
-		}
-
-
+		}  		
    		
-   		echo '1';
 	}
 }
 //end of class Reservation
