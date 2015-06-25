@@ -678,9 +678,7 @@ class User {
                 IF(`fb_token` IS NOT NULL, 1, 0) AS `fb_token_exists`,
                 IF(`email` IS NOT NULL, 1, 0) AS `email_exists`,
                 `location_id`,
-                `phone_number`,
-                `points_earned`,
-                `points_spent`
+                `phone_number`
             FROM users
             WHERE `fb_token` = ? OR `email` = ?
             ORDER BY `fb_token`
@@ -805,7 +803,8 @@ class User {
                     'location_name' => $location_name,
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
-                    'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
+                    'reward_points' => $location_id + 500,
+                    //'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
                 ]
             ];
         }else{
