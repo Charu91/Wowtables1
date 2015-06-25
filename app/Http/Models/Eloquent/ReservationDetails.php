@@ -180,6 +180,8 @@ class ReservationDetails extends Model {
 				//Mail by mailchimp
 				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );
 
+				$arrData['giftCardID'] = (isset($arrData['giftCardID']) && !empty($arrData['giftCardID'])) ? $arrData['giftCardID'] : "" ;
+
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
@@ -199,7 +201,8 @@ class ReservationDetails extends Model {
 					                    'Auto_Reservation'=>'Not available',
 					                    //'telecampaign' => $campaign_id,
 					                    //'total_no_of_reservations'=> '1',
-					                    'Calling_option' => 'No'
+					                    'Calling_option' => 'No',
+					                    'gift_card_id_from_reservation' => $arrData['giftCardID']
                 						);
 				
 				//Calling zoho api method
@@ -769,6 +772,7 @@ class ReservationDetails extends Model {
                     'venue' => $outlet->vendor_name,
                     'username' => $zoho_data['Name']
                );
+        	$arrData['addons_special_request'] = "";
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
