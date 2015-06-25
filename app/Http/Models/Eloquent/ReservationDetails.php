@@ -1022,8 +1022,7 @@ class ReservationDetails extends Model {
             						->update(['status' => 'cancelled']);
            //Decrement the points_earned in users table 						
            $userReward = DB::table('users')
-		                      ->where('id', $rewardID
-		                      ->user_id)
+		                      ->where('id', $rewardID->user_id )
 		                      ->decrement('points_earned', $rewardID->points_earned);
   		}
   		else {
