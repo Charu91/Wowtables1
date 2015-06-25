@@ -442,10 +442,11 @@ class Reservation {
 				}
 
 				if( empty($row->vendor_name) && empty($row->product_name) ) {
-					$name = "";
-					$product_id = "";
-					$address = "";
-					$locality = "";
+					continue;
+					// $name = "";
+					// $product_id = "";
+					// $address = "";
+					// $locality = "";
 				}
 				else {
 					$name = (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name;
@@ -502,7 +503,7 @@ class Reservation {
 		return $arrData;
 	}
 
-	//-----------------------------------------------------------------
+	//-------------------------------------------------------------------
 	
 	/**
 	 * Reads the details of the add-ons associated with a reservation.
