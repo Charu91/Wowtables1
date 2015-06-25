@@ -1263,7 +1263,7 @@ class ReservationDetails extends Model {
 
 	public static function sendZohoMailupdate($arrData)
 	{
-		$queryResult = DB::table('reservation_details')->where('id', $reservationID)->select('user_id')->first();
+		$queryResult = DB::table('reservation_details')->where('id', $arrData['reservationID'])->select('user_id')->first();
 		$userData = Profile::getUserProfileWeb($queryResult->user_id);
 
 		if($reserveType == "experience"){
