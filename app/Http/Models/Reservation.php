@@ -105,7 +105,8 @@ class Reservation {
 							->join('locations', 'locations.id', '=', 'vl.location_id') 
 							->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
 							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
-							->where('pvl.product_id', $experienceID) 
+							->where('pvl.product_id', $experienceID)
+							->where('pvl.status','Active') 
 							->select('pvl.vendor_location_id as id', 'locations.name as area', 
 									'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
 									'pvll.max_people_per_reservation', 'pvll.min_people_increments',
