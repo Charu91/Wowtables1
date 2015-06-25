@@ -1266,7 +1266,7 @@ class ReservationDetails extends Model {
 		$queryResult = DB::table('reservation_details')->where('id', $arrData['reservationID'])->select('user_id')->first();
 		$userData = Profile::getUserProfileWeb($queryResult->user_id);
 
-		if($reserveType == "experience"){
+		if($arrData['reservationType'] == "experience"){
 			$arrProductVendorLocationId = DB::table('reservation_details')->where('id', $arrData['reservationID'])
 				->select('product_vendor_location_id')
 				->get();
