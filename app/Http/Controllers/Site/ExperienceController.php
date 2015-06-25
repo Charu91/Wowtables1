@@ -624,14 +624,16 @@ class ExperienceController extends Controller {
         $dataPost['addon']          = Input::get('add_ons');
         $dataPost['giftCardID']     = Input::get('giftcard_id');
 
-        echo "<pre>"; print_r($dataPost);
+        $count = $dataPost['addon'];
+        if($count==""){  $dataPost['addon'] =array();}
+       // echo "<pre>"; print_r($dataPost);
         $addonsText = '';
         foreach($dataPost['addon'] as $prod_id => $qty) {
             if($qty > 0){
                 echo "prod id = ".$prod_id." , qty = ".$qty;
                 $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
 
-                echo "<pre>"; print_r($addonsDetails);
+                //echo "<pre>"; print_r($addonsDetails);
                 $addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
             }
 
