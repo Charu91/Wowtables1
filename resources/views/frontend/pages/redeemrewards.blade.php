@@ -187,6 +187,22 @@
 
 <div class="container reservation-page">
 <div class="row">
+    <?php if(empty(Auth::user()->id)) { ?>
+
+        <div class="col-md-3 col-sm-3 reservation-menu">
+          <aside class="affix-top res-aside">
+            <h4 class="text-center aside-title">MY ACCOUNT</h4>
+            <div class="list-group">              
+               <a href="{{URL::to('/')}}/users/redeem-rewards" class="list-group-item active">Redeem Gourmet Points</a>                        
+            </div>
+          </aside>
+          <div class="query-contact">
+            <p>Got a question? <br> Call our Concierge at 9619551387</p>
+          </div>
+        </div>
+
+    <?php }else{?>
+
         <div class="col-md-3 col-sm-3 reservation-menu">
           <aside class="affix-top res-aside">
             <h4 class="text-center aside-title">MY ACCOUNT</h4>
@@ -206,6 +222,7 @@
             <p>Got a question? <br> Call our Concierge at 9619551387</p>
           </div>
         </div>
+     <?php } ?>
        
           
      <div class="col-md-9 col-sm-9 reservations-wrap myprofile-wrap"> 
