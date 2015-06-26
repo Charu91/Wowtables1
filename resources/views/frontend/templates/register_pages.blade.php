@@ -70,7 +70,7 @@
 
     
 
-@include('frontend.google_ana')
+{{--@include('frontend.google_ana')--}}
 <?php
 if(isset($_REQUEST['gclid'])){
     $this->input->set_cookie(array(
