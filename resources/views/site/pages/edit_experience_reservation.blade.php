@@ -103,8 +103,11 @@
                     <td class="title-content" style='float:left; padding:5px 57px 10px 70px; width:408px; background:#eab703; color:#fff; font-size:14px; font-style:italic; font-family:Times New Roman, Times, serif; letter-spacing:1px; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; position:relative; z-index:9;'>
 
                         <div style="margin: 5px 0; color: #000"><?php echo $exp_short_desc;?></div>
-
-
+                        <?php
+                        $special = trim($post_data['addons_special_request']);
+                        if(!empty($special)): ?>
+                        <div style="margin: 5px 0; color: #000">Special requests: <?php echo $special;?></div>
+                        <?php endif; ?>
                         <div style="margin: 5px 0; color: #000">Venue: <?php echo $exp_venue;?></div>
                         <div style="margin: 5px 0; color: #000">Address: <?php echo $exp_address;?></div>
 

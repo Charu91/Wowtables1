@@ -621,9 +621,29 @@ class RegistrationsController extends Controller {
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
 		$addonsArray= $this->request->input('addonsArray');
+<<<<<<< HEAD
 		$giftcard_id= $this->request->input('giftcard_id');
 
 		//	`print_r($addonsArray);
+=======
+		$count = $this->request->input('addonsArray');
+		if($count==""){  $addonsArray =array();}
+
+		$addonsText = '';
+		foreach($addonsArray as $prod_id => $qty) {
+			if($qty > 0){
+				//echo "prod id = ".$prod_id." , qty = ".$qty;
+				$addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+
+				//echo "<pre>"; print_r($addonsDetails);
+				$addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
+			}
+
+		}
+		$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		//echo " addon special request = ".$addons_special_request;
+		//echo "<pre>"; print_r($addonsArray); die;
+>>>>>>> 8fad5829ace76b2c03e4e8d40511e109c0061e90
 		if(count($addonsArray)>=1)
 		{
 			DB::delete("delete from reservation_addons_variants_details where reservation_id = '$reserv_id'");
@@ -699,6 +719,7 @@ class RegistrationsController extends Controller {
 				              'venue' => $outlet->vendor_name,
 							  'reservation_date'=> date('d-F-Y',strtotime($edit_date1)),
 							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
+							  'addons_special_request'=> $addons_special_request,
 
 			);
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;

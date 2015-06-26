@@ -140,8 +140,9 @@ class ReservationDetails extends Model {
 					                    'Experience_Title' => $aLaCarteDetail['name'].' - Ala Carte',
 					                    'No_of_People' => $arrData['partySize'],
 					                    'Date_of_Visit' => date('d-M-Y', strtotime($arrData['reservationDate'])),
-					                    'Time' => date("G:ia", strtotime($arrData['reservationTime'])),
+					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+					                    'Alternate_ID' =>  'A'.sprintf("%06d",$reservation_id['id']),					                    
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
 					                    'API_added' => 'Mobile',
@@ -218,8 +219,9 @@ class ReservationDetails extends Model {
 					                    'Experience_Title' => $productDetail['vendor_name'].' - '.$productDetail['descriptive_title'],
 					                    'No_of_People' => $arrData['partySize'],
 					                    'Date_of_Visit' => date('d-M-Y', strtotime($arrData['reservationDate'])),
-					                    'Time' => date("G:ia", strtotime($arrData['reservationTime'])),
+					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
+					                    'Alternate_ID' =>  'E'.sprintf("%06d",$reservation_id['id']),
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
 					                    'API_added' => 'Mobile',
