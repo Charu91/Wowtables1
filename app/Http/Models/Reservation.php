@@ -461,7 +461,7 @@ class Reservation {
 									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
 									'status' => (empty($row->reservation_status)) ? "" : $row->reservation_status,
 									'date' => (empty($row->reservation_date)) ? "" : $row->reservation_date,
-									'time' => (empty($row->reservation_time)) ? "" : $row->reservation_time,
+									'time' => (empty($row->reservation_time)) ? "" : date('H:m:s',strtotime($row->reservation_time)),
 									'no_of_persons' => (empty($row->no_of_persons)) ? "" : $row->no_of_persons,
 									'name' => $name,
 									'type' => (empty($row->reservation_type)) ? "" : $row->reservation_type,
