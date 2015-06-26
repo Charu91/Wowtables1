@@ -22,6 +22,7 @@ use DB;
 use Auth;
 use Redirect;
 use Request;
+use Mail;
 class ProfileController extends Controller {
 
 
@@ -142,6 +143,138 @@ class ProfileController extends Controller {
 		                ->with('flash_notice', '');
 		     }
 	}
+
+
+		/**
+	 * Handles requst for displaying the redeemRewards page.
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @param	string	$access_token
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function redeemRewards()
+	{
+		$user_array = Session::all();
+		//$userID =Session::get('id');
+		//this code is start in header and footer page.
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+		$arrResponse['user']   = Auth::user();
+
+        $city_id    = Input::get('city');        
+        $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+        //this code is start in header and footer page.
+       $id = Session::get('id');
+		
+		//$data=Profile::getUserProfileWeb($id);
+
+        return view('frontend.pages.redeemrewards',$arrResponse);
+	}
+
+	/**
+	 * Handles requst for displaying the redeemRewards page.
+	 * record of the logged in user.
+	 * 
+	 * @access	public
+	 * @param	string	$access_token
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function makeGiftcard()
+	{
+		$user_id = Input::get('gc_user_id');
+		$gc_points = Input::get('gc_points');
+		$gc_price = Input::get('gc_price');
+		Auth::user()->points_earned;
+		$email_id = Auth::user()->email ;
+		
+		$set_giftcard_id = 0;
+		if( $gc_points <= Auth::user()->points_earned-Auth::user()->points_spent ){
+				//echo "points avaiable";
+
+				DB::insert("insert into redeem_giftcard(user_id)values($user_id)");
+				$last_id = DB::select("select id from redeem_giftcard order by id desc limit 1");
+				$membership_query = DB::select("select attribute_value from user_attributes_varchar where user_id=$user_id limit 1");
+				//echo "sad = ".$last_id;
+				$membership_number = $membership_query[0]->attribute_value;
+
+				if(empty($last_id)){
+					$set_giftcard_id = 1;
+				}else{
+					$set_giftcard_id = $last_id[0]->id;
+				}
+				
+			
+				$quantity = 1;
+				if($gc_price == 500){
+					$reward_id = 1;
+					$description = "Redeemed Rs.500 - GPRED".sprintf("%04d",$set_giftcard_id);	
+				}else if($gc_price == 1000){
+					$reward_id = 2;
+					$description = "Redeemed Rs.1000 - GPRED".sprintf("%04d",$set_giftcard_id);
+				}else if($gc_price == 1500){
+					$reward_id = 3;
+					$description = "Redeemed Rs.1500 - GPRED".sprintf("%04d",$set_giftcard_id);
+				}
+				$pointsRedeemed = $quantity * $gc_points;
+				DB::insert("insert into reward_points_redeemed(user_id,order_id,points_redeemed,description)
+							values('$user_id','$reward_id','$pointsRedeemed','$description')");
+				
+				
+				$spent = $gc_points * $quantity;
+				
+				DB::update('UPDATE users SET points_spent = points_spent + '.$spent.' WHERE id = '.$user_id);
+				
+				$sent = Mail::send('site.pages.rewards_request_mail',
+						['quantity'=> $quantity,
+						 'email_id'=> $email_id,
+						 'membership_number'=> $membership_number,
+						 'description'=> $description,
+						 'points_spent'=> $spent,
+						 'set_giftcard_id'=> $set_giftcard_id,], function($message) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+						$message->to('kailash@gourmetitup.com')->subject('Rewards Request');
+						//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+				});
+				if($sent)
+				{
+					$msg = 1;
+				}
+				else
+				{
+					$msg = 2;
+				}
+
+				 Mail::send('site.pages.rewards_request_mail_user',
+						['quantity'=> $quantity,
+						 'email_id'=> $email_id,
+						 'membership_number'=> $membership_number,
+						 'description'=> $description,
+						 'points_spent'=> $spent,
+						 'set_giftcard_id'=> $set_giftcard_id,], function($message) use ($email_id) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+						$message->to($email_id)->subject('Your Gourmet Rewards redemption request was successful');
+						//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+				});
+				
+			}else{
+				$msg = 3;
+			}
+			echo json_encode ( array('message' => $msg,'giftcard_id' => 'GPRED'.sprintf("%04d",$set_giftcard_id)));
+	}
+
 
 
 

@@ -458,9 +458,12 @@ agm.cpkbandra@jsmcorp.in
                   <div class="panel-body" id="timeajax">
                        
                 </div>
+              </div>                  
               </div>
-                                 
-              </div>
+
+            <div id="my_addons">
+            </div>
+
               <a id="save_changes" class="btn btn-warning" href="javascript:" style="margin-left: 32%;display:none;">Confirm Changes</a> 
            
             <div class="text-center" >
@@ -700,6 +703,20 @@ agm.cpkbandra@jsmcorp.in
                });
 
                   });
+
+             $("body").delegate("#party_size1", "change", function() {
+                counter = $(this).val();
+                //alert(counter);
+                str = "";
+                for (var e = 0; e <= counter; e++) {
+                    str += "<option value='" + e + "'>" + e + "</option>"
+                }
+                $(".meals select").html(str);
+                 });
+
+             $("body").delegate(".myaddonselect", "change", function() {
+                $('#save_changes').show();
+                 });
 
             $('#locations1').change(function(){
               $('#party_edit1').trigger('click'); 

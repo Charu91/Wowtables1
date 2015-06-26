@@ -307,6 +307,14 @@ Route::post('/users/myreserv_locality', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::post('/users/myreserv_addons', [
+    'uses' => 'Site\RegistrationsController@myReservAddons',
+    'as' => 'myReservLocality',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::post('/users/productVendorLoad', [
     'uses' => 'Site\RegistrationsController@productVendorLoad',
     'as' => 'productVendorLoad',
@@ -334,6 +342,20 @@ Route::get('/users/updateinfo', [
 Route::post('/users/updateUserinfo', [
     'uses' => 'Site\ProfileController@updateUserinfo',
     'as' => 'updateUserinfo',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::get('/users/redeem-rewards', [
+    'uses' => 'Site\ProfileController@redeemRewards',
+    'as' => 'redeemRewards',
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/rewards/make_giftcard', [
+    'uses' => 'Site\ProfileController@makeGiftcard',
+    'as' => 'makeGiftcard',
     'middleware' => ['auth'],
     'where' =>[],
     'domain' => env('WEBSITE_URL')
