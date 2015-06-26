@@ -108,6 +108,11 @@
                         if(!empty($special)): ?>
                         <div style="margin: 5px 0; color: #000">Special requests: <?php echo $special;?></div>
                         <?php endif; ?>
+                        <?php
+                        $giftcardID = trim($post_data['giftcard_id']);
+                        if(!empty($giftcardID) && ($giftcardID != '0' || $giftcardID != 0)): ?>
+                        <div style="margin: 5px 0; color: #000">Gift Card ID: <?php echo $giftcardID;?></div>
+                        <?php endif; ?>
                         <div style="margin: 5px 0; color: #000">Venue: <?php echo $exp_venue;?></div>
                         <div style="margin: 5px 0; color: #000">Address: <?php echo $exp_address;?></div>
 
