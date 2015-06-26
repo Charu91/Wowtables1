@@ -493,7 +493,7 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '.$dataPost['venue'].' has been cancelled');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
@@ -665,7 +665,7 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '.$dataPost['venue'].' has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
@@ -741,7 +741,7 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '.$dataPost['venue'].' has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 

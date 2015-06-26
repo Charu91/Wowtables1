@@ -546,7 +546,9 @@ class User {
         DB::beginTransaction();
 
         $user = DB::table('users')
-                        ->select('password', 'old_password', 'id', 'location_id', 'phone_number','full_name', 'role_id', 'fb_token', 'type')
+                        ->select('password', 'old_password', 'id', 'location_id', 'phone_number',
+                                'full_name', 'role_id', 'fb_token', 'type', 'points_earned',
+                                'points_spent')
                         ->where('email', $data['email'])
                         ->first();
         if($user) {
@@ -637,7 +639,7 @@ class User {
                             'location_name' => $location_name,
                             'phone_number' => (string)$user->phone_number,
                             'full_name' => $user->full_name,
-                            'reward_points' => $user->id + 500,
+                            'reward_points' => $user->points_earned -  $user->points_spent,
                         ]
                     ];
                 }else{
@@ -802,6 +804,7 @@ class User {
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
                     'reward_points' => $location_id + 500,
+                    'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
                 ]
             ];
         }else{
