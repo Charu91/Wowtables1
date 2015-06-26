@@ -621,7 +621,7 @@ if (strpos($url,'alacarte') !== false) {
            <?php endif;?>
       <button onClick="window.location.href='{{URL::to('/')}}/users/myreservations'" type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">My Reservations</button>
       <button type="button" onClick="window.location.href='{{URL::to('/')}}/ users/myaccount'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">My Profile</button>
-      <button type="button" onClick="window.location.href='{{URL::to('/')}}/ redeem-rewards'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Redeem Gourmet Pts. <span style="padding-left:5px !important;"></span>(<?php //echo @$user['points_earned']-@$user['points_spent']; ?> Pts.)</button>
+      <button type="button" onClick="window.location.href='{{URL::to('/')}}/ users/redeem-rewards'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Redeem Gourmet Pts. <span style="padding-left:5px !important;"></span>(<?php //echo @$user['points_earned']-@$user['points_spent']; ?> Pts.)</button>
       <button type="button" onClick="window.location.href='{{URL::to('/')}}/ index.php/users/logout'" class="btn btn-primary btn-block wowtables_big_btn">Logout</button>
       <?php endif; ?>
       </div>
@@ -971,7 +971,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
                   <li><a href="#">Corporate Solutions</a></li>
                   <li><a href="#">Parties & Private Events</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
+                  <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
                   <li><a href="#">Terms of Use</a></li>
                   <li><a href="#">Privacy Statement</a></li>
                 </ul>
@@ -1007,7 +1007,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                 <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
                 <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
                 <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
-                <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
+                <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
                 <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
                 <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
               </ul>

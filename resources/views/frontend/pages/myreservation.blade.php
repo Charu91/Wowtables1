@@ -27,7 +27,7 @@ exit;*/
                   My Reservations
                 </a>
                 <a href="{{URL::to('/')}}/users/myaccount" class="list-group-item">My Profile</a>
-                            <a href="http://wowtables.com/redeem-rewards" class="list-group-item ">
+                            <a href="{{URL::to('/')}}/users/redeem-rewards" class="list-group-item ">
                 Redeem Gourmet Points
               </a>
                  
@@ -463,6 +463,8 @@ agm.cpkbandra@jsmcorp.in
 
             <div id="my_addons">
             </div>
+            <div id="my_giftcard">
+            </div>
 
               <a id="save_changes" class="btn btn-warning" href="javascript:" style="margin-left: 32%;display:none;">Confirm Changes</a> 
            
@@ -711,10 +713,14 @@ agm.cpkbandra@jsmcorp.in
                 for (var e = 0; e <= counter; e++) {
                     str += "<option value='" + e + "'>" + e + "</option>"
                 }
-                $(".meals select").html(str);
+                $(".meals2 select").html(str);
                  });
 
              $("body").delegate(".myaddonselect", "change", function() {
+                $('#save_changes').show();
+                 });
+
+             $("body").delegate("#giftcard_id", "keyup", function() {
                 $('#save_changes').show();
                  });
 
