@@ -206,7 +206,16 @@ class ProfileController extends Controller {
 				$last_id = DB::select("select id from redeem_giftcard order by id desc limit 1");
 				$membership_query = DB::select("select attribute_value from user_attributes_varchar where user_id=$user_id limit 1");
 				//echo "sad = ".$last_id;
-				$membership_number = $membership_query[0]->attribute_value;
+				$getMembership_number = $membership_query[0]->attribute_value;
+
+				if(empty($getMembership_number))
+				{
+					$membership_number = 'NULL';
+				}
+				else
+				{
+					$membership_number = $membership_query[0]->attribute_value;
+				}
 
 				if(empty($last_id)){
 					$set_giftcard_id = 1;
@@ -244,7 +253,7 @@ class ProfileController extends Controller {
 						 'set_giftcard_id'=> $set_giftcard_id,], function($message) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-						$message->to('kailash@gourmetitup.com')->subject('Rewards Request');
+						$message->to('concierge@wowtables.com')->subject('Rewards Request');
 						//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 				});
 				if($sent)
