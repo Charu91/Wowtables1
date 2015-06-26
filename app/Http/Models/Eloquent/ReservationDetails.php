@@ -54,6 +54,9 @@ class ReservationDetails extends Model {
 		//creating a new instance of the table
 		$reservation = new ReservationDetails;
 		
+		$date = date_create($arrData['reservationTime']);
+  		$arrData['reservationTime'] = date_format($date,"h:i A");
+
 		//initializing the data
 		$reservation->reservation_status = 'new';
 		$reservation->reservation_date = $arrData['reservationDate'];
@@ -313,6 +316,9 @@ class ReservationDetails extends Model {
 	public static function updateReservationDetail($arrData) {
 		//array to hold response
 		$arrResponse = array();
+
+		$date = date_create($arrData['reservationTime']);
+  		$arrData['reservationTime'] = date_format($date,"h:i A");
 		
 		$queryResult = Self::where('id', $arrData['reservationID'])
 						//->where('user_id',$arrData[])
