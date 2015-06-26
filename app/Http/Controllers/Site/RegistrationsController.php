@@ -207,6 +207,49 @@ class RegistrationsController extends Controller {
 	}
 
 	/**
+	 * Handles requests for partysizeajax a reservation.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function myReservGiftCard()
+	{
+		$res_id = $this->request->input('res_id');
+		$giftcard_id = DB::select("select giftcard_id from reservation_details where id = $res_id");
+
+		if(empty($giftcard_id))
+		{?>
+
+		<div class="panel panel-default">
+                <div class="panel-heading active">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Gift card Id </a>
+                      <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)">
+                        
+                  </h4>
+                </div>
+              </div>
+
+		<?php }
+		else
+		{?>
+		<div class="panel panel-default">
+                <div class="panel-heading active">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Gift card Id </a>
+                      <input type="text" name="giftcard_id" id="giftcard_id" class="form-control" placeholder="Gift card Id (If available)" value="<?php echo $giftcard_id[0]->giftcard_id;?>">
+                        
+                  </h4>
+                </div>
+              </div>
+
+		<?php }
+	}
+
+	/**
 	 * Handles requests for myReservLocality a reservation.
 	 * 
 	 * @access	public
@@ -289,7 +332,7 @@ class RegistrationsController extends Controller {
 		if(count($addOnArr)>0)
 		{?>
 			<div class="panel panel-default">
-                <div class="panel-heading active meals">
+                <div class="panel-heading active meals2">
                   <h4 class="panel-title">
                      <a href="javascript:" style="text-decoration: none;">
                       Meal options</a>
@@ -578,7 +621,29 @@ class RegistrationsController extends Controller {
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
 		$addonsArray= $this->request->input('addonsArray');
+
+		$giftcard_id= $this->request->input('giftcard_id');
+
 		//	`print_r($addonsArray);
+
+		$count = $this->request->input('addonsArray');
+		if($count==""){  $addonsArray =array();}
+
+		$addonsText = '';
+		foreach($addonsArray as $prod_id => $qty) {
+			if($qty > 0){
+				//echo "prod id = ".$prod_id." , qty = ".$qty;
+				$addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+
+				//echo "<pre>"; print_r($addonsDetails);
+				$addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
+			}
+
+		}
+		$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		//echo " addon special request = ".$addons_special_request;
+		//echo "<pre>"; print_r($addonsArray); die;
+
 		if(count($addonsArray)>=1)
 		{
 			DB::delete("delete from reservation_addons_variants_details where reservation_id = '$reserv_id'");
@@ -596,7 +661,7 @@ class RegistrationsController extends Controller {
 			DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',vendor_location_id='$locality_val',reservation_status='edited' where id = '$reserv_id'");
 		}
 		//exit;
-		
+		DB::update("update reservation_details set giftcard_id='$giftcard_id' where id = '$reserv_id'");
 
 		$userID = Session::get('id');
 		$userData = Profile::getUserProfileWeb($userID);
@@ -654,6 +719,7 @@ class RegistrationsController extends Controller {
 				              'venue' => $outlet->vendor_name,
 							  'reservation_date'=> date('d-F-Y',strtotime($edit_date1)),
 							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
+							  'addons_special_request'=> $addons_special_request,
 
 			);
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
