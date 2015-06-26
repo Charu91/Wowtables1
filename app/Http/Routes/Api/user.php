@@ -31,3 +31,5 @@ Route::put('api/set_phone_location', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::post('api/version', 'Api\CheckVersionController@checkVersion');
