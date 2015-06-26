@@ -493,10 +493,10 @@ class AlacarteController extends Controller {
                     'post_data'=>$dataPost,
                     'productDetails'=>$vendorDetails,
                     'reservationResponse'=>$reservationResponse,
-                ], function($message){
+                ], function($message) use ($mergeReservationsArray){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                    $message->to(Input::get('email'))->subject('Your WowTables Reservation');
+                    $message->to(Input::get('email'))->subject('Your WowTables Reservation at '.$mergeReservationsArray['venue']);
                     //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
                 });
 
