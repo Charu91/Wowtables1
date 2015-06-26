@@ -309,7 +309,15 @@ Route::post('/users/myreserv_locality', [
 
 Route::post('/users/myreserv_addons', [
     'uses' => 'Site\RegistrationsController@myReservAddons',
-    'as' => 'myReservLocality',
+    'as' => 'myReservAddons',
+    'middleware' => ['auth'],
+    'where' =>[],
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/users/myreserv_giftcard', [
+    'uses' => 'Site\RegistrationsController@myReservGiftCard',
+    'as' => 'myReservGiftCard',
     'middleware' => ['auth'],
     'where' =>[],
     'domain' => env('WEBSITE_URL')

@@ -531,6 +531,30 @@ $(document).ready(function() {
                         }
                    });
 
+                      $.ajax({
+                      url: "/users/myreserv_giftcard",
+                      type: "post",
+                      timeout: 3000,
+                      data: {
+                          res_id:res_id
+                      },
+                      beforeSend:function()
+                        {
+                        $("#my_giftcard").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
+                        },
+                      success: function(e) {
+                         console.log(e);
+                         $('#my_giftcard').html(e);
+                      },
+                        error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
+                   });
+
                 }
 
                $.ajax({
@@ -1093,6 +1117,7 @@ $(document).ready(function() {
             addonsArray[prod_id]= select_val;
             return addonsArray;
         });
+        giftcard_id = $("#giftcard_id").val();
         //alert(addons);
         //console.log(addonsArray);
         last_reserv_date = $("#last_reserv_date").val();
@@ -1140,6 +1165,7 @@ $(document).ready(function() {
                         reserv_id: res_id,
                         address: address,
                         addonsArray:addonsArray,
+                        giftcard_id:giftcard_id,
                         locality_val:locality_val,
                         party_size: party_size,
                         vendor_details:vendor_details,
