@@ -737,10 +737,10 @@ class ReservationDetails extends Model {
                     'post_data'=> $post_data,
                     'productDetails'=>$vendorDetails,
                     'reservationResponse'=>$reservationResponse,
-                ], function($message) use ($mergeReservationsArray, $arrData){                
+                ], function($message) use ($mergeReservationsArray, $arrData, $outlet){                
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');
+                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation at'. $outlet->vendor_name);
                 });
                 
                 $emails = ['kunal@wowtables.com', 'deepa@wowtables.com'];	
@@ -793,9 +793,9 @@ class ReservationDetails extends Model {
                     'post_data'=> $arrData,
                     'productDetails'=>$productDetails,
                     'reservationResponse'=>$reservationResponse,
-                ], function($message) use ($mergeReservationsArray, $arrData){
+                ], function($message) use ($mergeReservationsArray, $arrData, $outlet){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation');                    
+                    $message->to($arrData['guestEmail'])->subject('Your WowTables Reservation  at' . $outlet->vendor_name);                    
                 });
 
                 $emails = ['kunal@wowtables.com', 'deepa@wowtables.com'];
@@ -1233,7 +1233,7 @@ class ReservationDetails extends Model {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at'. $outlet->vendor_name . 'has been cancelled');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 			
@@ -1355,10 +1355,10 @@ class ReservationDetails extends Model {
 				'outlet'=> $outlet,
 				'post_data'=>$dataPost,
 				'productDetails'=>$productDetails,
-			], function($message) use ($dataPost){
+			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation'. $outlet->vendor_name. 'has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
@@ -1444,10 +1444,10 @@ class ReservationDetails extends Model {
 				'outlet'=> $outlet,
 				'post_data'=>$dataPost,
 				'productDetails'=>$vendorDetails,
-			], function($message) use ($dataPost){
+			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation'. $outlet->vendor_name. 'has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
