@@ -540,7 +540,7 @@ $(document).ready(function() {
                       },
                       beforeSend:function()
                         {
-                        $("#my_giftcard").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
+                        $("#my_giftcard").html('l<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
                         },
                       success: function(e) {
                          console.log(e);

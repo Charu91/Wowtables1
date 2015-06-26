@@ -621,11 +621,9 @@ class RegistrationsController extends Controller {
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
 		$addonsArray= $this->request->input('addonsArray');
-<<<<<<< HEAD
 		$giftcard_id= $this->request->input('giftcard_id');
-
 		//	`print_r($addonsArray);
-=======
+
 		$count = $this->request->input('addonsArray');
 		if($count==""){  $addonsArray =array();}
 
@@ -643,7 +641,7 @@ class RegistrationsController extends Controller {
 		$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
 		//echo " addon special request = ".$addons_special_request;
 		//echo "<pre>"; print_r($addonsArray); die;
->>>>>>> 8fad5829ace76b2c03e4e8d40511e109c0061e90
+
 		if(count($addonsArray)>=1)
 		{
 			DB::delete("delete from reservation_addons_variants_details where reservation_id = '$reserv_id'");
