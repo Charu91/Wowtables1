@@ -264,6 +264,63 @@ class RegistrationsController extends Controller {
 	}
 
 	//-----------------------------------------------------------------
+
+	/**
+	 * Handles requests for myReservLocality a reservation.
+	 * 
+	 * @access	public
+	 * @return	response
+	 * @since	1.0.0
+	 */
+	public function myReservAddons()
+	{
+		$product_id = $this->request->input('product_id');
+		$res_id = $this->request->input('res_id');
+		$no_of_persons = $this->request->input('no_of_persons');
+		$addOnArr = $this->experiences_model->readExperienceAddOns($product_id);
+		$addOnSelect = DB::select("select no_of_persons as person_select,options_id as optionsId from reservation_addons_variants_details where reservation_id = $res_id");
+		$arrDataAddonSelect = array();
+		foreach ($addOnSelect as $value) {
+			$arrDataAddonSelect[] = array('noOfPerson'=>$value->person_select,'optionsId'=>$value->optionsId);
+		}
+		//$addOnArr['addOnSelect'] = $arrDataAddonSelect;
+		
+		//exit;*/
+		if(count($addOnArr)>0)
+		{?>
+			<div class="panel panel-default">
+                <div class="panel-heading active meals">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Meal options</a>
+                      <a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"></a><br>
+                  <?php
+		                        foreach($addOnArr as $key =>$addOnDetails): 
+		                        	$addOnArr['addOnSelect'] = $arrDataAddonSelect;?> 
+		                       <?php $addonproduct_id = $addOnDetails['prod_id'];
+		                       $addOnSelect = array();
+		                       $addOnSelect = DB::select("select no_of_persons as person_select,options_id as optionsId from reservation_addons_variants_details where reservation_id = $res_id and options_id=$addonproduct_id");?>
+		                        <span><?php echo $addOnDetails['reservation_title'];  
+		                        if(count($addOnSelect)=='0') {$addon_value='0';}else{$addon_value=$addOnSelect[0]->person_select;} //echo $addOnSelect[0]->person_select;?></span>   
+		              <select id="add_ons" data-value="<?php echo $addOnDetails['prod_id'];?>" name="add_ons[<?php echo $addOnDetails['prod_id'];?>]"  class="pull-right space myaddonselect">
+		                    <option value="0">0</option>
+		                    <?php for($i=1;$i<=$no_of_persons;$i++){?>
+		                    <option value="<?php echo $i;?>" <?php if($addon_value==$i) {echo 'selected';}?> ><?php echo $i;?></option>
+		                    <?php } ?>
+		             	</select>
+		             	<br>
+		             	<br>
+		             	<input type ="hidden" name="add_prod_id[]" value="<?php echo $addOnDetails['prod_id'];?>">
+                        <?php endforeach; //print_r($addOnArr);?>
+                  </h4>
+                </div>
+              </div>
+		
+		<?php }
+
+	}
+
+	//-----------------------------------------------------------------
   
   /**
    * Returns the locations where product can be found.
@@ -506,6 +563,7 @@ class RegistrationsController extends Controller {
 		$array = explode(',', $vendor_details);
 		$reserveType = $array['0'];
 		//echo "sd = ".$reserveType; die;
+		
 		$reserv_id = $this->request->input('reserv_id');
 		$party_size = $this->request->input('party_size');
 		$locality_val = $this->request->input('locality_val');
@@ -519,6 +577,14 @@ class RegistrationsController extends Controller {
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
 
+		$addonsArray= $this->request->input('addonsArray');
+		//	`print_r($addonsArray);
+		if(count($addonsArray)>=1)
+		{
+			DB::delete("delete from reservation_addons_variants_details where reservation_id = '$reserv_id'");
+			$this->experiences_model->addReservationAddonDetails($reserv_id, $addonsArray);
+		}
+		//exit;
 		if($locality_val=="" || $locality_val=='0')
 		{
 			//echo 'null';

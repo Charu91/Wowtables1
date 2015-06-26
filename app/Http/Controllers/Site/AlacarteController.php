@@ -151,8 +151,7 @@ class AlacarteController extends Controller {
         //echo "==".$alacarte_id    = Vendor::where(['slug' => $alaslug])->first()->id;
         $aLaCarteID = DB::table('vendor_locations')->where('slug',$alaslug)->first()->id;
         $arrALaCarte = $this->alacarte_model->getALaCarteDetails($aLaCarteID);
-        print_r($arrALaCarte);
-        exit;
+
         $data['arrALaCarte']= $arrALaCarte;
         $data['reserveData']            = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates']            = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
