@@ -804,7 +804,7 @@ class User {
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
                     'reward_points' => $location_id + 500,
-                    //'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
+                    'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
                 ]
             ];
         }else{
