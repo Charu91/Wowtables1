@@ -57,7 +57,8 @@ class Experiences {
 							->join('vendors','vendors.id','=','vl.vendor_id')
 							->leftJoin('product_attributes_integer as pai', 'pai.product_id','=','products.id')
 							->leftJoin('product_attributes as pa2','pa2.id','=','pai.product_attribute_id')
-							->where('products.id',$experienceID);							
+							->where('products.id',$experienceID)
+							->where('pvl.status','Active');							
 		
 		//adding additional parameters in case of simple experience
 		if($queryType && $queryType->type == 'simple') {			
@@ -218,6 +219,7 @@ class Experiences {
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
 							//->where('pvl.id','!=',$pvlID)
+							->where('pvl.status','Active')
 							->get();
 		
 		//array to hold location details

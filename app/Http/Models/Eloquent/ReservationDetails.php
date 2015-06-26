@@ -120,7 +120,9 @@ class ReservationDetails extends Model {
 				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
 
 				//Increment the Reservation count by 1
-				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
+				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] ); 
+				//Increment reward point in user table
+				DB::table('users')->where('id', $userID)->increment('points_earned', $aLaCarteDetail['reward_point']);
 				
 				//Insert record for new reward point
 				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);
@@ -174,6 +176,9 @@ class ReservationDetails extends Model {
 				//Increment the Reservation count by 1
 				$reservationCount = self::incrementReservationCount($userID, $arrData['reservationType'] );  
 				
+				//Insert reward point in user table
+				DB::table('users')->where('id', $userID)->increment('points_earned', $productDetail['reward_point']);
+
 				//Insert record for new reward point
 				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point'], $reservation_id['id']);	 
 				
@@ -1008,13 +1013,17 @@ class ReservationDetails extends Model {
 
   		$rewardID = DB::table('reward_points_earned')
   								->where('reservation_id', $reservationID)
-  								->select('id')
+  								->select('id','user_id', 'points_earned')
   								->first();
 
   		if($rewardID) {
   			$rewardCancelStatus = DB::table('reward_points_earned')
   									->where('id', $rewardID->id)
             						->update(['status' => 'cancelled']);
+           //Decrement the points_earned in users table 						
+           $userReward = DB::table('users')
+		                      ->where('id', $rewardID->user_id )
+		                      ->decrement('points_earned', $rewardID->points_earned);
   		}
   		else {
   				$rewardCancelStatus = 0;

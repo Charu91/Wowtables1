@@ -130,12 +130,13 @@ class Schedules {
 						->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
 						->where('schedules.day_short',$day)
 						//->where('pvlbs.product_vendor_location_id', $queryMaxPVLI->pvl_id)
-						->where('pvlbs.product_vendor_location_id', function($query) use($productID) 
+						/*->where('pvlbs.product_vendor_location_id', function($query) use($productID) 
 								{
 									$query->select(DB::raw('MAX(id) as pvl_id'))
 											->from('product_vendor_locations as pvl')
 											->where('product_id',$productID);
-						})
+						})*/
+						->where('pvlbs.product_vendor_location_id',$productVendorLocationID)
 						->select('schedules.id','ts.time','ts.slot_type')
 						->get();
 						

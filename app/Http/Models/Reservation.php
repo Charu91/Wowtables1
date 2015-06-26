@@ -105,7 +105,8 @@ class Reservation {
 							->join('locations', 'locations.id', '=', 'vl.location_id') 
 							->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
 							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
-							->where('pvl.product_id', $experienceID) 
+							->where('pvl.product_id', $experienceID)
+							->where('pvl.status','Active') 
 							->select('pvl.vendor_location_id as id', 'locations.name as area', 
 									'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
 									'pvll.max_people_per_reservation', 'pvll.min_people_increments',
@@ -460,7 +461,7 @@ class Reservation {
 									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
 									'status' => (empty($row->reservation_status)) ? "" : $row->reservation_status,
 									'date' => (empty($row->reservation_date)) ? "" : $row->reservation_date,
-									'time' => (empty($row->reservation_time)) ? "" : $row->reservation_time,
+									'time' => (empty($row->reservation_time)) ? "" : date('H:i:s',strtotime($row->reservation_time)),
 									'no_of_persons' => (empty($row->no_of_persons)) ? "" : $row->no_of_persons,
 									'name' => $name,
 									'type' => (empty($row->reservation_type)) ? "" : $row->reservation_type,
