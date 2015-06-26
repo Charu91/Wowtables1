@@ -573,7 +573,7 @@ if (strpos($url,'alacarte') !== false) {
                     <?php endif;?>
                     <li> <a href="{{URL::to('/')}}/users/myreservations">My Reservations</a></li>
                     <li><a href="{{URL::to('/')}}/users/myaccount">My Profile</a></li>
-                    <li><a href="{{URL::to('/')}}/redeem-rewards">Redeem Points</a></li>
+                    <li><a href="{{URL::to('/')}}/users/redeem-rewards">Redeem Points</a></li>
                     <?php 
                     $logout = Cookie::get('token');
                     if(isset($user_array['facebook_id']) && !empty($user_array['facebook_id'])){
@@ -933,19 +933,19 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav block-list foot-menu">
-                  <li class=""><a href="{{URL::to('/')}}/about-us">About Us</a></li>
+                  <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
                   <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                  <li><a href="{{URL::to('/')}}/press">Press</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
                   <li><a href="#">Careers</a></li>
                   <li><a href="#">Partner With Us</a></li>
                   <li><a href="#">How It Works</a></li>
-                  <li><a href="{{URL::to('/')}}/faq">FAQ</a></li>
-                  <li><a href="{{URL::to('/')}}/contact-us">Contact Us</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
           <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                  <li><a href="{{URL::to('/')}}/gift-cards">Gift cards</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
                   <li><a href="#">Corporate Solutions</a></li>
                   <li><a href="#">Parties & Private Events</a></li>
-                  <li><a href="{{URL::to('/')}}/redeem-rewards">Gourmet Rewards</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
                   <li><a href="#">Terms of Use</a></li>
                   <li><a href="#">Privacy Statement</a></li>
                 </ul>
@@ -955,22 +955,22 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="col-md-3 col-sm-6 hidden-xs">
             <h4 class="foot-widget-title">Company</h4>
               <ul class="block-list foot-menu">
-                <li><a href="{{URL::to('/')}}/about-us">About Us</a></li>
+                <li><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
                 <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                <li><a href="{{URL::to('/')}}/press">Press</a></li>
-                <li><a href="{{URL::to('/')}}/careers">Careers</a></li>
-                <li><a href="{{URL::to('/')}}/restaurant-partnerships">Restaurateurs</a></li>
-                <li><a href="{{URL::to('/')}}/advertising">Brand Partnerships</a></li>  
+                <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
+                <li><a href="{{URL::to('/')}}/pages/careers">Careers</a></li>
+                <li><a href="{{URL::to('/')}}/pages/restaurant-partnerships">Restaurateurs</a></li>
+                <li><a href="{{URL::to('/')}}/pages/advertising">Brand Partnerships</a></li>  
               </ul>
           </div>          
           <div class="col-md-3 col-sm-6 hidden-xs">
             <h4 class="foot-widget-title">Help</h4>
               <ul class="block-list foot-menu">
                <!-- <li><a href="#">How It Works</a></li> -->
-                <li><a href="{{URL::to('/')}}/faq">FAQ</a></li>
-                <li><a href="{{URL::to('/')}}/contact-us">Contact Us</a></li>
+                <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
                <!-- <li><a href="{{URL::to('/')}}/sitemap">Sitemap</a></li>-->
-        <li><a href="{{URL::to('/')}}/sitemap">Sitemap</a></li>
+        <li><a href="{{URL::to('/')}}/pages/sitemap">Sitemap</a></li>
               </ul>
           </div>
           <div class="clearfix visible-sm"></div>
@@ -978,12 +978,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
             <h4 class="foot-widget-title">More</h4>
               <ul class="block-list foot-menu">
         <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                <li><a href="{{URL::to('/')}}/gift-cards">Gift cards</a></li>
-                <li><a href="{{URL::to('/')}}/corporate">Corporate Solutions</a></li>
-                <li><a href="{{URL::to('/')}}/event-planning">Parties & Private Events</a></li>
-                <li><a href="{{URL::to('/')}}/redeem-rewards">Gourmet Rewards</a></li>
-                <li><a href="{{URL::to('/')}}/terms-of-use">Terms of Use</a></li>
-                <li><a href="{{URL::to('/')}}/privacy-policy">Privacy Statement</a></li>
+                <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
+                <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
+                <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
+                <li><a href="{{URL::to('/')}}/pages/redeem-rewards">Gourmet Rewards</a></li>
+                <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
+                <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
               </ul>
           </div>
           <div class="col-md-3 col-sm-6">

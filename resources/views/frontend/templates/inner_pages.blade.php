@@ -592,7 +592,7 @@ if (strpos($url,'alacarte') !== false) {
                     <?php endif;?>
                     <li> <a href="{{URL::to('/')}}/users/myreservations">My Reservations</a></li>
                     <li><a href="{{URL::to('/')}}/users/myaccount">My Profile</a></li>
-                    <li><a href="{{URL::to('/')}}/redeem-rewards">Redeem Points</a></li>
+                    <li><a href="{{URL::to('/')}}/users/redeem-rewards">Redeem Points</a></li>
                     <?php 
                     $logout = Cookie::get('token');
                     if(isset($user_array['facebook_id']) && !empty($user_array['facebook_id'])){
