@@ -630,7 +630,7 @@ class ExperienceController extends Controller {
         $addonsText = '';
         foreach($dataPost['addon'] as $prod_id => $qty) {
             if($qty > 0){
-                echo "prod id = ".$prod_id." , qty = ".$qty;
+                //echo "prod id = ".$prod_id." , qty = ".$qty;
                 $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
 
                 //echo "<pre>"; print_r($addonsDetails);
@@ -790,10 +790,10 @@ class ExperienceController extends Controller {
                             'post_data'=>$dataPost,
                             'productDetails'=>$productDetails,
                             'reservationResponse'=>$reservationResponse,
-                        ], function($message){
+                        ], function($message) use ($mergeReservationsArray){
                         $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                        $message->to(Input::get('email'))->subject('Your WowTables Reservation');
+                        $message->to(Input::get('email'))->subject('Your WowTables Reservation at '.$mergeReservationsArray['venue']);
                         //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
                     });
                 $dataPost['admin']  = "yes";
