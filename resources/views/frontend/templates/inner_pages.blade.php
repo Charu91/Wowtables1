@@ -1151,7 +1151,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
       }
     }
     ?>    
-@include('frontend.google_ana')   
+{{--@include('frontend.google_ana')   --}}
 <style>
 .wowtables_doted{
   border-top: 1px dashed #c2c2c2;
