@@ -680,7 +680,7 @@ if(isset($_REQUEST['gclid'])){
         'domain' => 'wowtables.com',
     );
 
-    setcookie("wowtables", "google_add_words", time() + 86500, "/");
+    setcookie("wowtables", "wowtables.com", time() + 86500, "/");
 }
 
 function current_page_url() {

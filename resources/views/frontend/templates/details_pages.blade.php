@@ -652,13 +652,13 @@ if (strpos($url,'alacarte') !== false) {
 
 <?php
 if(isset($_REQUEST['gclid'])){
-    $this->input->set_cookie(array(
-        'name' => 'google_add_words', 
-        'value' => '1', 
-        'expire' => time()+ 86500, 
-        'domain' => 'dev.gourmetitup.com', 
-        'path'  => '/')
+    $cookiearray = array(
+        'name' => 'google_add_words',
+        'value' => '1',
+        'domain' => 'wowtables.com',
     );
+
+    setcookie("wowtables", "wowtables.com", time() + 86500, "/");
 }
 
 function current_page_url() {
