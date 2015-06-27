@@ -1252,7 +1252,6 @@ class ReservationDetails extends Model {
 					'venue' => $outlet->vendor_name,
 				);
 
-				$dataPost['addons_special_request'] = $arrData['addons_special_request'];
 
 			} else if($arrReservationDetails->reservation_type == "alacarte"){
 
@@ -1338,6 +1337,7 @@ class ReservationDetails extends Model {
 		$userData = Profile::getUserProfileWeb($queryResult->user_id);
 
 		if($arrData['reservationType'] == "experience"){
+			$dataPost['addons_special_request'] = $arrData['addons_special_request'];
 			$arrProductVendorLocationId = DB::table('reservation_details')->where('id', $arrData['reservationID'])
 				->select('product_vendor_location_id')
 				->get();
