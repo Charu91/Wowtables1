@@ -503,6 +503,58 @@ $(document).ready(function() {
                             } 
                         }
                    });
+
+                 $.ajax({
+                      url: "/users/myreserv_addons",
+                      type: "post",
+                      timeout: 3000,
+                      data: {
+                         
+                          product_id: product_id,
+                          res_id:res_id,
+                          no_of_persons:no_of_persons
+                      },
+                      beforeSend:function()
+                        {
+                        $("#my_addons").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
+                        },
+                      success: function(e) {
+                         console.log(e);
+                         $('#my_addons').html(e);
+                      },
+                        error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
+                   });
+
+                      $.ajax({
+                      url: "/users/myreserv_giftcard",
+                      type: "post",
+                      timeout: 3000,
+                      data: {
+                          res_id:res_id
+                      },
+                      beforeSend:function()
+                        {
+                        $("#my_giftcard").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
+                        },
+                      success: function(e) {
+                         console.log(e);
+                         $('#my_giftcard').html(e);
+                      },
+                        error: function(x, t, m) 
+                        {
+                            if(t==="timeout") 
+                            {
+                                alert("Got timeout! Please reload page again.");
+                            } 
+                        }
+                   });
+
                 }
 
                $.ajax({
@@ -1057,6 +1109,16 @@ $(document).ready(function() {
         vendor_details =$('#vendor_id').val();
         locality_val =$('#locality_val').val();
 
+        var addonsArray = {};
+        $('.myaddonselect').each(function(){
+
+            var prod_id = $(this).attr("data-value");
+            var select_val = $(this).val();
+            addonsArray[prod_id]= select_val;
+            return addonsArray;
+        });
+        giftcard_id = $("#giftcard_id").val();
+
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
         last_reserv_outlet = $("#last_reserv_outlet").val();
@@ -1102,6 +1164,8 @@ $(document).ready(function() {
                         reserv_id: res_id,
                         address: address,
                         locality_val:locality_val,
+                        addonsArray:addonsArray,
+                        giftcard_id:giftcard_id,
                         party_size: party_size,
                         vendor_details:vendor_details,
                         edit_date: edit_date,
