@@ -73,13 +73,13 @@
 {{--@include('frontend.google_ana')--}}
 <?php
 if(isset($_REQUEST['gclid'])){
-    $this->input->set_cookie(array(
-        'name' => 'google_add_words', 
-        'value' => '1', 
-        'expire' => time()+ 86500, 
-        'domain' => 'dev.gourmetitup.com', 
-        'path'  => '/')
+    $cookiearray = array(
+        'name' => 'google_add_words',
+        'value' => '1',
+        'domain' => 'wowtables.com',
     );
+
+    setcookie("wowtables", "wowtables.com", time() + 86500, "/");
 }
 ?>
 <footer>
@@ -157,9 +157,9 @@ if(isset($_REQUEST['gclid'])){
           <div class="col-md-3 col-sm-6">
             <h4 class="foot-widget-title">Follow us on</h4>
             <ul class="inline-list socialicons">
-              <li><a href="http://www.facebook.com/GourmetItUp" target="blank"><img src="/assets/img/fb_icon.png" alt="Gourmet FB"></a></li>
-              <li><a href="https://twitter.com/gourmetitup" target="blank"><img src="/assets/img/tw_icon.png" alt="Gourmet twitter"></a></li>
-              <li><a href="https://plus.google.com/112736118414045928797/posts" target="blank"><img src="/assets/img/g+_icon.png" alt="Gourmet google+"></a></li>
+              <li><a href="http://www.facebook.com/WowTables" target="blank"><img src="/assets/img/fb_icon.png" alt="Wowtables FB"></a></li>
+              <li><a href="https://twitter.com/wow_tables" target="blank"><img src="/assets/img/tw_icon.png" alt="Wowtables twitter"></a></li>
+              <li><a href="https://instagram.com/WowTables/" target="blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
             </ul>            
           </div>
         </div>
