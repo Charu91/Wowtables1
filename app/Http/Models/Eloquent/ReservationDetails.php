@@ -185,9 +185,14 @@ class ReservationDetails extends Model {
 
         			}
 			        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
-			        $special_request = isset($arrData['specialRequest']) && $arrData['specialRequest'] != "" ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
 			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request; 
 			        //---------------------------------------------------------------------------
+				}
+				else {
+					$finalAddontext = " ";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request;
 				}				
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 

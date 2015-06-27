@@ -220,6 +220,7 @@ class ExperienceLocation {
             }
 
             if(!empty($data['block_dates'])){
+                //echo "<pre>"; print_r($data['block_dates']);die;
                 $blockSchedulesSaved = $this->saveBlockDates($productVendorLocationLastId, $data['block_dates']);
 
                 if($blockSchedulesSaved['status'] !== 'success'){
@@ -331,16 +332,16 @@ class ExperienceLocation {
     protected function saveBlockDates($product_vendor_location_id, $block_dates)
     {
         $block_dates_insert_map = [];
-
+        //echo "<pre>"; print_r($block_dates);
         foreach($block_dates as $date){
-            if(strtotime($date) > strtotime('midnight')){
+            if($date != ""){
                 $block_dates_insert_map[] = [
                     'product_vendor_location_id' => $product_vendor_location_id,
                     'block_date' => $date
                 ];
             }
         }
-
+        //echo "<pre>"; print_r($block_dates_insert_map); die;
         if(count($block_dates_insert_map)){
             if(DB::table('product_vendor_location_block_schedules')->insert($block_dates_insert_map)){
                 return ['status' => 'success'];

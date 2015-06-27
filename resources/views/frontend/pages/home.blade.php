@@ -446,12 +446,12 @@
           <div class="col-md-12">
             <div class="row">
               <ul class="press-logos">
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/sunday-express.png" class="img-responsive"></a></li>
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/mumbai-boss.png" class="img-responsive"></a></li>
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/asian-age.png" class="img-responsive"></a></li>
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/grazia.png" class="img-responsive"></a></li>
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/inonit.png" class="img-responsive"></a></li>
-                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/press"><img src="{{URL::to('/')}}/assets/img/live-mint.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/sunday-express.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/mumbai-boss.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/asian-age.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/grazia.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/inonit.png" class="img-responsive"></a></li>
+                <li class="col-md-2 col-sm-2 col-xs-6"><a href="{{URL::to('/')}}/pages/press"><img src="{{URL::to('/')}}/assets/img/live-mint.png" class="img-responsive"></a></li>
               </ul>
             </div>
           </div>
