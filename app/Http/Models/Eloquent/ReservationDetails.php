@@ -1432,7 +1432,7 @@ class ReservationDetails extends Model {
 				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 
-		} else if($reserveType == "alacarte"){
+		} else if($arrData['reservationType'] == "alacarte"){
 
 			$arrVendorLocationID = DB::table('reservation_details')->where('id', $arrData['reservationID'])
 				->select('vendor_location_id')
