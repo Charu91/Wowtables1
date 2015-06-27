@@ -869,6 +869,7 @@ class ReservationDetails extends Model {
           ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
           ->first();
 
+
       return $queryResult;
   	}
 
@@ -1253,7 +1254,7 @@ class ReservationDetails extends Model {
 		
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
-			], function($message) use ($dataPost){
+			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name . 'has been cancelled');
