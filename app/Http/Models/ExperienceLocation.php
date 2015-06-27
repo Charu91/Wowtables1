@@ -334,12 +334,12 @@ class ExperienceLocation {
         $block_dates_insert_map = [];
         //echo "<pre>"; print_r($block_dates);
         foreach($block_dates as $date){
-            //if(strtotime($date) > strtotime('midnight')){
+            if($date != ""){
                 $block_dates_insert_map[] = [
                     'product_vendor_location_id' => $product_vendor_location_id,
                     'block_date' => $date
                 ];
-            //}
+            }
         }
         //echo "<pre>"; print_r($block_dates_insert_map); die;
         if(count($block_dates_insert_map)){
