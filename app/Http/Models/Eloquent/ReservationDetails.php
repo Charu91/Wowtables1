@@ -1405,6 +1405,7 @@ class ReservationDetails extends Model {
 
 			);
 			$dataPost['addons_special_request'] = $arrData['addons_special_request'];
+			$dataPost['giftcard_id'] = "";
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
@@ -1493,7 +1494,7 @@ class ReservationDetails extends Model {
 
 			);
 
-
+			$dataPost['giftcard_id'] = "";
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
