@@ -1109,6 +1109,16 @@ $(document).ready(function() {
         vendor_details =$('#vendor_id').val();
         locality_val =$('#locality_val').val();
 
+        var addonsArray = {};
+        $('.myaddonselect').each(function(){
+
+            var prod_id = $(this).attr("data-value");
+            var select_val = $(this).val();
+            addonsArray[prod_id]= select_val;
+            return addonsArray;
+        });
+        giftcard_id = $("#giftcard_id").val();
+
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
         last_reserv_outlet = $("#last_reserv_outlet").val();
@@ -1154,6 +1164,8 @@ $(document).ready(function() {
                         reserv_id: res_id,
                         address: address,
                         locality_val:locality_val,
+                        addonsArray:addonsArray,
+                        giftcard_id:giftcard_id,
                         party_size: party_size,
                         vendor_details:vendor_details,
                         edit_date: edit_date,
