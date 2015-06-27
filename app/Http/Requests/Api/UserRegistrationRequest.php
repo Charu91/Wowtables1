@@ -25,12 +25,12 @@ class UserRegistrationRequest extends Request {
             'email'         => 'required|email',
             'password'      => 'required|between:6,15',
             'location_id'   => 'required|integer',
-            'phone_number'  => 'required|integer',
+            'phone_number'  => 'required|regex:/^\d{10,11}$/',
             'device_id'     => 'required',
             'os_type'       => 'required|in:iOS,Android',
             'os_version'    => 'required',
             'hardware'      => 'required',
-            'app_version'   => 'required'
+            'app_version'   => 'required'            
 		];
 	}
 
