@@ -1337,7 +1337,6 @@ class ReservationDetails extends Model {
 		$userData = Profile::getUserProfileWeb($queryResult->user_id);
 
 		if($arrData['reservationType'] == "experience"){
-			$dataPost['addons_special_request'] = $arrData['addons_special_request'];
 			$arrProductVendorLocationId = DB::table('reservation_details')->where('id', $arrData['reservationID'])
 				->select('product_vendor_location_id')
 				->get();
@@ -1405,6 +1404,7 @@ class ReservationDetails extends Model {
 							  'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
 
 			);
+			$dataPost['addons_special_request'] = $arrData['addons_special_request'];
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
