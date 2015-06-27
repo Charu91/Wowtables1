@@ -1252,6 +1252,7 @@ class ReservationDetails extends Model {
 					'venue' => $outlet->vendor_name,
 				);
 
+				$dataPost['addons_special_request'] = $arrData['addons_special_request'];
 
 			} else if($arrReservationDetails->reservation_type == "alacarte"){
 
