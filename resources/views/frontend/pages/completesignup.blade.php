@@ -186,13 +186,14 @@ if(isset($user_array['logged_in']) && $this->input->get('signup') != 'extraprofi
         
         
       })(jQuery)   
-    </script> 
-    <?php 
-    if(!empty($codes)){
-        foreach($codes as $code){
-            echo $code['code'];
-        }
-    }
-    ?>
+    </script>
+  <?php
+  $arrdata = DB::table('codes')->where('view_pages', 'complete-signup')
+  ->select('code')
+  ->get();
+  foreach ($arrdata as $value) {
+  echo $value->code;
+  }
+  ?>
   </body>
 </html>
