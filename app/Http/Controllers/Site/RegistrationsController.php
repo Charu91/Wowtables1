@@ -623,7 +623,7 @@ class RegistrationsController extends Controller {
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');
 		//	`print_r($addonsArray);
-
+		//echo "sad = ".$giftcard_id;
 		$count = $this->request->input('addonsArray');
 		if($count==""){  $addonsArray =array();}
 
@@ -699,6 +699,7 @@ class RegistrationsController extends Controller {
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>'User Changed',
+				'gift_card_id_from_reservation' => $giftcard_id
 			);
 
 			//echo "<pre>"; print_r($zoho_data);
@@ -718,6 +719,7 @@ class RegistrationsController extends Controller {
 							  'reservation_date'=> date('d-F-Y',strtotime($edit_date1)),
 							  'reservation_time'=> date('g:i a',strtotime($this->request->input('edit_time'))),
 							  'addons_special_request'=> $addons_special_request,
+							  'giftcard_id'=> $giftcard_id,
 
 			);
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
