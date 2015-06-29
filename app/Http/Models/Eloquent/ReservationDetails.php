@@ -185,9 +185,14 @@ class ReservationDetails extends Model {
 
         			}
 			        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
-			        $special_request = isset($arrData['specialRequest']) && $arrData['specialRequest'] != "" ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
 			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request; 
 			        //---------------------------------------------------------------------------
+				}
+				else {
+					$finalAddontext = " ";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request;
 				}				
 				
 				$arrResponse['data']['reservation_id'] = $reservation_id['id']; 
@@ -381,6 +386,32 @@ class ReservationDetails extends Model {
 				$reservation->product_vendor_location_id = $arrData['vendorLocationID'];
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
 					self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
+					//Reading value for addon
+					$count = $arrData['addon'];
+        			if($count=="") {  
+        				$arrData['addon'] =array();
+        			}
+       					// echo "<pre>"; print_r($dataPost);
+        			$addonsText = '';
+			        foreach($arrData['addon'] as $prod_id => $qty) {
+			            if($qty > 0){
+			                //echo "prod id = ".$prod_id." , qty = ".$qty;
+			                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+
+			                //echo "<pre>"; print_r($addonsDetails);
+			                $addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
+			            }
+
+        			}
+			        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request; 
+			        //---------------------------------------------------------------------------
+				}
+				else {
+					$finalAddontext = " ";
+			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
+			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request;
 				}
 			}
  		
@@ -869,6 +900,7 @@ class ReservationDetails extends Model {
           ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id')
           ->first();
 
+
       return $queryResult;
   	}
 
@@ -1253,7 +1285,7 @@ class ReservationDetails extends Model {
 		
 			Mail::send('site.pages.cancel_reservation',[
 				'post_data'=>$dataPost,
-			], function($message) use ($dataPost){
+			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name . 'has been cancelled');
@@ -1372,6 +1404,8 @@ class ReservationDetails extends Model {
 							  'reservation_time'=> date('g:i a',strtotime($arrData['reservationTime'])),
 
 			);
+			$dataPost['addons_special_request'] = $arrData['addons_special_request'];
+			$dataPost['giftcard_id'] = "";
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
@@ -1381,7 +1415,7 @@ class ReservationDetails extends Model {
 			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name. 'has been changed');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name. ' has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
@@ -1398,7 +1432,7 @@ class ReservationDetails extends Model {
 				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 
-		} else if($reserveType == "alacarte"){
+		} else if($arrData['reservationType'] == "alacarte"){
 
 			$arrVendorLocationID = DB::table('reservation_details')->where('id', $arrData['reservationID'])
 				->select('vendor_location_id')
@@ -1460,7 +1494,7 @@ class ReservationDetails extends Model {
 
 			);
 
-
+			$dataPost['giftcard_id'] = "";
 			//echo "<br/>---datapost---<pre>"; print_r($dataPost);die;
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
@@ -1470,7 +1504,7 @@ class ReservationDetails extends Model {
 			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name. 'has been changed');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name. ' has been changed');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
