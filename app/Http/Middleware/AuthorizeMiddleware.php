@@ -34,10 +34,24 @@ class AuthorizeMiddleware {
 			$queryResult = DB::table('user_devices as ud')
 								->where('ud.device_id',$accessDevice)
 								->where('ud.access_token',$accessToken)
-								->select('ud.user_id')
+								->select('ud.user_id', 'app_version', 'os_type')
 								->first();
 			if($queryResult){
-				return $next($request);	
+
+				$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
+				$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
+				
+				if($queryResult->os_type == 'iOS' && version_compare($queryResult->app_version, $iOSVersion) >= 0) {					
+						return $next($request);
+					}
+				else if ($queryResult->os_type == 'Android' && version_compare($queryResult->app_version, $androidVersion) >= 0) {				
+						return $next($request);
+				}
+				else {
+						$arrResponse['status'] = Config::get('constants.API_ERROR');
+						$arrResponse['msg'] = "Update your app version";
+						return $arrResponse;
+				}	
 			}
 		}
 		$response=array();
