@@ -1690,7 +1690,7 @@ $(document).ready(function() {
         if ($("#ac_time_edit2 span").text() != "") {
             $("#ac_time_edit2").removeClass("hidden")
         }
-        $("#ac_date_edit2").addClass("hidden");
+        //$("#ac_date_edit2").addClass("hidden"); //kailash
         $("#ac_party_edit2").removeClass("hidden");
         $("#ac_party_size2").addClass("hidden")
     });
