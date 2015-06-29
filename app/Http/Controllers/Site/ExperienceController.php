@@ -897,7 +897,8 @@ class ExperienceController extends Controller {
                                          WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new'");
         //print_r($check_user_query);
         $success = '0';
-      if(!empty($check_user_query)){
+      if(!empty($check_user_query))
+      {
         foreach ($check_user_query as $value) {
            $reserv_date = $value->reservation_date;
            $reserv_time = $value->reservation_time;
@@ -918,7 +919,7 @@ class ExperienceController extends Controller {
                     }
 
                   }
-        }
+      }
         
        
        $arrData = $this->experiences_model->validateReservationData($dataPost);
