@@ -32,6 +32,14 @@ Route::post('admin/users/store_rewards', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/users/search/{user_val}', [
+    'uses' => 'AdminUsersController@search_users',
+    'as' => 'AdminUserSearchUsers',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 
 Route::get('admin/users/{id}', [
