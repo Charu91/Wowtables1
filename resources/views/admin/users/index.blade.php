@@ -21,14 +21,16 @@
 				All Users
 			</h2>
 		</header>
+
 		<div class="panel-body">
-			<table class="table table-striped table-responsive mb-none">
+			<input type="text" name="search_by" value="" id="users_search_by"/> <a href="javascript:void(0)" class="btn btn-xs btn-primary" id="search_users">Search</a> <span style="display: none;" id="search_loading"><img src="/assets/img/ajax-loader.gif" alt="loading"/></span>
+			<table class="table table-striped table-responsive mb-none" id="adminUsersTable">
 				<thead>
 				<tr>
 					<th>User Id</th>
 					<th>Full Name</th>
 					<th>Email</th>
-					{{--<th>Role</th>--}}
+					<th>Phone</th>
 					{{--<th>Status</th>--}}
 					<th>Action</th>
 				</tr>
@@ -39,7 +41,7 @@
 							<th>{!! $user->id !!}</th>
 							<th>{!! $user->full_name !!}</th>
 							<th>{!! $user->email !!}</th>
-							{{--<th>{!! $user->role->name !!}</th>--}}
+							<th>{!! $user->phone_number !!}</th>
 							{{--<th>{!! $user->status !!}</th>--}}
 							<th>
 								{!! link_to_route('AdminUserEdit','Edit',$user->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary','data-user-id'=>$user->id]) !!}
@@ -53,8 +55,11 @@
 						</tr>
 					@endforeach
 				</tbody>
+
 			</table>
-			<?php echo $users->render(); ?>
+			<div id="custom_pagination">
+				<?php echo $users->render(); ?>
+			</div>
 		</div>
 	</section>
 

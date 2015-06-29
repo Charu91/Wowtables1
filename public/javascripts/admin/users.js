@@ -5,7 +5,8 @@
     $(document).on('ready', function(){
 
         var   token = $("meta[name='_token']").attr('content')
-            , $deleteUserBtn = $('.delete-user-btn');
+            , $deleteUserBtn = $('.delete-user-btn')
+            , $searchUsers = $('#search_users');
 
         $('#usersTable').DataTable();
 
@@ -34,6 +35,29 @@
             }
 
         });
+
+        $searchUsers.on('click',function(){
+           var users_val = $("#users_search_by").val();
+
+            if(users_val != ""){
+                $("#search_loading").css('display','inline');
+                $.ajax({
+                    method: 'GET',
+                    url: '/admin/users/search/' + users_val,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    },
+                    success:function(response){
+                        $("#adminUsersTable tbody").replaceWith(response);
+                        $("#custom_pagination").hide();
+                        $("#search_loading").css('display','none');
+                    }
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+        });
+
 
     });
 })(jQuery);

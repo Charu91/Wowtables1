@@ -50,7 +50,7 @@ class AdminUsersController extends Controller {
 	public function index()
 	{
 		//$users = $this->eloquentUser->with('role')->get();
-		$users = DB::table('users')->select('id','full_name','email')->paginate(100);
+		$users = DB::table('users')->select('id','full_name','email','phone_number')->paginate(100);
 		//echo "<pre>"; print_r($users); die;
 
 		return view('admin.users.index',['users' => $users]);
@@ -226,5 +226,30 @@ class AdminUsersController extends Controller {
 
         return redirect('admin/users');
     }
+
+	public function search_users($userVal){
+
+		$usersResults = DB::select('SELECT id,full_name,email,phone_number from users WHERE full_name LIKE "%'.$userVal.'%" OR email LIKE "%'.$userVal.'%" OR phone_number LIKE "%'.$userVal.'%"');
+		$createTableStructure = '';
+		if(!empty($usersResults)){
+			$createTableStructure = '<tr>';
+			foreach($usersResults as $userData){
+
+				$createTableStructure .= '<th>'.$userData->id.'</th>';
+				$createTableStructure .= '<th>'.$userData->full_name.'</th>';
+				$createTableStructure .= '<th>'.$userData->email.'</th>';
+				$createTableStructure .= '<th>'.$userData->phone_number.'</th>';
+				$createTableStructure .= '<th>'.link_to_route("AdminUserEdit","Edit",$userData->id,["target"=>"_blank","class"=>"btn btn-xs btn-primary","data-user-id"=>$userData->id]).' &nbsp;|&nbsp;<a data-user-id="'.$userData->id.'" class="btn btn-xs btn-danger delete-user-btn">Delete</a>&nbsp;|&nbsp;<a href="/admin/users/'.$userData->id.'/create_reward" data-user-id="'.$userData->id.'" class="btn btn-xs btn-primary">Rewards</a></th>';
+				$createTableStructure .= '</tr>';
+			}
+
+
+		} else {
+			$createTableStructure = '<tr> <th colspan="5"> No Data Found!! </th><tr>';
+		}
+
+		echo "<tbody>".$createTableStructure."</tbody>";
+
+	}
 
 }
