@@ -878,6 +878,7 @@ class ExperienceController extends Controller {
 
     public function exporderexists()
     {
+      
         $dataPost['reservationDate']    = Input::get('booking_date');
         $dataPost['reservationDay']     =  date("D", strtotime($dataPost['reservationDate']));
         $dataPost['reservationTime']    = Input::get('booking_time');
@@ -889,8 +890,39 @@ class ExperienceController extends Controller {
         $dataPost['reservationType']    = 'experience';
         $dataPost['specialRequest']     = Input::get('special');
         $dataPost['access_token']       = Session::get('id');
+        $user_id = Auth::user()->id;
+        $reserv_date_new = Input::get('booking_date');
+        $reserv_time_new = Input::get('booking_time');
+        $check_user_query = DB::select("SELECT `reservation_date`,`reservation_time` FROM `reservation_details`
+                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new'");
+        //print_r($check_user_query);
+        $success = '0';
+      if(!empty($check_user_query)){
+        foreach ($check_user_query as $value) {
+           $reserv_date = $value->reservation_date;
+           $reserv_time = $value->reservation_time;
 
-        $arrData = $this->experiences_model->validateReservationData($dataPost);
+                  $last_reserv_date = date('Y-n-d',strtotime($reserv_time));
+                    $last_reserv_time =  strtotime($reserv_time);
+                    $last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);
+                    $last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
+                    if($reserv_date_new == $last_reserv_date){
+                        $new_reserv = strtotime($reserv_date_new." ".$reserv_time_new);
+                        
+                        if( $new_reserv >= $last_reserv_time_2_hours_before && $new_reserv <= $last_reserv_time_2_hours_after){
+                            $success =1;
+                           break; 
+                        }
+                    }
+
+                  }
+        }
+        
+       
+       $arrData = $this->experiences_model->validateReservationData($dataPost);
+       $arrData['check_time'] = $success;
+       //print_r($arrData);
+       //exit;
         echo json_encode($arrData);
     }
     public function zoho_add_booking($data)

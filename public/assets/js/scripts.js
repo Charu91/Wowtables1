@@ -1094,102 +1094,8 @@ $(document).ready(function() {
             }
         })
     });
-    $("#save_changes").click(function(e) {
-        e.preventDefault();
-        address = $("#locations").val();
-        outlet = $("#locations option:selected").text();
-        if (outlet == "") {
-            outlet = $("input[name=address_keyword]").val()
-        }
-        party_size = $("#myselect_person").text();
-        edit_date = $("#myselect_date").text();
-        edit_time = $("#myselect_time").text();
-        alcohol = $("#alcoholedit").val();
-        non_veg = $("#nonveg").val();
-        vendor_details =$('#vendor_id').val();
-        locality_val =$('#locality_val').val();
-
-        var addonsArray = {};
-        $('.myaddonselect').each(function(){
-
-            var prod_id = $(this).attr("data-value");
-            var select_val = $(this).val();
-            addonsArray[prod_id]= select_val;
-            return addonsArray;
-        });
-        giftcard_id = $("#giftcard_id").val();
-
-        last_reserv_date = $("#last_reserv_date").val();
-        last_reserv_time = $("#last_reserv_time").val();
-        last_reserv_outlet = $("#last_reserv_outlet").val();
-        last_reserv_party_size = $("#last_reserv_party_size").val();
-        l_date = last_reserv_date.split("/");
-        l_date = l_date[2] + "-" + l_date[0] + "-" + l_date[1];
-        if (l_date == edit_date && last_reserv_time == edit_time && last_reserv_outlet == outlet && last_reserv_party_size == party_size) {
-            $(".cant_change").removeClass("hidden");
-            $("#save_changes").addClass("hidden")
-        } else {
-            $(".change_loader").show();
-            /*if ($("#reserv_type").val() == "alacarte") {
-                $.ajax({
-                    url: "/orders/ac_edit_reservetion",
-                    type: "post",
-                    data: {
-                        reserv_id: res_id,
-                        address: address,
-                        party_size: party_size,
-                        edit_date: edit_date,
-                        edit_time: edit_time,
-                        alcohol: alcohol,
-                        non_veg: non_veg,
-                        outlet: outlet,
-                        last_reserv_date: last_reserv_date,
-                        last_reserv_time: last_reserv_time,
-                        last_reserv_outlet: last_reserv_outlet,
-                        last_reserv_party_size: last_reserv_party_size
-                    },
-                    success: function(e) {
-                        if (e == 1) {
-                            $(".change_reserv_form").addClass("hide");
-                            $(".change_reserv_confirmation").removeClass("hide");
-                            $(".change_loader").hide()
-                        }
-                    }
-                })
-            } else {*/
-                $.ajax({
-                    url: "/orders/edit_reservetion",
-                    type: "post",
-                    data: {
-                        reserv_id: res_id,
-                        address: address,
-                        locality_val:locality_val,
-                        addonsArray:addonsArray,
-                        giftcard_id:giftcard_id,
-                        party_size: party_size,
-                        vendor_details:vendor_details,
-                        edit_date: edit_date,
-                        edit_time: edit_time,
-                        alcohol: alcohol,
-                        non_veg: non_veg,
-                        outlet: outlet,
-                        last_reserv_date: last_reserv_date,
-                        last_reserv_time: last_reserv_time,
-                        last_reserv_outlet: last_reserv_outlet,
-                        last_reserv_party_size: last_reserv_party_size
-                    },
-                    success: function(e) {
-                        if (e == 1) {
-                            $("#reserv_table").css("display", "none");
-                            $(".change_reserv_form").addClass("hide");
-                            $(".change_reserv_confirmation").removeClass("hide");
-                            $(".change_loader").hide()
-                        }
-                    }
-                })
-            //}
-        }
-    });
+   
+    
     $(".close_modal").click(function() {
         setTimeout(window.location = "/users/myreservations", 3e3)
     });
@@ -1597,6 +1503,8 @@ $(document).ready(function() {
         $("#or_reservation").removeClass("hidden");
         $("#jump2-alacarte").removeClass("hidden");
         $("#order_info").slideUp()
+        $("#or_reservation").hide();
+        $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").hide();
     });
     $("#ac_info_edit1").click(function() {
         open_order_info = true;

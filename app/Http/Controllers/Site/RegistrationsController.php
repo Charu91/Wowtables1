@@ -618,7 +618,7 @@ class RegistrationsController extends Controller {
 		$month = str_pad($remove_comma, 2, "0", STR_PAD_LEFT); 
 		$year = $datearray["2"];
 		$final_date_format = $year.'-'.$month.'-'.$date;
-		$edit_time = date("H:i:s", strtotime($this->request->input('edit_time')));
+		$edit_time = $this->request->input('edit_time');
 
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');

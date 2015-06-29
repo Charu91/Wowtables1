@@ -1,3 +1,4 @@
+<?php date_default_timezone_set("Asia/Kolkata");?>
 @extends('frontend.templates.inner_pages')
 
 @section('content')
@@ -481,8 +482,11 @@ agm.cpkbandra@jsmcorp.in
               </div>
           </div>
             <div class="change_reserv_confirmation hide" >
-                 <h4 class="panel-title" style="margin-bottom: 20px;">
+                 <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_confirm" style="display:none;">
                     We have received your table change request. You will receive a confirmation mail & SMS from our concierge soon.
+                </h4>
+                <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_immediate" style="display:none;">
+                    To check for immediate availability, please call our concierge.
                 </h4>
                 <div class="text-center">
               <a  class="btn btn-warning close_modal" href="javascript:" data-dismiss="modal">Close This</a>
@@ -891,10 +895,115 @@ agm.cpkbandra@jsmcorp.in
 
   </script>
   <script type="text/javascript">
-  /*function test()
-  {
-    //document.getElementById("locality").className = "hidden";
-    document.getElementById("locality").style.visibility = "visible";
-  }*/
+   $("#save_changes").click(function(e) {
+        e.preventDefault();
+        address = $("#locations").val();
+        outlet = $("#locations option:selected").text();
+        if (outlet == "") {
+            outlet = $("input[name=address_keyword]").val()
+        }
+        party_size = $("#myselect_person").text();
+        edit_date = $("#myselect_date").text();
+        edit_time = $("#myselect_time").text();
+        alcohol = $("#alcoholedit").val();
+        non_veg = $("#nonveg").val();
+        vendor_details =$('#vendor_id').val();
+        locality_val =$('#locality_val').val();
+
+        var addonsArray = {};
+        $('.myaddonselect').each(function(){
+
+            var prod_id = $(this).attr("data-value");
+            var select_val = $(this).val();
+            addonsArray[prod_id]= select_val;
+            return addonsArray;
+        });
+        giftcard_id = $("#giftcard_id").val();
+
+        last_reserv_date = $("#last_reserv_date").val();
+        last_reserv_time = $("#last_reserv_time").val();
+        last_reserv_outlet = $("#last_reserv_outlet").val();
+        last_reserv_party_size = $("#last_reserv_party_size").val();
+        l_date = last_reserv_date.split("/");
+        l_date = l_date[2] + "-" + l_date[0] + "-" + l_date[1];
+        //alert(last_reserv_date);
+          //start convert 12 hrs time to 24hrs
+          var time = last_reserv_time;
+          var hours = Number(time.match(/^(\d+)/)[1]);
+          var minutes = Number(time.match(/:(\d+)/)[1]);
+          var AMPM = time.match(/\s(.*)$/)[1];
+          if(AMPM == "PM" && hours<12) hours = hours+12;
+          if(AMPM == "AM" && hours==12) hours = hours-12;
+          var sHours = hours.toString();
+          var sMinutes = minutes.toString();
+          if(hours<10) sHours = "0" + sHours;
+          if(minutes<10) sMinutes = "0" + sMinutes;
+          var final_booking_time = sHours + ":" + sMinutes;
+          //close convert 12 hrs time to 24hrs
+          var current_date = '<?php echo date("Y-m-d");?>';
+          var current_time = '<?php echo date("H:i");?>';
+       /* if(final_booking_time >='20:30' && current_time>='20:30' && current_date == last_reserv_date)   
+          {  //condition for not booking 20:30 above on same day.
+            alert('Not booking');
+          }
+          else
+          {
+            alert('booking');
+          }*/
+        if (l_date == edit_date && last_reserv_time == edit_time && last_reserv_outlet == outlet && last_reserv_party_size == party_size) {
+            $(".cant_change").removeClass("hidden");
+            $("#save_changes").addClass("hidden");
+            $('#my_update_confirm').css("display", "none");
+            $('#my_update_immediate').show();
+        } else {
+
+          if(final_booking_time >='20:30' && current_time>='20:30' && current_date == last_reserv_date)   
+          {  //condition for not booking 20:30 above on same day.
+            //alert('Not booking');
+            $("#reserv_table").css("display", "none");
+            $(".change_reserv_form").addClass("hide");
+            $(".change_reserv_confirmation").removeClass("hide");
+            $(".change_loader").hide();
+             $('#my_update_confirm').css("display", "none");
+            $('#my_update_immediate').show();
+          }
+          else{
+            //alert('booking');
+            $(".change_loader").show();
+                $.ajax({
+                    url: "/orders/edit_reservetion",
+                    type: "post",
+                    data: {
+                        reserv_id: res_id,
+                        address: address,
+                        locality_val:locality_val,
+                        addonsArray:addonsArray,
+                        giftcard_id:giftcard_id,
+                        party_size: party_size,
+                        vendor_details:vendor_details,
+                        edit_date: edit_date,
+                        edit_time: edit_time,
+                        alcohol: alcohol,
+                        non_veg: non_veg,
+                        outlet: outlet,
+                        last_reserv_date: last_reserv_date,
+                        last_reserv_time: last_reserv_time,
+                        last_reserv_outlet: last_reserv_outlet,
+                        last_reserv_party_size: last_reserv_party_size
+                    },
+                    success: function(e) {
+                        if (e == 1) {
+                            $("#reserv_table").css("display", "none");
+                            $(".change_reserv_form").addClass("hide");
+                            $(".change_reserv_confirmation").removeClass("hide");
+                            $(".change_loader").hide()
+                            $('#my_update_confirm').show();
+                           $('#my_update_immediate').hide();
+                        }
+                    }
+                })
+           }
+        }
+    });
   </script>
 @endsection
