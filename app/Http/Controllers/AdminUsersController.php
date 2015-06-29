@@ -49,7 +49,9 @@ class AdminUsersController extends Controller {
 	 */
 	public function index()
 	{
-		$users = $this->eloquentUser->with('role')->get();
+		//$users = $this->eloquentUser->with('role')->get();
+		$users = DB::table('users')->select('id','full_name','email')->paginate(100);
+		//echo "<pre>"; print_r($users); die;
 
 		return view('admin.users.index',['users' => $users]);
 	}

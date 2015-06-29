@@ -22,14 +22,14 @@
 			</h2>
 		</header>
 		<div class="panel-body">
-			<table class="table table-striped table-responsive mb-none" id="usersTable">
+			<table class="table table-striped table-responsive mb-none">
 				<thead>
 				<tr>
 					<th>User Id</th>
 					<th>Full Name</th>
 					<th>Email</th>
-					<th>Role</th>
-					<th>Status</th>
+					{{--<th>Role</th>--}}
+					{{--<th>Status</th>--}}
 					<th>Action</th>
 				</tr>
 				</thead>
@@ -39,8 +39,8 @@
 							<th>{!! $user->id !!}</th>
 							<th>{!! $user->full_name !!}</th>
 							<th>{!! $user->email !!}</th>
-							<th>{!! $user->role->name !!}</th>
-							<th>{!! $user->status !!}</th>
+							{{--<th>{!! $user->role->name !!}</th>--}}
+							{{--<th>{!! $user->status !!}</th>--}}
 							<th>
 								{!! link_to_route('AdminUserEdit','Edit',$user->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary','data-user-id'=>$user->id]) !!}
 
@@ -54,6 +54,7 @@
 					@endforeach
 				</tbody>
 			</table>
+			<?php echo $users->render(); ?>
 		</div>
 	</section>
 
