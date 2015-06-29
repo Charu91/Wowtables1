@@ -48,7 +48,7 @@ class AuthorizeMiddleware {
 						return $next($request);
 				}
 				else {
-						$arrResponse['status'] = Config::get('constants.API_ERROR');
+						$arrResponse['status'] = Config::get('constants.API_UPDATE');
 						$arrResponse['msg'] = "Update your app version";
 						return $arrResponse;
 				}	

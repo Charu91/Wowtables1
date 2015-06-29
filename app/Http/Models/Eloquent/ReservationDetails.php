@@ -93,9 +93,11 @@ class ReservationDetails extends Model {
 			
 			//reading the product detail
 			$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
+			$arrResult = self::readProductIdAndVendorLocation($arrData['vendorLocationID']);
 			
 			$reservation->points_awarded = $productDetail['reward_point'];
-			$reservation->vendor_location_id = 0;
+			$reservation->vendor_location_id = $arrResult->vendor_location_id;
+			$reservation->product_id = $arrResult->product_id;
 			$reservation->product_vendor_location_id = $arrData['vendorLocationID'];
 
 		}
@@ -730,9 +732,7 @@ class ReservationDetails extends Model {
 	 * @since	1.0.0
 	 */  
 
-	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {	
-
-		
+	public static function zohoSendMail($zoho_res, $zoho_data, $reservation_id, $arrData) {			
 
         $zoho_success = $zoho_res->result->form->add->status;		
         if($zoho_success[0] != "Success") {
@@ -1523,6 +1523,22 @@ class ReservationDetails extends Model {
 		}  		
    		
 	}
+	//-----------------------------------------------------------------------------
+
+	  	/**
+	 * Read product id and vendor location of experience by vendor location id.
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
+  		public static function readProductIdAndVendorLocation($id) { 
+  			$arrResponse = DB::table('product_vendor_locations as pvl')
+  							    ->where('pvl.id', $id)
+  							    ->select('vendor_location_id', 'product_id')
+  							    ->first();
+  			return $arrResponse;
+  		} 
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
