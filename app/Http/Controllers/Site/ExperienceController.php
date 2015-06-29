@@ -283,6 +283,7 @@ class ExperienceController extends Controller {
                                             LEFT JOIN vendor_location_address as vla on vla.vendor_location_id= pvl.vendor_location_id
                                             LEFT JOIN locations as l on l.id = vla.city_id
                                             WHERE t.slug = '$collection'
+                                            AND mrn.image_type = 'listing'
                                             AND t.status = 'available'
                                             group by p.id");
             
