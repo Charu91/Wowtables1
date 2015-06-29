@@ -1303,34 +1303,13 @@ var google_remarketing_only = true;
     <?php endif ?> 
 
     //
-
+    
     var open_order_info = false;
     $("#select_table_exp").click(function(e) {
       //alert($("#booking_time").val());
       var booking_date = $("#booking_date").val();
       var booking_time = $("#booking_time").val();
-      //start convert 12 hrs time to 24hrs
-      var time = booking_time;
-      var hours = Number(time.match(/^(\d+)/)[1]);
-      var minutes = Number(time.match(/:(\d+)/)[1]);
-      var AMPM = time.match(/\s(.*)$/)[1];
-      if(AMPM == "PM" && hours<12) hours = hours+12;
-      if(AMPM == "AM" && hours==12) hours = hours-12;
-      var sHours = hours.toString();
-      var sMinutes = minutes.toString();
-      if(hours<10) sHours = "0" + sHours;
-      if(minutes<10) sMinutes = "0" + sMinutes;
-      var final_booking_time = sHours + ":" + sMinutes;
-      //close convert 12 hrs time to 24hrs
-      //convert month 2digit 
-      var pieces = booking_date.split('-');
-      //var wanted = pieces[2] + '-' + pad(pieces[0], 2) + '-' +
-      var monthSplit = pad(pieces[1], 2);
-      var yearSplit = pieces[0];
-      var dateSplit = pieces[2];
-      var final_booking_date = yearSplit+"-"+monthSplit+"-"+dateSplit;
-      current_date = '<?php echo date("Y-m-d");?>';
-      var current_time = '<?php echo date("H:i");?>';
+    
      
 
       //alert('con'+booking_date1);
@@ -1348,15 +1327,49 @@ var google_remarketing_only = true;
       }*/
         e.preventDefault();
         if ($("#booking_date").val() && $("#booking_time").val()) {
-            
+          
+              var time = booking_time;
+              var hours = Number(time.match(/^(\d+)/)[1]);
+              var minutes = Number(time.match(/:(\d+)/)[1]);
+              var AMPM = time.match(/\s(.*)$/)[1];
+              if(AMPM == "PM" && hours<12) hours = hours+12;
+              if(AMPM == "AM" && hours==12) hours = hours-12;
+              var sHours = hours.toString();
+              var sMinutes = minutes.toString();
+              if(hours<10) sHours = "0" + sHours;
+              if(minutes<10) sMinutes = "0" + sMinutes;
+              var final_booking_time = sHours + ":" + sMinutes;
+              //close convert 12 hrs time to 24hrs
+              //convert month 2digit 
+              var pieces = booking_date.split('-');
+              //var wanted = pieces[2] + '-' + pad(pieces[0], 2) + '-' +
+              var monthSplit = pad(pieces[1], 2);
+              var yearSplit = pieces[0];
+              var dateSplit = pieces[2];
+              var final_booking_date = yearSplit+"-"+monthSplit+"-"+dateSplit;
+              current_date = '<?php echo date("Y-m-d");?>';
+              var current_time = '<?php echo date("H:i");?>';
+
           if(final_booking_time >='20:30' && current_time>='20:30' && current_date == final_booking_date)   
           {  //condition for not booking 20:30 above on same day.
+              //start convert 12 hrs time to 24hrs
+             
             //alert('Not booking');
             $("#select_table_exp").addClass("hidden");
             $("#cant_select_table").removeClass("hidden")
           }
           else{
-            //alert('booking');
+           // alert('booking');
+            if(current_time>=final_booking_time && current_date == final_booking_date)
+            {
+              //alert('not booking2');
+               $("#select_table_exp").addClass("hidden");
+               $("#cant_select_table").removeClass("hidden")
+            }
+            else
+            {
+              //alert('Final booking');
+            
             if (logged_in == "1") {
                has_reserv = false;
                 $.ajax({
@@ -1422,6 +1435,7 @@ var google_remarketing_only = true;
                 })
             }*/
           }
+        }
 
         } else {
             $("#select_table_exp").addClass("hidden");
@@ -1505,7 +1519,34 @@ var google_remarketing_only = true;
       $('#alacarte_make_reservation').click(function(){
          $('#alacarte_booking_form').submit();
      })
-           
+
+ $("body").delegate(".time_tab", "click", function() {
+      //alert('hi');select_table_exp
+      //$('#cant_select_table').hide();
+      //$('#select_table_exp').hide();
+      $('#cant_select_table').addClass("hidden")
+    }); 
+  $("body").delegate("#date_edit1", "click", function() {
+     
+     //$('#cant_select_table').hasClass("hidden")
+      //$('#select_table_exp').hide();
+      $('#cant_select_table').addClass("hidden")
+    }); 
+
+    $("body").delegate("#time_edit1", "click", function() {
+     
+      //$('#cant_select_table').hide();
+      //$('#select_table_exp').hide();
+      $('#cant_select_table').addClass("hidden")
+    }); 
+
+    $("body").delegate(".time", "click", function() {
+     
+      //$('#cant_select_table').hide();
+      //$('#select_table_exp').hide();
+      $('#cant_select_table').addClass("hidden")
+    }); 
+
     $('#booking_form').submit(function(){
         var error = false;        
         email = $('#email').val();

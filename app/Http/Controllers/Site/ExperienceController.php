@@ -891,7 +891,7 @@ class ExperienceController extends Controller {
         $dataPost['specialRequest']     = Input::get('special');
         $dataPost['access_token']       = Session::get('id');
         $user_id = Auth::user()->id;
-        $reserv_date_new = Input::get('booking_date');
+        $reserv_date_new = date('Y-m-d',strtotime(Input::get('booking_date')));
         $reserv_time_new = Input::get('booking_time');
         $check_user_query = DB::select("SELECT `reservation_date`,`reservation_time` FROM `reservation_details`
                                          WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new'");
@@ -902,12 +902,14 @@ class ExperienceController extends Controller {
            $reserv_date = $value->reservation_date;
            $reserv_time = $value->reservation_time;
 
-                  $last_reserv_date = date('Y-n-d',strtotime($reserv_time));
+                  $last_reserv_date = date('Y-m-d',strtotime($reserv_date));
                     $last_reserv_time =  strtotime($reserv_time);
                     $last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);
+                    //echo '<br>';
                     $last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
                     if($reserv_date_new == $last_reserv_date){
-                        $new_reserv = strtotime($reserv_date_new." ".$reserv_time_new);
+                        //echo 'if';
+                        $new_reserv = strtotime($reserv_time_new);
                         
                         if( $new_reserv >= $last_reserv_time_2_hours_before && $new_reserv <= $last_reserv_time_2_hours_after){
                             $success =1;
