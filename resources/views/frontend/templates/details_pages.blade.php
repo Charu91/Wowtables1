@@ -1383,9 +1383,10 @@ var google_remarketing_only = true;
                       {
                        // alert('block');
                             $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").removeClass("hidden");
-                            $("#select_table_exp").addClass("hidden");
+                           // $("#select_table_exp").addClass("hidden");
                             $("#or_reservation").addClass("hidden");
-                            $('#collapseFive').hide();
+                           // $('#collapseFive').hide();
+                            has_reserv = true;
                       }else{
                         if (e.status == 'error') {
                             has_reserv = true;
