@@ -23,7 +23,7 @@ class UserLoginRequest extends Request {
 	{
 		return [
 			'email'         => 'required|email',
-            'password'      => 'required|between:6,15',
+            'password'      => 'required|between:2,15',
             'device_id'     => 'required',
             'os_type'       => 'required|in:iOS,Android',
             'os_version'    => 'required',
