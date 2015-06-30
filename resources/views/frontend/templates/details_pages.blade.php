@@ -1445,18 +1445,75 @@ var google_remarketing_only = true;
     });
 
     $("#ac_select_table2_ala").click(function(e) {
+
+          var booking_date = $("#ac_booking_date2").val();
+          var booking_time = $("#alacarte_booking_time").val();
             e.preventDefault();
             if ($("#ac_booking_date2").val() && $("#alacarte_booking_time").val()) {
                 
+              var time = booking_time;
+              var hours = Number(time.match(/^(\d+)/)[1]);
+              var minutes = Number(time.match(/:(\d+)/)[1]);
+              var AMPM = time.match(/\s(.*)$/)[1];
+              if(AMPM == "PM" && hours<12) hours = hours+12;
+              if(AMPM == "AM" && hours==12) hours = hours-12;
+              var sHours = hours.toString();
+              var sMinutes = minutes.toString();
+              if(hours<10) sHours = "0" + sHours;
+              if(minutes<10) sMinutes = "0" + sMinutes;
+              var final_booking_time = sHours + ":" + sMinutes;
+              //close convert 12 hrs time to 24hrs
+              //convert month 2digit 
+              var pieces = booking_date.split('-');
+              //var wanted = pieces[2] + '-' + pad(pieces[0], 2) + '-' +
+              var monthSplit = pad(pieces[1], 2);
+              var yearSplit = pieces[0];
+              var dateSplit = pieces[2];
+              var final_booking_date = yearSplit+"-"+monthSplit+"-"+dateSplit;
+              current_date = '<?php echo date("Y-m-d");?>';
+              var current_time = '<?php echo date("H:i");?>';
+              //alert(final_booking_time);
+              //alert(final_booking_date);
+            if(final_booking_time >='20:30' && current_time>='20:30' && current_date == final_booking_date)   
+              {  //condition for not booking 20:30 above on same day.
+                  //start convert 12 hrs time to 24hrs
+                 
+                //alert('Not booking');
+                $("#ac_select_table2_ala").addClass("hidden");
+                $("#alacarte_cant_select_table").removeClass("hidden")
+              }
+              else
+              {
+
+                    // alert('booking');
+                if(current_time>=final_booking_time && current_date == final_booking_date)
+                {
+                  //alert('not booking2');
+                   $("#ac_select_table2_ala").addClass("hidden");
+                   $("#alacarte_cant_select_table").removeClass("hidden")
+                }
+                else
+                {
                 if (logged_in == "1") {
                    has_reserv = false;
                     $.ajax({
                         url: "/orders/check_alaorder_exists",
                         type: "POST",
                         dataType: "JSON",
-                        data: $('#booking_form').serialize(),
+                        data: $('#alacarte_booking_form').serialize(),
                         async: false,
                         success: function(e) {
+                          if(e.check_time == '1')
+                          {
+                            //alert('block');
+                               $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').removeClass("hidden");
+                               // $("#select_table_exp").addClass("hidden");
+                                $("#or_reservation").addClass("hidden");
+                               // $('#collapseFive').hide();
+                                has_reserv = true;
+                          }
+                          else
+                          {
                             if (e.status == 'error') {
                                 has_reserv = true;
                                 $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').removeClass("hidden");
@@ -1467,6 +1524,7 @@ var google_remarketing_only = true;
                                 $("#ac_select_all_data2").addClass("hidden");
                                 has_reserv = false
                             }
+                          }
                         }
                     });
                     $("#alacarte_load_layer").hide();
@@ -1484,7 +1542,9 @@ var google_remarketing_only = true;
                     }
 
                         
-                } 
+                 }
+               }
+            } 
                 /*else {
                     $.ajax({
                         url: "/experience/request_reg",
@@ -1521,32 +1581,57 @@ var google_remarketing_only = true;
          $('#alacarte_booking_form').submit();
      })
 
+ //for experience hide show
  $("body").delegate(".time_tab", "click", function() {
-      //alert('hi');select_table_exp
-      //$('#cant_select_table').hide();
-      //$('#select_table_exp').hide();
+   
       $('#cant_select_table').addClass("hidden")
     }); 
   $("body").delegate("#date_edit1", "click", function() {
      
-     //$('#cant_select_table').hasClass("hidden")
-      //$('#select_table_exp').hide();
       $('#cant_select_table').addClass("hidden")
     }); 
 
     $("body").delegate("#time_edit1", "click", function() {
-     
-      //$('#cant_select_table').hide();
-      //$('#select_table_exp').hide();
       $('#cant_select_table').addClass("hidden")
     }); 
 
     $("body").delegate(".time", "click", function() {
+      $('#cant_select_table').addClass("hidden")
+    }); 
+    //end experience code hide show
+
+    //start code hide or show in alacart
+    $("body").delegate(".time_tab", "click", function() {
+      //alert('hi');select_table_exp
+      //$('#cant_select_table').hide();
+      //$('#select_table_exp').hide();
+      $('#alacarte_cant_select_table').addClass("hidden")
+      $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass("hidden");
+    }); 
+  $("body").delegate("#ac_date_edit2", "click", function() {
+     
+     //$('#cant_select_table').hasClass("hidden")
+      //$('#select_table_exp').hide();
+      $('#alacarte_cant_select_table').addClass("hidden")
+      $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass("hidden");
+    }); 
+
+    $("body").delegate("#ac_time_edit2", "click", function() {
      
       //$('#cant_select_table').hide();
       //$('#select_table_exp').hide();
-      $('#cant_select_table').addClass("hidden")
+      $('#alacarte_cant_select_table').addClass("hidden")
+      $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass("hidden");
     }); 
+
+    $("body").delegate(".alacarte_time", "click", function() {
+     
+      //$('#cant_select_table').hide();
+      //$('#select_table_exp').hide();
+      $('#alacarte_cant_select_table').addClass("hidden")
+      $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').addClass("hidden");
+    }); 
+    //end hide and show code for alacart code
 
     $('#booking_form').submit(function(){
         var error = false;        

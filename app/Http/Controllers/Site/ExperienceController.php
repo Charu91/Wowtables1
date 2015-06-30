@@ -283,6 +283,7 @@ class ExperienceController extends Controller {
                                             LEFT JOIN vendor_location_address as vla on vla.vendor_location_id= pvl.vendor_location_id
                                             LEFT JOIN locations as l on l.id = vla.city_id
                                             WHERE t.slug = '$collection'
+                                            AND mrn.image_type = 'listing'
                                             AND t.status = 'available'
                                             group by p.id");
             
@@ -894,10 +895,11 @@ class ExperienceController extends Controller {
         $reserv_date_new = date('Y-m-d',strtotime(Input::get('booking_date')));
         $reserv_time_new = Input::get('booking_time');
         $check_user_query = DB::select("SELECT `reservation_date`,`reservation_time` FROM `reservation_details`
-                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new'");
+                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new' AND `reservation_status`IN ('edited', 'new')");
         //print_r($check_user_query);
         $success = '0';
-      if(!empty($check_user_query)){
+      if(!empty($check_user_query))
+      {
         foreach ($check_user_query as $value) {
            $reserv_date = $value->reservation_date;
            $reserv_time = $value->reservation_time;
@@ -918,7 +920,7 @@ class ExperienceController extends Controller {
                     }
 
                   }
-        }
+      }
         
        
        $arrData = $this->experiences_model->validateReservationData($dataPost);
