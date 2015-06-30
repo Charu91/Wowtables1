@@ -705,6 +705,7 @@ class User {
 
             $location_id = null;
             $phone_number = null;
+            $rewardPoints = 0;
 
         }else{
 
@@ -742,6 +743,8 @@ class User {
             if(!isset($user_id)) $user_id = $fb_user_id;
             if(!isset($location_id)) $location_id = $fb_user_location_id;
             if(!isset($phone_number)) $phone_number = $fb_user_phone_number;
+
+            $rewardPoints = $userResult->points_earned - $userResult->points_spent;
         }
 
         $access_token = Uuid::uuid1()->toString();
@@ -803,8 +806,7 @@ class User {
                     'location_name' => $location_name,
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
-                    'reward_points' => $location_id + 500,
-                    'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
+                    'reward_points' => $rewardPoints,
                 ]
             ];
         }else{

@@ -431,7 +431,7 @@ class Reservation {
 				if($reservationTimestamp >= $currentTimestamp) {
 					if($row->reservation_type == 'experience') {
 						$day = date('D',strtotime($row->reservation_date));
-						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day);
+						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 						
 					}
