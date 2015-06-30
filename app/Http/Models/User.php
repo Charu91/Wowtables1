@@ -669,7 +669,8 @@ class User {
     }
 
     public function mobileFbLogin(array $data)
-    {
+    {   
+        $rewardPoints = 0;
         DB::beginTransaction();
 
         $query = '
@@ -705,7 +706,7 @@ class User {
 
             $location_id = null;
             $phone_number = null;
-            $rewardPoints = 0;
+            
 
         }else{
 
@@ -723,10 +724,12 @@ class User {
                     $fb_user_id = $user->id;
                     $fb_token_exists = true;
                     $fb_user_location_id = $user->location_id;
+                    $rewardPoints = $userResult->points_earned - $userResult->points_spent;
                 }else if($user->email_exists){
                     $email_user_id = $user->id;
                     $email_exists = true;
                     $email_user_location_id = $user->location_id;
+                    $rewardPoints = $userResult->points_earned - $userResult->points_spent;
                 }
             }
 
@@ -744,7 +747,7 @@ class User {
             if(!isset($location_id)) $location_id = $fb_user_location_id;
             if(!isset($phone_number)) $phone_number = $fb_user_phone_number;
 
-            $rewardPoints = 0; //$userResult->points_earned - $userResult->points_spent;
+            
         }
 
         $access_token = Uuid::uuid1()->toString();
@@ -806,7 +809,7 @@ class User {
                     'location_name' => $location_name,
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
-                    'reward_points' => 0, //$rewardPoints,
+                    'reward_points' => $rewardPoints,
                 ]
             ];
         }else{
