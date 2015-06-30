@@ -396,7 +396,7 @@ class Reservation {
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();
-		//echo $queryResult->toSql(); 
+		//echo $queryResult->toSql(); die();
 		
 		//array to store the information
 		$arrData = array();
@@ -476,8 +476,8 @@ class Reservation {
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
-														'address' => $address,
-														'locality' => $locality,														
+														'address' => (empty($address)) ? "" : $address,
+														'locality' => (empty($locality)) ? "" : $locality,														
 													),
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 								);
