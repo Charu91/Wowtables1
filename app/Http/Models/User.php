@@ -679,7 +679,9 @@ class User {
                 IF(`fb_token` IS NOT NULL, 1, 0) AS `fb_token_exists`,
                 IF(`email` IS NOT NULL, 1, 0) AS `email_exists`,
                 `location_id`,
-                `phone_number`
+                `phone_number`,
+                `points_earned`,
+                `points_spent`
             FROM users
             WHERE `fb_token` = ? OR `email` = ?
             ORDER BY `fb_token`
