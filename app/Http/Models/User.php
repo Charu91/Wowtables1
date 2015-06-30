@@ -726,12 +726,12 @@ class User {
                     $fb_user_id = $user->id;
                     $fb_token_exists = true;
                     $fb_user_location_id = $user->location_id;
-                    $rewardPoints = $user->points_earned - $userResult->points_spent;
+                    $rewardPoints = $user->points_earned - $user->points_spent;
                 }else if($user->email_exists){
                     $email_user_id = $user->id;
                     $email_exists = true;
                     $email_user_location_id = $user->location_id;
-                    $rewardPoints = $user->points_earned - $userResult->points_spent;
+                    $rewardPoints = $user->points_earned - $user->points_spent;
                 }
             }
 
