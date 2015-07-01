@@ -134,9 +134,9 @@ class ReviewController extends Controller {
             $user_id = $queryResult[0]->user_id;
             $membership_query = DB::select("select attribute_value from user_attributes_varchar where user_id=$user_id limit 1");
                 //echo "sad = ".$last_id;
-                $getMembership_number = $membership_query[0]->attribute_value;
+                //$getMembership_number = $membership_query[0]->attribute_value;
 
-                if(empty($getMembership_number))
+                if(empty($membership_query))
                 {
                     $membership_number = 'NULL';
                 }
