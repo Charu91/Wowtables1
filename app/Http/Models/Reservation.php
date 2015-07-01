@@ -369,7 +369,7 @@ class Reservation {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
 						->leftJoin('product_vendor_locations as pvl', function($join){
-							$join->on('pvl.product_id','=','rd.product_id')->andOn('pvl.vendor_location_id','=','rd.vendor_location_id');
+							$join->on('pvl.product_id','=','rd.product_id')->on('pvl.vendor_location_id','=','rd.vendor_location_id');
 						})
 						->leftJoin('products','products.id','=','rd.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
