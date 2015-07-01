@@ -361,6 +361,18 @@ Route::get('/users/redeem-rewards', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/review/add_a_review/{reservid}', [
+    'uses' => 'Site\ReviewController@addReview',
+    'as' => 'addReview',
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/review/save_user_review', [
+    'uses' => 'Site\ReviewController@saveReview',
+    'as' => 'saveReview',
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::post('/rewards/make_giftcard', [
     'uses' => 'Site\ProfileController@makeGiftcard',
     'as' => 'makeGiftcard',

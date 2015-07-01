@@ -368,7 +368,9 @@ class Reservation {
 	public static function getReservationRecord($userID,$start=NULL,$limit=NULL) {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
-						//->leftJoin('product_vendor_locations as pvl','pvl.id','=','rd.product_vendor_location_id')
+						->leftJoin('product_vendor_locations as pvl', function($join){
+							$join->on('pvl.product_id','=','rd.product_id')->on('pvl.vendor_location_id','=','rd.vendor_location_id');
+						})
 						->leftJoin('products','products.id','=','rd.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
 						->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
@@ -387,7 +389,7 @@ class Reservation {
 									 'vendors.name as vendor_name', 'rd.reservation_type', 'products.id as product_id',
 									 'rd.vendor_location_id', 'rd.product_vendor_location_id', 'rd.special_request',
 									 'rd.giftcard_id', 'rd.guest_name', 'rd.guest_name', 'rd.guest_email',
-									 'rd.guest_phone', 'rd.points_awarded',
+									 'rd.guest_phone', 'rd.points_awarded', 'pvl.id as pvl_id',
 									 DB::raw('MAX(IF(pa.alias="short_description", pat.attribute_value,"")) AS product_short_description'),
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
 									 'ploc.name as product_locality','pvla.address as product_address',
@@ -396,7 +398,7 @@ class Reservation {
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();
-		//echo $queryResult->toSql(); 
+		//echo $queryResult->toSql(); die();
 		
 		//array to store the information
 		$arrData = array();
@@ -431,7 +433,7 @@ class Reservation {
 				if($reservationTimestamp >= $currentTimestamp) {
 					if($row->reservation_type == 'experience') {
 						$day = date('D',strtotime($row->reservation_date));
-						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day);
+						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
 						
 					}
@@ -449,7 +451,7 @@ class Reservation {
 					// $locality = "";
 				}
 				else {
-					$name = (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name;
+					$name = (empty($row->product_name)) ? $row->vendor_name : $row->product_name;
 					$product_id = ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id;
 					$address = (empty($row->product_address)) ? $row->vendor_address : $row->product_address;
 					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;		
@@ -466,7 +468,7 @@ class Reservation {
 									'name' => $name,
 									'type' => (empty($row->reservation_type)) ? "" : $row->reservation_type,
 									'product_id' => $product_id,
-									'vl_id' => ($row->vendor_location_id == 0) ? $row->product_vendor_location_id:$row->vendor_location_id,
+									'vl_id' => (empty($row->pvl_id)) ? $row->vendor_location_id:$row->pvl_id,
 									'special_request' => (is_null($row->special_request)) ? "" : $row->special_request,
 									'giftcard_id' => (is_null($row->giftcard_id)) ? "" : $row->giftcard_id,
 									'guest_name' => (empty($row->guest_name)) ? "" : $row->guest_name,
@@ -476,8 +478,8 @@ class Reservation {
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
-														'address' => $address,
-														'locality' => $locality,														
+														'address' => (empty($address)) ? "" : $address,
+														'locality' => (empty($locality)) ? "" : $locality,														
 													),
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 								);

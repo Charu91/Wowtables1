@@ -669,7 +669,8 @@ class User {
     }
 
     public function mobileFbLogin(array $data)
-    {
+    {   
+        $rewardPoints = 0;
         DB::beginTransaction();
 
         $query = '
@@ -678,7 +679,9 @@ class User {
                 IF(`fb_token` IS NOT NULL, 1, 0) AS `fb_token_exists`,
                 IF(`email` IS NOT NULL, 1, 0) AS `email_exists`,
                 `location_id`,
-                `phone_number`
+                `phone_number`,
+                `points_earned`,
+                `points_spent`
             FROM users
             WHERE `fb_token` = ? OR `email` = ?
             ORDER BY `fb_token`
@@ -705,6 +708,7 @@ class User {
 
             $location_id = null;
             $phone_number = null;
+            
 
         }else{
 
@@ -722,10 +726,12 @@ class User {
                     $fb_user_id = $user->id;
                     $fb_token_exists = true;
                     $fb_user_location_id = $user->location_id;
+                    $rewardPoints = $user->points_earned - $user->points_spent;
                 }else if($user->email_exists){
                     $email_user_id = $user->id;
                     $email_exists = true;
                     $email_user_location_id = $user->location_id;
+                    $rewardPoints = $user->points_earned - $user->points_spent;
                 }
             }
 
@@ -742,6 +748,8 @@ class User {
             if(!isset($user_id)) $user_id = $fb_user_id;
             if(!isset($location_id)) $location_id = $fb_user_location_id;
             if(!isset($phone_number)) $phone_number = $fb_user_phone_number;
+
+            
         }
 
         $access_token = Uuid::uuid1()->toString();
@@ -803,8 +811,7 @@ class User {
                     'location_name' => $location_name,
                     'phone_number' => (string)$phone_number,
                     'full_name' => $data['full_name'],
-                    'reward_points' => $location_id + 500,
-                    'reward_points' => ($userResult) ? ($userResult->points_earned - $userResult->points_spent):0,
+                    'reward_points' => $rewardPoints,
                 ]
             ];
         }else{

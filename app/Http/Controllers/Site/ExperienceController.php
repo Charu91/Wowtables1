@@ -899,7 +899,7 @@ class ExperienceController extends Controller {
         $reserv_date_new = date('Y-m-d',strtotime(Input::get('booking_date')));
         $reserv_time_new = Input::get('booking_time');
         $check_user_query = DB::select("SELECT `reservation_date`,`reservation_time` FROM `reservation_details`
-                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new'");
+                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new' AND `reservation_status`IN ('edited', 'new')");
         //print_r($check_user_query);
         $success = '0';
       if(!empty($check_user_query))
