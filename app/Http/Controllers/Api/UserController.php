@@ -102,4 +102,14 @@ class UserController extends Controller {
             return response()->json($updateUser['data'], $updateUser['code']);
         }
     }
+
+    /**
+     * Get total points of the user
+     *
+     * @return Response
+     */
+    public function getPoints() {
+        $userPoints = User::showPoints();       
+        return response()->json($userPoints, 200);
+    }
 }
