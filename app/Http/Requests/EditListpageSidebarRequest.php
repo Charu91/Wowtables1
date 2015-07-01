@@ -23,10 +23,10 @@ class EditListpageSidebarRequest extends Request {
     {
         return [
             'sidebar_media_id'  => 'required',
-            'location_id' => 'required|exists:locations,id,type,City',
-            'link' => 'required|url',
-            'title' => 'required',
-            'description' => 'required',
+            //'location_id' => 'required|exists:locations,id,type,City',
+            //'link' => 'required|url',
+            //'title' => 'required',
+            //'description' => 'required',
         ];
     }
 
