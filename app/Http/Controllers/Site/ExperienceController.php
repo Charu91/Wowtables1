@@ -73,7 +73,7 @@ class ExperienceController extends Controller {
 
         //$arrSubmittedData['city_id']    = $city_id;
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
-
+        //echo "<pre>"; print_r($arrExperience);
         $data['arrExperience']          = $arrExperience;
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);

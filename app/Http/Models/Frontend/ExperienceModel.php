@@ -528,10 +528,14 @@ class ExperienceModel {
     //query to read the experience detail
     $queryExperience = DB::table('products')
               ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+              ->leftJoin('product_attributes_date as pad','pad.product_id','=','products.id')
+              ->leftJoin('product_attributes_date as pad1','pad1.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
               ->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
+              ->leftJoin('product_attributes as pa1', 'pa1.id','=','pad.product_attribute_id')
+              ->leftJoin('product_attributes as pa2', 'pa2.id','=','pad1.product_attribute_id')
               //->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
               //->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
               //->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
@@ -569,6 +573,8 @@ class ExperienceModel {
                   DB::raw('MAX(IF(pa.alias = "seo_meta_desciption", pat.attribute_value, "")) AS seo_meta_desciption'),
                   DB::raw('MAX(IF(pa.alias = "seo_title", pat.attribute_value, "")) AS seo_title'),
                   DB::raw('MAX(IF(pa.alias = "seo_meta_keywords", pat.attribute_value, "")) AS seo_meta_keywords'),
+                  DB::raw('MAX(IF(pa1.alias = "start_date", pad.attribute_value, "")) AS start_date'),
+                  DB::raw('MAX(IF(pa2.alias = "end_date", pad1.attribute_value, "")) AS end_date'),
 
                   'media.file as experience_image', 'curators.name as curator_name',
                   'curators.bio as curator_bio', 'curators.designation',
@@ -595,7 +601,7 @@ class ExperienceModel {
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
 
-      /*echo "<pre>"; print_r($expResult); die;*/
+      //echo "<pre>"; print_r($expResult); die;
 
     //array to store the experience details
     $arrExpDetails = array();
@@ -620,6 +626,8 @@ class ExperienceModel {
                     'seo_meta_desciption' => $expResult->seo_meta_desciption,
                     'seo_title' => $expResult->seo_title,
                     'seo_meta_keywords' => $expResult->seo_meta_keywords,
+                    'start_date' => $expResult->start_date,
+                    'end_date' => $expResult->end_date,
                     'image' => $arrImage,
                     'type' => $expResult->type,
                     'price' => $expResult->price,
