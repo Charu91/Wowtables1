@@ -102,6 +102,10 @@ class AlacarteController extends Controller {
             $data['resultCount'] = 0;
         }
 
+
+        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_alacarte = 1');
+        $data['listpage_sidebar_url'] = Config::get('constants.LISTPAGE_SIDEBAR_WEB_URL');
+
         $data['allow_guest']='Yes'; 
         $data['current_city']  = strtolower($city);
         $data['current_city_id']        = $city_id;
