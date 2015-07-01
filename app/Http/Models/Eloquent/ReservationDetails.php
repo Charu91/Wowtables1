@@ -176,6 +176,18 @@ class ReservationDetails extends Model {
         			}
        					// echo "<pre>"; print_r($dataPost);
         			$addonsText = '';
+
+        			foreach($arrData['addon'] as $key => $value) {
+        				if($value['qty'] > 0){
+			                //echo "prod id = ".$prod_id." , qty = ".$qty;
+			                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $value['prod_id'] and product_attribute_id = 17");
+
+			                //echo "<pre>"; print_r($addonsDetails);
+			                $addonsText .= $addonsDetails[0]->attribute_value." (".$value['qty'].") , ";
+			            }
+        			}
+
+        			/*
 			        foreach($arrData['addon'] as $prod_id => $qty) {
 			            if($qty > 0){
 			                //echo "prod id = ".$prod_id." , qty = ".$qty;
@@ -186,6 +198,7 @@ class ReservationDetails extends Model {
 			            }
 
         			}
+        			*/
 			        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
 			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
 			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request; 
