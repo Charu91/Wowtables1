@@ -431,11 +431,10 @@ class ReservationDetails extends Model {
 
 			                //echo "<pre>"; print_r($addonsDetails);
 			                $addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
-			            }
-
-			        */
+			            }	        
 
         			}
+        			*/
 			        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
 			        $special_request = isset($arrData['specialRequest']) && !empty($arrData['specialRequest'] ) ? "Spl Req: ".$arrData['specialRequest'] : "";
 			        $arrData['addons_special_request'] = $finalAddontext." ".$special_request; 
