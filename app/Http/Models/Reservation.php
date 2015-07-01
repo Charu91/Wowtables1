@@ -451,7 +451,7 @@ class Reservation {
 					// $locality = "";
 				}
 				else {
-					$name = (empty($row->vendor_name)) ? $row->product_name : $row->vendor_name;
+					$name = (empty($row->product_name)) ? $row->vendor_name : $row->product_name;
 					$product_id = ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id;
 					$address = (empty($row->product_address)) ? $row->vendor_address : $row->product_address;
 					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;		
