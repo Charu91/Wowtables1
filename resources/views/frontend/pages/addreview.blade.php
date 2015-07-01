@@ -31,7 +31,7 @@ $(document).ready(function(){
 		<div class="col-md-12 entry-content">
 	<?php if($data['review_status'] == "Yes")
 				{
-				echo '<h3>your review is exist . Thank you</h3>';
+				echo "<h3>It looks like you have already submitted a review for this reservation. If there's something wrong, or you would like to edit your review, please write to us at concierge@wowtables.com. </h3>";
 				}
 			else { ?>	
 					
