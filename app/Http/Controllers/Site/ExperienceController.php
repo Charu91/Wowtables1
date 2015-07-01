@@ -72,14 +72,14 @@ class ExperienceController extends Controller {
         $data['current_city_id']        = $city_id;
 
         //$arrSubmittedData['city_id']    = $city_id;
-       
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
+
         $data['arrExperience']          = $arrExperience;
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
         //echo "city id = ".$city_id; die;
-//         echo "<prE>"; print_r($data['arrExperience']); die;
+
        /*echo '<pre>';
        //print_r( $time_range);
        print_r( $data['arrExperience']);
@@ -198,6 +198,10 @@ class ExperienceController extends Controller {
             $data['resultCount'] = 0;
         }
 
+        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_experience = 1');
+        $data['listpage_sidebar_url'] = Config::get('constants.LISTPAGE_SIDEBAR_WEB_URL');
+        //echo "url = ".$data['listpage_sidebar_url'];
+        //echo "<br/><pre>"; print_r($data['ListpageSidebars']); die;
         $data['allow_guest']='Yes'; 
         $data['current_city']  = strtolower($city);
         $data['current_city_id']  = $city_id;

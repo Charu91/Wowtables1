@@ -333,8 +333,6 @@ $(document).ready(function(){
 				}
 				?>
 				
-				
-				
 				<div class="widget conc-mobile col-md-12 visible-xs text-center">
 					<a href="#">
 						<span class="orange">MAKE A RESERVATION ONLINE</span><br/>OR<br/>CALL OUR CONCIERGE AT <span class="orange">9619551387</span>
@@ -560,73 +558,27 @@ $(document).ready(function(){
             </div>
           </div>
 		  <?php }?>
-			<div class="widget">
-				<?php if(isset($right_content[1]['image1']) && $right_content[1]['image1']!=''){ ?>    
-					<?php if(isset($right_content[1]['link1']) && $right_content[1]['link1']!=''){ ?> 
-						<a href="<?php echo $right_content[1]['link1'];?>"><?php } ?>
-						<img src="<?php //echo $base_url.$right_content[1]['image1'];?>" class="img-responsive" alt="WowTables Concierge">
-					<?php if(isset($right_content[1]['link1']) && $right_content[1]['link1']!=''){ ?>    </a> <?php } ?>
-					<?php } else { ?>
-						<img src="{{URL::to('/')}}/<?php echo 'assets/img/concierge.jpg';?>">	
-					<?php } ?>
-			</div>				
-				<?php if(isset($right_content[1]['image2']) && $right_content[1]['image2']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link2']) && $right_content[1]['link2']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link2'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image2'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link2']) && $right_content[1]['link2']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image3']) && $right_content[1]['image3']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link3']) && $right_content[1]['link3']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link3'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image3'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link3']) && $right_content[1]['link3']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image4']) && $right_content[1]['image4']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link4']) && $right_content[1]['link4']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link4'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image4'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link4']) && $right_content[1]['link4']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image5']) && $right_content[1]['image5']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link5']) && $right_content[1]['link5']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link5'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image5'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link5']) && $right_content[1]['link5']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php 
-				if(isset($collections) && count($collections)>0)
-				{
-					foreach($collections as $collection)
-					{                 
-						if(!empty($collection['exp_url'])  && !empty($collection['exp_title']) && !empty($collection['exp_small_image']) && empty($collection['exp_hide_shortcut']) )
-						{              
-						?>                             
-						<div class="widget" >
-							<a  href="/collection/<?php echo $collection['exp_url'] ?>"><img src="<?php echo (!empty($collection['exp_small_image'])) ? $collection['exp_small_image'] : $collection['exp_image'] ;  ?>" class="img-responsive"></a>
-							<div class="desc">
-								<p><?php echo $collection['exp_title'] ?></p>
-								<p class="small" ><?php echo (!empty($collection['exp_short_desc'])) ? $collection['exp_short_desc'] : substr($collection['exp_description'],0,50) .' ...'  ;  ?></p>           
-							</div>       
+			<?php foreach($ListpageSidebars as $sidebars){ ?>
+				<div class="widget">
 
-						</div>         
-						<?php  
-						}   
-					}
-				}
-				?>
+					<?php if(isset($sidebars->link) && $sidebars->link != ''){ ?>
+						<a href="<?php echo $sidebars->link;?>">
+					<?php } ?>
+						<img src="<?php echo $listpage_sidebar_url.$sidebars->imagename;?>" class="img-responsive" alt="WowTables Concierge">
+					<?php if(isset($sidebars->link) && $sidebars->link != ''){ ?>
+						</a>
+					<?php } ?>
+					<?php if((isset($sidebars->promotion_title) && $sidebars->promotion_title != '') && (isset($sidebars->description) && $sidebars->description != '')){ ?>
+						<div class="desc">
+							<p><?php echo $sidebars->promotion_title;?></p>
+							<p class="small"> <?php echo strip_tags($sidebars->description);?></p>
+						</div>
+					<?php } ?>
+
+				</div>
+			<?php } ?>
+
+
         </div>
 	</div>
 </div>
