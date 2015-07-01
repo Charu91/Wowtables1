@@ -120,15 +120,17 @@ class Schedules {
 	 * @return	array
 	 * @author	Parth Shukla <parthshukla@ahex.co.in>
 	 */
-	public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
+	public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  
+															$day=NULL, $vendorLocationID = NULL) {
 		//initializing the value of day
 		$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
 		
 		//query to read the schedules
-		$schedules = DB::table('schedules')
-						->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
-						->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
-						->where('schedules.day_short',$day)
+		$scheduleQuery = DB::table('schedules')
+							->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+							->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+							->join('product_vendor_locations as pvl', 'pvl.id', '=', 'pvlbs.product_vendor_location_id')
+							->where('schedules.day_short',$day);
 						//->where('pvlbs.product_vendor_location_id', $queryMaxPVLI->pvl_id)
 						/*->where('pvlbs.product_vendor_location_id', function($query) use($productID) 
 								{
@@ -136,10 +138,20 @@ class Schedules {
 											->from('product_vendor_locations as pvl')
 											->where('product_id',$productID);
 						})*/
-						->where('pvlbs.product_vendor_location_id',$productVendorLocationID)
+						//->where('pvlbs.product_vendor_location_id',$productVendorLocationID)
+						/*->where('pvl.product_id',$productID)
+						->where('pvl.vendor_location_id',$vendorLocationID)
 						->select('schedules.id','ts.time','ts.slot_type')
-						->get();
-						
+						->get(); */ 
+		if(!is_null($productVendorLocationID)) {
+			$scheduleQuery->where('pvlbs.product_vendor_location_id',$productVendorLocationID);
+		} else {
+			$scheduleQuery->where('pvl.product_id',$productID)
+							->where('pvl.vendor_location_id',$vendorLocationID);						
+		} 
+
+		$schedules = $scheduleQuery->select('schedules.id','ts.time','ts.slot_type')->get(); 
+												
 		#array to hold information
 		$arrData = array();
 		

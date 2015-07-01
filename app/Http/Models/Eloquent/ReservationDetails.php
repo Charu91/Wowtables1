@@ -386,6 +386,11 @@ class ReservationDetails extends Model {
 			else if($arrData['reservationType'] == 'experience') {
 				$reservation->vendor_location_id = 0;
 				$reservation->product_vendor_location_id = $arrData['vendorLocationID'];
+				//----------------------------------------------------------------------
+				$arrResult = self::readProductIdAndVendorLocation($arrData['vendorLocationID']);			
+				$reservation->vendor_location_id = $arrResult->vendor_location_id;
+				$reservation->product_id = $arrResult->product_id;
+				//-----------------------------------------------------------------------
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
 					self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
 					//Reading value for addon
