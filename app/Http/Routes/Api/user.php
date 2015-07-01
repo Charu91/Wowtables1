@@ -33,3 +33,11 @@ Route::put('api/set_phone_location', [
 ]);
 
 Route::post('api/version', 'Api\CheckVersionController@checkVersion');
+
+Route::get('api/get_points', [
+    'uses' => 'Api\UserController@getPoints',
+    'as' => '',
+    'middleware' => 'wow.api',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);

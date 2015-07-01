@@ -9,6 +9,7 @@ use Illuminate\Auth\Authenticatable;
 use Rhumsaa\Uuid\Uuid;
 use Illuminate\Contracts\Hashing\Hasher;
 use Hash;
+use Config as Confg;
 
 /**
  * Class User
@@ -1145,6 +1146,39 @@ class User {
     public function get_all_points_spent($id){
         $rewards = DB::table('reward_points_redeemed')->where('user_id', $id)->select('points_redeemed','description');
         return $rewards->get();
+    }
+    //--------------------------------------------------------------------------------
+
+    /**
+     * Show the total points of the user
+     *
+     * @access  public
+     * @param  
+     * @return  array $arrResponse
+     * @since   1.0.0
+     */
+    public static function showPoints() {
+
+        $token = $_SERVER['HTTP_X_WOW_TOKEN'];
+        $device = $_SERVER['HTTP_X_WOW_DEVICE'];
+
+        $arrData = DB::table('user_devices as ud')
+                        ->join('users as u', 'u.id', '=', 'ud.user_id')
+                        ->where('ud.device_id', $device)
+                        ->where('ud.access_token', $token)
+                        ->select('u.points_earned', 'u.points_spent')
+                        ->first();
+
+        if( $arrData ) {
+              $arrResponse['status'] = Confg::get('constants.API_SUCCESS');
+              $arrResponse['data']['points'] = $arrData->points_earned - $arrData->points_spent;        
+        }
+        else{   
+            $arrResponse['status'] = Confg::get('constants.API_ERROR');
+            $arrResponse['data']['points'] = 0;
+        }
+
+        return $arrResponse;
     }
 
 }

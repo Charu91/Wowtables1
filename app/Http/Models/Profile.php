@@ -100,7 +100,7 @@ class Profile {
                                             'selectedPreferences' => $preferredLocations['data'],
                                             'areas' => $cityAreas['data'],
                                             'last_reservation_date' => (empty($lastReservationDetail->reservation_date)) ? "" : $lastReservationDetail->reservation_date,
-                                            'last_reservation_time' => (empty($lastReservationDetail->reservation_time)) ? "" : $lastReservationDetail->reservation_time
+                                            'last_reservation_time' => (empty($lastReservationDetail->reservation_time)) ? "" : date('H:i:s', strtotime($lastReservationDetail->reservation_time)),
                                           );
             }
             else {
