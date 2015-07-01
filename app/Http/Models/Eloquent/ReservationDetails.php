@@ -180,7 +180,8 @@ class ReservationDetails extends Model {
         			foreach($arrData['addon'] as $key => $value) {
         				if($value['qty'] > 0){
 			                //echo "prod id = ".$prod_id." , qty = ".$qty;
-			                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $value['prod_id'] and product_attribute_id = 17");
+			                $prod_id = $value['prod_id'];
+			                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
 
 			                //echo "<pre>"; print_r($addonsDetails);
 			                $addonsText .= $addonsDetails[0]->attribute_value." (".$value['qty'].") , ";
