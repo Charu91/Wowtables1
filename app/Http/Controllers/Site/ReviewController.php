@@ -52,7 +52,7 @@ class ReviewController extends Controller {
      * @since	1.0.0
      */
 
-    public function addReview($reservid)
+    public function addReview($myreservid)
 	{
 
 
@@ -77,6 +77,12 @@ class ReviewController extends Controller {
         $id = Session::get('id');
 		
 		//$data=Profile::getUserProfileWeb($id);
+
+        $var = $myreservid;
+        $substr =substr($var, 1);
+
+        $reservid = ltrim($substr, '0');
+
 
         $queryResult = DB::select("select `rd`.`id`, `rd`.`user_id`, `rd`.`reservation_status`, `rd`.`reservation_date`, `rd`.`reservation_time`, `rd`.`no_of_persons`,
                                    `products`.`name` as `product_name`, `vendors`.`id` as `vendor_id`, `vendors`.`name` as `vendor_name`,
@@ -253,7 +259,7 @@ class ReviewController extends Controller {
                          'membership_num' => $membership_num,], function($message) use ($exp_name, $member_name) {
                         $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                        $message->to('kailash@wowtables.com')->subject(' New Feedback on '.$exp_name.' by '.$member_name.'');
+                        $message->to('concierge@wowtables.com')->subject(' New Feedback on '.$exp_name.' by '.$member_name.'');
                         //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
                 });
 
