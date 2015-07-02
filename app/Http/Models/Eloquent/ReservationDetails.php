@@ -1401,6 +1401,9 @@ class ReservationDetails extends Model {
 			//echo "<prE>"; print_r($productDetails);
 			//echo "<br/>----outlet-----<prE>"; print_r($outlet);
 			//echo "<br/>----locationDetails-----<prE>"; print_r($locationDetails);
+    		if(!array_key_exists('giftCardID', $arrData)) {
+    			$arrData['giftCardID'] = '';
+    		}
 			$zoho_data = array(
 				'Name' => $userData['data']['full_name'],
 				'Email_ids' => $userData['data']['email'],
