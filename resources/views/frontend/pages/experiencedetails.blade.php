@@ -1096,6 +1096,37 @@ $last_url_item = count($url)-1;
 }
 	
 </style>
+<?php
+        //echo "<pre>"; print_r($arrExperience);
+//echo " sd = ".$arrExperience['start_date'];
+//die;
+$sd = date('Y-m-d',strtotime($arrExperience['data']['start_date']));
+$ed = date('Y-m-d',strtotime($arrExperience['data']['end_date']));
+//echo "sd = ".$startDate." , ed == ".$endDate;
+if ($sd != '0000-00-00') {
+    if($sd < date('Y-m-d'))
+    {
+        $startDate = 'new Date()';
+    }
+    else
+    {
+        $tmp = explode('-', $sd);
+        $startDate = 'new Date('.$tmp[0].','.($tmp[1]-1).','.$tmp[2].')';
+    }
+
+} else {
+    $startDate = 'new Date()';
+}
+if ($ed != '0000-00-00') {
+    $tmp = explode('-', $ed);
+    $endDate = 'new Date('.$tmp[0].','.($tmp[1]-1).','.$tmp[2].')';
+} else {
+    $endDate = '\'\'';
+}
+//echo "sd = ".$startDate." , ed == ".$endDate;
+
+
+?>
   <!--Modal for selecting alacarte location from experiences reservation modal-->
   <script type="text/javascript">
       //code for floating reservation button
@@ -1217,10 +1248,11 @@ $last_url_item = count($url)-1;
 
        function loadDatePicker() {
           $("#choose_date").datepicker("destroy");
-         
+
           $("#choose_date").datepicker({
              dateFormat: 'yy-m-dd',
-             minDate: 'new Date()',
+              minDate: <?php echo $startDate; ?>,
+              maxDate: <?php echo $endDate; ?>,
              beforeShowDay: disableAllTheseDays,
              onSelect: function(dateText, inst) 
              {

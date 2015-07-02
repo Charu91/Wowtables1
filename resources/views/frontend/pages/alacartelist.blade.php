@@ -536,74 +536,25 @@ $(document).ready(function(){
 				  </form>
 	            </div>
 	          </div>
+			<?php foreach($ListpageSidebars as $sidebars){ ?>
 			<div class="widget">
-				<?php if(isset($right_content[1]['image1']) && $right_content[1]['image1']!=''){ ?>    
-					<?php if(isset($right_content[1]['link1']) && $right_content[1]['link1']!=''){ ?> 
-						<a href="<?php echo $right_content[1]['link1'];?>"><?php } ?>
-						<img src="<?php //echo $base_url.$right_content[1]['image1'];?>" class="img-responsive" alt="WowTables Concierge">
-					<?php if(isset($right_content[1]['link1']) && $right_content[1]['link1']!=''){ ?>    </a> <?php } ?>
-					<?php } else { ?>
-						<img src="<?php echo '/assets/img/concierge.jpg';?>">	
-					<?php } ?>
-			</div>	
-				
-				<?php if(isset($right_content[1]['image2']) && $right_content[1]['image2']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link2']) && $right_content[1]['link2']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link2'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image2'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link2']) && $right_content[1]['link2']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image3']) && $right_content[1]['image3']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link3']) && $right_content[1]['link3']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link3'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image3'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link3']) && $right_content[1]['link3']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image4']) && $right_content[1]['image4']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link4']) && $right_content[1]['link4']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link4'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image4'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link4']) && $right_content[1]['link4']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php if(isset($right_content[1]['image5']) && $right_content[1]['image5']!=''){ ?>  
-					<div class="widget">
-					<?php if(isset($right_content[1]['link5']) && $right_content[1]['link5']!=''){ ?>    
-						<a href="<?php echo $right_content[1]['link5'];?>"> <?php } ?>
-							<img src="<?php echo $right_content[1]['image5'];?>" class="img-responsive">
-					<?php if(isset($right_content[1]['link5']) && $right_content[1]['link5']!=''){ ?>    </a> <?php } ?>
-					</div>
-				<?php } ?>
-				
-				<?php 
-				if(isset($collections) && count($collections)>0)
-				{
-					foreach($collections as $collection)
-					{     //echo "<pre>"; print_r($collection);
-						if(!empty($collection['a_url'])  && !empty($collection['a_title']) && !empty($collection['a_small_image']) && empty($collection['a_hide_shortcut']) )
-						{              
-						?>                             
-						<div class="widget" >
-							<a  href="/alacarte/collection/<?php echo $collection['a_url'] ?>"><img src="<?php echo (!empty($collection['a_small_image'])) ? $collection['a_small_image'] : $collection['a_image'] ;  ?>" class="img-responsive"></a>
-							<div class="desc">
-								<p><?php echo $collection['a_title'] ?></p>
-								<p class="small" ><?php echo (!empty($collection['a_short_desc'])) ? $collection['a_short_desc'] : substr($collection['a_description'],0,50) .' ...'  ;  ?></p>           
-							</div>       
 
-						</div>         
-						<?php  
-						}
-					}
-				}
-				?>
+				<?php if(isset($sidebars->link) && $sidebars->link != ''){ ?>
+				<a href="<?php echo $sidebars->link;?>">
+					<?php } ?>
+					<img src="<?php echo $listpage_sidebar_url.$sidebars->imagename;?>" class="img-responsive" alt="WowTables Concierge">
+					<?php if(isset($sidebars->link) && $sidebars->link != ''){ ?>
+				</a>
+				<?php } ?>
+				<?php if((isset($sidebars->promotion_title) && $sidebars->promotion_title != '') && (isset($sidebars->description) && $sidebars->description != '')){ ?>
+				<div class="desc">
+					<p><?php echo $sidebars->promotion_title;?></p>
+					<p class="small"> <?php echo strip_tags($sidebars->description);?></p>
+				</div>
+				<?php } ?>
+
+			</div>
+			<?php } ?>
         </div>
 	</div>
 </div>
