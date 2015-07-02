@@ -387,6 +387,10 @@ class ReservationDetails extends Model {
 			if(isset($arrData['specialRequest'])) {
 				$reservation->special_request = $arrData['specialRequest'];
 			}
+
+			if(isset($arrData['giftCardID'])) {
+				$reservation->giftcard_id = $arrData['giftCardID'];
+			}
 		
 			if(isset($arrData['addedBy'])) {
 				$reservation->added_by = $arrData['addedBy'];
@@ -1414,6 +1418,8 @@ class ReservationDetails extends Model {
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>'User Changed',
+				'Occasion' => $arrData['addons_special_request'],
+				'gift_card_id_from_reservation' => $arrData['giftCardID']
 			);
 
 			//echo "<pre>"; print_r($zoho_data);
