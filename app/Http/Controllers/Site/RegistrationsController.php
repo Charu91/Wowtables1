@@ -675,7 +675,10 @@ class RegistrationsController extends Controller {
 			}
 
 		}
-		$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		//$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		$finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		$special_request_data = isset($special_request) && $special_request != "" ? "Spl Req: ".$special_request : "";
+		$addons_special_request = $finalAddontext." ".$special_request_data;
 		//echo " addon special request = ".$addons_special_request;
 		//echo "<pre>"; print_r($addonsArray); die;
 
@@ -736,6 +739,7 @@ class RegistrationsController extends Controller {
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>'User Changed',
+				'Occasion' => $addons_special_request,
 				'gift_card_id_from_reservation' => $giftcard_id
 			);
 
