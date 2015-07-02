@@ -243,7 +243,7 @@ class ReservationDetails extends Model {
 					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Alternate_ID' =>  'E'.sprintf("%06d",$reservation_id['id']),
-					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Occasion' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
 					                    'API_added' => 'Mobile',
 					                    //'GIU_Membership_ID' => '1001010',
