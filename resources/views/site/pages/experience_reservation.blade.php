@@ -105,7 +105,7 @@
                                     <?php
                                     $special = trim($post_data['addons_special_request']);
                                     if(!empty($special)): ?>
-                                    <div style="margin: 5px 0; color: #000">Special requests: <?php echo $special;?></div>
+                                    <div style="margin: 5px 0; color: #000">Other Info: <?php echo $special;?></div>
                                     <?php endif; ?>
                                     <?php
                                     $giftcardID = trim($post_data['giftCardID']);

@@ -319,6 +319,9 @@ class RegistrationsController extends Controller {
                   <h4 class="panel-title">
                      <a href="javascript:" style="text-decoration: none;">
                       Select Location<input type="hidden" value="<?php echo $product_id;?>" id="my_product_id"> <span id="get_locality"><input type="hidden" id="locality_val" value="<?php echo $selectVendorLocationId;?>"></span></a>
+					  <input type="hidden" name="old_area" value="<?php echo $areaName?>" id="old_area_name"/>
+					  <input type="hidden" name="old_locality_value" value="<?php echo $selectVendorLocationId?>" id="old_locality_value"/>
+					  <input type="hidden" name="new_locality_value" value="" id="new_locality_value"/>
                       <a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"></a>
 		              <select name="locality" id="locality"  class="pull-right space" style="display:none;">
 		                    <option value="0">SELECT</option>
@@ -633,13 +636,14 @@ class RegistrationsController extends Controller {
 	 */
 	public function updateReservetion()
 	{
-
+		$reserv_id = $this->request->input('reserv_id');
+		$old_reservation_data = DB::table('reservation_details')->where('id', $reserv_id);
 		$vendor_details = $this->request->input('vendor_details');
 		$array = explode(',', $vendor_details);
 		$reserveType = $array['0'];
 		//echo "sd = ".$reserveType; die;
 		
-		$reserv_id = $this->request->input('reserv_id');
+
 		$party_size = $this->request->input('party_size');
 		$locality_val = $this->request->input('locality_val');
 		$edit_date = $this->request->input('edit_date');
@@ -671,7 +675,10 @@ class RegistrationsController extends Controller {
 			}
 
 		}
-		$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		//$addons_special_request = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		$finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+		$special_request_data = isset($special_request) && $special_request != "" ? "Spl Req: ".$special_request : "";
+		$addons_special_request = $finalAddontext." ".$special_request_data;
 		//echo " addon special request = ".$addons_special_request;
 		//echo "<pre>"; print_r($addonsArray); die;
 
@@ -732,6 +739,7 @@ class RegistrationsController extends Controller {
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>'User Changed',
+				'Occasion' => $addons_special_request,
 				'gift_card_id_from_reservation' => $giftcard_id
 			);
 
