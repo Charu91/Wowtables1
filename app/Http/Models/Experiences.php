@@ -211,6 +211,13 @@ class Experiences {
 	 * @since	1.0.0
 	 */
 	public static function getProductLocations($productID, $pvlID) {
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
+			$cityID = $_SERVER['HTTP_X_WOW_CITY'];
+		} 
+		else {
+			$cityID = 0;
+		}
+		
 		$queryResult = 	DB::table('product_vendor_locations as pvl')	
 							//->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 							->leftJoin('vendor_locations as vl', 'vl.id','=','pvl.vendor_location_id')
@@ -218,9 +225,16 @@ class Experiences {
 							->leftJoin('locations', 'locations.id','=','vl.location_id')							
 							->select('locations.name as area','vla.latitude','vla.longitude')
 							->where('pvl.product_id',$productID)
+							//->where('vla.city_id', $cityID) Added on 2.7.15
 							//->where('pvl.id','!=',$pvlID)
-							->where('pvl.status','Active')
-							->get();
+							->where('pvl.status','Active');
+							//->get();
+		if($cityID != 0) {
+			$queryResult = $queryResult->where('vla.city_id', $cityID)->get();
+		}
+		else {
+			$queryResult = $queryResult->get();
+		}
 		
 		//array to hold location details
 		$arrLocation = array();
