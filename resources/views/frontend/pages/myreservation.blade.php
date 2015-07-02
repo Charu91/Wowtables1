@@ -728,6 +728,10 @@ agm.cpkbandra@jsmcorp.in
                 $('#save_changes').show();
                  });
 
+              $("body").delegate("#special_request", "keyup", function() {
+                $('#save_changes').show();
+                 });
+
             $('#locations1').change(function(){
               $('#party_edit1').trigger('click'); 
               
@@ -918,7 +922,8 @@ agm.cpkbandra@jsmcorp.in
             addonsArray[prod_id]= select_val;
             return addonsArray;
         });
-        giftcard_id = $("#giftcard_id").val();
+        var giftcard_id = $("#giftcard_id").val();
+        var special_request = $("#special_request").val();
 
         last_reserv_date = $("#last_reserv_date").val();
         last_reserv_time = $("#last_reserv_time").val();
@@ -979,6 +984,7 @@ agm.cpkbandra@jsmcorp.in
                         locality_val:locality_val,
                         addonsArray:addonsArray,
                         giftcard_id:giftcard_id,
+                        special_request:special_request,
                         party_size: party_size,
                         vendor_details:vendor_details,
                         edit_date: edit_date,
