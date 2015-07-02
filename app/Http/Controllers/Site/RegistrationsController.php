@@ -619,7 +619,7 @@ class RegistrationsController extends Controller {
 		$year = $datearray["2"];
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = $this->request->input('edit_time');
-
+		
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');
 		//	`print_r($addonsArray);
