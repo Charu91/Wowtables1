@@ -105,7 +105,8 @@ class AdminExperienceLocationsController extends Controller {
                           'product_address'           => $row->product_address,
                           'review'                    => $row->review,
                           'review_id'                 => $row->review_id,
-                          'review_status'                 => $row->review_status,
+                          'review_status'             => $row->review_status,
+                          'product_locality'          => $row->product_locality,
                            );
             }
         }

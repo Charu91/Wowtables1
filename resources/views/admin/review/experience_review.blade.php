@@ -40,7 +40,7 @@
                         <tr>
                             <td>{{$experienceReview['review_id']}}</td>
                             <td>{{$experienceReview['reservation_date']}}</td>
-                            <td>{{$experienceReview['product_name']}} - {{$experienceReview['product_address']}}</td>
+                            <td>{{$experienceReview['product_name']}} - {{$experienceReview['vendor_name']}} - {{$experienceReview['product_locality']}}</td>
                             <td>{{$experienceReview['guest_name']}} - {{$experienceReview['guest_email']}}</td>
                             <td>{{$experienceReview['review']}}</td>
                             <td>Actions</td>
