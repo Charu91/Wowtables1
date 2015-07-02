@@ -626,7 +626,7 @@ class ExperienceModel {
                     'terms_and_condition' => $expResult->terms_and_conditions,
                     'seo_meta_desciption' => $expResult->seo_meta_desciption,
                     'seo_title' => $expResult->seo_title,
-                    'seo_meta_keywords' => $expResult->seo_meta_keywords,
+                    'seo_meta_keywords' => $expResult->seo_meta_keywords, 
                     'start_date' => $expResult->start_date,
                     'end_date' => $expResult->end_date,
                     'image' => $arrImage,
