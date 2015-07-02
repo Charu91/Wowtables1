@@ -9,6 +9,38 @@ Route::get('admin/experiences', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/review', [
+    'uses' => 'AdminExperienceLocationsController@review',
+    'as' => 'AdminReview',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/show_exp_review_update', [
+    'uses' => 'AdminExperienceLocationsController@showExperienceReview',
+    'as' => 'showExperienceReview',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/show_alacart_review_update', [
+    'uses' => 'AdminExperienceLocationsController@showAlacarteReview',
+    'as' => 'showAlacarteReview',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/reviewalacarte', [
+    'uses' => 'AdminExperienceLocationsController@reviewAlacarte',
+    'as' => 'reviewAlacarte',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('admin/experiences/create', [
     'uses' => 'AdminExperiencesController@create',
     'as' => 'AdminExperienceCreate',

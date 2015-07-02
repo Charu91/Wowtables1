@@ -216,7 +216,7 @@ class RegistrationsController extends Controller {
 	public function myReservGiftCard()
 	{
 		$res_id = $this->request->input('res_id');
-		$giftcard_id = DB::select("select giftcard_id from reservation_details where id = $res_id");
+		$giftcard_id = DB::select("select giftcard_id, special_request from reservation_details where id = $res_id");
 
 		if(empty($giftcard_id))
 		{?>
@@ -247,6 +247,38 @@ class RegistrationsController extends Controller {
               </div>
 
 		<?php }
+
+		if(empty($giftcard_id[0]->special_request))
+		{?>
+
+		<div class="panel panel-default">
+                <div class="panel-heading active">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Special Request </a>
+                      <input type="text" name="special_request" id="special_request" class="form-control" placeholder="Special Request">
+                        
+                  </h4>
+                </div>
+              </div>
+
+		<?php }
+		else
+		{?>
+		<div class="panel panel-default">
+                <div class="panel-heading active">
+                  <h4 class="panel-title">
+                     <a href="javascript:" style="text-decoration: none;">
+                      Special Request </a>
+                      <input type="text" name="special_request" id="special_request" class="form-control" placeholder="Special Request" value="<?php echo $giftcard_id[0]->special_request;?>">
+                        
+                  </h4>
+                </div>
+              </div>
+
+		<?php }
+
+
 	}
 
 	/**
@@ -623,9 +655,10 @@ class RegistrationsController extends Controller {
 		$year = $datearray["2"];
 		$final_date_format = $year.'-'.$month.'-'.$date;
 		$edit_time = $this->request->input('edit_time');
-
+		
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');
+		$special_request= $this->request->input('special_request');
 		//	`print_r($addonsArray);
 		//echo "sad = ".$giftcard_id;
 		$count = $this->request->input('addonsArray');
@@ -663,7 +696,7 @@ class RegistrationsController extends Controller {
 			DB::update("update reservation_details set reservation_date='$final_date_format',reservation_time='$edit_time',no_of_persons='$party_size',vendor_location_id='$locality_val',reservation_status='edited' where id = '$reserv_id'");
 		}
 		//exit;
-		DB::update("update reservation_details set giftcard_id='$giftcard_id' where id = '$reserv_id'");
+		DB::update("update reservation_details set giftcard_id='$giftcard_id', special_request = '$special_request' where id = '$reserv_id'");
 
 		$userID = Session::get('id');
 		$userData = Profile::getUserProfileWeb($userID);
