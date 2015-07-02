@@ -17,6 +17,38 @@ Route::get('admin/review', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('expreview/edit/{id}', [
+    'uses' => 'AdminExperienceLocationsController@expReviewUpdate',
+    'as' => 'reviewUpdate',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/expreview/updatesave', [
+    'uses' => 'AdminExperienceLocationsController@expReviewUpdateSave',
+    'as' => 'expReviewUpdateSave',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('admin/alacarte/updatesave', [
+    'uses' => 'AdminExperienceLocationsController@alaReviewUpdateSave',
+    'as' => 'alaReviewUpdateSave',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('alacartereview/edit/{id}', [
+    'uses' => 'AdminExperienceLocationsController@alacarteReviewUpdate',
+    'as' => 'alacarteReviewUpdate',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::post('/admin/show_exp_review_update', [
     'uses' => 'AdminExperienceLocationsController@showExperienceReview',
     'as' => 'showExperienceReview',

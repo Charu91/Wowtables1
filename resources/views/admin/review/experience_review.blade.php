@@ -43,7 +43,9 @@
                             <td>{{$experienceReview['product_name']}} - {{$experienceReview['vendor_name']}} - {{$experienceReview['product_locality']}}</td>
                             <td>{{$experienceReview['guest_name']}} - {{$experienceReview['guest_email']}}</td>
                             <td>{{$experienceReview['review']}}</td>
-                            <td>Actions</td>
+                            <td>
+                                <a data-experience-id="{!! $experienceReview['review_id'] !!}" href="<?php echo URL::to('/').'/expreview/edit/'.$experienceReview['review_id']; ?>" class="btn btn-xs btn-primary">Edit</a>
+                                <a data-experience-id="{!! $experienceReview['review_id'] !!}" class="btn btn-xs btn-danger delete-experience">Delete</a></td>
                             <td>
                                 <span id ="show_exp_review_{{$experienceReview['review']}}"><span>
                 <input type ="checkbox" name="show[]" value="{{$experienceReview['review_id']}}" <?php if($experienceReview['review_status'] == 'Approved') { echo 'checked';} ?> onClick="experienceReview(this.value)">
