@@ -43,7 +43,10 @@
                             <td>{{$alacartReview['vendor_name']}} - {{$alacartReview['vendor_address']}}</td>
                             <td>{{$alacartReview['guest_name']}} - {{$alacartReview['guest_email']}}</td>
                             <td>{{$alacartReview['review']}}</td>
-                            <td>Actions</td>
+                            <td>
+                                <a data-experience-id="{!! $alacartReview['review_id'] !!}" href="<?php echo URL::to('/').'/alacartereview/edit/'.$alacartReview['review_id']; ?>" class="btn btn-xs btn-primary">Edit</a>
+                                <a data-experience-id="{!! $alacartReview['review_id'] !!}" class="btn btn-xs btn-danger delete-experience">Delete</a>
+                            </td>
                             <td>
                                 <span id ="show_alacart_review_{{$alacartReview['review']}}"><span>
                 <input type ="checkbox" name="show[]" value="{{$alacartReview['review_id']}}" <?php if($alacartReview['review_status'] == 'Approved') { echo 'checked';} ?> onClick="alacartReview(this.value)">

@@ -1385,6 +1385,7 @@ var google_remarketing_only = true;
                             $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").removeClass("hidden");
                            // $("#select_table_exp").addClass("hidden");
                             $("#or_reservation").addClass("hidden");
+                            $("#cant_do_reserv1,#cant_do_reserv2,#brs_my_reserv").show();
                            // $('#collapseFive').hide();
                             has_reserv = true;
                       }else{
@@ -1399,6 +1400,7 @@ var google_remarketing_only = true;
                             $("#select_all_data").addClass("hidden");
                             $("#or_reservation").removeClass("hidden");
                             has_reserv = false
+                            //$("#order_info").show();
                         }
                       }
                     }
@@ -1412,6 +1414,7 @@ var google_remarketing_only = true;
                         $("#order_info").slideDown()
                     }
                     $("#order_info").removeClass("hidden");
+                    $('#order_info').show();
                     full_info = $("#party_edit1 span").text() + " people - " + $("#time_edit1 span").text() + " - " + $("#date_edit1 span").text();
                     $("#fullinfo").html("<strong>" + full_info + "</strong>")
                 }

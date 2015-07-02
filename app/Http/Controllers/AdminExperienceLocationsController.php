@@ -239,6 +239,89 @@ class AdminExperienceLocationsController extends Controller {
 
     }
 
+        /**
+     * Display a expReviewUpdate of the update experience review.
+     *
+     * @return Response
+     */
+    public function expReviewUpdate($id)
+    {
+        $expReviewDetails = DB::select("select pr.id, pr.review, pr.rating, pr.status, rd.reservation_date, rd.guest_name, rd.guest_email
+                                    from product_reviews as pr inner join reservation_details as rd on rd.id = pr.reserv_id 
+                                    where pr.id = '$id'");
+        
+        return view('admin.review.experience_review_update',["expReviewDetails" => $expReviewDetails]);
+    }
+
+   /**
+     * Display a expReviewUpdate of the update experience review.
+     *
+     * @return Response
+     */
+    public function expReviewUpdateSave()
+    {
+        $review_id = Input::get('review_id');
+        $review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+
+       if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+        
+        $update = DB::update("update product_reviews set review ='$review', rating = '$rating', status ='$statusUpdate' where id = $review_id");
+
+          flash()->success('The Experience Review has been successfully updated.');
+            return redirect('admin/review');
+    }
+
+
+      /**
+     * Display a expReviewUpdate of the update experience review.
+     *
+     * @return Response
+     */
+    public function alacarteReviewUpdate($id)
+    {
+        $alacarteReviewDetails = DB::select("select vlr.id, vlr.review, vlr.rating, vlr.status, rd.reservation_date, rd.guest_name, rd.guest_email
+                                    from vendor_location_reviews as vlr inner join reservation_details as rd on rd.id = vlr.reserv_id 
+                                    where vlr.id = '$id'");
+        
+        return view('admin.review.alacarte_review_update',["alacarteReviewDetails" => $alacarteReviewDetails]);
+    }
+
+
+ /**
+     * Display a expReviewUpdate of the update experience review.
+     *
+     * @return Response
+     */
+    public function alaReviewUpdateSave()
+    {
+        $review_id = Input::get('review_id');
+        $review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+       if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+        
+        $update = DB::update("update vendor_location_reviews set review ='$review', rating = '$rating', status ='$statusUpdate' where id = $review_id");
+
+          flash()->success('The Alacarte Review has been successfully updated.');
+            return redirect('admin/reviewalacarte');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

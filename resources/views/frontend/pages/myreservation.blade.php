@@ -682,6 +682,7 @@ agm.cpkbandra@jsmcorp.in
               //alert(1);
               var locality_change_val = $(this).val();
               var locality_select_txt = $(this).find('option:selected').text();
+                //console.log("sad = "+locality_select_txt);
               if(locality_change_val !='0')
               {
                 //$('#locality_val').val(locality_change_val);
@@ -703,8 +704,9 @@ agm.cpkbandra@jsmcorp.in
                         $("#get_locality").html('<img src="/images/loading.gif">');
                         },
                   success: function(e) {
-                     console.log(e);
+                     //console.log(e);
                      $('#get_locality').html(e);
+                     $('#new_locality_value').val(locality_select_txt);
                   }
                });
 
@@ -913,6 +915,9 @@ agm.cpkbandra@jsmcorp.in
         non_veg = $("#nonveg").val();
         vendor_details =$('#vendor_id').val();
         locality_val =$('#locality_val').val();
+        old_area =$('#old_area').val();
+       old_locality_value =$('#old_locality_value').val();
+       new_locality_value =$('#new_locality_value').val();
 
         var addonsArray = {};
         $('.myaddonselect').each(function(){
@@ -982,6 +987,9 @@ agm.cpkbandra@jsmcorp.in
                         reserv_id: res_id,
                         address: address,
                         locality_val:locality_val,
+                        old_area:old_area,
+                        old_locality_value:old_locality_value,
+                        new_locality_value:new_locality_value,
                         addonsArray:addonsArray,
                         giftcard_id:giftcard_id,
                         special_request:special_request,

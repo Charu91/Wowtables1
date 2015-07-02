@@ -600,7 +600,8 @@ class ExperienceModel {
     //running the query to get the results
     //echo $queryExperience->toSql();
     $expResult = $queryExperience->first();
-
+      //echo "saa = ".$expResult->taxes." , ";
+      //echo (!empty($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable';
       //echo "<pre>"; print_r($expResult); die;
 
     //array to store the experience details
@@ -625,13 +626,13 @@ class ExperienceModel {
                     'terms_and_condition' => $expResult->terms_and_conditions,
                     'seo_meta_desciption' => $expResult->seo_meta_desciption,
                     'seo_title' => $expResult->seo_title,
-                    'seo_meta_keywords' => $expResult->seo_meta_keywords,
+                    'seo_meta_keywords' => $expResult->seo_meta_keywords, 
                     'start_date' => $expResult->start_date,
                     'end_date' => $expResult->end_date,
                     'image' => $arrImage,
                     'type' => $expResult->type,
                     'price' => $expResult->price,
-                    'taxes' => (is_null($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable',
+                    'taxes' => (!empty($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable',
                     'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
                     'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
                     'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
