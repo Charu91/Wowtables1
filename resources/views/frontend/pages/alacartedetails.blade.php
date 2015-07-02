@@ -251,7 +251,7 @@
                         <div class="row star-info">
                           <div class="col-xs-8">
                             <ul class="list-inline">
-                            <?php $reviews['rating'];
+                            <p><?php $reviews['rating'];
                               $avar = 5 - $reviews['rating'];
                             ?></p>
                            <?PHP          
@@ -959,7 +959,7 @@
           //$("#ac_choose_date2").datepicker("destroy");
          
           $("#ac_choose_date2").datepicker({
-             dateFormat: 'yy-mm-dd',
+             dateFormat: 'yy-m-dd',
              minDate: 'new Date()',
              beforeShowDay: disableAllTheseDays,
              onSelect: function(dateText, inst) 
