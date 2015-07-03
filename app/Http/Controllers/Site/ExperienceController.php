@@ -127,10 +127,13 @@ class ExperienceController extends Controller {
 
         $vendor_id = $arrExperience['data']['vendor_id'];
 
-        $jump_to_ala_query = DB::select("SELECT vendor_id, location_id, slug FROM `vendor_locations`
-                                        WHERE vendor_id = '$vendor_id'
-                                        AND a_la_carte = '1'
-                                        AND STATUS = 'Active' ");
+        $jump_to_ala_query = DB::select("SELECT vl.vendor_id, vl.location_id, vl.slug,l.name as area
+                              FROM `vendor_locations` as vl
+                              left join locations as l on l.id = vl.location_id
+                              WHERE vl.vendor_id = '$vendor_id'
+                              AND vl.a_la_carte = '1'
+                              AND vl.status = 'Active'");
+
         $alacarte_jump = array();
         if(!empty($jump_to_ala_query))
         {
@@ -138,10 +141,19 @@ class ExperienceController extends Controller {
             {
               $alacarte_jump[] = array("vendor_id"   =>$row->vendor_id,
                                        "location_id" =>$row->location_id,
-                                       "slug"        =>$row->slug);
+                                       "slug"        =>$row->slug,
+                                       "area"        =>$row->area);
             }
         }
 
+        echo"<pre>";print_r($arrExperience['data']['location']);
+
+
+        echo"<pre>";print_r($alacarte_jump);
+
+       
+
+        exit;
         /*echo"<pre>";print_r($alacarte_jump);
         echo"<pre>";print_r($data);
         exit;*/
