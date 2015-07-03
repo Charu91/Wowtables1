@@ -45,7 +45,7 @@
   border-color: #FFFFFF;
   border: 2px solid #FFFFFF !important;
   font-weight: bolder;
-  margin-left: 35%;
+  margin-left: 30%;
 }
 
 .signup-wrapper{
@@ -329,19 +329,19 @@
 
               <!-- Facebook plugin start --> 
               <div class="questionpage-facebook-link">
-                <div class="wowtables_small_div">
-                  <div class="row">
-                  <div class="col-sm-12 col-xs-12 col-md-12">
-                  <h3 class="wowtable_nameing" style="text-align:center !important;">The WowTables app is here.</h3>
+                  <div class="wowtables_small_div">
+                      <div class="row">
+                          <div class="col-sm-12 col-xs-12 col-md-12">
+                              <h3 style="text-align:center !important;" class="wowtable_nameing">The WowTables app is here.</h3>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-12 col-xs-12 col-md-12">
+                              <p style="text-align:center !important;">Dining out has never been easier!</p>
+                              <a class="btn btn-primary button_wowtables" target="_blank" href="http://app.wowtables.com">Install now</a>
+                          </div>
+                      </div>
                   </div>
-                </div>
-                <div class="row">
-                <div class="col-sm-12 col-xs-12 col-md-12">
-                <p style="text-align:center !important;">Dining out has never been easier!</p>
-                    <a href="http://app.wowtables.com" target="_blank" class="btn btn-primary button_wowtables">Install now</a>
-                </div>
-              </div>
-                </div>
                 <div class="row questionpage-facebook-link_hide">
                     <div class="col-sm-12 col-xs-12">                           
                         <div id="fb-root"></div>
@@ -529,14 +529,14 @@
     </div>
 
     <script type="text/javascript">
-        $(document).ready(function(){           
+        $(document).ready(function(){
             $("#forget_password").click(function(){
                 $("#FBLogin").hide();
             });
             $("#go_back_link").click(function(){
                 $("#FBLogin").show();
             });
-            
+
         });
     </script>
 
@@ -634,9 +634,9 @@
               $("#password_error_1").css('display','none');
           });
 
-          $('#send').click(function(event){          
+          $('#send').click(function(event){
                 event.preventDefault();
-                email_address = $("input[name='email']"); 
+                email_address = $("input[name='email']");
                 err=0;
                 mypassword='';
                 if(email_address.val()==''){
@@ -645,7 +645,7 @@
                     $("input[name='email']").css('border','2px solid #B94A39');
                     err++;
                 }
-                else if(!email_regex.test(email_address.val())){ 
+                else if(!email_regex.test(email_address.val())){
                     $("#email_error").text("Please enter a valid email address");
                     $("#email_error").css('display','block');
                     $("input[name='email']").css('border','2px solid #B94A39');
@@ -655,14 +655,14 @@
                     $("#email_error").css('display','none');
                     $("input[name='email']").css('border','0px');
                 }
-                
+
                 if($("input[name='password']").val()==''){
                     $("#password_error").text("Please enter a password");
                     $("input[name='password']").css('border','2px solid #B94A39');
                     $("#password_error").css('display','block');
                     err++;
                 }
-                else if($("input[name='password']").val().replace(/\s+$/,"")=='' || $("input[name='password']").val().replace(/\s+$/,"")=='******' ){ 
+                else if($("input[name='password']").val().replace(/\s+$/,"")=='' || $("input[name='password']").val().replace(/\s+$/,"")=='******' ){
                     $("#password_error").text("Write correct password");
                     $("input[name='password']").css('border','2px solid #B94A39');
                     $("#password_error").css('display','block');
@@ -673,8 +673,8 @@
                     $("#password_error").css('display','none');
                     mypassword=$("input[name='password']").val();
                 }
-                
-                if ($('#city').val() == -1) {   
+
+                if ($('#city').val() == -1) {
                     $("#city").css('border','2px solid #B94A39');
                     $("#city_error").css('display','block');
                     err++;
@@ -683,7 +683,7 @@
                     $("#city").css('border','0px');
                     $("#city_error").css('display','none');
                 }
-                
+
                 if(err>=1){
                      return false;
                 }
@@ -694,7 +694,7 @@
                             type: 'post',
                             success: function(data){
                                 if(data != '')
-                                {    
+                                {
                                     //console.log(url);
                                     console.log(data);
                                     $("input[name='email']").css('border','2px solid #B94A39');
@@ -704,7 +704,7 @@
                                         $('.form-slide-wrapper').animate({'left': '-320px'});
                                         $("input[name='email']").css('border','0px');
                                     });
-                                    err++;   
+                                    err++;
                                 }
                                 else
                                 {
@@ -721,7 +721,7 @@
                                         success:function(data){
                                             var  order_path = "";
                                             if(data==1){
-                                                <?php 
+                                                <?php
                                                 $order = Session::get('order');
                                                 if (!empty($order) && is_array($order)) {
                                                     $order_path = $order['slug']; ?>
@@ -731,14 +731,14 @@
                                                     window.location = "{{URL::to('/')}}/exp/"+order_path;
                                                 } else{
                                                     window.location="{{URL::to('/')}}/exp/lists/?signup=true";
-                                                }  
+                                                }
                                             }
                                         }
                                     });
                                     //Adding for now End
                                 }
-                                
-                            }      
+
+                            }
                         });
                 }
           });
@@ -954,5 +954,5 @@
                 });
            })
       });
-    </script> 
+    </script>
 @endsection

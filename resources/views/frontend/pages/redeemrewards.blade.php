@@ -155,7 +155,7 @@
           $("#select_gift_error").removeClass('hidden');
         }else{
           $.ajax({
-          url: "/rewards/make_giftcard",
+          url: "/user/redeem_points",
           type: "POST",
           dataType: "json",
           data:{gc_price: gc_price_val,gc_points:gc_points_val,gc_user_id:gc_user_id_val},

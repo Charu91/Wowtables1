@@ -1296,10 +1296,11 @@ var google_remarketing_only = true;
           });
 */
                   /*$("#fbSelectCity").modal('toggle'); */
-                  $.get('getMyCity/city',function(response) {
+                  $.get("{{URL::to('/')}}/"+'getMyCity/city',function(response) {
                     var city = response.city;
         if(city.length > 0) {
-            window.location.href = "{{URL::to('/')}}/"+city;
+            //window.location.href = "{{URL::to('/')}}/"+city;
+            window.location.href = pageUrl;
         }
         else {
           $("#fbSelectCity").modal('toggle');
