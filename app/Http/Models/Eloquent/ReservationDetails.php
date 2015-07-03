@@ -665,7 +665,7 @@ class ReservationDetails extends Model {
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
 									'created_at' => date('Y-m-d H:i:s'),
-									'updated_at' => date('Y-m-d H:i:s'),
+									'updated_at' => date('Y-m-d H:i:'),
 								);
 		}
 		
@@ -687,20 +687,30 @@ class ReservationDetails extends Model {
 	public static function updateReservationAddonDetails($reservationID, $arrAddon) {
 			
 		//array to hold the data to be written into the DB
-		$arrInsertData = array();		
+		$arrInsertData = array();
 		
 		//updating the addons values	
-		foreach($arrAddon as $key => $value) {
-			if(isset($value['id'])) {
-				//getting an instance of the row to be updated
-				$addOn = ReservationAddonsVariantsDetails::find($value['id']);
+		foreach($arrAddon as $key => $value) {		
+			$queryResult = DB::table('reservation_addons_variants_details')
+									->where('reservation_id',$reservationID)
+									->where('options_id', $arrAddon[$key]['prod_id'])
+									->first(); 
+			if(isset($value['prod_id']) && $queryResult) {
+				// //getting an instance of the row to be updated
+				// $addOn = ReservationAddonsVariantsDetails::find($value['prod_id']);
 			
-				//initializing the values to be updated
-				$addOn->no_of_persons = $value['qty'];
-				$addOn->options_id = $value['prod_id'];
+				// //initializing the values to be updated
+				// $addOn->no_of_persons = $value['qty'];
+				// $addOn->options_id = $value['prod_id'];
 			
-				//writing the updated information
-				$addOn->save();
+				// //writing the updated information
+				// $addOn->save();				
+				
+				$result = DB::table('reservation_addons_variants_details')
+					            ->where('id', $queryResult->id)
+					            ->update(array('no_of_persons' => $arrAddon[$key]['qty'], 
+					            				'options_id' => $arrAddon[$key]['prod_id']
+					            			   ));				
 			}
 			else {
 				$arrInsertData[] = array(
