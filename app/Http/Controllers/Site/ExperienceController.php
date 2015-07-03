@@ -124,11 +124,42 @@ class ExperienceController extends Controller {
         $meta_information = array('seo_title'      => $seoTitleDetails,
                                    'meta_desc'     => $metaDescDetails, 
                                    'meta_keywords' => $meta_keywords);
-        
-        /*echo"<pre>";print_r($data);
+
+        $vendor_id = $arrExperience['data']['vendor_id'];
+
+        $jump_to_ala_query = DB::select("SELECT vl.vendor_id, vl.location_id, vl.slug,l.name as area
+                              FROM `vendor_locations` as vl
+                              left join locations as l on l.id = vl.location_id
+                              WHERE vl.vendor_id = '$vendor_id'
+                              AND vl.a_la_carte = '1'
+                              AND vl.status = 'Active'");
+
+        $alacarte_jump = array();
+        if(!empty($jump_to_ala_query))
+        {
+            foreach($jump_to_ala_query as $row)
+            {
+              $alacarte_jump[] = array("vendor_id"   =>$row->vendor_id,
+                                       "location_id" =>$row->location_id,
+                                       "slug"        =>$row->slug,
+                                       "area"        =>$row->area);
+            }
+        }
+
+        echo"<pre>";print_r($arrExperience['data']['location']);
+
+
+        echo"<pre>";print_r($alacarte_jump);
+
+       
+
+        exit;
+        /*echo"<pre>";print_r($alacarte_jump);
+        echo"<pre>";print_r($data);
         exit;*/
         return view('frontend.pages.experiencedetails',$data)
-                        ->with('meta_information', $meta_information);
+                        ->with('meta_information', $meta_information)
+                        ->with('alacarteJumpDetails', $alacarte_jump);
     }
 
 

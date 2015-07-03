@@ -873,8 +873,44 @@ $last_url_item = count($url)-1;
                 <a class="btn btn-warning hidden" id="brs_my_reserv" href="<?=URL::to('/users/myreservations');?>">View My Existing Reservations</a>
                 <p class="hidden" id="cant_do_reserv2">If you have any queries please call our concierge desk.</p> 
                 <div class="text-center select-all-data hidden" id="select_all_data">Please select all data</div>
-                <a  data-page_loc="Reservation Widget" class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && (isset($allow_guest) && $allow_guest == "Yes")) ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='select_table_exp'>SELECT TABLE</a>
-                                <?php //endif ?>
+                <a  data-page_loc="Reservation Widget" class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && (isset($allow_guest) && $allow_guest == "Yes")) ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='select_table_exp'>SELECT TABLE</a><br>
+
+                  <?php 
+                   // print_r($alacarteJumpDetails);
+                    $arrExperience['data']['location'][0]['city'];
+                   $count_alacart_jump = count($alacarteJumpDetails);
+                    //$count_alacart_jump = 5;
+                   if(!empty($alacarteJumpDetails))
+                   {  
+                    $city = strtolower($arrExperience['data']['location'][0]['city']);
+                    $alacart_slug = $alacarteJumpDetails[0]['slug'];
+                    if($count_alacart_jump == 1){
+                    ?>
+
+                      <p id="or_reservation" class="text-center or-reservation ">OR</p>
+                      <a class="alacarte_reservation_text" href="<?php echo URL::to("/$city/alacarte/$alacart_slug");?> ">
+                          <small>Make An A la carte Reservation at <br>
+                            <span>
+                              <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                            </span>
+                          </small>
+                      </a>  
+                  <?php  }
+                  else if($count_alacart_jump >= 1)
+                    { ?>
+
+                     <p id="or_reservation" class="text-center or-reservation ">OR</p>
+                      <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
+                        <small>Make An A la carte Reservation at <br>
+                          <span>
+                            <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
+                          </span>
+                        </small>
+                    </a> 
+                  
+                     <?php }
+                   }
+                  ?>
               </div>
                 <input type="hidden" id="slug" value="<?php echo $arrExperience['data']['slug']; ?>">
                 <input type="hidden" name="time" id="fulltime">
@@ -939,18 +975,27 @@ $last_url_item = count($url)-1;
             <div class="panel panel-default">
 
               <!-- List group -->
-              <ul class="a-list-group">
-				<?php /*foreach($rest_detail_alacarte as $cities){ //echo "<pre>"; print_r($cities);?>
-					<li class="a-list-group-item" data-alacarte_link="<?php echo $cities['city']."/alacarte/".$cities['slug'];?>">
-						<center><a href="" data-dismiss="modal"><?php echo $cities['area'];?></a></center>
+              <ul class="a-list-group"> URL::to("
+				<?php foreach($arrExperience['data']['location'] as $key =>$listData){
+          $city = strtolower($listData['city']);
+          foreach($alacarteJumpDetails as $key2 => $alacarteJump)
+          {
+            $slug = $alacarteJump["slug"];
+         //echo "<pre>"; print_r($cities);  
+            
+          ?>
+					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/Test"); ?>">
+						<center><a href="" data-dismiss="modal"><?php echo $listData['area'];?></a></center>
 					</li>
-				<?php }*/?>
+				<?php } 
+              }?>
               </ul>
             </div>
           </div>
 	  </div>
 	</div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
+
   <!-- Modal for email experience starts here-->
   <!--Share Modal -->
     <div class="modal fade" id="redirectExperienceEmailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
