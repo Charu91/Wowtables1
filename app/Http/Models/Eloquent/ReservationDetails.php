@@ -664,8 +664,8 @@ class ReservationDetails extends Model {
 									'options_id' => $detail['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
-									'created_at' => date('Y-m-d H:i:m'),
-									'updated_at' => date('Y-m-d H:i:m'),
+									'created_at' => date('Y-m-d H:i:s'),
+									'updated_at' => date('Y-m-d H:i:s'),
 								);
 		}
 		
@@ -709,8 +709,8 @@ class ReservationDetails extends Model {
 									'options_id' => $value['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
-									'created_at' => date('Y-m-d H:i:m'),
-									'updated_at' => date('Y-m-d H:i:m'),
+									'created_at' => date('Y-m-d H:i:s'),
+									'updated_at' => date('Y-m-d H:i:s'),
 								);
 			}
 			
