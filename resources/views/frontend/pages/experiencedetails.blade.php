@@ -977,16 +977,16 @@ $last_url_item = count($url)-1;
               <!-- List group -->
               <ul class="a-list-group"> URL::to("
 				<?php foreach($arrExperience['data']['location'] as $key =>$listData){
-          foreach($alacarteJumpDetails as $key2 => $alacarteJump)
+         /* foreach($alacarteJumpDetails as $key2 => $alacarteJump)
           {
-            $slug = $alacarteJump["slug"];
+            $slug = $alacarteJump["slug"];*/
          //echo "<pre>"; print_r($cities);  
             $city = strtolower($listData['city']);
           ?>
-					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/$slug"); ?>">
+					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/Test"); ?>">
 						<center><a href="" data-dismiss="modal"><?php echo $listData['area'];?></a></center>
 					</li>
-				<?php } 
+				<?php //} 
               }?>
               </ul>
             </div>
