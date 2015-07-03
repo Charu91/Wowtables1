@@ -520,7 +520,7 @@ class Reservation {
 							->join('products as p','p.id','=','ravd.options_id')
 							->whereIn('ravd.reservation_id',$arrReservation)
 							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
-										'ravd.reservation_id')
+										'ravd.reservation_id', 'ravd.created_at')
 							->get();
 		
 		//array to store the addons details
