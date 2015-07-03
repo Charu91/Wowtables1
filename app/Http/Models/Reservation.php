@@ -528,8 +528,8 @@ class Reservation {
 		
 		foreach($queryResult as $row) {
 			if( array_key_exists($row->reservation_id, $arrData) 
-				&& (strtotime($row->created_at) > strtotime($arrData[$row->reservation_id]['date']))
-				&& ($row->prod_id == $arrData[$row->reservation_id]['prod_id']) 
+				&& ($row->prod_id == $arrData[$row->reservation_id]['prod_id'])
+				&& ($row->id > $arrData[$row->reservation_id]['id']) 
 			  ) {
 				$arrData[$row->reservation_id][] = array(
 														'id' => $row->id,
@@ -538,7 +538,7 @@ class Reservation {
 														'date' => $row->created_at
 													);
 			}
-			else {
+			else if (!array_key_exists($row->reservation_id, $arrData)) {
 				$arrData[$row->reservation_id][] = array(
 														'id' => $row->id,
 														'prod_id' => $row->prod_id,
@@ -546,6 +546,7 @@ class Reservation {
 														'date' => $row->created_at
 													);
 			}
+			
 		}
 		return $arrData;
 	}	
