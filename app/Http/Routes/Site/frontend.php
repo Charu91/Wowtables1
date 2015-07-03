@@ -379,7 +379,7 @@ Route::post('/review/save_user_review', [
     'domain' => env('WEBSITE_URL')
 ]);
 
-Route::post('/rewards/make_giftcard', [
+Route::post('/user/redeem_points', [
     'uses' => 'Site\ProfileController@makeGiftcard',
     'as' => 'makeGiftcard',
     'middleware' => ['auth'],
