@@ -146,14 +146,14 @@ class ExperienceController extends Controller {
             }
         }
 
-        echo"<pre>";print_r($arrExperience['data']['location']);
+        /*echo"<pre>";print_r($arrExperience['data']['location']);
 
 
         echo"<pre>";print_r($alacarte_jump);
 
        
 
-        exit;
+        exit;*/
         /*echo"<pre>";print_r($alacarte_jump);
         echo"<pre>";print_r($data);
         exit;*/

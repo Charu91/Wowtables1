@@ -975,20 +975,21 @@ $last_url_item = count($url)-1;
             <div class="panel panel-default">
 
               <!-- List group -->
-              <ul class="a-list-group"> URL::to("
-				<?php foreach($arrExperience['data']['location'] as $key =>$listData){
-          $city = strtolower($listData['city']);
+              <ul class="a-list-group"> 
+				<?php //foreach($arrExperience['data']['location'] as $key =>$listData){
+          //$city = strtolower($listData['city']);
+          $city = strtolower($arrExperience['data']['location'][0]['city']);
           foreach($alacarteJumpDetails as $key2 => $alacarteJump)
           {
             $slug = $alacarteJump["slug"];
          //echo "<pre>"; print_r($cities);  
             
           ?>
-					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/Test"); ?>">
-						<center><a href="" data-dismiss="modal"><?php echo $listData['area'];?></a></center>
+					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/$slug"); ?>">
+						<center><a href="" data-dismiss="modal"><?php echo $alacarteJump['area'];?></a></center>
 					</li>
 				<?php } 
-              }?>
+              //}?>
               </ul>
             </div>
           </div>
