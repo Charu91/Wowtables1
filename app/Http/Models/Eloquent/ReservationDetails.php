@@ -1424,7 +1424,7 @@ class ReservationDetails extends Model {
 				'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
-				'API_added' => 'Yes',
+				'API_added' => 'Mobile',
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
