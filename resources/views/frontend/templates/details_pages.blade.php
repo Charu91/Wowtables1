@@ -820,8 +820,8 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   </select>
                   <label class="control-label error-code text-danger" id="city_error">Please pick a city</label>
                 </div>                      
-                <input type="submit" class="btn btn-warning btn-block wowtable_enter_btn" name="send" id="send" value="REGISTER"/>
-                 <input type="hidden" name="url" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+                <input type="button" class="btn btn-warning btn-block wowtable_enter_btn" name="send" id="send_register" value="REGISTER"/>
+                 <input type="hidden" name="url" id="url" value="<?php echo $_SERVER['REQUEST_URI'];?>">
                  <input type="hidden" name="base_url" id="url" value="{{URL::to('/')}}">
                 <small class="text-center comment"><span style="color: #ab9d8a !important;padding-left: 16%;">By Joining, you agree to our</span><a href="{{URL::to('/')}}/terms-of-use" style="color: #81ad5e !important;"> Terms & Conditions</a>
                 </small>
