@@ -530,12 +530,16 @@ class ExperienceModel {
               ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
               ->leftJoin('product_attributes_date as pad','pad.product_id','=','products.id')
               ->leftJoin('product_attributes_date as pad1','pad1.product_id','=','products.id')
+              ->leftJoin('product_attributes_boolean as pab','pab.product_id','=','products.id')
+              ->leftJoin('product_attributes_integer as pai','pai.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat4','pat4.product_id','=','products.id')
               //->leftJoin('product_attributes_text as pat5','pat5.product_id','=','products.id')
               ->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
               ->leftJoin('product_attributes as pa1', 'pa1.id','=','pad.product_attribute_id')
               ->leftJoin('product_attributes as pa2', 'pa2.id','=','pad1.product_attribute_id')
+              ->leftJoin('product_attributes as pa4', 'pa4.id','=','pai.product_attribute_id')
+              ->leftJoin('product_attributes as pa5', 'pa5.id','=','pab.product_attribute_id')
               //->leftJoin('product_attributes as pa2', 'pa2.id','=','pat2.product_attribute_id')
               //->leftJoin('product_attributes as pa4', 'pa4.id','=','pat4.product_attribute_id')
               //->leftJoin('product_attributes as pa5', 'pa5.id','=','pat5.product_attribute_id')
@@ -575,6 +579,8 @@ class ExperienceModel {
                   DB::raw('MAX(IF(pa.alias = "seo_meta_keywords", pat.attribute_value, "")) AS seo_meta_keywords'),
                   DB::raw('MAX(IF(pa1.alias = "start_date", pad.attribute_value, "")) AS start_date'),
                   DB::raw('MAX(IF(pa2.alias = "end_date", pad1.attribute_value, "")) AS end_date'),
+                  DB::raw('MAX(IF(pa4.alias = "reward_points_per_reservation", pai.attribute_value, "")) AS reward_points'),
+                  DB::raw('MAX(IF(pa5.alias = "allow_gift_card_redemptions", pab.attribute_value, "")) AS gift_card'),
 
                   'media.file as experience_image', 'curators.name as curator_name',
                   'curators.bio as curator_bio', 'curators.designation',
@@ -649,6 +655,8 @@ class ExperienceModel {
                     //'product_vendor_location_id' => $expResult->product_vendor_location_id,
                     'location' => $arrLocation,
                     'addons' => $arrAddOn,
+                    'reward_points' => $expResult->reward_points,
+                    'gift_card' => $expResult->gift_card,
                     'similar_option' => array(),
                   );
         
