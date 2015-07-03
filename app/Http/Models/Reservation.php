@@ -520,33 +520,27 @@ class Reservation {
 							->join('products as p','p.id','=','ravd.options_id')
 							->whereIn('ravd.reservation_id',$arrReservation)
 							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
-										'ravd.reservation_id', 'ravd.created_at')
+										'ravd.reservation_id')
 							->get();
 		
 		//array to store the addons details
 		$arrData = array();
 		
 		foreach($queryResult as $row) {
-			if( array_key_exists($row->reservation_id, $arrData) 
-				&& ($row->prod_id == $arrData[$row->reservation_id]['prod_id'])
-				&& ($row->id > $arrData[$row->reservation_id]['id']) 
-			  ) {
+			if(array_key_exists($row->reservation_id, $arrData)) {
 				$arrData[$row->reservation_id][] = array(
 														'id' => $row->id,
 														'prod_id' => $row->prod_id,
-														'qty' => $row->qty,
-														'date' => $row->created_at
+														'qty' => $row->qty
 													);
 			}
-			else if (!array_key_exists($row->reservation_id, $arrData)) {
+			else {
 				$arrData[$row->reservation_id][] = array(
 														'id' => $row->id,
 														'prod_id' => $row->prod_id,
-														'qty' => $row->qty,
-														'date' => $row->created_at
+														'qty' => $row->qty
 													);
 			}
-			
 		}
 		return $arrData;
 	}	
