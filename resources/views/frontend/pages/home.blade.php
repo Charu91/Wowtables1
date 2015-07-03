@@ -337,7 +337,7 @@
                 </div>
                 <div class="row">
                 <div class="col-sm-12 col-xs-12 col-md-12">
-                <p style="text-align:center !important;">Dining out has never been easier.</p>
+                <p style="text-align:center !important;">Dining out has never been easier!</p>
                     <a href="http://app.wowtables.com" target="_blank" class="btn btn-primary button_wowtables">Install now</a>
                 </div>
               </div>
