@@ -79,6 +79,12 @@ Route::get('/home', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('pages/gift-cards',[
+    'uses' => 'Site\StaticPagesController@giftCard',
+    'as' => 'giftCard',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('pages/{pages}',[
     'uses' => 'Site\StaticPagesController@pages',
     'as' => 'aboutus',
