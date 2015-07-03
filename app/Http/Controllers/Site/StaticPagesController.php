@@ -52,6 +52,27 @@ class StaticPagesController extends Controller {
 		}
 	}
 
+	public function giftCard()
+	{
+		
+		$cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+        $arrResponse['user']   = Auth::user(); 
+
+        $city_id    = Input::get('city');        
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['current_city']           = strtolower($city_name);
+        $arrResponse['current_city_id']        = $city_id;
+
+        return view('frontend.pages.giftcard',$arrResponse);
+	}
+
 	public function pages($pages="")
 	{
 
