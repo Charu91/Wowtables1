@@ -586,7 +586,7 @@ class ExperienceModel {
                   'curators.bio as curator_bio', 'curators.designation',
                   'cm.file as curator_image',
                   'pvl.id as product_vendor_location_id',
-                  'vendors.name as vendor_name');
+                  'vendors.name as vendor_name','vendors.id as vendor_id');
               
     }
     else {
@@ -599,7 +599,7 @@ class ExperienceModel {
                   'curators.bio as curator_bio','curators.designation','pat2.attribute_value as short_description', 
                   'media.file as experience_image','cm.file as curator_image', 
                   'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
-                  'pat5.attribute_value as experience_includes','vendors.name as vendor_name');
+                  'pat5.attribute_value as experience_includes','vendors.name as vendor_name','vendors.id as vendor_id');
     }
 
 
@@ -626,6 +626,7 @@ class ExperienceModel {
                     'name' => $expResult->name,
                     'slug'  => $expResult->slug,
                     'vendor_name' => $expResult->vendor_name,
+                    'vendor_id' => $expResult->vendor_id,
                     'experience_info' => $expResult->experience_info,
                     'experience_includes' => $expResult->experience_includes,
                     'short_description' => $expResult->short_description,

@@ -664,8 +664,8 @@ class ReservationDetails extends Model {
 									'options_id' => $detail['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
-									'created_at' => date('Y-m-d H:i:m'),
-									'updated_at' => date('Y-m-d H:i:m'),
+									'created_at' => date('Y-m-d H:i:s'),
+									'updated_at' => date('Y-m-d H:i:s'),
 								);
 		}
 		
@@ -709,8 +709,8 @@ class ReservationDetails extends Model {
 									'options_id' => $value['prod_id'],
 									'option_type' => 'addon',
 									'reservation_type' => 'experience',
-									'created_at' => date('Y-m-d H:i:m'),
-									'updated_at' => date('Y-m-d H:i:m'),
+									'created_at' => date('Y-m-d H:i:s'),
+									'updated_at' => date('Y-m-d H:i:s'),
 								);
 			}
 			
@@ -1322,7 +1322,7 @@ class ReservationDetails extends Model {
 			], function($message) use ($dataPost, $outlet){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name . 'has been cancelled');
+				$message->to($dataPost['guestEmail'])->subject('Your WowTables Reservation at '. $outlet->vendor_name . ' has been cancelled');
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 			

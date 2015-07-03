@@ -1514,6 +1514,7 @@ var google_remarketing_only = true;
                                 $("#or_reservation").addClass("hidden");
                                // $('#collapseFive').hide();
                                 has_reserv = true;
+                                $('#alacarte_cant_do_reserv1,#alacarte_cant_do_reserv2,#alacarte_brs_my_reserv').show();
                           }
                           else
                           {
@@ -1539,6 +1540,7 @@ var google_remarketing_only = true;
                                 $("#ac_order_info2").slideDown()
                             }
                             $("#ac_order_info2").removeClass("hidden");
+                            $("#ac_order_info2").show();
                             full_info = $("#ac_party_edit2 span").text() + " people - " + $("#ac_time_edit2 span").text() + " - " + $("#ac_date_edit2 span").text();
                             //console.log("full info = "+full_info);
                             $("#ac_fullinfo2").html("<strong>" + full_info + "</strong>")
