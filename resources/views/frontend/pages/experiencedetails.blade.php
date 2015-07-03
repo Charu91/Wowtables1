@@ -565,8 +565,8 @@ $last_url_item = count($url)-1;
              <?php endif;?>
             <h4>This Experience Includes:</h4>
             <ul>
-             <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['experience_includes']); ?>
-				     <?php echo ((isset($arrExperience['data']['reward_points']) && $arrExperience['data']['reward_points'] > 0)? '<li>- '.$arrExperience['data']['reward_points'].' Gourmet Points when you make a reservation online<a  href="'.URL::to("gourmet-rewards").'" target="_blank" data-original-title="Click here to read about Gourmet Rewards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="'.URL::to('images/question_icon_small_display.png').'"></a></li>': ' '  )?>
+             <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['experience_includes']); ?><br/><br/>
+				     <?php echo ((isset($arrExperience['data']['reward_points']) && $arrExperience['data']['reward_points'] > 0)? '<li> '.$arrExperience['data']['reward_points'].' Gourmet Points when you make a reservation online<a  href="'.URL::to("users/redeem-rewards").'" target="_blank" data-original-title="Click here to read about Gourmet Rewards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="'.URL::to('images/question_icon_small_display.png').'"></a></li>': ' '  )?>
              <?php /*if ($soldOut): ?>
               <li>
                 <h1 class="sold_out">SOLD OUT</h1>
@@ -933,12 +933,12 @@ $last_url_item = count($url)-1;
             <ul>   
             <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['terms_and_condition']);?>
             <?php if(isset($arrExperience['data']['gift_card']) && $arrExperience['data']['gift_card']==1){?>
-            <li>- Can be redeemed with a WowTables Gift Card
+            <li> Can be redeemed with a WowTables Gift Card
             <a  href="<?php echo URL::to('gift-cards')?>" target="_blank" data-original-title="Click here to find out more about WowTables Gift Cards"
              data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="/images/question_icon_small_display.png"></a>
             </li>
             <?php } else {?>
-      			{{--<li>- WowTables Gift Cards cannot be used for this experience</li>--}}
+      			<li> WowTables Gift Cards cannot be used for this experience</li>
       			<?php } ?>
             </ul> 
             

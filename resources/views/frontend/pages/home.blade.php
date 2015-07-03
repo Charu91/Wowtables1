@@ -45,7 +45,7 @@
   border-color: #FFFFFF;
   border: 2px solid #FFFFFF !important;
   font-weight: bolder;
-  margin-left: 30%;
+  margin-left: 35%;
 }
 
 .signup-wrapper{
@@ -332,13 +332,13 @@
                 <div class="wowtables_small_div">
                   <div class="row">
                   <div class="col-sm-12 col-xs-12 col-md-12">
-                  <h3 class="wowtable_nameing" style="text-align:center !important;">GourmetItUp is now WowTables</h3>
+                  <h3 class="wowtable_nameing" style="text-align:center !important;">The WowTables app is here.</h3>
                   </div>
                 </div>
                 <div class="row">
                 <div class="col-sm-12 col-xs-12 col-md-12">
-                <p style="text-align:center !important;">Fine dining has changed - and so have we.</p>
-                  <button type="button" class="btn btn-primary button_wowtables" onclick="window.location.href='http://blog.gourmetitup.com/gourmetitup-is-now-wowtables-the-fine-dining-revolution-begins/'" target="_blank">FIND OUT MORE</button>
+                <p style="text-align:center !important;">Dining out has never been easier!</p>
+                    <a href="http://app.wowtables.com" target="_blank" class="btn btn-primary button_wowtables">Install now</a>
                 </div>
               </div>
                 </div>
