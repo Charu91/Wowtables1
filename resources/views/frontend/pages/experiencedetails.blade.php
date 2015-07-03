@@ -934,7 +934,7 @@ $last_url_item = count($url)-1;
             <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['terms_and_condition']);?>
             <?php if(isset($arrExperience['data']['gift_card']) && $arrExperience['data']['gift_card']==1){?>
             <li> Can be redeemed with a WowTables Gift Card
-            <a  href="<?php echo URL::to('gift-cards')?>" target="_blank" data-original-title="Click here to find out more about WowTables Gift Cards"
+            <a  href="<?php echo URL::to('pages/gift-cards')?>" target="_blank" data-original-title="Click here to find out more about WowTables Gift Cards"
              data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="/images/question_icon_small_display.png"></a>
             </li>
             <?php } else {?>
