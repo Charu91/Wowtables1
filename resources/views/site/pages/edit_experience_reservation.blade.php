@@ -95,6 +95,28 @@
                     </td>
                 </tr>
 
+                <?php if(isset($post_data['admin_email']) && $post_data['admin_email'] == 1){ ?>
+                <tr>
+                    <td class="heading-content" style="float:left; margin-top:5px; height:auto; width:535px; background:#000; line-height:25px; color:#fff; font-weight:bold; font-size:16px; letter-spacing:2px; text-align:center; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; ">Reservation Changes</td>
+                </tr>
+                <tr>
+                    <td class="title-content" style=" float:left; padding:5px 57px 10px 70px; width:408px; background:#eab703; color:#fff; font-size:14px; font-style:italic; font-family:'Times New Roman', Times, serif; letter-spacing:1px; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; position:relative; z-index:9;">
+                        <?php if(isset($post_data['final_reservation_oulet']) && $post_data['final_reservation_oulet'] != ""){ ?>
+                            <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_reservation_oulet'];?></div>
+                        <?php } ?>
+                        <?php if(isset($post_data['final_reservation_party_size']) && $post_data['final_reservation_party_size'] != ""){ ?>
+                            <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_reservation_party_size'];?></div>
+                        <?php } ?>
+                        <?php if(isset($post_data['final_reservation_date']) && $post_data['final_reservation_date'] != ""){ ?>
+                            <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_reservation_date'];?></div>
+                        <?php } ?>
+                        <?php if(isset($post_data['final_reservation_time']) && $post_data['final_reservation_time'] != ""){ ?>
+                            <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_reservation_time'];?></div>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?php } ?>
+
                 <tr>
                     <td class="heading-content" style="float:left; margin-top:10px; height:25px; width:535px; background:#000; line-height:25px; color:#fff; font-weight:bold; font-size:16px; letter-spacing:2px; text-align:center; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; ">EXPERIENCE (Reservation ID: E<?php echo sprintf("%06d",$order_bookingno);?>)</td>
                 </tr>

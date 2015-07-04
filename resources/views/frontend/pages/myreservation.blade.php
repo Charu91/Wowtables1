@@ -474,8 +474,11 @@ agm.cpkbandra@jsmcorp.in
                 <input type="hidden" name="res_id" id="res_id"> 
                 <input type="hidden" value="" id="last_reserv_date" name="last_reserv_date">
                 <input type="hidden" value="" id="last_reserv_time" name="last_reserv_time">
-                <input type="hidden" value="Nariman Point" id="last_reserv_outlet" name="last_reserv_outlet">
-                <input type="hidden" value="2" id="last_reserv_party_size" name="last_reserv_party_size">
+                <input type="hidden" value="" id="last_reserv_outlet" name="last_reserv_outlet">
+                <input type="hidden" value="" id="last_reserv_party_size" name="last_reserv_party_size">
+                <input type="hidden" value="" id="last_reservation_date" name="last_reservation_date">
+                <input type="hidden" value="" id="last_reservation_time" name="last_reservation_time">
+                <input type="hidden" value="" id="last_reservation_party_size" name="last_reservation_party_size">
                 <p id="cant_change_table" class="hidden">To make changes to your reservation for this evening please call our concierge or the restaurant directly.</p>
                 <p id="cant_change_table" class="hidden cant_change">Please make a change to confirm. If no change is required, please click on cancel.</p>
                 <a aria-hidden="true" data-dismiss="modal" id="cancel" class="btn btn-warning hidden cant_change" href="javascript:">Cancel</a>        
@@ -804,7 +807,7 @@ agm.cpkbandra@jsmcorp.in
           var vendor_id = $('#vendor_id').val();
           var last_reserv_time = $('#last_reserv_time').val();
           $("#choose_date").datepicker({
-             dateFormat: 'yy-mm-dd',
+             dateFormat: 'yy-m-dd',
              minDate: 'new Date()',
              beforeShowDay: disableAllTheseDays,
              onSelect: function(dateText, inst) 
@@ -916,8 +919,12 @@ agm.cpkbandra@jsmcorp.in
         vendor_details =$('#vendor_id').val();
         locality_val =$('#locality_val').val();
         old_area =$('#old_area').val();
+        old_area_name =$('#old_area_name').val();
        old_locality_value =$('#old_locality_value').val();
        new_locality_value =$('#new_locality_value').val();
+       last_reservation_date =$('#last_reservation_date').val();
+       last_reservation_time =$('#last_reservation_time').val();
+       last_reservation_party_size =$('#last_reservation_party_size').val();
 
         var addonsArray = {};
         $('.myaddonselect').each(function(){
@@ -1003,7 +1010,11 @@ agm.cpkbandra@jsmcorp.in
                         last_reserv_date: last_reserv_date,
                         last_reserv_time: last_reserv_time,
                         last_reserv_outlet: last_reserv_outlet,
-                        last_reserv_party_size: last_reserv_party_size
+                        last_reservation_date: last_reservation_date,
+                        last_reservation_time: last_reservation_time,
+                        last_reservation_party_size: last_reservation_party_size,
+                        old_area_name:old_area_name
+
                     },
                     success: function(e) {
                         if (e == 1) {

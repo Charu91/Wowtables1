@@ -612,8 +612,8 @@ class RegistrationsController extends Controller {
 
     $arrData = array('last_reservation_date'=>$reservation_date,
     				 'last_reservation_time'=>$reservation_time,
-    				 'convert_time'=>date('h:i A',strtotime($reservation_time)),
-    				 'convert_date'=>date('jS m, Y',strtotime($reservation_date)),
+    				 'convert_time'=>date('g:i A',strtotime($reservation_time)),
+    				 'convert_date'=>date('jS M, Y',strtotime($reservation_date)),
      				 'no_of_persons'=>$no_of_persons);
    		 echo json_encode($arrData);
     	exit;
@@ -636,8 +636,11 @@ class RegistrationsController extends Controller {
 	 */
 	public function updateReservetion()
 	{
+		//echo "<pre>"; print_r(Input::all());
+
+
 		$reserv_id = $this->request->input('reserv_id');
-		$old_reservation_data = DB::table('reservation_details')->where('id', $reserv_id);
+
 		$vendor_details = $this->request->input('vendor_details');
 		$array = explode(',', $vendor_details);
 		$reserveType = $array['0'];
@@ -648,14 +651,71 @@ class RegistrationsController extends Controller {
 		$locality_val = $this->request->input('locality_val');
 		$edit_date = $this->request->input('edit_date');
 		$edit_date1 = $this->request->input('last_reserv_date');
-		$datearray=explode(" ",$edit_date);
+		$new_date = date('Y-m-d',strtotime($this->request->input('last_reserv_date')));
+		/*$datearray=explode(" ",$edit_date);
 		$date = trim(str_replace(range('a','z'),'',$datearray["0"]));
 		$remove_comma = trim(str_replace(',','',$datearray["1"]));
 		$month = str_pad($remove_comma, 2, "0", STR_PAD_LEFT); 
 		$year = $datearray["2"];
-		$final_date_format = $year.'-'.$month.'-'.$date;
+		$final_date_format = $year.'-'.$month.'-'.$date;*/
+		$final_date_format = $edit_date1;
 		$edit_time = $this->request->input('edit_time');
-		
+		//echo "new_date = ".$new_date;
+		$last_reservation_time = $this->request->input('last_reservation_time');
+		$last_reservation_date = $this->request->input('last_reservation_date');
+		$last_reservation_party_size = $this->request->input('last_reservation_party_size');
+		$new_reservation_outlet = $this->request->input('new_locality_value');
+		$last_reservation_outlet_val = $this->request->input('old_locality_value');
+		$last_reservation_outlet_name = $this->request->input('old_area_name');
+
+		//check for outlet change
+		if($locality_val != $last_reservation_outlet_val){
+			//echo " , outlet changed, send to email";
+			$old_reservation_outlet = $last_reservation_outlet_name;
+			$new_reservation_outlet = $new_reservation_outlet;
+
+			$reservation_oulet = " Old Outlet: ".$old_reservation_outlet." -> New Outlet: ".$new_reservation_outlet;
+		} else {
+			$reservation_oulet = "";
+		}
+
+		//check for party size change
+		if($party_size != $last_reservation_party_size){
+			//echo " , party size changed, send to email";
+			$old_reservation_party_size = $last_reservation_party_size;
+			$new_reservation_party_size = $party_size;
+
+			$reservation_party_size = " Old Party Size: ".$old_reservation_party_size." -> New Party Size: ".$new_reservation_party_size;
+		} else {
+			$reservation_party_size = "";
+
+		}
+
+
+		//check for date change
+		if($new_date != $last_reservation_date){
+
+			$old_reservation_date = $last_reservation_date;
+			$new_reservation_date = $new_date;
+
+			$reservation_date = " Old Date: ".$old_reservation_date." -> New Date: ".$new_reservation_date;
+
+		} else {
+			$reservation_date = "";
+		}
+
+		//check for time change
+		if($edit_time != $last_reservation_time){
+
+			$old_reservation_time = $last_reservation_time;
+			$new_reservation_time = $edit_time;
+
+			$reservation_time = " Old Time: ".$old_reservation_time." -> New Time: ".$new_reservation_time;
+
+		} else {
+			$reservation_time = "";
+		}
+
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');
 		$special_request= $this->request->input('special_request');
@@ -679,6 +739,7 @@ class RegistrationsController extends Controller {
 		$finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
 		$special_request_data = isset($special_request) && $special_request != "" ? "Spl Req: ".$special_request : "";
 		$addons_special_request = $finalAddontext." ".$special_request_data;
+
 		//echo " addon special request = ".$addons_special_request;
 		//echo "<pre>"; print_r($addonsArray); die;
 
@@ -776,6 +837,12 @@ class RegistrationsController extends Controller {
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
+			$dataPost['admin_email'] = 1;
+			$dataPost['final_reservation_oulet'] = $reservation_oulet;
+			$dataPost['final_reservation_party_size'] = $reservation_party_size;
+			$dataPost['final_reservation_date'] = $reservation_date;
+			$dataPost['final_reservation_time'] = $reservation_time;
+
 
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
@@ -785,8 +852,8 @@ class RegistrationsController extends Controller {
 				], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->to('tech@gourmetitup.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 
 		} else if($reserveType == "alacarte"){
@@ -852,6 +919,10 @@ class RegistrationsController extends Controller {
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
+			$dataPost['admin_email'] = 1;
+			$dataPost['final_reservation_party_size'] = $reservation_party_size;
+			$dataPost['final_reservation_date'] = $reservation_date;
+			$dataPost['final_reservation_time'] = $reservation_time;
 
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
@@ -861,8 +932,8 @@ class RegistrationsController extends Controller {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->to('tech@gourmetitup.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 		}
 
