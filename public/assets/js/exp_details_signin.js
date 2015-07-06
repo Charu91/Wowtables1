@@ -40,6 +40,7 @@ $(document).ready(function() {
         $("#redirectloginModal ul").find(".active").removeClass("active");
         $("#redirectloginModal li").first().addClass("active")
     });
+
     $("#send").click(function(e) { console.log("send");
         e.preventDefault();
         email_address = $("input[name='email1']");
@@ -126,7 +127,8 @@ $(document).ready(function() {
                             },
                             success: function(e) {
                                 //alert(yourcity);
-                                window.location = "/exp/lists/?signup=true";
+                                //alert(1);
+                               window.location = "/exp/lists/?signup=true";
                                 /*var t = "";
                                 var n = $("#url").val();
                                 if (e == 1) {
@@ -147,6 +149,121 @@ $(document).ready(function() {
             })
         }
     });
+
+
+$("#send_register").click(function(e) { console.log("send");
+        //this is for inner page popup register...
+        var url = $("#url").val();
+        //alert(url);
+        e.preventDefault();
+        email_address = $("input[name='email1']");
+        err = 0;
+        mypassword = "";
+        if (email_address.val() == "") {
+            $("#email_error").text("Please enter your email address");
+            $("#email_error").css("display", "block");
+            $("input[name='email1']").css("border", "2px solid #B94A39");
+            err++
+        } else if (!email_regex.test(email_address.val())) {
+            $("#email_error").text("Please enter a valid email address");
+            $("#email_error").css("display", "block");
+            $("input[name='email1']").css("border", "2px solid #B94A39");
+            err++
+        } else {
+            $("#email_error").css("display", "none");
+            $("input[name='email1']").css("border", "0px")
+        }
+        if ($("input[name='password1']").val() == "") {
+            $("#password_error").text("Please enter a password");
+            $("input[name='password1']").css("border", "2px solid #B94A39");
+            $("#password_error").css("display", "block");
+            err++
+        } else if ($("input[name='password1']").val().replace(/\s+$/, "") == "" || $("input[name='password1']").val().replace(/\s+$/, "") == "******") {
+            $("#password_error").text("Write correct password");
+            $("input[name='password']").css("border", "2px solid #B94A39");
+            $("#password_error").css("display", "block");
+            err++
+        } else {
+            $("input[name='password1']").css("border", "0px");
+            $("#password_error").css("display", "none");
+            mypassword = $("input[name='password1']").val()
+        }
+        if ($("#city").val() == -1) {
+            $("#city").css("border", "2px solid #B94A39");
+            $("#city_error").css("display", "block");
+            err++
+        } else {
+            $("#city").css("border", "0px");
+            $("#city_error").css("display", "none")
+        }
+        if (err >= 1) {
+            return false
+        } else {
+            $.ajax({
+                url: "/users/checkemail",
+                data: {
+                    email: email_address.val(),
+                    gothrough: "gothrough"
+                },
+                type: "post",
+                success: function(e) {
+                    if (e != "") {
+                        console.log(e);
+                        $("input[name='email1']").css("border", "2px solid #B94A39");
+                        $("#email_error").html(e);
+                        $("#email_error").css("display", "block");
+                        $("#email_error a").on("click", function(e) {
+                            $(".form-slide-wrapper").animate({
+                                left: "-320px"
+                            });
+                            $("input[name='email1']").css("border", "0px")
+                        });
+                        err++
+                    } else {
+                        var t = getURLParameters($(location).attr("href"));
+                        if (t.utm_source && t.utm_medium && t.utm_campaign) {
+                            var n = "/users/register?utm_source=" + t.utm_source + "&utm_medium=" + t.utm_medium + "&utm_campaign=" + t.utm_campaign
+                        } else {
+                            var n = "/users/register"
+                        }
+                        yourcity = $("#city option:selected").val();
+                        var r = $("#year_bd").val() + "-" + $("#month_bd").val() + "-" + $("#day_bd").val();
+                        $.ajax({
+                            type: "POST",
+                            url: n,
+                            data: {
+                                email: email_address.val(),
+                                password: mypassword,
+                                city: yourcity,
+                                full_name: $("#full_name").val(),
+                                reg_page : window.location.href,
+                            },
+                            success: function(e) {
+                                //alert(yourcity);
+                               // alert(1);
+                                window.location = url;
+                                /*var t = "";
+                                var n = $("#url").val();
+                                if (e == 1) {
+                                    t = $("#slug").val();
+                                    console.log("slug = "+t);
+                                    if (t != "" && t != "listing") {
+                                        window.location = n + "experiences/" + t
+                                    } else if(t == "listing") {
+                                        window.location = n 
+                                    }else {
+                                        window.location = n + "experience/lists/?signup=true"
+                                    }
+                                } else {}*/
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    });
+
+
     $("#send1").click(function(e) { //console.log("send 1");
         e.preventDefault();
         error = 0;

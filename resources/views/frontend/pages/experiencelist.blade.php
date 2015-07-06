@@ -149,7 +149,7 @@ $(document).ready(function(){
 <input type="hidden" id="slug" value="listing">
 		<div class="col-md-8 col-sm-8 deal-listing-left">
 			<div style="padding-bottom:10px;">
-				<a href="http://blog.gourmetitup.com/gourmetitup-is-now-wowtables-the-fine-dining-revolution-begins/" target="_blank"><img src="/assets/img/wowtable_sidebar_page.jpg" class="img-responsive"/></a>							 
+				<a href="http://app.wowtables.com" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
 			</div>
 			<div class="row">
 			<?php if($current_city != "bangalore"){?>

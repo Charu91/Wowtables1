@@ -101,7 +101,7 @@ $(document).ready(function() {
 				var mail_address = $("#mail_address").val();
 				var spl_inst = $("#special_instructions").val();
 				var exp_pri = $("#single_exp_price").val();
-				console.log("reveiver_email: "+rec_email+",receiver_name: "+rec_name+", gift_num_ppl: "+gift_no_people+",  select_gift_opt: "+sel_gift_opt+", gift_chse_exp: "+gift_choose_exp+", amount: "+amt+", other_amount: "+oth_amt+", send_gift: "+gift_send+", mailing_address: "+mail_address+", special_insts: "+spl_inst+", exp_price: "+exp_pri);
+				//console.log("reveiver_email: "+rec_email+",receiver_name: "+rec_name+", gift_num_ppl: "+gift_no_people+",  select_gift_opt: "+sel_gift_opt+", gift_chse_exp: "+gift_choose_exp+", amount: "+amt+", other_amount: "+oth_amt+", send_gift: "+gift_send+", mailing_address: "+mail_address+", special_insts: "+spl_inst+", exp_price: "+exp_pri);
 				$.ajax({
 						url: "gift_cards/set_values_for_giftcard",
 						type: "POST",
@@ -230,7 +230,7 @@ $(document).ready(function() {
                 var t = "";
                 for (var n = 0; n < e.length; n++) {
                     if (n < 4) continue;
-                    console.log(e[n].name);
+                    //console.log(e[n].name);
                     var r = 5 - e[n].rating;
                     var i = e[n].date_seating.split(" ");
                     var s = i[0].split("-");
@@ -470,6 +470,9 @@ $(document).ready(function() {
                $('#res_id').val(res_id);
                $('#last_reserv_date').val(last_reservation_date);
                $('#last_reserv_time').val(last_reservation_time);
+               $('#last_reservation_date').val(last_reservation_date);
+               $('#last_reservation_time').val(reservation_time);
+               $('#last_reservation_party_size').val(no_of_persons);
 
                if(reserve_type == 'experience')
                {
@@ -492,7 +495,7 @@ $(document).ready(function() {
                         $("#my_locality").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
                         },
                       success: function(e) {
-                         console.log(e);
+                         //console.log(e);
                          $('#my_locality').html(e);
                       },
                         error: function(x, t, m) 
@@ -519,7 +522,7 @@ $(document).ready(function() {
                         $("#my_addons").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
                         },
                       success: function(e) {
-                         console.log(e);
+                         //console.log(e);
                          $('#my_addons').html(e);
                       },
                         error: function(x, t, m) 
@@ -543,7 +546,7 @@ $(document).ready(function() {
                         $("#my_giftcard").html('<div id="load_layer" class="change_loader" ><img src="/images/loading.gif"></div>');
                         },
                       success: function(e) {
-                         console.log(e);
+                         //console.log(e);
                          $('#my_giftcard').html(e);
                       },
                         error: function(x, t, m) 
@@ -570,7 +573,7 @@ $(document).ready(function() {
                     $("#party_size1").html('<img src="/images/loading.gif">');
                     },
                   success: function(e) {
-                     console.log(e);
+                     //console.log(e);
                      $('#party_size1').html(e);
                   },
                   error: function(x, t, m)
@@ -1471,7 +1474,7 @@ $(document).ready(function() {
                     }
                     $("#ac_order_info2").removeClass("hidden");
                     full_info = $("#ac_party_edit2 span").text() + " people - " + $("#ac_time_edit2 span").text() + " - " + $("#ac_date_edit2 span").text();
-					console.log("full info = "+full_info);
+					//console.log("full info = "+full_info);
                     $("#ac_fullinfo2").html("<strong>" + full_info + "</strong>")
                 }
             } else {
@@ -1516,7 +1519,7 @@ $(document).ready(function() {
         $("#ac_order_info").slideUp()
     });
 	/*start  alacarte details*/
-	$("#ac_info_edit2").click(function() { console.log("clicked");
+	$("#ac_info_edit2").click(function() { //console.log("clicked");
         open_order_info = true;
         $("#ac_reserv_table2").slideDown();
         $("#ac_select_table2").removeClass("hidden");
@@ -1544,7 +1547,7 @@ $(document).ready(function() {
     });
 
 	/*starts alacarte details*/
-	$(document).on("click", ".alacarte_time", function() { console.log("called");
+	$(document).on("click", ".alacarte_time", function() { //console.log("called");
         $("#ac_time_edit2 span").text($(this).text());
         $("#ac_time_edit2").removeClass("hidden");
         $("#ac_select_table2_ala").removeClass("hidden");

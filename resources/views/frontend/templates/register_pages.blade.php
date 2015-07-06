@@ -49,17 +49,7 @@
 <![endif]-->
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/home-main.js') !!}
-<script type="text/javascript">
-    $(document).ready(function(){
-        var sess_usr_status = '<?php echo $session_user_status;?>';
-        if(sess_usr_status == 'false'){
-            mixpanel.register({"New User":'False'});
-        }
-        var curr_url = '<?php echo $currentPageUrl;?>';
-        mixpanel.track("Landing Page",{"Page Type":'Registration','Url':curr_url});
 
-    });
-</script>
 </head>
 <body class="home" id="header">
     <div class="container" style="margin-top:10px;max-width:700px;">
@@ -188,6 +178,17 @@ if(isset($_REQUEST['gclid'])){
         </div>
       </div>
     </footer>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var sess_usr_status = '<?php echo $session_user_status;?>';
+            if(sess_usr_status == 'false'){
+                mixpanel.register({"New User":'False'});
+            }
+            var curr_url = '<?php echo $currentPageUrl;?>';
+            mixpanel.track("Landing Page",{"Page Type":'Registration','Url':curr_url});
+
+        });
+    </script>
     {!! Html::script('assets/js/bootstrap.min.js') !!}
 </body>
 </html>

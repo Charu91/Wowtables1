@@ -388,5 +388,17 @@ Route::post('/user/redeem_points', [
 ]);
 
 
+Route::get('/payment/request',[
+    'uses' => 'Site\PaymentController@test',
+    'as' => '',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/payment/response',[
+    'uses' => 'Site\PaymentController@response',
+    'as' => '',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 
