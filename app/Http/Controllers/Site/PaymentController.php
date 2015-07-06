@@ -22,6 +22,7 @@ class PaymentController extends Controller{
     }
 
     public function response(){
+        echo "sad"; die;
         echo "<pre>"; print_r($_REQUEST);
     }
 }
