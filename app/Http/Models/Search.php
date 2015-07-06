@@ -518,7 +518,7 @@
 		$queryResult = DB::table('vendors as v')
 						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
 						->where('v.name','LIKE',"%$matchString%")
-						->('vl.status', 'Active')
+						->where('vl.status', 'Active')
 						->select('v.name', 'v.id as vendor_id',
 								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
 						->groupBy('vl.vendor_id')
