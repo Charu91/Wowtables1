@@ -567,11 +567,11 @@ $last_url_item = count($url)-1;
             <ul>
              <?php echo str_replace(array('<p>','</p>'),array('<li>','</li>'),$arrExperience['data']['experience_includes']); ?>
 				     <?php echo ((isset($arrExperience['data']['reward_points']) && $arrExperience['data']['reward_points'] > 0)? '<li> '.$arrExperience['data']['reward_points'].' Gourmet Points when you make a reservation online<a  href="'.URL::to("users/redeem-rewards").'" target="_blank" data-original-title="Click here to read about Gourmet Rewards" data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="'.URL::to('images/question_icon_small_display.png').'"></a></li>': ' '  )?>
-             <?php /*if ($soldOut): ?>
+             <?php if (isset($arrExperience['data']['prepaid']) && $arrExperience['data']['prepaid'] != "" && $arrExperience['data']['prepaid'] == 1): ?>
               <li>
-                <h1 class="sold_out">SOLD OUT</h1>
+                  A pre-payment is required to confirm this reservation.
               </li>
-              <?php endif;*/?>
+              <?php endif;?>
             </ul>
           </div>
           <?php
@@ -658,6 +658,7 @@ $last_url_item = count($url)-1;
                 </div>
              <?php elseif(!empty($arrExperience['data']['location']) && count($arrExperience['data']['location']) == 1): ?>    
                 <input type="hidden" name="address" id='locations1' value="<?php echo $arrExperience['data']['location'][0]['vendor_location_id'];?>">
+                <input type="hidden" name="prepaid" value="<?php echo $arrExperience['data']['prepaid'];?>">
              <?php endif; ?>
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
@@ -861,7 +862,15 @@ $last_url_item = count($url)-1;
                     <div class="reservation_errors"></div>
                     <div class="reservation_errors" id="error_people"></div> 
                     <div class="text-center">
-                        <button class="btn btn-warning btn-xs" type="button"  id="make_reservation">MAKE A RESERVATION</button>
+                        <button class="btn btn-warning btn-xs" type="button"  id="make_reservation">
+                            <?php if (isset($arrExperience['data']['prepaid']) && $arrExperience['data']['prepaid'] != "" && $arrExperience['data']['prepaid'] == 1){
+                                echo "PROCEED TO PAYMENT";
+                            } else {
+                                echo "MAKE A RESERVATION";
+                            } ?>
+
+
+                        </button>
                     </div> 
                   </div>
                 </div>
