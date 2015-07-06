@@ -3,7 +3,7 @@
 
 //$url=  "http://boot.gourmetitup.com/response";
 //$url="http://dev.buzzr.in/gourmet_project/response.php?DR={DR}";
-$url="http://dev.wowtables.com/payment/response";
+$url="http://wowtables.com/payment/response";
 
 //$MerchantID='C0Dr8m';
 
@@ -18,18 +18,17 @@ $salt = "U09bo7dX";
 //$secret="ebskey";
 
 //$name_arr = explode(" ",$_POST['name']);
-$name = "Rushikesh Joshi";
-$name_arr = explode(" ",$name);
+$name_arr = explode(" ",$cookie_array['guestName']);
 
 
 //$hash = "ceee9798dbb27bb66668c564854dce75|9661|".$_POST['amount']."|".$order_id."|http://gourmetitup.com/response.php?DR={DR}|".$mode;
 //$hash = "ceee9798dbb27bb66668c564854dce75|9661|".$_POST['amount']."|".$order_id."|http://dev.buzzr.in/gourmet_project/response.php?DR={DR}|".$mode;
 
-$order_id = 1 ;
-$email = 'tech@gourmetitup.com';
-$amount = "1.00";
-$description = "Testing";
-$phone = "9699985906";
+$order_id = $cookie_array['order_id'] ;
+$email = $cookie_array['guestEmail'];
+$amount = $cookie_array['total_amount'];
+$description = $cookie_array['addons_special_request'];
+$phone = $cookie_array['phone'];
 
 $hash = $MerchantID."|".$order_id."|".$amount."|".$description."|".$name_arr['0']."|".$email."|||||||||||".$salt;
 //$hash = $MerchantID."|".$order_id."|".$_POST['amount']."|".$_POST['description']."|".$name_arr['0']."|".$_POST['email']."|||||||||||".$salt;
@@ -65,8 +64,8 @@ $action_url = "https://secure.payu.in/_payment";
 
     <input name="email" type="hidden"  value="<?php echo $email?>" />
     <input name="phone" type="hidden" value="<?php echo $phone ?>" />
-    <input name="surl" type="hidden"  value="http://dev.wowtables.com/payment/response" />
-    <input name="furl" type="text"  value="http://dev.wowtables.com/payment/response" />
+    <input name="surl" type="hidden"  value="http://wowtables.com/payment/response" />
+    <input name="furl" type="text"  value="http://wowtables.com/payment/response" />
     <input name="api_version" type="hidden"   value="1" />
     <input name="hash" type="hidden" size="60" value="<?php echo $secure_hash;?>" />
 

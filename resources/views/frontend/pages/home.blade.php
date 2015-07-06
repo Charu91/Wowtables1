@@ -45,7 +45,7 @@
   border-color: #FFFFFF;
   border: 2px solid #FFFFFF !important;
   font-weight: bolder;
-  margin-left: 30%;
+  margin-left: 35%;
 }
 
 .signup-wrapper{

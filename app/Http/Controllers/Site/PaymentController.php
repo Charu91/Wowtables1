@@ -21,7 +21,8 @@ class PaymentController extends Controller{
         return view('site.pages.payment');
     }
 
-    public function response(){
+    public function process_response(){
+        echo "sad <br/>";
         echo "<pre>"; print_r($_REQUEST);
     }
 }

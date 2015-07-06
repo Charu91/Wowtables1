@@ -581,6 +581,7 @@ class ExperienceModel {
                   DB::raw('MAX(IF(pa2.alias = "end_date", pad1.attribute_value, "")) AS end_date'),
                   DB::raw('MAX(IF(pa4.alias = "reward_points_per_reservation", pai.attribute_value, "")) AS reward_points'),
                   DB::raw('MAX(IF(pa5.alias = "allow_gift_card_redemptions", pab.attribute_value, "")) AS gift_card'),
+                  DB::raw('MAX(IF(pa5.alias = "prepayment_allowed", pab.attribute_value, "")) AS prepaid'),
 
                   'media.file as experience_image', 'curators.name as curator_name',
                   'curators.bio as curator_bio', 'curators.designation',
@@ -642,6 +643,7 @@ class ExperienceModel {
                     'taxes' => (!empty($expResult->taxes)) ? $expResult->taxes : 'Taxes Applicable',
                     'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
                     'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
+                    'prepaid' => (!empty($expResult->prepaid)) ? $expResult->prepaid : "0",
                     'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
                     'price_type' => (is_null($expResult->price_type)) ? "": $expResult->price_type,
                     'curator_name' => (is_null($expResult->curator_name)) ? "":$expResult->curator_name,
@@ -1073,7 +1075,7 @@ class ExperienceModel {
     $reservation = array();
     
     //initializing the data
-    $reservation['reservation_status'] = 'new';
+    $reservation['reservation_status'] = $arrData['status'];
     $reservation['reservation_date'] = $arrData['reservationDate'];
     $reservation['reservation_time'] = $arrData['reservationTime'];
     $reservation['no_of_persons'] = $arrData['partySize'];    
@@ -1081,7 +1083,7 @@ class ExperienceModel {
     $reservation['guest_email'] = $arrData['guestEmail'];
     $reservation['guest_phone'] = $arrData['phone'];
     $reservation['reservation_type'] = $arrData['reservationType'];
-    $reservation['order_amount'] = 0;
+    $reservation['order_amount'] = $arrData['total_amount'];
     $reservation['user_id'] = $userID;
     
     //setting up the variables that may be present
