@@ -31,7 +31,7 @@ $amount = "1.00";
 $description = "Testing";
 $phone = "9699985906";
 
-$hash = $MerchantID."|".$order_id."|".$amount."|".$description."||".$email."|||||||||||".$salt;
+$hash = $MerchantID."|".$order_id."|".$amount."|".$description."|".$name_arr['0']."|".$email."|||||||||||".$salt;
 //$hash = $MerchantID."|".$order_id."|".$_POST['amount']."|".$_POST['description']."|".$name_arr['0']."|".$_POST['email']."|||||||||||".$salt;
 
 //echo "hash code ".$hash;
@@ -45,8 +45,8 @@ Test Server:
 */
 ?>
 <?php //echo  $order_id;
-$action_url = "https://test.payu.in/_payment";
-//$action_url = "https://secure.payu.in/_payment";
+//$action_url = "https://test.payu.in/_payment";
+$action_url = "https://secure.payu.in/_payment";
 
 ?>
 <br>
