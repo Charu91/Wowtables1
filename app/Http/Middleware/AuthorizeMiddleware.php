@@ -38,7 +38,7 @@ class AuthorizeMiddleware {
 								->first();
 			if($queryResult){
 				return $next($request);
-				/*
+				
 				$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
 				$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
 				
@@ -53,7 +53,7 @@ class AuthorizeMiddleware {
 						$arrResponse['msg'] = "Update your app version";
 						return $arrResponse;
 				}
-				*/	
+					
 			}
 		}
 		$response=array();
