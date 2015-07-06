@@ -3,7 +3,7 @@
 
 //$url=  "http://boot.gourmetitup.com/response";
 //$url="http://dev.buzzr.in/gourmet_project/response.php?DR={DR}";
-$url="http://dev.wowtables.com/payment/process_response";
+$url="http://dev.wowtables.com/payment/response";
 
 //$MerchantID='C0Dr8m';
 
@@ -44,8 +44,8 @@ Test Server:
 */
 ?>
 <?php //echo  $order_id;
-$action_url = "https://test.payu.in/_payment";
-//$action_url = "https://secure.payu.in/_payment";
+//$action_url = "https://test.payu.in/_payment";
+$action_url = "https://secure.payu.in/_payment";
 
 ?>
 <br>

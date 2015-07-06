@@ -337,8 +337,8 @@ $last_url_item = count($url)-1;
 				            ?>
                            ];
 						   //console.log("multiple latlongs = "+multiple_latlongs);
-						   var dealer_lat = "<?php echo $arrExperience['data']['lattitude_coordinate']?>";
-                           var dealer_lng = "<?php echo $arrExperience['data']['longitude_coordinates']?>";
+						   var dealer_lat = "<?php echo (isset($arrExperience['data']['lattitude_coordinate']) && $arrExperience['data']['lattitude_coordinate'] != "" ? $arrExperience['data']['lattitude_coordinate'] : 18.9750)?>";
+                           var dealer_lng = "<?php echo (isset($arrExperience['data']['longitude_coordinates']) && $arrExperience['data']['longitude_coordinates'] != "" ? $arrExperience['data']['longitude_coordinates'] : 72.8258)?>";
 							var markers = [];
 							var iterator = 0;
 
