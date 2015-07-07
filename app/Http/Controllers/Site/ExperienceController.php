@@ -722,9 +722,10 @@ class ExperienceController extends Controller {
                         ) ;
 
         $validator = Validator::make($dataPost,$arrRules);
-        echo "sd"; die;
+
         if($validator->fails()) {
-            $message = $validator->messages();
+            echo "validation fails";
+            /*$message = $validator->messages();
             $errorMessage = "";
             foreach($data as $key => $value) {
                 if($message->has($key)) {
@@ -732,11 +733,11 @@ class ExperienceController extends Controller {
                 }
             }
 
-           return redirect()->back()->withErrors($validator);
+           return redirect()->back()->withErrors($validator);*/
         } else {
 
             //End MailChimp
-
+            echo "validates success";
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
@@ -745,11 +746,11 @@ class ExperienceController extends Controller {
                         /*$getUsersDetails = $this->user->fetchDetails($userID);
                         echo "<pre>"; print_r($getUsersDetails); die;*/
                     echo "status is success";
-                        $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                        //$reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
                                 echo "prepaid is true";
-                            if(isset($_COOKIE['email_cookie'])){
+                            /*if(isset($_COOKIE['email_cookie'])){
                                 unset($_COOKIE['email_cookie']);
                             }
                             $cookiearray = array(
@@ -823,11 +824,12 @@ class ExperienceController extends Controller {
 
 
                             //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
-                            return view('site.pages.payment',['cookie_array'=>$cookiearray]);
-                            //
+                            return view('site.pages.payment',['cookie_array'=>$cookiearray]);*/
+
 
                         } else {
-                            $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+                            echo "not prepaid";
+                            /*$rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
                             $bookingsMade = $userData['data']['bookings_made'] + 1;
                             $type = "new";
                             $reservationType = "experience";
@@ -968,7 +970,7 @@ class ExperienceController extends Controller {
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
 
-                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
+                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);*/
                         }
 
                 }
