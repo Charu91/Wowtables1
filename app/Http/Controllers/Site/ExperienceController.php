@@ -826,7 +826,7 @@ class ExperienceController extends Controller {
                             }
 
                             //die;
-                            echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
+                            echo "<pre>sad = "; print_r($_COOKIE); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
 
