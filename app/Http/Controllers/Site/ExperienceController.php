@@ -724,7 +724,7 @@ class ExperienceController extends Controller {
         $validator = Validator::make($dataPost,$arrRules);
 
         if($validator->fails()) {
-            echo "validation fails";
+            //echo "validation fails";
             /*$message = $validator->messages();
             $errorMessage = "";
             foreach($data as $key => $value) {
@@ -745,11 +745,11 @@ class ExperienceController extends Controller {
                 if($arrResponse['status'] == 'success') {
                         /*$getUsersDetails = $this->user->fetchDetails($userID);
                         echo "<pre>"; print_r($getUsersDetails); die;*/
-                    echo "status is success";
+                    //echo "status is success";
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-                                echo "prepaid is true";
+                                //echo "prepaid is true";
                             if(isset($_COOKIE['email_cookie'])){
                                 unset($_COOKIE['email_cookie']);
                             }
@@ -802,8 +802,6 @@ class ExperienceController extends Controller {
                                 }
                             }
 
-
-
                             $city_id    = Input::get('city');
                             $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
                             if(empty($city_name))
@@ -816,17 +814,18 @@ class ExperienceController extends Controller {
 
                             $cookiearray['current_city_id']        = $city_id;
 
-                            foreach($cookiearray as $key => $val)
+                            /*foreach($cookiearray as $key => $val)
                             {
-                                echo "key  = ".$key." , val = ".$val." , ";
+                                //echo "key  = ".$key." , val = ".$val." , ";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
-                                echo " name = ".$name." , time = ".$time."<br/>";
-                                cookie($name, $val, $time, "/");
-                            }
+                                //echo " name = ".$name." , time = ".$time."<br/>";
+                                //cookie($name, $val, $time, "/");
+                            }*/
+                            Session::put('email_session',$cookiearray);
 
                             //die;
-                            echo "<pre>sad = "; print_r($_COOKIE); die;
+                            //echo "<pre>sad = "; print_r($_COOKIE); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
 
@@ -989,7 +988,7 @@ class ExperienceController extends Controller {
         //echo "sad <br/>";
         $requestarray = Input::all();
 
-        $fetch_cookie = $_COOKIE['email_cookie'];
+        $fetch_cookie = Session::get('email_session');
 
         //echo "<pre> sads = "; print_r($fetch_cookie);
         //echo "<pre> sads = "; print_r($requestarray);
