@@ -338,7 +338,7 @@
                       <div class="row">
                           <div class="col-sm-12 col-xs-12 col-md-12">
                               <p style="text-align:center !important;">Dining out has never been easier!</p>
-                              <a class="btn btn-primary button_wowtables" target="_blank" href="http://app.wowtables.com">Install now</a>
+                              <a class="btn btn-primary button_wowtables" target="_blank" href="http://go.onelink.me/1433356199?pid=Website&c=Homepage_Banner">Install now</a>
                           </div>
                       </div>
                   </div>

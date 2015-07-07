@@ -51,12 +51,12 @@ exit;*/
                 <span class="lead col-md-8">
                   <?php if($data['type']=='experience' || $data['type']=='event')
                   {
-                     echo $data['vendor_name'].' : '.$data['name'];
+                     echo $data['vendor_name'].': '.$data['name'];
 
                   } 
                   else
                   {
-                    echo $data['vendor_name'] .' : '.'A la carte Reservation';
+                    echo $data['vendor_name'] .': '.'A la carte Reservation';
                   }
                   ?>
                 </span>

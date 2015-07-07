@@ -41,6 +41,8 @@ class ExperienceController extends Controller {
      function details($city='',$expslug = ''){
         DB::connection()->enableQueryLog();
 
+         echo "<pre>"; print_r(Session::get('email_session'));
+
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
 
@@ -655,12 +657,12 @@ class ExperienceController extends Controller {
         $dataPost['guestName'] = Input::get('fullname');
         $dataPost['guestEmail'] = Input::get('email');
         $dataPost['phone'] = Input::get('phone');
-        $dataPost['reservationType'] = (isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1 ? 'experience' : 'event');
+        $dataPost['reservationType'] = (isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1 ? 'event' : 'experience');
         $dataPost['specialRequest'] = Input::get('special');
 
         $dataPost['addon']          = Input::get('add_ons');
         $dataPost['giftCardID']     = Input::get('giftcard_id');
-        $dataPost['status']     = (Input::get('prepaid') == 1 ? "inactive" : "new");
+        $dataPost['status']     = (Input::get('prepaid') == 1 ? "unpaid" : "new");
         $dataPost['prepaid']     = Input::get('prepaid');
 
         $count = $dataPost['addon'];
@@ -987,7 +989,7 @@ class ExperienceController extends Controller {
         $requestarray = Input::all();
 
         $fetch_cookie = Session::get('email_session');
-        
+
         if($requestarray['status'] == "success"){
             $details = '<table width="600" cellpadding="2" cellspacing="2" border="0">
         <tr>
@@ -1014,7 +1016,7 @@ class ExperienceController extends Controller {
 
             $bookingsMade = DB::table('reservation_details')
                 ->where('id', $requestarray['txnid'])
-                ->update(array('reservation_status' => 'new','transaction_id' => $lastTransactionID));
+                ->update(array('reservation_status' => 'prepaid','transaction_id' => $lastTransactionID));
 
             $locationDetails = $this->experiences_model->getLocationDetails($fetch_cookie['vendorLocationID']);
             $outlet = $this->experiences_model->getOutlet($fetch_cookie['vendorLocationID']);
@@ -1171,9 +1173,11 @@ class ExperienceController extends Controller {
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
+            Session::forget('email_session');
+
         }
 
-        Session::forget('email_session');
+
 
 
     }

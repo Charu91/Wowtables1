@@ -106,7 +106,7 @@ class ReservationModel extends Model {
                                     left join `vendor_location_address` as `vvla` on `vvla`.`vendor_location_id` = `rd`.`vendor_location_id` 
                                     left join `locations` as `vloc` on `vloc`.`id` = `vl`.`location_id`
                                     left join `locations` as `vloc1` on `vloc1`.`id` = vvla.city_id
-                                     where `rd`.`user_id` = $userID and `reservation_status` in ('new', 'edited') 
+                                     where `rd`.`user_id` = $userID and `reservation_status` in ('new', 'edited','prepaid')
                                     group by `rd`.`id` order by `rd`.`reservation_date` asc, `rd`.`reservation_time` asc");
     //echo $queryResult->toSql();
     
