@@ -750,9 +750,7 @@ class ExperienceController extends Controller {
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
                                 //echo "prepaid is true";
-                            if(isset($_COOKIE['email_cookie'])){
-                                unset($_COOKIE['email_cookie']);
-                            }
+                            Session::forget('email_session');
                             $cookiearray = array(
                                 'reservationDate' => $dataPost['reservationDate'],
                                 'reservationDay' => $dataPost['reservationDay'],
@@ -989,12 +987,7 @@ class ExperienceController extends Controller {
         $requestarray = Input::all();
 
         $fetch_cookie = Session::get('email_session');
-
-        //echo "<pre> sads = "; print_r($fetch_cookie);
-        //echo "<pre> sads = "; print_r($requestarray);
-        //echo " asf = ".$requestarray['status'];
-        //echo "asd = ".$fetch_cookie['addons_special_request'];
-        //die;
+        
         if($requestarray['status'] == "success"){
             $details = '<table width="600" cellpadding="2" cellspacing="2" border="0">
         <tr>
@@ -1177,7 +1170,10 @@ class ExperienceController extends Controller {
             $arrResponse['slug'] = $fetch_cookie['slug'];
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
+
         }
+
+        Session::forget('email_session');
 
 
     }
