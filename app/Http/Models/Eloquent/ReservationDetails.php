@@ -1504,7 +1504,8 @@ class ReservationDetails extends Model {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','shuklaparth@hotmail.com');
 			});
 
 		} else if($arrData['reservationType'] == "alacarte"){
