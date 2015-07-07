@@ -49,7 +49,7 @@ exit;*/
             <div class="panel-heading">
               <div class="row">
                 <span class="lead col-md-8">
-                  <?php if($data['type']=='experience')
+                  <?php if($data['type']=='experience' || $data['type']=='event')
                   {
                      echo $data['vendor_name'].' : '.$data['name'];
 
