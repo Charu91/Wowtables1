@@ -1679,7 +1679,7 @@ class ReservationDetails extends Model {
 
 
 			//check for date change
-			if($new_date != $last_reservation_date){
+			if($queryResult->reservation_date != $arrData['reservationDate']){
 
 				$old_reservation_date = $queryResult->reservation_date;
 				$new_reservation_date = $arrData['reservationDate'];
