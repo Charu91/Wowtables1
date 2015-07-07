@@ -394,8 +394,8 @@ Route::get('/payment/request',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('/payment/response',[
-    'uses' => 'Site\PaymentController@response',
+Route::post('/payment/process_response',[
+    'uses' => 'Site\ExperienceController@process_response',
     'as' => '',
     'domain' => env('WEBSITE_URL'),
 ]);

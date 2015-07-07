@@ -3,7 +3,8 @@
 
 //$url=  "http://boot.gourmetitup.com/response";
 //$url="http://dev.buzzr.in/gourmet_project/response.php?DR={DR}";
-$url="http://wowtables.com/payment/response";
+//$url="http://wowtables.app/payment/process_response";
+$url="http://dev.wowtables.com/payment/process_response";
 
 //$MerchantID='C0Dr8m';
 
@@ -64,8 +65,11 @@ $action_url = "https://secure.payu.in/_payment";
 
     <input name="email" type="hidden"  value="<?php echo $email?>" />
     <input name="phone" type="hidden" value="<?php echo $phone ?>" />
-    <input name="surl" type="hidden"  value="http://wowtables.com/payment/response" />
-    <input name="furl" type="text"  value="http://wowtables.com/payment/response" />
+    <!--<input name="surl" type="hidden"  value="http://wowtables.app/payment/process_response" />
+    <input name="furl" type="text"  value="http://wowtables.app/payment/process_response" />
+    -->
+    <input name="surl" type="hidden"  value="http://dev.wowtables.com/payment/process_response" />
+    <input name="furl" type="text"  value="http://dev.wowtables.com/payment/process_response" />
     <input name="api_version" type="hidden"   value="1" />
     <input name="hash" type="hidden" size="60" value="<?php echo $secure_hash;?>" />
 

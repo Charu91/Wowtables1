@@ -766,8 +766,26 @@ class ExperienceController extends Controller {
                                 'product_id' => $dataPost['product_id'],
                                 'vendor_location_id' => $dataPost['vendor_location_id'],
                                 'total_amount' => $dataPost['total_amount'],
-                                'order_id' => $reservationResponse['data']['reservationID']
+                                'order_id' => $reservationResponse['data']['reservationID'],
+                                'user_id' => $userID,
+                                'reward_points' => $productDetails['attributes']['reward_points_per_reservation'],
+                                'bookingsMade' => $userData['data']['bookings_made'] + 1,
+                                'restaurant_name' => $outlet->vendor_name,
+                                'descriptive_title' => $outlet->descriptive_title,
+                                'membership_number' => $userData['data']['membership_number'],
+                                'outlet_name' => $outlet->name,
+                                'experience_title' => $outlet->product_name,
+                                'experience_description' => $productDetails['attributes']['short_description'],
+                                'order_id_digits' => sprintf("%06d",$reservationResponse['data']['reservationID']),
+                                'experience_includes' => $productDetails['attributes']['experience_includes'],
+                                'terms_and_conditions' => $productDetails['attributes']['terms_and_conditions'],
+                                'address' => $locationDetails->address,
+                                'lat' => $locationDetails->latitude,
+                                'long' => $locationDetails->longitude,
+                                'slug' => $outlet->slug,
                             );
+
+
 
                             foreach($dataPost['addon'] as $prod_id => $qty) {
                                 if($qty > 0){
@@ -777,17 +795,24 @@ class ExperienceController extends Controller {
                                 }
 
                             }
-
+                            Cookie::forget('email_cookie');
                             foreach($cookiearray as $key => $val)
                             {
                                 //echo "key  = ".$key." , val = ".$val." , ";
                                 $name = "email_cookie['".$key."']";
                                 $time = time()+ 86500;
-                                cookie($name, $val, $time);
+
+                                if(Cookie::make($name, $val, $time)){
+                                    echo "created <br/>";
+                                } else {
+                                    echo "no <br/>";
+                                }
                             }
 
+                            echo "<prE>"; print_r($cookiearray);
+                            echo "<pre>sad = "; print_r(Cookie::get('email_cookie')); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
-                            //echo "<pre>sad = "; print_r(Cookie::get('email_cookie'));
+                            //
 
                         } else {
                             $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
@@ -916,12 +941,6 @@ class ExperienceController extends Controller {
 
                             $arrResponse['current_city_id']        = $city_id;
 
-                            //return response()->view('frontend.pages.thankyou',$arrResponse);
-                            //view('frontend.pages.thankyou',$arrResponse);
-                            //$experienceOrderId = '#E'.$mergeReservationsArray['order_id'];
-                            //echo '/experiences/thankyou/E'.$mergeReservationsArray['order_id']; print_r($arrResponse);
-                            //return redirect('/experiences/thankyou/E'.$mergeReservationsArray['order_id'],$arrResponse);
-                            //echo "<pre>"; print_r($arrResponse); //die;
                             $arrResponse['restaurant_name'] = $outlet->vendor_name;
                             $arrResponse['experience_title'] = $outlet->product_name;
                             $arrResponse['experience_description'] = $productDetails['attributes']['short_description'];
@@ -936,7 +955,7 @@ class ExperienceController extends Controller {
                             $arrResponse['long'] = $locationDetails->longitude;
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
-                            //echo "<pre>"; print_r($arrResponse); die;
+
                             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }
 
@@ -944,6 +963,48 @@ class ExperienceController extends Controller {
             } else {
                 return redirect()->back()->withErrors($validator);
             }
+        }
+
+
+    }
+
+    public function process_response(){
+        //echo "sad <br/>";
+        $requestarray = Input::all();
+
+        $fetch_cookie = Cookie::get('email_cookie');
+
+        echo "<pre> request array"; print_r($requestarray);
+        echo "<br/> fetch_cookie array"; print_r(Cookie::get('email_cookie'));
+        echo "<br/> fetch_cookie array sad"; print_r($fetch_cookie);
+        die;
+        if($requestarray['status'] == "success"){
+            $details = '<table width="600" cellpadding="2" cellspacing="2" border="0">
+        <tr>
+            <th colspan="2">Transaction Details</th>
+        </tr>';
+            foreach( $requestarray as $key => $value) {
+                $details .= '<tr>
+                <td class="fieldName" width="50%">'. $key.'</td>
+                <td class="fieldName" align="left" width="50%">'. $value.'</td>
+            </tr>';
+            }
+            $details .= '</table>';
+
+            $transaction['user_id']=$fetch_cookie['user_id'];
+            $transaction['response_code']=$requestarray['unmappedstatus'];
+            $transaction['response_message']=$requestarray['status'];
+            $transaction['transaction_date']=date('Y-m-d H:i:s');
+            $transaction['reservation_id']=$requestarray['txnid'];
+            $transaction['amount_paid']=$requestarray['amount'];
+            $transaction['transaction_number']=$requestarray['mihpayid'];
+            $transaction['transaction_details']=$details."~~".$requestarray['status'];
+
+            $lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
+
+            $bookingsMade = DB::table('reservation_details')
+                ->where('id', $requestarray['txnid'])
+                ->update(array('reservation_status' => 'new','transaction_id' => $lastTransactionID));
         }
 
 
