@@ -790,18 +790,21 @@ class ExperienceController extends Controller {
                                 'slug' => $outlet->slug,
                             );
 
+                            if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
+                                echo "set addons in cookie";
+                                /*foreach($dataPost['addon'] as $prod_id => $qty) {
+                                    if($qty > 0){
+                                        //echo "prod id = ".$prod_id." , qty = ".$qty;
+                                        $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+                                        $cookiearray['addon_'.$prod_id] = $qty;
+                                    }
 
-                            foreach($dataPost['addon'] as $prod_id => $qty) {
-                                if($qty > 0){
-                                    //echo "prod id = ".$prod_id." , qty = ".$qty;
-                                    $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
-                                    $cookiearray['addon_'.$prod_id] = $qty;
-                                }
-
+                                }*/
                             }
 
 
-                            $city_id    = Input::get('city');
+
+                            /*$city_id    = Input::get('city');
                             $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
                             if(empty($city_name))
                             {
@@ -811,7 +814,7 @@ class ExperienceController extends Controller {
                             $cookiearray['allow_guest']            ='Yes';
                             $cookiearray['current_city']           = strtolower($city_name);
 
-                            $cookiearray['current_city_id']        = $city_id;
+                            $cookiearray['current_city_id']        = $city_id;*/
 
                             foreach($cookiearray as $key => $val)
                             {
@@ -819,17 +822,17 @@ class ExperienceController extends Controller {
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
-                                setcookie($name, $val, $time, "/");
+                                //setcookie($name, $val, $time, "/");
                             }
 
-
+                            die;
                             //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
-                            return view('site.pages.payment',['cookie_array'=>$cookiearray]);
+                            //return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
 
                         } else {
-                            echo "not prepaid";
-                            /*$rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+                            //echo "not prepaid";
+                            $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
                             $bookingsMade = $userData['data']['bookings_made'] + 1;
                             $type = "new";
                             $reservationType = "experience";
@@ -970,7 +973,7 @@ class ExperienceController extends Controller {
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
 
-                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);*/
+                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }
 
                 }
