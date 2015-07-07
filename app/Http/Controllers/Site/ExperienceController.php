@@ -804,7 +804,7 @@ class ExperienceController extends Controller {
 
 
 
-                            /*$city_id    = Input::get('city');
+                            $city_id    = Input::get('city');
                             $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
                             if(empty($city_name))
                             {
@@ -814,7 +814,7 @@ class ExperienceController extends Controller {
                             $cookiearray['allow_guest']            ='Yes';
                             $cookiearray['current_city']           = strtolower($city_name);
 
-                            $cookiearray['current_city_id']        = $city_id;*/
+                            $cookiearray['current_city_id']        = $city_id;
 
                             foreach($cookiearray as $key => $val)
                             {
@@ -822,7 +822,7 @@ class ExperienceController extends Controller {
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
-                                //setcookie($name, $val, $time, "/");
+                                setcookie($name, $val, $time, "/");
                             }
 
                             die;
