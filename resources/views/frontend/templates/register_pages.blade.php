@@ -31,6 +31,8 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-itunes-app" content="app-id=983901046">
+<meta name="google-play-app" content="app-id=com.wowtables.android">
 
 <title>{!! $meta_information['seo_title'] or 'WowTables: Exclusive fine dining meals & experiences in your city' !!}</title>
 <meta name="title" content="{!! $seo_title or 'WowTables' !!}">
@@ -40,16 +42,23 @@
 {!! Html::style('assets/css/app.css?ver=1.0.1') !!}
 {!! Html::style('assets/css/bootstrap.min.css?ver=1.0.1') !!}
 {!! Html::script('assets/js/respond.js') !!}
+{!! Html::script('assets/js/jquery.smartbanner.js') !!}
 <link rel="icon" href="{{URL::to('/')}}/assets/img/WTFAV_Y.ico" type="image/x-icon">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
 <![endif]-->
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/home-main.js') !!}
-
+<script type="text/javascript">
+    $(function () {
+        $.smartbanner({ daysHidden: 0, daysReminder: 0, title:'Wowtables'
+        })
+    })
+</script>
 </head>
 <body class="home" id="header">
     <div class="container" style="margin-top:10px;max-width:700px;">
