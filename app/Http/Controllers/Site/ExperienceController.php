@@ -821,8 +821,8 @@ class ExperienceController extends Controller {
                                 echo "key  = ".$key." , val = ".$val." <br/>";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
-
-                                setcookie($name, $val, $time, "/");
+                                echo " name = ".$name." , time = ".$time;
+                                //setcookie($name, $val, $time, "/");
                             }
 
                             die;
