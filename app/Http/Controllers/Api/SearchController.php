@@ -219,7 +219,7 @@ use WowTables\Http\Models\RestaurantLocations;
              }
          }
          //die();
-         print_r($arrResult['filters']['locations']);   die();
+         //print_r($arrResult['filters']['locations']);   die();
 
          $finalResult=array(
                         'experiences'=>$arrResult['data'],
