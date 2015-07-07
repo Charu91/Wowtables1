@@ -1492,7 +1492,7 @@ class ReservationDetails extends Model {
 			$dataPost['final_reservation_oulet'] = $lastReservationDetail['reservation_oulet'];
 			$dataPost['final_reservation_party_size'] = $lastReservationDetail['reservation_party_size'];
 			$dataPost['final_reservation_date'] = $lastReservationDetail['reservation_date'];
-			$dataPost['final_reservation_time'] = $lastReservationDetail['reservationTime'];
+			$dataPost['final_reservation_time'] = $lastReservationDetail['reservation_time'];
 			//--------------------------------------------------------------------
 
 			Mail::send('site.pages.edit_experience_reservation',[
@@ -1587,7 +1587,7 @@ class ReservationDetails extends Model {
 			$dataPost['admin_email'] = 1;
 			$dataPost['final_reservation_party_size'] = $lastReservationDetail['reservation_party_size'];
 			$dataPost['final_reservation_date'] = $lastReservationDetail['reservation_date'];
-			$dataPost['final_reservation_time'] = $lastReservationDetail['reservationTime'];
+			$dataPost['final_reservation_time'] = $lastReservationDetail['reservation_time'];
 			//---------------------------------------------------------
 
 			Mail::send('site.pages.edit_restaurant_reservation',[
