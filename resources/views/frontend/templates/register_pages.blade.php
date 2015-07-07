@@ -42,7 +42,7 @@
 {!! Html::style('assets/css/app.css?ver=1.0.1') !!}
 {!! Html::style('assets/css/bootstrap.min.css?ver=1.0.1') !!}
 {!! Html::script('assets/js/respond.js') !!}
-{!! Html::script('assets/js/jquery.smartbanner.js') !!}
+
 <link rel="icon" href="{{URL::to('/')}}/assets/img/WTFAV_Y.ico" type="image/x-icon">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,6 +53,7 @@
 <![endif]-->
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/home-main.js') !!}
+{!! Html::script('assets/js/jquery.smartbanner.js') !!}
 <script type="text/javascript">
     $(function () {
         $.smartbanner({ daysHidden: 0, daysReminder: 0, title:'Wowtables'
