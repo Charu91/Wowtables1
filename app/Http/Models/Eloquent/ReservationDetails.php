@@ -1492,7 +1492,7 @@ class ReservationDetails extends Model {
 			$dataPost['final_reservation_oulet'] = $lastReservationDetail['reservation_oulet'];
 			$dataPost['final_reservation_party_size'] = $lastReservationDetail['reservation_party_size'];
 			$dataPost['final_reservation_date'] = $lastReservationDetail['reservation_date'];
-			$dataPost['final_reservation_time'] = $lastReservationDetail$arrData['reservationTime'];
+			$dataPost['final_reservation_time'] = $lastReservationDetail['reservationTime'];
 			//--------------------------------------------------------------------
 
 			Mail::send('site.pages.edit_experience_reservation',[
