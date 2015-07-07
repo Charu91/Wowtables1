@@ -665,7 +665,7 @@ class ExperienceController extends Controller {
         //echo "<pre>"; print_r($dataPost);
         $count = $dataPost['addon'];
         if($count==""){  $dataPost['addon'] =array();}
-       // echo "<pre>"; print_r($dataPost);
+        echo "<pre>"; print_r($dataPost); die;
         $addonsText = '';
         $addonsPostTaxTotal = '';
         foreach($dataPost['addon'] as $prod_id => $qty) {
