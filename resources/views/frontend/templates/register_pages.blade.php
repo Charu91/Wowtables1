@@ -56,7 +56,14 @@
 {!! Html::script('assets/js/jquery.smartbanner.js') !!}
 <script type="text/javascript">
     $(function () {
-        $.smartbanner({ daysHidden: 0, daysReminder: 0, title:'Wowtables'
+        $.smartbanner({
+            daysHidden: 0,
+            daysReminder: 0,
+            title:'The WowTables app',
+            author: 'Fast, simple & rewarding reservations',
+            price: 'FREE',
+            button : 'INSTALL',
+            icon: '/images/wt.png'
         })
     })
 </script>
