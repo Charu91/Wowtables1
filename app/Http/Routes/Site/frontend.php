@@ -143,7 +143,7 @@ Route::get('/alacarte/thankyou/{orderid}',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::post('orders/expcheckout',[
+Route::post('/orders/expcheckout',[
     'uses' => 'Site\ExperienceController@exporder',
     'as' => 'experience.expcheckout',
     'domain' => env('WEBSITE_URL'),
