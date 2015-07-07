@@ -665,7 +665,7 @@ class ExperienceController extends Controller {
         //echo "<pre>"; print_r($dataPost);
         $count = $dataPost['addon'];
         if($count==""){  $dataPost['addon'] =array();}
-        
+
         $addonsText = '';
         $addonsPostTaxTotal = '';
         foreach($dataPost['addon'] as $prod_id => $qty) {
@@ -747,7 +747,10 @@ class ExperienceController extends Controller {
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-                            unset($_COOKIE['email_cookie']);
+
+                            if(isset($_COOKIE['email_cookie'])){
+                                unset($_COOKIE['email_cookie']);
+                            }
                             $cookiearray = array(
                                 'reservationDate' => $dataPost['reservationDate'],
                                 'reservationDay' => $dataPost['reservationDay'],
