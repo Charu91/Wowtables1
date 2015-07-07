@@ -9,11 +9,14 @@
     <meta name="title" content="{!! $seo_title or 'WowTables' !!}">
     <meta name="description" content="{!! $seo_meta_description or 'WowTables' !!}">
     <meta name="keywords" content="{!! $seo_meta_keywords or 'WowTables' !!}">
+    <meta name="apple-itunes-app" content="app-id=983901046">
+    <meta name="google-play-app" content="app-id=com.wowtables.android">
 
     {!! Html::style('https://fonts.googleapis.com/css?family=Lato:100') !!}
     {!! Html::style('vendor/font-awesome/css/font-awesome.css') !!}
     {!! Html::style( elixir("css/all.css") ) !!}
     {!! Html::script('vendor/modernizr/modernizr.js') !!}
+    {!! Html::script('assets/js/jquery.smartbanner.js') !!}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

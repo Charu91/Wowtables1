@@ -54,19 +54,7 @@
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/home-main.js') !!}
 {!! Html::script('assets/js/jquery.smartbanner.js') !!}
-<script type="text/javascript">
-    $(function () {
-        $.smartbanner({
-            daysHidden: 0,
-            daysReminder: 0,
-            title:'The WowTables app',
-            author: 'Fast, simple & rewarding reservations',
-            price: 'FREE',
-            button : 'INSTALL',
-            icon: '/images/wt.png'
-        })
-    })
-</script>
+
 <style>
     #smartbanner { position:absolute; left:0; top:-82px; border-bottom:1px solid #e8e8e8; width:100%; height:78px; font-family:'Helvetica Neue',sans-serif; background:-webkit-linear-gradient(top, #f4f4f4 0%,#cdcdcd 100%); background-image: -ms-linear-gradient(top, #F4F4F4 0%, #CDCDCD 100%); background-image: -moz-linear-gradient(top, #F4F4F4 0%, #CDCDCD 100%); box-shadow:0 1px 2px rgba(0,0,0,0.5); z-index:9998; -webkit-font-smoothing:antialiased; overflow:hidden; -webkit-text-size-adjust:none; }
     #smartbanner, html.sb-animation {-webkit-transition: all .3s ease;}
