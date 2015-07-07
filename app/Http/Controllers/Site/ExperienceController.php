@@ -41,7 +41,7 @@ class ExperienceController extends Controller {
      function details($city='',$expslug = ''){
         DB::connection()->enableQueryLog();
 
-         echo "<pre>"; print_r(Session::get('email_session'));
+         //echo "<pre>"; print_r(Session::get('email_session'));
 
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
