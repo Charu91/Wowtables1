@@ -66,8 +66,8 @@ $action_url = "https://secure.payu.in/_payment";
     <input name="email" type="hidden"  value="<?php echo $email?>" />
     <input name="phone" type="hidden" value="<?php echo $phone ?>" />
     <!--<input name="surl" type="hidden"  value="http://wowtables.app/payment/process_response" />
-    <input name="furl" type="text"  value="http://wowtables.app/payment/process_response" />
-    -->
+    <input name="furl" type="text"  value="http://wowtables.app/payment/process_response" />-->
+
     <input name="surl" type="hidden"  value="http://dev.wowtables.com/payment/process_response" />
     <input name="furl" type="text"  value="http://dev.wowtables.com/payment/process_response" />
     <input name="api_version" type="hidden"   value="1" />
