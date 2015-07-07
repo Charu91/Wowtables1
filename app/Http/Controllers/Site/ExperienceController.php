@@ -818,10 +818,10 @@ class ExperienceController extends Controller {
 
                             foreach($cookiearray as $key => $val)
                             {
-                                echo "key  = ".$key." , val = ".$val." <br/>";
+                                echo "key  = ".$key." , val = ".$val." , ";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
-                                echo " name = ".$name." , time = ".$time;
+                                echo " name = ".$name." , time = ".$time."<br/>";
                                 //setcookie($name, $val, $time, "/");
                             }
 
