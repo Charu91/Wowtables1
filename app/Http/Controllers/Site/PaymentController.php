@@ -23,7 +23,7 @@ class PaymentController extends Controller{
 
     public function process_response(){
         echo "sad <br/>";
-        echo "<pre>"; print_r($_REQUEST);
+        echo "<pre>"; print_r(Input::all());
     }
 }
 ?>

@@ -42,8 +42,7 @@
                                 <?php
                                 if($reservationResponse['data']['reservation_type']=='event'){
                                     $your_booking_order = "Your Booking";
-                                    $order_bookingno = $order_id;
-                                    $payment_string = '<div style="margin: 5px 0; color: #000">Please pay directly at the venue.</div>';
+                                    $order_bookingno = $reservationResponse['data']['reservationID'];
                                 }
                                 else{
                                     $your_booking_order = "Your Order Receipt";
@@ -108,8 +107,10 @@
                                     <div style="margin: 5px 0; color: #000">Other Info: <?php echo $special;?></div>
                                     <?php endif; ?>
                                     <?php
+
+                                    if(!empty($giftcardID)):
                                     $giftcardID = trim($post_data['giftCardID']);
-                                    if(!empty($giftcardID)): ?>
+                                    ?>
                                         <div style="margin: 5px 0; color: #000">Gift Card ID: <?php echo $giftcardID;?></div>
                                     <?php endif; ?>
                                     <div style="margin: 5px 0; color: #000">Venue: <?php echo $exp_venue;?></div>

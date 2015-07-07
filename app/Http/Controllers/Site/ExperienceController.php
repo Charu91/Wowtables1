@@ -655,7 +655,7 @@ class ExperienceController extends Controller {
         $dataPost['guestName'] = Input::get('fullname');
         $dataPost['guestEmail'] = Input::get('email');
         $dataPost['phone'] = Input::get('phone');
-        $dataPost['reservationType'] = 'experience';
+        $dataPost['reservationType'] = (isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1 ? 'experience' : 'event');
         $dataPost['specialRequest'] = Input::get('special');
 
         $dataPost['addon']          = Input::get('add_ons');
@@ -665,7 +665,7 @@ class ExperienceController extends Controller {
         //echo "<pre>"; print_r($dataPost);
         $count = $dataPost['addon'];
         if($count==""){  $dataPost['addon'] =array();}
-       // echo "<pre>"; print_r($dataPost);
+
         $addonsText = '';
         $addonsPostTaxTotal = '';
         foreach($dataPost['addon'] as $prod_id => $qty) {
@@ -724,7 +724,8 @@ class ExperienceController extends Controller {
         $validator = Validator::make($dataPost,$arrRules);
 
         if($validator->fails()) {
-            $message = $validator->messages();
+            echo "validation fails";
+            /*$message = $validator->messages();
             $errorMessage = "";
             foreach($data as $key => $value) {
                 if($message->has($key)) {
@@ -732,22 +733,26 @@ class ExperienceController extends Controller {
                 }
             }
 
-           return redirect()->back()->withErrors($validator);
+           return redirect()->back()->withErrors($validator);*/
         } else {
 
             //End MailChimp
-
+            echo "validates success";
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
-
+                echo "checking validation";
                 if($arrResponse['status'] == 'success') {
                         /*$getUsersDetails = $this->user->fetchDetails($userID);
                         echo "<pre>"; print_r($getUsersDetails); die;*/
+                    echo "status is success";
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-
+                                echo "prepaid is true";
+                            if(isset($_COOKIE['email_cookie'])){
+                                unset($_COOKIE['email_cookie']);
+                            }
                             $cookiearray = array(
                                 'reservationDate' => $dataPost['reservationDate'],
                                 'reservationDay' => $dataPost['reservationDay'],
@@ -759,15 +764,32 @@ class ExperienceController extends Controller {
                                 'phone' => $dataPost['phone'],
                                 'reservationType' => $dataPost['reservationType'],
                                 'specialRequest' => $dataPost['specialRequest'],
-                                'giftCardID' => $dataPost['giftCardID'],
+                                'giftCardID' => (isset($dataPost['giftCardID']) && $dataPost['giftCardID'] != "" ? $dataPost['giftCardID'] : ""),
                                 'status' => $dataPost['status'],
                                 'prepaid' => $dataPost['prepaid'],
                                 'addons_special_request' => $dataPost['addons_special_request'],
                                 'product_id' => $dataPost['product_id'],
                                 'vendor_location_id' => $dataPost['vendor_location_id'],
                                 'total_amount' => $dataPost['total_amount'],
-                                'order_id' => $reservationResponse['data']['reservationID']
+                                'order_id' => $reservationResponse['data']['reservationID'],
+                                'user_id' => $userID,
+                                'reward_points' => $productDetails['attributes']['reward_points_per_reservation'],
+                                'bookingsMade' => $userData['data']['bookings_made'] + 1,
+                                'restaurant_name' => $outlet->vendor_name,
+                                'descriptive_title' => $outlet->descriptive_title,
+                                'membership_number' => $userData['data']['membership_number'],
+                                'outlet_name' => $outlet->name,
+                                'experience_title' => $outlet->product_name,
+                                'experience_description' => $productDetails['attributes']['short_description'],
+                                'order_id_digits' => sprintf("%06d",$reservationResponse['data']['reservationID']),
+                                'experience_includes' => $productDetails['attributes']['experience_includes'],
+                                'terms_and_conditions' => $productDetails['attributes']['terms_and_conditions'],
+                                'address' => $locationDetails->address,
+                                'lat' => $locationDetails->latitude,
+                                'long' => $locationDetails->longitude,
+                                'slug' => $outlet->slug,
                             );
+
 
                             foreach($dataPost['addon'] as $prod_id => $qty) {
                                 if($qty > 0){
@@ -778,19 +800,36 @@ class ExperienceController extends Controller {
 
                             }
 
-                            foreach($cookiearray as $key => $val)
+
+                            $city_id    = Input::get('city');
+                            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+                            if(empty($city_name))
                             {
-                                //echo "key  = ".$key." , val = ".$val." , ";
-                                $name = "email_cookie['".$key."']";
-                                $time = time()+ 86500;
-                                cookie($name, $val, $time);
+                                $city_name = 'mumbai';
                             }
 
+                            $cookiearray['allow_guest']            ='Yes';
+                            $cookiearray['current_city']           = strtolower($city_name);
+
+                            $cookiearray['current_city_id']        = $city_id;
+
+                            foreach($cookiearray as $key => $val)
+                            {
+                                echo "key  = ".$key." , val = ".$val." <br/>";
+                                $name = "email_cookie[".$key."]";
+                                $time = time()+ 86500;
+
+                                setcookie($name, $val, $time, "/");
+                            }
+
+
+                            //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
-                            //echo "<pre>sad = "; print_r(Cookie::get('email_cookie'));
+
 
                         } else {
-                            $rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
+                            echo "not prepaid";
+                            /*$rewardsPoints = $productDetails['attributes']['reward_points_per_reservation'];
                             $bookingsMade = $userData['data']['bookings_made'] + 1;
                             $type = "new";
                             $reservationType = "experience";
@@ -916,12 +955,6 @@ class ExperienceController extends Controller {
 
                             $arrResponse['current_city_id']        = $city_id;
 
-                            //return response()->view('frontend.pages.thankyou',$arrResponse);
-                            //view('frontend.pages.thankyou',$arrResponse);
-                            //$experienceOrderId = '#E'.$mergeReservationsArray['order_id'];
-                            //echo '/experiences/thankyou/E'.$mergeReservationsArray['order_id']; print_r($arrResponse);
-                            //return redirect('/experiences/thankyou/E'.$mergeReservationsArray['order_id'],$arrResponse);
-                            //echo "<pre>"; print_r($arrResponse); //die;
                             $arrResponse['restaurant_name'] = $outlet->vendor_name;
                             $arrResponse['experience_title'] = $outlet->product_name;
                             $arrResponse['experience_description'] = $productDetails['attributes']['short_description'];
@@ -936,14 +969,212 @@ class ExperienceController extends Controller {
                             $arrResponse['long'] = $locationDetails->longitude;
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
-                            //echo "<pre>"; print_r($arrResponse); die;
-                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
+
+                            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);*/
                         }
 
                 }
             } else {
                 return redirect()->back()->withErrors($validator);
             }
+        }
+
+
+    }
+
+    public function process_response(){
+        //echo "sad <br/>";
+        $requestarray = Input::all();
+
+        $fetch_cookie = $_COOKIE['email_cookie'];
+
+        //echo "<pre> sads = "; print_r($fetch_cookie);
+        //echo "<pre> sads = "; print_r($requestarray);
+        //echo " asf = ".$requestarray['status'];
+        //echo "asd = ".$fetch_cookie['addons_special_request'];
+        //die;
+        if($requestarray['status'] == "success"){
+            $details = '<table width="600" cellpadding="2" cellspacing="2" border="0">
+        <tr>
+            <th colspan="2">Transaction Details</th>
+        </tr>';
+            foreach( $requestarray as $key => $value) {
+                $details .= '<tr>
+                <td class="fieldName" width="50%">'. $key.'</td>
+                <td class="fieldName" align="left" width="50%">'. $value.'</td>
+            </tr>';
+            }
+            $details .= '</table>';
+
+            $transaction['user_id']=$fetch_cookie['user_id'];
+            $transaction['response_code']=$requestarray['unmappedstatus'];
+            $transaction['response_message']=$requestarray['status'];
+            $transaction['transaction_date']=date('Y-m-d H:i:s');
+            $transaction['reservation_id']=$requestarray['txnid'];
+            $transaction['amount_paid']=$requestarray['amount'];
+            $transaction['transaction_number']=$requestarray['mihpayid'];
+            $transaction['transaction_details']=$details."~~".$requestarray['status'];
+
+            $lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
+
+            $bookingsMade = DB::table('reservation_details')
+                ->where('id', $requestarray['txnid'])
+                ->update(array('reservation_status' => 'new','transaction_id' => $lastTransactionID));
+
+            $locationDetails = $this->experiences_model->getLocationDetails($fetch_cookie['vendorLocationID']);
+            $outlet = $this->experiences_model->getOutlet($fetch_cookie['vendorLocationID']);
+            $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+
+            $userID = $fetch_cookie['user_id'];
+            $rewardsPoints = $fetch_cookie['reward_points'];
+            $bookingsMade = $fetch_cookie['bookingsMade'];
+            $type = "new";
+            $reservationType = "experience";
+            $lastOrderId = $fetch_cookie['order_id'];
+            //echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
+            Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+            DB::table('users')
+                ->where('id', $userID)
+                ->update(array('full_name' => $fetch_cookie['guestName'],'phone_number'=>$fetch_cookie['phone']));
+
+            //echo "<pre>"; print_r($reservationResponse); die;
+            $zoho_data = array(
+                'Name' => $fetch_cookie['guestName'],
+                'Email_ids' => $fetch_cookie['guestEmail'],
+                'Contact' => $fetch_cookie['phone'],
+                'Experience_Title' => $fetch_cookie['restaurant_name'].' - '.$fetch_cookie['descriptive_title'],
+                'No_of_People' => $fetch_cookie['partySize'],
+                'Date_of_Visit' => date('d-M-Y', strtotime($fetch_cookie['reservationDate'])),
+                'Time' => date("g:i A", strtotime($fetch_cookie['reservationTime'])),
+                'Alternate_ID' =>  'E'.sprintf("%06d",$fetch_cookie['order_id']),
+                'Occasion' => $fetch_cookie['addons_special_request'],
+                'Type' => "Experience",
+                'API_added' => 'Yes',
+                'GIU_Membership_ID' => $fetch_cookie['membership_number'],
+                'Outlet' => $fetch_cookie['outlet_name'],
+                //'Points_Notes'=>'test',
+                'AR_Confirmation_ID'=>'0',
+                'Auto_Reservation'=>'Not available',
+                //'telecampaign' => $campaign_id,
+                //'total_no_of_reservations'=> '1',
+                'Calling_option' => 'No',
+                'gift_card_id_from_reservation' => (isset($fetch_cookie['giftCardID']) && $fetch_cookie['giftCardID'] != "" ? $fetch_cookie['giftCardID'] : "")
+            );
+            //echo "<pre>"; print_r($zoho_data);
+            $zoho_res = $this->zoho_add_booking($zoho_data);
+            $zoho_success = $zoho_res->result->form->add->status;
+            //echo "<pre>"; print_r($zoho_success); die;
+            if($zoho_success[0] != "Success"){
+                //$this->email->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
+                //$this->email->to($list);
+                //$this->email->subject('Urgent: Zoho reservation posting error');
+                $mailbody = 'E'.sprintf("%06d",$fetch_cookie['order_id']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                $mailbody .= 'Reservation Details<br>';
+                foreach($zoho_data as $key => $val){
+                    $name = str_replace('_',' ',$key);
+                    $mailbody .= $name.' '.$val.'<br>';
+                }
+
+                Mail::send('site.pages.zoho_posting_error',[
+                    'zoho_data'=> $mailbody,
+                ], function($message) use ($zoho_data)
+                {
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                });
+            }
+
+            $mergeReservationsArray = array('order_id'=> sprintf("%06d",$fetch_cookie['order_id']),
+                'reservation_date'=> date('d-F-Y',strtotime($fetch_cookie['reservationDate'])),
+                'reservation_time'=> date('g:i a',strtotime($fetch_cookie['reservationTime'])),
+                'venue' => $fetch_cookie['restaurant_name'],
+                'username' => $fetch_cookie['guestName']
+            );
+
+            $reservationResponse = array();
+            $reservationResponse['data']['reservationDate'] = $fetch_cookie['reservationDate'];
+            $reservationResponse['data']['reservationTime'] = $fetch_cookie['reservationTime'];
+            $reservationResponse['data']['partySize'] = $fetch_cookie['partySize'];
+            $reservationResponse['data']['reservationID'] = $fetch_cookie['order_id'];
+            $reservationResponse['data']['reservation_type'] = "event";
+
+            Mail::send('site.pages.experience_reservation',[
+                'location_details'=> $locationDetails,
+                'outlet'=> $outlet,
+                'post_data'=>$fetch_cookie,
+                'productDetails'=>$productDetails,
+                'reservationResponse'=>$reservationResponse,
+            ], function($message) use ($mergeReservationsArray){
+                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                $message->to(Input::get('email'))->subject('Your WowTables Reservation at '.$mergeReservationsArray['venue']);
+                //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+            });
+            $dataPost['admin']  = "yes";
+            Mail::send('site.pages.experience_reservation',[
+                'location_details'=> $locationDetails,
+                'outlet'=> $outlet,
+                'post_data'=>$fetch_cookie,
+                'productDetails'=>$productDetails,
+                'reservationResponse'=>$reservationResponse,
+            ], function($message) use ($mergeReservationsArray){
+                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                $message->to('tech@gourmetitup.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+            });
+
+            //echo "userid == ".$userID;
+            $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+
+            //Start MailChimp
+            if(!empty($getUsersDetails)){
+
+                $merge_vars = array(
+                    'MERGE1'=>$fetch_cookie['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$fetch_cookie['bookingsMade'],
+                    'MERGE13'=>$fetch_cookie['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($fetch_cookie['reservationDate']))
+                );
+                $this->mailchimp->lists->subscribe($this->listId, ["email"=>$fetch_cookie['guestEmail']],$merge_vars,"html",false,true );
+                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+            }
+
+            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+            $arrResponse['cities'] = $cities;
+
+            $city_id    = Input::get('city');
+            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+            if(empty($city_name))
+            {
+                $city_name = 'mumbai';
+            }
+
+            $arrResponse['allow_guest']            ='Yes';
+            $arrResponse['current_city']           = strtolower($city_name);
+
+            $arrResponse['current_city_id']        = $city_id;
+
+            $arrResponse['restaurant_name'] = $fetch_cookie['restaurant_name'];
+            $arrResponse['experience_title'] = $fetch_cookie['experience_title'];
+            $arrResponse['experience_description'] = $fetch_cookie['experience_description'];
+            $arrResponse['reservation_date'] = $fetch_cookie['reservationDate'];
+            $arrResponse['reservation_time'] = $fetch_cookie['reservationTime'];
+            $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
+            $arrResponse['guests'] = $fetch_cookie['partySize'];
+            $arrResponse['experience_includes'] = $fetch_cookie['experience_includes'];
+            $arrResponse['terms_and_conditions'] = $fetch_cookie['terms_and_conditions'];
+            $arrResponse['address'] = $fetch_cookie['address'];
+            $arrResponse['lat'] = $fetch_cookie['lat'];
+            $arrResponse['long'] = $fetch_cookie['long'];
+            $arrResponse['city'] = $fetch_cookie['current_city'];
+            $arrResponse['slug'] = $fetch_cookie['slug'];
+
+            return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
         }
 
 
