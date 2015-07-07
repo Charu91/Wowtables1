@@ -686,7 +686,7 @@ class ExperienceController extends Controller {
         $special_request = isset($dataPost['specialRequest']) && $dataPost['specialRequest'] != "" ? "Spl Req: ".$dataPost['specialRequest'] : "";
         $dataPost['addons_special_request'] = $finalAddontext." ".$special_request;
 
-        echo "<pre>"; print_r($dataPost); die;
+        //echo "<pre>"; print_r($dataPost); die;
 
         //echo $finalSpecialRequest;
         //die;
@@ -737,11 +737,11 @@ class ExperienceController extends Controller {
         } else {
 
             //End MailChimp
-            echo "validates success";
+            //echo "validates success";
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->experiences_model->validateReservationData($dataPost);
-                echo "checking validation";
+                //echo "checking validation";
                 if($arrResponse['status'] == 'success') {
                         /*$getUsersDetails = $this->user->fetchDetails($userID);
                         echo "<pre>"; print_r($getUsersDetails); die;*/
@@ -749,7 +749,7 @@ class ExperienceController extends Controller {
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-                                echo "prepaid is true";
+                                //echo "prepaid is true";
                             if(isset($_COOKIE['email_cookie'])){
                                 unset($_COOKIE['email_cookie']);
                             }
@@ -791,15 +791,15 @@ class ExperienceController extends Controller {
                             );
 
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
-                                echo "set addons in cookie";
-                                /*foreach($dataPost['addon'] as $prod_id => $qty) {
+                                //echo "set addons in cookie";
+                                foreach($dataPost['addon'] as $prod_id => $qty) {
                                     if($qty > 0){
                                         //echo "prod id = ".$prod_id." , qty = ".$qty;
                                         $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
                                         $cookiearray['addon_'.$prod_id] = $qty;
                                     }
 
-                                }*/
+                                }
                             }
 
 
@@ -818,16 +818,16 @@ class ExperienceController extends Controller {
 
                             foreach($cookiearray as $key => $val)
                             {
-                                echo "key  = ".$key." , val = ".$val." <br/>";
+                                //echo "key  = ".$key." , val = ".$val." <br/>";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
-                                //setcookie($name, $val, $time, "/");
+                                setcookie($name, $val, $time, "/");
                             }
 
-                            die;
+                            //die;
                             //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
-                            //return view('site.pages.payment',['cookie_array'=>$cookiearray]);
+                            return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
 
                         } else {
