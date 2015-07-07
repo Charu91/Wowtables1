@@ -749,7 +749,7 @@ class ExperienceController extends Controller {
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-                                //echo "prepaid is true";
+                                echo "prepaid is true";
                             if(isset($_COOKIE['email_cookie'])){
                                 unset($_COOKIE['email_cookie']);
                             }
@@ -804,7 +804,7 @@ class ExperienceController extends Controller {
 
 
 
-                            /*$city_id    = Input::get('city');
+                            $city_id    = Input::get('city');
                             $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
                             if(empty($city_name))
                             {
@@ -814,18 +814,18 @@ class ExperienceController extends Controller {
                             $cookiearray['allow_guest']            ='Yes';
                             $cookiearray['current_city']           = strtolower($city_name);
 
-                            $cookiearray['current_city_id']        = $city_id;*/
+                            $cookiearray['current_city_id']        = $city_id;
 
                             foreach($cookiearray as $key => $val)
                             {
-                                //echo "key  = ".$key." , val = ".$val." <br/>";
+                                echo "key  = ".$key." , val = ".$val." <br/>";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
                                 setcookie($name, $val, $time, "/");
                             }
 
-                            //die;
+                            die;
                             //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
