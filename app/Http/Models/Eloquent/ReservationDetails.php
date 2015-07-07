@@ -1445,7 +1445,7 @@ class ReservationDetails extends Model {
 				'Type' => 'Experience',
 				'API_added' => 'Mobile',
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
-				'Outlet' => 3.,
+				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
