@@ -822,7 +822,7 @@ class ExperienceController extends Controller {
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
-                                //setcookie($name, $val, $time, "/");
+                                setcookie($name, $val, $time, "/");
                             }
 
                             die;
