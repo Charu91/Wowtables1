@@ -802,11 +802,7 @@ class ExperienceController extends Controller {
                                 $name = "email_cookie['".$key."']";
                                 $time = time()+ 86500;
 
-                                if(Cookie::make($name, $val, $time)){
-                                    echo "created <br/>";
-                                } else {
-                                    echo "no <br/>";
-                                }
+                                Cookie::make($name, $val, $time);
                             }
 
                             echo "<prE>"; print_r($cookiearray);
