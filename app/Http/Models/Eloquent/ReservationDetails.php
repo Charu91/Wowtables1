@@ -41,6 +41,9 @@ class ReservationDetails extends Model {
 	
 	//-----------------------------------------------------------------
 	
+	//array to hold lastReservation detail 
+	protected $lastReservationDetail = array();
+
 	/**
 	 * Writes the details of the reservation in the DB.
 	 * 
@@ -363,6 +366,9 @@ class ReservationDetails extends Model {
 
 		$date = date_create($arrData['reservationTime']);
   		$arrData['reservationTime'] = date_format($date,"h:i A");
+
+  		//Read and hold the last reservation details
+  		$lastReservationDetail = self::getLastReservationDetail($arrData);
 		
 		$queryResult = Self::where('id', $arrData['reservationID'])
 						//->where('user_id',$arrData[])
@@ -462,7 +468,7 @@ class ReservationDetails extends Model {
 			//print_r($resultData['vendor_location_id']);  
 			//die();
 
-			$zohoMailStatus = Self::sendZohoMailupdate($arrData);
+			$zohoMailStatus = Self::sendZohoMailupdate($arrData, $lastReservationDetail);
 
 			if($resultData['reservation_type']=='alacarte'){
 				//reading the resturants detail
@@ -1250,6 +1256,13 @@ class ReservationDetails extends Model {
   	}
   	//-------------------------------------------------------------------
 
+  	/**
+	 * Send mail by zohomail for every cancelled reservation .
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
   	public static function zohoSendMailCancel( $reservationID) {
 		$arrReservationDetails = DB::table('reservation_details')->where('id', $reservationID)->first();
 		
@@ -1374,8 +1387,14 @@ class ReservationDetails extends Model {
 	}
 	//-----------------------------------------------------------------
 
-
-	public static function sendZohoMailupdate($arrData)
+	/**
+	 * Send mail by zoho for every edited reservation .
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
+	public static function sendZohoMailupdate($arrData, $lastReservationDetail)
 	{
 		$queryResult = DB::table('reservation_details')->where('id', $arrData['reservationID'])->select('user_id')->first();
 		$userData = Profile::getUserProfileWeb($queryResult->user_id);
@@ -1426,7 +1445,7 @@ class ReservationDetails extends Model {
 				'Type' => 'Experience',
 				'API_added' => 'Mobile',
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
-				'Outlet' => $outlet->name,
+				'Outlet' => 3.,
 				//'Points_Notes'=>$this->data['bonus_reason'],
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
@@ -1468,6 +1487,13 @@ class ReservationDetails extends Model {
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
+			//--------------------------------------------------------------------
+			$dataPost['admin_email'] = 1;
+			$dataPost['final_reservation_oulet'] = $lastReservationDetail['reservation_oulet'];
+			$dataPost['final_reservation_party_size'] = $lastReservationDetail['reservation_party_size'];
+			$dataPost['final_reservation_date'] = $lastReservationDetail['reservation_date'];
+			$dataPost['final_reservation_time'] = $lastReservationDetail$arrData['reservationTime'];
+			//--------------------------------------------------------------------
 
 			Mail::send('site.pages.edit_experience_reservation',[
 				'location_details'=> $locationDetails,
@@ -1557,6 +1583,12 @@ class ReservationDetails extends Model {
 				//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 			});
 
+			//--------------------------------------------------------
+			$dataPost['admin_email'] = 1;
+			$dataPost['final_reservation_party_size'] = $lastReservationDetail['reservation_party_size'];
+			$dataPost['final_reservation_date'] = $lastReservationDetail['reservation_date'];
+			$dataPost['final_reservation_time'] = $lastReservationDetail['reservationTime'];
+			//---------------------------------------------------------
 
 			Mail::send('site.pages.edit_restaurant_reservation',[
 				'location_details'=> $locationDetails,
@@ -1587,7 +1619,91 @@ class ReservationDetails extends Model {
   							    ->select('vendor_location_id', 'product_id')
   							    ->first();
   			return $arrResponse;
-  		} 
+  		}
+  	//----------------------------------------------------------------------------
+
+  	public static function getLastReservationDetail($arrData) {
+		$queryResult = Self::where('id', $arrData['reservationID'])						
+							->whereIn('reservation_status',array('new','edited'))
+							->first();	
+		
+		//check for outlet change
+			if($queryResult->reservation_type == "experience") {
+					//-----------------------------------------------------------------------------------------------------
+					$arrProductVendorLocationId = DB::table('reservation_details')->where('id', $arrData['reservationID'])
+					->select('product_vendor_location_id')
+					->get();
+					
+					 $outletOld = self::getExperienceOutlet($arrProductVendorLocationId[0]->product_vendor_location_id);
+					 $outlet = self::getExperienceOutlet($arrData['vendorLocationID']);
+					 
+					//--------------------------------------------------------------------------------------------------------
+					if($outletOld->name != $outlet->name){
+						//echo " , outlet changed, send to email";
+						$old_reservation_outlet = $outletOld->name ;
+						$new_reservation_outlet = $outlet->name;
+						$arrResponse['reservation_oulet'] = " Old Outlet: ".$old_reservation_outlet." -> New Outlet: ".$new_reservation_outlet;
+					} else {
+						$arrResponse['reservation_oulet'] = "";
+					}
+			} else if($queryResult->reservation_type == "alacarte") {
+						//---------------------------------------------------------------------------------------------------
+						$arrVendorLocationID = DB::table('reservation_details')->where('id', $arrData['reservationID'])
+						->select('vendor_location_id')
+						->get();
+						$outletOld = self::getAlacarteOutlet($arrVendorLocationID[0]->vendor_location_id);
+						$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
+						//-------------------------------------------------------------------------------------------------------
+						if($outletOld->name != $outlet->name){
+						//echo " , outlet changed, send to email";
+							$old_reservation_outlet = $outletOld->name;
+							$new_reservation_outlet = $outlet->name;
+
+							$arrResponse['reservation_oulet'] = " Old Outlet: ".$old_reservation_outlet." -> New Outlet: ".$new_reservation_outlet;
+						} else {
+							$arrResponse['reservation_oulet'] = "";
+						}
+			}
+
+			//check for party size change
+			if($queryResult->no_of_persons != $arrData['partySize']){
+				//echo " , party size changed, send to email";
+				$old_reservation_party_size = $queryResult->no_of_persons;
+				$new_reservation_party_size = $arrData['partySize'];
+
+				$arrResponse['reservation_party_size'] = " Old Party Size: ".$old_reservation_party_size." -> New Party Size: ".$new_reservation_party_size;
+			} else {
+				$arrResponse['reservation_party_size'] = "";
+
+			}
+
+
+			//check for date change
+			if($new_date != $last_reservation_date){
+
+				$old_reservation_date = $queryResult->reservation_date;
+				$new_reservation_date = $arrData['reservationDate'];
+
+				$arrResponse['reservation_date'] = " Old Date: ".$old_reservation_date." -> New Date: ".$new_reservation_date;
+
+			} else {
+				$arrResponse['reservation_date'] = "";
+			}
+
+			//check for time change
+			if($arrData['reservationTime'] != $queryResult->reservation_time){
+
+				$old_reservation_time = $last_reservation_time;
+				$new_reservation_time = $arrData['reservationTime'];
+
+				$arrResponse['reservation_time'] = " Old Time: ".$old_reservation_time." -> New Time: ".$new_reservation_time;
+
+			} else {
+				$arrResponse['reservation_time'] = "";
+			}
+			
+			return $arrResponse;							
+	} 
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php
