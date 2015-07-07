@@ -662,7 +662,7 @@ class ExperienceController extends Controller {
         $dataPost['giftCardID']     = Input::get('giftcard_id');
         $dataPost['status']     = (Input::get('prepaid') == 1 ? "inactive" : "new");
         $dataPost['prepaid']     = Input::get('prepaid');
-        //echo "<pre>"; print_r($dataPost);
+
         $count = $dataPost['addon'];
         if($count==""){  $dataPost['addon'] =array();}
 
@@ -686,7 +686,7 @@ class ExperienceController extends Controller {
         $special_request = isset($dataPost['specialRequest']) && $dataPost['specialRequest'] != "" ? "Spl Req: ".$dataPost['specialRequest'] : "";
         $dataPost['addons_special_request'] = $finalAddontext." ".$special_request;
 
-
+        echo "<pre>"; print_r($dataPost); die;
 
         //echo $finalSpecialRequest;
         //die;
