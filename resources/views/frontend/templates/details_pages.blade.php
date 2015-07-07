@@ -369,8 +369,9 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
     <!--[if lt IE 9]>
       <script src="{{URL::to('/')}}/assets/js/html5shiv.js"></script>
       <script src="{{URL::to('/')}}/assets/js/respond.min.js"></script>
-      {!! Html::script('assets/js/jquery.smartbanner.js') !!}
+
     <![endif]-->
+    {!! Html::script('assets/js/jquery.smartbanner.js') !!}
     <link rel="icon" href="{{URL::to('/')}}/assets/img/WTFAV_Y.ico" type="image/x-icon">
     <script type="text/javascript" src="https://www.curebit.com/javascripts/api/all-0.4.js?ver=1.0.2"></script>
   <script type="text/javascript">
