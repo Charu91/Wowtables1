@@ -749,7 +749,7 @@ class ExperienceController extends Controller {
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
-                                //echo "prepaid is true";
+                                echo "prepaid is true";
                             if(isset($_COOKIE['email_cookie'])){
                                 unset($_COOKIE['email_cookie']);
                             }
@@ -818,14 +818,14 @@ class ExperienceController extends Controller {
 
                             foreach($cookiearray as $key => $val)
                             {
-                                //echo "key  = ".$key." , val = ".$val." <br/>";
+                                echo "key  = ".$key." , val = ".$val." <br/>";
                                 $name = "email_cookie[".$key."]";
                                 $time = time()+ 86500;
 
-                                setcookie($name, $val, $time, "/");
+                                //setcookie($name, $val, $time, "/");
                             }
 
-                            //die;
+                            die;
                             //echo "<pre>sad = "; print_r($_COOKIE['email_cookie']); die;
                             return view('site.pages.payment',['cookie_array'=>$cookiearray]);
 
