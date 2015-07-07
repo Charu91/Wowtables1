@@ -1125,8 +1125,8 @@ class ExperienceController extends Controller {
             ], function($message) use ($mergeReservationsArray){
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                $message->to('tech@gourmetitup.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
             });
 
             //echo "userid == ".$userID;
@@ -1219,7 +1219,7 @@ class ExperienceController extends Controller {
         $reserv_date_new = date('Y-m-d',strtotime(Input::get('booking_date')));
         $reserv_time_new = Input::get('booking_time');
         $check_user_query = DB::select("SELECT `reservation_date`,`reservation_time` FROM `reservation_details`
-                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new' AND `reservation_status`IN ('edited', 'new')");
+                                         WHERE `user_id`='$user_id' and `reservation_date`='$reserv_date_new' AND `reservation_status` IN ('edited', 'new')");
         //print_r($check_user_query);
         $success = '0';
       if(!empty($check_user_query))
