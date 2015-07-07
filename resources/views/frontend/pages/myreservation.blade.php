@@ -79,6 +79,8 @@ exit;*/
                           $change_id = "cancel_reservation";
                         } else if($data['type'] == "alacarte"){
                           $change_id = "ac_cancel_reservation";
+                        }else if($data['type'] == "event"){
+                          $change_id = "event_reservation";
                         }
                   ?>                    
                   <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#cancelModal" id="<?php echo $change_id;?>" data-reserve-type="{{$data['type']}}">Cancel</a>
