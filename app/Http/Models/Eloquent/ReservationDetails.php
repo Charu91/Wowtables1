@@ -1693,7 +1693,7 @@ class ReservationDetails extends Model {
 			//check for time change
 			if($arrData['reservationTime'] != $queryResult->reservation_time){
 
-				$old_reservation_time = $last_reservation_time;
+				$old_reservation_time = $queryResult->reservation_time;
 				$new_reservation_time = $arrData['reservationTime'];
 
 				$arrResponse['reservation_time'] = " Old Time: ".$old_reservation_time." -> New Time: ".$new_reservation_time;
