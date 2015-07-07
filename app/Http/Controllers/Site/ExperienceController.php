@@ -722,7 +722,7 @@ class ExperienceController extends Controller {
                         ) ;
 
         $validator = Validator::make($dataPost,$arrRules);
-
+        echo "sd"; die;
         if($validator->fails()) {
             $message = $validator->messages();
             $errorMessage = "";
