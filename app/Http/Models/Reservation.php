@@ -398,7 +398,7 @@ class Reservation {
 						->orderBy('rd.reservation_date','asc')
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
-						->get();
+						->get();    
 		//echo $queryResult->toSql(); die();
 		
 		//array to store the information
@@ -430,7 +430,7 @@ class Reservation {
 			
 			foreach($queryResult as $row) {
 				//converting reservation day time to timestamp
-				$reservationTimestamp = strtotime($row->reservation_date.' '.$row->reservation_time);
+				$reservationTimestamp = strtotime($row->reservation_date.' '.date('H:i:s',strtotime($row->reservation_time)));
 				if($reservationTimestamp >= $currentTimestamp) {
 					if($row->reservation_type == 'experience') {
 						$day = date('D',strtotime($row->reservation_date));
