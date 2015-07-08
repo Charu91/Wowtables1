@@ -172,8 +172,7 @@ class ExperienceModel {
                       'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
                       'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
                       'locations.name as location_name','products.slug');
-
-
+        
       //adding filter for cuisines if cuisines are present
       if(isset($arrData['cuisine']) && !empty($arrData['cuisine'])) {
         $experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
