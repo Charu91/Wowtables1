@@ -58,11 +58,11 @@
             , $experienceCommissionOn = $('#experienceCommissionOn')
             , $experienceFlags = $('#experienceFlags')
             , $experienceCurators = $('#experienceCurators')
-
-
+            , $experienceLocationCities = $('#experienceLocationCities')
 
 
         $('#experiencesTable').DataTable();
+        $('#experiences_table').DataTable();
 
         $addNewExperienceAddonBtn.on('click', function () {
             $experienceAddonForm.show();
@@ -95,6 +95,31 @@
             disableIfEmpty: true,
             enableFiltering: true,
             filterBehavior: 'text'
+        });
+        $experienceLocationCities.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
+
+        $experienceLocationCities.on('change',function(){
+           var cityval = $(this).val();
+            if(cityval != ""){
+                $("#search_loading").css('display','inline');
+                $.ajax({
+                    method: 'GET',
+                        url: '/admin/experiences/location/' + cityval,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    },
+                    success:function(response){
+                        $("#experienceLocationsDiv").replaceWith(response);
+                        $("#search_loading").css('display','none');
+                    }
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
         });
 
         $experienceAddonForm.hide();
@@ -276,6 +301,10 @@
                 console.log(jqXHR);
             });
         });
+
+
+
+
 
 
 

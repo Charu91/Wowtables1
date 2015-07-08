@@ -80,5 +80,50 @@
         {!! Html::script('http://maps.google.com/maps/api/js?sensor=false') !!}
 
         {!! Html::script( elixir("js/all.js") ) !!}
+            <script type="text/javascript">
+
+                    function move_table_fields(){
+                        var order_list = new Array();
+                        $("#experiences_table tr[rel]").each(function(i){
+                            order_list[i] = $(this).attr('rel');
+                        });
+
+                        $("#experiences_table").tableDnD({
+                            onDragClass: "myDragClass",
+                            onDrop: function(table, row) {
+                                $("#search_loading").css('display','inline');
+                                var rows = table.tBodies[0].rows;
+                                start = row.id;
+
+                                var prev_id = $('#experiences_table #' + start).prev().attr('id');
+                                var next_id = $('#experiences_table #' + start).next().attr('id');
+                                var new_id;
+                                if(start < next_id){
+                                    new_id = next_id;
+                                } else{
+                                    new_id = prev_id;
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    data: {start : start, end: new_id,order_list : order_list},
+                                    url: "/admin/experience/location/ajax_sort",
+                                    dataType: "json",
+                                    success: function(data){
+                                        $("#search_loading").css('display','none');
+                                        var tr;
+                                        for(tr in data)
+                                        {
+                                            $("#experiences_table tr[rel=" + data[tr]['id'] + "]").attr('id',data[tr]['order_status']);
+                                        }
+                                    }
+                                });
+
+                            },
+                            onDragStart: function(table, row) {}
+                        });
+                    }
+                    move_table_fields();
+
+            </script>
     </body>
 </html>

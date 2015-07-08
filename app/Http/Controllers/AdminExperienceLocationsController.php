@@ -6,6 +6,7 @@ use WowTables\Http\Requests\Admin\CreateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\UpdateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\DeleteExperienceLocationRequest;
 use WowTables\Http\Models\ExperienceLocation;
+use WowTables\Http\Models\Eloquent\Location;
 use DB;
 use Input;
 
@@ -40,10 +41,11 @@ class AdminExperienceLocationsController extends Controller {
     {
         $locations = [];
         $experienceLocationDetails = $this->experienceLocation->getExperienceLocationDetails();
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
 
-
-        return view('admin.experiences.locations.index',['experienceLocationDetails'=>$experienceLocationDetails]);
+        return view('admin.experiences.locations.index',['experienceLocationDetails'=>$experienceLocationDetails,'cities'=>$cities]);
     }
+
 
     /**
      * Display a listing of the review.
@@ -493,6 +495,138 @@ class AdminExperienceLocationsController extends Controller {
             $userID = Input::post('vendor_id');
             echo $userID;
         }
+    }
+
+    public function getExperienceScheduleCity($cityval)
+    {
+        $experiencesResults = DB::select('(SELECT pvl.id ,pvl.status,vla.city_id,pvl.order_status as sort_order,p.name as product_name,vl.slug,v.name as vendor_name
+                    FROM product_vendor_locations as pvl
+                    LEFT JOIN products as p on pvl.product_id = p.id
+                    LEFT JOIN vendor_locations as vl on pvl.vendor_location_id = vl.id
+                    LEFT JOIN vendor_location_address as vla on vla.vendor_location_id =pvl.vendor_location_id
+                    LEFT JOIN vendors as v on vl.vendor_id = v.id
+                    WHERE vla.city_id = '.$cityval.') ORDER BY sort_order ASC
+                    ');
+
+        if(!empty($experiencesResults)){
+
+            $createTableStructure = '<script type="text/javascript">move_table_fields();</script>
+                                    <div class="panel-body" id="experienceLocationsDiv">
+                                    <table class="table table-striped table-responsive mb-none" id="experiences_table">
+                                        <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Experience Name</th>
+                                            <th>Locations</th>
+                                            <th>Restaurant name</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>';
+            foreach($experiencesResults as $expData){
+
+                $createTableStructure .= '<tr id="'.$expData->sort_order.'" rel="'.$expData->id.'" style="cursor: move;">';
+                $createTableStructure .= '<td>'.$expData->id.'</td>';
+                $createTableStructure .= '<td>'.$expData->product_name.'</td>';
+                $createTableStructure .= '<td>'.$expData->slug.'</td>';
+                $createTableStructure .= '<td>'.$expData->vendor_name.'</td>';
+                $createTableStructure .= '<td>'.$expData->status.'</td>';
+                $createTableStructure .= '<td>'.link_to_route('AdminExperienceLocationsEdit','Edit',$expData->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']).' &nbsp;|&nbsp;<a data-experience-id="'.$expData->id.'" class="btn btn-xs btn-danger delete-experience">Delete</a></td>';
+                $createTableStructure .= '</tr>';
+            }
+
+
+        } else {
+            $createTableStructure = '<div class="panel-body" id="experienceLocationsDiv">
+                                        <table class="table table-striped table-responsive mb-none" id="experiences_table">
+                                        <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Experience Name</th>
+                                            <th>Locations</th>
+                                            <th>Restaurant name</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody><tr> <th colspan="6"> No Data Found!! </th><tr></tbody></table></div>';
+        }
+
+        echo $createTableStructure."</tbody></table></div>";
+
+        //echo "<pre>"; print_r($experiencesResults);
+
+    }
+
+    public function experienceSortOrder(){
+        //echo "<pre>"; print_r(Input::all());
+        $start = Input::get('start');('start');
+        $end = Input::get('end');
+        $order_list = Input::get('order_list');
+
+        $convert_order_list = implode(",",$order_list);
+        //echo "sac = ".$ab; die;
+
+        $experiencesResults = DB::select('SELECT pvl.id FROM product_vendor_locations as pvl WHERE pvl.order_status = '.$start);
+
+
+        if($start < $end)
+        {
+            for($i=$start;$i<$end;$i++)
+            {
+                if($i > $start)
+                {
+                    //$this->db->query('UPDATE product_vendor_locations SET order = order-1 WHERE order = '.$i);
+                    $q = "UPDATE product_vendor_locations SET order_status = order_status-1 WHERE order_status = ?";
+
+                    DB::update($q,[$i]);
+                }
+            }
+            DB::table('product_vendor_locations')
+                ->where('id', $experiencesResults[0]->id)
+                ->update(array('order_status' => $end - 1));
+
+        }
+        else if($start > $end)
+        {
+            if($end == '' || empty($end)){
+                $end = 0;
+            }
+            for($i=$start-1;$i>$end;$i--)
+            {
+                if($i < $start && $i != $start)
+                {
+                    //$this->db->query('UPDATE experiences SET `order` = `order`+1 WHERE `order` = '.$i);
+                    $q = "UPDATE product_vendor_locations SET order_status = order_status+1 WHERE order_status = ?";
+
+                    DB::update($q,[$i]);
+                }
+            }
+
+            DB::table('product_vendor_locations')
+                ->where('id', $experiencesResults[0]->id)
+                ->update(array('order_status' => $end + 1));
+        }
+
+        $experiencesOrderResults = DB::select('SELECT pvl.id,pvl.order_status FROM product_vendor_locations as pvl ORDER BY order_status ASC');
+
+
+        $i=1;
+        foreach($experiencesOrderResults as $single)
+        {
+            $q = "UPDATE product_vendor_locations SET order_status = ? WHERE id = ?";
+
+            DB::update($q,[$i,$single->id]);
+
+            $i++;
+        }
+        //$newOrderExperienceList = DB::select('SELECT pvl.order_status FROM product_vendor_locations as pvl WHERE IN pvl.id = ?');
+        //$q = "SELECT pvl.order_status FROM product_vendor_locations as pvl WHERE pvl.id IN ()";
+        $q = DB::select('SELECT pvl.order_status,pvl.id FROM product_vendor_locations as pvl WHERE pvl.id IN ('.$convert_order_list.')');
+
+        echo json_encode($q);
+
     }
 
 }

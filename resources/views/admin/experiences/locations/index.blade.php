@@ -1,6 +1,8 @@
 @extends('templates.admin_layout')
 
+
 @section('content')
+
     <header class="page-header">
         <h2>Experience Locations</h2>
         <div class="right-wrapper pull-right">
@@ -19,10 +21,21 @@
         <header class="panel-heading">
             <h2 class="panel-title">
                 All Experience Locations
-            </h2>
+            </h2><br/>
+            <span>
+                <select name="cities" class='form-control populate' id="experienceLocationCities">
+                    <option value="0">--Select--</option>
+                    <?php foreach($cities as $key => $val){ ?>
+                        <option value="<?php echo $key ;?>"><?php echo $val ;?></option>
+                    <?php } ?>
+                </select>
+                <span style="display: none;" id="search_loading"><img src="/assets/img/ajax-loader.gif" alt="loading"/></span>
+            </span>
+
         </header>
-        <div class="panel-body">
-            <table class="table table-striped table-responsive mb-none" id="restaurantsTable">
+
+        <div class="panel-body" id="experienceLocationsDiv">
+            <table class="table table-striped table-responsive mb-none" id="experiences_table">
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -35,7 +48,7 @@
                 </thead>
                 <tbody>
                     @foreach($experienceLocationDetails as $experienceLocationDetail)
-                        <tr>
+                        <tr id="{{$experienceLocationDetail->sort_order}}" rel="{{$experienceLocationDetail->id}}" style="cursor: move;">
                             <td>{{$experienceLocationDetail->id}}</td>
                             <td>{{$experienceLocationDetail->product_name}}</td>
                             <td>{{$experienceLocationDetail->slug}}</td>

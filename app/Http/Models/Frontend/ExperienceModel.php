@@ -166,6 +166,7 @@ class ExperienceModel {
                 ->where('products.visible',1)
                 ->whereIN('products.type',array('simple','complex'))
                 ->groupBy('products.id')
+                ->orderBy('pvl.order_status')
                 ->select('products.id','products.name as title','pat.attribute_value as description',
                       'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
                       'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 

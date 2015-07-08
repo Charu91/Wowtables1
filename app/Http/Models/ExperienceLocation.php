@@ -292,7 +292,7 @@ class ExperienceLocation {
         ';*/
 
         $experiencesLocationDetails = '
-                    SELECT pvl.id ,pvl.status,(SELECT MAX(pvl2.id) from product_vendor_locations as pvl2 WHERE pvl2.product_id = pvl.product_id) ,p.name as product_name,vl.slug,v.name as vendor_name
+                    SELECT pvl.id ,pvl.status,pvl.order_status as sort_order,p.name as product_name,vl.slug,v.name as vendor_name
                     FROM product_vendor_locations as pvl
                     LEFT JOIN products as p on pvl.product_id = p.id
                     LEFT JOIN vendor_locations as vl on pvl.vendor_location_id = vl.id

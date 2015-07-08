@@ -373,7 +373,6 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
     <![endif]-->
     {!! Html::script('assets/js/jquery.smartbanner.js') !!}
     <link rel="icon" href="{{URL::to('/')}}/assets/img/WTFAV_Y.ico" type="image/x-icon">
-    <script type="text/javascript" src="https://www.curebit.com/javascripts/api/all-0.4.js?ver=1.0.2"></script>
   <script type="text/javascript">
       
         

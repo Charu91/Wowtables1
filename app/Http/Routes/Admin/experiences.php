@@ -163,6 +163,20 @@ Route::post('admin/experience/locations/getVendorLocationsDetails',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('/admin/experience/location/ajax_sort',[
+    'uses' => 'AdminExperienceLocationsController@experienceSortOrder',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('/admin/experiences/location/{cityval}',[
+    'uses' => 'AdminExperienceLocationsController@getExperienceScheduleCity',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::match(['get', 'post'],'admin/experiences/deactive_Addon/{id}',[
     'uses' => 'AdminExperiencesController@deactive_Addon',
     'middleware' => [],

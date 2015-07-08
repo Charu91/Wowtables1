@@ -388,8 +388,6 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
       $(this).addClass('active');
   });
 </script>
-
-    <script type="text/javascript" src="https://www.curebit.com/javascripts/api/all-0.4.js?ver=1.0.2"></script>
 <script type="text/javascript">
   $(document).ready(function(){
 

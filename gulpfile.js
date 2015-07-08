@@ -62,13 +62,11 @@ elixir(function(mix) {
             "vendor/pnotify/pnotify.custom.js",
             "vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
             "vendor/bootstrap-timepicker/js/bootstrap-timepicker.js",
-            "vendor/bootstrap-markdown/js/markdown.js",
-            "vendor/bootstrap-markdown/js/to-markdown.js",
-            "vendor/bootstrap-markdown/js/bootstrap-markdown.js",
             "vendor/summernote/summernote.js",
             "vendor/bootstrap-maxlength/bootstrap-maxlength.js",
             "vendor/slugit/jquery.slugit.js",
             "vendor/jquery-checkboxes/jquery.checkboxes-1.0.6.min.js",
+            "/javascripts/admin/tableDnd.js",
             "javascripts/markdown/vue.min.js",
             "javascripts/markdown/marked.min.js",
             "javascripts/admin/theme.js",
@@ -98,7 +96,10 @@ elixir(function(mix) {
             "javascripts/admin/maps.js",
             "javascripts/admin/promotions.js",
             "javascripts/admin/curator.js",
-            "javascripts/admin/experiences.js"
+            "javascripts/admin/experiences.js",
+            "vendor/bootstrap-markdown/js/markdown.js",
+            "vendor/bootstrap-markdown/js/to-markdown.js",
+            "vendor/bootstrap-markdown/js/bootstrap-markdown.js"
         ], "public/js", "public")
 
         .version(["css/all.css","js/all.js"])
