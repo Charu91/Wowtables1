@@ -159,9 +159,8 @@ class ExperienceModel {
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
-                ->where('pvl.show_status','show_in_all')
-                ->orWhere('pvl.show_status','hide_in_mobile')
-                ->where('pa1.alias','experience_info')
+                ->whereIN('pvl.show_status',array('show_in_all','hide_in_mobile'))
+                //->where('pa1.alias','experience_info')
                 ->where('pa2.alias','short_description')
                 //->orWhere('pa3.alias','cuisines')
                 ->where('vla.city_id',$arrData['city_id'])
@@ -169,7 +168,7 @@ class ExperienceModel {
                 ->whereIN('products.type',array('simple','complex'))
                 ->groupBy('products.id')
                 ->orderBy('pvl.order_status','asc')
-                ->select('products.id','products.name as title','pat.attribute_value as description',
+                ->select('products.id','products.name as title',
                       'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
                       'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
                       'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
@@ -258,7 +257,7 @@ class ExperienceModel {
                           'slug' => $row->slug,
                           'type' => $row->product_type,
                           'name' => $row->title,
-                          'description' => $row->description,
+                          //'description' => $row->description,
                           'short_description' => $row->short_description,
                           'price' => $row->price,
                           'taxes' => (is_null($row->post_tax_price))? 'exclusive':'inclusive',
