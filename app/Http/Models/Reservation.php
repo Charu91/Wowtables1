@@ -50,16 +50,39 @@ class Reservation {
 	 * @since	1.0.0
 	 */
 	public static function getVendorLocationAndLimit($vendorLocationID) {
-		$queryResult = DB::table(DB::raw('vendor_locations as vl')) 
-						->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
-						->join('locations', 'locations.id', '=', 'vl.location_id') 
-						->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
-						->where('vl.id', $vendorLocationID) 
-						->select('vl.id', 'locations.name as area', 'vla.latitude', 
-									'vla.longitude', 'vll.min_people_per_reservation', 
-									'vll.max_people_per_reservation', 'vll.min_people_increments') 
-						->get();
+		// $queryResult = DB::table(DB::raw('vendor_locations as vl')) 
+		// 				->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
+		// 				->join('locations', 'locations.id', '=', 'vl.location_id') 
+		// 				->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
+		// 				->where('vl.id', $vendorLocationID) 
+		// 				->select('vl.id', 'locations.name as area', 'vla.latitude', 
+		// 							'vla.longitude', 'vll.min_people_per_reservation', 
+		// 							'vll.max_people_per_reservation', 'vll.min_people_increments') 
+		// 				->get();
 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
+			$cityID = $_SERVER['HTTP_X_WOW_CITY'];
+		} 
+		else {
+			$cityID = 0;
+		}
+
+		$queryResult = DB::table(DB::raw('vendor_locations as vl')) 
+								->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
+								->join('locations', 'locations.id', '=', 'vl.location_id') 
+								->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
+								->where('vl.id', $vendorLocationID) 
+								->select('vl.id', 'locations.name as area', 'vla.latitude', 
+											'vla.longitude', 'vll.min_people_per_reservation', 
+											'vll.max_people_per_reservation', 'vll.min_people_increments'); 
+								//->get();
+		if($cityID != 0) {
+					$queryResult = $queryResult->where('vla.city_id', $cityID)->get();
+				}
+				else {
+					$queryResult = $queryResult->get();
+				}
+				
 		//array to read the locations and limits
 		$arrLocLmt = array();
 
@@ -100,18 +123,44 @@ class Reservation {
 	 * @since	1.0.0
 	 */
 	public static function getExperienceLocationAndLimit($experienceID) {
+		// $queryResult = DB::table('product_vendor_locations as pvl') 
+		// 					->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id') 
+		// 					->join('locations', 'locations.id', '=', 'vl.location_id') 
+		// 					->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
+		// 					->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
+		// 					->where('pvl.product_id', $experienceID)
+		// 					->where('pvl.status','Active') 
+		// 					->select('pvl.vendor_location_id as id', 'locations.name as area', 
+		// 							'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
+		// 							'pvll.max_people_per_reservation', 'pvll.min_people_increments',
+		// 							'pvl.product_id as experience_id','pvl.id as pvl_id') 
+		// 					->get();
+
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
+			$cityID = $_SERVER['HTTP_X_WOW_CITY'];
+		} 
+		else {
+			$cityID = 0;
+		}
+
 		$queryResult = DB::table('product_vendor_locations as pvl') 
-							->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id') 
-							->join('locations', 'locations.id', '=', 'vl.location_id') 
-							->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
-							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
-							->where('pvl.product_id', $experienceID)
-							->where('pvl.status','Active') 
-							->select('pvl.vendor_location_id as id', 'locations.name as area', 
-									'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
-									'pvll.max_people_per_reservation', 'pvll.min_people_increments',
-									'pvl.product_id as experience_id','pvl.id as pvl_id') 
-							->get();
+									->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id') 
+									->join('locations', 'locations.id', '=', 'vl.location_id') 
+									->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
+									->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id') 
+									->where('pvl.product_id', $experienceID)
+									->where('pvl.status','Active') 
+									->select('pvl.vendor_location_id as id', 'locations.name as area', 
+											'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation', 
+											'pvll.max_people_per_reservation', 'pvll.min_people_increments',
+											'pvl.product_id as experience_id','pvl.id as pvl_id'); 
+									//->get();
+		if($cityID != 0) {
+					$queryResult = $queryResult->where('vla.city_id', $cityID)->get();
+				}
+				else {
+					$queryResult = $queryResult->get();
+				}
 
 		#array to read experiences and location limits
 		$arrLocLmt = array();
