@@ -22,7 +22,8 @@ class CustomValidator extends Validator {
 		$reservationDate = $this->data['reservationDate'];
 		$accessToken = $this->data['access_token'];
 		$reservationID = (isset($this->data['reservationID'])) ? $this->data['reservationID']:0; 
-		$reservationTime = $value;
+		//$reservationTime = $value;
+		$reservationTime = date("H:i", strtotime($value));
 		
 		$query = DB::table('reservation_details as rd')
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
