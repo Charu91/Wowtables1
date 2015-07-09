@@ -159,6 +159,8 @@ class ExperienceModel {
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
+                ->where('pvl.show_status','show_in_all')
+                ->orWhere('pvl.show_status','hide_in_mobile')
                 ->where('pa1.alias','experience_info')
                 ->where('pa2.alias','short_description')
                 //->orWhere('pa3.alias','cuisines')
