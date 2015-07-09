@@ -152,7 +152,6 @@ $(document).ready(function(){
 				<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
 			</div>
 			<div class="row">
-			
             <!-- filter for small screen -->
             <div class="col-md-12 visible-xs visible-sm">
               <div class="widget filter-widget-wrap small">
