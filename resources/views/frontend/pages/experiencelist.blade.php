@@ -152,7 +152,6 @@ $(document).ready(function(){
 				<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
 			</div>
 			<div class="row">
-			<?php if($current_city != "bangalore"){?>
             <!-- filter for small screen -->
             <div class="col-md-12 visible-xs visible-sm">
               <div class="widget filter-widget-wrap small">
@@ -284,7 +283,6 @@ $(document).ready(function(){
                 </div>
               </div>
             </div> <!-- end filter widget -->
-			<?php }?>
 
 			<div id="left-content" style="clear:both;">
 				<div id="exp_list_load_layer" class="hidden">
@@ -427,7 +425,7 @@ $(document).ready(function(){
 		</div>
 		
 		<div class="col-md-4 col-sm-4 deal-listing-right">
-		<?php if($current_city != "bangalore"){?>
+		
 			<div class="widget filter-widget-wrap hidden-xs hidden-sm">
           <h3 class="text-center">Refine your search</h3>
 		  <span id="date_error" style="color:red;display:none;padding: 10px;text-align: justify;">Selected date should be greater than or equal to todays date!</span>
@@ -557,7 +555,7 @@ $(document).ready(function(){
 			  </form>
             </div>
           </div>
-		  <?php }?>
+
 			<?php foreach($ListpageSidebars as $sidebars){ ?>
 				<div class="widget">
 
