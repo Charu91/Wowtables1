@@ -204,7 +204,9 @@
 								->where('products.visible',1)
 								->where('products.status','=','publish')
 								->whereIN('products.type',array('simple','complex'))
+								->whereIN('pvl.show_status',array('show_in_all', 'hide_in_web'))
 								->groupBy('products.id')
+								->orderBy('pvl.order_status','asc')
 								->select('products.id','products.name as title','pat.attribute_value as description',
 											'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
 											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image','pp.taxes', 
