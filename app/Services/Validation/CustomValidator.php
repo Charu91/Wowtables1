@@ -22,7 +22,9 @@ class CustomValidator extends Validator {
 		$reservationDate = $this->data['reservationDate'];
 		$accessToken = $this->data['access_token'];
 		$reservationID = (isset($this->data['reservationID'])) ? $this->data['reservationID']:0; 
-		$reservationTime = $value;
+		//$reservationTime = $value;
+		$reservationTime = date("H:i A", strtotime($value));
+		$value = date("h:i A", strtotime($value));
 		
 		$query = DB::table('reservation_details as rd')
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
@@ -39,7 +41,7 @@ class CustomValidator extends Validator {
 		}
 		
 		//executing the query
-		$queryResult = $query->get();
+		$queryResult = $query->get(); 
 		if($queryResult) {
 			$hourLimit = Config::get('constants.NEXT_RESERVATION_TIME_RANGE_LIMIT');
 			foreach($queryResult as $row) {
