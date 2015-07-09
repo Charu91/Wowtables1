@@ -1598,7 +1598,8 @@ class ReservationDetails extends Model {
 			], function($message) use ($dataPost){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				//$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
+				$message->to('shuklaparth@hotmail.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
 				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
 			});
 		}  		
