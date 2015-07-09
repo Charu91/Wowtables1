@@ -432,7 +432,7 @@ class Reservation {
 				//converting reservation day time to timestamp
 				$reservationTimestamp = strtotime($row->reservation_date.' '.date('H:i:s',strtotime($row->reservation_time)));
 				if($reservationTimestamp >= $currentTimestamp) {
-					if($row->reservation_type == 'experience') {
+					if($row->reservation_type == 'experience' || $row->reservation_type == 'event') {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
