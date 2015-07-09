@@ -369,7 +369,9 @@ class Reservation {
 		$queryResult = DB::table('reservation_details as rd')
 						->leftJoin('vendor_locations as vl','vl.id','=', 'rd.vendor_location_id')
 						->leftJoin('product_vendor_locations as pvl', function($join){
-							$join->on('pvl.product_id','=','rd.product_id')->on('pvl.vendor_location_id','=','rd.vendor_location_id');
+							$join->on('pvl.product_id','=','rd.product_id')
+								 ->on('pvl.vendor_location_id','=','rd.vendor_location_id')
+								 ->where('pvl.status', '=','Active');
 						})
 						->leftJoin('products','products.id','=','rd.product_id')
 						->leftJoin('vendors','vendors.id','=','vl.vendor_id')
@@ -383,7 +385,7 @@ class Reservation {
 						->leftJoin('vendor_location_address as vvla','vvla.vendor_location_id','=','rd.vendor_location_id')
 						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
 						->where('rd.user_id', $userID)
-						->where('pvl.status', 'Active')
+						//->where('pvl.status', 'Active')
 						->whereIn('reservation_status',array('new','edited'))
 						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
 									'rd.reservation_time','rd.no_of_persons', 'products.name as product_name','vendors.id as vendor_id',
@@ -432,7 +434,7 @@ class Reservation {
 				//converting reservation day time to timestamp
 				$reservationTimestamp = strtotime($row->reservation_date.' '.date('H:i:s',strtotime($row->reservation_time)));
 				if($reservationTimestamp >= $currentTimestamp) {
-					if($row->reservation_type == 'experience') {
+					if($row->reservation_type == 'experience' || $row->reservation_type == 'event') {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);

@@ -344,6 +344,7 @@ class Experiences {
 								'pt.type_name'
 							)
 						->get();
+						
 		//array to hold formatted result
 		$arrData = array();
 		if($queryResult) {
