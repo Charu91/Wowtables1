@@ -730,7 +730,7 @@ $current_page_url =  current_page_url();
 if(isset($dropdowns_opt) && $dropdowns_opt == 1)
 {
 ?>
-<section class="related-experiences deal-detail">
+<!--<section class="related-experiences deal-detail">
       <div class="container">
         <div class="row wowtables_padding_left"> 
           <div class="bottom-filters">
@@ -743,12 +743,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   </button>
                   <ul class="dropdown-menu" id="f_cuisine_ul">
                   <?php 
-                  if(isset($allCuisines))
+                  /*if(isset($allCuisines))
                   {
                       foreach($allCuisines as $cousine): ?>
                      <li ><a rel="<?php echo strtolower($cousine); ?>" href="javascript:void(0);"><?php echo $cousine; ?></a></li>
                   <?php endforeach; 
-                  }
+                  }*/
                   ?>
                   </ul>
                 </div>
@@ -761,12 +761,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   </button>
                   <ul class="dropdown-menu" id="f_area_ul">
                   <?php 
-                  if(isset($allAreas))
+                  /*if(isset($allAreas))
                   {
                       foreach($allAreas as $area_data): ?>
                      <li ><a rel="<?php echo strtolower($area_data['slug']); ?>" href="javascript:void(0);"><?php echo $area_data['name']; ?></a></li>
                      <?php endforeach; 
-                  }
+                  }*/
                   ?>
                   </ul>
                 </div>
@@ -779,12 +779,12 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   </button>
                   <ul class="dropdown-menu" id="f_price_ul">
                   <?php
-                  if(isset($allPrices))
+                  /*if(isset($allPrices))
                   {
                    foreach($allPrices as $key => $price): ?>  
                      <li rel="<?php echo $key; ?>"><a rel="<?php echo strtolower($key); ?>" href="javascript:void(0);"><?php echo htmlspecialchars($price); ?></a></li>
                   <?php endforeach; 
-                  }
+                  }*/
                   ?>
                   </ul>
                 </div>
@@ -793,7 +793,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
     </div> 
         </div>
       </div>
-</section> 
+</section>-->
 <?php
 }
 ?>
