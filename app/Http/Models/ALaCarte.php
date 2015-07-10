@@ -385,12 +385,12 @@ use Config;
 				$data['data']['alacarte'][] = array(
 												'vl_id' 		=> $row->vl_id,
 												'name' 			=> $row->name,
-												'cuisine' 		=> (is_null($row->cuisine)) ? "" : $row->cuisine,
-												'pricing_level' => (is_null($row->pricing_level)) ? "" : $row->pricing_level,
-												'total_reviews' => (is_null($row->total_reviews)) ? "" : $row->total_reviews,
+												'cuisine' 		=> (empty($row->cuisine)) ? "" : $row->cuisine,
+												'pricing_level' => (empty($row->pricing_level)) ? "" : $row->pricing_level,
+												'total_reviews' => (empty($row->total_reviews)) ? "" : $row->total_reviews,
 												'rating' 		=> (empty($row->total_reviews)) ? 0 : $row->rating,
-												'location' 		=> (is_null($row->location_name)) ? "" : $row->location_name,
-												'flag' 			=> (is_null($row->flag_name)) ? "" : $row->flag_name,
+												'location' 		=> (empty($row->location_name)) ? "" : $row->location_name,
+												'flag' 			=> (empty($row->flag_name)) ? "" : $row->flag_name,
 												'image' => array(
 																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
