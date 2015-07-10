@@ -26,9 +26,9 @@
 		<div class="panel-body">
 
 			<div class="form-group">
-				{!! Form::label('title','Title',['class'=>'col-sm-3 control-label']) !!}
+				{!! Form::label('page_title','Title',['class'=>'col-sm-3 control-label']) !!}
 				<div class="col-sm-6">
-					{!! Form::text('title',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
+					{!! Form::text('page_title',null,['class'=>'form-control','id'=>'title','required'=>'']) !!}
 				</div>
 			</div>
 			<div class="form-group">
@@ -39,18 +39,29 @@
 			</div>
 
 			<div class="form-group">
-				{!! Form::label('main_content','Main Content',['class'=>'col-sm-3 control-label']) !!}
+				{!! Form::label('page_contents','Main Content',['class'=>'col-sm-3 control-label']) !!}
 				<div class="col-sm-6">
-					{!! Form::textarea('main_content',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
+					{!! Form::textarea('page_contents',null,['rows'=>'10','class'=>'form-control','id'=>'description','required'=>'']) !!}
 				</div>
 			</div>
 
-			@include('partials.forms.seo_details')
-
 			<div class="form-group">
-				{!! Form::label('status','Status',['class'=>'col-sm-3 control-label']) !!}
+				<label class="col-sm-3 control-label" for="attributes[seo_title]">SEO Title <span class="required">*</span></label>
 				<div class="col-sm-6">
-					{!! Form::select('status',['Inactive'=>'Inactive','Active'=>'Active'],$page->status,['class'=>'form-control']) !!}
+					{!! Form::text('seo_title',null,['class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'70','required'=>'']) !!}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="attributes[meta_desc]">SEO Meta Description <span class="required">*</span></label>
+				<div class="col-sm-6">
+					{!! Form::textarea('meta_desc',null,['rows'=>'3','class'=>'form-control','data-plugin-maxlength'=>'','maxlength'=>'140','required'=>'']) !!}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="attributes[meta_keywords]">SEO Keywords <span class="required">*</span></label>
+				<div class="col-sm-6">
+					{{--{!! Form::select('meta_keywords',[''=>''],null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'']) !!}--}}
+					{!! Form::text('meta_keywords',null,['class'=>'form-control','rows'=>'3','multiple'=>'','data-role'=>'tagsinput','data-tag-class'=>'label label-primary','required'=>'','class'=>'seo_meta_keywords']) !!}
 				</div>
 			</div>
 
@@ -58,5 +69,7 @@
 	</section>
 
 	{!! Form::submit('Update Page',['class'=>'btn btn-primary']) !!}
+	<a href="/admin/pages">Cancel</a>
 	{!! Form::close() !!}
+
 @stop

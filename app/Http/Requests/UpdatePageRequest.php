@@ -12,12 +12,12 @@ class UpdatePageRequest extends Request {
     public function rules()
     {
         return [
-            'title' => 'required',
-            'main_content' => 'required',
+            'page_title' => 'required',
+            'page_contents' => 'required',
             'slug' => 'required',
             'seo_title' => 'required',
-            'seo_meta_description' => 'required',
-            'seo_meta_keywords' => 'required'
+            'meta_desc' => 'required',
+            'meta_keywords' => 'required'
         ];
     }
 

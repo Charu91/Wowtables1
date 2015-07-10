@@ -30,13 +30,12 @@ class AdminPagesController extends Controller {
     {
 
         Page::create([
-            'title' => $request->get('title'),
+            'page_title' => $request->get('page_title'),
             'slug' => $request->get('slug'),
-            'main_content' => $request->get('main_content'),
+            'page_contents' => $request->get('page_contents'),
             'seo_title' => $request->get('seo_title'),
-            'seo_meta_description' => $request->get('seo_meta_description'),
-            'seo_meta_keywords' => $request->get('seo_meta_keywords'),
-            'status' => $request->get('status')
+            'meta_desc' => $request->get('meta_desc'),
+            'meta_keywords' => $request->get('meta_keywords'),
         ]);
 
         flash()->success('The Page has been successfully created!');
@@ -56,6 +55,7 @@ class AdminPagesController extends Controller {
     public function edit($id)
     {
         $page = Page::find($id);
+        //echo "<pre>"; print_r($page); die;
 
         return view('admin.pages.edit',['page'=>$page]);
     }
@@ -64,13 +64,12 @@ class AdminPagesController extends Controller {
     {
         $page = Page::find($id);
 
-        $page->title = $request->get('title');
+        $page->page_title = $request->get('page_title');
         $page->slug = $request->get('slug');
-        $page->main_content = $request->get('main_content');
+        $page->page_contents = $request->get('page_contents');
         $page->seo_title = $request->get('seo_title');
-        $page->seo_meta_description = $request->get('seo_meta_description');
-        $page->seo_meta_keywords = $request->get('seo_meta_keywords');
-        $page->status = $request->get('status');
+        $page->meta_desc = $request->get('meta_desc');
+        $page->meta_keywords = $request->get('meta_keywords');
         $page->save();
 
         flash()->success('The Page has been updated Successfully!');

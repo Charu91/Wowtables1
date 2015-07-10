@@ -27,8 +27,6 @@
 				<tr>
 					<th>Page Id</th>
 					<th>Page Slug</th>
-					<th>Main Content</th>
-					<th>Status</th>
 					<th>Actions</th>
 				</tr>
 				</thead>
@@ -36,9 +34,7 @@
 					@foreach($pages as $page)
 						<tr>
 							<th>{!! $page->id !!}</th>
-							<th>{!! $page->title !!}</th>
 							<th>{!! $page->slug !!}</th>
-							<th>{!! $page->status !!}</th>
 							<th>
 								{!! link_to_route('AdminPagesEdit','Edit',$page->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary','data-page-id'=>$page->id]) !!}
 

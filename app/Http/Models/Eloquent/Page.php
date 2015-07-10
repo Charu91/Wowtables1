@@ -9,7 +9,7 @@ class Page extends Model {
      *
      * @var string
      */
-    protected $table = 'pages';
+    protected $table = 'cmspages';
 
     /**
      * The attributes that are mass assignable.
@@ -17,5 +17,7 @@ class Page extends Model {
      * @var array
      */
     protected $guarded = ['id'];
+
+    protected $fillable = ['page_title','slug','page_contents','seo_title','meta_desc','meta_keywords'];
 
 }

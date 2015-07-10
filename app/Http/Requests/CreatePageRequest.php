@@ -12,12 +12,12 @@ class CreatePageRequest extends Request {
     public function rules()
     {
         return [
-            'title' => 'required',
-            'main_content' => 'required',
-            'slug' => 'required|unique:pages',
+            'page_title' => 'required',
+            'page_contents' => 'required',
+            'slug' => 'required|unique:cmspages',
             'seo_title' => 'required',
-            'seo_meta_description' => 'required',
-            'seo_meta_keywords' => 'required'
+            'meta_desc' => 'required',
+            'meta_keywords' => 'required'
         ];
     }
 
