@@ -348,13 +348,21 @@ use Config;
 						->leftJoin('vendor_locations_flags_map as vlfm','vlfm.vendor_location_id','=','vl.id')
 						->leftJoin('flags','flags.id','=','vlfm.flag_id')
 						->leftJoin('vendor_locations_media_map as vlmm', 'vlmm.vendor_location_id','=', 'vl.id')
-						->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'vlmm.media_id')
-						->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'vlmm.media_id')            
+						//->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'vlmm.media_id')
+						//->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'vlmm.media_id')
+						->leftJoin('media_resized_new as mrn1', function($join) {
+												$join->on('mrn1.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn1.image_type', '=' , 'mobile_listing_ios_alacarte');
+						})
+						->leftJoin('media_resized_new as mrn2', function($join) {
+												$join->on('mrn2.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn1.image_type', '=', 'mobile_listing_ios_alacarte');
+						})            
 						->where('vl.vendor_id',$vendorID)
 						->where('v.status','Publish')
 						->where('vl.status','Active')
-						->where('mrn1.image_type','mobile_listing_ios_alacarte')
-						->where('mrn2.image_type', 'mobile_listing_android_alacarte')
+						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
+						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
 								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
 								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
@@ -365,7 +373,8 @@ use Config;
 								'mrn2.file as android_image'
 								)
 						->groupBy('vl.id')
-						->get();
+						->get();  
+					//echo $queryResult->toSql();	die();
 		
 		//array to store the information from the DB
 		$data = array();
@@ -374,14 +383,14 @@ use Config;
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$data['data']['alacarte'][] = array(
-												'vl_id' => $row->vl_id,
-												'name' => $row->name,
-												'cuisine' => $row->cuisine,
-												'pricing_level' => $row->pricing_level,
-												'total_reviews' => $row->total_reviews,
-												'rating' => $row->rating,
-												'location' => $row->location_name,
-												'flag' => $row->flag_name,
+												'vl_id' 		=> $row->vl_id,
+												'name' 			=> $row->name,
+												'cuisine' 		=> (empty($row->cuisine)) ? "" : $row->cuisine,
+												'pricing_level' => (empty($row->pricing_level)) ? "" : $row->pricing_level,
+												'total_reviews' => (empty($row->total_reviews)) ? "" : $row->total_reviews,
+												'rating' 		=> (empty($row->total_reviews)) ? 0 : $row->rating,
+												'location' 		=> (empty($row->location_name)) ? "" : $row->location_name,
+												'flag' 			=> (empty($row->flag_name)) ? "" : $row->flag_name,
 												'image' => array(
 																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
