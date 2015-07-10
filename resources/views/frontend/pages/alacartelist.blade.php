@@ -259,7 +259,7 @@ $(document).ready(function(){
 				  <h3>What do you get when you a la carte with WowTables?</h3>
 				  <div>
 					<p style="text-align:center;">1) <b>Rs.500 Gift Card on every A La Carte reservation.</b> </p>
-					<p style="text-align:center;">2) <a href="{{URL::to('/')}}/pages/alacartereferrals" target="_blank">3000 Wow Points every time you successfully refer a friend to WowTables A La Carte</a><a href="{{URL::to('/')}}/redeem-rewards" style="color:#f0c140;"target="_blank"><b>(Where do these points go? Click here to know more)</b></a></p>
+					<p style="text-align:center;">2) <a href="{{URL::to('/')}}/pages/alacartereferrals" target="_blank">3000 Wow Points every time you successfully refer a friend to WowTables A La Carte</a><a href="{{URL::to('/')}}/users/redeem-rewards" style="color:#f0c140;"target="_blank"><b>(Where do these points go? Click here to know more)</b></a></p>
 					<p style="text-align:center;">3) 500 - 1500 Wow Points on every reservation</p>
 					<p style="text-align:center;">4) 500 Wow Points every time you review a restaurant</p>
 					<p style="text-align:center;">5) Expert tips and exclusive curator suggestions</p>
