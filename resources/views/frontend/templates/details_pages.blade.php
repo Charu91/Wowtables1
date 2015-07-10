@@ -1041,14 +1041,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
             </div>
             <div class="col-md-8 col-sm-8">
               <p class="pull-right concierge-info">Login to make a reservation online or Call our Concierge for assistance at 09619551387
-                 <?php
-                $arrdata = DB::table('codes')->where('view_pages', 'all')
-                  ->select('code')
-                  ->get();
-                  foreach ($arrdata as $value) {
-                    echo $value->code;
-                  }
-                ?>
+
 <noscript>
 <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=886637294682125&amp;ev=PixelInitialized" /></noscript>
               </p> 
@@ -2911,5 +2904,13 @@ var google_remarketing_only = true;
 
 </script>
 <?php endif;?>
+<?php
+$arrdata = DB::table('codes')->where('view_pages', 'all')
+        ->select('code')
+        ->get();
+foreach ($arrdata as $value) {
+    echo $value->code;
+}
+?>
 </body>
 </html>
