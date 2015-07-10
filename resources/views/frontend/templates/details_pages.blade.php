@@ -2910,6 +2910,6 @@ var google_remarketing_only = true;
   
 
 </script>
-<?php endif;?> 
+<?php endif;?>
 </body>
 </html>
