@@ -386,7 +386,7 @@ use Config;
 												'vl_id' => $row->vl_id,
 												'name' => $row->name,
 												'cuisine' => $row->cuisine,
-												'pricing_level' => $row->pricing_level,
+												'pricing_level' => (is_null($row->pricing_level)) ? "" : $row->pricing_level,
 												'total_reviews' => $row->total_reviews,
 												'rating' => $row->rating,
 												'location' => $row->location_name,
