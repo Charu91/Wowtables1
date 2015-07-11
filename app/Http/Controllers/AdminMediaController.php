@@ -600,6 +600,8 @@ class AdminMediaController extends Controller {
             $setImageUrl = $this->config->get('media.base_s3_url_collection_web');
         }elseif($allImages[0]['imageType'] == "sidebar"){
             $setImageUrl = $this->config->get('media.base_s3_url_sidebars');
+        }elseif($allImages[0]['imageType'] == "email_footer_promotions"){
+            $setImageUrl = $this->config->get('media.base_s3_url_email_footer_promotions');
         }
 
         return view('admin.media.fetch',
