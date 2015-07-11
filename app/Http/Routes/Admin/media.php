@@ -50,6 +50,14 @@ Route::get('admin/media/sidebar_modal', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/media/email_footer_promotions_modal', [
+    'uses' => 'AdminMediaController@email_footer_promotions_modal',
+    'as' => 'AdminEmailFooterPromotionsModal',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('admin/media/web_collection_modal', [
     'uses' => 'AdminMediaController@web_collection_modal',
     'as' => 'AdminWebsiteCollectionModal',
@@ -113,6 +121,15 @@ Route::post('admin/media/sidebars_media', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+Route::post('admin/media/email_footer_promotions_media', [
+    'uses' => 'AdminMediaController@emailFooterPromotionStore',
+    'as' => 'AdminMediaEmailFooterPromotionStore',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 
 Route::post('admin/media/web_collection_media', [
     'uses' => 'AdminMediaController@webCollectionStore',

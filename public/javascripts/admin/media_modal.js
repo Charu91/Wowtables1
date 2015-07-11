@@ -12,6 +12,7 @@
         var $mediaModalBtnMobileListingExperiences = $(".media-modal-btn-mobile-listing-experience");
         var $mediaModalBtnWebCollectionImages = $(".media-modal-btn-web-collection-images");
         var $mediaModalBtnSidebarImages = $(".sidebar-media-modal-btn");
+        var $mediaModalBtnEmailFooterPromotions = $(".media-modal-btn-email-footer-promotions");
 
 
         $('body').delegate('a.edit-media-link-modal','click', function () {
@@ -92,6 +93,29 @@
             $.ajax({
                 method: 'GET',
                 url: '/admin/media/sidebar_modal'
+            }).done( function(result) {
+                    $( "#mediaModalHolder" ).html( result );
+                    $('#mediaModal').modal('show');
+                    $('#selectMediaBtn').attr('data-gallery-position',galleryPosition);
+                    $('#selectMediaBtn').attr('data-media-select',mediaSelect);
+                    $('#selectMediaBtn').attr('data-media-type',mediaType);
+                    $('#mediaModal').checkboxes('max', mediaSelect);
+                    $("#selectMediaBtn").attr('disabled','disabled');
+            }).fail(function (jqXHR) {
+                console.log(jqXHR);
+            });
+
+        });
+
+        $mediaModalBtnEmailFooterPromotions.on('click',function(){
+            console.log('called');
+            var   mediaSelect = $(this).data('media-select')
+                , mediaType = $(this).data('media-type')
+                , galleryPosition = $(this).data('gallery-position');
+
+            $.ajax({
+                method: 'GET',
+                url: '/admin/media/email_footer_promotions_modal'
             }).done( function(result) {
                     $( "#mediaModalHolder" ).html( result );
                     $('#mediaModal').modal('show');
