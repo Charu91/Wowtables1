@@ -387,8 +387,8 @@ use Config;
 												'name' 			=> $row->name,
 												'cuisine' 		=> (empty($row->cuisine)) ? "" : $row->cuisine,
 												'pricing_level' => (empty($row->pricing_level)) ? "" : $row->pricing_level,
-												'total_reviews' => (empty($row->total_reviews)) ? "" : $row->total_reviews,
-												'rating' 		=> (empty($row->total_reviews)) ? 0 : $row->rating,
+												'total_reviews' => $row->total_reviews,
+												'rating' 		=> $row->rating,
 												'location' 		=> (empty($row->location_name)) ? "" : $row->location_name,
 												'flag' 			=> (empty($row->flag_name)) ? "" : $row->flag_name,
 												'image' => array(
