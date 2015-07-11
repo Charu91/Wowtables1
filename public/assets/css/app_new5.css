@@ -64,7 +64,7 @@ top:26% !important;
 }
 @media (min-width: 1024px) and (max-width: 1199px) {
 
-//COLLECTION PAGE
+/*COLLECTION PAGE*/
 
 #table_head_coll{
 background: none repeat scroll 0 0 #EA9403;
@@ -96,7 +96,7 @@ background:#E4E4E4;
 width: 100%;
 }
 
-//EXPERIANCE DETAIL PAGE
+/*EXPERIANCE DETAIL PAGE*/
 
 #table_head_exp{
 background: none repeat scroll 0 0 #EA9403;
@@ -339,10 +339,6 @@ margin-top: 6px;
 
 #big_div_height{
 height:171px;
-}
-
-#rupee_symobol{
-margin-top: 8px;
 }
 
 #review_tab{

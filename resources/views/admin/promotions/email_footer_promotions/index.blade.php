@@ -33,25 +33,13 @@
                 <tr>
                     <th>Id</th>
                     <th>Link</th>
-                    <th>Media</th>
+                    <!--<th>Media</th>-->
                     <th>City</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-               @foreach($email_footer_promotions as $efp)
-                    <tr>
-                        <th>{!! $efp->id !!}</th>
-                        <th>{!! $efp->link !!}</th>
-                        <th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$efp->media->media_resized->first()->file !!}"/></th>
-                        <th>{!! $efp->location->name !!}</th>
-                        <th>
-                            <a href="/admin/promotions/email_footer_promotions/{!! $efp->id !!}/edit" data-efp-id="{!! $efp->id !!}" class="btn btn-xs btn-primary edit-efp-btn">Edit</a>
-                            &nbsp;|&nbsp;
-                            <a data-efp-id="{!! $efp->id !!}" class="btn btn-xs btn-danger delete-efp-btn">Delete</a>
-                        </th>
-                    </tr>
-                @endforeach
+               
                 </tbody>
             </table>
         </div>

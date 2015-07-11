@@ -34,7 +34,7 @@
         </div>
         <div class="mt-lg mb-lg form-group">
             <div class="col-sm-4">
-                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Image</button>
+                <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn-email-footer-promotions">Select Image</button>
             </div>
             <div data-gallery-position="1" class="popup-gallery col-sm-8">
                 <input name="media_id" type="hidden" required>

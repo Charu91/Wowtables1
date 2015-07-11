@@ -613,14 +613,20 @@ if (strpos($url,'alacarte') !== false) {
               } ?>
               <li class="dropdown">
                 <?php if($uname != "Guest") {?>
-                  <a href="javascript:void(0);{{URL::to('/')}}/users/myaccount" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php $user = Auth::user(); echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
-                <?php }?>
-                <?php if(isset($user_data['full_name']) && $user_data['full_name'] !='Guest'): ?>
+                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;">
+                      <?php echo $uname; ?>
+                          <span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">
+                              (<?php $user = Auth::user(); echo $user->points_earned - $user->points_spent; ?> Pts.)
+                          </span>
+                          <span class="caret" style="margin-left: 9px;color:#979797 !important;"></span>
+                  </a>
+
+                <?php if((isset($user_data['full_name']) && $user_data['full_name'] != 'Guest' ) || (isset($user_data['username']) && $user_data['username'] != 'Guest' ) ){ ?>
                   <ul class="dropdown-menu wowtables_dropdown_menu">
-                    <?php if(isset($user_data['user_role']) && $user_data['user_role'] == '1'):?>
+                    <?php if(isset($user_data['user_role']) && $user_data['user_role'] == '1') { ?>
                       <li><a href="{{URL::to('/')}}/admin">Admin</a></li>
                       <li><a href="{{URL::to('/')}}/adminreservations">Admin Reservations</a></li>
-                    <?php endif;?>
+                    <?php } ?>
                     <li> <a href="{{URL::to('/')}}/users/myreservations">My Reservations</a></li>
                     <li><a href="{{URL::to('/')}}/users/myaccount">My Profile</a></li>
                     <li><a href="{{URL::to('/')}}/users/redeem-rewards">Redeem Points</a></li>
@@ -632,14 +638,17 @@ if (strpos($url,'alacarte') !== false) {
                     <?PHP } else {?>
                     <li><a href="{{URL::to('/')}}/logout">Logout</a></li>          
                     <?PHP } ?>
+
                   </ul>
-                <?php endif; ?>
+                <?php } ?>
+                    <?php } ?>
               </li>
             </ul>
           </div>
         </div>
       </div>
     </header>
+<?php //echo "<pre>"; print_r($user_data);?>
 <div class="clearfix"></div>
 
  <div class="row wowtables_services" id="wowtables_services_list" style="display:none;">

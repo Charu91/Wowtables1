@@ -8,6 +8,9 @@ use WowTables\Http\Requests\Admin\CreateRestaurantLocationRequest;
 use WowTables\Http\Requests\Admin\UpdateRestaurantLocationRequest;
 use WowTables\Http\Requests\Admin\DeleteRestaurantLocationRequest;
 use WowTables\Http\Models\RestaurantLocation;
+use WowTables\Http\Models\Eloquent\Location;
+use DB;
+use Input;
 
 class AdminRestaurantLocationsController extends Controller {
 
@@ -35,9 +38,12 @@ class AdminRestaurantLocationsController extends Controller {
      */
 	public function index()
 	{
+		//echo "sda"; die;
 		$RestaurantLocations = $this->repository->getAll();
+		//echo "<pre>"; print_r($RestaurantLocations); die;
+		$cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
 
-		return view('admin.restaurants.locations.index',['RestaurantLocations' => $RestaurantLocations]);
+		return view('admin.restaurants.locations.index',['RestaurantLocations' => $RestaurantLocations,'cities'=>$cities]);
 	}
 
 	/**
@@ -281,6 +287,135 @@ class AdminRestaurantLocationsController extends Controller {
 
 		//if($name)
 		//echo "<prE>"; print_r($_GET['locality_value']);
+	}
+
+	public function getAlacarteScheduleCity($cityval)
+	{
+
+		//echo "city val = ".$cityval; die;
+		$restaurantLocationsResults = DB::select('(SELECT vl.id ,vl.status,vla.city_id,vl.order_status as sort_order,v.name as vendor_name,vl.slug
+                    FROM vendor_locations as vl
+                    LEFT JOIN vendor_location_address as vla on vla.vendor_location_id =vl.location_id
+                    LEFT JOIN vendors as v on vl.vendor_id = v.id
+                    WHERE vla.city_id = '.$cityval.') ORDER BY sort_order ASC
+                    ');
+
+		if(!empty($restaurantLocationsResults)){
+
+			$createTableStructure = '<script type="text/javascript">move_table_fields_restaurant();</script>
+                                    <div class="panel-body" id="restaurantLocationsDiv">
+                                    <table class="table table-striped table-responsive mb-none" id="restaurants_Table">
+                                        <thead>
+                                        <tr>
+                                            <th>Id</th>
+											<th>Restaurant Name</th>
+											<th>Slug</th>
+											<th>Status</th>
+											<th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>';
+			foreach($restaurantLocationsResults as $restaurantData){
+
+				$createTableStructure .= '<tr id="'.$restaurantData->sort_order.'" rel="'.$restaurantData->id.'" style="cursor: move;">';
+				$createTableStructure .= '<td>'.$restaurantData->id.'</td>';
+				$createTableStructure .= '<td>'.$restaurantData->vendor_name.'</td>';
+				$createTableStructure .= '<td>'.$restaurantData->slug.'</td>';
+				$createTableStructure .= '<td>'.$restaurantData->status.'</td>';
+				$createTableStructure .= '<td>'.link_to_route('AdminRestaurantLocationsEdit','Edit',$restaurantData->id,['target'=>'_blank','class'=>'btn btn-xs btn-primary']).' &nbsp;|&nbsp;<a data-restaurant-location-id="'.$restaurantData->id.'" class="btn btn-xs btn-danger delete-restaurant-location">Delete</a></td>';
+				$createTableStructure .= '</tr>';
+			}
+
+
+		} else {
+			$createTableStructure = '<div class="panel-body" id="restaurantLocationsDiv">
+                                        <table class="table table-striped table-responsive mb-none" id="restaurants_Table">
+                                        <thead>
+                                        <tr>
+                                            <th>Id</th>
+											<th>Restaurant Name</th>
+											<th>Slug</th>
+											<th>Status</th>
+											<th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody><tr> <th colspan="5"> No Data Found!! </th><tr></tbody></table></div>';
+		}
+
+		echo $createTableStructure."</tbody></table></div>";
+
+		//echo "<pre>"; print_r($experiencesResults);
+
+	}
+
+	public function restaurantSortOrder(){
+		//echo "<pre>"; print_r(Input::all());
+		$start = Input::get('start');('start');
+		$end = Input::get('end');
+		$order_list = Input::get('order_list');
+
+		$convert_order_list = implode(",",$order_list);
+		//echo "sac = ".$ab; die;
+
+		$restaurantsResults = DB::select('SELECT vl.id FROM vendor_locations as vl WHERE vl.order_status = '.$start);
+
+
+		if($start < $end)
+		{
+			for($i=$start;$i<$end;$i++)
+			{
+				if($i > $start)
+				{
+					//$this->db->query('UPDATE product_vendor_locations SET order = order-1 WHERE order = '.$i);
+					$q = "UPDATE vendor_locations SET order_status = order_status-1 WHERE order_status = ?";
+
+					DB::update($q,[$i]);
+				}
+			}
+			DB::table('vendor_locations')
+				->where('id', $restaurantsResults[0]->id)
+				->update(array('order_status' => $end - 1));
+
+		}
+		else if($start > $end)
+		{
+			if($end == '' || empty($end)){
+				$end = 0;
+			}
+			for($i=$start-1;$i>$end;$i--)
+			{
+				if($i < $start && $i != $start)
+				{
+					//$this->db->query('UPDATE experiences SET `order` = `order`+1 WHERE `order` = '.$i);
+					$q = "UPDATE vendor_locations SET order_status = order_status+1 WHERE order_status = ?";
+
+					DB::update($q,[$i]);
+				}
+			}
+
+			DB::table('vendor_locations')
+				->where('id', $restaurantsResults[0]->id)
+				->update(array('order_status' => $end + 1));
+		}
+
+		$restaurantOrderResults = DB::select('SELECT vl.id,vl.order_status FROM vendor_locations as vl ORDER BY order_status ASC');
+
+
+		$i=1;
+		foreach($restaurantOrderResults as $single)
+		{
+			$q = "UPDATE vendor_locations SET order_status = ? WHERE id = ?";
+
+			DB::update($q,[$i,$single->id]);
+
+			$i++;
+		}
+		//$newOrderExperienceList = DB::select('SELECT pvl.order_status FROM product_vendor_locations as pvl WHERE IN pvl.id = ?');
+		//$q = "SELECT pvl.order_status FROM product_vendor_locations as pvl WHERE pvl.id IN ()";
+		$q = DB::select('SELECT vl.order_status,vl.id FROM vendor_locations as vl WHERE vl.id IN ('.$convert_order_list.')');
+
+		echo json_encode($q);
+
 	}
 
 }
