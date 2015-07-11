@@ -22,6 +22,8 @@ class AdminEmailFooterPromotionsController extends Controller {
     {
         $email_footer_promotions = EmailFooterPromotion::all();
 
+        //echo "<pre>"; print_r($email_footer_promotions); die;
+
         return view('admin.promotions.email_footer_promotions.index',['email_footer_promotions'=>$email_footer_promotions]);
     }
 

@@ -134,6 +134,7 @@
                </li>
             </ul>
             <input type="hidden" name="current_city" value="<?php echo $current_city;?>">
+
             <input type="hidden" name="cuisine" value="<?php echo $arrALaCarte['data']['cuisine'][0];?>">
             <input type="hidden" name="price" value="<?php echo $ptype;?>">
             <input type="hidden" name="areas" value="<?php echo $arrALaCarte['data']['location_address']['area'];?>">
@@ -575,6 +576,7 @@
                 <input type="hidden" name="amount" id="ac_amount2">
         <input type="hidden" name="restaurant_id" id="ac_restaurant_id2" value="<?=$arrALaCarte['data']['id']?>">
                 <input type="hidden" name="city" value="<?php echo $current_city?>">
+                 <input type="hidden" name="city_id" value="<?php echo $current_city_id;?>">
         <input type="hidden" name="alacarte_id" value="<?php echo $arrALaCarte['data']['id']?>">
         <input type="hidden" name="alacarte_reward_points" value="<?php echo $arrALaCarte['data']["reward_point"] ?>">
                 <input type="hidden" name="send">

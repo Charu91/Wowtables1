@@ -295,7 +295,7 @@ class AdminRestaurantLocationsController extends Controller {
 		//echo "city val = ".$cityval; die;
 		$restaurantLocationsResults = DB::select('(SELECT vl.id ,vl.status,vla.city_id,vl.order_status as sort_order,v.name as vendor_name,vl.slug
                     FROM vendor_locations as vl
-                    LEFT JOIN vendor_location_address as vla on vla.vendor_location_id =vl.location_id
+                    LEFT JOIN vendor_location_address as vla on vla.vendor_location_id =vl.id
                     LEFT JOIN vendors as v on vl.vendor_id = v.id
                     WHERE vla.city_id = '.$cityval.') ORDER BY sort_order ASC
                     ');

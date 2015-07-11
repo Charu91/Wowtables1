@@ -347,6 +347,7 @@ class AlacarteController extends Controller {
 
     public function alaorder()
     {
+
         $dataPost['reservationDate'] = Input::get('booking_date');
         $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
         $dataPost['reservationTime'] = Input::get('booking_time');
@@ -490,6 +491,9 @@ class AlacarteController extends Controller {
                                             );
 
                 //echo "<pre>"; print_r($mergeReservationsArray); die;
+                $city_id    = Input::get('city_id');
+
+                $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_alacarte = 1 AND efp.city_id = '.$city_id);
 
                 Mail::send('site.pages.restaurant_reservation',[
                     'location_details'=> $locationDetails,
@@ -497,6 +501,7 @@ class AlacarteController extends Controller {
                     'post_data'=>$dataPost,
                     'productDetails'=>$vendorDetails,
                     'reservationResponse'=>$reservationResponse,
+                    'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
                 ], function($message) use ($mergeReservationsArray){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -510,6 +515,7 @@ class AlacarteController extends Controller {
                     'post_data'=>$dataPost,
                     'productDetails'=>$vendorDetails,
                     'reservationResponse'=>$reservationResponse,
+                    'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
                 ], function($message) use ($mergeReservationsArray){
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 

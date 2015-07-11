@@ -892,6 +892,12 @@ class ExperienceController extends Controller {
                                 });
                             }
 
+                            $city_id    = Input::get('city');
+
+                            $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_experience = 1 AND efp.city_id = '.$city_id);
+
+                            //echo "<pre>"; print_r($footerpromotions); die;
+
                             $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
                                 'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
                                 'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
@@ -905,6 +911,7 @@ class ExperienceController extends Controller {
                                 'post_data'=>$dataPost,
                                 'productDetails'=>$productDetails,
                                 'reservationResponse'=>$reservationResponse,
+                                'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
                             ], function($message) use ($mergeReservationsArray){
                                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -918,6 +925,7 @@ class ExperienceController extends Controller {
                                 'post_data'=>$dataPost,
                                 'productDetails'=>$productDetails,
                                 'reservationResponse'=>$reservationResponse,
+                                'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
                             ], function($message) use ($mergeReservationsArray){
                                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -1073,6 +1081,10 @@ class ExperienceController extends Controller {
                     $mailbody .= $name.' '.$val.'<br>';
                 }
 
+                $city_id    = Input::get('city');
+
+                $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_experience = 1 AND efp.city_id = '.$city_id);
+
                 Mail::send('site.pages.zoho_posting_error',[
                     'zoho_data'=> $mailbody,
                 ], function($message) use ($zoho_data)
@@ -1104,6 +1116,7 @@ class ExperienceController extends Controller {
                 'post_data'=>$fetch_cookie,
                 'productDetails'=>$productDetails,
                 'reservationResponse'=>$reservationResponse,
+                'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
             ], function($message) use ($mergeReservationsArray){
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
@@ -1117,6 +1130,7 @@ class ExperienceController extends Controller {
                 'post_data'=>$fetch_cookie,
                 'productDetails'=>$productDetails,
                 'reservationResponse'=>$reservationResponse,
+                'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
             ], function($message) use ($mergeReservationsArray){
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
