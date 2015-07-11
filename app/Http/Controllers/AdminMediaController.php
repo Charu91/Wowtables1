@@ -209,18 +209,18 @@ class AdminMediaController extends Controller {
             //echo "<pre>"; print_r($allMedia); die;
         if($allMedia['count'] > 0) {
             return view(
-                'admin.media.email_footer_promotions_modal',
+                'admin.media.sidebars_modal',
                 [
                     'mediaCount' => $allMedia['count'],
                     'images' => $allMedia['images'],
                     //'pages' => $allMedia['pages'],
                     //'pagenum' => $allMedia['pagenum'],
                     //'search' => empty($input['search'])? '' : $input['search'],
-                    's3_url' => $this->config->get('media.base_s3_url_email_footer_promotions')
+                    's3_url' => $this->config->get('media.base_s3_url_sidebars')
                 ]
             );
         }else{
-            return view('admin.media.email_footer_promotions_modal', ['mediaCount' => $allMedia['count']]);
+            return view('admin.media.sidebars_modal', ['mediaCount' => $allMedia['count']]);
         }
     }
 
@@ -241,18 +241,18 @@ class AdminMediaController extends Controller {
             //echo "<pre>"; print_r($allMedia); die;
         if($allMedia['count'] > 0) {
             return view(
-                'admin.media.sidebars_modal',
+                'admin.media.email_footer_promotions_modal',
                 [
                     'mediaCount' => $allMedia['count'],
                     'images' => $allMedia['images'],
                     //'pages' => $allMedia['pages'],
                     //'pagenum' => $allMedia['pagenum'],
                     //'search' => empty($input['search'])? '' : $input['search'],
-                    's3_url' => $this->config->get('media.base_s3_url_sidebars')
+                    's3_url' => $this->config->get('media.base_s3_url_email_footer_promotions')
                 ]
             );
         }else{
-            return view('admin.media.sidebars_modal', ['mediaCount' => $allMedia['count']]);
+            return view('admin.media.email_footer_promotions_modal', ['mediaCount' => $allMedia['count']]);
         }
     }
 
