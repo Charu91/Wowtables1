@@ -238,11 +238,9 @@
 				$experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
 			}
 			else if(isset($arrData['minPrice'])) {
-				echo 'inside min price';
 				$experienceQuery->where('pp.price','>=',$arrData['minPrice']);
 			}
 			else if(isset($arrData['maxPrice'])) {
-				echo 'inside max price';
 				$experienceQuery->where('pp.price','<=', $arrData['maxPrice']);
 			}			
 
