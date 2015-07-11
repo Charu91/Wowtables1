@@ -890,6 +890,7 @@ class ReservationDetails extends Model {
                     'username' => $zoho_data['Name']
                );
         	//$arrData['addons_special_request'] = "";
+        	print_r($arrData); print_r($outlet); print_r($mergeReservationsArray); print_r($reservationResponse); print_r($locationDetails); die();
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
