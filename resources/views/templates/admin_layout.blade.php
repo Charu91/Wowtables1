@@ -124,6 +124,48 @@
                     }
                     move_table_fields();
 
+                    function move_table_fields_restaurant(){
+                        var order_list = new Array();
+                        $("#restaurants_Table tr[rel]").each(function(i){
+                            order_list[i] = $(this).attr('rel');
+                        });
+
+                        $("#restaurants_Table").tableDnD({
+                            onDragClass: "myDragClass",
+                            onDrop: function(table, row) {
+                                $("#search_loading").css('display','inline');
+                                var rows = table.tBodies[0].rows;
+                                start = row.id;
+
+                                var prev_id = $('#restaurants_Table #' + start).prev().attr('id');
+                                var next_id = $('#restaurants_Table #' + start).next().attr('id');
+                                var new_id;
+                                if(start < next_id){
+                                    new_id = next_id;
+                                } else{
+                                    new_id = prev_id;
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    data: {start : start, end: new_id,order_list : order_list},
+                                    url: "/admin/restaurants/location/ajax_sort",
+                                    dataType: "json",
+                                    success: function(data){
+                                        $("#search_loading").css('display','none');
+                                        var tr;
+                                        for(tr in data)
+                                        {
+                                            $("#restaurants_Table tr[rel=" + data[tr]['id'] + "]").attr('id',data[tr]['order_status']);
+                                        }
+                                    }
+                                });
+
+                            },
+                            onDragStart: function(table, row) {}
+                        });
+                    }
+                    move_table_fields_restaurant();
+
             </script>
     </body>
 </html>

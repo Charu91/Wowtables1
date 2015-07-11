@@ -59,10 +59,12 @@
             , $experienceFlags = $('#experienceFlags')
             , $experienceCurators = $('#experienceCurators')
             , $experienceLocationCities = $('#experienceLocationCities')
+            , $alacarteLocationCities = $('#alacarteLocationCities')
 
 
         $('#experiencesTable').DataTable();
         $('#experiences_table').DataTable();
+        $('#restaurants_Table').DataTable();
 
         $addNewExperienceAddonBtn.on('click', function () {
             $experienceAddonForm.show();
@@ -101,6 +103,11 @@
             enableFiltering: true,
             filterBehavior: 'text'
         });
+        $alacarteLocationCities.multiselect({
+            disableIfEmpty: true,
+            enableFiltering: true,
+            filterBehavior: 'text'
+        });
 
         $experienceLocationCities.on('change',function(){
            var cityval = $(this).val();
@@ -114,6 +121,26 @@
                     },
                     success:function(response){
                         $("#experienceLocationsDiv").replaceWith(response);
+                        $("#search_loading").css('display','none');
+                    }
+                }).fail(function (jqXHR) {
+                    console.log(jqXHR);
+                });
+            }
+        });
+
+        $alacarteLocationCities.on('change',function(){
+           var cityval = $(this).val();
+            if(cityval != ""){
+                $("#search_loading").css('display','inline');
+                $.ajax({
+                    method: 'GET',
+                        url: '/admin/restaurants/location/' + cityval,
+                    headers: {
+                        'X-XSRF-TOKEN': token
+                    },
+                    success:function(response){
+                        $("#restaurantLocationsDiv").replaceWith(response);
                         $("#search_loading").css('display','none');
                     }
                 }).fail(function (jqXHR) {

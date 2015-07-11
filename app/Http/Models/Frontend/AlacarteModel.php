@@ -183,11 +183,11 @@ class AlacarteModel{
         }
 
         if(isset($filters['sort_by']) === 'Popular'){
-            $select->orderBy('vl.id', 'asc');
+            $select->orderBy('vl.order_status', 'asc');
         }else if(isset($filters['sort_by']) === 'Latest'){
-            $select->orderBy('v.publish_time', 'desc');
+            $select->orderBy('vl.order_status', 'asc');
         }else{
-            $select->orderBy('v.publish_time', 'desc');
+            $select->orderBy('vl.order_status', 'asc');
         }
         
         //echo $select->toSql();

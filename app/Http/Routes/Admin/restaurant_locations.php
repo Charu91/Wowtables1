@@ -64,8 +64,24 @@ Route::delete('admin/restaurants/locations/{id}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/admin/restaurants/location/{cityval}',[
+    'uses' => 'AdminRestaurantLocationsController@getAlacarteScheduleCity',
+    'middleware' => [],
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::post('admin/restaurants/locations/getCity/{name}',[
     'uses' => 'AdminRestaurantLocationsController@getCityName',
     'middleware' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+
+Route::post('/admin/restaurants/location/ajax_sort',[
+    'uses' => 'AdminRestaurantLocationsController@restaurantSortOrder',
+    'middleware' => [],
+    'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
