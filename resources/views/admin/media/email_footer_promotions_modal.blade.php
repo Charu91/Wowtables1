@@ -120,7 +120,7 @@
 
         $.ajax({
             method: 'GET',
-            url: '/admin/media/sidebar_modal'
+            url: '/admin/media/email_footer_promotions_modal'
         }).done( function(result) {
             $( "#mediaModalHolder" ).html( result );
             $('#mediaModal').modal('show');
