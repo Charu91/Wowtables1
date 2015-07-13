@@ -660,9 +660,9 @@ if (strpos($url,'alacarte') !== false) {
         <button onClick="window.location.href='{{URL::to('/')}}/adminreservations; ?>'" type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Admin Reservations</button>
            <?php endif;?>
       <button onClick="window.location.href='{{URL::to('/')}}/users/myreservations'" type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">My Reservations</button>
-      <button type="button" onClick="window.location.href='{{URL::to('/')}}/ users/myaccount'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">My Profile</button>
-      <button type="button" onClick="window.location.href='{{URL::to('/')}}/ users/redeem-rewards'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Redeem Gourmet Pts. <span style="padding-left:5px !important;"></span>(<?php //echo @$user['points_earned']-@$user['points_spent']; ?> Pts.)</button>
-      <button type="button" onClick="window.location.href='{{URL::to('/')}}/ index.php/users/logout'" class="btn btn-primary btn-block wowtables_big_btn">Logout</button>
+      <button type="button" onClick="window.location.href='{{URL::to('/')}}/users/myaccount'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">My Profile</button>
+      <button type="button" onClick="window.location.href='{{URL::to('/')}}/users/redeem-rewards'" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Redeem Gourmet Pts. <span style="padding-left:5px !important;"></span>(<?php //echo @$user['points_earned']-@$user['points_spent']; ?> Pts.)</button>
+      <button type="button" onClick="window.location.href='{{URL::to('/')}}/logout'" class="btn btn-primary btn-block wowtables_big_btn">Logout</button>
       <?php endif; ?>
       </div>
   </div>
@@ -682,10 +682,10 @@ if (strpos($url,'alacarte') !== false) {
           <?php
           if ($current_city == "mumbai" || $current_city == "pune") {?>
                 <div class="col-xs-4" id="wowtables_width_size" style="border-right:1px solid #9d9d9c !important;">
-                  <a href="{{URL::to('/')}}/ <?php echo $current_city;?>" class="wowtable_dining_menu">Experiences</a>
+                  <a href="{{URL::to('/')}}/<?php echo $current_city;?>" class="wowtable_dining_menu">Experiences</a>
                 </div>
                 <div class="col-xs-4"  id="wowtables_width_size2" style="border-right:1px solid #9d9d9c !important;">
-                  <a href="{{URL::to('/')}}/ <?php echo $current_city;?>/alacarte" class="wowtable_dining_menu">A la carte</a>
+                  <a href="{{URL::to('/')}}/<?php echo $current_city;?>/alacarte" class="wowtable_dining_menu">A la carte</a>
                 </div>
           <?php }?>
                 <div class="col-xs-4" id="wowtables_width_size3">
