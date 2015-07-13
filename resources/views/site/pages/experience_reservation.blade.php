@@ -190,18 +190,31 @@
 
                                 </td>
                             </tr>
+                            <?php if(isset($footerPromotions) && $footerPromotions != ""){
+                            foreach($footerPromotions as $fp){
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo $fp->link ?>" target="_blank">
+                                        <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/email_footer_promotions/<?php echo $fp->file; ?>" width="535">
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php       }
+                            }
+                            ?>
 
                         </table>
 
 
                     </td>
                 </tr>
+
                 <!--COntent-->
 
             </table>
         </td>
     </tr>
 </table>
-
 </body>
 </html>

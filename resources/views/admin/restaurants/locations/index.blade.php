@@ -20,14 +20,22 @@
             <h2 class="panel-title">
                 All Restaurants
             </h2>
+            <span>
+                <select name="cities" class='form-control populate' id="alacarteLocationCities">
+                    <option value="0">--Select--</option>
+                    <?php foreach($cities as $key => $val){ ?>
+                    <option value="<?php echo $key ;?>"><?php echo $val ;?></option>
+                    <?php } ?>
+                </select>
+                <span style="display: none;" id="search_loading"><img src="/assets/img/ajax-loader.gif" alt="loading"/></span>
+            </span>
         </header>
-        <div class="panel-body">
-            <table class="table table-striped table-responsive mb-none" id="restaurantsTable">
+        <div class="panel-body" id="restaurantLocationsDiv">
+            <table class="table table-striped table-responsive mb-none" id="restaurants_Table">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Restaurant Name</th>
-                    {{--<th>Location Name</th>--}}
                     <th>Slug</th>
                     <th>Status</th>
                     <th>Created At</th>
@@ -40,7 +48,6 @@
                     <tr>
                         <th>{!! $location->id !!}</th>
                         <th>{!! $location->vendor->name !!}</th>
-                        {{--<th>{!! $location->location->name !!}</th>--}}
                         <th>{!! $location->slug !!}</th>
                         <th>{!! $location->status !!}</th>
                         <th>{!! $location->created_at->format('d-m-Y') !!}</th>

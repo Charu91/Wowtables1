@@ -22,7 +22,7 @@ class CreateEmailFooterPromotionsRequest extends Request {
     public function rules()
     {
         return [
-            'media_id'  => 'required|exists:media,id|unique:email_footer_promotions',
+            'media_id'  => 'required|exists:media,id',
             'link' => 'required|url',
             'location_id' => 'required|exists:locations,id,type,City',
         ];

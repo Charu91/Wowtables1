@@ -224,6 +224,38 @@ class AdminMediaController extends Controller {
         }
     }
 
+    public function email_footer_promotions_modal()
+    {   //echo "sadsad"; die;
+        $input = $this->request->all();
+
+        //$pagenum = isset($input['pagenum'])? $input['pagenum']: 1;
+        //$search_terms = empty($input['search'])? [] : explode(',', trim($input['search']));
+
+        $allMedia = $this->media->getAllEmailFooterPromotionsImages([
+            //'pagenum'       => $pagenum,
+            //'limit'         => 20,
+            'height'        => 450,
+            'width'         => 450,
+            //'search'        => $search_terms
+        ]);
+            //echo "<pre>"; print_r($allMedia); die;
+        if($allMedia['count'] > 0) {
+            return view(
+                'admin.media.email_footer_promotions_modal',
+                [
+                    'mediaCount' => $allMedia['count'],
+                    'images' => $allMedia['images'],
+                    //'pages' => $allMedia['pages'],
+                    //'pagenum' => $allMedia['pagenum'],
+                    //'search' => empty($input['search'])? '' : $input['search'],
+                    's3_url' => $this->config->get('media.base_s3_url_email_footer_promotions')
+                ]
+            );
+        }else{
+            return view('admin.media.email_footer_promotions_modal', ['mediaCount' => $allMedia['count']]);
+        }
+    }
+
 
     public function web_collection_modal()
     {
@@ -398,6 +430,20 @@ class AdminMediaController extends Controller {
         }
 	}
 
+    public function emailFooterPromotionStore()
+	{
+        $file = $this->request->file('media');
+        //echo "<pre>"; print_r($file); die;
+        $mediaStore = $this->media->saveEmailFooterPromotionImage($file);
+
+        if($mediaStore['status'] === 'success'){
+            return response()->json($mediaStore, 200);
+        }else{
+            return response()->json($mediaStore, 500);
+        }
+	}
+
+
     public function webCollectionStore()
 	{
         $file = $this->request->file('media');
@@ -554,6 +600,8 @@ class AdminMediaController extends Controller {
             $setImageUrl = $this->config->get('media.base_s3_url_collection_web');
         }elseif($allImages[0]['imageType'] == "sidebar"){
             $setImageUrl = $this->config->get('media.base_s3_url_sidebars');
+        }elseif($allImages[0]['imageType'] == "email_footer_promotions"){
+            $setImageUrl = $this->config->get('media.base_s3_url_email_footer_promotions');
         }
 
         return view('admin.media.fetch',

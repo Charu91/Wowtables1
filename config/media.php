@@ -14,6 +14,8 @@ return [
 
     'base_path_sidebar' => '/uploads/sidebars/',
 
+    'base_path_email_footer_promotions' => '/uploads/email_footer_promotions/',
+
     'base_s3_url' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/',
 
     'base_s3_url_listing' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/',
@@ -25,6 +27,8 @@ return [
     'base_s3_url_collection_web' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/collections/',
 
     'base_s3_url_sidebars' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/sidebars/',
+
+    'base_s3_url_email_footer_promotions' => 'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/email_footer_promotions/',
 
     'base_cdn_url' => '',
 

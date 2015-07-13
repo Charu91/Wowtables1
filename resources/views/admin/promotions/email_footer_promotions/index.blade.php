@@ -43,7 +43,7 @@
                     <tr>
                         <th>{!! $efp->id !!}</th>
                         <th>{!! $efp->link !!}</th>
-                        <th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$efp->media->media_resized->first()->file !!}"/></th>
+                        <th><img style="height: 56px;" class="img-thumbnail" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/email_footer_promotions/{!! $efp->media->file !!}"/></th>
                         <th>{!! $efp->location->name !!}</th>
                         <th>
                             <a href="/admin/promotions/email_footer_promotions/{!! $efp->id !!}/edit" data-efp-id="{!! $efp->id !!}" class="btn btn-xs btn-primary edit-efp-btn">Edit</a>

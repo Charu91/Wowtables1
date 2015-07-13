@@ -21,8 +21,9 @@
 </header>
 
 <section class="panel col-lg-8 col-lg-offset-2">
+    <?php //echo "<pre>"; print_r($email_footer_promotions); die;?>
     <header class="panel-heading">
-        <h2 class="panel-title">Add New</h2>
+        <h2 class="panel-title">Edit</h2>
     </header>
     {!! Form::model($email_footer_promotions,['route'=>['admin.promotions.email_footer_promotions.update',$email_footer_promotions->id],'method'=>'PUT','novalidate'=>'novalidate']) !!}
     <div class="panel-body">
@@ -38,7 +39,7 @@
             </div>
             <div data-gallery-position="1" class="popup-gallery col-sm-8">
                 <input name="media_id" type="hidden" required value="{{$email_footer_promotions->media_id}}">
-                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="{!! $media_url.$email_footer_promotions->media->media_resized->first()->file !!}" width="100">
+                <img class="pull-left mt-xs mb-xs mr-xs img-thumbnail img-responsive" src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/email_footer_promotions/{!! $email_footer_promotions->media->file !!}" width="100">
             </div>
         </div>
         <div class="form-group">
