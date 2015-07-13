@@ -832,7 +832,7 @@ class ReservationDetails extends Model {
                     'username' => $zoho_data['Name']
                 );
 
-                //echo "<pre>"; print_r($mergeReservationsArray); die;        	
+                //echo "<pre>"; print_r($mergeReservationsArray); die();        	
         				$post_data =	$arrData;  
         		
                 Mail::send('site.pages.restaurant_reservation',[
@@ -889,8 +889,7 @@ class ReservationDetails extends Model {
                     'venue' => $outlet->vendor_name,
                     'username' => $zoho_data['Name']
                );
-        	//$arrData['addons_special_request'] = "";
-        	print_r($arrData); print_r($outlet); print_r($mergeReservationsArray); print_r($reservationResponse); print_r($locationDetails); die();
+        	//$arrData['addons_special_request'] = "";        	
 
                 Mail::send('site.pages.experience_reservation',[
                     'location_details'=> $locationDetails,
