@@ -300,7 +300,7 @@ $queryProfileResult = DB::table('users as u')
             }
 
             $dobID = DB::table('user_attributes_date')
-                                ->where('user_id', 53)
+                                ->where('user_id', $userID->user_id)
                                 ->whereIn('user_attribute_id', array($arrAttribute['date_of_birth'], $arrAttribute['anniversary_date']))
                                 ->select('id', 'user_attribute_id')
                                 ->get();
