@@ -205,7 +205,7 @@ Route::get('/alacarte_custom_search/new_custom_search',[
     'domain' => env('WEBSITE_URL'),
 ]);*/
 
-Route::get('forgotPassword/{token}/{userid}',[
+Route::get('setPassword/{token}/{userid}',[
     'uses' => 'Site\HomePageController@verifyResetToken',
     'as' => 'websiteVerifyPasswordToken',
     'domain' => env('WEBSITE_URL'),

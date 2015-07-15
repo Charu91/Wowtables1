@@ -322,6 +322,7 @@ class ExperienceController extends Controller {
                                             WHERE t.slug = '$collection'
                                             AND mrn.image_type = 'listing'
                                             AND t.status = 'available'
+                                            AND pvl.status = 'Active'
                                             group by p.id");
             
          // print_r($exclusiveExperiences);
@@ -381,6 +382,7 @@ class ExperienceController extends Controller {
                                             WHERE t.slug = '$collection'
                                             AND t.status = 'available'
                                             AND mrn.image_type = 'listing'
+                                            AND vl.status = 'Active'
                                             AND va.alias = 'short_description'");
              /*print_r($arrData);
              foreach ($arrData['data'] as $data)
@@ -727,7 +729,7 @@ class ExperienceController extends Controller {
 
         if($validator->fails()) {
             //echo "validation fails";
-            /*$message = $validator->messages();
+            $message = $validator->messages();
             $errorMessage = "";
             foreach($data as $key => $value) {
                 if($message->has($key)) {
@@ -735,7 +737,7 @@ class ExperienceController extends Controller {
                 }
             }
 
-           return redirect()->back()->withErrors($validator);*/
+           return redirect()->back()->withErrors($validator);
         } else {
 
             //End MailChimp

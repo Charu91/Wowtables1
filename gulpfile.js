@@ -18,7 +18,7 @@ elixir(function(mix) {
             "vendor/magnific-popup/magnific-popup.css",
             "vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css",
             "vendor/bootstrap-datepicker/css/datepicker3.css",
-            "vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css",
+            "vendor/jquery-ui/css/jquery-ui.css",
             "vendor/select2/select2.css",
             "vendor/isotope/jquery.isotope.css",
             "vendor/bootstrap-multiselect/bootstrap-multiselect.css",
@@ -40,6 +40,7 @@ elixir(function(mix) {
 
         .scripts([
             "vendor/jquery/jquery.js",
+            "vendor/jquery-ui/js/jquery-ui.js",
             "vendor/jquery-browser-mobile/jquery.browser.mobile.js",
             "vendor/bootstrap/js/bootstrap.js",
             "vendor/nanoscroller/nanoscroller.js",
@@ -97,6 +98,7 @@ elixir(function(mix) {
             "javascripts/admin/promotions.js",
             "javascripts/admin/curator.js",
             "javascripts/admin/experiences.js",
+            "javascripts/admin/adminreservations.js",
             "vendor/bootstrap-markdown/js/markdown.js",
             "vendor/bootstrap-markdown/js/to-markdown.js",
             "vendor/bootstrap-markdown/js/bootstrap-markdown.js"
