@@ -526,7 +526,7 @@ class Reservation {
 									'guest_name' => (empty($row->guest_name)) ? "" : $row->guest_name,
 									'guest_email' => (empty($row->guest_email)) ? "" : $row->guest_email,
 									'guest_phone' => (empty($row->guest_phone)) ? "" : $row->guest_phone,
-									'reward_point' => (empty($row->points_awarded)) ? "" : $row->points_awarded,
+									'reward_point' => (empty($row->points_awarded)) ? 0 : $row->points_awarded,
 									'selected_addon' => (array_key_exists($row->id, $arrSelectedAddOn)) ? $arrSelectedAddOn[$row->id]:array(),
 									'day_schedule' => $arrSchedule,
 									'address' => array(
