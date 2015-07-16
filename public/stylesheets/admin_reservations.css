@@ -1,7 +1,20 @@
-﻿.time_tab { 
+﻿.actives {
+    width: inherit;
+    margin-bottom: 15px;
+    left: 22px;
+}
+
+.time_tab {
     background: #fff!important;
     border-color: #fff!important;
     padding: 2px 6px!important;
+    color: #000;
+    border-radius:0px !important;
+}
+
+﻿.time_tab:hover{
+    border-color: #fff!important;
+    color: #000;
 }
 
 .time_tab.active {
