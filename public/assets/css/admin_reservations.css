@@ -1,0 +1,42 @@
+﻿.time_tab {
+    background: #fff!important;
+    border-color: #fff!important;
+    padding: 2px 6px!important;
+}
+
+.time_tab.active {
+    background: #EAB803!important;
+    border-color: #EAB803!important;
+}
+
+.time {
+    height: 25px;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    background: #696969;
+    border-radius: 2px;
+    text-align: center;
+    padding: 2px 0;
+    color:#fff;
+    text-decoration:none;
+    white-space: nowrap;
+}
+
+.time:hover {
+    background: #696969;
+}
+
+.time a {
+    color: #fff;
+    text-decoration: none;}
+
+
+.btn-warning.active, .btn-warning:active, .open>.dropdown-toggle.btn-warning {
+    background-image: none;
+    color: #000;
+    font-weight: bold;}
+
+.time_active, .time_active:hover{
+    background: #EAB803;
+}
