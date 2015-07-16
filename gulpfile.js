@@ -35,7 +35,8 @@ elixir(function(mix) {
             "stylesheets/media.css",
             "stylesheets/theme.css",
             "stylesheets/skins/default.css",
-            "stylesheets/theme-custom.css"
+            "stylesheets/theme-custom.css",
+            "stylesheets/admin_reservations.css",
         ], "public/css", "public")
 
         .scripts([
