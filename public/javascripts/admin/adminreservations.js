@@ -1,4 +1,6 @@
-$(document).ready(function() {
+(function($){
+
+
     function formatDate(e) {
         e = e.split("-");
         year = e[0];
@@ -1022,7 +1024,7 @@ $(document).ready(function() {
         var map_id = 0;
         var pr_map_id = 0;
         $.ajax({
-            url: "/adminreservations/mod_reservs",
+            url: "/admin/adminreservations/mod_reservs",
             type: "POST",
             dataType: "json",
             async: true,
@@ -1037,22 +1039,22 @@ $(document).ready(function() {
                 $(".ajax_loader").hide();
                 if (data.upcomings.length != 0) {
                     $("#upcomings_reservs").html(data.upcomings);
-                    for (var i in data.up_com_gm) {
+                    /*for (var i in data.up_com_gm) {
                         var str = "var dealer_lat" + map_id + " = data.up_com_gm[" + i + "]['lat'];var dealer_lng" + map_id + " = data.up_com_gm[" + i + "]['long'];var mylatlng" + map_id + "=  new google.maps.LatLng(dealer_lat" + map_id + ", dealer_lng" + map_id + ");var mapOptions" + map_id + " = {center: mylatlng" + map_id + ",zoom: 16};var map" + map_id + " = new google.maps.Map(document.getElementById('map" + map_id + "'),mapOptions" + map_id + ");var marker" + map_id + " = new google.maps.Marker({position: mylatlng" + map_id + ",map: map" + map_id + "});";
                         eval(str);
                         map_id++
-                    }
+                    }*/
                 }
                 if (data.count_previous > 0) {
                     $("#last_reserv").show()
                 }
                 if (data.previous.length != 0) {
                     $("#pref_reservs").html(data.previous);
-                    for (var i in data.prev_gm) {
+                    /*for (var i in data.prev_gm) {
                         var str = "var pr_dealer_lat" + pr_map_id + " = data.prev_gm[" + i + "]['lat'];var pr_dealer_lng" + pr_map_id + " = data.prev_gm[" + i + "]['long'];var pr_mylatlng" + pr_map_id + "=  new google.maps.LatLng(pr_dealer_lat" + pr_map_id + ", pr_dealer_lng" + pr_map_id + ");var pr_mapOptions" + pr_map_id + " = {center: pr_mylatlng" + pr_map_id + ",zoom: 16};var pr_map" + pr_map_id + " = new google.maps.Map(document.getElementById('pr_map" + pr_map_id + "'),pr_mapOptions" + pr_map_id + ");var pr_marker" + pr_map_id + " = new google.maps.Marker({position: pr_mylatlng" + pr_map_id + ",map: pr_map" + pr_map_id + "});";
                         eval(str);
                         pr_map_id++
-                    }
+                    }*/
                 }
             }
         })
@@ -1408,6 +1410,76 @@ $(document).ready(function() {
             }
         })
     });
+
+    $('#admin_restaurant_search').autocomplete({
+
+        source: function( request, response ) {
+
+            $.ajax({
+                url: "/admin/adminreservations/restaurant_search/"+request.term,
+                dataType: "JSON",
+                success: function( data ) {
+                    //console.log('response for all== '+data);
+                    response( data );
+                }
+            });
+        },
+        select: function(event,ui){
+            $(".small-ajax-loader-search").css('display','inline');
+            var restaurant_name = ui.item.value;
+
+
+            $.ajax({
+
+                url: "/admin/adminreservations/getRelatedResults",
+                dataType: "JSON",
+                type: "post",
+                //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
+                data: {restaurant_val : restaurant_name},
+
+                success: function(e) {
+                    $(".small-ajax-loader-search").css('display','none');
+
+                    var t = "";
+                    var n = "";
+                    var u = "";
+                    if (e.experiences.length == 0 && e.alacarte.length == 0) {
+                        t = "<tr><td colspan='2'><p class='text-center'>There are no any experiences or alacarte!</p></td></tr>"
+                    } else {
+                        $.each(e.experiences, function(r, i) {
+                            t += "<tr>";
+                            t += "<td><p>Experience: " + ucfirst(i.exp_name) + "</p>";
+                            t += "<p>Restaurant: " + ucfirst(i.vendor_name) + "</p>";
+                            t += "<p>City: " + ucfirst(i.city_name) + "</p>";
+                            t += "<p><strong><a href='" + e.url + "/" + i.city_name + "/experiences/" + escape(i.slug) + "' target='_blank' class='details'>View Details</a></strong></p>";
+
+                            t += "<td><a href='javascript:void(0)' class='btn btn-warning book_table'>Book Experience</a>" + n + "</td></tr>"
+                        });
+
+                        $.each(e.alacarte, function(a, b) {
+                            //console.log("a = "+a+" , b = "+b.venue);
+                            u += "<tr><td>";
+                            //t += "<td><p>Experience: " + ucfirst(i.exp_title) + "</p>";
+                            u += "<p>Restaurant: " + ucfirst(b.name) + "</p>";
+                            u += "<p>City: " + ucfirst(b.city_name) + "</p>";
+                            u += "<p>Area: " + ucfirst(b.area_name) + "</p>";
+                            u += "<p><strong><a href='" + e.url + "/" + b.city_name + "/alacarte/" + escape(b.slug) + "' target='_blank' class='details'>View Details</a></strong></p>";
+                            //if (i.alacarte_alow) {
+                            u += "<td><a href='javascript:void(0)' class='btn btn-warning ac_book_table'>Book A la carte</a></td>"
+                            //} else {
+                            //n = ""
+                            //}
+                            //t += "<td><a href='javascript:void(0)' class='btn btn-warning book_table' rel='" + i.id + "'>book experience</a>" + n + "</td></tr>"*/
+                        });
+
+                    }
+                    $("#experiences tbody").html(t+""+u);
+                },
+                timeout: 9999999
+            });
+        },
+        minLength: 1
+    })
     $("#exp_search").keyup(function() {
         var e = $(this).val();
         $("#search_error").html("");
@@ -1501,6 +1573,8 @@ $(document).ready(function() {
         }
     });
     $("#customerEmail").keyup(function() {
+        $(".show_in_input_no").css('display','none');
+        $(".show_in_input_yes").css('display','none');
         var e = $(this).val();
         delay(function() {
             $(".small-ajax-loader").show();
@@ -1509,7 +1583,7 @@ $(document).ready(function() {
             $("#pref_reservs").html("");
             $(".member-reservation-wrap li:first-child a").click();
             $.ajax({
-                url: "/adminreservations/checkUser",
+                url: "/admin/adminreservations/checkUser",
                 type: "POST",
                 dataType: "json",
                 data: {
@@ -1520,20 +1594,20 @@ $(document).ready(function() {
                     if (e.error == 0) {
                         $("#email_error").html("");
                         if (e.exists) {
-                            $(".glyphicon-ok").show();
-                            $(".glyphicon-remove").hide();
+                            $(".show_in_input_no").css('display','none');
+                            $(".show_in_input_yes").css('display','inline');
                             $("#customerName").val(e.user.full_name);
-                            $("#customerNumber").val(e.user.phone);
+                            $("#customerNumber").val(e.user.phone_number);
                             $("#customerCity option").each(function(t, n) {
-                                if ($(this).val() == e.user.city) {
+                                if ($(this).val() == e.user.location_id) {
                                     $(this).attr("selected", "selected")
                                 }
                             });
                             $("#add_member").addClass("hidden");
                             $("#user_id").val(e.user.id)
                         } else {
-                            $(".glyphicon-remove").show();
-                            $(".glyphicon-ok").hide();
+                            $(".show_in_input_no").css('display','inline');
+                            $(".show_in_input_yes").css('display','none');
                             $("#add_member").removeClass("hidden");
                             $("#customerName").val("");
                             $("#customerNumber").val("");
@@ -1543,9 +1617,9 @@ $(document).ready(function() {
                             $("#user_id").val("")
                         }
                     } else {
-                        $("#email_error").html(e.errors.email);
-                        $(".glyphicon-remove").show();
-                        $(".glyphicon-ok").hide();
+                        $("#email_error").html(e.errors.email.CustomerEmail);
+                        $(".show_in_input_no").css('display','inline');
+                        $(".show_in_input_yes").css('display','none');
                         $("#add_member").addClass("hidden");
                         $("#customerName").val("");
                         $("#customerNumber").val("");
@@ -1584,7 +1658,7 @@ $(document).ready(function() {
         }
         if (!e) {
             $.ajax({
-                url: "/adminreservations/addmember",
+                url: "/admin/adminreservations/addmember",
                 type: "POST",
                 dataType: "json",
                 data: {
@@ -1600,8 +1674,8 @@ $(document).ready(function() {
                     t += e.success_message + "</div>";
                     $(".cms-title").before(t);
                     $("#user_id").val(e.user_id);
-                    $(".glyphicon-remove").hide();
-                    $(".glyphicon-ok").show();
+                    $(".show_in_input_no").css('display','none');
+                    $(".show_in_input_yes").css('display','inline');
                     $("#add_member").addClass("hidden")
                 }
             })
@@ -1902,4 +1976,296 @@ $(document).ready(function() {
             })
         }
     })
-})
+
+    /*code pasted from my reservations page*/
+
+    var disabledAllDays = '';
+    var allschedule = '';
+    var reserveminmax = '';
+
+    function disableAllTheseDays(date) {
+        var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
+        var location_id = $('#locations1').val();
+        var disabledDays = disabledAllDays[location_id];
+
+        if(disabledDays != undefined)
+        {
+            for (i = 0; i < disabledDays.length; i++) {
+                m=m+1;
+                mon=m.toString();
+                if(mon.length <2){
+                    m="0"+m;
+                }
+                day=d.toString();
+                if(day.length <2){
+                    d="0"+d;
+                }
+                if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                    return [false];
+                }
+            }
+        }
+        return [true];
+    }
+
+
+        //alert("here");
+        var current_url = window.location.href;
+        var check_menu = current_url.indexOf("#menu");
+        //console.log("checkmenu = "+check_menu);
+        if(check_menu > 0){
+            $('html, body').animate({
+                scrollTop: $('.deal-bottom-box').offset().top
+            }, 'slow');
+            $("#info_tab").removeClass("active");
+            $("#menu_tab").addClass("active");
+            $("#info").removeClass("in");
+            $("#info").removeClass("active");
+            $("#menu").addClass("in");
+            $("#menu").addClass("active");
+        }
+
+        $(".a-list-group-item").on('click',function(){
+            var v = $(this).attr('data-alacarte_link');
+            window.location.href=v;
+        });
+
+        /*reservation strat*/
+        // loadDatePicker();
+
+        /*$('#locality_select').on('click', function(){
+         alert(1);
+         //$('#locality').show();
+         });*/
+
+        $("body").delegate("#locality_select", "click", function() {
+            $('#locality').show();
+            $('#locality_select').hide();
+        });
+
+        $("body").delegate("#locality", "change", function() {
+            //alert(1);
+            var locality_change_val = $(this).val();
+            var locality_select_txt = $(this).find('option:selected').text();
+            //console.log("sad = "+locality_select_txt);
+            if(locality_change_val !='0')
+            {
+                //$('#locality_val').val(locality_change_val);
+                $('#myselect_locality').text(locality_select_txt);
+                $('#save_changes').show();
+            }
+            $('#locality').hide();
+            $('#locality_select').show();
+            var product_id = $('#my_product_id').val();
+            $.ajax({
+                url: "/users/productVendorLoad",
+                type: "post",
+                data: {
+                    product_id:  product_id,
+                    locality_change_val: locality_change_val
+                },
+                beforeSend:function()
+                {
+                    $("#get_locality").html('<img src="/images/loading.gif">');
+                },
+                success: function(e) {
+                    //console.log(e);
+                    $('#get_locality').html(e);
+                    $('#new_locality_value').val(locality_select_txt);
+                }
+            });
+
+        });
+
+        $("body").delegate("#party_size1", "change", function() {
+            counter = $(this).val();
+            //alert(counter);
+            str = "";
+            for (var e = 0; e <= counter; e++) {
+                str += "<option value='" + e + "'>" + e + "</option>"
+            }
+            $(".meals2 select").html(str);
+        });
+
+        $("body").delegate(".myaddonselect", "change", function() {
+            $('#save_changes').show();
+        });
+
+        $("body").delegate("#giftcard_id", "keyup", function() {
+            $('#save_changes').show();
+        });
+
+        $("body").delegate("#special_request", "keyup", function() {
+            $('#save_changes').show();
+        });
+
+        $('#locations1').change(function(){
+            $('#party_edit1').trigger('click');
+
+            loadPartySelect();
+            loadDatePicker();
+        });
+
+
+
+        /*reservation over*/
+
+        $('#time_edit5').click(function(){
+            $('#save_changes').show();
+            var last_reserve_date = $('last_reserv_date').val();
+            var vendor_id = $('#vendor_id').val();
+            var last_reserv_time = $('#last_reserv_time').val();
+            $('#collapseThree5').slideToggle();
+            $.ajax({
+                url: "/users/timedataload",
+                type: "post",
+                data: {
+                    dateText:  last_reserve_date,
+                    vendor_id: vendor_id,
+                    last_reserv_time:last_reserv_time
+                },
+                beforeSend:function()
+                {
+                    $("#timeajax").html('<img src="/images/loading.gif">');
+                },
+                success: function(e) {
+                    //console.log(e);
+                    $('#timeajax').html(e);
+                }
+            });
+        });
+
+
+
+
+
+    function loadPartySelect()
+    {
+        var location_id = $('#locations1').val();
+        var jsondata = reserveminmax[location_id];
+        //console.log(jsondata);
+        var selectList = $("#party_size1");
+        selectList.find("option:gt(0)").remove();
+
+        var min_people = jsondata.min_people;
+        var max_people = jsondata.max_people;
+        if(parseInt(max_people)>0)
+        {
+            for(var j = min_people;j <max_people;)
+            {
+                var optiontext = (j == 1) ? ' Person' : ' People';
+                selectList.append('<option value="'+j+'">'+j+optiontext+'</option>')
+
+                j = j+ parseInt(jsondata['increment']);
+            }
+        }
+
+    }
+
+    /* function loadDatePicker() {
+     $("#choose_date").datepicker("destroy");*/
+    $('#date_edit12').click(function(){
+        $('#save_changes').show();
+        var vendor_id = $('#vendor_id').val();
+        var last_reserv_time = $('#last_reserv_time').val();
+        $("#choose_date").datepicker({
+            dateFormat: 'yy-m-dd',
+            minDate: 'new Date()',
+            beforeShowDay: disableAllTheseDays,
+            onSelect: function(dateText, inst)
+            {
+                var d = $.datepicker.parseDate("yy-m-dd",  dateText);
+
+                var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
+                var txt2 = '';
+                var g = 1;
+                var cur_date =  new Date();
+                month = parseInt(cur_date.getMonth());
+                month += 1;
+                c_date = cur_date.getFullYear() + '-' + ((month<10)?'0':'')+month +  '-'  + cur_date.getDate();
+                c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
+
+                //console.log(c_date);
+                //alert(dateText);
+                $('#last_reserv_date').val(dateText);
+                $.ajax({
+                    url: "/users/timedataload",
+                    type: "post",
+                    data: {
+                        dateText:dateText,
+                        vendor_id:vendor_id,
+                        last_reserv_time:last_reserv_time
+                    },
+                    beforeSend:function()
+                    {
+                        $("#timeajax").html('<img src="/images/loading.gif">');
+                    },
+                    success: function(e) {
+                        //console.log(e);
+                        $('#timeajax').html(e);
+                    }
+                });
+                //here using ajax!!!
+                //console.log(dateText);
+                /*Time display container*/
+                /*var location_id = '97';
+                 var schedule = allschedule[location_id];
+                 console.log(schedule);
+
+                 if(schedule != undefined)
+                 {
+                 for(key_sch in schedule[datestrInNewFormat])
+                 {
+
+                 var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
+                 console.log(obj_length);
+                 active_tab = (g == obj_length) ? 'active' : '' ;
+                 active_blck = (g == obj_length) ? '' : 'hidden' ;
+                 txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
+                 txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+                 for(key_sch_time in schedule[datestrInNewFormat][key_sch])
+                 {
+                 if(c_date == dateText)
+                 {
+                 if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                 txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                 }
+                 }
+                 else
+                 {
+                 txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                 }
+
+                 }
+                 txt2+= '</div>';
+                 g++;
+                 }
+                 }*/
+                /*Time display container*/
+
+
+                /* txt += '</div><div class="clearfix"></div>';
+                 txt += '<input type="hidden" name="booking_time" id="booking_time" value="">';
+                 $('#hours').html(txt2);
+                 $('#time').html(txt);
+
+                 $('#booking_date').val(dateText);*/
+
+
+
+                $('#date_edit12 span').text(formatDate(dateText));
+                $('#date_edit12').click();
+                timehide=0;
+                // $('#time_edit1').click();
+            }
+        });
+        $( "#choose_date" ).datepicker("refresh");
+        /*}*/
+    });
+
+
+
+
+
+})(jQuery);

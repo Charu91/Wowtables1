@@ -93,11 +93,11 @@
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/orders') !== false)? 'nav-expanded nav-active':''}}">
                         <a>
                             <i class="fa fa-list-alt" aria-hidden="true"></i>
-                            <span>Orders</span>
+                            <span>Reservations</span>
                         </a>
                         <ul class="nav nav-children">
-                            <li class="{{ (isset($uri) && $uri === 'admin/orders')? 'nav-active':'' }}">
-                                <a href="javascript:void(0)">View All</a>
+                            <li class="{{ (isset($uri) && $uri === 'adminreservations')? 'nav-active':'' }}">
+                                <a href="/admin/adminreservations ">Admin</a>
                             </li>
                             <li class="{{ (isset($uri) && $uri === 'admin/orders/create')? 'nav-active':'' }}">
                                 <a href="javascript:void(0)">Create New</a>
