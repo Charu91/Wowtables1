@@ -9,7 +9,7 @@ Route::get('api/collection',
 										'domain' => env('WEBSITE_URL'),
 								  ));
 
-Route::get('api/collection/{cityID}/{tagID}',
+Route::get('api/collection/{tagID}',
 											array(
 								 					'uses' => 'Api\CollectionController@show',
 													'as' => '',
