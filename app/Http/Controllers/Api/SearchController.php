@@ -80,13 +80,13 @@ use WowTables\Http\Models\RestaurantLocations;
 					$arrResult['resultCount'] = $searchResult['resultCount'];
 					$arrResult['data'] = (array_key_exists('data', $searchResult)) ? $searchResult['data']:array();
 					$arrResult['filters'] = $this->search->getExperienceSearchFilters();
-					$arrResult['no_result_msg'] = 'No matching data found.';
+					$arrResult['no_result_msg'] = 'No results found. Try again with different filters or slide right to check for A la carte options matching your filters.';
 				}
 				else {
 					$arrResult['status'] = Config::get('constants.API_SUCCESS');
 					$arrResult['resultCount'] = 0;
 					$arrResult['data'] = array();
-					$arrResult['no_result_msg'] = 'No matching data found.';
+					$arrResult['no_result_msg'] = 'No results found. Try again with different filters or slide right to check for A la carte options matching your filters.';
 				}
 			}
 		}

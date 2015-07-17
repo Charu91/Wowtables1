@@ -29,7 +29,7 @@ class RestaurantsController extends Controller {
 		$arrResult = $restaurantLocations->arr_result;
 		if(empty($arrResult)) {
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-			$arrResponse['no_result_msg'] = 'No matching data found.';
+			$arrResponse['no_result_msg'] = 'No results found. Try again with different filters or slide left to check for Experiences matching your filters.';
 			$arrResponse['data'] = array(
 										'listing' => array()
 									);
@@ -45,7 +45,7 @@ class RestaurantsController extends Controller {
             								'sort_options' => $restaurantLocations->sort_options,
             							),
             				'total_count' => $restaurantLocations->total_count,
-            				'no_result_msg' => 'No matching result found.'
+            				'no_result_msg' => 'No results found. Try again with different filters or slide left to check for Experiences matching your filters.'
 										
 						);
 		}
