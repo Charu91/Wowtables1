@@ -55,3 +55,13 @@ body .time_tab.active {
 .time_active, .time_active:hover{
     background: #EAB803;
 }
+
+/* css changes on 17-07-2015 */
+
+.modal-content{
+    border:0px;
+}
+
+.modal-body{
+    background: #f0f0f0;
+}
