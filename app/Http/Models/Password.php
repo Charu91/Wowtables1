@@ -69,6 +69,17 @@ class Password {
 
 	   }
 
+        public static function creatRequestWebsitePassword($data) {
+            //creating a new token
+            $response = self::saveWebsitePasswordRequest($data);
+
+            //$arrResponse=array();
+            //$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+
+            return $response;
+
+	   }
+
        //---------------------------------------------------------------
 
        /**

@@ -625,7 +625,7 @@ if (strpos($url,'alacarte') !== false) {
                   <ul class="dropdown-menu wowtables_dropdown_menu">
                     <?php if(isset($user_data['user_role']) && $user_data['user_role'] == '1') { ?>
                       <li><a href="{{URL::to('/')}}/admin">Admin</a></li>
-                      <li><a href="{{URL::to('/')}}/adminreservations">Admin Reservations</a></li>
+                      <li><a href="{{URL::to('/')}}/admin/adminreservations">Admin Reservations</a></li>
                     <?php } ?>
                     <li> <a href="{{URL::to('/')}}/users/myreservations">My Reservations</a></li>
                     <li><a href="{{URL::to('/')}}/users/myaccount">My Profile</a></li>
@@ -1281,10 +1281,6 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
     <script type="text/javascript" src="{{URL::to('/')}}/js/jquery-ui-1.10.0.custom.min.js?ver=1.0.1"></script>
   <script type="text/javascript" src="{{URL::to('/')}}/assets/js/jquery-ui.min.js?ver=1.0.1"></script>
     <script src="{{URL::to('/')}}/assets/js/bootstrap.min.js?ver=1.0.1"></script>
-    <?php 
-    if($method == 'adminreservations'):?>
-      <script src="{{URL::to('/')}}/assets/js/adminreservations.js?ver=1.3"></script>
-    <?php endif;?>
      <script src="{{URL::to('/')}}/assets/js/home-main.js?ver=1.0.1"></script> 
     <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js?ver=1.0.4"></script>
 <!-- Google Code for Remarketing Tag -->
