@@ -134,7 +134,7 @@ close:hover{
     border-radius:0px;
     color:#000 !important;
     font-size:13px;
-    font-weight:700px !important;
+    font-weight:700 !important;
     line-height:14px;
     padding:5px 20px;
     text-shadow:none;
@@ -142,10 +142,14 @@ close:hover{
 }
 
 .btn-warning:hover{
-    background:#c99f06;
+    background:#c99f06 !important;
 }
 
 .panel-heading select{
     border:1px solid;
     border-color:rgba(169,169,169,.99);
+}
+
+#time .actives{
+    right:0px;
 }
