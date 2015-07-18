@@ -37,6 +37,11 @@ class CollectionController extends Controller {
 	 * @since     1.0.0
 	 */
 	public function show($tagID) {
+
+		if(!is_int($tagID)) {
+			$tagID = CollectionTags::getSlugID($tagID);
+		}
+
 		$filters = array(
 								'city_id' => $_SERVER['HTTP_X_WOW_CITY'],
 								'tag' => array($tagID)

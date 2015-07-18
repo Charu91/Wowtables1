@@ -82,7 +82,13 @@ class ExperiencesController extends Controller {
         $data=array('id' => $id);
 
         //Validation user's profile data
-        $validator = Validator::make($data,Experiences::$arrRules);
+        if(is_int($id)) {
+            $validator = Validator::make($data,Experiences::$arrRules);    
+        }
+        else {
+            $validator = Validator::make($data,Experiences::$arrRulesSlug);   
+        }
+        
 
         if($validator->fails()){
             $arrResponse['status'] = Config::get('constants.API_SUCCESS');
