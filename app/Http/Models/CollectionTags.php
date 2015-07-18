@@ -67,6 +67,29 @@ class CollectionTags {
             
             return $arrResponse;
         }
+
+        //-------------------------------------------------------------
+
+        /**
+         * Returns the ID of the slug.
+         *
+         * @static
+         * @access  public
+         * @param   string   $slug
+         * @return    integer
+         * @since   1.0.0
+         */
+        public static function getSlugID($slug) {
+            $query = DB::table('products')
+                            ->where('slug', $experienceID)
+                            ->select('id')
+                            ->first();
+            if($query){
+                return $query->id;
+            }
+
+            return 0;
+        }
      
 }
 //end of class Collection.
