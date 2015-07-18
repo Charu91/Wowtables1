@@ -582,7 +582,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('CR - '.$dataPost['order_id'].' | '.date('d-F-Y',strtotime($dataPost['reservationDate'])).' , '.date('g:i a',strtotime($dataPost['reservationTime'])).' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
 			});
 
 
@@ -853,7 +853,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
 			});
 
 		} else if($reserveType == "alacarte"){
@@ -933,7 +933,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
 			});
 		}
 
