@@ -18,6 +18,10 @@ class Experiences {
         static $arrRules = array(
             'id' => 'required|exists:products,id'
         );
+
+         static $arrRulesSlug = array(
+            'id' => 'required|exists:products,slug'
+        );
         //-------------------------------------------------------------
 	
 	/**
@@ -30,9 +34,28 @@ class Experiences {
 	 * @version	1.0.0
 	 */
 	public function find($experienceID) {
+		
+		if(!is_numeric($experienceID)) { 
+			$query = DB::table('products')
+							->where('slug', $experienceID)
+							->select('id')
+							->first();
+			if($query){
+				$experienceID = $query->id;
+			}
+			else { 
+				$arrExpDetails['status'] = Config::get('constants.API_SUCCESS');
+	            $arrExpDetails['no_result_msg'] = 'No matching values found.';
+	            $arrExpDetails['data'] = array();
+	            $arrExpDetails['total_count'] = 0; 
+	            return $arrExpDetails;
+			}
+
+		}		
+
 		//query to read product type
 		$queryType = DB::table('products')
-						->where('id',$experienceID)
+						->where('id', $experienceID)
 						->select('name','type')
 						->first();
 

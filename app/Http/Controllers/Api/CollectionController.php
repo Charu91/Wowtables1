@@ -26,10 +26,24 @@ class CollectionController extends Controller {
 			return response()->json(CollectionTags::readAllCollection(),200);
 	}
 
-	public function show($cityID, $tagID) {
-			
-			$filters = array(
-								'city_id' => $cityID,
+	//-----------------------------------------------------------------
+
+	/**
+	 * Displays the experiences matching the tag.
+	 *
+	 * @access    public
+	 * @param     integer  $tagID
+	 * @return    response
+	 * @since     1.0.0
+	 */
+	public function show($tagID) {
+
+		if(!is_numeric($tagID)) {
+			$tagID = CollectionTags::getSlugID($tagID);
+		}
+
+		$filters = array(
+								'city_id' => $_SERVER['HTTP_X_WOW_CITY'],
 								'tag' => array($tagID)
 							
 						);

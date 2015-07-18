@@ -4,6 +4,7 @@ use Illuminate\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use Config;
 use Illuminate\Http\Request;
+use WowTables\Http\Models\AppVersion;
 
 /**
  * Controller class CheckVersionController.
@@ -41,19 +42,13 @@ class CheckVersionController extends Controller {
 		//$deviceType = "Android";
 		//$appVersion = "1.0.3";
 		$data =  $this->request->all();
-
-		$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
-		$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
 		
-		if($data['deviceType'] == 'iOS' && version_compare($data['appVersion'], $iOSVersion) >= 0) {			
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-			}
-		else if ($data['deviceType'] == 'Android' && version_compare($data['appVersion'], $androidVersion) >= 0) {		
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');				
-		}
-		else {
-				$arrResponse['status'] = Config::get('constants.API_ERROR');
-		}			
+		$status = AppVersion::updateAppVersion($data);
+					
+		if($status)
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		else
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
 		
 		return response()->json($arrResponse,200);
 		

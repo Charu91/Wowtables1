@@ -76,15 +76,21 @@ class ExperiencesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id) {
+	public function show($id) {  
 
         //data to be validated
         $data=array('id' => $id);
 
         //Validation user's profile data
-        $validator = Validator::make($data,Experiences::$arrRules);
+        if(is_numeric($id)) {   
+            $validator = Validator::make($data,Experiences::$arrRules);    
+        }
+        else {
+            $validator = Validator::make($data,Experiences::$arrRulesSlug);   
+        }
+        
 
-        if($validator->fails()){
+        if($validator->fails()){  
             $arrResponse['status'] = Config::get('constants.API_SUCCESS');
             $arrResponse['no_result_msg'] = 'No matching values found.';
             $arrResponse['data'] = array();

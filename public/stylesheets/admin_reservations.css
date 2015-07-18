@@ -1,4 +1,5 @@
-﻿﻿.actives {
+﻿﻿/*custom admin css file*/
+.actives {
     width: inherit;
     margin-bottom: 15px;
     left: 22px;
@@ -53,4 +54,144 @@ body .time_tab.active {
 
 .time_active, .time_active:hover{
     background: #EAB803;
+}
+
+/* css changes on 17-07-2015 */
+
+.modal-content{
+    border:0px;
+    border-radius: 0px;
+    width:400px;
+}
+
+.modal-body{
+    background: #f0f0f0;
+    padding:15px;
+}
+
+.modal-header{
+    padding:12px 15px 10px;
+}
+
+.change_loader{
+    display:none;
+}
+
+.modal-title{
+   color:#fff; 
+   text-transform: uppercase;
+   text-shadow:1px 1px 2px rgba(0,0,0,.6);
+   font-weight:700;
+   font-size:18px;
+}
+
+.close{
+    color:#fff;
+    opacity:1;
+    outline:none;
+}
+
+.close:hover{
+    color:#fff !important;
+    opacity: 1;
+}
+
+.panel{
+    border:1px solid trasparent;
+    box-shadow:0px 2px 3px rgba(0,0,0,0.1);
+}
+
+.panel-title>.small, .panel-title>.small>a, .panel-title>a{
+    font-size:15px;
+    padding:0px;
+    color:#333;
+    font-weight:500;
+}
+
+.panel-title>.small, .panel-title>.small>a, .panel-title>a:hover{
+    color:#333;
+    line-height:13px;
+}
+
+.panel-default{
+    border-color:#ddd;
+}
+
+.panel-default>.panel-heading{
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    border-bottom:0px;
+    border-top-right-radius:3px;
+}
+
+.pull-right{
+    border-radius:0px;
+    height:auto;
+    padding:0;
+    font-size:15px;
+}
+
+.btn.btn-warning{
+    background:#EAB803 !important;
+    border-radius:0px;
+    color:#000 !important;
+    font-size:13px;
+    font-weight:700 !important;
+    line-height:14px;
+    padding:5px 20px;
+    text-shadow:none;
+    border:1px solid #eea236;
+}
+
+.btn-warning:hover{
+    background:#c99f06 !important;
+}
+
+.panel-heading select{
+    border:1px solid;
+    border-color:rgba(169,169,169,.99);
+}
+
+#time .actives{
+    right:0px;
+}
+
+.datepicker table tfoot tr th:hover, .datepicker table thead tr th.next:hover, .datepicker table thead tr th.prev:hover, .datepicker table thead tr:first-child th:hover, .datepicker table tr td span:hover, .datepicker table tr td.day:hover, .datepicker.datepicker-dark table tbody tr td.day.active, .datepicker.datepicker-dark table tbody tr td.day:hover, .datepicker.datepicker-dark table thead tr th.next:hover, .datepicker.datepicker-dark table thead tr th.prev:hover, html.dark .datepicker.datepicker-primary table tbody tr td.day.active, html.dark .datepicker.datepicker-primary table tbody tr td.day:hover, html.dark .datepicker.datepicker-primary table thead tr th.next:hover, html.dark .datepicker.datepicker-primary table thead tr th.prev:hover{
+    background:trnsparent;
+    color:#333;
+}
+
+.datepicker table tbody tr td.day:hover{
+    background:#ea9403 !important;
+    color:#fff !important;
+}
+
+.datepicker thead tr:first-child th:hover{
+    background:transparent !important;
+    color:#333;
+}
+
+#myselect_person{
+    display:none;
+}
+
+.datepicker.datepicker-inline {
+    background-color:#eee;
+    border:1px solid #ddd
+    border-radius:0px;
+}
+
+.datepicker table td.day{
+    border:2px solid #eee !important;
+    background-color:#ddd !important;
+    font-weight:bold !important;
+    color:#555 !important;
+}
+
+.datepicker table tr td.old{
+    visibility:hidden !important;
+}
+
+.datepicker table td.day.new{
+    visibility:hidden !important;
 }
