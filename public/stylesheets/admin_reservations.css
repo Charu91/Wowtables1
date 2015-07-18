@@ -118,7 +118,8 @@ close:hover{
 
 .panel-default>.panel-heading{
     padding: 10px 10px;
-    border: 1px solid transparent;
+    border: 1px solid #ddd;
+    border-bottom:0px;
     border-top-right-radius:3px;
 }
 
@@ -129,7 +130,7 @@ close:hover{
     font-size:15px;
 }
 
-.btn-warning{
+.btn.btn-warning{
     background:#EAB803 !important;
     border-radius:0px;
     color:#000 !important;
@@ -152,4 +153,14 @@ close:hover{
 
 #time .actives{
     right:0px;
+}
+
+.datepicker table tfoot tr th:hover, .datepicker table thead tr th.next:hover, .datepicker table thead tr th.prev:hover, .datepicker table thead tr:first-child th:hover, .datepicker table tr td span:hover, .datepicker table tr td.day:hover, .datepicker.datepicker-dark table tbody tr td.day.active, .datepicker.datepicker-dark table tbody tr td.day:hover, .datepicker.datepicker-dark table thead tr th.next:hover, .datepicker.datepicker-dark table thead tr th.prev:hover, html.dark .datepicker.datepicker-primary table tbody tr td.day.active, html.dark .datepicker.datepicker-primary table tbody tr td.day:hover, html.dark .datepicker.datepicker-primary table thead tr th.next:hover, html.dark .datepicker.datepicker-primary table thead tr th.prev:hover{
+    background:trnsparent;
+    color:#333;
+}
+
+.datepicker table tbody tr td.day:hover{
+    background:#ea9403 !important;
+    color:#fff;
 }
