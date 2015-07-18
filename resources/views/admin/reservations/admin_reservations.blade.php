@@ -163,6 +163,115 @@
         </div>
     </section>
 
+    <!--edit Modal -->
+
+    <div style="z-index: 9999;" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background: #EAB703 !important;">
+                <div id="load_layer" class="change_loader" >
+                    <img src="/images/loading.gif">
+                </div>
+                <div class="modal-header" style="margin-top:-7px !important;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id='close_changes'>&times;</button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Change This Reservation</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="reserv_table">
+
+                        <div id="my_locality">
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading active">
+                                <h4 class="panel-title">
+                                    <a href="javascript:" style="text-decoration: none;">
+                                        Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://wowtables.app/images/question_icon_small_display.png"></a>
+                                    <select name="qty" id="party_size1"  class="pull-right space hidden">
+                                        <option value="0">SELECT</option>
+
+                                        <!-- <option value="2">2 People</option>
+                                        <option value="7">7 People</option> -->
+
+                                    </select>
+                                    <strong><a id="party_edit1" href="javascript:"  style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_person"></span> EDIT</a></strong>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" >
+                                <h4 class="panel-title">
+                                    <a href="javascript:" style="text-decoration: none;">
+                                        Select Date <input type="hidden" value="" id="vendor_id">
+                                    </a>
+                                    <strong><a id="date_edit12"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo1" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_date"></span> EDIT</a></strong>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo1" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="input-append date" id='dp1' data-date-format="dd-mm-yyyy">
+                                        <input type="hidden" value="" name="booking_date" id="booking_date">
+                                        <div class="options" style="margin: -10px;">
+                                            <div id="choose_date"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="javascript:" style="text-decoration: none;">
+                                        Select Time
+                                    </a>
+                                    <strong><a id="time_edit5"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_time"></span> EDIT</a></strong>
+                                </h4>
+                            </div>
+                            <div id="collapseThree5" class="panel-collapse collapse in" style="display:none;">
+                                <div class="panel-body" id="timeajax">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="my_addons">
+                        </div>
+                        <div id="my_giftcard">
+                        </div>
+
+                        <a id="save_changes" class="btn btn-warning" href="javascript:" style="margin-left: 32%;display:none;">Confirm Changes</a>
+
+                        <div class="text-center" >
+
+                            <input type="hidden" name="res_id" id="res_id">
+                            <input type="hidden" value="" id="last_reserv_date" name="last_reserv_date">
+                            <input type="hidden" value="" id="last_reserv_time" name="last_reserv_time">
+                            <input type="hidden" value="" id="last_reserv_outlet" name="last_reserv_outlet">
+                            <input type="hidden" value="" id="last_reserv_party_size" name="last_reserv_party_size">
+                            <input type="hidden" value="" id="last_reservation_date" name="last_reservation_date">
+                            <input type="hidden" value="" id="last_reservation_time" name="last_reservation_time">
+                            <input type="hidden" value="" id="last_reservation_party_size" name="last_reservation_party_size">
+                            <p id="cant_change_table" class="hidden">To make changes to your reservation for this evening please call our concierge or the restaurant directly.</p>
+                            <p id="cant_change_table" class="hidden cant_change">Please make a change to confirm. If no change is required, please click on cancel.</p>
+                            <a aria-hidden="true" data-dismiss="modal" id="cancel" class="btn btn-warning hidden cant_change" href="javascript:">Cancel</a>
+                        </div>
+                    </div>
+                    <div class="change_reserv_confirmation hide" >
+                        <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_confirm" style="display:none;">
+                            We have received your table change request. You will receive a confirmation mail & SMS from our concierge soon.
+                        </h4>
+                        <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_immediate" style="display:none;">
+                            To check for immediate availability, please call our concierge.
+                        </h4>
+                        <div class="text-center">
+                            <a  class="btn btn-warning close_modal" href="javascript:" data-dismiss="modal">Close This</a>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+    <!--edit Modal -->
+
     <!--add Experience Modal-->
     <div style="z-index: 9999;" class="modal fade" id="addExperienceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -445,114 +554,7 @@
     </div><!-- /.modal -->
 
     <!--add Alacarte Modal-->
-    <!--edit Modal -->
 
-    <div style="z-index: 9999;" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="background: #EAB703 !important;">
-                <div id="load_layer" class="change_loader" >
-                    <img src="/images/loading.gif">
-                </div>
-                <div class="modal-header" style="margin-top:-7px !important;">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id='close_changes'>&times;</button>
-                    <h4 class="modal-title text-center" id="myModalLabel">Change This Reservation</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="reserv_table">
-
-                        <div id="my_locality">
-                        </div>
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading active">
-                                <h4 class="panel-title">
-                                    <a href="javascript:" style="text-decoration: none;">
-                                        Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://wowtables.app/images/question_icon_small_display.png"></a>
-                                    <select name="qty" id="party_size1"  class="pull-right space hidden">
-                                        <option value="0">SELECT</option>
-
-                                        <!-- <option value="2">2 People</option>
-                                        <option value="7">7 People</option> -->
-
-                                    </select>
-                                    <strong><a id="party_edit1" href="javascript:"  style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_person"></span> EDIT</a></strong>
-                                </h4>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" >
-                                <h4 class="panel-title">
-                                    <a href="javascript:" style="text-decoration: none;">
-                                        Select Date <input type="hidden" value="" id="vendor_id">
-                                    </a>
-                                    <strong><a id="date_edit12"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_date"></span> EDIT</a></strong>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <div class="input-append date" id='dp1' data-date-format="dd-mm-yyyy">
-                                        <input type="hidden" value="" name="booking_date" id="booking_date">
-                                        <div class="options" style="margin: -10px;">
-                                            <div id="choose_date"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a href="javascript:" style="text-decoration: none;">
-                                        Select Time
-                                    </a>
-                                    <strong><a id="time_edit5"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="text-decoration: none;float: right;font-size: 13px;color: #EAB703;"><span style="color:#756554 !important;" id="myselect_time"></span> EDIT</a></strong>
-                                </h4>
-                            </div>
-                            <div id="collapseThree5" class="panel-collapse collapse in" style="display:none;">
-                                <div class="panel-body" id="timeajax">
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="my_addons">
-                        </div>
-                        <div id="my_giftcard">
-                        </div>
-
-                        <a id="save_changes" class="btn btn-warning" href="javascript:" style="margin-left: 32%;display:none;">Confirm Changes</a>
-
-                        <div class="text-center" >
-
-                            <input type="hidden" name="res_id" id="res_id">
-                            <input type="hidden" value="" id="last_reserv_date" name="last_reserv_date">
-                            <input type="hidden" value="" id="last_reserv_time" name="last_reserv_time">
-                            <input type="hidden" value="" id="last_reserv_outlet" name="last_reserv_outlet">
-                            <input type="hidden" value="" id="last_reserv_party_size" name="last_reserv_party_size">
-                            <input type="hidden" value="" id="last_reservation_date" name="last_reservation_date">
-                            <input type="hidden" value="" id="last_reservation_time" name="last_reservation_time">
-                            <input type="hidden" value="" id="last_reservation_party_size" name="last_reservation_party_size">
-                            <p id="cant_change_table" class="hidden">To make changes to your reservation for this evening please call our concierge or the restaurant directly.</p>
-                            <p id="cant_change_table" class="hidden cant_change">Please make a change to confirm. If no change is required, please click on cancel.</p>
-                            <a aria-hidden="true" data-dismiss="modal" id="cancel" class="btn btn-warning hidden cant_change" href="javascript:">Cancel</a>
-                        </div>
-                    </div>
-                    <div class="change_reserv_confirmation hide" >
-                        <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_confirm" style="display:none;">
-                            We have received your table change request. You will receive a confirmation mail & SMS from our concierge soon.
-                        </h4>
-                        <h4 class="panel-title" style="margin-bottom: 20px;" id="my_update_immediate" style="display:none;">
-                            To check for immediate availability, please call our concierge.
-                        </h4>
-                        <div class="text-center">
-                            <a  class="btn btn-warning close_modal" href="javascript:" data-dismiss="modal">Close This</a>
-                        </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    </div>
-    <!--edit Modal -->
 
     <!--Cancel Modal -->
     <div style="z-index: 9999;" class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
