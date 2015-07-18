@@ -35,7 +35,7 @@ class Experiences {
 	 */
 	public function find($experienceID) {
 		
-		if(!is_int($experienceID)) { 
+		if(!is_numeric($experienceID)) { 
 			$query = DB::table('products')
 							->where('slug', $experienceID)
 							->select('id')
@@ -43,7 +43,7 @@ class Experiences {
 			if($query){
 				$experienceID = $query->id;
 			}
-			else {
+			else { 
 				$arrExpDetails['status'] = Config::get('constants.API_SUCCESS');
 	            $arrExpDetails['no_result_msg'] = 'No matching values found.';
 	            $arrExpDetails['data'] = array();
