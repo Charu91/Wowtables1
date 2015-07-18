@@ -35,7 +35,7 @@ class Experiences {
 	 */
 	public function find($experienceID) {
 		
-		if(!is_int($experienceID)) { 
+		if(!is_numeric($experienceID)) { 
 			$query = DB::table('products')
 							->where('slug', $experienceID)
 							->select('id')
