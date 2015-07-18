@@ -4,6 +4,7 @@ use Illuminate\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use Config;
 use Illuminate\Http\Request;
+use WowTables\Http\Models\AppVersion;
 
 /**
  * Controller class CheckVersionController.
@@ -52,7 +53,18 @@ class CheckVersionController extends Controller {
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');				
 		}
 		else {
-				$arrResponse['status'] = Config::get('constants.API_ERROR');
+				$appVersion = (array_key_exists('HTTP_X_WOW_VERSION', $_SERVER)) ? $_SERVER['HTTP_X_WOW_VERSION']:"";
+				
+				if(!empty($appVersion)) {
+					$status = AppVersion::updateAppVersion();
+					if($status == "TRUE")
+						$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+					else
+						$arrResponse['status'] = Config::get('constants.API_ERROR');
+				}
+				else {
+					$arrResponse['status'] = Config::get('constants.API_ERROR');
+				}				
 		}			
 		
 		return response()->json($arrResponse,200);
