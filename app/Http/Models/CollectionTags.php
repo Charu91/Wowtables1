@@ -80,7 +80,7 @@ class CollectionTags {
          * @since   1.0.0
          */
         public static function getSlugID($slug) {
-            $query = DB::table('products')
+            $query = DB::table('tags')
                             ->where('slug', $slug)
                             ->select('id')
                             ->first();
