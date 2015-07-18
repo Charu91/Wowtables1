@@ -88,6 +88,7 @@ body .time_tab.active {
 .close{
     color:#fff;
     opacity:1;
+    outline:none;
 }
 
 .close:hover{
