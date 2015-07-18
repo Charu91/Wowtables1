@@ -81,7 +81,7 @@ class CollectionTags {
          */
         public static function getSlugID($slug) {
             $query = DB::table('products')
-                            ->where('slug', $experienceID)
+                            ->where('slug', $slug)
                             ->select('id')
                             ->first();
             if($query){
