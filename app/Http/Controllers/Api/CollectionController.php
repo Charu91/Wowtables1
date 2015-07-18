@@ -38,7 +38,7 @@ class CollectionController extends Controller {
 	 */
 	public function show($tagID) {
 
-		if(!is_int($tagID)) {
+		if(!is_numeric($tagID)) {
 			$tagID = CollectionTags::getSlugID($tagID);
 		}
 
