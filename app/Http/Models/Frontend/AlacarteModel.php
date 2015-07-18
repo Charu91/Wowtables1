@@ -1048,7 +1048,7 @@ class AlacarteModel{
         $queryResult = \DB::table('vendor_locations as vl')
             ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
             ->where('vl.id',$vendorLocationID)
-            ->select('vla.address','vla.latitude','vla.longitude')
+            ->select('vla.address','vla.latitude','vla.longitude','vla.city_id')
             ->first();
 
 

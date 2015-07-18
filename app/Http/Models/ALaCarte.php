@@ -28,6 +28,25 @@ use Config;
 	 * @version	1.0.0
 	 */
 	public static function getALaCarteDetails( $aLaCarteID ) {
+		
+		if(!is_numeric($aLaCarteID)) { 
+			$query = DB::table('vendor_locations')
+							->where('slug', $aLaCarteID)
+							->select('id')
+							->first();
+			if($query){
+				$aLaCarteID = $query->id;
+			}
+			else { 
+				$arrData['status'] = Config::get('constants.API_SUCCESS');
+				$arrData['no_result_msg'] = 'No matching values found.';
+				$arrData['data'] = array();
+				$arrData['total_count'] = 0;
+	            return $arrDatas;
+			}
+
+		}
+
 		//array to store the matching result
 		$arrData = array();
 		

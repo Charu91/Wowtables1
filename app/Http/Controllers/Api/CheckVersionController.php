@@ -42,30 +42,13 @@ class CheckVersionController extends Controller {
 		//$deviceType = "Android";
 		//$appVersion = "1.0.3";
 		$data =  $this->request->all();
-
-		$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
-		$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
 		
-		if($data['deviceType'] == 'iOS' && version_compare($data['appVersion'], $iOSVersion) >= 0) {			
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-			}
-		else if ($data['deviceType'] == 'Android' && version_compare($data['appVersion'], $androidVersion) >= 0) {		
-				$arrResponse['status'] = Config::get('constants.API_SUCCESS');				
-		}
-		else {
-				$appVersion = (array_key_exists('HTTP_X_WOW_VERSION', $_SERVER)) ? $_SERVER['HTTP_X_WOW_VERSION']:"";
-				
-				if(!empty($appVersion)) {
-					$status = AppVersion::updateAppVersion();
-					if($status == "TRUE")
-						$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-					else
-						$arrResponse['status'] = Config::get('constants.API_ERROR');
-				}
-				else {
-					$arrResponse['status'] = Config::get('constants.API_ERROR');
-				}				
-		}			
+		$status = AppVersion::updateAppVersion($data);
+					
+		if($status)
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+		else
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
 		
 		return response()->json($arrResponse,200);
 		
