@@ -164,3 +164,8 @@ close:hover{
     background:#ea9403 !important;
     color:#fff;
 }
+
+.datepicker thead tr:first-child th:hover{
+    background:transparent !important;
+    color:#333;
+}
