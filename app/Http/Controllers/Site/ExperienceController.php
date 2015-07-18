@@ -648,7 +648,7 @@ class ExperienceController extends Controller {
         echo json_encode($arrExpData);
     }
 
-    public function exporder()
+        public function exporder()
     {
         //echo "<pre>"; print_r(Input::all());
         $dataPost['reservationDate'] = Input::get('booking_date');
@@ -932,7 +932,7 @@ class ExperienceController extends Controller {
                                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
                             });
 
                             //echo "userid == ".$userID;
@@ -1137,7 +1137,7 @@ class ExperienceController extends Controller {
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
             });
 
             //echo "userid == ".$userID;
