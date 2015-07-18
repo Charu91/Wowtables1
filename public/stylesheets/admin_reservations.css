@@ -162,7 +162,7 @@ close:hover{
 
 .datepicker table tbody tr td.day:hover{
     background:#ea9403 !important;
-    color:#fff;
+    color:#fff !important;
 }
 
 .datepicker thead tr:first-child th:hover{
@@ -172,4 +172,21 @@ close:hover{
 
 #myselect_person{
     display:none;
+}
+
+.datepicker.datepicker-inline {
+    background-color:#eee;
+    border:1px solid #ddd
+    border-radius:0px;
+}
+
+.datepicker table td.day{
+    border:2px solid #eee !important;
+    background-color:#ddd !important;
+    font-weight:bold !important;
+    color:#555 !important;
+}
+
+.datepicker table tr td.old{
+    visibility:hidden !important;
 }
