@@ -90,7 +90,7 @@ class ExperiencesController extends Controller {
         }
         
 
-        if($validator->fails()){
+        if($validator->fails()){  
             $arrResponse['status'] = Config::get('constants.API_SUCCESS');
             $arrResponse['no_result_msg'] = 'No matching values found.';
             $arrResponse['data'] = array();
