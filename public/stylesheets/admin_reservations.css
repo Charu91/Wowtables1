@@ -190,3 +190,7 @@ close:hover{
 .datepicker table tr td.old{
     visibility:hidden !important;
 }
+
+.datepicker table td.day.new{
+    visibility:hidden !important;
+}
