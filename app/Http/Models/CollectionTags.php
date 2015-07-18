@@ -36,17 +36,19 @@ class CollectionTags {
                     ->where('status','=','available')
         	 		->select('t.id','t.name','t.status','t.description',
         	 				  //DB::Raw('IFNULL(mrn.file,"") AS file',
-                            'mrn1.file as ios_image','mrn2.file as android_image'                                
+                            'mrn1.file as ios_image','mrn2.file as android_image',
+                            't.slug'                               
         	 				)   
         	 		->get();
 
                     if($queryResult) {
                         foreach($queryResult as $row) {
                             $data[] = array(
-                                                            'id'         => $row->id,
-                                                            'name'          => $row->name,
-                                                            'status'       => (empty($row->status)) ? "" : $row->status,
-                                                            'description' => (empty($row->description)) ? "" : $row->description,                                                            
+                                                            'id'          => $row->id,
+                                                            'name'        => $row->name,
+                                                            'status'      => (empty($row->status)) ? "" : $row->status,
+                                                            'description' => (empty($row->description)) ? "" : $row->description,
+                                                            'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
                                                             'image' => array(
                                                                                 'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
                                                                                 'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
