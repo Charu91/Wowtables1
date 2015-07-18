@@ -37,7 +37,7 @@ class AuthorizeMiddleware {
 								->select('ud.user_id', 'app_version', 'os_type')
 								->first();
 			if($queryResult){
-				return $next($request);
+				
 				
 				$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
 				$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
