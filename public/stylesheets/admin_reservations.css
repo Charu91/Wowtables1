@@ -90,7 +90,7 @@ body .time_tab.active {
     opacity:1;
 }
 
-close:hover{
+.close:hover{
     color:#fff !important;
     opacity: 1;
 }
