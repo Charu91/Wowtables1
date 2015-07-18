@@ -91,7 +91,7 @@ body .time_tab.active {
 }
 
 close:hover{
-    color:#fff;
+    color:#fff !important;
     opacity: 1;
 }
 
@@ -168,4 +168,8 @@ close:hover{
 .datepicker thead tr:first-child th:hover{
     background:transparent !important;
     color:#333;
+}
+
+#myselect_person{
+    display:none;
 }
