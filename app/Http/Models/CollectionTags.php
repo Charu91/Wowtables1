@@ -125,14 +125,14 @@ class CollectionTags {
 
             if($queryResult) {
                  $data = array(
-                                'id'          => $row->id,
-                                'name'        => $row->name,
-                                'status'      => (empty($row->status)) ? "" : $row->status,
-                                'description' => (empty($row->description)) ? "" : $row->description,
-                                'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
+                                'id'          => $queryResult->id,
+                                'name'        => $queryResult->name,
+                                'status'      => (empty($queryResult->status)) ? "" : $queryResult->status,
+                                'description' => (empty($queryResult->description)) ? "" : $queryResult->description,
+                                'slug'        => (empty($queryResult->slug)) ? "" : $queryResult->slug,                                                            
                                 'image' => array(
-                                                'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-                                                'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+                                                'mobile_listing_ios_experience' => (empty($queryResult>ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->ios_image,
+                                                'mobile_listing_android_experience' => (empty($queryResult->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->android_image,
                                             )
                                 );
             }
