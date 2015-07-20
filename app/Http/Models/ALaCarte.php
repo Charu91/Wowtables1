@@ -399,6 +399,9 @@ use Config;
 		$data = array();
 		$data['status']=Config::get('constants.API_SUCCESS');
 
+		//reading the experiences
+		$arrExperience = self::readRestaurantsExperiences($vendorID);
+
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$data['data']['alacarte'][] = array(
@@ -418,21 +421,21 @@ use Config;
 			}
 			if(array_key_exists('data', $data)) { 
 				$data['alacarteCount'] = count($data['data']['alacarte']);
-				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-				$data['experienceCount']=count($data['data']['experience']);
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount']=count($arrExperience);
 			} else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 			}
 		}
 		else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 		}
 		
