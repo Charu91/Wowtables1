@@ -117,6 +117,7 @@ class CollectionTags {
                                                      ->where('mrn2.image_type', '=', 'mobile_listing_android_experience');
                                 })
                             ->where('status','=','available')
+                            ->where('t.id','=',$tagID)
                             ->select('t.id','t.name','t.status','t.description',
                                     'mrn1.file as ios_image','mrn2.file as android_image',
                                     't.slug'                               
