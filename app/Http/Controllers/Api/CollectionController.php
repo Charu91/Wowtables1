@@ -47,29 +47,30 @@ class CollectionController extends Controller {
 								'tag' => array($tagID)
 							
 						);
+		//reading the alacarte details 
+		$this->listings->fetchListings($filters);
+        $arrResult = $this->listings->arr_result;
 
-        	$this->listings->fetchListings($filters);
-        	$arrResult = $this->listings->arr_result;
 
-        	if(empty($arrResult)) {
-			$arrResult['status1'] = Config::get('constants.API_SUCCESS');
-			$arrResult['no_result_msg1'] = 'No matching data found.';
-			$arrResult['data1'] = array(
+		if(empty($arrResult)) {
+			$arrResult['status'] = Config::get('constants.API_SUCCESS');
+			$arrResult['no_result_msg'] = 'No matching data found.';
+			$arrResult['data'] = array(
 										'listing' => array()
 									);
-			$arrResult['total_count1'] = 0;
+			$arrResult['total_count'] = 0;
 			}
 			else {
 			$arrResult = array(
-							'status1' => Config::get('constants.API_SUCCESS'),
-							'data1' => array(
+							'status' => Config::get('constants.API_SUCCESS'),
+							'data' => array(
 											'listing' => $arrResult,
             								//'filters' => $this->listings->filters,            								
             								'total_pages' => $this->listings->total_pages,
             								'sort_options' => $this->listings->sort_options,
             							),
-            				'total_count1' => $this->listings->total_count,
-            				'no_result_msg1' => 'No matching result found.'
+            				'total_count' => $this->listings->total_count,
+            				'no_result_msg' => 'No matching result found.'
 										
 						);
 			}	
@@ -93,12 +94,12 @@ class CollectionController extends Controller {
 
 
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-				$arrResponse['data'] = array(
-												"alacarte" => $arrResult['data1']['listing'],
-												"alacarteResultCount" => $arrResult['total_count1'],
-												"experience" => $arrResult['data2'],
-												"experienceResultCount" => $arrResult['resultCount2']
-											);
+
+				$arrResponse['data'] = CollectionTags::getCollectionTagDetail($tagID);
+				$arrResponse['data']['alacarte'] = $arrResult['data1']['listing'];
+				$arrResponse['data']['alacarteResultCount']  = $arrResult['total_count1'];
+				$arrResponse['data']['experience'] = $arrResult['data2'];
+				$arrResponse['data']['experienceResultCount'] = $arrResult['resultCount2']				
 				$arrResponse['no_result_msg'] = 'No matching data found.';
 
 				return response()->json($arrResponse,200);      	
