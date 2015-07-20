@@ -99,7 +99,7 @@ class CollectionController extends Controller {
 				$arrResponse['data']['alacarte'] = $arrResult['data1']['listing'];
 				$arrResponse['data']['alacarteResultCount']  = $arrResult['total_count1'];
 				$arrResponse['data']['experience'] = $arrResult['data2'];
-				$arrResponse['data']['experienceResultCount'] = $arrResult['resultCount2']				
+				$arrResponse['data']['experienceResultCount'] = $arrResult['resultCount2'];				
 				$arrResponse['no_result_msg'] = 'No matching data found.';
 
 				return response()->json($arrResponse,200);      	
