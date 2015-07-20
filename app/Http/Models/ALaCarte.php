@@ -163,10 +163,9 @@ use Config;
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_SUCCESS');
+			$arrData['status'] = Config::get('constants.API_ERROR');
 			$arrData['no_result_msg'] = 'No matching values found.';
-			$arrData['data'] = array();
-			$arrData['total_count'] = 0;
+			
 		}
 		return $arrData;			
 	}
