@@ -513,17 +513,28 @@
 	public static function readRestaurantsByMatchingNames($matchString) {
 		
 		//array to store the restaurant details
-		$data = array();
-			
-		
+		$data = array();	
+
 		$queryResult = DB::table('vendors as v')
 						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
 						->where('v.name','LIKE',"%$matchString%")
 						->where('vl.status', 'Active')
+						//->where('vl.a_la_carte','=', 1)
 						->select('v.name', 'v.id as vendor_id',
 								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
-						->groupBy('vl.vendor_id')
-						->get();
+						->groupBy('vl.vendor_id');
+						//->get();
+
+		
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);									   
+							//echo $queryResult->toSql(); die();
+							 //print_r($queryResult); die();
+		}
+		
+		$queryResult = $queryResult->get();
+		
 						
 		if($queryResult) {
 			

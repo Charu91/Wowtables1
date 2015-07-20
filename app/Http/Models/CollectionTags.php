@@ -22,7 +22,6 @@ class CollectionTags {
      */
         public static function readAllCollection() { 
 
-        //echo "Hi...."; 
         	$queryResult=DB::table('tags as t')        	 		
         	 		//->leftjoin('media_resized_new as mrn','t.media_id','=','mrn.id')
         	 		->leftJoin('media_resized_new as mrn1', function($join) {
@@ -76,7 +75,7 @@ class CollectionTags {
          * @static
          * @access  public
          * @param   string   $slug
-         * @return    integer
+         * @return  integer
          * @since   1.0.0
          */
         public static function getSlugID($slug) {
@@ -89,6 +88,57 @@ class CollectionTags {
             }
 
             return 0;
+        }
+
+        //-------------------------------------------------------------
+
+        /**
+         * Reads the details of a particular collection.
+         *
+         * @static   
+         * @access   public
+         * @param    integer  $tagID
+         * @return   array
+         * @since    1.0.0
+         */
+        public static function getCollectionTagDetail($tagID) {
+
+            //array to store the data to be sent in response
+            $data = array();
+
+            //query to read the details of a collection
+            $queryResult = DB::table('tags as t')                 
+                            ->leftJoin('media_resized_new as mrn1', function($join) {
+                                                $join->on('mrn1.media_id', '=', 't.media_id')
+                                                     ->where('mrn1.image_type', '=' , 'mobile_listing_ios_experience');
+                                })
+                            ->leftJoin('media_resized_new as mrn2', function($join) {
+                                                $join->on('mrn2.media_id', '=', 't.media_id')
+                                                     ->where('mrn2.image_type', '=', 'mobile_listing_android_experience');
+                                })
+                            ->where('status','=','available')
+                            ->where('t.id','=',$tagID)
+                            ->select('t.id','t.name','t.status','t.description',
+                                    'mrn1.file as ios_image','mrn2.file as android_image',
+                                    't.slug'                               
+                                )   
+                            ->first();
+
+            if($queryResult) {
+                 $data = array(
+                                'id'          => $queryResult->id,
+                                'name'        => $queryResult->name,
+                                'status'      => (empty($queryResult->status)) ? "" : $queryResult->status,
+                                'description' => (empty($queryResult->description)) ? "" : $queryResult->description,
+                                'slug'        => (empty($queryResult->slug)) ? "" : $queryResult->slug,                                                            
+                                'image' => array(
+                                                'mobile_listing_ios_experience' => (empty($queryResult->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->ios_image,
+                                                'mobile_listing_android_experience' => (empty($queryResult->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->android_image,
+                                            )
+                                );
+            }
+
+            return $data;
         }
      
 }

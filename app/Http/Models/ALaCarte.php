@@ -163,10 +163,9 @@ use Config;
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_SUCCESS');
+			$arrData['status'] = Config::get('constants.API_ERROR');
 			$arrData['no_result_msg'] = 'No matching values found.';
-			$arrData['data'] = array();
-			$arrData['total_count'] = 0;
+			
 		}
 		return $arrData;			
 	}
@@ -380,6 +379,7 @@ use Config;
 						->where('vl.vendor_id',$vendorID)
 						->where('v.status','Publish')
 						->where('vl.status','Active')
+						->where('vl.a_la_carte','=', 1)
 						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
 						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
@@ -399,6 +399,9 @@ use Config;
 		$data = array();
 		$data['status']=Config::get('constants.API_SUCCESS');
 
+		//reading the experiences
+		$arrExperience = self::readRestaurantsExperiences($vendorID);
+
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$data['data']['alacarte'][] = array(
@@ -417,22 +420,22 @@ use Config;
 											);
 			}
 			if(array_key_exists('data', $data)) { 
-				$data['alacarteCount']=count($data['data']['alacarte']);
-				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-				$data['experienceCount']=count($data['data']['experience']);
+				$data['alacarteCount'] = count($data['data']['alacarte']);
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount']=count($arrExperience);
 			} else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 			}
 		}
 		else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 		}
 		
