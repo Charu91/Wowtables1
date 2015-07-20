@@ -107,7 +107,7 @@ class CollectionTags {
             $data = array();
 
             //query to read the details of a collection
-            $queryResult=DB::table('tags as t')                 
+            $queryResult = DB::table('tags as t')                 
                             ->leftJoin('media_resized_new as mrn1', function($join) {
                                                 $join->on('mrn1.media_id', '=', 't.media_id')
                                                      ->where('mrn1.image_type', '=' , 'mobile_listing_ios_experience');
@@ -115,25 +115,25 @@ class CollectionTags {
                             ->leftJoin('media_resized_new as mrn2', function($join) {
                                                 $join->on('mrn2.media_id', '=', 't.media_id')
                                                      ->where('mrn2.image_type', '=', 'mobile_listing_android_experience');
-                        })
-                    ->where('status','=','available')
-                    ->select('t.id','t.name','t.status','t.description',
-                            'mrn1.file as ios_image','mrn2.file as android_image',
-                            't.slug'                               
-                            )   
-                    ->first();
+                                })
+                            ->where('status','=','available')
+                            ->select('t.id','t.name','t.status','t.description',
+                                    'mrn1.file as ios_image','mrn2.file as android_image',
+                                    't.slug'                               
+                                )   
+                            ->first();
 
             if($queryResult) {
                  $data = array(
-                                    'id'          => $row->id,
-                                    'name'        => $row->name,
-                                    'status'      => (empty($row->status)) ? "" : $row->status,
-                                    'description' => (empty($row->description)) ? "" : $row->description,
-                                    'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
-                                    'image' => array(
-                                                        'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-                                                        'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
-                                                    );
+                                'id'          => $row->id,
+                                'name'        => $row->name,
+                                'status'      => (empty($row->status)) ? "" : $row->status,
+                                'description' => (empty($row->description)) ? "" : $row->description,
+                                'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
+                                'image' => array(
+                                                'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+                                                'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+                                            )
                                 );
             }
 
