@@ -171,10 +171,6 @@ body .time_tab.active {
     color:#333;
 }
 
-#myselect_person{
-    display:none;
-}
-
 .datepicker.datepicker-inline {
     background-color:#eee;
     border:1px solid #ddd

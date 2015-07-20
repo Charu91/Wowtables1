@@ -403,13 +403,17 @@ $(document).ready(function() {
         e.preventDefault();
         $(".cancel_loader").show();
          var reserv_typee = $('#reserv_type').val();
-            
+         var user_id = $('#cancel_user_id').val();
+         var added_by = $('#added_by').val();
+
             $.ajax({
                 url: "/orders/cancel_reservation",
                 type: "post",
                 data: {
                     reserv_id:   reserv,
-                    reserv_type: reserv_typee 
+                    reserv_type: reserv_typee,
+                    user_id: user_id,
+                    added_by: added_by
                 },
                 success: function(e) {
                     if (e == 1) {
@@ -421,7 +425,7 @@ $(document).ready(function() {
             })
     });
     var dtp = "";
-    $("#myres_div #change_reservation").click(function() {
+    $("#myres_div #change_reservation").click(function() { //alert('called');
         $("#last_reserv_date").val();
         $("#last_reserv_time").val();
         $("#last_reserv_outlet").val();
@@ -457,13 +461,14 @@ $(document).ready(function() {
                     $("#myselect_person").html('<img src="/images/loading.gif">');
                     },
             success: function(data) {
-                
+                //console.log("sad = "+data);
                 $('#party_edit1').show();
                var prev_reserv_date = data["convert_date"];
                var reservation_time = data["convert_time"];
                var no_of_persons    = data["no_of_persons"];
                var last_reservation_date = data["last_reservation_date"];
                var last_reservation_time = data["last_reservation_time"];
+               var last_reservation_giftcard_id = data["giftcard_id"];
                $('#myselect_person').text(no_of_persons);
                $('#myselect_date').text(prev_reserv_date);
                $('#myselect_time').text(reservation_time);
@@ -473,6 +478,7 @@ $(document).ready(function() {
                $('#last_reservation_date').val(last_reservation_date);
                $('#last_reservation_time').val(reservation_time);
                $('#last_reservation_party_size').val(no_of_persons);
+               $('#last_reservation_giftcard_id').val(last_reservation_giftcard_id);
 
                if(reserve_type == 'experience')
                {

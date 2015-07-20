@@ -254,7 +254,7 @@ class ProfileController extends Controller {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 						$message->to('concierge@wowtables.com')->subject('Rewards Request');
-						//$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+						$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
 				});
 				if($sent)
 				{

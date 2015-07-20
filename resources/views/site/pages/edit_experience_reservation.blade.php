@@ -113,6 +113,9 @@
                         <?php if(isset($post_data['final_reservation_time']) && $post_data['final_reservation_time'] != ""){ ?>
                             <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_reservation_time'];?></div>
                         <?php } ?>
+                            <?php if(isset($post_data['final_giftcard_id']) && $post_data['final_giftcard_id'] != ""){ ?>
+                            <div style="margin: 5px 0; color: #000"><?php echo $post_data['final_giftcard_id'];?></div>
+                        <?php } ?>
                     </td>
                 </tr>
                 <?php } ?>

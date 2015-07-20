@@ -516,13 +516,17 @@
                         });
                         $("body").delegate('#cancel_reservation','click',function() {
                             reserv = $(this).parent().next().val();
+                            var user_id = $("#user_id").val();
                             $("#reserv_type").remove();
-                            $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="experience">')
+                            $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="experience">');
+                            $("#cancel_user_id").val(user_id);
                         });
                         $("body").delegate('#ac_cancel_reservation','click',function() {
                             reserv = $(this).parent().next().val();
+                            var user_id = $("#user_id").val();
                             $("#reserv_type").remove();
-                            $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="alacarte">')
+                            $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="alacarte">');
+                            $("#cancel_user_id").val('user_id');
                         });
                         hidden_parram = 0;
                         $("body").delegate('#party_edit','click',function() {
@@ -573,13 +577,17 @@
                             e.preventDefault();
                             $(".cancel_loader").show();
                             var reserv_typee = $('#reserv_type').val();
+                            var user_id = $('#cancel_user_id').val();
+                            var added_by = $('#added_by').val();
 
                             $.ajax({
                                 url: "/orders/cancel_reservation",
                                 type: "post",
                                 data: {
                                     reserv_id:   reserv,
-                                    reserv_type: reserv_typee
+                                    reserv_type: reserv_typee,
+                                    user_id: user_id,
+                                    added_by: added_by
                                 },
                                 success: function(e) {
                                     if (e == 1) {
@@ -592,10 +600,10 @@
                         });
                         var dtp = "";
                         $("body").delegate('#change_reservation','click',function() { //alert("asd");
-                            $("#last_reserv_date").val();
-                            $("#last_reserv_time").val();
-                            $("#last_reserv_outlet").val();
-                            $("#last_reserv_party_size").val();
+                            $("#last_reserv_date").val('');
+                            $("#last_reserv_time").val('');
+                            $("#last_reserv_outlet").val('');
+                            $("#last_reserv_party_size").val('');
                             var bd_dates = new Array;
                             var bd_time = new Array;
                             var bd_time_end = new Array;
@@ -617,6 +625,7 @@
                             cur_minute = now.getMinutes();
                             $(".cant_change").addClass("hidden");
                             var g = 1;
+                            var user_id = $("#user_id").val();
                             $.ajax({
                                 type: "GET",
                                 dataType: "json",
@@ -643,6 +652,7 @@
                                     $('#last_reservation_date').val(last_reservation_date);
                                     $('#last_reservation_time').val(reservation_time);
                                     $('#last_reservation_party_size').val(no_of_persons);
+                                    $('#change_user_id').val(user_id);
 
                                     if(reserve_type == 'experience')
                                     {
@@ -1980,6 +1990,8 @@
                             last_reservation_date =$('#last_reservation_date').val();
                             last_reservation_time =$('#last_reservation_time').val();
                             last_reservation_party_size =$('#last_reservation_party_size').val();
+                            user_id =$('#change_user_id').val();
+                            added_by =$('#added_by').val();
 
                             var addonsArray = {};
                             $('.myaddonselect').each(function(){
@@ -2068,7 +2080,9 @@
                                             last_reservation_date: last_reservation_date,
                                             last_reservation_time: last_reservation_time,
                                             last_reservation_party_size: last_reservation_party_size,
-                                            old_area_name:old_area_name
+                                            old_area_name:old_area_name,
+                                            user_id : user_id,
+                                            added_by : added_by
 
                                         },
                                         success: function(e) {

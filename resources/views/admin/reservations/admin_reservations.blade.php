@@ -250,6 +250,8 @@
                             <input type="hidden" value="" id="last_reservation_date" name="last_reservation_date">
                             <input type="hidden" value="" id="last_reservation_time" name="last_reservation_time">
                             <input type="hidden" value="" id="last_reservation_party_size" name="last_reservation_party_size">
+                            <input type="hidden" value="" id="change_user_id" name="change_user_id">
+                            <input type="hidden" value="admin" id="added_by" name="added_by">
                             <p id="cant_change_table" class="hidden">To make changes to your reservation for this evening please call our concierge or the restaurant directly.</p>
                             <p id="cant_change_table" class="hidden cant_change">Please make a change to confirm. If no change is required, please click on cancel.</p>
                             <a aria-hidden="true" data-dismiss="modal" id="cancel" class="btn btn-warning hidden cant_change" href="javascript:">Cancel</a>
@@ -576,6 +578,8 @@
                             <a type="button" class="btn btn-warning" href="javascript:" id='cancel_current'>Yes, Cancel It</a>
                             <a type="button" class="btn btn-warning close" data-dismiss="modal" style="color:#000;text-shadow:0 0 0 #000">Nevermind</a>
                             <input type="hidden" name='reserv_id'>
+                            <input type="hidden" value="" id="cancel_user_id" name="cancel_user_id">
+                            <input type="hidden" value="user" id="added_by" name="added_by">
                         </div>
                     </div>
                 </div>
