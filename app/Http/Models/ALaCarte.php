@@ -379,6 +379,7 @@ use Config;
 						->where('vl.vendor_id',$vendorID)
 						->where('v.status','Publish')
 						->where('vl.status','Active')
+						->where('vl.a_la_carte','=', 1)
 						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
 						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
@@ -416,13 +417,13 @@ use Config;
 											);
 			}
 			if(array_key_exists('data', $data)) { 
-				$data['alacarteCount']=count($data['data']['alacarte']);
+				$data['alacarteCount'] = count($data['data']['alacarte']);
 				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
 				$data['experienceCount']=count($data['data']['experience']);
 			} else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
+				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
 				$data['experienceCount'] = 0;
 				$data['no_result_msg'] = 'No matching result found.';
 			}
