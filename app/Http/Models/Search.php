@@ -519,7 +519,7 @@
 						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
 						->where('v.name','LIKE',"%$matchString%")
 						->where('vl.status', 'Active')
-						->where('vl.a_la_carte','=', 1)
+						//->where('vl.a_la_carte','=', 1)
 						->select('v.name', 'v.id as vendor_id',
 								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
 						->groupBy('vl.vendor_id');
