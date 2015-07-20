@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
+use Config;
 
 /**
  * Model class AppVersion.
