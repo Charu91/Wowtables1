@@ -23,6 +23,22 @@ class AppVersion {
 	public static function updateAppVersion($data) {
 
 		$accessToken = (array_key_exists('HTTP_X_WOW_TOKEN', $_SERVER)) ? $_SERVER['HTTP_X_WOW_TOKEN']:"";
+
+		if(empty($accessToken)) {
+			$iOSVersion = Config::get('constants.MIN_SUPPORTED_IOS_VERSION');
+			$androidVersion = Config::get('constants.MIN_SUPPORTED_ANDROID_VERSION');
+
+			if($data['deviceType'] == 'iOS' && version_compare($data['appVersion'], $iOSVersion) >= 0) {					
+						return TRUE;
+			}
+			else if ($data['deviceType'] == 'Android' && version_compare($data['appVersion'], $androidVersion) >= 0) {				
+						return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+
 		$accessDevice = (array_key_exists('HTTP_X_WOW_DEVICE', $_SERVER)) ? $_SERVER['HTTP_X_WOW_DEVICE']:"";
 		//$appVersion = (array_key_exists('HTTP_X_WOW_VERSION', $_SERVER)) ? $_SERVER['HTTP_X_WOW_VERSION']:"";
 					
