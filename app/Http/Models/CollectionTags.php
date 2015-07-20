@@ -131,7 +131,7 @@ class CollectionTags {
                                 'description' => (empty($queryResult->description)) ? "" : $queryResult->description,
                                 'slug'        => (empty($queryResult->slug)) ? "" : $queryResult->slug,                                                            
                                 'image' => array(
-                                                'mobile_listing_ios_experience' => (empty($queryResult>ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->ios_image,
+                                                'mobile_listing_ios_experience' => (empty($queryResult->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->ios_image,
                                                 'mobile_listing_android_experience' => (empty($queryResult->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->android_image,
                                             )
                                 );
