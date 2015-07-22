@@ -46,7 +46,7 @@ class CollectionTags {
                                                             'id'          => $row->id,
                                                             'name'        => $row->name,
                                                             'status'      => (empty($row->status)) ? "" : $row->status,
-                                                            'description' => (empty($row->description)) ? "" : $row->description,
+                                                            'description' => (empty($row->description)) ? "" : preg_replace('/<[^>]*>/', '', $row->description),
                                                             'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
                                                             'image' => array(
                                                                                 'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
