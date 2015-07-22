@@ -132,7 +132,7 @@ class AdminReservationsController extends Controller{
                 'MERGE17'=>'Admin added account',
                 'PHONE'=>   isset($phone) ? $phone: '',
             );
- 
+
             $this->mailchimp->lists->subscribe($this->listId, ["email"=>$createPasswordRequest['email']],$merge_vars,"html",false,true );
 
             $my_email = $createPasswordRequest['email'];
