@@ -133,7 +133,7 @@ class AdminReservationsController extends Controller{
                 'PHONE'=>   isset($phone) ? $phone: '',
             );
 
-            $this->mailchimp->lists->subscribe($this->listId, array("email"=>$createPasswordRequest['email']),$merge_vars,"html",false,true );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$createPasswordRequest['email']],$merge_vars,"html",false,true );
 
             $my_email = $createPasswordRequest['email'];
 
