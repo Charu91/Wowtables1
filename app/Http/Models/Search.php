@@ -190,7 +190,7 @@
 								->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
 								->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
-								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')								
 								//->leftJoin('locations','locations.id','=','vl.location_id')
 								->leftJoin('locations','locations.id','=','vla.area_id')
 								->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
@@ -212,7 +212,7 @@
 											'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
 											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image','pp.taxes', 
 											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
-											'locations.name as location_name');
+											'locations.name as location_name', 'vla.latitude','vla.longitude');
 
 			//echo $experienceQuery->toSql();
 			//adding filter for cuisines if cuisines are present
@@ -293,6 +293,10 @@
 													'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
 													'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
 													'image' => (array_key_exists($row->id, $arrImage))? $arrImage[$row->id] : "",
+													'coordinates' => array(
+																			'latitude' => (is_null($row->latitude)) ? "" : $row->latitude,
+																			'longitude' => (is_null($row->longitude)) ? "" : $row->longitude
+																		   ),
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
@@ -516,11 +520,11 @@
 		$data = array();	
 
 		$queryResult = DB::table('vendors as v')
-						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
+						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')						
 						->where('v.name','LIKE',"%$matchString%")
 						->where('vl.status', 'Active')
 						//->where('vl.a_la_carte','=', 1)
-						->select('v.name', 'v.id as vendor_id',
+						->select('v.name', 'v.id as vendor_id',							
 								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
 						->groupBy('vl.vendor_id');
 						//->get();
@@ -542,7 +546,7 @@
 				$data[] = array(
 								'id' => $row->vendor_id,
 								'name' => $row->name,
-								'branches' => $row->branch_count,
+								'branches' => $row->branch_count,								
 							);
 			}
 		}

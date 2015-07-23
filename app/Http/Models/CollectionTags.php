@@ -40,6 +40,21 @@ class CollectionTags {
         	 				)   
         	 		->get();
 
+                    // if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
+                    //         $cityID = $_SERVER['HTTP_X_WOW_CITY'];
+
+                    //       $queryResult =  $queryResult->leftJoin('vendor_locations_tags_map as vltm', 'vltm.tag_id', '=', 't.id')
+                    //                                   ->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vltm.vendor_location_id')
+                    //                                   ->where('vla.city_id', '=', $cityID)
+                    //                                   ->groupBy('t.id') 
+                    //                                   ->get();
+                    //                              //echo $queryResult->toSql(); die("Noo"); 
+                    //     }
+                    // else {
+                    //         $queryResult =  $queryResult->get();
+                    // }
+
+
                     if($queryResult) {
                         foreach($queryResult as $row) {
                             $data[] = array(
