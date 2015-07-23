@@ -377,7 +377,7 @@ use Config;
 													  ->where('mrn1.image_type', '=', 'mobile_listing_ios_alacarte');
 						})            
 						->where('vl.vendor_id',$vendorID)
-						->where('v.status','Publish')
+						//->where('v.status','Publish')
 						->where('vl.status','Active')
 						->where('vl.a_la_carte','=', 1)
 						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
@@ -477,6 +477,7 @@ use Config;
 							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
 							->where('vl.vendor_id', $vendorID)							
 							->where('p.status', 'Publish')
+							->where('pvl.status','Active')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
 							->where('mrn2.image_type', 'mobile_listing_android_experience')						
 							->select(
