@@ -520,11 +520,11 @@
 		$data = array();	
 
 		$queryResult = DB::table('vendors as v')
-						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')
+						->join('vendor_locations as vl', 'vl.vendor_id', '=', 'v.id')						
 						->where('v.name','LIKE',"%$matchString%")
 						->where('vl.status', 'Active')
 						//->where('vl.a_la_carte','=', 1)
-						->select('v.name', 'v.id as vendor_id',
+						->select('v.name', 'v.id as vendor_id',							
 								 DB::raw('COUNT(vl.vendor_id) as branch_count'))
 						->groupBy('vl.vendor_id');
 						//->get();
@@ -546,7 +546,7 @@
 				$data[] = array(
 								'id' => $row->vendor_id,
 								'name' => $row->name,
-								'branches' => $row->branch_count,
+								'branches' => $row->branch_count,								
 							);
 			}
 		}
