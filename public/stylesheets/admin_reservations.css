@@ -194,6 +194,7 @@ body .time_tab.active {
 
 /*new css changes*/
 #mediaModal .modal-content{width: auto;}
+#markdownmodal .modal-content{width: auto;}
 #mediaModal .modal-footer{border-top: 0px solid #e5e5e5;}
 #addAlacarteModal .modal-header{background-color:#EAB703;}
 .deal-bottom-box .tab-content hr{margin-bottom:8px !important;}
