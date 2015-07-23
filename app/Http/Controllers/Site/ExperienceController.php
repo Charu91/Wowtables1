@@ -932,7 +932,7 @@ class ExperienceController extends Controller {
                                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
+                                $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
                             });
 
                             //echo "userid == ".$userID;
