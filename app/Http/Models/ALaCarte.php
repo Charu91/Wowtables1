@@ -391,9 +391,17 @@ use Config;
 								'mrn1.file as ios_image',
 								'mrn2.file as android_image'
 								)
-						->groupBy('vl.id')
-						->get();  
-					//echo $queryResult->toSql();	die();
+						->groupBy('vl.id');
+						//->get();  
+					
+		//checking if city has been passed in 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
+		}
+		
+		//executing the query
+		$queryResult = $queryResult->get();
 		
 		//array to store the information from the DB
 		$data = array();
@@ -491,8 +499,17 @@ use Config;
 									'pp.post_tax_price','pp.price',
 									'pp.taxes', 'pt.type_name as price_type'
 									)
-							->groupBy('p.id')
-							->get();							
+							->groupBy('p.id');
+						//	->get();
+
+		//checking if city has been passed in 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
+		}
+
+		//executing the query
+		$queryResult = $queryResult->get();
 							
 		//array to store the information from the DB
 		$data = array();
