@@ -199,9 +199,6 @@ body .time_tab.active {
 #mediaModal .modal-content{width: auto;}
 #mediaModal .modal-footer{border-top: 0px solid #e5e5e5;}
 #addAlacarteModal .modal-header{background-color:#EAB703;}
-.deal-bottom-box .tab-content hr{margin-bottom:8px !important;}
-.deal-detail .widget.price-box ul li:first-child{display:none;}
-.deal-detail .widget.price-box ul li:last-child{margin-bottom:-20px;}
 .panel-body #ac_time .actives{left:0px !important;}
 .panel-body #ac_time .btn.active, .btn:active{ -webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.125); box-shadow: inset 0 0px 0px rgba(0,0,0,.125);}
 .panel-body #ac_time .btn.btn-warning{border: 0px solid #eea236;}
@@ -213,3 +210,7 @@ header .head-links ul.navbar-nav li a{font-family: 'PT Sans',sans-serif !importa
 #abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin{font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;}
 .btn_city{font-family: 'PT Sans',sans-serif !important;}
 header .head-links ul li a{font-family: 'PT Sans',sans-serif !important;}
+.deal-detail .deal-bottom-box .tab-pane hr{margin-bottom: 8px !important;}
+.deal-detail-right .price-box ul li, .deal-detail-right .terms-box ul li{margin-bottom:10px;}
+.deal-detail-right .price-box h3{font-size:16px !important; font-weight:normal !important; }
+body.home{font-family: 'PT Sans',sans-serif !important;}
