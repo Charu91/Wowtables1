@@ -105,6 +105,7 @@ class RestaurantLocations extends VendorLocations{
                 'la.name AS area',
                 'la.id as area_id',
                 'vl.pricing_level',
+                'vladd.latitude','vladd.longitude',
                 //'mr.file AS image',
                 //'m.alt AS image_alt',
                 //'m.title AS image_title',
@@ -414,6 +415,10 @@ class RestaurantLocations extends VendorLocations{
 										'rating' => $row->rating,
 										'flag_name' => $row->flag_name,
 										'cuisine' =>  $row->cuisine,
+                                        'coordinates' => array(
+                                                                            'latitude' => (is_null($row->latitude)) ? "" : $row->latitude,
+                                                                            'longitude' => (is_null($row->longitude)) ? "" : $row->longitude
+                                                                           ),
 										'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "" 
 									);
 									
