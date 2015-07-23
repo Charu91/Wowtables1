@@ -970,7 +970,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
 			});
 		}
 
