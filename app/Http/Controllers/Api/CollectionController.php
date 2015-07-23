@@ -49,7 +49,7 @@ class CollectionController extends Controller {
 						);
 		//reading the alacarte details 
 		$this->listings->fetchListings($filters);
-        $arrAlacarte = $this->listings->arr_result;
+        $arrAlacarte = (is_null($this->listings->arr_result)) ? array():$this->listings->arr_result;
 
         //reading details of the experiences
         $arrExperiences = $this->experienceList->findMatchingExperience($filters);
@@ -59,8 +59,8 @@ class CollectionController extends Controller {
 		$arrResponse['data'] = CollectionTags::getCollectionTagDetail($tagID);
 		$arrResponse['data']['alacarte'] = $arrAlacarte;
 		$arrResponse['data']['alacarteResultCount']  = count($arrAlacarte);
-		$arrResponse['data']['experience'] = $arrExperiences['data'];
-		$arrResponse['data']['experienceResultCount'] = $arrExperiences['resultCount'];				
+		$arrResponse['data']['experience'] = (array_key_exists('data', $arrExperiences)) ? $arrExperiences['data'] : array();
+		$arrResponse['data']['experienceResultCount'] = (array_key_exists('resultCount', $arrExperiences)) ? $arrExperiences['resultCount']:0;				
 		$arrResponse['no_result_msg'] = 'No matching data found.';
 
 		return response()->json($arrResponse,200);      	
