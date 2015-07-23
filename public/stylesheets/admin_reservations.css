@@ -191,3 +191,17 @@ body .time_tab.active {
 .datepicker table td.day.new{
     visibility:hidden !important;
 }
+
+/*new css changes*/
+#mediaModal .modal-content{width: auto;}
+#mediaModal .modal-footer{border-top: 0px solid #e5e5e5;}
+#addAlacarteModal .modal-header{background-color:#EAB703;}
+.deal-bottom-box .tab-content hr{margin-bottom:8px !important;}
+.deal-detail .widget.price-box ul li:first-child{display:none;}
+.deal-detail .widget.price-box ul li:last-child{margin-bottom:-20px;}
+.panel-collapse.collapse.in .panel-body #time .pull-right.actives{left:0px;}
+.panel-collapse.collapse.in .panel-body #time .pull-right.actives #dinner{-webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.125); box-shadow: inset 0 0px 0px rgba(0,0,0,.125);}
+body .time_tab.active{border:0px solid transparent !important;}
+body .time_tab.active:hover{background: #c99f06!important;}
+#ac_hours #dinner_tab .ac_time{background-color:#696969; margin: 3px 6px;   border-radius: 2px;}
+#ac_hours #dinner_tab .ac_time a{color:#fff !important; text-decoration:none !important; font-size:12px !important; padding: 0px 5px;}
