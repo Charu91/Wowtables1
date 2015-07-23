@@ -49,7 +49,7 @@ class CollectionController extends Controller {
 						);
 		//reading the alacarte details 
 		$this->listings->fetchListings($filters);
-        $arrAlacarte = $this->listings->arr_result;
+        $arrAlacarte = (is_null($this->listings->arr_result)) ? array():$this->listings->arr_result;
 
         //reading details of the experiences
         $arrExperiences = $this->experienceList->findMatchingExperience($filters);
