@@ -59,8 +59,8 @@ class CollectionController extends Controller {
 		$arrResponse['data'] = CollectionTags::getCollectionTagDetail($tagID);
 		$arrResponse['data']['alacarte'] = $arrAlacarte;
 		$arrResponse['data']['alacarteResultCount']  = count($arrAlacarte);
-		$arrResponse['data']['experience'] = $arrExperiences;
-		$arrResponse['data']['experienceResultCount'] = count($arrExperiences);;				
+		$arrResponse['data']['experience'] = $arrExperiences['data'];
+		$arrResponse['data']['experienceResultCount'] = $arrExperiences['resultCount'];				
 		$arrResponse['no_result_msg'] = 'No matching data found.';
 
 		return response()->json($arrResponse,200);      	
