@@ -165,12 +165,17 @@
 
         </div>
     </div>
-
+    <input type="hidden" name="total_amount" id="total_amount" value="{{$result['total_amount']}}" />
+    <input type="hidden" name="experience_title" id="experience_title" value="{{$result['experience_title']}}" />
+    <input type="hidden" name="restaurant_name" id="restaurant_name" value="{{$result['restaurant_name']}}" />
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol ) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
     </script>
     <script type="text/javascript">
+        var total_amount = $("total_amount").val();
+        var experience_title = $("experience_title").val();
+        var restaurant_name = $("restaurant_name").val();
         try{
             var pageTracker = _gat._getTracker("UA-1717133-12");
             pageTracker._trackPageview();

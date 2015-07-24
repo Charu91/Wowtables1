@@ -471,6 +471,15 @@ $(document).ready(function(){
 </script> 
 </head>
 <body>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PQHMSR"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PQHMSR');</script>
+<!-- End Google Tag Manager -->
 <?php
 
 $uname = (isset($user_data['full_name']) && $user_data['full_name']!=''?$user_data['full_name']:$user_data['username']);
@@ -968,23 +977,23 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
 
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav block-list foot-menu">
-                  <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
-                  <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
-                  <li><a href="#">Careers</a></li>
-                  <li><a href="#">Partner With Us</a></li>
-                  <li><a href="#">How It Works</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
-          <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
-                  <li><a href="#">Corporate Solutions</a></li>
-                  <li><a href="#">Parties & Private Events</a></li>
-                  <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
-                  <li><a href="#">Terms of Use</a></li>
-                  <li><a href="#">Privacy Statement</a></li>
-                </ul>
+                  <ul class="nav navbar-nav block-list foot-menu">
+                      <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
+                      <li><a href="http://blog.gourmetitup.com">Blog</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/careers">Careers</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/restaurant-partnerships">Restaurateurs</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/advertising">Brand Partnerships</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
+                      <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
+                      <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
+                  </ul>
               </div><!-- /.navbar-collapse -->
             </nav>
           </div>
