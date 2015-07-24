@@ -22,6 +22,8 @@ class CollectionTags {
      */
         public static function readAllCollection() { 
 
+            $data = array();
+
         	$queryResult=DB::table('tags as t')        	 		
         	 		//->leftjoin('media_resized_new as mrn','t.media_id','=','mrn.id')
         	 		->leftJoin('media_resized_new as mrn1', function($join) {
@@ -31,33 +33,48 @@ class CollectionTags {
                     ->leftJoin('media_resized_new as mrn2', function($join) {
                                                 $join->on('mrn2.media_id', '=', 't.media_id')
                                                      ->where('mrn2.image_type', '=', 'mobile_listing_android_experience');
-                        })
-                    ->where('status','=','available')
+                        })                                        
+                    ->where('t.status','=','available')
         	 		->select('t.id','t.name','t.status','t.description',
         	 				  //DB::Raw('IFNULL(mrn.file,"") AS file',
                             'mrn1.file as ios_image','mrn2.file as android_image',
                             't.slug'                               
-        	 				)   
-        	 		->get();
+        	 				);   
+        	 		//->get();
 
-                    // if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
-                    //         $cityID = $_SERVER['HTTP_X_WOW_CITY'];
+                    if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) {
+                            $cityID = $_SERVER['HTTP_X_WOW_CITY'];
 
-                    //       $queryResult =  $queryResult->leftJoin('vendor_locations_tags_map as vltm', 'vltm.tag_id', '=', 't.id')
-                    //                                   ->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vltm.vendor_location_id')
-                    //                                   ->where('vla.city_id', '=', $cityID)
-                    //                                   ->groupBy('t.id') 
-                    //                                   ->get();
-                    //                              //echo $queryResult->toSql(); die("Noo"); 
-                    //     }
-                    // else {
-                    //         $queryResult =  $queryResult->get();
-                    // }
+                          $queryResult1 =  $queryResult//->leftJoin('vendor_locations_tags_map as vltm', 'vltm.tag_id', '=', 't.id')
+                                                      //->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vltm.vendor_location_id')
+                                                      
+                                                      ->leftJoin('product_tag_map as ptm', 'ptm.tag_id', '=', 't.id')
+                                                      ->leftJoin('product_vendor_locations as pvl', 'pvl.product_id', '=', 'ptm.product_id')
+                                                      ->leftJoin('vendor_location_address as vladd','vladd.vendor_location_id', '=', 'pvl.vendor_location_id')                                                      
+                                                      //->where('vla.city_id', '=', $cityID)
+                                                      ->where('vladd.city_id', '=', $cityID)
+                                                      ->groupBy('t.id') 
+                                                      ->get();
+                                                 //echo $queryResult->toSql(); die("Noo"); 
 
+                            $queryResult2 =  $queryResult->leftJoin('vendor_locations_tags_map as vltm', 'vltm.tag_id', '=', 't.id')
+                                                      ->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vltm.vendor_location_id')
+                                                      
+                                                      //->leftJoin('product_tag_map as ptm', 'ptm.tag_id', '=', 't.id')
+                                                      //->leftJoin('product_vendor_locations as pvl', 'pvl.product_id', '=', 'ptm.product_id')
+                                                      //->leftJoin('vendor_location_address as vladd','vladd.vendor_location_id', '=', 'pvl.vendor_location_id')                                                      
+                                                      ->where('vla.city_id', '=', $cityID)
+                                                      //->where('vladd.city_id', '=', $cityID)
+                                                      ->groupBy('t.id') 
+                                                      ->get();
+                                                 //echo $queryResult->toSql(); die("Noo");
 
-                    if($queryResult) {
-                        foreach($queryResult as $row) {
-                            $data[] = array(
+                            $arrCollections = array();
+                            foreach($queryResult1 as $row) {
+
+                                $arrCollections[] = $row->id;
+
+                                $data[] = array(
                                                             'id'          => $row->id,
                                                             'name'        => $row->name,
                                                             'status'      => (empty($row->status)) ? "" : $row->status,
@@ -68,11 +85,52 @@ class CollectionTags {
                                                                                 'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
                                                                              )
                                                         );
+                            }
+
+                            foreach($queryResult2 as $row) {
+
+                                if(!array_key_exists($row->id, $arrCollections) ) {
+
+                                    $data[] = array(
+                                                        'id'          => $row->id,
+                                                        'name'        => $row->name,
+                                                        'status'      => (empty($row->status)) ? "" : $row->status,
+                                                        'description' => (empty($row->description)) ? "" : preg_replace('/<[^>]*>/', '', $row->description),
+                                                        'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
+                                                        'image' => array(
+                                                                        'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+                                                                        'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+                                                                    )
+                                                            );
+                                }
+                                    
+                            }
+                               
                         }
-                    }
+                            
                     else {
-                        $data[] = array();
+                            $queryResult =  $queryResult->get();
+
+                            if($queryResult) {
+                                foreach($queryResult as $row) {
+                                    $data[] = array(
+                                                                    'id'          => $row->id,
+                                                                    'name'        => $row->name,
+                                                                    'status'      => (empty($row->status)) ? "" : $row->status,
+                                                                    'description' => (empty($row->description)) ? "" : preg_replace('/<[^>]*>/', '', $row->description),
+                                                                    'slug'        => (empty($row->slug)) ? "" : $row->slug,                                                            
+                                                                    'image' => array(
+                                                                                        'mobile_listing_ios_experience' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+                                                                                        'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+                                                                                     )
+                                                                );
+                                }
+                            }
+                    
                     }
+
+
+                    
 
                             
             $arrResponse['data']=$data;      
