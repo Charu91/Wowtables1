@@ -187,6 +187,13 @@ if(isset($_REQUEST['gclid'])){
               <li><a href="https://instagram.com/WowTables/" target="blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
             </ul>            
           </div>
+          <div class="col-md-3 col-sm-6">
+            <h4 class="foot-widget-title">Download our app from</h4>
+            <ul class="inline-list socialicons">
+              <li><a href="https://itunes.apple.com/app/id983901046" target="blank"><img src="/assets/img/apple.jpg" alt="Wowtables Apple iTunes"></a></li>
+              <li><a href="https://play.google.com/store/apps/details?id=com.wowtables.android&hl=en" target="blank"><img src="/assets/img/android.jpg" alt="Wowtables Andriod Playstore"></a></li>
+            </ul>
+          </div>
         </div>
       </div>
 
