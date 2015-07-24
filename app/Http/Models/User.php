@@ -445,12 +445,27 @@ class User {
                 												'full_name' => $data['full_name']
             								));
 
+            $cityarray = DB::select("SELECT name FROM locations WHERE id=".$data['location_id']);
+            $cityname = $cityarray[0]['name'];
+
             //Adding user membershipId to the database
             DB::table('user_attributes_varchar')->insert([
                'user_id' => $userInsertId,
                'user_attribute_id' => 7,
                'attribute_value' => '1'.str_pad($userInsertId, 6, '0', STR_PAD_LEFT),
            ]);
+
+            $registerarray = array(
+                'email' => $data['email'],
+                'city' => $cityname,
+                'phone_number' => $data['phone_number'],
+                'full_name' => $data['full_name']
+            );
+
+            Mail::send('emails.register', ['register'=> $registerarray], function($message) use ($registerarray)
+            {
+                $message->to('concierge@wowtables.com')->subject('New app registartion in '.$registerarray['city']);
+            });
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();
