@@ -90,10 +90,10 @@ class CustomValidator extends Validator {
 		$currentDay = date('Y-m-d');
 
 		$cutOffTime = date( "H:i", strtotime( Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION') ) );
-		//$value = date( "H:i", strtotime($value));
-		$currentTime = date( "H:i"); 
+		$value = date( "H:i", strtotime($value));
+		//$currentTime = date( "H:i"); 
 					
-		if($currentDay == $reservationDate && $cutOffTime <= $currentTime ) { 
+		if($currentDay == $reservationDate && $cutOffTime <= $value ) { 
 			// $currentTime = strtotime(date("H:i:s"));
 			// $cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
 		
