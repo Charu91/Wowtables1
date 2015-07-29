@@ -74,13 +74,13 @@ class CreateExperienceLocationRequest extends Request {
             }
         }*/
 
-        $rules['block_dates'] = 'array';
+        /*$rules['block_dates'] = 'array';
 
         if($this->has('block_dates') && is_array($this->get('block_dates'))){
             foreach($this->get('block_dates') as $key => $block_date){
-                $rules['block_dates'.$key] = 'date_format:Y-m-d';
+                $rules['block_dates'.$key] = 'required';
             }
-        }
+        }*/
 
         $rules['reset_time_range_limits'] = 'array';
 

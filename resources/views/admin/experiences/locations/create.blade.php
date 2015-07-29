@@ -155,57 +155,6 @@
                                 <th>Action</th>
                             </tr>
                             <tbody>
-                            @if( Input::old('reset_time_range_limits') )
-                                @foreach(Input::old('reset_time_range_limits') as $key => $time_range)
-                                    <tr>
-                                        <td>{!! Form::select('reset_time_range_limits['.$key.'][limit_by]',['Day'=>'Day','Date'=>'Date'],null,['class'=>'form-control time-range-limit-by']) !!}</td>
-                                        <td>
-                                            @if( Input::old('reset_time_range_limits')[$key]['limit_by'] == 'Day' )
-                                                {!! Form::select('reset_time_range_limits['.$key.'][day]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
-                                                {!! Form::text('reset_time_range_limits['.$key.'][date]',null,['style'=>'display:none;','class'=>'form-control block-time-range-date-picker']) !!}
-                                            @else
-                                                {!! Form::select('reset_time_range_limits['.$key.'][day]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['style'=>'display:none;','class'=>'form-control block-time-range-day-picker']) !!}
-                                                {!! Form::text('reset_time_range_limits['.$key.'][date]',null,['class'=>'form-control block-time-range-date-picker']) !!}
-                                            @endif
-                                        </td>
-                                        <td>{!! Form::checkbox('',null,true,['class'=>'form-control full-time-range-picker']) !!}</td>
-                                        <td>
-                                            @if( (Input::old('reset_time_range_limits')[$key]['from_time'] == '00:00:00' || Input::old('reset_time_range_limits')[$key]['from_time'] == '0:00:00' )  && ( Input::old('reset_time_range_limits')[$key]['to_time'] == '00:00:00' || Input::old('reset_time_range_limits')[$key]['to_time'] == '0:00:00') )
-                                                {!! Form::text('reset_time_range_limits['.$key.'][from_time]',null,['size'=>'2','class'=>'form-control block-from-time-picker','readonly'=>'']) !!}</td>
-                                        @else
-                                            {!! Form::text('reset_time_range_limits['.$key.'][from_time]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
-                                        @endif
-                                        <td>
-                                            @if( (Input::old('reset_time_range_limits')[$key]['from_time'] == '00:00:00' || Input::old('reset_time_range_limits')[$key]['from_time'] == '0:00:00' )  && ( Input::old('reset_time_range_limits')[$key]['to_time'] == '00:00:00' || Input::old('reset_time_range_limits')[$key]['to_time'] == '0:00:00') )
-                                                {!! Form::text('reset_time_range_limits['.$key.'][to_time]',null,['size'=>'2','class'=>'form-control block-to-time-picker','readonly'=>'']) !!}</td>
-                                        @else
-                                            {!! Form::text('reset_time_range_limits['.$key.'][to_time]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
-                                        @endif
-                                        <td>{!! Form::text('reset_time_range_limits['.$key.'][max_covers_limit]',null,['size'=>'2','class'=>'form-control']) !!}</td>
-                                        <td>
-                                            <a class="btn btn-danger delete-block-time-range">Remove</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td>{!! Form::select('reset_time_range_limits[0][limit_by]',['Day'=>'Day','Date'=>'Date'],'Day',['class'=>'form-control time-range-limit-by']) !!}</td>
-                                    <td>
-                                        {!! Form::select('reset_time_range_limits[0][day]',['mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday'],'Day',['class'=>'form-control block-time-range-day-picker']) !!}
-                                        {!! Form::text('reset_time_range_limits[0][date]',null,['style'=>'display:none;','class'=>'form-control block-time-range-date-picker']) !!}
-                                    </td>
-                                    <td>
-                                        {!! Form::checkbox('',null,false,['class'=>'form-control full-time-range-picker']) !!}
-                                    </td>
-                                    <td>{!! Form::text('reset_time_range_limits[0][from_time]',null,['size'=>'2','class'=>'form-control block-from-time-picker']) !!}</td>
-                                    <td>{!! Form::text('reset_time_range_limits[0][to_time]',null,['size'=>'2','class'=>'form-control block-to-time-picker']) !!}</td>
-                                    <td>{!! Form::text('reset_time_range_limits[0][max_covers_limit]',null,['size'=>'2','class'=>'form-control']) !!}</td>
-                                    <td>{!! Form::text('reset_time_range_limits[0][max_tables_limit]',null,['size'=>'2','class'=>'form-control']) !!}</td>
-                                    <td>
-                                        <a class="btn btn-danger delete-block-time-range">Remove</a>
-                                    </td>
-                                </tr>
-                            @endif
                             </tbody>
                         </table>
                     </div>

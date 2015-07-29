@@ -456,16 +456,27 @@ class User {
                'attribute_value' => '1'.str_pad($userInsertId, 6, '0', STR_PAD_LEFT),
            ]);
 
+            if($cityname == 'Mumbai' || $cityname == 'mumbai'){
+                $email_to = 'durgesh@wowtables.com';
+            } else if(($cityname == 'Pune' || $cityname == 'pune') || ($cityname == 'Delhi' || $cityname == 'delhi')){
+                $email_to = 'harshad@wowtables.com';
+            } else if($cityname == 'Bangalore' || $cityname == 'bangalore'){
+                $email_to = 'karishma@wowtables.com';
+            }
+
             $registerarray = array(
                 'email' => $data['email'],
                 'city' => $cityname,
                 'phone_number' => $data['phone_number'],
-                'full_name' => $data['full_name']
+                'full_name' => $data['full_name'],
+                'email_to' => $email_to
             );
+
 
             Mail::send('emails.register', ['register'=> $registerarray], function($message) use ($registerarray)
             {
-                $message->to('tech@wowtables.com')->subject('New app registartion in '.$registerarray['city']);
+                $message->to($registerarray['email_to'])->subject('New app registration in '.$registerarray['city']);
+                $message->cc(['kunal@wowtables.com', 'rooshabh@wowtables.com','concierge@wowtables.com']);
             });
 
             if($userInsertId){

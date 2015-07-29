@@ -337,8 +337,8 @@ class AdminExperienceLocationsController extends Controller {
      * Store a newly created resource in storage.
      *
      */
-    public function store()
-    { //CreateExperienceLocationRequest $createExperienceLocationRequest (needs to be checked)
+    public function store(CreateExperienceLocationRequest $createExperienceLocationRequest)
+    { // (needs to be checked)
         $input = $this->request->all();
         //dd($input);
         $experienceLocationCreate = $this->experienceLocation->create($input);
