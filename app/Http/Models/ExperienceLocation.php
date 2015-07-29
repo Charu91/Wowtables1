@@ -135,7 +135,7 @@ class ExperienceLocation {
         $pvlbtrl = 'DELETE FROM product_vendor_location_booking_time_range_limits WHERE product_vendor_location_id = ?';
         $pvll = 'DELETE FROM product_vendor_locations_limits WHERE product_vendor_location_id = ?';
 
-        DB::delete($pvl, [$productVendorLocationId]);
+        //DB::delete($pvl, [$productVendorLocationId]);
         DB::delete($pvlbs, [$productVendorLocationId]);
         DB::delete($pvlbls, [$productVendorLocationId]);
         DB::delete($pvlbtrl, [$productVendorLocationId]);
@@ -199,10 +199,10 @@ class ExperienceLocation {
                 'status' => $data['status']
             ];
 
-            $productVendorLocationLastId = DB::table('product_vendor_locations')->insertGetId($productVendorLocationInsertData);
+            $productVendorLocationLastId = DB::table('product_vendor_locations')->where('id',$productVendorLocationId)->update($productVendorLocationInsertData);
 
             if(!empty($data['limits'])){
-                $AttributesSaved = $this->saveReservationLimits($productVendorLocationLastId, $data['limits']);
+                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['limits']);
 
                 if($AttributesSaved['status'] !== 'success'){
                     $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
@@ -211,7 +211,7 @@ class ExperienceLocation {
             }
 
             if(!empty($data['schedules'])){
-                $schedulesSaved = $this->saveSchedules($productVendorLocationLastId, $data['schedules']);
+                $schedulesSaved = $this->saveSchedules($productVendorLocationId, $data['schedules']);
 
                 if($schedulesSaved['status'] !== 'success'){
                     $schedulesSaved['message'] = 'Could not create the Experience Location Schedules. Contact the system admin';
@@ -221,7 +221,7 @@ class ExperienceLocation {
 
             if(!empty($data['block_dates'])){
                 //echo "<pre>"; print_r($data['block_dates']);die;
-                $blockSchedulesSaved = $this->saveBlockDates($productVendorLocationLastId, $data['block_dates']);
+                $blockSchedulesSaved = $this->saveBlockDates($productVendorLocationId, $data['block_dates']);
 
                 if($blockSchedulesSaved['status'] !== 'success'){
                     $blockSchedulesSaved['message'] = 'Could not create the Experience Location Block Schedules. Contact the system admin';
@@ -230,7 +230,7 @@ class ExperienceLocation {
             }
 
             if(!empty($data['reset_time_range_limits'])){
-                $resetTimeRangeLimtsSaved = $this->saveTimeRangeLimits($productVendorLocationLastId, $data['reset_time_range_limits']);
+                $resetTimeRangeLimtsSaved = $this->saveTimeRangeLimits($productVendorLocationId, $data['reset_time_range_limits']);
 
                 if($resetTimeRangeLimtsSaved['status'] !== 'success'){
                     $resetTimeRangeLimtsSaved['message'] = 'Could not create the Experience Location Time Range Limits. Contact the system admin';
