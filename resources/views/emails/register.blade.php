@@ -10,10 +10,10 @@
 
 <body>
 Hi,<br>
-Email : <?php echo $register['email']?>
-Username : <?php echo $register['full_name']?>
-Phone No.: <?php echo $register['phone_number']?>
-City : <?php echo $register['city']?>
+Email : <?php echo $register['email']?><br/>
+Username : <?php echo $register['full_name']?><br/>
+Phone No.: <?php echo $register['phone_number']?><br/>
+City : <?php echo $register['city']?><br/>
 <br>Thanks & Regards<br>
 The WowTables Team
 </body>

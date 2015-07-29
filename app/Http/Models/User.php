@@ -464,7 +464,7 @@ class User {
 
             Mail::send('emails.register', ['register'=> $registerarray], function($message) use ($registerarray)
             {
-                $message->to('concierge@wowtables.com')->subject('New app registartion in '.$registerarray['city']);
+                $message->to('tech@wowtables.com')->subject('New app registartion in '.$registerarray['city']);
             });
 
             if($userInsertId){
