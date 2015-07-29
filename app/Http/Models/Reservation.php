@@ -26,7 +26,7 @@ class Reservation {
 	public  static $arrRules = array(
 									'reservationDate' => 'required|date|NotPreviousDate',
 									'reservationDay' => 'required',
-									'reservationTime' => 'required|OutsidePrevReservationTimeRange:reservationDate',
+									'reservationTime' => 'required|OutsidePrevReservationTimeRange:reservationDate|DayReservationCutOff',
 									'partySize' => 'required|integer',
 									'vendorLocationID' => 'required|not_in:0',
 									'guestName' => 'required|max:255',

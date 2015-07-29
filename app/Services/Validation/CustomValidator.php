@@ -86,18 +86,24 @@ class CustomValidator extends Validator {
 	 * @since	1.0.0
 	 */
 	public function validateDayReservationCutOff($attribute, $value, $parameter) {
+		$reservationDate = date( "Y-m-d", strtotime($this->data['reservationDate']));
 		$currentDay = date('Y-m-d');
+
+		$cutOffTime = date( "H:i", strtotime( Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION') ) );
+		$value = date( "H:i", strtotime($value));
+		//$currentTime = date( "H:i"); 
+					
+		if($currentDay == $reservationDate && $cutOffTime <= $value ) { 
+			// $currentTime = strtotime(date("H:i:s"));
+			// $cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
 		
-		if($currentDay == $value) {
-			$currentTime = strtotime(date("H:i:s"));
-			$cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
-		
-			$timeDiff = $currentTime - $cutOffTime;
+			// $timeDiff = $currentTime - $cutOffTime;
 				
-			if($timeDiff >= 0) {
-				return FALSE;
-			}
-		}				
+			// if($timeDiff >= 0) {
+			// 	return FALSE;
+			// }
+			return FALSE;
+		}			
 		return TRUE;
 	}
 

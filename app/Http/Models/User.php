@@ -446,7 +446,8 @@ class User {
             								));
 
             $cityarray = DB::select("SELECT name FROM locations WHERE id=".$data['location_id']);
-            $cityname = $cityarray[0]['name'];
+            //$cityname = $cityarray[0]['name'];
+            $cityname = $cityarray[0]->name;          
 
             //Adding user membershipId to the database
             DB::table('user_attributes_varchar')->insert([
