@@ -965,7 +965,7 @@ class RestaurantLocation extends VendorLocation{
             if(strtotime($date) > strtotime('midnight')){
                 $block_dates_insert_map[] = [
                     'vendor_location_id' => $vendor_location_id,
-                    'block_date' => $date
+                    'block_date' => date('Y-m-d',strtotime($date))
                 ];
             }
         }
