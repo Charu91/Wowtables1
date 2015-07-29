@@ -22,35 +22,50 @@ class CustomValidator extends Validator {
 		$reservationDate = $this->data['reservationDate'];
 		$accessToken = $this->data['access_token'];
 		$reservationID = (isset($this->data['reservationID'])) ? $this->data['reservationID']:0; 
-		//$reservationTime = $value;
-		$reservationTime = date("H:i A", strtotime($value));
-		$value = date("h:i A", strtotime($value));
+		$reservationTime = $value;
+		//$reservationTime = date("H:i A", strtotime($value));
+		//$value = date("h:i A", strtotime($value));
 		
 		$query = DB::table('reservation_details as rd')
 							->join('user_devices as ud','ud.user_id','=','rd.user_id')
 							->where('rd.reservation_date','=',$reservationDate)
 							->where('ud.access_token',$accessToken)
 							->whereIn('rd.reservation_status',['new', 'edited'])
-							->select('rd.id',
-									DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
+							->select('rd.id', 'rd.reservation_date', 'rd.reservation_time'
+									//DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
 									)
-							->orderBy('time_difference','ASC');
-		
-		if($reservationID > 0) {
-			$query->where('rd.id','!=',$reservationID);
-		}
-		
-		//executing the query
-		$queryResult = $query->get(); 
-		if($queryResult) {
-			$hourLimit = Config::get('constants.NEXT_RESERVATION_TIME_RANGE_LIMIT');
-			foreach($queryResult as $row) {
-				if($row->time_difference <= $hourLimit) {
-					return false;
-				}
-			}
-		}		
-		return true;		
+							->get();
+							//->orderBy('time_difference','ASC');
+
+		if(!empty($query))
+	      { 
+	        foreach ($query as $value) {
+	           //$reserv_date = $value->reservation_date;
+	           //$reserv_time = $value->reservation_time;
+
+	                  $last_reserv_date = date('Y-m-d',strtotime($value->reservation_date));
+	                  $last_reserv_time =  strtotime($value->reservation_time);
+
+	                  $last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);	                   
+	                  $last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
+	                  	
+	                  if($reservationDate == $last_reserv_date){
+	                        
+	                        $new_reserv = strtotime($reservationTime);
+	                        	                        
+	                        if( $new_reserv >= $last_reserv_time_2_hours_before && 
+	                        	$new_reserv <= $last_reserv_time_2_hours_after) {
+	                            //$success =1; 	                            
+	                            return FALSE;
+	                           //break; 
+	                        }
+	                    }
+
+	        }
+	      }
+
+		return TRUE;   
+			
 	}
 	
 	//-----------------------------------------------------------------
