@@ -337,7 +337,7 @@ class ExperienceLocation {
             if($date != ""){
                 $block_dates_insert_map[] = [
                     'product_vendor_location_id' => $product_vendor_location_id,
-                    'block_date' => $date
+                    'block_date' => date('Y-m-d',strtotime($date))
                 ];
             }
         }
