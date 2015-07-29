@@ -78,6 +78,7 @@ class Restaurant extends Vendor{
 
     public function update($restaurant_id, $data)
     {
+        //echo "id = ".$restaurant_id." , data = <pre>"; print_r($data); die;
         DB::beginTransaction();
 
         //$vendorTypeId = DB::table('vendor_types')->where('type','Restaurants')->pluck('id');
@@ -106,7 +107,7 @@ class Restaurant extends Vendor{
 
             DB::delete($query, [$restaurant_id]);*/
 
-            if(DB::table('vendors')->where('id', $restaurant_id)->update(array('name' => $data['name']))){
+            if(DB::table('vendors')->where('id', $restaurant_id)->update(array('name' => $data['name'],'status'=>$data['status'],'publish_time'=>$data['publish_date']." ".$data['publish_time']))){
                 DB::commit();
                 return [
                     'status' => 'success',
