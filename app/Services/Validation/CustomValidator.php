@@ -52,7 +52,7 @@ class CustomValidator extends Validator {
 	                  if($reservationDate == $last_reserv_date){
 	                        
 	                        $new_reserv = strtotime($reservationTime);
-	                        	                        
+
 	                        if( $new_reserv >= $last_reserv_time_2_hours_before && 
 	                        	$new_reserv <= $last_reserv_time_2_hours_after) {
 	                            //$success =1; 	                            
@@ -105,10 +105,10 @@ class CustomValidator extends Validator {
 		$currentDay = date('Y-m-d');
 
 		$cutOffTime = date( "H:i", strtotime( Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION') ) );
-		$value = date( "H:i", strtotime($value));
-		//$currentTime = date( "H:i"); 
+		//$value = date( "H:i", strtotime($value));
+		$currentTime = date( "H:i"); 
 					
-		if($currentDay == $reservationDate && $cutOffTime <= $value ) { 
+		if($currentDay == $reservationDate && $cutOffTime <= $currentTime ) { 
 			// $currentTime = strtotime(date("H:i:s"));
 			// $cutOffTime = strtotime(Config::get('constants.SERVER_TIME_CUTOFF_FOR_RESERVATION'));
 		
