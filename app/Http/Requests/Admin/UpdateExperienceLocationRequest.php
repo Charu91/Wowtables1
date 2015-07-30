@@ -45,7 +45,7 @@ class UpdateExperienceLocationRequest extends Request {
         $rules['experience_id'] = 'required|integer|exists:products,id';
         //$rules['restaurant_location_id'] = 'required|integer|exists:restaurant_locations,id|unique:product_vendor_locations,vendor_location_id,NULL,id,product_id.'.$this->get('experience_id');
         $rules['restaurant_location_id'] = 'required';
-        $rules['status'] = 'required|in:Active,Inactive';
+        $rules['status'] = 'required|in:Active,Inactive,Hidden';
 
         if($this->has('status') && $this->get('status') === 'Active'){
             $rules['limits.min_people_per_reservation'] = 'required|integer';

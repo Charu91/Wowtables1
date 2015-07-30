@@ -75,7 +75,7 @@ class ExperienceController extends Controller {
 
         //$arrSubmittedData['city_id']    = $city_id;
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
-        //echo "<pre>"; print_r($arrExperience);
+        //echo "<pre>"; print_r($arrExperience);die;
         $data['arrExperience']          = $arrExperience;
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
@@ -974,7 +974,6 @@ class ExperienceController extends Controller {
                             $arrResponse['reservation_time'] = $dataPost['reservationTime'];
                             $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
                             $arrResponse['guests'] = $dataPost['partySize'];
-                            $arrResponse['total_amount'] = $dataPost['total_amount'];
                             $arrResponse['experience_includes'] = $productDetails['attributes']['experience_includes'];
                             $arrResponse['terms_and_conditions'] = $productDetails['attributes']['terms_and_conditions'];
                             $arrResponse['address'] = $locationDetails->address;
@@ -1180,7 +1179,6 @@ class ExperienceController extends Controller {
             $arrResponse['reservation_time'] = $fetch_cookie['reservationTime'];
             $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
             $arrResponse['guests'] = $fetch_cookie['partySize'];
-            $arrResponse['total_amount'] = $fetch_cookie['total_amount'];
             $arrResponse['experience_includes'] = $fetch_cookie['experience_includes'];
             $arrResponse['terms_and_conditions'] = $fetch_cookie['terms_and_conditions'];
             $arrResponse['address'] = $fetch_cookie['address'];

@@ -1011,12 +1011,7 @@
             e = setTimeout(t, n)
         }
     }();
-    $(window).keydown(function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            return false
-        }
-    });
+
     $("#party_size").change(function() {
         var e = $("#party_size option:selected").val();
         $("#party_change span").text(e);

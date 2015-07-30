@@ -180,15 +180,19 @@
                     {!! Form::text('publish_time',null,['class'=>'form-control','id'=>'restaurantLocationTimePicker']) !!}
                 </div>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-5">
                 <label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
                 <div class="radio-custom radio-success radio-inline">
                     <input type="radio" id="Active" name="status" value="Active">
                     <label for="Active">Active</label>
                 </div>
                 <div class="radio-custom radio-danger radio-inline">
-                    <input type="radio" id="Inactive" name="status" value="Inactive" checked="checked">
+                    <input type="radio" id="Inactive" name="status" value="Inactive">
                     <label for="Inactive">Inactive</label>
+                </div>
+                <div class="radio-custom radio-danger radio-inline">
+                    <input type="radio" id="Hidden" name="status" value="Hidden" checked="checked">
+                    <label for="Hidden">Hidden</label>
                 </div>
             </div>
             <div class="col-sm-2">

@@ -588,7 +588,7 @@ class ExperienceModel {
                   'curators.bio as curator_bio', 'curators.designation',
                   'cm.file as curator_image',
                   'pvl.id as product_vendor_location_id',
-                  'vendors.name as vendor_name','vendors.id as vendor_id');
+                  'vendors.name as vendor_name','vendors.id as vendor_id','pvl.status as pvl_status');
               
     }
     else {
@@ -661,6 +661,7 @@ class ExperienceModel {
                     'addons' => $arrAddOn,
                     'reward_points' => $expResult->reward_points,
                     'gift_card' => $expResult->gift_card,
+                    'pvl_status' => $expResult->pvl_status,
                     'similar_option' => array(),
                   );
         
@@ -761,6 +762,7 @@ class ExperienceModel {
               ->where('pvl.product_id',$productID)
               ->where('vla.city_id',$cityID)
               ->where('pvl.status','Active')
+              ->orWhere('pvl.status','Hidden')
               ->get();
     
     //array to hold location details
