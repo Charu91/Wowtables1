@@ -2041,7 +2041,7 @@
                                 $('#my_update_immediate').show();
                             } else {
 
-                                if(final_booking_time >='20:30' && current_time>='20:30' && current_date == last_reserv_date)
+                                /*if(final_booking_time >='20:30' && current_time>='20:30' && current_date == last_reserv_date)
                                 {  //condition for not booking 20:30 above on same day.
                                     //alert('Not booking');
                                     $("#reserv_table").css("display", "none");
@@ -2051,7 +2051,7 @@
                                     $('#my_update_confirm').css("display", "none");
                                     $('#my_update_immediate').show();
                                 }
-                                else{
+                                else{*/
                                     //alert('booking');
                                     $(".change_loader").show();
                                     $.ajax({
@@ -2096,7 +2096,7 @@
                                             }
                                         }
                                     })
-                                }
+                                //}
                             }
                         });
                     });
