@@ -324,7 +324,7 @@ class ExperienceController extends Controller {
                                             AND t.status = 'available'
                                             AND pvl.status = 'Active'
                                             group by p.id");
-            
+
          // print_r($exclusiveExperiences);
           //exit;
             $arrData = array();
