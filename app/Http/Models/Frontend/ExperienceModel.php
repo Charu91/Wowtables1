@@ -763,7 +763,7 @@ class ExperienceModel {
               ->where('pvl.product_id',$productID)
               ->where('vla.city_id',$cityID)
               ->where('pvl.status','Active')
-              ->orWhere('pvl.status','Hidden')
+              //->orWhere('pvl.status','Hidden')
               ->get();
     
     //array to hold location details
