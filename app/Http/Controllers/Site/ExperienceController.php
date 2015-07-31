@@ -981,6 +981,7 @@ class ExperienceController extends Controller {
                             $arrResponse['long'] = $locationDetails->longitude;
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
+                            $arrResponse['total_amount'] = $dataPost['total_amount'];
 
                             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }
