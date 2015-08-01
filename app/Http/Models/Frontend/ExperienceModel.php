@@ -135,7 +135,7 @@ class ExperienceModel {
     /**
      * Reads the detail of the experience matching passed criteria.
      *
-     * @access  public
+     * @access  public 
      * @param $arrData
      * @since 1.0.0
      * @version 1.0.0
