@@ -600,7 +600,7 @@ class User {
                     'code' => 227,
                     'data' => [
                         'action' => 'Check if the email address and password match',
-                        'message' => 'There is an email password mismatch. Please check an try again'
+                        'message' => 'There is an email password mismatch. Please check and try again'
                     ]
                 ];
             }

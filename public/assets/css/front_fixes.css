@@ -1,0 +1,15 @@
+/* this file is made only for front-end design fixes */
+
+.deal-detail .deal-bottom-box .tab-pane hr{ margin-bottom: 10px !important;}
+.deal-detail .deal-bottom-box .tab-pane hr + div{ padding-bottom: 8px;}
+
+.deal-detail-right .price-box h3{ color: #FA7B47;  text-transform: uppercase;  font-size: 16px;  margin-left: 8px; font-weight: normal;}
+.deal-detail-right .price-box ul li, .deal-detail-right .terms-box ul li{ margin-bottom:8px;}
+.deal-detail-right .price-box{ padding-bottom:5px;}
+.deal-detail-right .price-box ul li br{ display:none;}
+
+body{ font-family: 'PT Sans', sans-serif;}
+body .wowtable_font{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .form-slide-wrapper .info-text.new a{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .form-slide-wrapper .info-text.new a.active{ font-weight:normal !important;}
