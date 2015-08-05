@@ -599,19 +599,19 @@ if (strpos($url,'alacarte') !== false) {
            <div class="col-md-8 col-sm-9 col-xs-8 pull-right head-links wowtables_hide_refer_menu">
             <ul class="nav navbar-nav navbar-right wowtables_tablet_size">
               <li>
-                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
+                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;"> Refer a friend and Get 3000 Gourmet points </a>
               </li>
               <?php if(isset($user_data['full_name']) && $user_data['full_name']=='Guest')
               {
                 ?>
                 <li>
-                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;font-family:Swis721 Lt BT !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
+                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
               </li>
               <?php
               } ?>
               <li class="dropdown">
                 <?php if($uname != "Guest") {?>
-                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
+                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
                 <?php }?>
                     <?php if((isset($user_data['full_name']) && $user_data['full_name'] != 'Guest' ) || (isset($user_data['username']) && $user_data['username'] != 'Guest' ) ){ ?>
                   <ul class="dropdown-menu wowtables_dropdown_menu">
