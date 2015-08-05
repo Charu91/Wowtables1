@@ -168,6 +168,7 @@
     <input type="hidden" name="total_amount" id="total_amount" value="{{$result['total_amount']}}" />
     <input type="hidden" name="experience_title" id="experience_title" value="{{$result['experience_title']}}" />
     <input type="hidden" name="restaurant_name" id="restaurant_name" value="{{$result['restaurant_name']}}" />
+    <img style="position:absolute; visibility:hidden" src="http://www.ref-r.com/campaign/t1/settings?bid_e=D604D097C8F8B0C4D3A75B7D7F4772E0&bid=4944&t=420&orderID=<?php echo "E".$result['order_id']; ?>&purchaseValue=<?php echo $result['total_amount']; ?>&email=<?php echo $result['guestEmail']; ?>" />
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol ) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
