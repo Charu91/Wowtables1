@@ -358,6 +358,9 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
   <link href="{{URL::to('/')}}/assets/css/app_new5.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new5.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new6.css?ver=1.0.5" rel='stylesheet' type="text/css">
+  
+  <!-- new css for front-end design fixes -->
+  <link href="{{URL::to('/')}}/assets/css/front_fixes.css?ver=1.0.5" rel='stylesheet' type="text/css">
 
 
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -568,7 +571,7 @@ if (strpos($url,'alacarte') !== false) {
                   <div class="top-filter col-md-12">
                     <div class="filter-left">
                       <div class="btn-group btn-block wowtable_mobile_view" style="padding-top:5px !important;  padding-bottom:5px !important;">
-                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p" style="font-family:Swis721 Lt BT !important;">
+                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p">
                           <span class="glyphicon glyphicon-map-marker" style="margin-left: -41%;padding-right: 9%;font-size:16px !important;color:#9d9d9c !important;"></span>
                           <?php
                           $current_city = ($current_city ? $current_city : "mumbai");
