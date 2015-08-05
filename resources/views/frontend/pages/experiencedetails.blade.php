@@ -510,7 +510,7 @@ $hasOrder = (bool)(isset($order) && is_array($order) && $arrExperience['data']['
            <ul>
             <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
             <li><?php echo $addons['short_description'];?></li>
-            <li>Rs. <?php echo $addons['price'];?> <small><br>per person(Taxes Applicable)</small></li>
+            <li>Rs. <?php echo $addons['price'];?> <small><br>per person (Taxes Applicable)</small></li>
           </ul>
           <hr> <br/>
           <?php
