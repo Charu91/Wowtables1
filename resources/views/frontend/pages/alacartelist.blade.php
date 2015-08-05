@@ -586,6 +586,11 @@ $(document).ready(function(){
 					}
 				});
 			},
+			focus: function( event, ui ) { //console.log('ui = '+ui.item.label);
+				var itemArr = ui.item.label.split('~~~');
+				$( this ).val( itemArr[0] );
+				return false;
+			},
 			select: function(event,ui){ //console.log("called");
 				event.preventDefault();
 				var itemArr = ui.item.value.split('~~~');
