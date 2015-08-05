@@ -331,7 +331,7 @@ class AlacarteController extends Controller {
             $data['filters']['tags']  = array();
         }
 
-        //echo "seachdata<pre>"; print_r($data);
+        //echo "<pre>"; print_r($data);
          //die;
 
         $restaurant_data_values = view('frontend.pages.alacartelistajax',$data)->render();

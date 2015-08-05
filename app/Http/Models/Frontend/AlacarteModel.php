@@ -6,14 +6,15 @@ use Config;
 
 class AlacarteModel{
 
-    public $filters = array(
+    protected $filters = array(
                             'date' => array(),
                             'time' => array(),
                             'pricing_level' => array('Low','Medium','High'),
                             'cuisines' => array(),
                             'tags' => array(),
-                            'areas' => array(),
+                            'locations' => array(),
                         );
+
 
     public $listing;
 
@@ -95,7 +96,7 @@ class AlacarteModel{
 
 
     public function findMatchingAlacarte(array $filters)
-    {
+    {   //echo "<pre>"; print_r($filters); die;
          $select = DB::table('vendor_locations AS vl')
             ->join('vendors AS v', 'v.id', '=', 'vl.vendor_id')
             ->join('vendor_types AS vt', 'vt.id', '=', 'v.vendor_type_id')
@@ -141,57 +142,65 @@ class AlacarteModel{
             ->where('vt.type', DB::raw('"Restaurants"'))
             ->where('v.status', DB::raw('"Publish"'))
             ->where('v.publish_time', '<', DB::raw('NOW()'))
-            ->where('lc.id', $filters['city_id'])
+            ->where('vladd.city_id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
             ->groupBy('vl.id');
 
 
 
-       if(isset($filters['areas'])){
-            $select->whereIn('la.id', $filters['areas']);
-            $this->filters['areas']['active'] = $filters['areas'];
+        if(isset($filters['location']) && !empty($filters['location'])) {
+            $select->whereIn('l.id', $filters['location']);
+            $this->filters['location']['active'] = $filters['location'];
         }
 
         if(isset($filters['pricing_level'])){
-            $select->where('vl.pricing_level', $filters['pricing_level']);
-            $this->filters['pricing_level']['active'] = $filters['pricing_level'];
+            //echo "<pre>"; print_r($filters['pricing_level']);
+            $select->whereIn('vl.pricing_level', $filters['pricing_level']);
+            //$this->filters['pricing_level']['active'] = $filters['pricing_level'];
         }
-
+            //die;
         if(isset($filters['tags'])){
-            $select->whereIn('vltm.tag_id', $filters['tags']);
-            $this->filters['tags']['active'] = $filters['tags'];
-        }
+             $select->whereIn('vltm.tag_id', $filters['tags']);
+             $this->filters['tags']['active'] = $filters['tags'];
+         }
 
-        if(isset($filters['cuisines'])){
-            $select->whereIn('vaso.id', $filters['cuisines']);
-            $this->filters['tags']['cuisines'] = $filters['cuisines'];
-        }
+        if(isset($filters['cuisine'])){
+             $select->whereIn('vaso.id', $filters['cuisine']);
+             $this->filters['tags']['cuisine'] = $filters['cuisine'];
+         }
 
-        if(isset($filters['date']) && isset($filters['time'])){
-            $select->where('s.day', '=', DB::raw('DAYNAME("'.$filters['date'].'")'))
-                ->whereNotIn('vlbls.block_date', [$filters['date']])
-                ->where('ts.time', $filters['time']);
-            $this->filters['tags']['date'] = $filters['date'];
-            $this->filters['tags']['time'] = $filters['time'];
-        }else if(isset($filters['date'])){
-            $select->where('s.day', '=', DB::raw('DAYNAME("'.$filters['date'].'")'))
-                ->whereNotIn('vlbls.block_date', [$filters['date']]);
-            $this->filters['tags']['date'] = $filters['date'];
-        }else if(isset($filters['time'])){
-            $select->where('ts.time', $filters['time']);
-            $this->filters['tags']['time'] = $filters['time'];
-        }
+         //adding filter for price if price has been selected
+         if(isset($filters['vendor']) && isset($filters['vendor'])) {
+             $select->whereIN('vl.vendor_id',$filters['vendor']);
+         }
 
-        if(isset($filters['sort_by']) === 'Popular'){
-            $select->orderBy('vl.order_status', 'asc');
-        }else if(isset($filters['sort_by']) === 'Latest'){
-            $select->orderBy('vl.order_status', 'asc');
-        }else{
-            $select->orderBy('vl.order_status', 'asc');
-        }
-        
+         if(isset($filters['date']) && isset($filters['time'])){
+             $select->where('s.day', '=', DB::raw('DAYNAME("'.$filters['date'].'")'))
+                 ->whereNotIn('vlbls.block_date', [$filters['date']])
+                 ->where('ts.time', $filters['time']);
+             $this->filters['tags']['date'] = $filters['date'];
+             $this->filters['tags']['time'] = $filters['time'];
+         }else if(isset($filters['date'])){
+             $select->where('s.day', '=', DB::raw('DAYNAME("'.$filters['date'].'")'))
+                 ->whereNotIn('vlbls.block_date', [$filters['date']]);
+             $this->filters['tags']['date'] = $filters['date'];
+         }else if(isset($filters['time'])){
+             $select->where('ts.time', $filters['time']);
+             $this->filters['tags']['time'] = $filters['time'];
+         }
+
+         if(isset($filters['sort_by']) === 'Popular'){
+             $select->orderBy('vl.order_status', 'asc');
+         }else if(isset($filters['sort_by']) === 'Latest'){
+             $select->orderBy('vl.order_status', 'asc');
+         }else{
+             $select->orderBy('vl.order_status', 'asc');
+         }
+        //echo "sad = ".$select;
         //echo $select->toSql();
         $queryResult = $select->get();
+
+        //echo "<pre>"; print_r($queryResult); die;
 
       
         //array to hold all the alacarte ids
@@ -248,24 +257,26 @@ class AlacarteModel{
                     #setting up the value for the location filter
                     if( !in_array($row->location_id, $arrLocationId)) {
                         $arrLocationId[] = $row->location_id;
-                        $this->filters['areas'][] = array(
+                        $this->filters['locations'][] = array(
                                                         "id" => $row->location_id,
                                                         "name" => $row->locality,
                                                         "count" => 1
                                                     );
                         }
                         else {
-                            foreach($this->filters['areas'] as $key => $value) {
+                            foreach($this->filters['locations'] as $key => $value) {
                                 if($value['id'] == $row->location_id) {
-                                    $this->filters['areas'][$key]['count']++;
+                                    $this->filters['locations'][$key]['count']++;
                                 }
                             }
                         }    
         }
 
+      }else{
+          $arrData = array();
       }
      
-        // echo '<pre>';print_r($arrData['data']);
+         //echo '<pre>';print_r($arrData);
         return $arrData;
     }
 
