@@ -151,27 +151,24 @@ $(document).ready(function(){
 	                    <div class="form-group">
 	                  <label for="amount">Price range:</label>
 						<div class="row">
-								<!-- <input type="checkbox" class="alacarte_search_by_price_type" value="1"><span style="color:white;">Low</span>
-								<input type="checkbox" class="alacarte_search_by_price_type" value="2"><span style="color:white;">Medium</span>
-								<input type="checkbox" class="alacarte_search_by_price_type" value="3"><span style="color:white;">High</span> -->
 							<div class="col-sm-4 col-xs-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="1" style="padding-left:50px;"><span style="font-family:serif;">&#x20B9;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="Low" style="padding-left:50px;"><span style="font-family:serif;">&#x20B9;</span>
 								  </label>  
 							  </div>
 							</div>
 							<div class="col-sm-4 col-xs-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="2" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="Medium" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;</span>
 								  </label>  
 							  </div>
 							</div>
 							<div class="col-sm-4 col-xs-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="3" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;&#8377;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="High" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;&#8377;</span>
 								  </label>  
 							  </div>
 							</div>
@@ -382,7 +379,7 @@ $(document).ready(function(){
 		</div>  
 
 		</div>
-		
+		<!--Filter for desktop screens-->
 		<div class="col-md-4 col-sm-4 deal-listing-right">
 			<div class="widget filter-widget-wrap hidden-xs hidden-sm">
 	          <h3 class="text-center">Refine your search</h3>
@@ -426,27 +423,24 @@ $(document).ready(function(){
 	                <div class="form-group">
 	                  <label for="amount">Price range:</label>
 						<div class="row">
-								<!-- <input type="checkbox" class="alacarte_search_by_price_type" value="1"><span style="color:white;">Low</span>
-								<input type="checkbox" class="alacarte_search_by_price_type" value="2"><span style="color:white;">Medium</span>
-								<input type="checkbox" class="alacarte_search_by_price_type" value="3"><span style="color:white;">High</span> -->
 							<div class="col-sm-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="1" style="padding-left:50px;"><span style="font-family:serif;">&#x20B9;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="Low" style="padding-left:50px;"><span style="font-family:serif;">&#x20B9;</span>
 								  </label>  
 							  </div>
 							</div>
 							<div class="col-sm-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="2" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="Medium" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;</span>
 								  </label>  
 							  </div>
 							</div>
 							<div class="col-sm-4">
 								<div class="btn-group" data-toggle="buttons">
 								  <label class="btn btn-warning" id="rupee_symbol">
-									<input type="checkbox" class="alacarte_search_by_price_type" value="3" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;&#8377;</span>
+									<input type="checkbox" class="alacarte_search_by_price_type" value="High" style="padding-left:50px;"><span style="font-family:serif;">&#8377;&#8377;&#8377;</span>
 								  </label>  
 							  </div>
 							</div>
@@ -581,7 +575,7 @@ $(document).ready(function(){
 			source: function( request, response ) {
 
 				$.ajax({
-					url: "{{URL::to('/')}}/alacarte_custom_search/new_custom_search",
+					url: "/alacarte_custom_search/new_custom_search",
 					dataType: "JSON",
 					data: {
 						term: request.term,city : c
@@ -592,7 +586,7 @@ $(document).ready(function(){
 					}
 				});
 			},
-			select: function(event,ui){
+			select: function(event,ui){ //console.log("called");
 				event.preventDefault();
 				var itemArr = ui.item.value.split('~~~');
 				
@@ -602,8 +596,10 @@ $(document).ready(function(){
 				var sList1 = "";
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+					}
 				});
 				
 				var sList2        = "";
@@ -636,7 +632,7 @@ $(document).ready(function(){
 				//console.log("rest_val = "+rest_val+" , date_val = "+date_val+" , time_val = "+time_val);
 				$.ajax({
 
-					url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+					url: "/alacarte_custom_search/search_filter",
 					dataType: "JSON",
 					type: "post",
 					//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -651,23 +647,23 @@ $(document).ready(function(){
 							$("#alacarte-left-content").empty();
 							$("#alacarte-left-content").html(d.restaurant_data);
 						});
-					 var area_replace = '';
-					  $.each(d.area_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					  });
+						var area_replace = '';
+						$.each(d.area_count,function(index, value){
+							//console.log('city' + index + ',  value: ' + value);
+							area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+						});
 
-					   var cuisine_replace = '';
-					  $.each(d.cuisine_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					  });
+						var cuisine_replace = '';
+						$.each(d.cuisine_count,function(index, value){
+							//console.log('city' + index + ',  value: ' + value);
+							cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+						});
 
-					  var tags_replace = '';
-					  $.each(d.tags_count,function(index, value){
-						//console.log('city' + index + ',  value: ' + value);
-						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
-					  });
+						var tags_replace = '';
+						$.each(d.tags_count,function(index, value){
+							//console.log('city' + index + ',  value: ' + value);
+							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
+						});
 
 					  
 					if(area_replace == "") {
@@ -718,8 +714,10 @@ $(document).ready(function(){
 			var sList1 = "";
 
 			$( ".alacarte_search_by_price_type" ).each(function() {
-				var sThisVal1 = (this.checked ? $(this).val() : "0");
-				sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+				var sThisVal1 = (this.checked ? $(this).val() : "null");
+				if(sThisVal1 != "null") {
+					sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+				}
 			});
 			//var amount_value = $("#amount").val();
 			
@@ -733,7 +731,7 @@ $(document).ready(function(){
 			if(rest_val != "") {
 			  $.ajax({
 				//url: "custom_search/search_result",
-				url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+				url: "/alacarte_custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -747,23 +745,23 @@ $(document).ready(function(){
 							$("#alacarte-left-content").empty();
 							$("#alacarte-left-content").html(d.restaurant_data);
 						});
-					 var area_replace = '';
-					  $.each(d.area_count,function(index, value){
+					var area_replace = '';
+					$.each(d.area_count,function(index, value){
 						//console.log('city' + index + ',  value: ' + value);
-						area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					  });
+						area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+					});
 
-					   var cuisine_replace = '';
-					  $.each(d.cuisine_count,function(index, value){
+					var cuisine_replace = '';
+					$.each(d.cuisine_count,function(index, value){
 						//console.log('city' + index + ',  value: ' + value);
-						cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-					  });
+						cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+					});
 
-					  var tags_replace = '';
-					  $.each(d.tags_count,function(index, value){
+					var tags_replace = '';
+					$.each(d.tags_count,function(index, value){
 						//console.log('city' + index + ',  value: ' + value);
-						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
-					  });
+						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
+					});
 
 					  
 					if(area_replace == "") {
@@ -805,8 +803,10 @@ $(document).ready(function(){
 			var sList1 = "";
 
 			$( ".alacarte_search_by_price_type" ).each(function() {
-				var sThisVal1 = (this.checked ? $(this).val() : "0");
-				sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+				var sThisVal1 = (this.checked ? $(this).val() : "null");
+				if(sThisVal1 != "null") {
+					sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+				}
 			});
 			//var amount_value = $("#amount-small").val();
 			/*var final_amount = amount_value.split(' ');
@@ -822,7 +822,7 @@ $(document).ready(function(){
 			if(rest_val != "") {
 			  $.ajax({
 				//url: "custom_search/search_result",
-				url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+				url: "/alacarte_custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -833,23 +833,23 @@ $(document).ready(function(){
 				},
 				success: function(d) {
 				  //console.log(d.area_count);
-				  var area_replace = '';
-				  $.each(d.area_count,function(index, value){
-					//console.log('city' + index + ',  value: ' + value);
-					area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-				  });
+					var area_replace = '';
+					$.each(d.area_count,function(index, value){
+						//console.log('city' + index + ',  value: ' + value);
+						area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+					});
 
-				  var cuisine_replace = '';
-				  $.each(d.cuisine_count,function(index, value){
-					//console.log('city' + index + ',  value: ' + value);
-					cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
-				  });
+					var cuisine_replace = '';
+					$.each(d.cuisine_count,function(index, value){
+						//console.log('city' + index + ',  value: ' + value);
+						cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
+					});
 
-				  var tags_replace = '';
-				  $.each(d.tags_count,function(index, value){
-					//console.log('city' + index + ',  value: ' + value);
-					tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
-				  });
+					var tags_replace = '';
+					$.each(d.tags_count,function(index, value){
+						//console.log('city' + index + ',  value: ' + value);
+						tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
+					});
 
 				  $("#alacarte-left-content").fadeOut(500, function() {
 						$("#alacarte-left-content").empty();
@@ -896,8 +896,10 @@ $(document).ready(function(){
 				  var sList1 = "";
 
 					$( ".alacarte_search_by_price_type" ).each(function() {
-						var sThisVal1 = (this.checked ? $(this).val() : "0");
-						sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+						var sThisVal1 = (this.checked ? $(this).val() : "null");
+						if(sThisVal1 != "null") {
+							sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+						}
 					});
 				  //var amount_value = $("#amount").val();
 				  /*var final_amount = amount_value.split(' ');
@@ -917,7 +919,7 @@ $(document).ready(function(){
 							
 							$.ajax({
 								//url: "custom_search/search_future_date_restaurant",
-								url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+								url: "/alacarte_custom_search/search_filter",
 								dataType: "JSON",
 								type: "post",
 								//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -932,19 +934,19 @@ $(document).ready(function(){
 									var area_replace = '';
 									$.each(d.area_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+										area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 									});
 
 									var cuisine_replace = '';
 									$.each(d.cuisine_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+										cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 									});
 
 									var tags_replace = '';
 									$.each(d.tags_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+										tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 									});
 
 									$("#alacarte-left-content").fadeOut(500, function() {
@@ -983,7 +985,7 @@ $(document).ready(function(){
 							
 							$.ajax({
 								//url: "custom_search/search_todays_date_restaurant",
-								url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+								url: "/alacarte_custom_search/search_filter",
 								dataType: "JSON",
 								type: "post",
 								//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -998,19 +1000,19 @@ $(document).ready(function(){
 									var area_replace = '';
 									$.each(d.area_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+										area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 									});
 
 									var cuisine_replace = '';
 									$.each(d.cuisine_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+										cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 									});
 
 									var tags_replace = '';
 									$.each(d.tags_count,function(index, value){
 										//console.log('city' + index + ',  value: ' + value);
-										tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+										tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 									});
 					
 									$("#alacarte-left-content").fadeOut(500, function() {
@@ -1062,8 +1064,10 @@ $(document).ready(function(){
 				var sList1 = "";
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+					}
 				});
 				//var amount_value = $("#amount").val();
 				
@@ -1073,7 +1077,7 @@ $(document).ready(function(){
 				//console.log("time value == "+time_val+" , date value = "+date_val+" , rest val = "+rest_val+" , start_from = "+start_from+" , end_with = "+end_with);
 				if(time_val != "") {
 					$.ajax({
-						url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+						url: "/alacarte_custom_search/search_filter",
 						dataType: "JSON",
 						type: "post",
 						//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -1088,19 +1092,19 @@ $(document).ready(function(){
 							var area_replace = '';
 							$.each(d.area_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+								area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 							});
 
 							var cuisine_replace = '';
 							$.each(d.cuisine_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+								cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 							});
 
 							var tags_replace = '';
 							$.each(d.tags_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+								tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 							});
 
 							$("#alacarte-left-content").fadeOut(500, function() {
@@ -1146,12 +1150,16 @@ $(document).ready(function(){
 				var sList1 = "";
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+						//console.log(sThisVal1);
+					}
+
 				});
 				//console.log("slist == "+sList1);
 				$.ajax({
-					url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+					url: "/alacarte_custom_search/search_filter",
 					dataType: "JSON",
 					type: "post",
 					data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,price: sList1,city: c},
@@ -1161,23 +1169,23 @@ $(document).ready(function(){
 					},
 					success: function(d) {
 						//$("#results").append(d);
-							//console.log(d);
+							//console.log("asd = "+ d.locations);
 							var area_replace = '';
-							$.each(d.area_count,function(index, value){
+						    $.each(d.area_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+								area_replace += '<div class="checkbox"><label><input class="alacarte_search_by_place" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 							});
 
-							var cuisine_replace = '';
+						    var cuisine_replace = '';
 							$.each(d.cuisine_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+								cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 							});
 
 							var tags_replace = '';
 							$.each(d.tags_count,function(index, value){
 								//console.log('city' + index + ',  value: ' + value);
-								tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+								tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 							});
 
 							$("#alacarte-left-content").fadeOut(500, function() {
@@ -1224,20 +1232,22 @@ $(document).ready(function(){
 				var sList1 = "";
 
 				$( ".alacarte_search_by_place" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "nullvalue");
-					//if($(this).attr('checked')) {
-						sList += (sList=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal)) {
+						sList += (sList=="" ? sThisVal : "," + sThisVal+"");
+					}
 				});
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+					}
 				});
 				//console.log (sList);
 				//console.log("time value == "+time_val+" , date value = "+date_val+" , rest val = "+rest_val+" , start_from = "+start_from+" , end_with = "+end_with+" , sList = "+sList);
 				$.ajax({
-					url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+					url: "/alacarte_custom_search/search_filter",
 					dataType: "JSON",
 					type: "post",
 					//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
@@ -1253,13 +1263,13 @@ $(document).ready(function(){
 						var cuisine_replace = '';
 						$.each(d.cuisine_count,function(index, value){
 							//console.log('city' + index + ',  value: ' + value);
-							cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+index+'">'+index+'<span class="badge">'+value+'</span></label></div>'
+							cuisine_replace += '<div class="checkbox"><label><input class="alacarte_search_by_cuisine" type="checkbox" value="'+value.id+'">'+value.name+'<span class="badge">'+value.count+'</span></label></div>'
 						});
 
 						var tags_replace = '';
 						$.each(d.tags_count,function(index, value){
 							//console.log('city' + index + ',  value: ' + value);
-							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 						});
 
 						$("#alacarte-left-content").fadeOut(500, function() {
@@ -1305,26 +1315,29 @@ $(document).ready(function(){
 				var sList2 = "";
 
 				$( ".alacarte_search_by_place" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "nullvalue");
-					//if($(this).attr('checked')) {
-						sList += (sList=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal)) {
+						sList += (sList=="" ? sThisVal : "," + sThisVal+"");
+					}
 				});
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+					}
+
 				});
 
 				$( ".alacarte_search_by_cuisine" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "nullvalue");
-					//if($(this).attr('checked')) {
-						sList2 += (sList2=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal2 = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal2)) {
+						sList2 += (sList2=="" ? sThisVal2 : "," + sThisVal2+"");
+					}
 				});
 				//console.log (sList);
 				$.ajax({
-					url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+					url: "/alacarte_custom_search/search_filter",
 					//url: "custom_search/refine_search",
 					dataType: "JSON",
 					type: "post",
@@ -1337,12 +1350,10 @@ $(document).ready(function(){
 					//data: {cuisine_values : sList},
 					success: function(d) {
 						//$("#results").append(d);
-						console.log("here = "+d);
-						console.log(d.tags_count+" = tags count")
 						var tags_replace = '';
 						$.each(d.tags_count,function(index, value){
 							//console.log('city' + index + ',  value: ' + value);
-							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value+'</label>'
+							tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="alacarte_search_by_tags" value="'+index+'"> '+value.name+'</label>'
 						});
 
 						$("#alacarte-left-content").fadeOut(500, function() {
@@ -1385,34 +1396,36 @@ $(document).ready(function(){
 				var sList3 = "";
 
 				$( ".alacarte_search_by_place" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "nullvalue");
-					//if($(this).attr('checked')) {
-						sList += (sList=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal)) {
+						sList += (sList=="" ? sThisVal: "," + sThisVal+"");
+					}
 				});
 
 				$( ".alacarte_search_by_price_type" ).each(function() {
-					var sThisVal1 = (this.checked ? $(this).val() : "0");
-					sList1 += (sList1=="" ? "'"+sThisVal1+"'" : ",'" + sThisVal1+"'");
+					var sThisVal1 = (this.checked ? $(this).val() : "null");
+					if(sThisVal1 != "null") {
+						sList1 += (sList1 == "" ? sThisVal1 : "," + sThisVal1 );
+					}
 				});
 
 				$( ".alacarte_search_by_cuisine" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "nullvalue");
-					//if($(this).attr('checked')) {
-						sList2 += (sList2=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal2 = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal2)) {
+						sList2 += (sList2=="" ? sThisVal2: "," + sThisVal2+"");
+					}
 				});
 				
 				
 				$( ".alacarte_search_by_tags" ).each(function() {
-					var sThisVal = (this.checked ? $(this).val() : "0");
-					//if($(this).attr('checked')) {
-						sList3 += (sList3=="" ? "'"+sThisVal+"'" : ",'" + sThisVal+"'");
-					//}
+					var sThisVal3 = (this.checked ? $(this).val() : "0");
+					if(parseInt(sThisVal3)) {
+						sList3 += (sList3=="" ? sThisVal3: "," + sThisVal3+"");
+					}
 				});
 				//console.log (sList);
 				$.ajax({
-					url: "{{URL::to('/')}}/alacarte_custom_search/search_filter",
+					url: "/alacarte_custom_search/search_filter",
 					dataType: "JSON",
 					type: "post",
 					//data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},

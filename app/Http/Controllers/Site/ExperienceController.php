@@ -650,7 +650,7 @@ class ExperienceController extends Controller {
 
         public function exporder()
     {
-        //echo "<pre>"; print_r(Input::all());
+        //echo "<pre>"; print_r(Input::all()); die;
         $dataPost['reservationDate'] = Input::get('booking_date');
         $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
         $dataPost['reservationTime'] = Input::get('booking_time');
@@ -982,6 +982,7 @@ class ExperienceController extends Controller {
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
                             $arrResponse['total_amount'] = $dataPost['total_amount'];
+                            $arrResponse['guestEmail'] = $dataPost['guestEmail'];
 
                             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }

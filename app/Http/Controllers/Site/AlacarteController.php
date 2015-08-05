@@ -18,6 +18,7 @@ use Hash;
 use DB;
 use Auth;
 use Redirect;
+use Response;
 use Mail;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 use Mailchimp;
@@ -125,7 +126,7 @@ class AlacarteController extends Controller {
             //$data['referral'] = $this->partners_model->get_row_by_refid($refid);
         }
 
-        
+        //echo "<pre>"; print_r($data); die;
         return response()->view('frontend.pages.alacartelist',$data);
     }
 
@@ -235,15 +236,18 @@ class AlacarteController extends Controller {
     public function search_filter()
     {
         //DB::connection()->enableQueryLog();
+        //echo "<prE>"; print_r(Input::all()); die;
         $restaurant_value = Input::get('restaurant_val');
         $format_date_value = (Input::get('date_value') ? Input::get('date_value') : "");
         $time_value = Input::get('time_value');
-        $price_start_range = Input::get('start_price');
-        $price_end_with = Input::get('end_price');
+        //$price_start_range = Input::get('start_price');
+        //$price_end_with = Input::get('end_price');
         $arrAreasList = Input::get('area_values');
         $arrCuisineList = Input::get('cuisine_values');   
-        $arrTagsList = Input::get('tags_values');   
-             
+        $arrTagsList = Input::get('tags_values');
+        $arrVendorList = Input::get('vendor_value');
+        $price = Input::get('price');
+
         $search_city = Input::get('city');
        
         $city       = Location::where(['Type' => 'City', 'id' => $search_city])->first()->name;
@@ -300,13 +304,18 @@ class AlacarteController extends Controller {
             $arrSubmittedData['tag']  = explode(',',$arrTagsList);
         }
 
-        $arrSubmittedData['minPrice']       = $price_start_range; 
+        //$arrSubmittedData['minPrice']       = $price_start_range;
 
-        if(!empty($price_end_with))
+        if(!empty($price))
         {
-            $arrSubmittedData['maxPrice']  = $price_end_with;
+            $arrSubmittedData['pricing_level']  = explode(',',$price);
         }
 
+        if(!empty($arrVendorList))
+        {
+            $arrSubmittedData['vendor']  = explode(',',$arrVendorList);
+        }
+        //echo "<pre>"; print_r($arrSubmittedData); die;
         $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);       
 
         if(!empty($searchResult)) {
@@ -322,8 +331,13 @@ class AlacarteController extends Controller {
             $data['filters']['tags']  = array();
         }
 
+        //echo "<pre>"; print_r($data);
+         //die;
+
         $restaurant_data_values = view('frontend.pages.alacartelistajax',$data)->render();
         $restaurant_data = str_replace(array('\r', '\n', '\t'),"",$restaurant_data_values);
+
+
 
         return Response::json(array('restaurant_data'=> $restaurant_data,'area_count' => $data['filters']['locations'], 'cuisine_count' => $data['filters']['cuisines'], 'tags_count' => $data['filters']['tags']), 200);
         
@@ -555,6 +569,7 @@ class AlacarteController extends Controller {
         $arrResponse['lat'] = $locationDetails->latitude;
         $arrResponse['long'] = $locationDetails->longitude;
         $arrResponse['city'] = $arrResponse['current_city'];
+        $arrResponse['guestEmail'] = $dataPost['guestEmail'];
         //echo "<pre>"; print_r($arrResponse); die;
         //return response()->view('frontend.pages.thankyou',$arrResponse);
         return Redirect::to('/alacarte/thankyou/A'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
