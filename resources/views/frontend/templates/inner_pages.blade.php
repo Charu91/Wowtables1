@@ -3435,67 +3435,7 @@ var google_remarketing_only = true;
 
       $("body").delegate(".clear_filters","click",function(){
 
-        $("#slider-range").slider("values", 0, 0);
-          $("#slider-range").slider("values", 1, 15000);
-          $( "#amount" ).val( "Rs " + $( "#slider-range" ).slider( "values", 0 ) + " - Rs " + $( "#slider-range" ).slider( "values", 1 ) );
-        $("#slider-range-small").slider("values", 0, 0);
-          $("#slider-range-small").slider("values", 1, 15000);
-          $( "#amount-small" ).val( "Rs " + $( "#slider-range-small" ).slider( "values", 0 ) + " - Rs " + $( "#slider-range-small" ).slider( "values", 1 ) );
-        //console.log("clieck");
-        //window.location.reload();
-        var c = $("#uri_city_id").val();       
-        $.ajax({
-            url: "custom_search/search_filter",
-            type: "POST",
-            dataType: "json",
-            data:{city: c},
-            beforeSend:function(){
-                $('#exp_list_load_layer').removeClass('hidden');
-            },
-            success: function(d) {
-            //console.log(d.area_count);
-            var area_replace = '';
-            $.each(d.area_count,function(index, valueData){
-              area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
-            });
-
-            var cuisine_replace = '';
-            $.each(d.cuisine_count,function(index, valueData){
-              cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
-            });
-
-            var tags_replace = '';
-            $.each(d.tags_count,function(index, valueData){
-              tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+valueData.id+'"> '+valueData.name+'</label>'
-            });
-
-            $("#left-content").fadeOut(500, function() {
-              $("#left-content").empty();
-              $("#left-content").html(d.restaurant_data);
-            });
-            if(area_replace == "") {
-              area_replace = "No Areas found";
-            }
-            if(cuisine_replace == "") {
-              cuisine_replace = "No Cuisine found";
-            }
-            if(tags_replace == "") {
-              tags_replace = "No Tags found";
-            }
-            $(".dynamic_areas").html(area_replace);
-            $(".dynamic_cuisine").html(cuisine_replace);
-            $(".dynamic_tags").html(tags_replace);
-            
-          },complete: function() {
-                $('#exp_list_load_layer').addClass('hidden');
-            $("#left-content").fadeIn(500);
-                $('html, body').animate({
-                    scrollTop: $('#left-content').offset().top
-                }, 'slow');
-          },
-          timeout: 9999999
-          
-        });
+          location.reload();
       });
       
     });

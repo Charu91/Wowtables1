@@ -611,7 +611,7 @@ $(document).ready(function(){
 				var sList3        = "";
 				var sList4         = "";
 
-				if(itemArr[2] == 'location')
+				if(itemArr[2] == 'location' || itemArr[2] == 'no_data')
 				{
 					sList2	= 	itemArr[1]
 				}

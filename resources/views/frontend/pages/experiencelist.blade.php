@@ -775,7 +775,6 @@ $(document).ready(function(){
 				select: function(event,ui){
 					event.preventDefault();
 					var itemArr = ui.item.value.split('~~~');
-					
 					var rest_val = itemArr[0];
 					var date_val = $("#datepicker").val();
 					var time_val = $("#search_by_time").val();
@@ -788,7 +787,7 @@ $(document).ready(function(){
 					var sList2        = "";
 					var sList         = "";
 
-					if(itemArr[2] == 'location')
+					if(itemArr[2] == 'location' || itemArr[2] == 'no_data')
 					{
 						sList1	= 	itemArr[1]
 					}

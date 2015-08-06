@@ -88,6 +88,8 @@ class AlacarteModel{
                 $arrData[] = $row->vendor_name.'~~~'.$row->vendor_id.'~~~vendor';
                 $arrData[] = $row->cuisine_name.'~~~'.$row->cuisine_id.'~~~cuisine';
           }
+      }else{
+          $arrData[] = 'No Data Found!~~~1~~~no_data';
       }
      // echo '<pre>';print_r($arrData['data']);
       $arrDataNew =  array_unique( $arrData);
