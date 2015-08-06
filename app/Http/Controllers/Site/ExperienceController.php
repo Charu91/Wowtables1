@@ -607,10 +607,8 @@ class ExperienceController extends Controller {
 
         $arrSubmittedData['minPrice']       = $price_start_range; 
 
-        if(!empty($price_end_with))
-        {
-            $arrSubmittedData['maxPrice']  = $price_end_with;
-        }
+        $arrSubmittedData['maxPrice']  = $price_end_with;
+
         
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
                 

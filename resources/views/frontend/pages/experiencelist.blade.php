@@ -602,7 +602,7 @@ $(document).ready(function(){
 			//console.log("ajax call for according to price "+ui.values[ 1 ]+" , "+ui.values[ 0 ]);
 			//console.log("time value = "+time_val+" , date value = "+date_val+" , rest value = "+rest_val);
 			$.ajax({
-				url: "{{URL::to('/')}}/custom_search/search_filter",
+				url: "/custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
@@ -683,7 +683,7 @@ $(document).ready(function(){
 			//console.log("ajax call for according to price "+ui.values[ 1 ]+" , "+ui.values[ 0 ]);
 			//console.log("time value = "+time_val+" , date value = "+date_val+" , rest value = "+rest_val);
 			$.ajax({
-				url: "{{URL::to('/')}}/custom_search/search_filter",
+				url: "/custom_search/search_filter",
 				dataType: "JSON",
 				type: "post",
 				data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
@@ -756,7 +756,7 @@ $(document).ready(function(){
 				source: function( request, response ) {
 
 					$.ajax({
-						url: "{{URL::to('/')}}/custom_search/new_custom_search",
+						url: "/custom_search/new_custom_search",
 						dataType: "JSON",
 						data: {
 							term: request.term,city : c
