@@ -13,3 +13,17 @@ body .wowtable_font{ font-family: 'PT Sans', sans-serif !important;}
 #abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin{ font-family: 'PT Sans', sans-serif !important;}
 #abovefold .form-slide-wrapper .info-text.new a{ font-family: 'PT Sans', sans-serif !important;}
 #abovefold .form-slide-wrapper .info-text.new a.active{ font-weight:normal !important;}
+.widget.price-box+hr+.deal-detail-right .price-box h3{text-align:left;}
+.deal-detail-right .price-box h3 p{display:none;}
+.deal-detail-right .price-box h3{font-size: 18px !important; font-weight: normal; margin: 0; text-transform: uppercase; color: #FA7B47;}
+.deal-detail-right .price-box h3.text-left{padding-left: 10px;}
+.widget.price-box+hr{display:none;}
+.deal-detail-right .price-box h3{border-bottom: 0px solid #fff;}
+#rupee_symbol input[value="Low"]+span{background:url(../img/rupee_icon1.png) no-repeat; width:10px; height:13px; display:inline-block; text-indent: -999999px;}
+#rupee_symbol input[value="Medium"]+span{background:url(../img/rupee_icon2.png) no-repeat; width:17px; height:13px; display:inline-block; text-indent: -999999px;}
+#rupee_symbol input[value="High"]+span{background:url(../img/rupee_icon3.png) no-repeat; width:23px; height:13px; display:inline-block; text-indent: -999999px;}
+#exp_list_load_layer{background:rgba(0, 0, 0, 0.55) url(../img/icon_loader.gif) no-repeat 195px 110px !Important;}
+#exp_list_load_layer:before{content: "Loading"; color: rgba(244,244,244,0.90); font-size: 60px; position: absolute; top: 120px;
+left: 50%; margin-left: -15px;}
+#exp_list_load_layer img{display:none;}
+.deal-listing .experience-grid li .flag.valign{top:7% !important;}
