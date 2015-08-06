@@ -65,6 +65,9 @@ $(document).ready(function(){
 
 </script>
 <input type="hidden" name="current_city" value="<?php echo $current_city;?>">
+<div class="col-md-12 col-sm-12" style="padding-bottom: 15px;">
+	<img src="/assets/img/alacarte_img.jpg" alt="alacarte image" />
+</div>
 
 <div class="col-md-8 col-sm-8 deal-listing-left">
 			<?php if(Session::has('suggestion_status') != 0) {?>

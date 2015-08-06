@@ -424,7 +424,7 @@ class AlacarteModel{
                         ->join(DB::raw('vendor_attributes as va2'), 'va2.id', '=', 'vlat2.vendor_attribute_id')
                         ->join(DB::raw('vendor_attributes as va3'), 'va3.id', '=', 'vlat3.vendor_attribute_id')
                         ->leftJoin(DB::raw('vendor_attributes as va4'), 'va4.id', '=', 'vlat4.vendor_attribute_id')
-                        ->leftjoin(DB::raw('vendor_locations_curator_map as vlcm'),'vlcm.vendor_location_id','=','vl.id')
+                        ->leftjoin('vendor_locations_curator_map as vlcm','vlcm.vendor_location_id','=','vl.id')
                         ->leftjoin('curators', 'curators.id', '=', 'vlcm.curator_id')
                         ->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
                         ->join(DB::raw('locations as loc1'),'loc1.id', '=' , 'vla.area_id')
@@ -455,8 +455,10 @@ class AlacarteModel{
                                     'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
                                     'loc3.name as state_name', 'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
                                     'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point',
-                                    'vlat5.attribute_value as expert_tips', 'm2.file as curator_image','vl.location_id as vl_location_id')
+                                    'vlat5.attribute_value as expert_tips', 'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips')
                         ->first();
+
+        //echo "<pre>"; print_r($queryResult); die;
                         
         if($queryResult) {
             //reading the review ratings
@@ -572,7 +574,8 @@ class AlacarteModel{
                                     'menu_pick' => (is_null($queryResult->menu_picks)) ? "" : $queryResult->menu_picks,
                                     'similar_option' => $arrSimilarVendor,
                                     'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
-                                    'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips                                  
+                                    'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
+                                    'curator_tips' => (is_null($queryResult->curator_tips)) ? "" : $queryResult->curator_tips
                                 );
             
             //reading the review details

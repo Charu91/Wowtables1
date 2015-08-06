@@ -33,6 +33,12 @@
             </div>
         </div>
         <div class="form-group">
+            {!! Form::label('designation','Designation',['class'=>'col-sm-4 control-label']) !!}
+            <div class="col-sm-8">
+                {!! Form::text('designation',null,['class'=>'form-control','required'=>'']) !!}
+            </div>
+        </div>
+        <div class="form-group">
             <label for="location_id" class="col-sm-4 control-label ">City <span class="required">*</span></label>
             <div class="col-sm-8">
                 {!! Form::select('location_id',$cities_list,0,['class'=>'form-control populate select-location','data-plugin-selectTwo'=>'','required'=>'']) !!}

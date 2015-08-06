@@ -45,6 +45,7 @@ class AdminCuratorsController extends Controller {
         $curator->name = $this->request->get('name');
         //$curator->media_id = $this->request->get('media_id');
         $curator->bio = $this->request->get('bio');
+        $curator->designation = $this->request->get('designation');
         $curator->link = $this->request->get('link');
         $curator->city_id = $this->request->get('location_id');
 
@@ -81,6 +82,7 @@ class AdminCuratorsController extends Controller {
 
         $curator->name = $this->request->get('name');
         //$curator->media_id = $this->request->get('media_id');
+        $curator->designation = $this->request->get('designation');
         $curator->bio = $this->request->get('bio');
         $curator->link = $this->request->get('link');
         $curator->city_id = $this->request->get('location_id');
