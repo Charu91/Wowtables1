@@ -289,7 +289,8 @@ $(document).ready(function(){
 					<img src="{{URL::to('/')}}/images/Loading-Image.gif">
 				</div>
 			<div class="col-sm-6">
-				<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." experiences match your search criteria" : "No experiences match your search criteria"); ?></p>
+				<?php $set_exp_name = (($resultCount == 1) ? "experience" : "experiences")?>
+				<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." ".$set_exp_name." match your search criteria" : "No experiences match your search criteria"); ?></p>
 			</div>
 			<div class="col-sm-6">
 				<span style="display:none;margin-top: -30px;position: absolute" class="show_loading_img"><img src="<?php echo URL::asset('assets/img/loading.gif');?>" title='Loading' /></span>

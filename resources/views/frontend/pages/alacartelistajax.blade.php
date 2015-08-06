@@ -2,7 +2,8 @@
 	<img src="{{URL::to('/')}}/images/Loading-Image.gif">
 </div>
 <div class="col-sm-8">
-	<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." restaurants match your search criteria" : "No restaurants match your search criteria"); ?></p><span style="display:none;margin-left: 315px;margin-top: -30px;position: absolute" class="show_loading_img"><img src="/assets/img/loading.gif" title='Loading' /></span>
+	<?php $set_exp_name = (($resultCount == 1) ? "experience" : "experiences")?>
+	<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." ".$set_exp_name." match your search criteria" : "No experiences match your search criteria"); ?></p>
 </div>
 
 <!--<div class="col-sm-4 text-right">
