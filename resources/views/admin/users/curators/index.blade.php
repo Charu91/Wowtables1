@@ -33,7 +33,7 @@
                 <tr>
                     <th>Id</th>
                     <th>Name</th>
-                    <th>Image</th>
+                    {{--<th>Image</th>--}}
                     <th>City</th>
                     <th>Action</th>
                 </tr>
@@ -43,7 +43,7 @@
                     <tr>
                         <th>{!! $curator->id !!}</th>
                         <th>{!! $curator->name !!}</th>
-                        <th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$curator->media->media_resized->first()->file !!}"/></th>
+                        {{--<th><img style="height: 56px;" class="img-thumbnail" src="{!! $media_url.$curator->media->media_resized->first()->file !!}"/></th>--}}
                         <th>{!! $curator->location->name !!}</th>
                         <th>
                             <a href="/admin/user/curators/{!! $curator->id !!}/edit" data-curator-id="/admin/user/curators/{!! $curator->id !!}/edit" class="btn btn-xs btn-primary edit-curator-btn">Edit</a>
