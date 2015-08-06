@@ -145,7 +145,7 @@ $(function() {
 								<img src="<?php echo isset($data[$j_count]['image']['listing'])?$data[$j_count]['image']['listing']:'';?>" alt="image1" class="img-responsive"/>							
 									<?php
 									if(isset($data[$j_count]['flag']) &&  !empty($data[$j_count]['flag'])) {?>
-									<div class="flag new valign" id="top_paddin"style="background:#<?php echo $data[$j_count]['color'];?>"><?php echo $data[1]['flag'];?></div>
+									<div class="flag new valign" id="top_paddin"style="background:<?php echo $data[$j_count]['color'];?>"><?php echo $data[$j_count]['flag'];?></div>
 								<?php } 
 								/* 
 								<div class="bookmark valign balign" id="top_alignmen">
