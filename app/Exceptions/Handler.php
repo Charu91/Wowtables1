@@ -62,7 +62,8 @@ class Handler extends ExceptionHandler {
             {
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-                $message->to('tech@wowtables.com')->subject('Website error');
+                $message->to('concierge@wowtables.com')->subject('404 error on website');
+                $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
 
             });
             //return parent::render($request, $e);
