@@ -149,6 +149,9 @@ img.alacate_banner_img_main{}
 @media screen and (max-width: 720px){
 	.deal-listing .experience-grid li{ margin-bottom: 20px;}
 }
+@media (max-width: 359px) and (min-width: 320px){
+	#review-menu-tab-detail{ height: 40px;}
+}
 
 /* Landscape */
 @media only screen 
