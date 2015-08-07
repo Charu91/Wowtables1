@@ -26,3 +26,12 @@ Route::get('search/experience',
 									'where' => array(),
 									'domain' => env('WEBSITE_URL'),
 								));
+
+Route::post('api/nearby', 
+								array(
+									'uses' => 'Api\SearchController@getNearbyResource',
+									'as' => '',
+									'middleware' => 'wow.api',
+									'where' => array(),
+									'domain' => env('WEBSITE_URL'),
+								));
