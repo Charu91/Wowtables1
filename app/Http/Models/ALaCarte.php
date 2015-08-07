@@ -653,6 +653,7 @@ use Config;
         
         return $result['data']; 
     }
+    
  }
-//end of class LaCarte
+//end of class AlaCarte
 //end of file WowTables\Http\Models\LaCarte.php
