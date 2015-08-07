@@ -493,7 +493,7 @@ class AlacarteController extends Controller {
                             $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                             $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                            $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                            $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
                         });
                     }
 

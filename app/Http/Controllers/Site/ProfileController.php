@@ -38,6 +38,7 @@ class ProfileController extends Controller {
 	public function myProfile()
 	{
 		$user_array = Session::all();
+		$arrResponse['user']   = Auth::user();
 		//$userID =Session::get('id');
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
