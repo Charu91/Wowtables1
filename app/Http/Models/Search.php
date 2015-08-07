@@ -191,8 +191,13 @@
 								->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
 								->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
 								->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')								
-								//->leftJoin('locations','locations.id','=','vl.location_id')
-								->leftJoin('locations','locations.id','=','vla.area_id')
+								//->leftJoin('locations','locations.id','=','vl.location_id')								
+								->leftJoin('locations','locations.id','=','vla.area_id')								
+								->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+		                        ->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+		                        ->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+		                        ->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+								->join('locations as loc5','loc5.id','=','vl.location_id')
 								->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
 								->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
 								//->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
@@ -212,7 +217,9 @@
 											'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
 											'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image','pp.taxes', 
 											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
-											'locations.name as location_name', 'vla.latitude','vla.longitude');
+											'locations.name as location_name', 'vla.latitude','vla.longitude', 'vla.address',
+											'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+                                			'loc4.name as country', 'vla.pin_code', 'loc5.name as locality');
 
 			//echo $experienceQuery->toSql();
 			//adding filter for cuisines if cuisines are present
@@ -293,6 +300,7 @@
 													'price_type' => (is_null($row->price_type)) ? "" : $row->price_type,
 													'variable' => (is_null($row->is_variable)) ? "" : $row->is_variable,
 													'image' => (array_key_exists($row->id, $arrImage))? $arrImage[$row->id] : "",
+
 													'coordinates' => array(
 																			'latitude' => (is_null($row->latitude)) ? "" : $row->latitude,
 																			'longitude' => (is_null($row->longitude)) ? "" : $row->longitude
@@ -300,6 +308,17 @@
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
+													'location_address' => array(
+																					"address_line" 	=> $row->address,
+																					"locality" 		=> $row->locality,
+																					"area"			=> $row->area,
+																					"city" 			=> $row->city,
+																					"pincode" 		=> $row->pin_code,
+																					"state" 		=> $row->state_name,																
+																					"country" 		=> $row->country,
+																					"latitude" 		=> $row->latitude,
+																					"longitude" 	=> $row->longitude																
+																				),
 												);
 												
 					#setting up the value for the location filter

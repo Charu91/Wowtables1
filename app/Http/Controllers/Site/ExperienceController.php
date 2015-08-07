@@ -132,8 +132,10 @@ class ExperienceController extends Controller {
         $jump_to_ala_query = DB::select("SELECT vl.vendor_id, vl.location_id, vl.slug,l.name as area
                               FROM `vendor_locations` as vl
                               left join locations as l on l.id = vl.location_id
+                              left join vendor_location_address as vla on vla.vendor_location_id = vl.id
                               WHERE vl.vendor_id = '$vendor_id'
                               AND vl.a_la_carte = '1'
+                              AND vla.city_id = '$city_id'
                               AND vl.status = 'Active'");
 
         $alacarte_jump = array();
@@ -605,10 +607,8 @@ class ExperienceController extends Controller {
 
         $arrSubmittedData['minPrice']       = $price_start_range; 
 
-        if(!empty($price_end_with))
-        {
-            $arrSubmittedData['maxPrice']  = $price_end_with;
-        }
+        $arrSubmittedData['maxPrice']  = $price_end_with;
+
         
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
                 

@@ -65,6 +65,9 @@ $(document).ready(function(){
 
 </script>
 <input type="hidden" name="current_city" value="<?php echo $current_city;?>">
+<div class="col-md-12 col-sm-12" style="padding-bottom: 15px;">
+	<img src="/assets/img/alacarte_img.jpg" alt="alacarte image" />
+</div>
 
 <div class="col-md-8 col-sm-8 deal-listing-left">
 			<?php if(Session::has('suggestion_status') != 0) {?>
@@ -250,20 +253,6 @@ $(document).ready(function(){
 					
 				  
 				  </script>
-			
-			<div class="col-sm-12">
-				<div id="ala_accordion">
-				  <h3>What do you get when you a la carte with WowTables?</h3>
-				  <div>
-					<p style="text-align:center;">1) <b>Rs.500 Gift Card on every A La Carte reservation.</b> </p>
-					<p style="text-align:center;">2) <a href="{{URL::to('/')}}/pages/alacartereferrals" target="_blank">3000 Wow Points every time you successfully refer a friend to WowTables A La Carte</a><a href="{{URL::to('/')}}/users/redeem-rewards" style="color:#f0c140;"target="_blank"><b>(Where do these points go? Click here to know more)</b></a></p>
-					<p style="text-align:center;">3) 500 - 1500 Wow Points on every reservation</p>
-					<p style="text-align:center;">4) 500 Wow Points every time you review a restaurant</p>
-					<p style="text-align:center;">5) Expert tips and exclusive curator suggestions</p>
-					<p><a href="{{URL::to('/')}}/pages/alacartereferrals" style="color:#f0c140;" target="_blank"><b>Click here to refer a friend<b></a></p>
-				  </div>
-				 </div>
-			</div>
 
 			<div id="alacarte-left-content" style="clear:both;">
 				<div id="exp_list_load_layer" class="hidden">
@@ -271,7 +260,8 @@ $(document).ready(function(){
 				</div>
 			<?php //echo "count of id = ".count($rows['id']);//echo "<pre>"; print_r($rows);?>
 			<div class="col-sm-8">
-				<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." restaurants match your search criteria" : "No restaurants match your search criteria"); ?></p><span style="display:none;margin-left: 315px;margin-top: -30px;position: absolute" class="show_loading_img"><img src="/assets/img/loading.gif" title='Loading' /></span>
+				<?php $set_exp_name = (($resultCount == 1) ? "experience" : "experiences")?>
+				<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." ".$set_exp_name." match your search criteria" : "No experiences match your search criteria"); ?></p>
 			</div>
 
             <!--<div class="col-sm-4 text-right">
@@ -586,6 +576,11 @@ $(document).ready(function(){
 					}
 				});
 			},
+			focus: function( event, ui ) { //console.log('ui = '+ui.item.label);
+				var itemArr = ui.item.label.split('~~~');
+				$( this ).val( itemArr[0] );
+				return false;
+			},
 			select: function(event,ui){ //console.log("called");
 				event.preventDefault();
 				var itemArr = ui.item.value.split('~~~');
@@ -606,7 +601,7 @@ $(document).ready(function(){
 				var sList3        = "";
 				var sList4         = "";
 
-				if(itemArr[2] == 'location')
+				if(itemArr[2] == 'location' || itemArr[2] == 'no_data')
 				{
 					sList2	= 	itemArr[1]
 				}

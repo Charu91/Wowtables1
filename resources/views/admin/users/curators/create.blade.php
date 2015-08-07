@@ -33,6 +33,12 @@
             </div>
         </div>
         <div class="form-group">
+            {!! Form::label('designation','Designation',['class'=>'col-sm-4 control-label']) !!}
+            <div class="col-sm-8">
+                {!! Form::text('designation',null,['class'=>'form-control','required'=>'']) !!}
+            </div>
+        </div>
+        <div class="form-group">
             <label for="location_id" class="col-sm-4 control-label ">City <span class="required">*</span></label>
             <div class="col-sm-8">
                 {!! Form::select('location_id',$cities_list,0,['class'=>'form-control populate select-location','data-plugin-selectTwo'=>'','required'=>'']) !!}
@@ -44,14 +50,14 @@
                 {!! Form::text('link',null,['class'=>'form-control','required'=>'','placeholder'=>'http://www.example.com']) !!}
             </div>
         </div>
-        <div class="mt-lg mb-lg form-group">
+        <!--<div class="mt-lg mb-lg form-group">
             <div class="col-sm-4">
                 <button data-media-select="1" data-gallery-position="1"  data-media-type="single-media-image" type="button" class="btn btn-primary media-modal-btn">Select Image</button>
             </div>
             <div data-gallery-position="1" class="popup-gallery col-sm-8">
                 <input name="media_id" type="hidden" required>
             </div>
-        </div>
+        </div>-->
         <div class="form-group">
             {!! Form::label('bio','Bio',['class'=>'col-sm-4 control-label']) !!}
             <div class="col-sm-8">

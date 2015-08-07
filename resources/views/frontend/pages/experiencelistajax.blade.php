@@ -58,7 +58,8 @@ $(function() {
 		<img src="{{URL::to('/')}}/images/Loading-Image.gif">
 	</div>
 <div class="col-sm-6">
-	<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." experiences match your search criteria" : "No experiences match your search criteria"); ?></p>
+	<?php $set_exp_name = (($resultCount == 1) ? "experience" : "experiences")?>
+	<p class="sort-info"><?php echo ((($resultCount)>0) ? $resultCount." ".$set_exp_name." match your search criteria" : "No experiences match your search criteria"); ?></p>
 </div>
 <div class="col-sm-6">
 	<span style="display:none;margin-top: -30px;position: absolute" class="show_loading_img"><img src="<?php echo URL::asset('assets/img/loading.gif');?>" title='Loading' /></span>
@@ -145,7 +146,7 @@ $(function() {
 								<img src="<?php echo isset($data[$j_count]['image']['listing'])?$data[$j_count]['image']['listing']:'';?>" alt="image1" class="img-responsive"/>							
 									<?php
 									if(isset($data[$j_count]['flag']) &&  !empty($data[$j_count]['flag'])) {?>
-									<div class="flag new valign" id="top_paddin"style="background:#<?php echo $data[$j_count]['color'];?>"><?php echo $data[1]['flag'];?></div>
+									<div class="flag new valign" id="top_paddin"style="background:<?php echo $data[$j_count]['color'];?>"><?php echo $data[$j_count]['flag'];?></div>
 								<?php } 
 								/* 
 								<div class="bookmark valign balign" id="top_alignmen">
