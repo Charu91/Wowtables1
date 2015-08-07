@@ -51,11 +51,12 @@ class Handler extends ExceptionHandler {
         }
         else
         {
-            
-            $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+
+            $domain = $_SERVER['SERVER_NAME'];
+            $error_url = $_SERVER['REQUEST_URI'];
             $user_ip = $this->getUserIP();
             $browser_details =  $_SERVER['HTTP_USER_AGENT'];
-            $errorarray = array('error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
+            $errorarray = array('domain'=>$domain,'error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
             Mail::send('site.pages.page_error_404',[
                 'error_array'=> $errorarray,
             ], function($message) use ($errorarray)

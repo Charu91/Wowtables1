@@ -8,7 +8,8 @@
 <body>
 
 <p>User has found error while surfing the website. Below are the few details:</p>
-<p> Website url: <?php echo $error_array['error_url'];?></p>
+<p> Website: <?php echo $error_array['domain'];?></p>
+<p> Error url: <?php echo $error_array['error_url'];?></p>
 <p> User's IP Address: <?php echo $error_array['ip_address'];?></p>
 <p> User's browser details: <?php echo $error_array['browser_details'];?></p>
 
