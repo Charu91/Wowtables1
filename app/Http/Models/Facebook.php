@@ -230,7 +230,7 @@ class Facebook {
                             ->join('users', 'users.location_id','=','locations.id')
                             ->where('users.id',$userId)
                             ->where('locations.id', $cityId)
-                            ->select('name')
+                            ->select('slug')
                             ->first();
         if ($resultCity) {
             return $resultCity->slug;
