@@ -27,3 +27,35 @@ body .wowtable_font{ font-family: 'PT Sans', sans-serif !important;}
 left: 50%; margin-left: -15px;}
 #exp_list_load_layer img{display:none;}
 .deal-listing .experience-grid li .flag.valign{top:7% !important;}
+
+img.alacate_banner_img_mob{}
+img.alacate_banner_img_main{}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) { 
+	img.alacate_banner_img_mob{ display:none !important;}
+	img.alacate_banner_img_main{ display:block !important;}
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+	img.alacate_banner_img_mob{ display:none !important;}
+	img.alacate_banner_img_main{ display:block !important;}
+}
+
