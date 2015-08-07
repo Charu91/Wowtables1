@@ -499,15 +499,17 @@ $hasOrder = (bool)(isset($order) && is_array($order) && $arrExperience['data']['
           ?>
           <hr>
           <div class="widget price-box" style="margin-top: -20px;">
-                        <h3 class="text-center" style="color:#FA7B47">ADD ONS</h3>
+                        <h3 class="text-left" style="color:#FA7B47">ADD ONS</span></h3>
+
             <p class="text-center"><small></small></p>
+
                         <h4></h4>
            <ul>
            <?php 
           foreach($arrExperience['data']['addons'] as $addons)
           {
             ?>
-           <ul>
+
             <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
             <li><?php echo $addons['short_description'];?></li>
             <li>Rs. <?php echo $addons['price'];?> <small><br>per person (Taxes Applicable)</small></li>
