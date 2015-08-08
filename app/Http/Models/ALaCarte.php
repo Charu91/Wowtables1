@@ -314,20 +314,41 @@ use Config;
 	 */
 	public static function getVendorLocation($vendorID,$locationID=0) {
 		//array to contain the list of locations
-		$arrLocation = array();
+		$arrLocation = array();  
 		
 		$queryResult = DB::table('vendor_locations as vl')
 							->leftJoin('locations as loc', 'loc.id','=','vl.location_id')
+							->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
+							->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+							->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+							->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+							->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')
 							->where('vl.vendor_id','=',$vendorID)
 							->where('vl.location_id','!=',$locationID)
-							->select('loc.name','vl.slug')
+							->select('loc.name','vl.slug',
+									  'vla.latitude','vla.longitude', 'vla.address', 'vla.pin_code',
+									  'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
+									  'loc3.name as state_name','loc4.name as country', 'loc5.name as locality'
+									  )
 							->get();
 		
-		foreach( $queryResult as $vendorLocation) {				
+		foreach( $queryResult as $vendorLocation) {			
 			$arrLocation[] = array(
 									'name' => $vendorLocation->name,
-									'slug' => $vendorLocation->slug 
-								);
+									'slug' => $vendorLocation->slug,									
+									'location_address' => array(
+																	'address_line' => $vendorLocation->address,
+																	'locality' 		=> $vendorLocation->locality,
+																	'area' 			=> $vendorLocation->area,
+																	'city' 			=> $vendorLocation->city,
+																	'pincode' 		=> $vendorLocation->pin_code,
+																	'state' 		=> $vendorLocation->state_name,																
+																	'country' 		=> $vendorLocation->country,
+																	'latitude' 		=> $vendorLocation->latitude,
+																	'longitude' 	=> $vendorLocation->longitude,																
+																), 
+								); 
 		}
 		
 		return $arrLocation;
