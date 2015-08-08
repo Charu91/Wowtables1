@@ -41,6 +41,8 @@
 .popup_fix{
     display: block;
     opacity: 1;
+    padding-top: 25px;
+    margin-top: 40px;
 }
 .btn-primary:active,.btn-primary:hover,.btn-primary {
   color: #000;
