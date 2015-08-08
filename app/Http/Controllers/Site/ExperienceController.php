@@ -1248,9 +1248,9 @@ class ExperienceController extends Controller {
 
                   $last_reserv_date = date('Y-m-d',strtotime($reserv_date));
                     $last_reserv_time =  strtotime($reserv_time);
-                    $last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);
+                    $last_reserv_time_2_hours_after = strtotime('+1 Hour',$last_reserv_time);
                     //echo '<br>';
-                    $last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
+                    $last_reserv_time_2_hours_before = strtotime('-1 Hour',$last_reserv_time);
                     if($reserv_date_new == $last_reserv_date){
                         //echo 'if';
                         $new_reserv = strtotime($reserv_time_new);
