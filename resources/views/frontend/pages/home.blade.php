@@ -544,7 +544,7 @@
     </script>
 
    <script type="text/javascript">
-
+       $("#fbSelectCity").removeClass('popup_fix');
     function popup(){
         myWindow=window.open("{{URL::to('/')}}/users/facebook", "_blank", "scrollbars=1,resizable=1,height=300,width=450");
         myWindow.moveTo(500, 200); 
