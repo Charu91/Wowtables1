@@ -135,8 +135,8 @@ left: 50%; margin-left: -15px;}
 
 .deal-listing-left .widget.conc-mobile, .deal-listing.featured-variant .listing-cover-desc{ margin: 0px 0;}
 .deal-listing.featured-variant .listing-cover-desc .lead.intro-tag{ text-align:left; margin-bottom:0px; padding-bottom:10px;}
-.deal-listing .experience-grid li{ min-height: 360px; margin-bottom: 50px;}
-.deal-listing .experience-grid li .deal-desc{ margin-bottom: 61px !important;}
+.deal-listing .experience-grid li{ margin-bottom: 50px;}
+/*.deal-listing .experience-grid li .deal-desc{ margin-bottom: 61px !important;}*/
 
 img.alacate_banner_img_mob{}
 img.alacate_banner_img_main{}
