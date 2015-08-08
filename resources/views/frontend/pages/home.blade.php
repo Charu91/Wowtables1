@@ -580,6 +580,9 @@
             window.location.href = "{{URL::to('/')}}/"+city;
         }
         else {
+
+		console.log('modal called');
+	  
           $("#fbSelectCity").addClass('popup_fix').modal('toggle');
         }
         }, 'json');
