@@ -577,7 +577,9 @@
             window.location.href = "{{URL::to('/')}}/"+city;
         }
         else {
+		console.log('modal called');
           $("#fbSelectCity").modal('toggle');
+	  
         }
         }, 'json');
 
