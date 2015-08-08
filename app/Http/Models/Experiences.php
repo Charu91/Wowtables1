@@ -269,8 +269,16 @@ class Experiences {
 							//->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 							->leftJoin('vendor_locations as vl', 'vl.id','=','pvl.vendor_location_id')
 							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
-							->leftJoin('locations', 'locations.id','=','vl.location_id')							
-							->select('locations.name as area','vla.latitude','vla.longitude')
+							->leftJoin('locations', 'locations.id','=','vl.location_id')
+							->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+							->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+							->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+							->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')							
+							->select('locations.name as area','vla.latitude','vla.longitude',
+								     'vla.address', 'vla.pin_code', 								
+									 'loc2.name as city', 'loc3.name as state_name',
+									 'loc4.name as country', 'loc5.name as locality')
 							->where('pvl.product_id',$productID)
 							//->where('vla.city_id', $cityID) Added on 2.7.15
 							//->where('pvl.id','!=',$pvlID)
@@ -288,9 +296,16 @@ class Experiences {
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$arrLocation[] = array(
-									'area' => $row->area,
+									//'area' => $row->area,
 									'latitude' => $row->latitude,
-									'longitude' => $row->longitude
+									'longitude' => $row->longitude,
+									"address_line" 	=> $row->address,
+									"locality" 		=> $row->locality,
+									"area"			=> $row->area,
+									"city" 			=> $row->city,
+									"pincode" 		=> $row->pin_code,
+									"state" 		=> $row->state_name,																
+									"country" 		=> $row->country,
 								);
 			}
 		}		
