@@ -316,7 +316,7 @@
 													'rating' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['averageRating']:0,
 													'total_reviews' => array_key_exists($row->id, $arrRatings) ? $arrRatings[$row->id]['totalRating']:0,
 													"flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
-													'location_address' => array(
+													'location_address' => array([
 																					"address_line" 	=> $row->address,
 																					"locality" 		=> $row->locality,
 																					"area"			=> $row->area,
@@ -325,8 +325,8 @@
 																					"state" 		=> $row->state_name,																
 																					"country" 		=> $row->country,
 																					"latitude" 		=> $row->latitude,
-																					"longitude" 	=> $row->longitude																
-																				),
+																					"longitude" 	=> $row->longitude
+																				]),
 												);
 												
 					#setting up the value for the location filter
