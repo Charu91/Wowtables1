@@ -598,6 +598,10 @@
 	 */
 	public static function getNearbyResturantInformation($input) {
 		
+		if( !isset($input['distance']) || empty($input['distance'])) {
+			$input['distance'] = Config::get('constants.API_NEARBY_DISTANCE'); 			
+		}
+
 		$lat = $input['lat'];	
 		$log = $input['log'];			
 		
@@ -623,25 +627,20 @@
 						->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
 						->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
 						->join('locations as loc5','loc5.id','=','vl.location_id')						
-						//->leftJoin('vendor_locations_flags_map as vlfm','vlfm.vendor_location_id','=','vl.id')
-						//->leftJoin('flags','flags.id','=','vlfm.flag_id')
-						//->leftJoin('vendor_locations_media_map as vlmm', 'vlmm.vendor_location_id','=', 'vl.id')
-						//->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'vlmm.media_id')
-						//->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'vlmm.media_id')
-						// ->leftJoin('media_resized_new as mrn1', function($join) {
-						// 						$join->on('mrn1.media_id', '=', 'vlmm.media_id')
-						// 							  ->where('mrn1.image_type', '=' , 'mobile_listing_ios_alacarte');
-						// })
-						// ->leftJoin('media_resized_new as mrn2', function($join) {
-						// 						$join->on('mrn2.media_id', '=', 'vlmm.media_id')
-						// 							  ->where('mrn1.image_type', '=', 'mobile_listing_ios_alacarte');
-						// })            
-						//->where('vl.vendor_id',$vendorID)
-						//->where('v.status','Publish')
+						->leftJoin('vendor_locations_flags_map as vlfm','vlfm.vendor_location_id','=','vl.id')
+						->leftJoin('flags','flags.id','=','vlfm.flag_id')
+						->leftJoin('vendor_locations_media_map as vlmm', 'vlmm.vendor_location_id','=', 'vl.id')
+						->leftJoin('media_resized_new as mrn1', function($join) {
+												$join->on('mrn1.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn1.image_type', '=' , 'mobile_listing_ios_alacarte');
+						})
+						->leftJoin('media_resized_new as mrn2', function($join) {
+												$join->on('mrn2.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn1.image_type', '=', 'mobile_listing_ios_alacarte');
+						})
+						->where('v.status','Publish')
 						->where('vl.status','Active')
-						->where('vl.a_la_carte','=', 1)
-						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
-						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
+						->where('vl.a_la_carte','=', 1)						
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
 								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
 								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
@@ -649,14 +648,10 @@
 								'loc.name as location_name',
 								'vlaa.latitude','vlaa.longitude', 'vlaa.address', 'vlaa.pin_code', 								
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
-								'loc4.name as country', 'loc5.name as locality',
-								//DB::raw(("(((acos(sin((36.114646*pi()/180)) * sin(('vlaa.latitude'*pi()/180))+cos((36.114646*pi()/180)) * cos(('vlaa.latitude'*pi()/180)) * cos(((115.172816- 'vlaa.longitude')*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance"))													
-								DB::raw(("(((acos(sin((".$lat."*pi()/180)) * sin(('vlaa.latitude'*pi()/180))+cos((".$lat."*pi()/180)) * cos(('vlaa.latitude'*pi()/180)) * cos(((".$log." - 'vlaa.longitude')*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance"))
-								//DB::raw('IFNULL(flags.name,"") AS flag_name'),
-								//DB::raw('IFNULL(flags.name,"") AS flag_name'),
-								//'mrn1.file as ios_image',
-								//'mrn2.file as android_image'
-								//'vlaa.latitude'
+								'loc4.name as country', 'loc5.name as locality',								
+								DB::raw('IFNULL(flags.name,"") AS flag_name'),								
+								'mrn1.file as ios_image',
+								'mrn2.file as android_image'
 								)
 						->groupBy('vl.id');
 						//->get();  
@@ -675,11 +670,26 @@
 		$data['status']=Config::get('constants.API_SUCCESS');
 
 		//reading the experiences
-		$arrExperience = self::readNearbyRestaurantsExperiences();
+		$arrExperience = self::readNearbyRestaurantsExperiences($input);
 
 		if($queryResult) {
 			foreach($queryResult as $row) {
-				$data['data']['alacarte'][] = array(
+
+					$lat1 = $input['lat'];
+					$log1 = $input['log'];						
+					$lat2 = $row->latitude ;
+					$log2 = $row->longitude ;  					
+
+					$dist = (((acos(sin(($lat1*pi()/180)) * sin(($lat2*pi()/180))+cos(($lat1*pi()/180)) *
+					cos(($lat2*pi()/180)) * cos((($log1 - $log2)*pi()/180))))*180/pi())*60*1.1515);
+
+					$dist =$dist * 1.609344;
+					$distance =round($dist,2);  
+						
+
+				if($distance <= $input['distance']) {
+
+					$data['data']['alacarte'][] = array(
 												'vl_id' 		=> $row->vl_id,
 												'name' 			=> $row->name,
 												'cuisine' 		=> (empty($row->cuisine)) ? "" : $row->cuisine,
@@ -687,12 +697,12 @@
 												'total_reviews' => $row->total_reviews,
 												'rating' 		=> $row->rating,
 												'location' 		=> (empty($row->location_name)) ? "" : $row->location_name,
-												// 'flag' 			=> (empty($row->flag_name)) ? "" : $row->flag_name,
-												// 'image' => array(
-												// 					'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-												// 					'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
-												// 				 )
-												'distance' 		=> round($row->distance,2),
+												'flag' 			=> (empty($row->flag_name)) ? "" : $row->flag_name,
+												'image' => array(
+																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																 ),
+												'distance' 		=> $distance, 
 												'location_address' => array(
 																				"address_line" 	=> $row->address,
 																				"locality" 		=> $row->locality,
@@ -705,6 +715,7 @@
 																				"longitude" 	=> $row->longitude																
 																			),												
 											);
+				}
 			}
 			if(array_key_exists('data', $data)) { 
 				$data['alacarteCount'] = count($data['data']['alacarte']);
@@ -742,7 +753,7 @@
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function readNearbyRestaurantsExperiences() {
+	public static function readNearbyRestaurantsExperiences($input) {
 		
 		//query to read experiences available at the Restaurant
 		$queryResult = DB::table('products as p')
@@ -756,32 +767,30 @@
                     													->on('pr.status','=', DB::raw('"Approved"'));
                     												})
 							->leftJoin('locations as loc','loc.id','=','vl.location_id')
-							//->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
-							//->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
-							//->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
-							//->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
-							//->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
+							->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
+							->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
+							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
+							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
+							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
 							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
 							->leftjoin('vendor_location_address as vlaa', 'vlaa.vendor_location_id', '=', 'vl.id')							
 							->join('locations as loc1','loc1.id', '=' , 'vlaa.area_id')
 							->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
 							->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
 							->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
-							->join('locations as loc5','loc5.id','=','vl.location_id')
-							//->where('vl.vendor_id', $vendorID)							
+							->join('locations as loc5','loc5.id','=','vl.location_id')														
 							->where('p.status', 'Publish')
 							->where('pvl.status','Active')
-							//->where('mrn1.image_type','mobile_listing_ios_experience')
-							//->where('mrn2.image_type', 'mobile_listing_android_experience')						
+							->where('mrn1.image_type','mobile_listing_ios_experience')
+							->where('mrn2.image_type', 'mobile_listing_android_experience')						
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
-									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),
-									DB::raw(("(((acos(sin((36.114646*pi()/180)) * sin(('vlaa.latitude'*pi()/180))+cos((36.114646*pi()/180)) * cos(('vlaa.latitude'*pi()/180)) * cos(((115.172816- 'vlaa.longitude')*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance")),
-									//'mrn1.file as ios_image','mrn2.file as android_image',
-									//'flags.name as flag_name',
+									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),									
+									'mrn1.file as ios_image','mrn2.file as android_image',
+									'flags.name as flag_name',
 									'vlaa.latitude','vlaa.longitude', 'vlaa.address', 'vlaa.pin_code', 								
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 									'loc4.name as country', 'loc5.name as locality',
@@ -803,8 +812,24 @@
 		//array to store the information from the DB
 		$data = array();
 		if($queryResult) {
-			foreach($queryResult as $row) {
-				$data[] = array(
+			foreach($queryResult as $row) {   
+				
+					$lat1 = $input['lat'];
+					$log1 = $input['log'];
+						
+					$lat2 = $row->latitude ;
+					$log2 = $row->longitude ;  
+						
+
+					$dist = (((acos(sin(($lat1*pi()/180)) * sin(($lat2*pi()/180))+cos(($lat1*pi()/180)) *
+					cos(($lat2*pi()/180)) * cos((($log1 - $log2)*pi()/180))))*180/pi())*60*1.1515);
+
+					$dist =$dist * 1.609344;
+					$distance =round($dist,2);  						
+
+				if( $distance <= $input['distance'] ) {
+
+					$data[] = array(
 											'prod_id' => $row->product_id,
 											'pvl_id' => $row->pvl_id,
 											'name' => $row->name,
@@ -815,7 +840,7 @@
 											'taxes' => $row->taxes,
 											'price_type' => $row->price_type,
 											'location' => $row->location_name,
-											'distance' 		=> round($row->distance,2),
+											'distance' 		=> $distance, 
 											'location_address' => array(
 																			"address_line" 	=> $row->address,
 																			"locality" 		=> $row->locality,
@@ -827,13 +852,14 @@
 																			"latitude" 		=> $row->latitude,
 																			"longitude" 	=> $row->longitude																
 																		),
-											//'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
-											//'short_description' => $row->short_description ,
-											// 'image' => array(
-											// 					'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
-											// 					'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
-											// 				 )
+											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
+											'short_description' => $row->short_description ,
+											'image' => array(
+																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+															 )
 										);
+				}
 			}
 		}		
 		return $data;							
