@@ -66,7 +66,11 @@ class Handler extends ExceptionHandler {
                 $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
 
             });
+<<<<<<< HEAD
             //return parent::render($request, $e); 
+=======
+            //return parent::render($request, $e);
+>>>>>>> 4da41e04c424df0f349d94296bcc0757354017c3
             return response()->view('errors.404');  //this code redirect any code to 404 re
 
         }
