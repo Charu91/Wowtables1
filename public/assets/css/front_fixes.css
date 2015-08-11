@@ -152,8 +152,8 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 #redirectloginModal .modal-body .nav-justified.wowtables-nav>li a{font-family: 'swiss_721light' !important; font-weight: inherit;}
 #redirectloginModal .modal-body .nav-justified.wowtables-nav>li.active{font-family: 'swiss_721light' !important;}
 .modal-body form .wowtable_enter_btn{font-family: 'swiss_721light' !important;}
-.deal-listing .experience-grid, .deal-listing .top-filter ul{overflow:hidden;}
-.deal-listing .experience-grid, .deal-listing .top-filter ul li #desc_tag_exp{margin-bottom: 101px !important;}
+.deal-listing .experience-grid, .deal-listing .top-filter ul{}
+#desc_tag_exp{margin-bottom: 101px !important;}
 
 @media screen and (min-width: 768px){
 	.carousel-caption{ left: initial; right:9%;}
