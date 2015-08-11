@@ -4,7 +4,6 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use \Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Mail;
 
 class Handler extends ExceptionHandler {
 
@@ -44,32 +43,14 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-        if ($this->isHttpException($e))
+		 if ($this->isHttpException($e))
         {
-
             return $this->renderHttpException($e);
         }
         else
         {
-
-            $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
-            $user_ip = $this->getUserIP();
-            $browser_details =  $_SERVER['HTTP_USER_AGENT'];
-            $errorarray = array('error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
-            Mail::send('site.pages.page_error_404',[
-                'error_array'=> $errorarray,
-            ], function($message) use ($errorarray)
-            {
-                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-
-                $message->to('concierge@wowtables.com')->subject('404 error on website');
-                $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
-
-            });
-
-            //return parent::render($request, $e);
-            return response()->view('errors.404');  //this code redirect any code to 404 re
-
+            return parent::render($request, $e);
+            //return response()->view('errors.'.'405', [], '405');  //this code redirect any code to 404 re
         }
 	}
 
@@ -89,27 +70,6 @@ class Handler extends ExceptionHandler {
         {
             return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
         }
-    }
-
-    public function getUserIP(){
-        $client  = @$_SERVER['HTTP_CLIENT_IP'];
-        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote  = $_SERVER['REMOTE_ADDR'];
-
-        if(filter_var($client, FILTER_VALIDATE_IP))
-        {
-            $ip = $client;
-        }
-        elseif(filter_var($forward, FILTER_VALIDATE_IP))
-        {
-            $ip = $forward;
-        }
-        else
-        {
-            $ip = $remote;
-        }
-
-        return $ip;
     }
 
 }
