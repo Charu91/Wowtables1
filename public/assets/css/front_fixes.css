@@ -141,6 +141,19 @@ left: 50%; margin-left: -15px;}
 img.alacate_banner_img_mob{}
 img.alacate_banner_img_main{}
 
+header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
+.top-filter .filter-left .btn-group.btn-block #city_p{font-family: 'swiss_721light' !important;}
+#abovefold .signup-wrapper #FBLogin {font-family: 'swiss_721light' !important;}
+#abovefold .form-slide-wrapper .info-text.new a{font-family: 'swiss_721light' !important;}
+.widget .filter-widget .more-filter .panel-body .option.tags{clear:left;}
+.widget .filter-widget .more-filter .panel-body .option.tags .leads_tag{padding-top:0% !important;}
+
+#redirectloginModal .modal-body #FBSignup{font-family: 'swiss_721light' !important;}
+#redirectloginModal .modal-body .nav-justified.wowtables-nav>li a{font-family: 'swiss_721light' !important; font-weight: inherit;}
+#redirectloginModal .modal-body .nav-justified.wowtables-nav>li.active{font-family: 'swiss_721light' !important;}
+.modal-body form .wowtable_enter_btn{font-family: 'swiss_721light' !important;}
+.deal-listing .experience-grid, .deal-listing .top-filter ul{overflow:hidden;}
+.deal-listing .experience-grid, .deal-listing .top-filter ul li #desc_tag_exp{margin-bottom: 101px !important;}
 
 @media screen and (min-width: 768px){
 	.carousel-caption{ left: initial; right:9%;}
@@ -148,6 +161,7 @@ img.alacate_banner_img_main{}
 
 @media screen and (max-width: 720px){
 	.deal-listing .experience-grid li{ margin-bottom: 20px;}
+	#redirectloginModal .modal-body .nav-justified.wowtables-nav > li a{padding: 2px 5px !important;}
 }
 @media (max-width: 359px) and (min-width: 320px){
 	#review-menu-tab-detail{ height: 40px;}
@@ -180,4 +194,3 @@ img.alacate_banner_img_main{}
 	img.alacate_banner_img_mob{ display:none !important;}
 	img.alacate_banner_img_main{ display:block !important;}
 }
-
