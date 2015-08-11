@@ -1188,6 +1188,7 @@ class ExperienceController extends Controller {
             $arrResponse['long'] = $fetch_cookie['long'];
             $arrResponse['city'] = $fetch_cookie['current_city'];
             $arrResponse['slug'] = $fetch_cookie['slug'];
+            $arrResponse['total_amount'] = $fetch_cookie['total_amount'];
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
