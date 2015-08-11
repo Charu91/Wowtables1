@@ -709,7 +709,7 @@ class ExperienceController extends Controller {
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
         $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
         $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
-        //echo "<pre>"; print_r($productDetails); die;
+        echo "<pre>"; print_r($dataPost); die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
