@@ -48,8 +48,8 @@ class CustomValidator extends Validator {
 
 	                  //$last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);	                   
 	                  //$last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
-	                  $last_reserv_time_2_hours_after = strtotime('-90 minutes',$last_reserv_time);	                   
-	                  $last_reserv_time_2_hours_before = strtotime('-90 minutes',$last_reserv_time);
+	                  $last_reserv_time_2_hours_after = strtotime('+1.5 Hour',$last_reserv_time);	                   
+	                  $last_reserv_time_2_hours_before = strtotime('-1.5 Hour',$last_reserv_time);
 	                  	
 	                  if($reservationDate == $last_reserv_date){
 	                        
