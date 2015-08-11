@@ -709,7 +709,7 @@ class ExperienceController extends Controller {
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
         $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
         $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
-        echo "<pre>"; print_r($dataPost); die;
+        echo "<pre>"; print_r($dataPost); //die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -791,7 +791,7 @@ class ExperienceController extends Controller {
                                 'long' => $locationDetails->longitude,
                                 'slug' => $outlet->slug,
                             );
-
+                            echo "<pre>"; print_r($cookiearray); die;
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
                                 //echo "set addons in cookie";
                                 foreach($dataPost['addon'] as $prod_id => $qty) {
