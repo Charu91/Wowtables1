@@ -23,7 +23,7 @@ class CreateCuratorRequest extends Request {
     {
         return [
             'name'  => 'required',
-            'media_id'  => 'required|exists:media,id|unique:curators',
+            //'media_id'  => 'required|exists:media,id|unique:curators',
             'bio' => 'required',
             'link' => 'required|url',
             'location_id' => 'required|exists:locations,id,type,City',

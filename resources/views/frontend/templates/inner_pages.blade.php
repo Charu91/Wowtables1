@@ -364,7 +364,8 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
   <link href="{{URL::to('/')}}/assets/css/app_new4.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new5.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new6.css?ver=1.0.5" rel='stylesheet' type="text/css">
-
+	<!-- new css for front-end design fixes -->
+  <link href="{{URL::to('/')}}/assets/css/front_fixes.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js?ver=1.0.2"></script>-->
 
     <script src="{{URL::to('/')}}/assets/js/jquery.js"></script>
@@ -485,6 +486,15 @@ $(document).ready(function(){
 </script> 
 </head>
 <body>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PQHMSR"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PQHMSR');</script>
+<!-- End Google Tag Manager -->
 <?php
 
 $uname = (isset($user_data['full_name']) && $user_data['full_name']!=''?$user_data['full_name']:$user_data['username']);
@@ -573,7 +583,7 @@ if (strpos($url,'alacarte') !== false) {
                   <div class="top-filter col-md-12">
                     <div class="filter-left">
                       <div class="btn-group btn-block wowtable_mobile_view" style="padding-top:5px !important;  padding-bottom:5px !important;">
-                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p" style="font-family:Swis721 Lt BT !important;">
+                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p">
                           <span class="glyphicon glyphicon-map-marker" style="margin-left: -41%;padding-right: 9%;font-size:16px !important;color:#9d9d9c !important;"></span>
                           <?php
                           $current_city = ($current_city ? $current_city : "mumbai");
@@ -601,19 +611,19 @@ if (strpos($url,'alacarte') !== false) {
            <div class="col-md-8 col-sm-9 col-xs-8 pull-right head-links wowtables_hide_refer_menu">
             <ul class="nav navbar-nav navbar-right wowtables_border_color wowtables_tablet_size">
               <li>
-                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
+                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;"> Refer a friend and Get 3000 Gourmet points </a>
               </li>
               <?php if(isset($user_data['full_name']) && $user_data['full_name']=='Guest')
               {
                 ?>
                 <li>
-                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;font-family:Swis721 Lt BT !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
+                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
               </li>
               <?php
               } ?>
               <li class="dropdown">
                 <?php if($uname != "Guest") {?>
-                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;">
+                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;text-transform:capitalize;">
                       <?php echo $uname; ?>
                           <span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">
                               (<?php $user = Auth::user(); echo $user->points_earned - $user->points_spent; ?> Pts.)
@@ -1002,18 +1012,18 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
                   <li><a href="http://blog.gourmetitup.com">Blog</a></li>
                   <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
-                  <li><a href="#">Careers</a></li>
-                  <li><a href="#">Partner With Us</a></li>
-                  <li><a href="#">How It Works</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/careers">Careers</a></li>
+                    <li><a href="{{URL::to('/')}}/pages/restaurant-partnerships">Restaurateurs</a></li>
+                    <li><a href="{{URL::to('/')}}/pages/advertising">Brand Partnerships</a></li>
+                    <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
                   <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
-          <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
+                  <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
                   <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
-                  <li><a href="#">Corporate Solutions</a></li>
-                  <li><a href="#">Parties & Private Events</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
                   <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
-                  <li><a href="#">Terms of Use</a></li>
-                  <li><a href="#">Privacy Statement</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
+                  <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
                 </ul>
               </div><!-- /.navbar-collapse -->
             </nav>
@@ -1060,6 +1070,13 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <li><a href="https://instagram.com/WowTables/" target="blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
               </ul>
           </div>
+            <div class="col-md-3 col-sm-6">
+                <h4 class="foot-widget-title">Download our app from</h4>
+                <ul class="inline-list socialicons">
+                    <li><a href="https://itunes.apple.com/app/id983901046" target="blank"><img src="/assets/img/apple.jpg" alt="Wowtables Apple iTunes"></a></li>
+                    <li><a href="https://play.google.com/store/apps/details?id=com.wowtables.android&hl=en" target="blank"><img src="/assets/img/android.jpg" alt="Wowtables Andriod Playstore"></a></li>
+                </ul>
+            </div>
         </div>
       </div>
 
@@ -2268,7 +2285,7 @@ var google_remarketing_only = true;
             });
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
+              $('#exp_list_load_layer').addClass('hidden');
             $("#left-content").fadeIn(500)
           }
         });
@@ -2335,7 +2352,6 @@ var google_remarketing_only = true;
             //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
             data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c,area_values : sList1,cuisine_values : sList2,vendor_value : sList},
             beforeSend:function(){
-              //$(".show_loading_img").css("display","block");
               $('#exp_list_load_layer').removeClass('hidden');
             },
             success: function(d) {
@@ -2374,7 +2390,6 @@ var google_remarketing_only = true;
               
             },
             complete: function() {
-              $(".show_loading_img").css("display","none");
               $("#left-content").fadeIn(500);
               $('#exp_list_load_layer').addClass('hidden');
               $('html, body').animate({
@@ -2447,7 +2462,7 @@ var google_remarketing_only = true;
           type: "post",
           data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c,area_values : sList1,cuisine_values : sList2,vendor_value : sList},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           success: function(d) {
             //console.log(d.area_count);
@@ -2485,8 +2500,11 @@ var google_remarketing_only = true;
             
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
           });
@@ -2540,7 +2558,7 @@ var google_remarketing_only = true;
           type: "post",
           data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c,area_values : sList1,cuisine_values : sList2,vendor_value : sList},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           success: function(d) {
             //console.log(d.area_count);
@@ -2578,8 +2596,11 @@ var google_remarketing_only = true;
             
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
           });
@@ -2619,7 +2640,7 @@ var google_remarketing_only = true;
                 //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
                 data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
                 beforeSend:function(){
-                  $(".show_loading_img").css("display","block");
+                    $('#exp_list_load_layer').removeClass('hidden');
                 },
                 success: function(d) {
                   //$("#results").append(d);
@@ -2658,8 +2679,11 @@ var google_remarketing_only = true;
                   $(".dynamic_tags").html(tags_replace);
                 },
                 complete: function() {
-                  $(".show_loading_img").css("display","none");
-                  $("#left-content").fadeIn(500)
+                    $('#exp_list_load_layer').addClass('hidden');
+                  $("#left-content").fadeIn(500);
+                    $('html, body').animate({
+                        scrollTop: $('#left-content').offset().top
+                    }, 'slow');
                 },
                 timeout: 9999999
               });
@@ -2677,7 +2701,7 @@ var google_remarketing_only = true;
                 //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
                 data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
                 beforeSend:function(){
-                  $(".show_loading_img").css("display","block");
+                    $('#exp_list_load_layer').removeClass('hidden');
                 },
                 success: function(d) {
                   //$("#results").append(d);
@@ -2716,8 +2740,11 @@ var google_remarketing_only = true;
                   $(".dynamic_tags").html(tags_replace);
                 },
                 complete: function() {
-                  $(".show_loading_img").css("display","none");
-                  $("#left-content").fadeIn(500)
+                    $('#exp_list_load_layer').addClass('hidden');
+                  $("#left-content").fadeIn(500);
+                    $('html, body').animate({
+                        scrollTop: $('#left-content').offset().top
+                    }, 'slow');
                 },
                 timeout: 9999999
               });
@@ -2763,7 +2790,7 @@ var google_remarketing_only = true;
                 //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
                 data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
                 beforeSend:function(){
-                  $(".show_loading_img").css("display","block");
+                    $('#exp_list_load_layer').removeClass('hidden');
                 },
                 success: function(d) {
                   //$("#results").append(d);
@@ -2801,8 +2828,11 @@ var google_remarketing_only = true;
                   $(".dynamic_tags").html(tags_replace);
                 },
                 complete: function() {
-                  $(".show_loading_img").css("display","none");
-                  $("#left-content").fadeIn(500)
+                    $('#exp_list_load_layer').addClass('hidden');
+                  $("#left-content").fadeIn(500);
+                    $('html, body').animate({
+                        scrollTop: $('#left-content').offset().top
+                    }, 'slow');
                 },
                 timeout: 9999999
               });
@@ -2820,7 +2850,7 @@ var google_remarketing_only = true;
                 //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
                 data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
                 beforeSend:function(){
-                  $(".show_loading_img").css("display","block");
+                    $('#exp_list_load_layer').removeClass('hidden');
                 },
                 success: function(d) {
                   //$("#results").append(d);
@@ -2859,8 +2889,11 @@ var google_remarketing_only = true;
                   $(".dynamic_tags").html(tags_replace);
                 },
                 complete: function() {
-                  $(".show_loading_img").css("display","none");
-                  $("#left-content").fadeIn(500)
+                    $('#exp_list_load_layer').addClass('hidden');
+                  $("#left-content").fadeIn(500);
+                    $('html, body').animate({
+                        scrollTop: $('#left-content').offset().top
+                    }, 'slow');
                 },
                 timeout: 9999999
               });
@@ -2896,7 +2929,7 @@ var google_remarketing_only = true;
             //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
             data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,city: c},
             beforeSend:function(){
-              $(".show_loading_img").css("display","block");
+                $('#exp_list_load_layer').removeClass('hidden');
             },
             success: function(d) {
               //$("#results").append(d);
@@ -2935,8 +2968,11 @@ var google_remarketing_only = true;
               $(".dynamic_tags").html(tags_replace);
             },
             complete: function() {
-              $(".show_loading_img").css("display","none");
-              $("#left-content").fadeIn(500)
+                $('#exp_list_load_layer').addClass('hidden');
+              $("#left-content").fadeIn(500);
+                $('html, body').animate({
+                    scrollTop: $('#left-content').offset().top
+                }, 'slow');
             },
             timeout: 9999999
           });
@@ -2964,7 +3000,7 @@ var google_remarketing_only = true;
           //data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val},
           data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with, city: c},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           success: function(d) {
             //$("#results").append(d);
@@ -3003,8 +3039,11 @@ var google_remarketing_only = true;
             $(".dynamic_tags").html(tags_replace);
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
         });
@@ -3036,7 +3075,7 @@ var google_remarketing_only = true;
           type: "post",
          data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,area_values : sList,city: c},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           success: function(d) {
             var cuisine_replace = '';
@@ -3064,8 +3103,11 @@ var google_remarketing_only = true;
             $(".dynamic_tags").html(tags_replace);
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
         });
@@ -3073,7 +3115,7 @@ var google_remarketing_only = true;
 
 
       //ajax call for getting results according to the cuisine selected in the search bar
-      $("body").delegate(".search_by_cuisine","change",function(){
+      $("body").delegate(".search_by_cuisine","change",function(){ //console.log("asd");
         var time_val      = $("#search_by_time").val();
         var date_val      = $("#datepicker").val();
         var rest_val      = $("#search_by").val();
@@ -3089,9 +3131,11 @@ var google_remarketing_only = true;
 
        $( ".search_by_place" ).each(function() {
           var sThisVal = (this.checked ? $(this).val() : "0");
+           //console.log("checked val = "+sThisVal);
           if(parseInt(sThisVal)) {
-            sList1 += (sList=="" ? sThisVal : "," + sThisVal+"");
+            sList1 += (sList1=="" ? sThisVal : "," + sThisVal+"");
           }
+           //console.log(" , v = "+sList1+" <br/>");
         });
 
         $( ".search_by_cuisine" ).each(function() {
@@ -3108,7 +3152,7 @@ var google_remarketing_only = true;
           type: "post",
           data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,area_values : sList1,cuisine_values : sList,city: c},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           //data: {cuisine_values : sList},
           success: function(d) {
@@ -3128,8 +3172,11 @@ var google_remarketing_only = true;
             $(".dynamic_tags").html(tags_replace);
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
         });
@@ -3153,14 +3200,14 @@ var google_remarketing_only = true;
        $( ".search_by_place" ).each(function() {
           var sThisVal = (this.checked ? $(this).val() : "0");
           if(parseInt(sThisVal)) {
-            sList1 += (sList=="" ? sThisVal : "," + sThisVal+"");
+            sList1 += (sList1=="" ? sThisVal : "," + sThisVal+"");
           }
         });
 
         $( ".search_by_cuisine" ).each(function() {
           var sThisVal = (this.checked ? $(this).val() : "0");
           if(parseInt(sThisVal)) {
-            sList2 += (sList=="" ? sThisVal : "," + sThisVal+"");
+            sList2 += (sList2=="" ? sThisVal : "," + sThisVal+"");
           }
         });        
         
@@ -3177,7 +3224,7 @@ var google_remarketing_only = true;
           type: "post",
           data: {restaurant_val : rest_val,date_value : date_val,time_value : time_val,start_price: start_from, end_price : end_with,area_values : sList1,cuisine_values : sList2,tags_values : sList, city : c},
           beforeSend:function(){
-            $(".show_loading_img").css("display","block");
+              $('#exp_list_load_layer').removeClass('hidden');
           },
           success: function(d) {
             //$("#results").append(d);
@@ -3187,8 +3234,11 @@ var google_remarketing_only = true;
             });
           },
           complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+              $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+              $('html, body').animate({
+                  scrollTop: $('#left-content').offset().top
+              }, 'slow');
           },
           timeout: 9999999
         });
@@ -3206,7 +3256,7 @@ var google_remarketing_only = true;
               dataType: "json",
               data:{city: c},
               beforeSend:function(){
-                $(".show_loading_img").css("display","block");
+                  $('#exp_list_load_layer').removeClass('hidden');
               },
               success: function(d) {
               //console.log(d.area_count);
@@ -3243,8 +3293,11 @@ var google_remarketing_only = true;
               $(".dynamic_tags").html(tags_replace);
               
             },complete: function() {
-              $(".show_loading_img").css("display","none");
-              $("#left-content").fadeIn(500)
+                  $('#exp_list_load_layer').addClass('hidden');
+              $("#left-content").fadeIn(500);
+                  $('html, body').animate({
+                      scrollTop: $('#left-content').offset().top
+                  }, 'slow');
             },
             timeout: 9999999
             
@@ -3268,7 +3321,7 @@ var google_remarketing_only = true;
             dataType: "json",
             data:{city: c},
             beforeSend:function(){
-              $(".show_loading_img").css("display","block");
+                $('#exp_list_load_layer').removeClass('hidden');
             },
             success: function(d) {
             
@@ -3305,8 +3358,11 @@ var google_remarketing_only = true;
             $(".dynamic_tags").html(tags_replace);
             
           },complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+                $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+                $('html, body').animate({
+                    scrollTop: $('#left-content').offset().top
+                }, 'slow');
           },
           timeout: 9999999
           
@@ -3329,7 +3385,7 @@ var google_remarketing_only = true;
             dataType: "json",
             data:{city: c},
             beforeSend:function(){
-              $(".show_loading_img").css("display","block");
+                $('#exp_list_load_layer').removeClass('hidden');
             },
             success: function(d) {
             //console.log(d.area_count);
@@ -3366,8 +3422,11 @@ var google_remarketing_only = true;
             $(".dynamic_tags").html(tags_replace);
             
           },complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
+                $('#exp_list_load_layer').addClass('hidden');
+            $("#left-content").fadeIn(500);
+                $('html, body').animate({
+                    scrollTop: $('#left-content').offset().top
+                }, 'slow');
           },
           timeout: 9999999
           
@@ -3376,64 +3435,7 @@ var google_remarketing_only = true;
 
       $("body").delegate(".clear_filters","click",function(){
 
-        $("#slider-range").slider("values", 0, 0);
-          $("#slider-range").slider("values", 1, 15000);
-          $( "#amount" ).val( "Rs " + $( "#slider-range" ).slider( "values", 0 ) + " - Rs " + $( "#slider-range" ).slider( "values", 1 ) );
-        $("#slider-range-small").slider("values", 0, 0);
-          $("#slider-range-small").slider("values", 1, 15000);
-          $( "#amount-small" ).val( "Rs " + $( "#slider-range-small" ).slider( "values", 0 ) + " - Rs " + $( "#slider-range-small" ).slider( "values", 1 ) );
-        //console.log("clieck");
-        //window.location.reload();
-        var c = $("#uri_city_id").val();       
-        $.ajax({
-            url: "custom_search/search_filter",
-            type: "POST",
-            dataType: "json",
-            data:{city: c},
-            beforeSend:function(){
-              $(".show_loading_img").css("display","block");
-            },
-            success: function(d) {
-            //console.log(d.area_count);
-            var area_replace = '';
-            $.each(d.area_count,function(index, valueData){
-              area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
-            });
-
-            var cuisine_replace = '';
-            $.each(d.cuisine_count,function(index, valueData){
-              cuisine_replace += '<div class="checkbox"><label><input class="search_by_cuisine" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'
-            });
-
-            var tags_replace = '';
-            $.each(d.tags_count,function(index, valueData){
-              tags_replace += '<label class="btn btn-warning"><input type="checkbox" class="search_by_tags" value="'+valueData.id+'"> '+valueData.name+'</label>'
-            });
-
-            $("#left-content").fadeOut(500, function() {
-              $("#left-content").empty();
-              $("#left-content").html(d.restaurant_data);
-            });
-            if(area_replace == "") {
-              area_replace = "No Areas found";
-            }
-            if(cuisine_replace == "") {
-              cuisine_replace = "No Cuisine found";
-            }
-            if(tags_replace == "") {
-              tags_replace = "No Tags found";
-            }
-            $(".dynamic_areas").html(area_replace);
-            $(".dynamic_cuisine").html(cuisine_replace);
-            $(".dynamic_tags").html(tags_replace);
-            
-          },complete: function() {
-            $(".show_loading_img").css("display","none");
-            $("#left-content").fadeIn(500)
-          },
-          timeout: 9999999
-          
-        });
+          location.reload();
       });
       
     });

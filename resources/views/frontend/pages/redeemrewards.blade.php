@@ -366,7 +366,13 @@
        </p>
         <p>
           -We only award Gourmet Points for reservations made through our website and not over the phone. However if you are having difficulty with using the website we will be happy to make an exception.
-        </p>   
+        </p>
+        <p>
+          <span style="font-size:18px;"><strong>Can I redeem a gift card with points earned on a  reservation made but not yet completed?</strong></span>
+       </p>
+        <p>
+          -No. Gourmet Points earned for reservations can only be used for gift card redemptions 1 week after a successful seating.
+        </p>
                    
             
         </div>

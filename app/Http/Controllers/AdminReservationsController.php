@@ -11,6 +11,11 @@ use WowTables\Http\Models\Password;
 use Mail;
 use Mailchimp;
 use WowTables\Http\Models\Frontend\ReservationModel;
+use WowTables\Http\Models\Frontend\ExperienceModel;
+use WowTables\Http\Models\Frontend\AlacarteModel;
+use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
+use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
+use WowTables\Http\Models\Profile;
 
 /**
  * Class AdminExperiencesController
@@ -23,9 +28,12 @@ class AdminReservationsController extends Controller{
 
     protected $listId = '986c01a26a';
 
-    public function __construct(Mailchimp $mailchimp) {
+    public function __construct(Mailchimp $mailchimp,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,ExperienceModel $experiences_model,AlacarteModel $alacarte_model) {
         $this->mailchimp = $mailchimp;
-
+        $this->experiences_model = $experiences_model;
+        $this->repository = $repository;
+        $this->alacarterepository = $alacarterepository;
+        $this->alacarte_model = $alacarte_model;
     }
 
     public function index(){
@@ -371,5 +379,1312 @@ class AdminReservationsController extends Controller{
 
     }
 
+    public function getExp_info(){
+        $product_id = Input::get('id');
+        $city_id = Input::get('city_id');
+        $pvl_id = Input::get('pvl_id');
+
+        //echo "product-id = ".$product_id." , city_id = ".$city_id;
+        $data['locations']            = $this->experiences_model->getProductLocations($product_id, $pvl_id,$city_id);
+        $data['reserveData']            = $this->experiences_model->getExperienceLimitWithCity($product_id,$city_id);
+        $data['block_dates']            = AdminReservations::getExperienceBlockDates($product_id);
+        $data['exp_schedule']               = $this->experiences_model->getExperienceLocationSchedule($product_id);
+        $dataEnddate               = AdminReservations::getExperienceEndDate($product_id);
+        $data['schedule'] = Array
+        (
+
+            "mon" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "tue" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "wed" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "thu" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "fri" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "sat" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "sun" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            )
+
+        );
+        $data['addons']               = $this->experiences_model->readExperienceAddOns($product_id);
+        //echo "<pre>"; print_r($data['schedule']); die;
+
+        $ed = ((isset($dataEnddate[0]->end_date) && $dataEnddate[0]->end_date != "") ? date('Y-m-d',strtotime($dataEnddate[0]->end_date)) : "0000-00-00");
+        if ($ed != '0000-00-00') {
+            $tmp = explode('-', $ed);
+            $endDate = 'new Date('.$tmp[0].','.($tmp[1]-1).','.$tmp[2].')';
+        } else {
+            $endDate = '\'\'';
+        }
+        $data['enddate'] = $endDate;
+        echo json_encode($data);
+    }
+
+    public function getAla_info(){
+        $vl_id = Input::get('id');
+        $city_id = Input::get('city_id');
+
+        $data['reserveData']   = $this->alacarte_model->getAlacarteLimit($vl_id);
+        //$data['ala_schedule']  = $this->alacarte_model->getAlacarteLocationSchedule($vl_id);
+        $data['block_dates']   = $this->alacarte_model->getAlacarteBlockDates($vl_id);
+
+
+        $data['schedule'] = Array
+        (
+
+            "mon" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "tue" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "wed" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "thu" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "fri" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            ),
+
+            "sat" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+            ),
+
+            "sun" => Array
+            (
+                "breakfast" => Array
+                (
+                    "03:00" => "3:00 AM",
+                    "03:30" => "3:30 AM",
+                    "04:00" => "4:00 AM",
+                    "04:30" => "4:30 AM",
+                    "05:00" => "5:00 AM",
+                    "05:30" => "5:30 AM",
+                    "06:00" => "6:00 AM",
+                    "06:30" => "6:30 AM",
+                    "07:00" => "7:00 AM",
+                    "07:30" => "7:30 AM",
+                    "08:00" => "8:00 AM",
+                    "08:30" => "8:30 AM",
+                    "09:00" => "9:00 AM",
+                    "09:30" => "9:30 AM",
+                    "10:00" => "10:00 AM",
+                    "10:30" => "10:30 AM",
+                    "11:00" => "11:00 AM",
+                    "11:30" => "11:30 AM"
+                ),
+
+                "lunch" => Array
+                (
+                    "12:00" => "12:00 PM",
+                    "12:30" => "12:30 PM",
+                    "13:00" => "1:00 PM",
+                    "13:30" => "1:30 PM",
+                    "14:00" => "2:00 PM",
+                    "14:30" => "2:30 PM",
+                    "15:00" => "3:00 PM",
+                    "15:30" => "3:30 PM",
+                    "16:00" => "4:00 PM",
+                    "16:30" => "4:30 PM",
+                    "17:00" => "5:00 PM",
+                    "17:30" => "5:30 PM"
+                ),
+
+                "dinner" => Array
+                (
+                    "18:00" => "6:00 PM",
+                    "18:30" => "6:30 PM",
+                    "19:00" => "7:00 PM",
+                    "19:30" => "7:30 PM",
+                    "20:00" => "8:00 PM",
+                    "20:30" => "8:30 PM",
+                    "21:00" => "9:00 PM",
+                    "21:30" => "9:30 PM",
+                    "22:00" => "10:00 PM",
+                    "22:30" => "10:30 PM",
+                    "23:00" => "11:00 PM",
+                    "23:30" => "11:30 PM",
+                    "00:00" => "12:00 AM",
+                    "00:30" => "12:30 AM",
+                    "01:00" => "1:00 AM",
+                    "01:30" => "1:30 AM",
+                    "02:00" => "2:00 AM",
+                    "02:30" => "2:30 AM",
+                )
+
+            )
+
+        );
+
+        echo json_encode($data);
+    }
+
+    public function experienceCheckout(){
+        //echo "<pre>"; print_r(Input::all());
+        $dataPost['reservationDate'] = Input::get('booking_date');
+        $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
+        $dataPost['reservationTime'] = Input::get('booking_time');
+        $dataPost['partySize'] = Input::get('qty');
+        $dataPost['vendorLocationID'] = Input::get('address');
+        $dataPost['guestName'] = Input::get('fullname');
+        $dataPost['guestEmail'] = Input::get('email');
+        $dataPost['phone'] = Input::get('phone');
+        $dataPost['total_amount'] = 0;
+        //$dataPost['reservationType'] = (isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1 ? 'event' : 'experience');
+        $dataPost['specialRequest'] = Input::get('special');
+
+        $dataPost['addon']          = Input::get('addonsArray');
+        $dataPost['giftCardID']     = Input::get('gc_id');
+        $award = Input::get('avard_point');
+        $user_email = Input::get('mail');
+
+        $count = $dataPost['addon'];
+        if($count==""){  $dataPost['addon'] =array();}
+
+        $addonsText = '';
+        $addonsPostTaxTotal = '';
+        foreach($dataPost['addon'] as $prod_id => $qty) {
+            if($qty > 0){
+                //echo "prod id = ".$prod_id." , qty = ".$qty;
+                $addonsDetails = DB::select("SELECT attribute_value from product_attributes_text where product_id = $prod_id and product_attribute_id = 17");
+                $addonsPricing = DB::select("SELECT post_tax_price from product_pricing where product_id = $prod_id");
+                $addonsPostTaxTotal += $qty * $addonsPricing[0]->post_tax_price;
+                //echo "<pre>"; print_r($addonsDetails);
+                $addonsText .= $addonsDetails[0]->attribute_value." (".$qty.") , ";
+                $dataPost['addon_'.$prod_id] = $qty;
+            }
+
+        }
+        //echo "grand total addons = ".$addonsPostTaxTotal." , grand total = ".$dataPost['total_amount'];die;
+        $finalAddontext = isset($addonsText) && $addonsText != "" ? "Addons: ".$addonsText : " ";
+        $special_request = isset($dataPost['specialRequest']) && $dataPost['specialRequest'] != "" ? "Spl Req: ".$dataPost['specialRequest'] : "";
+        $dataPost['addons_special_request'] = $finalAddontext." ".$special_request;
+
+        //echo "<pre>"; print_r($dataPost); die;
+
+        //echo $finalSpecialRequest;
+        //die;
+        $userID = Input::get('user_id');
+        $userData = Profile::getUserProfileWeb($userID);
+        //echo "<pre>"; print_r($userData); die;
+
+        //$dataPost['access_token'] = Session::get('id');
+        //echo "<pre>"; print_r($dataPost); die;
+        $locationDetails = $this->experiences_model->getLocationDetails($dataPost['vendorLocationID']);
+        //echo "<pre>"; print_r($locationDetails); //die;
+        $outlet = $this->experiences_model->getOutlet($dataPost['vendorLocationID']);
+        //echo "<pre>"; print_r($outlet);
+
+        //die;
+        $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+        $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
+        $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
+        $dataPost['reservationType'] = (isset($productDetails['attributes']['prepayment_allowed']) && $productDetails['attributes']['prepayment_allowed'] == 1 ? 'event' : 'experience');
+        $dataPost['status']     = "new";
+        $dataPost['addedBy']     = "admin";
+        $vendor_name     = Input::get('vendor_name');
+        $exp_title     = Input::get('exp_title');
+        //echo "<pre>"; print_r($dataPost);
+
+        $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+
+        $rewardsPoints = (isset($award) && $award != 0 ? $productDetails['attributes']['reward_points_per_reservation'] : 0);
+        $bookingsMade = $userData['data']['bookings_made'] + 1;
+        $type = "new";
+        $reservationType = "experience";
+        $lastOrderId = $reservationResponse['data']['reservationID'];
+        //echo "rewardsPoints = ".$rewardsPoints." , bookingsMade = ".$bookingsMade." , type = ".$type." , reservationType = ".$reservationType; die;
+        Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+        DB::table('users')
+            ->where('id', $userID)
+            ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
+
+        //echo "<pre>"; print_r($reservationResponse); die;
+        $zoho_data = array(
+            'Name' => $dataPost['guestName'],
+            'Email_ids' => $dataPost['guestEmail'],
+            'Contact' => $dataPost['phone'],
+            'Experience_Title' => $outlet->vendor_name.' - '.$outlet->descriptive_title,
+            'No_of_People' => $dataPost['partySize'],
+            'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
+            'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
+            'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
+            'Occasion' => $dataPost['addons_special_request'],
+            'Type' => "Experience",
+            'API_added' => 'Admin',
+            'GIU_Membership_ID' => $userData['data']['membership_number'],
+            'Outlet' => $outlet->name,
+            //'Points_Notes'=>'test',
+            'AR_Confirmation_ID'=>'0',
+            'Auto_Reservation'=>'Not available',
+            //'telecampaign' => $campaign_id,
+            //'total_no_of_reservations'=> '1',
+            'Calling_option' => 'No',
+            'gift_card_id_from_reservation' => $dataPost['giftCardID']
+        );
+        //echo "<pre>"; print_r($zoho_data);
+        $zoho_res = AdminReservations::zoho_add_booking($zoho_data);
+        $zoho_success = $zoho_res->result->form->add->status;
+        //echo "<pre>"; print_r($zoho_success); die;
+        if($zoho_success[0] != "Success"){
+            //$this->email->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+            //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
+            //$this->email->to($list);
+            //$this->email->subject('Urgent: Zoho reservation posting error');
+            $mailbody = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+            $mailbody .= 'Reservation Details<br>';
+            foreach($zoho_data as $key => $val){
+                $name = str_replace('_',' ',$key);
+                $mailbody .= $name.' '.$val.'<br>';
+            }
+
+            Mail::send('site.pages.zoho_posting_error',[
+                'zoho_data'=> $mailbody,
+            ], function($message) use ($zoho_data)
+            {
+                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+            });
+        }
+
+        $city_id    = $locationDetails->city_id;
+
+        $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_experience = 1 AND efp.city_id = '.$city_id);
+
+        //echo "<pre>"; print_r($footerpromotions); die;
+
+        $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
+            'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
+            'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
+            'venue' => $outlet->vendor_name,
+            'username' => $dataPost['guestName']
+        );
+
+        if(isset($user_email) && $user_email != 0) {
+            Mail::send('site.pages.experience_reservation',[
+                'location_details'=> $locationDetails,
+                'outlet'=> $outlet,
+                'post_data'=>$dataPost,
+                'productDetails'=>$productDetails,
+                'reservationResponse'=>$reservationResponse,
+                'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
+            ], function($message) use ($mergeReservationsArray){
+                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                $message->to(Input::get('email'))->subject('Your WowTables Reservation at '.$mergeReservationsArray['venue']);
+                //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+            });
+        }
+
+
+        $dataPost['admin']  = "yes";
+        Mail::send('site.pages.experience_reservation',[
+            'location_details'=> $locationDetails,
+            'outlet'=> $outlet,
+            'post_data'=>$dataPost,
+            'productDetails'=>$productDetails,
+            'reservationResponse'=>$reservationResponse,
+            'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
+        ], function($message) use ($mergeReservationsArray){
+            $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+            $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+            $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
+        });
+
+        $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+
+        //Start MailChimp
+        if(!empty($getUsersDetails)){
+
+            $merge_vars = array(
+                'MERGE1'=>$dataPost['guestName'],
+                'MERGE10'=>date('m/d/Y'),
+                'MERGE11'=>$userData['data']['bookings_made'] + 1,
+                'MERGE13'=>$dataPost['phone'],
+                'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+            );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
+            //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+        }
+
+        $result_data = array(
+            'full_name'=>$dataPost['guestName'],
+            'email'=>$dataPost['guestEmail'],
+            'phone'=>$dataPost['phone'],
+            'booking_date'=>$dataPost['reservationDate'],
+            'booking_time'=>$dataPost['reservationTime'],
+            'venue'=>$vendor_name,
+            'exp_title'=>$exp_title,
+            'order_id'=>'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
+        );
+        echo json_encode($result_data);
+    }
+
+    public function alacarteCheckout(){
+        //echo "<pre>"; print_r(Input::all());
+        $dataPost['reservationDate'] = Input::get('booking_date');
+        $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
+        $dataPost['reservationTime'] = Input::get('booking_time');
+        $dataPost['partySize'] = Input::get('qty');
+        $dataPost['vendorLocationID'] = Input::get('address');
+        $dataPost['guestName'] = Input::get('fullname');
+        $dataPost['guestEmail'] = Input::get('email');
+        $dataPost['phone'] = Input::get('phone');
+        $dataPost['reservationType'] = 'alacarte';
+        $dataPost['specialRequest'] = Input::get('special');
+        $dataPost['addon']          = Input::get('add_ons');
+        $award = Input::get('avard_point');
+        $user_email = Input::get('mail');
+        $vendor_name     = Input::get('vendor_name');
+        $userID = Input::get('user_id');
+        $userData = Profile::getUserProfileWeb($userID);
+
+        $outlet = $this->alacarte_model->getOutlet($dataPost['vendorLocationID']);
+
+        $locationDetails = $this->alacarte_model->getLocationDetails($dataPost['vendorLocationID']);
+
+        $vendorDetails = $this->alacarterepository->getByRestaurantLocationId($dataPost['vendorLocationID']);
+
+        $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+
+        //Start MailChimp
+        if(!empty($getUsersDetails)){
+
+            $merge_vars = array(
+                'MERGE1'=>$dataPost['guestName'],
+                'MERGE10'=>date('m/d/Y'),
+                'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
+                'MERGE13'=>$dataPost['phone'],
+                'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+            );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
+            //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+        }
+        //End MailChimp
+        $getReservationID = '';
+        if($userID > 0) {
+            //validating the information submitted by users
+            $arrResponse = $this->alacarte_model->validateReservationData($dataPost);
+
+            if($arrResponse['status'] == 'success') {
+                $reservationResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);
+
+                $rewardsPoints = (isset($award) && $award != 0 ? $vendorDetails['attributes']['reward_points_per_reservation'] : 0);;
+                $bookingsMade = $userData['data']['a_la_carte_reservation'] + 1;
+                $type = "new";
+                $reservationType = "alacarte";
+                $lastOrderId = $reservationResponse['data']['reservationID'];
+
+                Profile::updateReservationInUsers($rewardsPoints,$type,$bookingsMade,$reservationType,$userID,$lastOrderId);
+                DB::table('users')
+                    ->where('id', $userID)
+                    ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
+                $getReservationID = $reservationResponse['data']['reservationID'];
+                $zoho_data = array(
+                    'Name' => $dataPost['guestName'],
+                    'Email_ids' => $dataPost['guestEmail'],
+                    'Contact' => $dataPost['phone'],
+                    'Experience_Title' => $outlet->vendor_name.' - Ala Carte',
+                    'No_of_People' => $dataPost['partySize'],
+                    'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
+                    'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
+                    'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
+                    'Occasion' => $dataPost['specialRequest'],
+                    'Type' => "Alacarte",
+                    'API_added' => 'Admin',
+                    'GIU_Membership_ID' => $userData['data']['membership_number'],
+                    'Outlet' => $outlet->name,
+                    //'Points_Notes'=>'test',
+                    'AR_Confirmation_ID'=>'0',
+                    'Auto_Reservation'=>'Not available',
+                    //'telecampaign' => $campaign_id,
+                    //'total_no_of_reservations'=> '1',
+                    'Calling_option' => 'No'
+                );
+                //echo "<pre>"; print_r($zoho_data);
+                $zoho_res = AdminReservations::zoho_add_booking($zoho_data);
+                $zoho_success = $zoho_res->result->form->add->status;
+                //echo "<pre>"; print_r($zoho_success); die;
+                if($zoho_success[0] != "Success"){
+                    //$this->email->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+                    //$list = array('concierge@wowtables.com', 'kunal@wowtables.com', 'deepa@wowtables.com');
+                    //$this->email->to($list);
+                    //$this->email->subject('Urgent: Zoho reservation posting error');
+                    $mailbody = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']).' reservation has not been posted to zoho. Please fix manually.<br><br>';
+                    $mailbody .= 'Reservation Details<br>';
+                    foreach($zoho_data as $key => $val){
+                        $name = str_replace('_',' ',$key);
+                        $mailbody .= $name.' '.$val.'<br>';
+                    }
+
+                    Mail::send('site.pages.zoho_posting_error',[
+                        'zoho_data'=> $mailbody,
+                    ], function($message) use ($zoho_data)
+                    {
+                        $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                        $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
+                        $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                    });
+                }
+
+                $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
+                    'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
+                    'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
+                    'venue' => $outlet->vendor_name,
+                    'username' => $dataPost['guestName']
+                );
+
+                //echo "<pre>"; print_r($mergeReservationsArray); die;
+                $city_id    = $locationDetails->city_id;
+
+                $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_alacarte = 1 AND efp.city_id = '.$city_id);
+
+                if(isset($user_email) && $user_email != 0) {
+                    Mail::send('site.pages.restaurant_reservation',[
+                        'location_details'=> $locationDetails,
+                        'outlet'=> $outlet,
+                        'post_data'=>$dataPost,
+                        'productDetails'=>$vendorDetails,
+                        'reservationResponse'=>$reservationResponse,
+                        'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
+                    ], function($message) use ($mergeReservationsArray){
+                        $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                        $message->to(Input::get('email'))->subject('Your WowTables Reservation at '.$mergeReservationsArray['venue']);
+                        //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                    });
+                }
+
+
+                Mail::send('site.pages.restaurant_reservation',[
+                    'location_details'=> $locationDetails,
+                    'outlet'=> $outlet,
+                    'post_data'=>$dataPost,
+                    'productDetails'=>$vendorDetails,
+                    'reservationResponse'=>$reservationResponse,
+                    'footerPromotions'=>(!empty($footerpromotions) ? $footerpromotions : ""),
+                ], function($message) use ($mergeReservationsArray){
+                    $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                    $message->to('concierge@wowtables.com')->subject('NR - #A'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
+                    $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
+                });
+
+                $result_data = array(
+                    'full_name'=>$dataPost['guestName'],
+                    'email'=>$dataPost['guestEmail'],
+                    'phone'=>$dataPost['phone'],
+                    'booking_date'=>$dataPost['reservationDate'],
+                    'booking_time'=>$dataPost['reservationTime'],
+                    'exp_title'=>$vendor_name,
+                    'order_id'=>'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
+                );
+                echo json_encode($result_data);
+
+
+            }
+        }
+
+    }
 
 }

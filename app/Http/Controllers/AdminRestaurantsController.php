@@ -106,7 +106,7 @@ class AdminRestaurantsController extends Controller {
 	public function edit($id)
 	{
 		$restaurant = $this->repo->getByRestaurantId($id);
-		//echo "<pre>"; print_r($restaurant);
+		//echo "<pre>"; print_r($restaurant); die;
 
 		if ( $restaurant['restaurant']['status'] == 'Publish' ) {
 			$publish = explode(' ',$restaurant['restaurant']['publish_time']);
@@ -135,7 +135,7 @@ class AdminRestaurantsController extends Controller {
 			if($this->request->ajax()) {
 				return response()->json(['status' => 'success'], 200);
 			}
-			flash()->success('The restaurant has been successfully edited.');
+			flash()->success('The restaurant has been successfully Updated.');
 			return redirect()->route('AdminGetRestaurants');
         }else{
             return response()->json([

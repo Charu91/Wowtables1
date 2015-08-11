@@ -74,47 +74,47 @@
         $(e).html(str)
     }
 
-    function get_info(url, id) {
+    function get_info(url, id,city,city_name,exp_title,vendor_name,pvl_id) {
         $.ajax({
             url: url,
             type: "POST",
             dataType: "json",
             data: {
-                id: id
+                id: id,city_id:city,pvl_id:pvl_id
             },
             async: false,
             success: function(data) {
                 $(".add_loader").hide();
                 $("#save_changes").addClass("hidden");
-                $("#myModalLabel").text("Add Reservation");
-                $("#myModalsmallLabel").text(ucfirst(data.exp.city) + " / " + ucfirst(data.exp.venue) + " / " + ucfirst(data.exp.exp_title));
-                $("#price").val(data.exp.price);
-                $("#price_alcohol").val(data.exp.price_alcohol);
-                $("#price_non_veg").val(data.exp.price_non_veg);
-                $("#city").val(data.exp.city);
+
+                $("#myModalsmallLabel").text(ucfirst(city_name) + " / " + unescape(ucfirst(vendor_name)) + " / " + unescape(ucfirst(exp_title)));
+
                 var loc = "";
-                if (Object.keys(data.row).length > 1) {
-                    $.each(data.row, function(e, t) {
-                        loc += "<option value='" + t.address + "'>" + t.keyword + "</option>"
+                if (Object.keys(data.locations).length > 1) {
+                    $.each(data.locations, function(e, t) {
+                        loc += "<option value='" + t.vendor_location_id + "'>" + t.area + "</option>"
                     });
                     $("#address").html(loc);
                     $("#location").removeClass("hidden");
-                    $("#addr").val(data.row[1].address);
-                    $("#address_keyword").val(data.row[1].keyword)
+                    $("#addr").val(data.locations[0].vendor_location_id);
+
                 } else {
-                    $("#addr").val(data.row[1].address);
-                    $("#address_keyword").val(data.row[1].keyword);
+                    $("#addr").val(data.locations[0].vendor_location_id);
                     $("#location").addClass("hidden")
                 }
                 $("#party_size").removeClass("hidden");
                 $("#party_change").addClass("hidden");
                 $("#party_change span").text();
-                var min_num = parseInt(data.exp.min_num_tickets);
-                var max_num = parseInt(data.exp.max_num_orders - data.exp.tickets_sold < data.exp.max_num_tickets ? data.exp.max_num_orders - data.exp.tickets_sold : data.exp.max_num_tickets);
+                var exp_location_id = data.locations[0].vendor_location_id;
+                var min_num = (data.reserveData[exp_location_id]['min_people'])?data.reserveData[exp_location_id]['min_people']:0;
+                var max_num = (data.reserveData[exp_location_id]['max_people'])?data.reserveData[exp_location_id]['max_people']:0;
+                //var min_num = parseInt(data.exp.min_num_tickets);
+                //var max_num = parseInt(data.exp.max_num_orders - data.exp.tickets_sold < data.exp.max_num_tickets ? data.exp.max_num_orders - data.exp.tickets_sold : data.exp.max_num_tickets);
                 var select_str = "<option>SELECT</option>";
-                for (var i = min_num; i <= max_num; i++) {
+                for (var i = min_num; i <= max_num;) {
                     var peop_name = i == 1 ? "Person" : "People";
-                    select_str += "<option value='" + i + "'>" + i + " " + peop_name + "</option>"
+                    select_str += "<option value='" + i + "'>" + i + " " + peop_name + "</option>";
+                    i = i+data.reserveData[exp_location_id]['increment'];
                 }
                 $("#party_size").html(select_str);
                 if ($("#collapseTwo").hasClass("in")) {
@@ -122,9 +122,46 @@
                 }
                 $("#select_date").addClass("hidden");
                 $("#select_date span").text("");
-                var nowTemp = new Date;
-                var endtime = data.exp.end_date;
-                var date_array = endtime.split("-");
+
+                /*var SelectedDates = {};
+                $.each(data.block_dates, function(t,v) {
+                    //formatDate(t)
+                    //console.log(" t ="+t+" , v = "+v);
+                    //var splitDate = v.split(",");
+                    //console.log("sac = "+splitDate);
+                    SelectedDates[new Date(v)] = new Date(v);
+                });*/
+
+                var disabledAllDays = data.block_dates;
+
+                function disableAllTheseDays(date) {
+                    var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
+                    //var location_id = $('#locations1').val();
+                    var disabledDays = disabledAllDays[exp_location_id];
+
+                    if(disabledDays != undefined)
+                    {
+                        for (i = 0; i < disabledDays.length; i++) {
+                            m=m+1;
+                            mon=m.toString();
+                            if(mon.length <2){
+                                m="0"+m;
+                            }
+                            day=d.toString();
+                            if(day.length <2){
+                                d="0"+d;
+                            }
+                            if ($.inArray( m + '-' + d + '-' + y, disabledDays) != -1) {
+                                return [false];
+                            }
+                        }
+                    }
+                    return [true];
+                }
+                //console.log("block dates "+SelectedDates);
+                //var nowTemp = new Date;
+                //var endtime = data.end_date;
+                /*var date_array = endtime.split("-");
                 var bd_dates = new Array;
                 if (data.block_dates.length > 0) {
                     $.each(data.block_dates, function(e, t) {
@@ -142,104 +179,82 @@
                 cur_year = now.getFullYear();
                 cur_date = cur_year + "-" + cur_month + "-" + cur_day;
                 cur_time = now.getHours();
-                cur_minute = now.getMinutes();
+                cur_minute = now.getMinutes();*/
                 $("#party_date").datepicker("destroy");
+
                 dtp = $("#party_date").datepicker({
                     dateFormat: "yy-m-d",
-                    minDate: eval(data.new_start_date),
-                    maxDate: eval(data.new_end_date),
-                    beforeShowDay: function(e) {
-                        var t = data.exp["is_event"];
-                        if (t == 1) {
-                            var n = e.getMonth(),
-                                r = e.getDate(),
-                                i = e.getFullYear();
-                            if ($.inArray(i + "-" + (n + 1) + "-" + r, data.shedule) != -1) {
-                                return [true, "", ""]
-                            } else {
-                                return [false]
-                            }
-                            return e
-                        } else {
-                            var s = $.datepicker.formatDate("D", e).toLowerCase()
-                        }
-                        if (data.shedule[s] == undefined) {
-                            return new Array(false)
-                        }
-                        if (bd_dates.length > 0) {
-                            tmp_date = $.datepicker.formatDate("yy-mm-dd", e);
-                            tmp_day = $.datepicker.formatDate("dd", e);
-                            for (var o in bd_dates) {
-                                if (bd_dates[o] == tmp_date) {
-                                    return new Array(false, "closed_date")
-                                }
-                            }
-                        }
-                        return [e]
-                    },
-                    onSelect: function(e, t) {
-                        $(this).datepicker("hide");
-                        var n = $.datepicker.parseDate("yy-m-dd", e);
-                        $("#reserv_date").val(e);
-                        var r = "";
-                        var i = "";
-                        $.each(data.block_dates, function(e, t) {
-                            if ($.datepicker.formatDate("yy-mm-dd", n) == t.block_date) {
-                                e = t.block_time.split("-");
-                                r = e[0];
-                                i = e[1]
-                            }
-                        });
-                        var s = $("#select_table");
-                        var o = $("#cant_select_table");
-                        $("#select_date").click();
+                    maxDate: data.enddate,
+                    beforeShowDay: disableAllTheseDays,
+                    onSelect: function(dateText, inst)
+                    {
+                        var d = $.datepicker.parseDate("yy-m-dd",  dateText);
+                        //console.log("d == "+d);
+                        $("#reserv_date").val(dateText);
+                        var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                        var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
+                        var txt2 = '';
+                        var g = 1;
+                        var cur_date =  new Date();
+                        month = parseInt(cur_date.getMonth());
+                        month += 1;
+                        c_date = cur_date.getFullYear() + '-' + ((month<10)?'0':'')+month +  '-'  + cur_date.getDate();
+                        c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
+
+                        //console.log(c_date);
+                        //console.log(dateText);
+                        /*Time display container*/
                         $("#select_time").click();
-                        $("#select_date span").text(formatDate(e));
-                        $("#select_date").removeClass("hidden");
-                        var u = $.datepicker.parseDate("yy-m-dd", e);
-                        var a = $.datepicker.formatDate("D", u).toLowerCase();
-                        var f = '<div class="btn-group col-lg-10 pull-right actives ">';
-                        var l = "";
-                        var c = 1;
-                        for (key_sch in data.shedule[a]) {
-                            var h = Object.keys(data.shedule[a]).length;
-                            active_tab = c == h ? "active" : "";
-                            active_blck = c == h ? "" : "hidden";
-                            f += '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="' + key_sch + '">' + key_sch.toUpperCase() + "</label>";
-                            l += '<div id="' + key_sch + '_tab"  class="' + active_blck + '">';
-                            for (key_sch_time in data.shedule[a][key_sch]) {
-                                if (cur_date == e) {
-                                    if (key_sch_time >= cur_time + ":" + cur_minute && (key_sch_time < r || key_sch_time > i)) {
-                                        l += '<div class="time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
+                        $("#select_date span").text(formatDate(dateText));
+                        //$("#select_date").removeClass("hidden");
+                        var location_id = $('#addr').val();
+                        //var schedule = data.schedule[location_id];
+                        var schedule = data.schedule;
+                        //console.log("schedule == "+schedule);
+                        if(schedule != undefined)
+                        {
+                            for(key_sch in schedule[datestrInNewFormat])
+                            {
+
+                                var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
+                                active_tab = (g == obj_length) ? 'active' : '' ;
+                                active_blck = (g == obj_length) ? '' : 'hidden' ;
+                                txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
+                                txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+                                for(key_sch_time in schedule[datestrInNewFormat][key_sch])
+                                {
+                                    if(c_date == dateText)
+                                    {
+                                        if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                            txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                        }
                                     }
-                                } else {
-                                    if (key_sch_time < r || key_sch_time > i) {
-                                        l += '<div class="time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
+                                    else
+                                    {
+                                        txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                     }
+
                                 }
-                            }
-                            l += "</div>";
-                            c++
-                        }
-                        if (data.shedule_time != undefined) {
-                            var p = data.shedule_time;
-                            var a = $.datepicker.formatDate("D", u).toLowerCase();
-                            for (key in p[a]) {
-                                var h = Object.keys(p[a]).length;
-                                active_tab = c == h ? "active" : "";
-                                active_blck = c == h ? "" : "hidden";
-                                f += '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="' + key + '">' + key.toUpperCase() + "</label>";
-                                l += '<div id="' + key + '_tab"  class="' + active_blck + '">';
-                                for (key_sch_time in p[a][key]) {
-                                    l += '<div class="time col-lg-3" rel="' + p[a][key][key_sch_time] + '"><a href="javascript:">' + p[a][key][key_sch_time] + "</a></div>";
-                                    l += "</div>";
-                                    c++
-                                }
+                                txt2+= '</div>';
+                                g++;
                             }
                         }
-                        f += '</div><div class="clearfix"></div>';
-                        $("#time").html(f);
-                        $("#hours").html(l)
+                        /*Time display container*/
+
+
+                        txt += '</div><div class="clearfix"></div>';
+                        txt += '<input type="hidden" name="booking_time" id="booking_time" value="">';
+                        $('#hours').html(txt2);
+                        $('#time').html(txt);
+
+                        $('#booking_date').val(dateText);
+
+
+                        console.log("datetext == "+formatDate(dateText));
+                        $('#date_edit1 span').text(formatDate(dateText));
+                        $('#date_edit1').click();
+                        timehide=0;
+                        $('#time_edit1').click();
                     }
                 });
                 if ($("#collapseThree").hasClass("in")) {
@@ -247,7 +262,29 @@
                 }
                 $("#select_time").addClass("hidden");
                 $("#select_time span").text("");
-                var meal_options = data.exp.price_non_veg != "0.00" || data.exp.price_alcohol != "0.00";
+                if(data.addons != "" && data.addons != undefined){
+                    var addon = '';
+                    $.each(data.addons, function(a, b) {
+                        addon += "<div class='form-group'><label style='color:#756554 !important;'>"+ b.reservation_title+"</label><select name='add_ons["+b.prod_id+"]' data-value='"+b.prod_id+"' class='myaddonselect' id='non_veg'></select></div>";
+
+                    });
+                }
+                $("#add_addon").html(addon);
+
+                if (addon) {
+                    $("#meal_options").removeClass("hidden");
+                    if ($("#collapseFour").hasClass("in")) {
+                        $("#select_meal").click();
+
+                    }
+                } else {
+                    $("#meal_options").addClass("hidden")
+                }
+                if ($("#collapseFive").hasClass("in")) {
+                    $("#additional_options").click()
+                }
+
+                /*var meal_options = data.exp.price_non_veg != "0.00" || data.exp.price_alcohol != "0.00";
                 if (meal_options) {
                     $("#meal_options").removeClass("hidden");
                     if ($("#collapseFour").hasClass("in")) {
@@ -267,66 +304,50 @@
                     $("#alcohol").removeClass("hidden")
                 } else {
                     $("#alcohol").addClass("hidden")
-                }
+                }*/
                 if ($("#collapseFive").hasClass("in")) {
                     $("#additional_options").click()
                 }
                 $("#specialRequests").val("");
-                $("#experienceTakers").val("");
+                $("#vendor_name").val(vendor_name);
+                $("#experience_title").val(exp_title);
                 $("#giftID").val("");
-                $("#giftAmt").val("");
                 $("#avard_point").removeAttr("checked");
                 $("#select_table").addClass("hidden")
             }
         })
     }
 
-    function ac_get_info(url, id) {
+    function ac_get_info(url, id,city_id,vendor_name) {
 		console.log("call");
         $.ajax({
             url: url,
             type: "POST",
             dataType: "json",
             data: {
-                id: id
+                id: id,city_id:city_id
             },
             async: false,
             success: function(data) {
                 $(".add_loader").hide();
                 $("#save_changes").addClass("hidden");
                 $("#ac_myModalLabel").text("Add Reservation");
-				$("#alacarte_reward_points").val(data.exp[0].reward_points);
-                $("#ac_myModalsmallLabel").text("A la carte reservation " + ucfirst(data.exp[0].venue));
-				$("#ac_restaurant_id").val(data.exp[0].rest_id);
-                var loc = "";
-                /*if (Object.keys(data.row).length > 1) {
-                    $.each(data.row, function(e, t) {
-                        loc += "<option value='" + t.address + "'>" + t.outlet_name + "</option>"
-                    });
-                    $("#ac_address").html(loc);
-                    $("#ac_location").removeClass("hidden");
-                    $("#ac_addr").val(data.row[1].address);
-                    $("#ac_address_keyword").val(data.row[1].outlet_name)
-                } else {
-                    if (data.row[1]) {
-                        $("#ac_addr").val(data.row[1].address);
-                        $("#ac_address_keyword").val(data.row[1].outlet_name);
-                        $("#ac_location").addClass("hidden")
-                    } else {
-                        $("#ac_addr").val();
-                        $("#ac_address_keyword").val();
-                        $("#ac_location").addClass("hidden")
-                    }
-                }*/
+				//$("#alacarte_reward_points").val(data.exp[0].reward_points);
+                $("#ac_myModalsmallLabel").text("A la carte reservation " + ucfirst(vendor_name));
+				//$("#ac_restaurant_id").val(id);
+				$("#ac_addr").val(id);
+				$("#vendor_name").val(vendor_name);
+
                 $("#ac_party_size").removeClass("hidden");
                 $("#ac_party_change").addClass("hidden");
                 $("#ac_party_change span").text();
-                var min_num = 1;
-                var max_num = 15;
+                var min_num = data.reserveData[id]['min_people'];
+                var max_num = data.reserveData[id]['max_people'];
                 var select_str = "<option>SELECT</option>";
-                for (var i = min_num; i <= max_num; i++) {
+                for (var i = min_num; i <= max_num;) {
                     var peop_name = i == 1 ? "Person" : "People";
-                    select_str += "<option value='" + i + "'>" + i + " " + peop_name + "</option>"
+                    select_str += "<option value='" + i + "'>" + i + " " + peop_name + "</option>";
+                    i = i+data.reserveData[id]['increment'];
                 }
                 $("#ac_party_size").html(select_str);
                 if ($("#ac_collapseTwo").hasClass("in")) {
@@ -358,151 +379,75 @@
                 $("#ac_party_date").datepicker("destroy");
                 dtp = $("#ac_party_date").datepicker({
                     dateFormat: "yy-m-d",
-                    minDate: eval(data.new_start_date),
-                    maxDate: eval(data.new_end_date),
-                    beforeShowDay: function(e) {
-                        var t = 0;
-                        if (t == 1) {
-                            var n = e.getMonth(),
-                                r = e.getDate(),
-                                i = e.getFullYear();
-                            if ($.inArray(i + "-" + (n + 1) + "-" + r, data.shedule) != -1) {
-                                return [true, "", ""]
-                            } else {
-                                return [false]
-                            }
-                            return e
-                        } else {
-                            var s = $.datepicker.formatDate("D", e).toLowerCase()
-                        }
-                        if (data.shedule[s] == undefined) {
-                            return new Array(false)
-                        }
-                        if (bd_dates.length > 0) {
-                            tmp_date = $.datepicker.formatDate("yy-mm-dd", e);
-                            tmp_day = $.datepicker.formatDate("dd", e);
-                            for (var o in bd_dates) {
-                                if (bd_dates[o] == tmp_date) {
-                                    return new Array(false, "closed_date")
-                                }
-                            }
-                        }
-                        return [e]
-                    },
-                    onSelect: function(e, t) {
-                        $(this).datepicker("hide");
-                        var n = $.datepicker.parseDate("yy-m-dd", e);
-                        $("#ac_reserv_date").val(e);
-                        /*var r = "";
-                        var i = "";*/
-						var r = [];
-                        var i = [];
-                        $.each(data.block_dates, function(e, t) {
-                           if ($.datepicker.formatDate("yy-mm-dd", n) == t.ala_block_date) {
-                                e = t.ala_block_time.split("-");
-                                /*r = e[0];
-                                i = e[1];*/
-								r.push(e[0]);
-                                i.push(e[1]);
-                            }
-                        });
-						//console.log("r == "+r+" , i == "+i);
-                        var s = $("#ac_select_table");
-                        var o = $("#ac_cant_select_table");
-                        $("#ac_select_date").click();
+                    onSelect: function(dateText, inst)
+                    {
+                        var d = $.datepicker.parseDate("yy-m-dd",  dateText);
+                        //console.log("d == "+d);
+                        var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                        var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
+                        var txt2 = '';
+                        var g = 1;
+                        var cur_date =  new Date();
+                        month = parseInt(cur_date.getMonth());
+                        month += 1;
+                        c_date = cur_date.getFullYear() + '-' + ((month<10)?'0':'')+month +  '-'  + cur_date.getDate();
+                        c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
+
+                        //console.log(c_date);
+                        console.log(dateText);
+                        $('#ac_booking_date').val(dateText);
+                        /*Time display container*/
                         $("#ac_select_time").click();
-                        $("#ac_select_date span").text(formatDate(e));
+                        $("#ac_select_date span").text(formatDate(dateText));
                         $("#ac_select_date").removeClass("hidden");
-                        var u = $.datepicker.parseDate("yy-m-dd", e);
-                        var a = $.datepicker.formatDate("D", u).toLowerCase();
-                        var f = '<div class="btn-group col-lg-10 pull-right ac_actives ">';
-                        var l = "";
-                        var c = 1;
-                        for (key_sch in data.shedule[a]) {
-                            var h = Object.keys(data.shedule[a]).length;
-                            active_tab = c == h ? "active" : "";
-                            active_blck = c == h ? "" : "hidden";
-                            f += '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="ac_' + key_sch + '">' + key_sch.toUpperCase() + "</label>";
-                            l += '<div id="ac_' + key_sch + '_tab"  class="' + active_blck + '">';
-                            for (key_sch_time in data.shedule[a][key_sch]) {
-                                /*if (cur_date == e) {
-                                    if (key_sch_time >= cur_time + ":" + cur_minute && (key_sch_time < r || key_sch_time > i)) {
-                                        l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
+                        var location_id = $('#addr').val();
+                        //var schedule = data.schedule[location_id];
+                        var schedule = data.schedule;
+                        //console.log("schedule == "+schedule);
+                        if(schedule != undefined)
+                        {
+                            for(key_sch in schedule[datestrInNewFormat])
+                            {
+
+                                var obj_length = Object.keys(schedule[datestrInNewFormat]).length;
+                                active_tab = (g == obj_length) ? 'active' : '' ;
+                                active_blck = (g == obj_length) ? '' : 'hidden' ;
+                                txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
+                                txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+                                for(key_sch_time in schedule[datestrInNewFormat][key_sch])
+                                {
+                                    if(c_date == dateText)
+                                    {
+                                        if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                            txt2 += '<div class="ac_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                        }
                                     }
-                                } else {
-                                    if (key_sch_time < r || key_sch_time > i) {
-                                        l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
+                                    else
+                                    {
+                                        txt2 += '<div class="ac_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                     }
-                                }*/
 
-								if (cur_date == e) {
-                                    /*if (key_sch_time >= cur_time + ":" + cur_minute && (key_sch_time < r || key_sch_time > i)) {
-                                        l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
-                                    }*/
-									var is_valid = true;
-									for(var j=0; j<r.length; j++){ //key_sch_time>=c_time && 
-										/*if((String(key_sch_time) < String(bl_time_start[i]) || String(key_sch_time) > String(bl_time_end[i]))){
-											txt2+= '<div class="time col-lg-3" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-										}*/
-										if (String(key_sch_time) < String(r[j]) || String(key_sch_time) > String(i[j])) {
-											is_valid = is_valid && true;
-
-										} else {
-											is_valid = is_valid && false;
-
-										}
-
-									}
-
-									if(is_valid) {
-										l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
-									}
-                                } else {
-                                    /*if (key_sch_time < r || key_sch_time > i) {
-                                        l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
-                                    }*/
-									var is_valid = true;
-									for(var j=0; j<r.length; j++){ //key_sch_time>=c_time && 
-										/*if((String(key_sch_time) < String(bl_time_start[i]) || String(key_sch_time) > String(bl_time_end[i]))){
-											txt2+= '<div class="time col-lg-3" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
-										}*/
-										if (String(key_sch_time) < String(r[j]) || String(key_sch_time) > String(i[j])) {
-											is_valid = is_valid && true;
-
-										} else {
-											is_valid = is_valid && false;
-
-										}
-
-									}
-
-									if(is_valid) {
-										l += '<div class="ac_time col-lg-3" rel="' + data.shedule[a][key_sch][key_sch_time] + '"><a href="javascript:">' + data.shedule[a][key_sch][key_sch_time] + "</a></div>"
-									}
                                 }
-                            }
-                            l += "</div>";
-                            c++
-                        }
-                        if (data.shedule_time != undefined) {
-                            var p = data.shedule_time;
-                            var a = $.datepicker.formatDate("D", u).toLowerCase();
-                            for (key in p[a]) {
-                                var h = Object.keys(p[a]).length;
-                                active_tab = c == h ? "active" : "";
-                                active_blck = c == h ? "" : "hidden";
-                                f += '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="ac_' + key + '">' + key.toUpperCase() + "</label>";
-                                l += '<div id="ac_' + key + '_tab"  class="' + active_blck + '">';
-                                for (key_sch_time in p[a][key]) {
-                                    l += '<div class="ac_time col-lg-3" rel="' + p[a][key][key_sch_time] + '"><a href="javascript:">' + p[a][key][key_sch_time] + "</a></div>";
-                                    l += "</div>";
-                                    c++
-                                }
+                                txt2+= '</div>';
+                                g++;
                             }
                         }
-                        f += '</div><div class="clearfix"></div>';
-                        $("#ac_time").html(f);
-                        $("#ac_hours").html(l)
+                        /*Time display container*/
+
+
+                        txt += '</div><div class="clearfix"></div>';
+                        txt += '<input type="hidden" name="ac_booking_time" id="ac_booking_time" value="">';
+                        $('#ac_hours').html(txt2);
+                        $('#ac_time').html(txt);
+
+
+
+
+                        console.log("datetext == "+formatDate(dateText));
+                        $('#ac_date_edit1 span').text(formatDate(dateText));
+                        $('#ac_date_edit1').click();
+                        timehide=0;
+                        $('#ac_time_edit1').click();
                     }
                 });
                 if ($("#ac_collapseThree").hasClass("in")) {
@@ -1066,12 +1011,7 @@
             e = setTimeout(t, n)
         }
     }();
-    $(window).keydown(function(e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            return false
-        }
-    });
+
     $("#party_size").change(function() {
         var e = $("#party_size option:selected").val();
         $("#party_change span").text(e);
@@ -1192,7 +1132,7 @@
             $("#ac_lunch_tab,#ac_breakfast_tab").addClass("hidden")
         }
     });
-    $(document).on("click", ".time", function() {
+    $("body").on("click", ".time", function() { console.log("called");
         $("#hours").find(".time_active").removeClass("time_active");
         $(this).addClass("time_active");
         $("#select_time span").text($(this).text());
@@ -1203,14 +1143,16 @@
         if (!$("#modif_reserv").parent().hasClass("active")) {
             $("#select_table").removeClass("hidden")
         }
-        counter = $("#party_edit span").text();
+        counter = $("#party_change span").text();
+        console.log("counter == "+counter);
         str = "";
         for (var e = 0; e <= counter; e++) {
-            str += "<option value='" + e + "'>" + e + "</option>"
-        }
+            str += "<option value=" + e + ">" + e + "</option>";
+        }console.log(str);
+        $(".addon_meals select").html(str);
         if (!$("#meal_options").hasClass("hidden")) {
-            $(".meals select").html(str);
-            $("#select_meal").click()
+
+            $("#select_meal").click();
         }
     });
     $(document).on("click", ".ac_time", function() {
@@ -1248,6 +1190,7 @@
         $("#address_keyword").val(e);
         var t = $("#address option:selected").val();
         $("#addr").val(t)
+
     });
     $("#select_table").click(function() {
         var e = $("#user_id").val();
@@ -1256,25 +1199,20 @@
         var r = $("#customerNumber").val();
         var i = $("#customerName").val();
         var s = $("#city").val();
-        var o = $("#specialRequests").val() + " ";
-        if ($("#experienceTakers").val() != "") {
-            o += " Experience takers: " + $("#experienceTakers").val() + " "
-        }
-        if ($("#giftID").val() != "") {
-            o += " Gift Card ID: " + $("#giftID").val() + " "
-        }
-        if ($("#giftAmt").val() != "") {
-            o += " Gift Card Amount: " + $("#giftAmt").val() + " "
-        }
+        var o = $("#specialRequests").val();
+        var gcid = $("#giftID").val();
+        var vendor_name = $("#vendor_name").val();
+        var exp_title = $("#experience_title").val();
+
         var u = $("#select_time span").text();
         var a = $("#reserv_date").val();
         var f = a.split("-");
         var l = f[1] + "/" + f[2] + "/" + f[0] + " " + u;
         var c = parseInt($("#party_size").val());
-        var h = parseFloat($("#price").val());
-        var p = parseFloat($("#price_non_veg").val());
-        var d = parseFloat($("#price_alcohol").val());
-        if (!$("#nonveg").hasClass("hidden")) {
+        //var h = parseFloat($("#price").val());
+        //var p = parseFloat($("#price_non_veg").val());
+        //var d = parseFloat($("#price_alcohol").val());
+        /*if (!$("#nonveg").hasClass("hidden")) {
             non_veg_qty = parseInt($(".nonveg").val())
         } else {
             non_veg_qty = 0
@@ -1283,45 +1221,62 @@
             alcohol_qty = parseInt($(".alcohol").val())
         } else {
             alcohol_qty = 0
-        }
-        var v = c * h + non_veg_qty * p + alcohol_qty * d;
+        }*/
+        //var v = c * h + non_veg_qty * p + alcohol_qty * d;
         var m = $("#addr").val();
         var g = $("#address_keyword").val();
         var y = 0;
         if ($("#avard_point").is(":checked")) {
             y = 1
         }
+        var mail = 0;
+        if ($("#reservation_email").is(":checked")) {
+            mail = 1
+        }
+        var addonsArray = {};
+        $('.myaddonselect').each(function(){
+
+            var prod_id = $(this).attr("data-value");
+            var select_val = $(this).val();
+            addonsArray[prod_id]= select_val;
+            return addonsArray;
+        });
         $(".add_loader").show();
         $.ajax({
-            url: "/adminreservations/checkout",
+            url: "/admin/adminreservations/experience_checkout",
             type: "POST",
             data: {
                 experience_id: t,
                 user_id: e,
                 email: n,
                 fullname: i,
+                addonsArray:addonsArray,
                 phone: r,
                 special: o,
+                gc_id: gcid,
                 qty: c,
                 booking_time: u,
                 booking_date: a,
                 time: l,
-                amount: v,
-                address_keyword: g,
+                vendor_name: vendor_name,
+                exp_title: exp_title,
+                //amount: v,
+                //address_keyword: g,
                 address: m,
                 city: s,
                 is_Admin: 1,
                 avard_point: y,
-                non_veg: non_veg_qty,
-                alcohol: alcohol_qty
+                mail: mail
+                //non_veg: non_veg_qty,
+                //alcohol: alcohol_qty
             },
             dataType: "json",
             success: function(e) {
-                $("#editModal").modal("hide");
+                $("#addExperienceModal").modal("hide");
                 var t = "<div class='alert alert-success alert-dismissable' id='success_alert'>";
                 t += "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>x</button>";
                 t += "<strong>Success!</strong> You've just made a booking for <span>" + e.full_name + "</span> - <span>" + e.email + "</span>";
-                t += " at <span>" + e.venue + "</span>. <span>" + e.exp_title + "</span> booked on <span>" + e.booking_date + "</span> at <span>" + e.booking_time + "</span>. Contact " + e.full_name + " at <span>" + e.phone + " no for changes.</span>";
+                t += " at <span>" + unescape(e.venue) + "</span>. <span>" + unescape(e.exp_title) + "</span> booked on <span>" + e.booking_date + "</span> at <span>" + e.booking_time + "</span>. Contact " + e.full_name + " at <span>" + e.phone + " no for changes. Order ID: "+ e.order_id+"</span>";
                 $("#success_alert").remove();
                 $(".cms-title").before(t)
             }
@@ -1337,48 +1292,29 @@
         var o = parseInt($("#price" + t).val());
 		var arp = $("#alacarte_reward_points").val();
         var u = $("#ac_specialRequests").val() + " ";
-        if ($("#ac_experienceTakers").val() != "") {
-            u += " Experience takers: " + $("#ac_experienceTakers").val() + " "
-        }
-        if ($("#ac_giftID").val() != "") {
-            u += " Gift Card ID: " + $("#ac_giftID").val() + " "
-        }
-        if ($("#ac_giftAmt").val() != "") {
-            u += " Gift Card Amount: " + $("#ac_giftAmt").val() + " "
-        }
+
         var a = $("#ac_select_time span").text();
-        var f = $("#ac_reserv_date").val();
+        var f = $("#ac_booking_date").val();
         var l = f.split("-");
         var c = l[1] + "/" + l[2] + "/" + l[0] + " " + a;
         var h = parseInt($("#ac_party_size").val());
-        var p = parseFloat($("#ac_price").val());
-        var d = parseFloat($("#ac_price_non_veg").val());
-        var v = parseFloat($("#ac_price_alcohol").val());
-        if (!$("#ac_nonveg").hasClass("hidden")) {
-            non_veg_qty = parseInt($(".nonveg").val())
-        } else {
-            non_veg_qty = 0
-        }
-        if (!$("#ac_alcohol").hasClass("hidden")) {
-            alcohol_qty = parseInt($(".alcohol").val())
-        } else {
-            alcohol_qty = 0
-        }
-        var m = h * o;
+
         var g = $("#ac_addr").val();
         var y = $("#ac_address_keyword").val();
+        var vendor_name = $("#vendor_name").val();
         var b = 0;
         if ($("#ac_avard_point").is(":checked")) {
             b = 1
         }
+        var mail = 0;
+        if ($("#ac_reservation_email").is(":checked")) {
+            mail = 1
+        }
         $(".add_loader").show();
         $.ajax({
-            url: "/adminreservations/ac_checkout",
+            url: "/admin/adminreservations/ac_checkout",
             type: "POST",
             data: {
-            	alacarte_id:t,
-                experience_id: t,
-                restaurant_id: t,
                 user_id: e,
                 email: n,
                 fullname: i,
@@ -1388,23 +1324,21 @@
                 booking_time: a,
                 booking_date: f,
                 time: c,
-                amount: m,
-                address_keyword: y,
                 address: g,
                 city: s,
                 is_Admin: 1,
                 avard_point: b,
-                non_veg: non_veg_qty,
-                alcohol: alcohol_qty,
-				ala_reward_point: arp
+                mail: mail,
+                vendor_name:vendor_name
+
             },
             dataType: "json",
             success: function(e) {
-                $("#ac_editModal").modal("hide");
+                $("#addAlacarteModal").modal("hide");
                 var t = "<div class='alert alert-success alert-dismissable' id='success_alert'>";
                 t += "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>x</button>";
                 t += "<strong>Success!</strong> You've just made a booking for <span>" + e.full_name + "</span> - <span>" + e.email + "</span>";
-                t += " at <span>" + e.venue + "</span>. <span>" + e.exp_title + "</span> booked on <span>" + e.booking_date + "</span> at <span>" + e.booking_time + "</span>. Contact " + e.full_name + " at <span>" + e.phone + " no for changes.</span>";
+                t += " at <span>" + e.exp_title + "</span> for <span>" + e.booking_date + "</span> at <span>" + e.booking_time + "</span>. Contact " + e.full_name + " at <span>" + e.phone + " no for changes. Order ID: "+ e.order_id+"</span>";
                 $("#success_alert").remove();
                 $(".cms-title").before(t)
             }
@@ -1453,7 +1387,7 @@
                             t += "<p>City: " + ucfirst(i.city_name) + "</p>";
                             t += "<p><strong><a href='" + e.url + "/" + i.city_name + "/experiences/" + escape(i.slug) + "' target='_blank' class='details'>View Details</a></strong></p>";
 
-                            t += "<td><a href='javascript:void(0)' class='btn btn-warning book_table'>Book Experience</a>" + n + "</td></tr>"
+                            t += "<td><a href='javascript:void(0)' data-vendor_name='"+escape(i.vendor_name)+"' data-pvl_id='"+escape(i.pvl_id)+"' data-exp_title='"+escape(i.exp_name)+"' data-city_name='"+i.city_name+"' data-product_id='"+i.product_id+"' data-city_id='"+i.city_id+"' class='btn btn-warning book_table'>Book Experience</a>" + n + "</td></tr>"
                         });
 
                         $.each(e.alacarte, function(a, b) {
@@ -1465,7 +1399,7 @@
                             u += "<p>Area: " + ucfirst(b.area_name) + "</p>";
                             u += "<p><strong><a href='" + e.url + "/" + b.city_name + "/alacarte/" + escape(b.slug) + "' target='_blank' class='details'>View Details</a></strong></p>";
                             //if (i.alacarte_alow) {
-                            u += "<td><a href='javascript:void(0)' class='btn btn-warning ac_book_table'>Book A la carte</a></td>"
+                            u += "<td><a href='javascript:void(0)' data-vl_id='"+b.vl_id+"' data-vendor_name='"+escape(b.name)+"' data-city_id='"+b.city_id+"' class='btn btn-warning ac_book_table'>Book A la carte</a></td>"
                             //} else {
                             //n = ""
                             //}
@@ -1480,79 +1414,22 @@
         },
         minLength: 1
     })
-    $("#exp_search").keyup(function() {
-        var e = $(this).val();
-        $("#search_error").html("");
-        delay(function() {
-            $(".search-ajax-loader").show();
-            $.ajax({
-                url: "/adminreservations/getExperiences",
-                type: "POST",
-                dataType: "json",
-                data: {
-                    search: e
-                },
-                success: function(e) {
-                    $(".search-ajax-loader").hide();
-                    if (e.error == 0) {
-                        var t = "";
-                        var n = "";
-						var u = "";
-                        if (e.result.length == 0 && e.ala_result.length == 0) {
-                            t = "<tr><td colspan='2'><p class='text-center'>There are no any experiences or alacarte!</p></td></tr>"
-                        } else {
-                            $.each(e.result, function(r, i) {
-                                t += "<tr>";
-                                t += "<td><p>Experience: " + ucfirst(i.exp_title) + "</p>";
-                                t += "<p>Restaurant: " + ucfirst(i.venue) + "</p>";
-                                t += "<p>City: " + ucfirst(i.city) + "</p>";
-                                t += "<p><strong><a href='" + e.url + i.city + "/experiences/" + i.slug + "' target='_blank' class='details'>View Details</a></strong></p>";
-                                t += "<p><small>" + ucfirst(i.exp_short_desc) + "</small></p></td>";
-                                t += "<input type='hidden' name='price' id='price" + i.restaurant_id + "' value='" + i.price + "'>";
-                                /*if (i.alacarte_alow) {
-                                    n = "<br><br><a href='javascript:void(0)' class='btn btn-warning ac_book_table' rel='" + i.restaurant_id + "'>Book A la carte</a>"
-                                } else {
-                                    n = ""
-                                }*/
-                                t += "<td><a href='javascript:void(0)' class='btn btn-warning book_table' rel='" + i.id + "'>book experience</a>" + n + "</td></tr>"
-                            });
 
-							$.each(e.ala_result, function(a, b) {
-								//console.log("a = "+a+" , b = "+b.venue);
-                                u += "<tr><td>";
-                                //t += "<td><p>Experience: " + ucfirst(i.exp_title) + "</p>";
-                                u += "<p>Restaurant: " + ucfirst(b.venue) + "</p>";
-                                u += "<p>City: " + ucfirst(b.city) + "</p>";
-								u += "<p>Area: " + ucfirst(b.area) + "</p>";
-                                u += "<p><strong><a href='" + e.url + b.city + "/alacarte/" + b.slug + "' target='_blank' class='details'>View Details</a></strong></p>";
-                                u += "<input type='hidden' name='price' id='price" + b.id + "' value='" + b.price + "'></td>";
-                                //if (i.alacarte_alow) {
-                                u += "<td><a href='javascript:void(0)' class='btn btn-warning ac_book_table' rel='" + b.id + "'>Book A la carte</a></td>"
-                                //} else {
-                                    //n = ""
-                                //}
-                                //t += "<td><a href='javascript:void(0)' class='btn btn-warning book_table' rel='" + i.id + "'>book experience</a>" + n + "</td></tr>"*/
-                            });
-
-                        }
-						//console.log(t+" , this is for alacarte = "+u);
-                        $("#experiences tbody").html(t+""+u)
-                    } else {
-                        $("#search_error").html(e.message)
-                    }
-                }
-            })
-        }, 1e3)
-    });
     $(".table tbody").on("click", ".book_table", function() {
         var e = $("#user_id").val();
         var t = $(this).attr("rel");
         if (e != "") {
             $("#error_alert").html("");
             $("#error_alert").addClass("hidden");
-            $("#exp_id").val(t);
-            get_info("/adminreservations/getExp_info", t);
-            $("#editModal").modal("show")
+            //$("#exp_id").val(t);
+            var product_id = $(this).attr('data-product_id');
+            var city_id = $(this).attr('data-city_id');
+            var city_name = $(this).attr('data-city_name');
+            var exp_title = $(this).attr('data-exp_title');
+            var vendor_name = $(this).attr('data-vendor_name');
+            var pvl_id = $(this).attr('data-pvl_id');
+            get_info("/admin/adminreservations/getExp_info", product_id,city_id,city_name,exp_title,vendor_name,pvl_id);
+            $("#addExperienceModal").modal("show")
         } else {
             $("#error_alert").remove();
             $(".cms-title").before('<div class="alert alert-danger alert-dismissable" id="error_alert"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><p>Please enter a user</p></div>')
@@ -1564,9 +1441,12 @@
         if (e != "") {
             $("#error_alert").html("");
             $("#error_alert").addClass("hidden");
-            $("#ac_exp_id").val(t);
-            ac_get_info("/adminreservations/ac_getExp_info", t);
-            $("#ac_editModal").modal("show")
+            //$("#ac_exp_id").val(t);
+            var vl_id = $(this).attr('data-vl_id');
+            var city_id = $(this).attr('data-city_id');
+            var vendor_name = $(this).attr('data-vendor_name');
+            ac_get_info("/admin/adminreservations/getAla_info", vl_id,city_id,vendor_name);
+            $("#addAlacarteModal").modal("show")
         } else {
             $("#error_alert").remove();
             $(".cms-title").before('<div class="alert alert-danger alert-dismissable" id="error_alert"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><p>Please enter a user</p></div>')
@@ -1793,97 +1673,6 @@
         var e = $(this).attr("rel");
         ac_get_reserv_by_id(e);
         $("#ac_editModal").modal("show")
-    });
-    $("#save_changes").click(function() {
-        var e = $("#user_id").val();
-        var t = $("#exp_id").val();
-        var n = $("#customerEmail").val();
-        var r = $("#customerNumber").val();
-        var i = $("#customerName").val();
-        var s = $("#city").val();
-        var o = $("#specialRequests").val() + " ";
-        if ($("#experienceTakers").val() != "") {
-            o += " Experience takers: " + $("#experienceTakers").val() + " "
-        }
-        if ($("#giftID").val() != "") {
-            o += " Gift Card ID: " + $("#giftID").val() + " "
-        }
-        if ($("#giftAmt").val() != "") {
-            o += " Gift Card Amount: " + $("#giftAmt").val() + " "
-        }
-        var u = $("#select_time span").text();
-        var a = $("#reserv_date").val();
-        var f = a.split("-");
-        var l = f[1] + "/" + f[2] + "/" + f[0] + " " + u;
-        var c = parseInt($("#party_size").val());
-        var h = parseFloat($("#price").val());
-        var p = parseFloat($("#price_non_veg").val());
-        var d = parseFloat($("#price_alcohol").val());
-        if (!$("#nonveg").hasClass("hidden")) {
-            non_veg_qty = parseInt($(".nonveg").val())
-        } else {
-            non_veg_qty = 0
-        }
-        if (!$("#alcohol").hasClass("hidden")) {
-            alcohol_qty = parseInt($(".alcohol").val())
-        } else {
-            alcohol_qty = 0
-        }
-        var v = c * h + non_veg_qty * p + alcohol_qty * d;
-        var m = $("#res_id").val();
-        var g = $("#addr").val();
-        var y = $("#address_keyword").val();
-        var b = 0;
-        if ($("#avard_point").is(":checked")) {
-            b = 1
-        }
-        last_reserv_date = $("#last_reserv_date").val();
-        last_reserv_time = $("#last_reserv_time").val();
-        last_reserv_outlet = $("#last_reserv_outlet").val();
-        last_reserv_party_size = $("#last_reserv_party_size").val();
-        l_res_date = last_reserv_date.split("-");
-        l_res_date = l_res_date[1] + "/" + l_res_date[2] + "/" + l_res_date[0];
-        if (last_reserv_date == a && last_reserv_time == u && last_reserv_outlet == y && last_reserv_party_size == c) {
-            $(".cant_change").removeClass("hidden");
-            $("#save_changes").addClass("hidden")
-        } else {
-            $(".add_loader").show();
-            $.ajax({
-                url: "/adminreservations/edit_reservetion",
-                type: "POST",
-                dataType: "json",
-                data: {
-                    reserv_id: m,
-                    user_id: e,
-                    party_size: c,
-                    edit_date: a,
-                    edit_time: u,
-                    address: g,
-                    outlet: y,
-                    alcohol: alcohol_qty,
-                    non_veg: non_veg_qty,
-                    last_reserv_date: l_res_date,
-                    last_reserv_time: last_reserv_time,
-                    last_reserv_outlet: last_reserv_outlet,
-                    last_reserv_party_size: last_reserv_party_size,
-                    email: n,
-                    full_name: i,
-                    phone: r,
-                    special: o
-                },
-                success: function(e) {
-                    $(".add_loader").hide();
-                    var t = "<div class='alert alert-success alert-dismissable' id='success_alert'>";
-                    t += "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>x</button>";
-                    t += "<strong>Success!</strong> You've changed a booking with Reservation ID EU-" + e.reserv_id + " for <span>" + e.full_name + "</span> - <span>" + e.email + "</span>";
-                    t += " at <span>" + e.venue + "</span>. <span>" + e.exp_title + "</span> booked on <span>" + e.booking_date + "</span> at <span>" + e.booking_time + "</span>. Contact " + e.full_name + " at <span>" + e.phone + " no for changes.</span>";
-                    $("#success_alert").remove();
-                    $(".cms-title").before(t);
-                    $("#modif_reserv").click();
-                    $("#editModal").modal("hide")
-                }
-            })
-        }
     });
     $("#ac_save_changes").click(function() {
         var e = $("#user_id").val();
@@ -2164,7 +1953,7 @@
 
     /* function loadDatePicker() {
      $("#choose_date").datepicker("destroy");*/
-    $('#date_edit12').click(function(){
+    $('body').delegate('#date_edit12','click',function(){
         $('#save_changes').show();
         var vendor_id = $('#vendor_id').val();
         var last_reserv_time = $('#last_reserv_time').val();

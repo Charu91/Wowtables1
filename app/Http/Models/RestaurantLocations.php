@@ -97,7 +97,13 @@ class RestaurantLocations extends VendorLocations{
                     ->on('vlr.status','=', DB::raw('"Approved"'));
             })
 			->leftJoin(DB::raw('vendor_locations_flags_map as vlfm'),'vlfm.vendor_location_id','=','vl.id')
-			->leftJoin('flags','flags.id','=','vlfm.flag_id')
+			->leftJoin('flags','flags.id','=','vlfm.flag_id')            
+            ->leftjoin('vendor_location_address as vlaa', 'vlaa.vendor_location_id', '=', 'vl.id')                          
+            ->join('locations as loc1','loc1.id', '=' , 'vlaa.area_id')
+            ->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
+            ->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
+            ->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
+            ->join('locations as loc5','loc5.id','=','vl.location_id')            
             ->select(
                 DB::raw('SQL_CALC_FOUND_ROWS vl.id'),
                 'v.name AS restaurant',
@@ -105,9 +111,13 @@ class RestaurantLocations extends VendorLocations{
                 'la.name AS area',
                 'la.id as area_id',
                 'vl.pricing_level',
+                'vladd.latitude','vladd.longitude',
                 //'mr.file AS image',
                 //'m.alt AS image_alt',
-                //'m.title AS image_title',
+                //'m.title AS image_title',                
+                'vlaa.latitude','vlaa.longitude', 'vlaa.address', 'vlaa.pin_code',
+                'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+                'loc4.name as country', 'loc5.name as locality',
                 'l.id as location_id',
                 DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
                 DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
@@ -414,7 +424,22 @@ class RestaurantLocations extends VendorLocations{
 										'rating' => $row->rating,
 										'flag_name' => $row->flag_name,
 										'cuisine' =>  $row->cuisine,
-										'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "" 
+                                        'coordinates' => array(
+                                                                            'latitude' => (is_null($row->latitude)) ? "" : $row->latitude,
+                                                                            'longitude' => (is_null($row->longitude)) ? "" : $row->longitude
+                                                                           ),
+										'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "",
+                                        'location_address' => array([
+                                                                        "address_line" => $row->address,
+                                                                        "locality" => $row->locality,
+                                                                        "area" => $row->area,
+                                                                        "city" => $row->city,
+                                                                        "pincode" => $row->pin_code,
+                                                                        "state" => $row->state_name,                                                                
+                                                                        "country" => $row->country,
+                                                                        "latitude" => $row->latitude,
+                                                                        "longitude" => $row->longitude                                                              
+                                                                    ]),
 									);
 									
 			#setting up the value for the location filter

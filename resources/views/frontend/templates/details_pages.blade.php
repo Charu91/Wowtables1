@@ -358,6 +358,9 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
   <link href="{{URL::to('/')}}/assets/css/app_new5.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new5.css?ver=1.0.5" rel='stylesheet' type="text/css">
   <link href="{{URL::to('/')}}/assets/css/app_new6.css?ver=1.0.5" rel='stylesheet' type="text/css">
+  
+  <!-- new css for front-end design fixes -->
+  <link href="{{URL::to('/')}}/assets/css/front_fixes.css?ver=1.0.5" rel='stylesheet' type="text/css">
 
 
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -471,6 +474,15 @@ $(document).ready(function(){
 </script> 
 </head>
 <body>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PQHMSR"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PQHMSR');</script>
+<!-- End Google Tag Manager -->
 <?php
 
 $uname = (isset($user_data['full_name']) && $user_data['full_name']!=''?$user_data['full_name']:$user_data['username']);
@@ -559,7 +571,7 @@ if (strpos($url,'alacarte') !== false) {
                   <div class="top-filter col-md-12">
                     <div class="filter-left">
                       <div class="btn-group btn-block wowtable_mobile_view" style="padding-top:5px !important;  padding-bottom:5px !important;">
-                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p" style="font-family:Swis721 Lt BT !important;">
+                        <button type="button" class="btn btn-default btn-block dropdown-toggle wowtabls_btn btn_city wowtables_button_hide" data-toggle="dropdown" id="city_p">
                           <span class="glyphicon glyphicon-map-marker" style="margin-left: -41%;padding-right: 9%;font-size:16px !important;color:#9d9d9c !important;"></span>
                           <?php
                           $current_city = ($current_city ? $current_city : "mumbai");
@@ -587,19 +599,19 @@ if (strpos($url,'alacarte') !== false) {
            <div class="col-md-8 col-sm-9 col-xs-8 pull-right head-links wowtables_hide_refer_menu">
             <ul class="nav navbar-nav navbar-right wowtables_tablet_size">
               <li>
-                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;  font-family: Swis721 Lt BT !important;"> Refer a friend and Get 3000 Gourmet points </a>
+                <a href="{{URL::to('/')}}/pages/<?php echo $set_referal_url;?>" target="_blank" style="border-right:1px solid #f6f6f6 !important;font-size:12px !important;margin-right:-18px;color:#81ad5e !important;font-weight:none !important;"> Refer a friend and Get 3000 Gourmet points </a>
               </li>
               <?php if(isset($user_data['full_name']) && $user_data['full_name']=='Guest')
               {
                 ?>
                 <li>
-                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;font-family:Swis721 Lt BT !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
+                  <a class="border_none header_loc wowtable_font" href="#" data-target="#redirectloginModal" data-page_loc="Header" data-toggle="modal" style="color:#9d9d9c !important;font-size:13px !important;">Sign in | Register</a><?php //echo $base_url."?sign_in=true"?>
               </li>
               <?php
               } ?>
               <li class="dropdown">
                 <?php if($uname != "Guest") {?>
-                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;font-family:Swis721 Lt BT !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
+                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" style="color:#9d9d9c !important;font-size:12px !important;font-weight:none !important;text-transform:capitalize;"><?php echo $uname; ?><span style="padding-left:5px;"></span><span style="font-family: sans-serif !important;">(<?php echo $user->points_earned - $user->points_spent; ?> Pts.)</span><span class="caret" style="margin-left: 9px;color:#979797 !important;"></span></a>
                 <?php }?>
                     <?php if((isset($user_data['full_name']) && $user_data['full_name'] != 'Guest' ) || (isset($user_data['username']) && $user_data['username'] != 'Guest' ) ){ ?>
                   <ul class="dropdown-menu wowtables_dropdown_menu">
@@ -968,23 +980,23 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
 
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav block-list foot-menu">
-                  <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
-                  <li><a href="http://blog.gourmetitup.com">Blog</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
-                  <li><a href="#">Careers</a></li>
-                  <li><a href="#">Partner With Us</a></li>
-                  <li><a href="#">How It Works</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
-          <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
-                  <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
-                  <li><a href="#">Corporate Solutions</a></li>
-                  <li><a href="#">Parties & Private Events</a></li>
-                  <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
-                  <li><a href="#">Terms of Use</a></li>
-                  <li><a href="#">Privacy Statement</a></li>
-                </ul>
+                  <ul class="nav navbar-nav block-list foot-menu">
+                      <li class=""><a href="{{URL::to('/')}}/pages/about-us">About Us</a></li>
+                      <li><a href="http://blog.gourmetitup.com">Blog</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/press">Press</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/careers">Careers</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/restaurant-partnerships">Restaurateurs</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/advertising">Brand Partnerships</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/faq">FAQ</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/contact-us">Contact Us</a></li>
+                      <li><a href="http://www.finedinelove.com" target="_blank">FineDineLove</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
+                      <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
+                      <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
+                  </ul>
               </div><!-- /.navbar-collapse -->
             </nav>
           </div>
@@ -1030,6 +1042,13 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                   <li><a href="https://instagram.com/WowTables/" target="blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
               </ul>
           </div>
+            <div class="col-md-3 col-sm-6">
+                <h4 class="foot-widget-title">Download our app from</h4>
+                <ul class="inline-list socialicons">
+                    <li><a href="https://itunes.apple.com/app/id983901046" target="blank"><img src="/assets/img/apple.jpg" alt="Wowtables Apple iTunes"></a></li>
+                    <li><a href="https://play.google.com/store/apps/details?id=com.wowtables.android&hl=en" target="blank"><img src="/assets/img/android.jpg" alt="Wowtables Andriod Playstore"></a></li>
+                </ul>
+            </div>
         </div>
       </div>
 

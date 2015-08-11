@@ -171,10 +171,6 @@ body .time_tab.active {
     color:#333;
 }
 
-#myselect_person{
-    display:none;
-}
-
 .datepicker.datepicker-inline {
     background-color:#eee;
     border:1px solid #ddd
@@ -195,3 +191,25 @@ body .time_tab.active {
 .datepicker table td.day.new{
     visibility:hidden !important;
 }
+
+
+/*new css changes*/
+#markdownmodal .modal-content{width: auto;}
+#mediaModal .modal-content{width: auto;}
+#mediaModal .modal-footer{border-top: 0px solid #e5e5e5;}
+#addAlacarteModal .modal-header{background-color:#EAB703;}
+.panel-body #ac_time .actives{left:0px !important;}
+.panel-body #ac_time .btn.active, .btn:active{ -webkit-box-shadow: inset 0 0px 0px rgba(0,0,0,.125); box-shadow: inset 0 0px 0px rgba(0,0,0,.125);}
+.panel-body #ac_time .btn.btn-warning{border: 0px solid #eea236;}
+.panel-body #ac_time .btn-group .btn+.btn{margin-left: 2px;}
+body .time_tab.active:hover{background: #c99f06!important;}
+#ac_hours .ac_time{background-color:#696969; margin: 3px 6px;   border-radius: 2px;}
+#ac_hours .ac_time a{color:#fff !important; text-decoration:none !important; font-size:12px !important; padding: 0px 5px; white-space: nowrap;}
+header .head-links ul.navbar-nav li a{font-family: 'PT Sans',sans-serif !important;}
+#abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin{font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;}
+.btn_city{font-family: 'PT Sans',sans-serif !important;}
+header .head-links ul li a{font-family: 'PT Sans',sans-serif !important;}
+.deal-detail .deal-bottom-box .tab-pane hr{margin-bottom: 8px !important;}
+.deal-detail-right .price-box ul li, .deal-detail-right .terms-box ul li{margin-bottom:10px;}
+.deal-detail-right .price-box h3{font-size:16px !important; font-weight:normal !important; }
+body.home{font-family: 'PT Sans',sans-serif !important;}

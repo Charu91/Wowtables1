@@ -79,7 +79,13 @@ class Experiences {
 							->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
 							->join('vendors','vendors.id','=','vl.vendor_id')
 							->leftJoin('product_attributes_integer as pai', 'pai.product_id','=','products.id')
-							->leftJoin('product_attributes as pa2','pa2.id','=','pai.product_attribute_id')
+							->leftJoin('product_attributes as pa2','pa2.id','=','pai.product_attribute_id')							
+							->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+							->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+	                        ->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+	                        ->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+	                        ->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')
 							->where('products.id',$experienceID)
 							->where('pvl.status','Active');							
 		
@@ -100,7 +106,10 @@ class Experiences {
 									'media.file as experience_image', 'curators.name as curator_name', 
 									'curators.bio as curator_bio', 'curators.designation',
 									'cm.file as curator_image','pvl.id as product_vendor_location_id',
-									'vendors.name as vendor_name');
+									'vendors.name as vendor_name',
+									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+                                	'loc4.name as country', 'loc5.name as locality',
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
 							
 		}
 		else {
@@ -114,7 +123,10 @@ class Experiences {
 									'media.file as experience_image','cm.file as curator_image', 
 									'pat4.attribute_value as terms_and_condition', 'pvl.id as product_vendor_location_id',
                                     'pcm.curator_tips as tips',
-									'pat5.attribute_value as experience_includes','vendors.name as vendor_name', 'reward_points');
+									'pat5.attribute_value as experience_includes','vendors.name as vendor_name', 'reward_points',
+									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+                                	'loc4.name as country', 'loc5.name as locality',
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
 		}
 
 		//running the query to get the results
@@ -149,9 +161,9 @@ class Experiences {
 										'terms_and_condition' => $expResult->terms_and_conditions,
 										'image' => $arrImage,
 										'type' => $expResult->type,
-										'reward_points' => $expResult->reward_points,
-										'price' => $expResult->price ,
-										'taxes' => $expResult->taxes,
+										'reward_points' => (is_null($expResult->reward_points)) ? 0 : $expResult->reward_points,
+										'price' => (is_null($expResult->price)) ?  0 : $expResult->price,
+										'taxes' => (is_null($expResult->taxes)) ? 0 : $expResult->taxes,
 										'pre_tax_price' => (is_null($expResult->price))? "" : $expResult->price,
 										'post_tax_price' => (is_null($expResult->post_tax_price)) ? "" : $expResult->post_tax_price,
 										'tax' => (is_null($expResult->tax)) ? "": $expResult->tax,
@@ -170,6 +182,18 @@ class Experiences {
 										'location' => $arrLocation,
 										'similar_option' => array(),
 										'addons' => $arrAddOn,
+										//Added on 05-08-2015
+										'location_address' => array(
+																	  "address_line" => $expResult->address,
+																	  "locality" 	=> $expResult->locality,
+																	  "area" 		=> $expResult->area,
+																	  "city" 		=> $expResult->city,
+																	  "pincode" 	=> $expResult->pin_code,
+																	  "state" 		=> $expResult->state_name,																
+																	  "country" 	=> $expResult->country,
+																	  "latitude" 	=> $expResult->latitude,
+																	  "longitude" 	=> $expResult->longitude																
+																   ),
 									);
 
             $arrExpDetails['status'] = Config::get('constants.API_SUCCESS');
@@ -245,8 +269,16 @@ class Experiences {
 							//->leftJoin(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','pvl.vendor_location_id')
 							->leftJoin('vendor_locations as vl', 'vl.id','=','pvl.vendor_location_id')
 							->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
-							->leftJoin('locations', 'locations.id','=','vl.location_id')							
-							->select('locations.name as area','vla.latitude','vla.longitude')
+							->leftJoin('locations', 'locations.id','=','vl.location_id')
+							->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+							->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+							->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+							->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')							
+							->select('locations.name as area','vla.latitude','vla.longitude',
+								     'vla.address', 'vla.pin_code', 								
+									 'loc2.name as city', 'loc3.name as state_name',
+									 'loc4.name as country', 'loc5.name as locality')
 							->where('pvl.product_id',$productID)
 							//->where('vla.city_id', $cityID) Added on 2.7.15
 							//->where('pvl.id','!=',$pvlID)
@@ -264,9 +296,16 @@ class Experiences {
 		if($queryResult) {
 			foreach($queryResult as $row) {
 				$arrLocation[] = array(
-									'area' => $row->area,
+									//'area' => $row->area,
 									'latitude' => $row->latitude,
-									'longitude' => $row->longitude
+									'longitude' => $row->longitude,
+									"address_line" 	=> $row->address,
+									"locality" 		=> $row->locality,
+									"area"			=> $row->area,
+									"city" 			=> $row->city,
+									"pincode" 		=> $row->pin_code,
+									"state" 		=> $row->state_name,																
+									"country" 		=> $row->country,
 								);
 			}
 		}		

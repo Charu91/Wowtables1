@@ -80,7 +80,7 @@ else{?>
 						<?php }?>
 				 
 			   </div>
-			   <div class="deal-desc" id="desc_tag_exp" style="margin-bottom:103px !important;">
+			   <div class="deal-desc" id="desc_tag_exp">
 				  <p id="dummy_text">{{$data['short_description']}} </p>
 			   </div>
 			   <div class="white_background1_exp">

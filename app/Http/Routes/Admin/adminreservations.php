@@ -35,6 +35,34 @@ Route::post('/admin/adminreservations/getRelatedResults', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('/admin/adminreservations/getExp_info', [
+    'uses' => 'AdminReservationsController@getExp_info',
+    'as' => 'AdminReservationsGetExpInfo',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/adminreservations/getAla_info', [
+    'uses' => 'AdminReservationsController@getAla_info',
+    'as' => 'AdminReservationsGetAlaInfo',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/adminreservations/experience_checkout', [
+    'uses' => 'AdminReservationsController@experienceCheckout',
+    'as' => 'AdminReservationsExperienceCheckout',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/adminreservations/ac_checkout', [
+    'uses' => 'AdminReservationsController@alacarteCheckout',
+    'as' => 'AdminReservationsAlacarteCheckout',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('/admin/adminreservations/restaurant_search/{term}', [
     'uses' => 'AdminReservationsController@restaurantSearch',
     'as' => 'AdminReservationsRestaurantSearch',

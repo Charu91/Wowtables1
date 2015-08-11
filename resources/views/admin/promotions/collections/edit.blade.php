@@ -116,6 +116,13 @@
                     <label for="attributes[show_in_alacarte]">Show in Alacarte</label>
                 </div>
             </div>
+
+            <div class="col-sm-4">
+                <div class="checkbox-custom checkbox-primary">
+                    <input type="checkbox" value="1" id="hide_in_mobile" name="hide_in_mobile" @if($collection->hide_in_mobile == 1) checked="checked" @else @endif>
+                    <label for="hide_in_mobile">Hide in Mobile</label>
+                </div>
+            </div>
         </div>
     </div>
    <footer class="panel-footer">

@@ -75,7 +75,7 @@ class ExperienceController extends Controller {
 
         //$arrSubmittedData['city_id']    = $city_id;
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
-        //echo "<pre>"; print_r($arrExperience);
+        //echo "<pre>"; print_r($arrExperience);die;
         $data['arrExperience']          = $arrExperience;
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
@@ -132,8 +132,10 @@ class ExperienceController extends Controller {
         $jump_to_ala_query = DB::select("SELECT vl.vendor_id, vl.location_id, vl.slug,l.name as area
                               FROM `vendor_locations` as vl
                               left join locations as l on l.id = vl.location_id
+                              left join vendor_location_address as vla on vla.vendor_location_id = vl.id
                               WHERE vl.vendor_id = '$vendor_id'
                               AND vl.a_la_carte = '1'
+                              AND vla.city_id = '$city_id'
                               AND vl.status = 'Active'");
 
         $alacarte_jump = array();
@@ -324,7 +326,7 @@ class ExperienceController extends Controller {
                                             AND t.status = 'available'
                                             AND pvl.status = 'Active'
                                             group by p.id");
-            
+
          // print_r($exclusiveExperiences);
           //exit;
             $arrData = array();
@@ -605,10 +607,8 @@ class ExperienceController extends Controller {
 
         $arrSubmittedData['minPrice']       = $price_start_range; 
 
-        if(!empty($price_end_with))
-        {
-            $arrSubmittedData['maxPrice']  = $price_end_with;
-        }
+        $arrSubmittedData['maxPrice']  = $price_end_with;
+
         
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
                 
@@ -648,9 +648,9 @@ class ExperienceController extends Controller {
         echo json_encode($arrExpData);
     }
 
-    public function exporder()
+        public function exporder()
     {
-        //echo "<pre>"; print_r(Input::all());
+        //echo "<pre>"; print_r(Input::all()); die;
         $dataPost['reservationDate'] = Input::get('booking_date');
         $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
         $dataPost['reservationTime'] = Input::get('booking_time');
@@ -709,7 +709,7 @@ class ExperienceController extends Controller {
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
         $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
         $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
-        //echo "<pre>"; print_r($productDetails); die;
+        //echo "<pre>"; print_r($dataPost); //die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -791,7 +791,7 @@ class ExperienceController extends Controller {
                                 'long' => $locationDetails->longitude,
                                 'slug' => $outlet->slug,
                             );
-
+                            //echo "<pre>"; print_r($cookiearray); die;
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
                                 //echo "set addons in cookie";
                                 foreach($dataPost['addon'] as $prod_id => $qty) {
@@ -854,7 +854,7 @@ class ExperienceController extends Controller {
                                 'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                                 'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                                 'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-                                'Occasion' => $dataPost['addons_special_request'],
+                                'Special_Request' => $dataPost['addons_special_request'],
                                 'Type' => "Experience",
                                 'API_added' => 'Yes',
                                 'GIU_Membership_ID' => $userData['data']['membership_number'],
@@ -890,7 +890,7 @@ class ExperienceController extends Controller {
                                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                                     $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                                    $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
                                 });
                             }
 
@@ -932,7 +932,7 @@ class ExperienceController extends Controller {
                                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                                $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
                             });
 
                             //echo "userid == ".$userID;
@@ -981,6 +981,8 @@ class ExperienceController extends Controller {
                             $arrResponse['long'] = $locationDetails->longitude;
                             $arrResponse['city'] = $arrResponse['current_city'];
                             $arrResponse['slug'] = $outlet->slug;
+                            $arrResponse['total_amount'] = $dataPost['total_amount'];
+                            $arrResponse['guestEmail'] = $dataPost['guestEmail'];
 
                             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }
@@ -1054,7 +1056,7 @@ class ExperienceController extends Controller {
                 'Date_of_Visit' => date('d-M-Y', strtotime($fetch_cookie['reservationDate'])),
                 'Time' => date("g:i A", strtotime($fetch_cookie['reservationTime'])),
                 'Alternate_ID' =>  'E'.sprintf("%06d",$fetch_cookie['order_id']),
-                'Occasion' => $fetch_cookie['addons_special_request'],
+                'Special_Request' => $fetch_cookie['addons_special_request'],
                 'Type' => "Experience",
                 'API_added' => 'Yes',
                 'GIU_Membership_ID' => $fetch_cookie['membership_number'],
@@ -1094,7 +1096,7 @@ class ExperienceController extends Controller {
                     $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                     $message->to('concierge@wowtables.com')->subject('Urgent: Zoho reservation posting error');
-                    $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                    $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
                 });
             }
 
@@ -1137,7 +1139,7 @@ class ExperienceController extends Controller {
                 $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
-                $message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+                $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
             });
 
             //echo "userid == ".$userID;
@@ -1186,6 +1188,8 @@ class ExperienceController extends Controller {
             $arrResponse['long'] = $fetch_cookie['long'];
             $arrResponse['city'] = $fetch_cookie['current_city'];
             $arrResponse['slug'] = $fetch_cookie['slug'];
+            $arrResponse['total_amount'] = $fetch_cookie['total_amount'];
+            $arrResponse['guestEmail'] = $fetch_cookie['guestEmail'];
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
@@ -1246,9 +1250,9 @@ class ExperienceController extends Controller {
 
                   $last_reserv_date = date('Y-m-d',strtotime($reserv_date));
                     $last_reserv_time =  strtotime($reserv_time);
-                    $last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);
+                    $last_reserv_time_2_hours_after = strtotime('+1 Hour',$last_reserv_time);
                     //echo '<br>';
-                    $last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
+                    $last_reserv_time_2_hours_before = strtotime('-1 Hour',$last_reserv_time);
                     if($reserv_date_new == $last_reserv_date){
                         //echo 'if';
                         $new_reserv = strtotime($reserv_time_new);

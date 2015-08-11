@@ -62,11 +62,11 @@ class AdminRestaurantLocationsController extends Controller {
 	 * @param CreateRestaurantLocationRequest $request
 	 * @return Response
 	 */
-	public function store(CreateRestaurantLocationRequest $request)
-	{
+	public function store()
+	{ //CreateRestaurantLocationRequest $request
 
         $input = $this->request->all();
-		//dd($input);
+		//echo "<pre>"; print_r($input); die;
 		if(!isset($input['a_la_carte'])){
 			$input['a_la_carte'] =  0;
 			//$input['attributes']['menu'] =  $input['attributes']['old_menu'];

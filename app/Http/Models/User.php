@@ -445,12 +445,39 @@ class User {
                 												'full_name' => $data['full_name']
             								));
 
+            $cityarray = DB::select("SELECT name FROM locations WHERE id=".$data['location_id']);
+            //$cityname = $cityarray[0]['name'];
+            $cityname = $cityarray[0]->name;          
+
             //Adding user membershipId to the database
             DB::table('user_attributes_varchar')->insert([
                'user_id' => $userInsertId,
                'user_attribute_id' => 7,
                'attribute_value' => '1'.str_pad($userInsertId, 6, '0', STR_PAD_LEFT),
            ]);
+
+            if($cityname == 'Mumbai' || $cityname == 'mumbai'){
+                $email_to = 'durgesh@wowtables.com';
+            } else if(($cityname == 'Pune' || $cityname == 'pune') || ($cityname == 'Delhi' || $cityname == 'delhi')){
+                $email_to = 'harshad@wowtables.com';
+            } else if($cityname == 'Bangalore' || $cityname == 'bangalore'){
+                $email_to = 'karishma@wowtables.com';
+            }
+
+            $registerarray = array(
+                'email' => $data['email'],
+                'city' => $cityname,
+                'phone_number' => $data['phone_number'],
+                'full_name' => $data['full_name'],
+                'email_to' => $email_to
+            );
+
+
+            Mail::send('emails.register', ['register'=> $registerarray], function($message) use ($registerarray)
+            {
+                $message->to($registerarray['email_to'])->subject('New app registration in '.$registerarray['city']);
+                $message->cc(['kunal@wowtables.com', 'rooshabh@wowtables.com','concierge@wowtables.com']);
+            });
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();
@@ -573,7 +600,7 @@ class User {
                     'code' => 227,
                     'data' => [
                         'action' => 'Check if the email address and password match',
-                        'message' => 'There is an email password mismatch. Please check an try again'
+                        'message' => 'There is an email password mismatch. Please check and try again'
                     ]
                 ];
             }

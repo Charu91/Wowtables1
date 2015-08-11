@@ -124,8 +124,10 @@ class ExperienceModel {
                 $arrData[] = $row->vendor_name.'~~~'.$row->vendor_id.'~~~vendor';
                 $arrData[] = $row->cuisine_name.'~~~'.$row->cuisine_id.'~~~cuisine';
           }
+      }else{
+          $arrData[] = 'No Data Found!~~~1~~~no_data';
       }
-     // echo '<pre>';print_r($arrData['data']);
+
       $arrDataNew =  array_unique( $arrData);
       return $arrDataNew;
     } 
@@ -135,7 +137,7 @@ class ExperienceModel {
     /**
      * Reads the detail of the experience matching passed criteria.
      *
-     * @access  public
+     * @access  public 
      * @param $arrData
      * @since 1.0.0
      * @version 1.0.0
@@ -557,7 +559,8 @@ class ExperienceModel {
               ->leftJoin('media','media.id','=','pmm.media_id')
               ->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
               ->join('vendors','vendors.id','=','vl.vendor_id')
-              ->where('products.id',$experienceID);
+              ->where('products.id',$experienceID)
+              ->where('pvl.status','Active');
               //->where('pa1.alias','experience_info')
               //->where('pa2.alias','short_description')
               //->where('pa4.alias','terms_and_conditions')
@@ -588,7 +591,7 @@ class ExperienceModel {
                   'curators.bio as curator_bio', 'curators.designation',
                   'cm.file as curator_image',
                   'pvl.id as product_vendor_location_id',
-                  'vendors.name as vendor_name','vendors.id as vendor_id');
+                  'vendors.name as vendor_name','vendors.id as vendor_id','pvl.status as pvl_status');
               
     }
     else {
@@ -661,6 +664,7 @@ class ExperienceModel {
                     'addons' => $arrAddOn,
                     'reward_points' => $expResult->reward_points,
                     'gift_card' => $expResult->gift_card,
+                    'pvl_status' => $expResult->pvl_status,
                     'similar_option' => array(),
                   );
         
@@ -761,6 +765,7 @@ class ExperienceModel {
               ->where('pvl.product_id',$productID)
               ->where('vla.city_id',$cityID)
               ->where('pvl.status','Active')
+              //->orWhere('pvl.status','Hidden')
               ->get();
     
     //array to hold location details
@@ -930,6 +935,39 @@ class ExperienceModel {
     return $arrLocLmt;
   }
 
+    public static function getExperienceLimitWithCity($experienceID,$cityID) {
+        $queryResult = DB::table('product_vendor_locations as pvl')
+            ->join('vendor_locations as vl', 'vl.id', '=', 'pvl.vendor_location_id')
+            ->leftJoin('product_vendor_locations_limits as pvll', 'pvll.product_vendor_location_id', '=', 'pvl.id')
+            ->leftJoin('vendor_location_address as vla', 'vla.vendor_location_id','=','vl.id')
+            ->join('locations as l1', 'l1.id', '=', 'vla.area_id')
+            ->where('pvl.product_id', $experienceID)
+            ->where('vla.city_id', $cityID)
+            ->select('pvl.id as vendor_location_id','pvl.vendor_location_id as id', 'l1.name as area',
+                'vla.latitude', 'vla.longitude', 'pvll.min_people_per_reservation',
+                'pvll.max_people_per_reservation', 'pvll.min_people_increments',
+                'pvl.product_id as experience_id','pvl.id as pvl_id')
+            ->get();
+
+
+        #array to read experiences and location limits
+        $arrLocLmt = array();
+
+        foreach ($queryResult as $row) {
+            $arrLocLmt[$row->vendor_location_id] = array(
+                'experience_id' => $row->experience_id,
+                'vl_id' => $row->id,
+                'area' => $row->area,
+                'min_people' => (is_null($row->min_people_per_reservation)) ? '' : $row->min_people_per_reservation,
+                'max_people' => (is_null($row->max_people_per_reservation)) ? '' : $row->max_people_per_reservation,
+                'increment' => (is_null($row->min_people_increments)) ? '' : $row->min_people_increments,
+                //'latitude' => $row->latitude,
+                //'longitude' => $row->longitude,
+            );
+        }
+
+        return $arrLocLmt;
+    }
   
 
   public function getExperienceBlockDates($expId=0)
@@ -1197,7 +1235,7 @@ class ExperienceModel {
           ->join('vendor_locations as vl','pvl.vendor_location_id','=','vl.id')
           ->leftJoin('vendor_location_address as vla','vl.id','=','vla.vendor_location_id')
           ->where('pvl.id',$vendorLocationID)
-          ->select('vla.address','vla.latitude','vla.longitude')
+          ->select('vla.address','vla.latitude','vla.longitude','vla.city_id')
           ->first();
 
 

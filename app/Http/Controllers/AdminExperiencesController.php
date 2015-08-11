@@ -67,7 +67,10 @@ class AdminExperiencesController extends Controller {
 	public function store(CreateSimpleExperienceRequest $request)
 	{
         $input = $this->request->all();
-        //dd($input);
+        //echo "before<pre>"; print_r($input);
+        $input['attributes']['start_date'] = date('Y-m-d',strtotime($input['attributes']['start_date']));
+        $input['attributes']['end_date'] = date('Y-m-d',strtotime($input['attributes']['end_date']));
+        //echo "---<br> after<pre>"; print_r($input); die;
         $simpleExperienceCreate = $this->simpleExperience->create($input);
 
         if($simpleExperienceCreate['status'] === 'success'){
@@ -168,6 +171,8 @@ class AdminExperiencesController extends Controller {
 	{
 
         $input = $this->request->all();
+        $input['attributes']['start_date'] = date('Y-m-d',strtotime($input['attributes']['start_date']));
+        $input['attributes']['end_date'] = date('Y-m-d',strtotime($input['attributes']['end_date']));
         //dd($input);
         if($input['attributes']['menu_markdown'] == ""){
             $input['attributes']['menu_markdown'] =  $input['attributes']['old_menu_markdown'];

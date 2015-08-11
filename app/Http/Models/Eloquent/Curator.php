@@ -6,16 +6,18 @@ class Curator extends Model {
 
     protected $table = 'curators';
 
-    protected $fillable = ['name','media_id','bio','link','city_id'];
+    //protected $fillable = ['name','media_id','bio','link','city_id'];
+    protected $fillable = ['name','bio','link','designation','city_id'];
 
     protected $visible = ['id','name','media_id','link','city_id'];
 
-    protected $with = ['media','location'];
+    //protected $with = ['media','location'];
+    protected $with = ['location'];
 
-    public function media()
+    /*public function media()
     {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Media','media_id','id');
-    }
+    }*/
 
     public function location()
     {

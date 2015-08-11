@@ -64,8 +64,8 @@ class CreateSimpleExperienceRequest extends Request {
             $rules['attributes.reward_points_per_reservation'] = 'required|integer';
             //$rules['attributes.curator_tip'] = 'required';
             $rules['attributes.cuisines'] = 'required|productcuisinesarray';
-            $rules['attributes.start_date'] = 'required|date_format:Y-m-d';
-            $rules['attributes.end_date'] = 'required|date_format:Y-m-d';
+            $rules['attributes.start_date'] = 'required';
+            $rules['attributes.end_date'] = 'required';
 
             $rules['pricing.price'] = 'required|numeric';
             $rules['pricing.post_tax_price'] = 'required|numeric';

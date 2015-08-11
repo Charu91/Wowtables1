@@ -38,7 +38,12 @@
  	margin-left: 4%;
 	margin-bottom: 2%;
 }
-
+.popup_fix{
+    display: block;
+    opacity: 1;
+    padding-top: 25px;
+    margin-top: 40px;
+}
 .btn-primary:active,.btn-primary:hover,.btn-primary {
   color: #000;
   background-color: #FFFFFF;
@@ -504,7 +509,7 @@
     </section>
 
        <!-- Modal -->
-    <div class="modal fade" id="fbSelectCity" tabindex="-1" role="dialog" aria-labelledby="fbSelectCityLabel" aria-hidden="true">
+    <div class="modal fade popup_fix" id="fbSelectCity" tabindex="-1" role="dialog" aria-labelledby="fbSelectCityLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -541,7 +546,7 @@
     </script>
 
    <script type="text/javascript">
-
+       $("#fbSelectCity").removeClass('popup_fix');
     function popup(){
         myWindow=window.open("{{URL::to('/')}}/users/facebook", "_blank", "scrollbars=1,resizable=1,height=300,width=450");
         myWindow.moveTo(500, 200); 
@@ -577,7 +582,10 @@
             window.location.href = "{{URL::to('/')}}/"+city;
         }
         else {
-          $("#fbSelectCity").modal('toggle');
+
+		console.log('modal called');
+	  
+          $("#fbSelectCity").addClass('popup_fix').modal('toggle');
         }
         }, 'json');
 

@@ -290,6 +290,28 @@ use WowTables\Http\Models\RestaurantLocations;
 
 		
 	}
+
+    //-----------------------------------------------------------------
+
+    /**
+     * Handles request for searching the nearby experiences
+     * based on parameters.
+     * 
+     * @access  public
+     * @param   object  Request
+     * @return  json
+     * @since   1.0.0
+     */
+    public function getNearbyResource(Request $request) {
+        
+        //reading the input data
+         $input = $request->all();
+        
+        return response()->json(Search::getNearbyResturantInformation($input),200);
+        
+        
+    }
+
  }
 //end of class SearchController
 //end of file WowTables/Http/Controllers/Api/SearchController.php

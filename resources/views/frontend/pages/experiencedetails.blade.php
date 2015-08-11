@@ -37,102 +37,20 @@ $hasOrder = (bool)(isset($order) && is_array($order) && $arrExperience['data']['
     <div class="container deal-detail">
     <?php 
 	$footer_filter_access = array('lists','collection','filter');
-	/*if($arrExperience['data']['discontinued'] == 1) { ?>
-   
-<?php if((isset($details) && $details['dropdowns_opt'] == 0) || in_array($this->router->fetch_method(),$footer_filter_access)):?> 
+        if(isset($arrExperience['data']['pvl_status']) && $arrExperience['data']['pvl_status'] == "Inactive") { ?>
 <section class="related-experiences deal-detail discontinued">
       <div class="container">
-        <div class="row">  
-<?php  if($this->router->fetch_method() == 'exp'):?>
+        <div class="row">
+
 <h3 class="col-md-10">Sorry, this experience is no longer available.</h3>
-<p class="col-md-10"><strong>Other Experiences You Might Enjoy</strong></p>
-<ul>
 
-<?php $i=0;?>
-<?php foreach($experiences as $exp):?>
-<?php 
-
-?>
-    <li class="col-md-4 col-sm-4">
-        <a href="<?php echo URL::to('/').$exp['city']."/experiences/".$exp['slug'];?>">
-           <table class="deal-head">
-                <tr>
-                    <td>
-                        <?php echo $exp['exp_title'];?>
-                    </td>
-                    <td>
-                      <span>View</span> Details
-                    </td>
-                  </tr>
-                </table>
-                 <div class="deal-img">
-                    <img src="<?php echo URL::to('/').$exp['list_image']; ?>" alt="" class="img-responsive">
-                  <div class="deal-desc">
-                    <p><?php echo trim($exp['exp_short_desc']);?></p>
-                  </div>
-                </div>                
-              </a>
-            </li>
-<?php
- $i++; 
- ?>
-<?php endforeach ?>
-</ul>
 <div class="clearfix"></div>
-<?php endif ?>
-<?php 
-$url = $this->uri->segment(1);
-$url = explode("-",$url);
-$last_url_item = count($url)-1;
-?>
-    <div class="bottom-filters"> 
-    <ul>
-        <li class="col-md-4 col-sm-4">
-                <div class="btn-group dropup btn-block">
-                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_cuisine">
-                    Experiences by Cuisine
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" id="f_cuisine_ul">
-                  <?php foreach($cousines as $cousine): ?>
-                     <li ><a rel="<?php echo strtolower($cousine); ?>" href="javascript:void(0);"><?php echo $cousine; ?></a></li>
-                  <?php endforeach; ?>
-                  </ul>
-                </div>
-              </li>
-               <li class="col-md-4 col-sm-4">
-                <div class="btn-group dropup btn-block">
-                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_area">
-                    Experiences by Location
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" id="f_area_ul">
-                  <?php foreach($areas_footer[$current_city] as $area): ?>
-                     <li><a rel="<?php echo strtolower($area); ?>" href="javascript:void(0);"><?php echo $area; ?></a></li>
-                  <?php endforeach; ?>
-                  </ul>
-                </div>
-              </li>
-               <li class="col-md-4 col-sm-4">
-                <div class="btn-group dropup btn-block">
-                  <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" id="f_price">
-                    Experiences by Price
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" id="f_price_ul">
-                  <?php foreach($prices as $key => $price): ?>  
-                     <li rel="<?php echo $key; ?>"><a rel="<?php echo strtolower($key); ?>" href="javascript:void(0);"><?php echo htmlspecialchars($price); ?></a></li>
-                  <?php endforeach; ?>
-                  </ul>
-                </div>
-              </li>
-          </ul>
-    </div>
+
 </div>
 </div>
-</section> 
-<?php endif ?>
-<?php } */?>
+</section>
+
+<?php }?>
 
       <div class="row">
       <div class="col-md-8 col-sm-8 deal-detail-left"  itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
@@ -581,24 +499,25 @@ $last_url_item = count($url)-1;
           ?>
           <hr>
           <div class="widget price-box" style="margin-top: -20px;">
-                        <h3 class="text-center" style="color:#FA7B47">ADD ONS</span></h3>
+                        <h3 class="text-left" style="color:#FA7B47">ADD ONS</span></h3>
+
             <p class="text-center"><small></small></p>
+
                         <h4></h4>
            <ul>
            <?php 
           foreach($arrExperience['data']['addons'] as $addons)
           {
             ?>
-           <ul>
+			</ul>
+			<ul>
             <li style="color:#FA7B47;"><?php echo $addons['reservation_title'];?></li>
             <li><?php echo $addons['short_description'];?></li>
-            <li>Rs. <?php echo $addons['price'];?> <small><br>per person, taxes applicable(additonal to actual cost)</small></li>
-          </ul>
-          <hr> <br/>
+            <li>Rs. <?php echo $addons['price'];?> <small><br>per person (Taxes Applicable)</small></li>
           <?php
           }
           ?>
-        </ul>
+        </ul><br>
           </div>
 
       <?php }?>
@@ -636,6 +555,7 @@ $last_url_item = count($url)-1;
        </div>
       </div>
       <?php endif*/ ?>
+      <?php if(isset($arrExperience['data']['pvl_status']) && ($arrExperience['data']['pvl_status'] == "Active" || $arrExperience['data']['pvl_status'] == "Hidden")) { ?>
           <div class="widget reservation-box" id="ReservationBox"<?=(isset($_GET['v']) && $_GET['v']==2) ? ' style="display:none"' : ''?>>
              <h3 class="text-center">RESERVE THIS EXPERIENCE</h3>
              <form role='form' method="post" action="<?=URL::to('orders/expcheckout')?>" id="booking_form">  
@@ -646,7 +566,7 @@ $last_url_item = count($url)-1;
                         <div class="panel-heading">
                           <h4 class="panel-title">
                              <a href="javascript:" style="text-decoration: none;">
-                                Location</a>  
+                                Location</a>
                                 <select name="address" id='locations1' class="pull-right space">
                                 <?php
                                 foreach($arrExperience['data']['location'] as $key =>$listData): ?>
@@ -931,7 +851,7 @@ $last_url_item = count($url)-1;
                 <input type="hidden" name="send">
             </form>
           </div>
-          <?php //endif;?>
+      <?php } //endif;?>
 
 
           <div class="widget query-contact">
@@ -972,39 +892,40 @@ $last_url_item = count($url)-1;
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+<?php if(isset($arrExperience['data']['pvl_status']) && ($arrExperience['data']['pvl_status'] == "Active" || $arrExperience['data']['pvl_status'] == "Hidden")) { ?>
+    <div class="modal fade" id="redirectAlacarteLocationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Which <?php echo $arrExperience['data']['name'];?> would you like a reservation at?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-default">
 
-	<div class="modal fade" id="redirectAlacarteLocationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="width: 400px;">
-	<div class="modal-content">
-	  <div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h4 class="modal-title text-center" id="myModalLabel">Which <?php echo $arrExperience['data']['name'];?> would you like a reservation at?</h4>
-	  </div>
-		<div class="modal-body">               
-            <div class="panel panel-default">
+                    <!-- List group -->
+                        <ul class="a-list-group">
+                            <?php //foreach($arrExperience['data']['location'] as $key =>$listData){
+                            //$city = strtolower($listData['city']);
+                            $city = strtolower($arrExperience['data']['location'][0]['city']);
+                            foreach($alacarteJumpDetails as $key2 => $alacarteJump)
+                            {
+                            $slug = $alacarteJump["slug"];
+                            //echo "<pre>"; print_r($cities);
 
-              <!-- List group -->
-              <ul class="a-list-group"> 
-				<?php //foreach($arrExperience['data']['location'] as $key =>$listData){
-          //$city = strtolower($listData['city']);
-          $city = strtolower($arrExperience['data']['location'][0]['city']);
-          foreach($alacarteJumpDetails as $key2 => $alacarteJump)
-          {
-            $slug = $alacarteJump["slug"];
-         //echo "<pre>"; print_r($cities);  
-            
-          ?>
-					<li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/$slug"); ?>">
-						<center><a href="" data-dismiss="modal"><?php echo $alacarteJump['area'];?></a></center>
-					</li>
-				<?php } 
-              //}?>
-              </ul>
+                            ?>
+                            <li class="a-list-group-item" data-alacarte_link="<?php echo URL::to("$city/alacarte/$slug"); ?>">
+                                <center><a href="" data-dismiss="modal"><?php echo $alacarteJump['area'];?></a></center>
+                            </li>
+                            <?php }
+                            //}?>
+                        </ul>
+                    </div>
+                </div>
             </div>
-          </div>
-	  </div>
-	</div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+<?php } ?>
 
   <!-- Modal for email experience starts here-->
   <!--Share Modal -->

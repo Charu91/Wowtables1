@@ -23,7 +23,7 @@ class EditCuratorRequest extends Request {
     {
         return [
             'name'  => 'required',
-            'media_id'  => 'required|exists:media,id',
+            //'media_id'  => 'required|exists:media,id',
             'bio' => 'required',
             'link' => 'required|url',
             'location_id' => 'required|exists:locations,id,type,City',

@@ -132,7 +132,7 @@ class Facebook {
             if($user[0]->fb_token_exists) { 
 
                 if($user[0]->location_id) {
-                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
+                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('name');
 
                     if($location_slug){
                         $retarr = ['status' => 'success', 'location' => $location_slug];
@@ -151,7 +151,7 @@ class Facebook {
                 ]);
 
                 if($user[0]->location_id){
-                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('slug');
+                    $location_slug = DB::table('locations')->where('id', $user[0]->location_id)->pluck('name');
 
                     if($location_slug){
                         $retarr = ['status' => 'success', 'location' => $location_slug];
@@ -230,10 +230,10 @@ class Facebook {
                             ->join('users', 'users.location_id','=','locations.id')
                             ->where('users.id',$userId)
                             ->where('locations.id', $cityId)
-                            ->select('slug')
+                            ->select('name')
                             ->first();
         if ($resultCity) {
-            return $resultCity->slug;
+            return $resultCity->name;
         } 
 
         return false;

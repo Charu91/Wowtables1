@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label for="location_id" class="col-sm-3 control-label">Select Restaurant Location <span class="required">*</span></label>
                     <div class="col-sm-6">
-                        {!! Form::select('restaurant_location_id[]',$restaurant_locations_list,$productLocations,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'','multiple'=>'multiple']) !!}
+                        {!! Form::select('restaurant_location_id[]',$restaurant_locations_list,$productLocations,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -395,7 +395,7 @@
             <h2 class="panel-title">Publish Actions</h2>
         </header>
         <div class="panel-body">
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-5">
                 <label for="status">&nbsp;&nbsp;&nbsp;Status <span class="required">*</span>&nbsp;&nbsp;&nbsp;</label>
                 <div class="radio-custom radio-success radio-inline">
                     <input type="radio" id="Active" name="status" value="Active" @if($productLocationDetails['status']=='Active') checked="checked" @else @endif >
@@ -404,6 +404,10 @@
                 <div class="radio-custom radio-danger radio-inline">
                     <input type="radio" id="Inactive" name="status" value="Inactive"  @if($productLocationDetails['status']=='Inactive') checked="checked" @else @endif>
                     <label for="Inactive">Inactive</label>
+                </div>
+                <div class="radio-custom radio-danger radio-inline">
+                    <input type="radio" id="Hidden" name="status" value="Hidden" @if($productLocationDetails['status']=='Hidden') checked="checked" @else @endif>
+                    <label for="Hidden">Hidden</label>
                 </div>
             </div>
             <div class="col-sm-2">

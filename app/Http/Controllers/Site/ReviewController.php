@@ -260,7 +260,7 @@ class ReviewController extends Controller {
                         $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
                         $message->to('concierge@wowtables.com')->subject(' New Feedback on '.$exp_name.' by '.$member_name.'');
-                        //$message->cc('kunal@wowtables.com', 'deepa@wowtables.com');
+                        $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
                 });
 
          $page_text = "<center><h2>Thank you for your review.</h2></center>";

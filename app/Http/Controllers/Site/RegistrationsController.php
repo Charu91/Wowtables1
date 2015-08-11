@@ -454,18 +454,18 @@ class RegistrationsController extends Controller {
 	 */
 	public function reservationCancel()
 	{
+		//echo "<pre>"; print_r(Input::all()); die;
 		$reservationID = $this->request->input('reserv_id');
 		$reservationType = $this->request->input('reserv_type');
+		$user_id = $this->request->input('user_id');
+		$added_by = $this->request->input('added_by');
 		//echo "reservationID == ".$reservationID." , reservationType == ".$reservationType; die;
 		$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
-		$userID = Session::get('id');
+		$userID = $user_id;
 		$userData = Profile::getUserProfileWeb($userID);
 
-		$zoho_data  = array(
-			'Loyalty_Points_Awarded'=>0,
-			'Order_completed'=>'User Cancelled',
-		);
-		$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
+
+
 
 		$rewardsPoints = '';
 		$type = '';
@@ -482,6 +482,12 @@ class RegistrationsController extends Controller {
 		{
 
 			if($reservationType == "experience"){
+
+				$zoho_data  = array(
+					'Loyalty_Points_Awarded'=>0,
+					'Order_completed'=>(isset($added_by) && $added_by == 'user' ? 'User Cancelled' : 'Admin Cancelled'),
+				);
+				$res_data = $this->zoho_edit_booking('E'.sprintf("%06d",$reservationID),$zoho_data);
 
 				$setBookingKey = 'MERGE11';
 				$setBookingsValue = $userData['data']['bookings_made'];
@@ -521,6 +527,12 @@ class RegistrationsController extends Controller {
 
 				$setBookingKey = 'MERGE26';
 				$setBookingsValue = $userData['data']['a_la_carte_reservation'];
+
+				$zoho_data  = array(
+					'Loyalty_Points_Awarded'=>0,
+					'Order_completed'=>(isset($added_by) && $added_by == 'user' ? 'User Cancelled' : 'Admin Cancelled'),
+				);
+				$res_data = $this->zoho_edit_booking('A'.sprintf("%06d",$reservationID),$zoho_data);
 
 
 				$outlet = $this->alacarte_model->getOutlet($arrReservationDetails[0]->vendor_location_id);
@@ -582,7 +594,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('CR - '.$dataPost['order_id'].' | '.date('d-F-Y',strtotime($dataPost['reservationDate'])).' , '.date('g:i a',strtotime($dataPost['reservationTime'])).' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
 			});
 
 
@@ -602,11 +614,12 @@ class RegistrationsController extends Controller {
 	{
 		
     $arrdata = DB::table('reservation_details')->where('id', $id)
-                  ->select('reservation_date','reservation_time','no_of_persons')
+                  ->select('reservation_date','reservation_time','no_of_persons','giftcard_id')
                   ->get();
     $reservation_date = $arrdata[0]->reservation_date;
     $reservation_time = $arrdata[0]->reservation_time;
     $no_of_persons = $arrdata[0]->no_of_persons;
+	$giftcard_id = $arrdata[0]->giftcard_id;
 
 
 
@@ -614,7 +627,9 @@ class RegistrationsController extends Controller {
     				 'last_reservation_time'=>$reservation_time,
     				 'convert_time'=>date('g:i A',strtotime($reservation_time)),
     				 'convert_date'=>date('jS M, Y',strtotime($reservation_date)),
-     				 'no_of_persons'=>$no_of_persons);
+     				 'no_of_persons'=>$no_of_persons,
+					 'giftcard_id'=>($giftcard_id != "" ? $giftcard_id : "NULL")
+			);
    		 echo json_encode($arrData);
     	exit;
     	$aLaCarteID 		 = '97';
@@ -636,7 +651,7 @@ class RegistrationsController extends Controller {
 	 */
 	public function updateReservetion()
 	{
-		//echo "<pre>"; print_r(Input::all());
+		//echo "<pre>"; print_r(Input::all()); //die;
 
 
 		$reserv_id = $this->request->input('reserv_id');
@@ -667,6 +682,11 @@ class RegistrationsController extends Controller {
 		$new_reservation_outlet = $this->request->input('new_locality_value');
 		$last_reservation_outlet_val = $this->request->input('old_locality_value');
 		$last_reservation_outlet_name = $this->request->input('old_area_name');
+		$last_reservation_giftcard_id = rtrim($this->request->input('last_reservation_giftcard_id'));
+		$user_id = $this->request->input('user_id');
+		$added_by = $this->request->input('added_by');
+
+
 
 		//check for outlet change
 		if($locality_val != $last_reservation_outlet_val){
@@ -718,10 +738,24 @@ class RegistrationsController extends Controller {
 
 		$addonsArray= $this->request->input('addonsArray');
 		$giftcard_id= $this->request->input('giftcard_id');
+		$giftcard_id_text= ($this->request->input('giftcard_id') != "" ? $this->request->input('giftcard_id') : "NULL");
 		$special_request= $this->request->input('special_request');
 		//	`print_r($addonsArray);
 		//echo "sad = ".$giftcard_id;
 		$count = $this->request->input('addonsArray');
+		$giftcard_change = '';
+		if($giftcard_id != $last_reservation_giftcard_id){
+			if($giftcard_id == "") {
+				//echo " d null = ".$giftcard_id_text;
+				$giftcard_change = " old Giftcard ID: ".$last_reservation_giftcard_id." -> New Giftcard ID: ".$giftcard_id_text;
+			} else {
+				$giftcard_change = " old Giftcard ID: ".$last_reservation_giftcard_id." -> New Giftcard ID: ".$giftcard_id_text;
+			}
+
+		} else {
+			$giftcard_change = "";
+		}
+		//die;
 		if($count==""){  $addonsArray =array();}
 
 		$addonsText = '';
@@ -762,7 +796,7 @@ class RegistrationsController extends Controller {
 		//exit;
 		DB::update("update reservation_details set giftcard_id='$giftcard_id', special_request = '$special_request' where id = '$reserv_id'");
 
-		$userID = Session::get('id');
+		$userID = $user_id;
 		$userData = Profile::getUserProfileWeb($userID);
 
 		if($reserveType == "experience"){
@@ -793,20 +827,22 @@ class RegistrationsController extends Controller {
 				'Time' => date("g:ia", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
-				'API_added' => 'Yes',
+				'API_added' => (($added_by == 'user') ? 'Yes' : 'Admin'),
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
-				'Order_completed'=>'User Changed',
-				'Occasion' => $addons_special_request,
+				'Order_completed'=>(($added_by == 'user') ? 'User Changed' : 'Admin Changed'),
+				'Special_Request' => $addons_special_request,
 				'gift_card_id_from_reservation' => $giftcard_id
 			);
 
-			//echo "<pre>"; print_r($zoho_data);
+			//echo "<pre>E".sprintf("%06d",$reserv_id); print_r($zoho_data); die;
 
 			$this->zoho_edit_booking('E'.sprintf("%06d",$reserv_id),$zoho_data);
+
+			//echo "<pre> a ="; print_r($a); die;
 
 			$dataPost = array('reservation_type'=> $reserveType,
 				              'reservationID' => $reserv_id,
@@ -842,6 +878,7 @@ class RegistrationsController extends Controller {
 			$dataPost['final_reservation_party_size'] = $reservation_party_size;
 			$dataPost['final_reservation_date'] = $reservation_date;
 			$dataPost['final_reservation_time'] = $reservation_time;
+			$dataPost['final_giftcard_id'] = $giftcard_change;
 
 
 			Mail::send('site.pages.edit_experience_reservation',[
@@ -853,7 +890,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #E'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com','abhishek.n@wowtables.com');
 			});
 
 		} else if($reserveType == "alacarte"){
@@ -879,13 +916,13 @@ class RegistrationsController extends Controller {
 				'Time' => date("g:i a", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
-				'API_added' => 'Yes',
+				'API_added' => (($added_by == 'user') ? 'Yes' : 'Admin'),
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
-				'Order_completed'=>'User Changed',
+				'Order_completed'=>(($added_by == 'user') ? 'User Changed' : 'Admin Changed'),
 			);
 
 			$this->zoho_edit_booking('A'.sprintf("%06d",$reserv_id),$zoho_data);
@@ -933,7 +970,7 @@ class RegistrationsController extends Controller {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
 				$message->to('concierge@wowtables.com')->subject('ER - #A'.$dataPost['order_id'].' | '.$dataPost['reservation_date'].' , '.$dataPost['reservation_time'].' | '.$dataPost['venue'].' | '.$dataPost['guestName']);
-				$message->cc('kunal@wowtables.com', 'deepa@wowtables.com','tech@wowtables.com');
+				$message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
 			});
 		}
 
@@ -1026,7 +1063,7 @@ class RegistrationsController extends Controller {
 		);
 		curl_setopt_array($ch, $curlConfig);
 		$result = curl_exec($ch);
-		//  out($result);die;
+		  //echo "<pre> results == "; print_r($result);die;
 		curl_close($ch);
 	}
 

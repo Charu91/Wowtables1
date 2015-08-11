@@ -1,0 +1,196 @@
+/* this file is made only for front-end design fixes */ 
+
+@font-face {
+    font-family: 'swiss_721bold';
+    src: url('../fonts/swiss_721_bold-webfont.eot');
+    src: url('../fonts/swiss_721_bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_bold-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_bold-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_bold-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_bold-webfont.svg#swiss_721bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721condensed_italic';
+    src: url('../fonts/swiss_721_condensed_italic-webfont.eot');
+    src: url('../fonts/swiss_721_condensed_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_condensed_italic-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_condensed_italic-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_condensed_italic-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_condensed_italic-webfont.svg#swiss_721condensed_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721italic';
+    src: url('../fonts/swiss_721_italic-webfont.eot');
+    src: url('../fonts/swiss_721_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_italic-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_italic-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_italic-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_italic-webfont.svg#swiss_721italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721LtCnIt';
+    src: url('../fonts/swiss_721_light_condensed_italic-webfont.eot');
+    src: url('../fonts/swiss_721_light_condensed_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_light_condensed_italic-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_light_condensed_italic-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_light_condensed_italic-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_light_condensed_italic-webfont.svg#swiss_721LtCnIt') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721light';
+    src: url('../fonts/swiss_721_light-webfont.eot');
+    src: url('../fonts/swiss_721_light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_light-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_light-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_light-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_light-webfont.svg#swiss_721light') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721medium';
+    src: url('../fonts/swiss_721_medium-webfont.eot');
+    src: url('../fonts/swiss_721_medium-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_medium-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_medium-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_medium-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_medium-webfont.svg#swiss_721medium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721thin_italic';
+    src: url('../fonts/swiss_721_thin_italic-webfont.eot');
+    src: url('../fonts/swiss_721_thin_italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721_thin_italic-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721_thin_italic-webfont.woff') format('woff'),
+         url('../fonts/swiss_721_thin_italic-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721_thin_italic-webfont.svg#swiss_721thin_italic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'swiss_721roman';
+    src: url('../fonts/swiss_721-webfont.eot');
+    src: url('../fonts/swiss_721-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/swiss_721-webfont.woff2') format('woff2'),
+         url('../fonts/swiss_721-webfont.woff') format('woff'),
+         url('../fonts/swiss_721-webfont.ttf') format('truetype'),
+         url('../fonts/swiss_721-webfont.svg#swiss_721roman') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.deal-detail .deal-bottom-box .tab-pane hr{ margin-bottom: 10px !important;}
+.deal-detail .deal-bottom-box .tab-pane hr + div{ padding-bottom: 8px;}
+
+.deal-detail-right .price-box h3{ color: #FA7B47;  text-transform: uppercase;  font-size: 16px;  margin-left: 8px; font-weight: normal;}
+.deal-detail-right .price-box ul li, .deal-detail-right .terms-box ul li{ margin-bottom:8px;}
+.deal-detail-right .price-box{ padding-bottom:5px;}
+.deal-detail-right .price-box ul li br{ display:none;}
+
+body{ font-family: 'PT Sans', sans-serif;}
+body .wowtable_font{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .signup-wrapper #FBSignup, #abovefold .signup-wrapper #FBLogin{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .form-slide-wrapper .info-text.new a{ font-family: 'PT Sans', sans-serif !important;}
+#abovefold .form-slide-wrapper .info-text.new a.active{ font-weight:normal !important;}
+.widget.price-box+hr+.deal-detail-right .price-box h3{text-align:left;}
+.deal-detail-right .price-box h3 p{display:none;}
+.deal-detail-right .price-box h3{font-size: 18px !important; font-weight: normal; margin: 0; text-transform: uppercase; color: #FA7B47;}
+.deal-detail-right .price-box h3.text-left{padding-left: 10px;}
+.widget.price-box+hr{display:none;}
+.deal-detail-right .price-box h3{border-bottom: 0px solid #fff;}
+#rupee_symbol input[value="Low"]+span{background:url(../img/rupee_icon1.png) no-repeat; width:10px; height:13px; display:inline-block; text-indent: -999999px;}
+#rupee_symbol input[value="Medium"]+span{background:url(../img/rupee_icon2.png) no-repeat; width:17px; height:13px; display:inline-block; text-indent: -999999px;}
+#rupee_symbol input[value="High"]+span{background:url(../img/rupee_icon3.png) no-repeat; width:23px; height:13px; display:inline-block; text-indent: -999999px;}
+#exp_list_load_layer{background:rgba(0, 0, 0, 0.55) url(../img/icon_loader.gif) no-repeat 195px 110px !Important;}
+#exp_list_load_layer:before{content: "Loading"; color: rgba(244,244,244,0.90); font-size: 60px; position: absolute; top: 120px;
+left: 50%; margin-left: -15px;}
+#exp_list_load_layer img{display:none;}
+.deal-listing .experience-grid li .flag.valign{top:7% !important;}
+.deal-detail-right .price-box h3.text-left+p{border-bottom: 0px solid #fff;}
+
+.deal-listing-left .widget.conc-mobile, .deal-listing.featured-variant .listing-cover-desc{ margin: 0px 0;}
+.deal-listing.featured-variant .listing-cover-desc .lead.intro-tag{ text-align:left; margin-bottom:0px; padding-bottom:10px;}
+.deal-listing .experience-grid li{ margin-bottom: 50px;}
+/*.deal-listing .experience-grid li .deal-desc{ margin-bottom: 61px !important;}*/
+
+img.alacate_banner_img_mob{}
+img.alacate_banner_img_main{}
+
+header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
+.top-filter .filter-left .btn-group.btn-block #city_p{font-family: 'swiss_721light' !important;}
+#abovefold .signup-wrapper #FBLogin {font-family: 'swiss_721light' !important;}
+#abovefold .form-slide-wrapper .info-text.new a{font-family: 'swiss_721light' !important;}
+.widget .filter-widget .more-filter .panel-body .option.tags{clear:left;}
+.widget .filter-widget .more-filter .panel-body .option.tags .leads_tag{padding-top:0% !important;}
+
+#redirectloginModal .modal-body #FBSignup{font-family: 'swiss_721light' !important;}
+#redirectloginModal .modal-body .nav-justified.wowtables-nav>li a{font-family: 'swiss_721light' !important; font-weight: inherit;}
+#redirectloginModal .modal-body .nav-justified.wowtables-nav>li.active{font-family: 'swiss_721light' !important;}
+.modal-body form .wowtable_enter_btn{font-family: 'swiss_721light' !important;}
+.deal-listing .experience-grid, .deal-listing .top-filter ul{}
+#desc_tag_exp{margin-bottom: 101px !important;}
+
+@media screen and (min-width: 768px){
+	.carousel-caption{ left: initial; right:9%;}
+}
+
+@media screen and (max-width: 720px){
+	.deal-listing .experience-grid li{ margin-bottom: 20px;}
+	#redirectloginModal .modal-body .nav-justified.wowtables-nav > li a{padding: 2px 5px !important;}
+}
+@media (max-width: 359px) and (min-width: 320px){
+	#review-menu-tab-detail{ height: 40px;}
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) { 
+	img.alacate_banner_img_mob{ display:none !important;}
+	img.alacate_banner_img_main{ display:block !important;}
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+	img.alacate_banner_img_mob{ display:none !important;}
+	img.alacate_banner_img_main{ display:block !important;}
+}

@@ -163,10 +163,9 @@ use Config;
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
 		}
 		else {
-			$arrData['status'] = Config::get('constants.API_SUCCESS');
+			$arrData['status'] = Config::get('constants.API_ERROR');
 			$arrData['no_result_msg'] = 'No matching values found.';
-			$arrData['data'] = array();
-			$arrData['total_count'] = 0;
+			
 		}
 		return $arrData;			
 	}
@@ -315,20 +314,41 @@ use Config;
 	 */
 	public static function getVendorLocation($vendorID,$locationID=0) {
 		//array to contain the list of locations
-		$arrLocation = array();
+		$arrLocation = array();  
 		
 		$queryResult = DB::table('vendor_locations as vl')
 							->leftJoin('locations as loc', 'loc.id','=','vl.location_id')
+							->join(DB::raw('vendor_location_address as vla'),'vla.vendor_location_id','=','vl.id')
+							->join('locations as loc1','loc1.id', '=' , 'vla.area_id')
+							->join('locations as loc2', 'loc2.id', '=', 'vla.city_id')
+							->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
+							->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')
 							->where('vl.vendor_id','=',$vendorID)
 							->where('vl.location_id','!=',$locationID)
-							->select('loc.name','vl.slug')
+							->select('loc.name','vl.slug',
+									  'vla.latitude','vla.longitude', 'vla.address', 'vla.pin_code',
+									  'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
+									  'loc3.name as state_name','loc4.name as country', 'loc5.name as locality'
+									  )
 							->get();
 		
-		foreach( $queryResult as $vendorLocation) {				
+		foreach( $queryResult as $vendorLocation) {			
 			$arrLocation[] = array(
 									'name' => $vendorLocation->name,
-									'slug' => $vendorLocation->slug 
-								);
+									'slug' => $vendorLocation->slug,									
+									'location_address' => array(
+																	'address_line' => $vendorLocation->address,
+																	'locality' 		=> $vendorLocation->locality,
+																	'area' 			=> $vendorLocation->area,
+																	'city' 			=> $vendorLocation->city,
+																	'pincode' 		=> $vendorLocation->pin_code,
+																	'state' 		=> $vendorLocation->state_name,																
+																	'country' 		=> $vendorLocation->country,
+																	'latitude' 		=> $vendorLocation->latitude,
+																	'longitude' 	=> $vendorLocation->longitude,																
+																), 
+								); 
 		}
 		
 		return $arrLocation;
@@ -378,8 +398,9 @@ use Config;
 													  ->where('mrn1.image_type', '=', 'mobile_listing_ios_alacarte');
 						})            
 						->where('vl.vendor_id',$vendorID)
-						->where('v.status','Publish')
+						//->where('v.status','Publish')
 						->where('vl.status','Active')
+						->where('vl.a_la_carte','=', 1)
 						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
 						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
 						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
@@ -391,13 +412,24 @@ use Config;
 								'mrn1.file as ios_image',
 								'mrn2.file as android_image'
 								)
-						->groupBy('vl.id')
-						->get();  
-					//echo $queryResult->toSql();	die();
+						->groupBy('vl.id');
+						//->get();  
+					
+		//checking if city has been passed in 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
+		}
+		
+		//executing the query
+		$queryResult = $queryResult->get();
 		
 		//array to store the information from the DB
 		$data = array();
 		$data['status']=Config::get('constants.API_SUCCESS');
+
+		//reading the experiences
+		$arrExperience = self::readRestaurantsExperiences($vendorID);
 
 		if($queryResult) {
 			foreach($queryResult as $row) {
@@ -417,22 +449,22 @@ use Config;
 											);
 			}
 			if(array_key_exists('data', $data)) { 
-				$data['alacarteCount']=count($data['data']['alacarte']);
-				$data['data']['experience'] = self::readRestaurantsExperiences($vendorID);
-				$data['experienceCount']=count($data['data']['experience']);
+				$data['alacarteCount'] = count($data['data']['alacarte']);
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount']=count($arrExperience);
 			} else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 			}
 		}
 		else {
 				$data['data']['alacarte'] = array();
 				$data['alacarteCount'] = 0;
-				$data['data']['experience'] = array();
-				$data['experienceCount'] = 0;
+				$data['data']['experience'] = $arrExperience;
+				$data['experienceCount'] = count($arrExperience);
 				$data['no_result_msg'] = 'No matching result found.';
 		}
 		
@@ -474,6 +506,7 @@ use Config;
 							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
 							->where('vl.vendor_id', $vendorID)							
 							->where('p.status', 'Publish')
+							->where('pvl.status','Active')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
 							->where('mrn2.image_type', 'mobile_listing_android_experience')						
 							->select(
@@ -487,8 +520,17 @@ use Config;
 									'pp.post_tax_price','pp.price',
 									'pp.taxes', 'pt.type_name as price_type'
 									)
-							->groupBy('p.id')
-							->get();							
+							->groupBy('p.id');
+						//	->get();
+
+		//checking if city has been passed in 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
+		}
+
+		//executing the query
+		$queryResult = $queryResult->get();
 							
 		//array to store the information from the DB
 		$data = array();
@@ -632,6 +674,7 @@ use Config;
         
         return $result['data']; 
     }
+    
  }
-//end of class LaCarte
+//end of class AlaCarte
 //end of file WowTables\Http\Models\LaCarte.php

@@ -173,11 +173,12 @@
                 </div> 
               </div>
               <div class="tab-pane fade" id="menu">
-          <?php if(isset($rows[0]['curators_picks']) && $rows[0]['curators_picks'] != ""){?>
+          <?php if(isset($arrALaCarte['data']['curator_tips']) && $arrALaCarte['data']['curator_tips'] != ""){?>
                 <div class="row" style="width:100%;padding:10px;border:1px solid black;margin-top:10px;margin-left:1px;background-color:#fefbf2;">
                   <div class="col-sm-9">
                     <strong>From Our Curator Panel</strong>
-          <?php echo $rows[0]['curators_picks'];?>
+                      <p><?php echo $arrALaCarte['data']['curator_information']['name'].", ".$arrALaCarte['data']['curator_information']['designation'];?></p>
+          <?php echo $arrALaCarte['data']['curator_tips'];?>
                   </div>
                 </div>
         <?php } ?>
@@ -197,7 +198,7 @@
             <strong>Expert Tips</strong>
             <?php echo $arrALaCarte['data']['expert_tips'];?>
             </div>
-      <a data-page_loc="Suggest Tip Widget" class="btn btn-warning" data-target="#redirecttipModal" data-toggle="modal"> Suggest Tip</a>
+      {{--<a data-page_loc="Suggest Tip Widget" class="btn btn-warning" data-target="#redirecttipModal" data-toggle="modal"> Suggest Tip</a>--}}
           </div>
           <?php } else {?>
 
