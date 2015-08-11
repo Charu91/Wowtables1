@@ -203,7 +203,7 @@ class CollectionTags {
                                 'id'          => $queryResult->id,
                                 'name'        => $queryResult->name,
                                 'status'      => (empty($queryResult->status)) ? "" : $queryResult->status,
-                                'description' => (empty($queryResult->description)) ? "" : $queryResult->description,
+                                'description' => (empty($queryResult->description)) ? "" : preg_replace('/<[^>]*>/', '', $queryResult->description),
                                 'slug'        => (empty($queryResult->slug)) ? "" : $queryResult->slug,                                                            
                                 'image' => array(
                                                 'mobile_listing_ios_experience' => (empty($queryResult->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$queryResult->ios_image,
