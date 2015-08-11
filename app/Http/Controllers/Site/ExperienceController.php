@@ -709,7 +709,7 @@ class ExperienceController extends Controller {
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
         $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
         $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
-        //echo "<pre>"; print_r($productDetails); die;
+        //echo "<pre>"; print_r($dataPost); //die;
 
         $arrRules = array(
                             'reservationDate' => 'required|date',
@@ -791,7 +791,7 @@ class ExperienceController extends Controller {
                                 'long' => $locationDetails->longitude,
                                 'slug' => $outlet->slug,
                             );
-
+                            //echo "<pre>"; print_r($cookiearray); die;
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
                                 //echo "set addons in cookie";
                                 foreach($dataPost['addon'] as $prod_id => $qty) {
@@ -1188,6 +1188,7 @@ class ExperienceController extends Controller {
             $arrResponse['long'] = $fetch_cookie['long'];
             $arrResponse['city'] = $fetch_cookie['current_city'];
             $arrResponse['slug'] = $fetch_cookie['slug'];
+            $arrResponse['total_amount'] = $fetch_cookie['total_amount'];
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
