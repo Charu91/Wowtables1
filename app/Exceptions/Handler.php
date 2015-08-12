@@ -49,8 +49,22 @@ class Handler extends ExceptionHandler {
         }
         else
         {
-            return parent::render($request, $e);
-            //return response()->view('errors.'.'405', [], '405');  //this code redirect any code to 404 re
+            $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+            $user_ip = $this->getUserIP();
+            $browser_details =  $_SERVER['HTTP_USER_AGENT'];
+            $errorarray = array('error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
+            Mail::send('site.pages.page_error_404',[
+                'error_array'=> $errorarray,
+            ], function($message) use ($errorarray)
+            {
+                $message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+
+                $message->to('concierge@wowtables.com')->subject('404 error on website');
+                $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
+
+            });
+            //return parent::render($request, $e);
+            return response()->view('errors.404');
         }
 	}
 
