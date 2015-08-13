@@ -129,7 +129,7 @@ class SharingController extends Controller {
 			{
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 
-				$message->to('tech@wowtables.com')->subject($static_subject);
+				$message->to('kunal@wowtables.com')->subject($static_subject);
 				//$message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
 			}); //die;
 			echo 1;
