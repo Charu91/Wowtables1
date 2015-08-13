@@ -34,7 +34,7 @@ class CustomValidator extends Validator {
 							->select('rd.id', 'rd.reservation_date', 'rd.reservation_time'
 									//DB::raw('(ABS(TIME_TO_SEC(TIMEDIFF("'.$value.'",rd.reservation_time))/3600)) as time_difference')	
 									)
-							->get();
+							->get();    //die("Hi....");
 							//->orderBy('time_difference','ASC');
 
 		if(!empty($query))
@@ -48,8 +48,8 @@ class CustomValidator extends Validator {
 
 	                  //$last_reserv_time_2_hours_after = strtotime('+2 Hour',$last_reserv_time);	                   
 	                  //$last_reserv_time_2_hours_before = strtotime('-2 Hour',$last_reserv_time);
-	                  $last_reserv_time_2_hours_after = strtotime('+1 Hour 30 Minutes ',$last_reserv_time);	                   
-	                  $last_reserv_time_2_hours_before = strtotime('-2 Hour 30 Minutes',$last_reserv_time);
+	                  $last_reserv_time_2_hours_after = strtotime('+1 Hour 29 Minutes ',$last_reserv_time);	                   
+	                  $last_reserv_time_2_hours_before = strtotime('-2 Hour 29 Minutes',$last_reserv_time);
 	                  	                  	
 	                  if($reservationDate == $last_reserv_date){
 	                        
