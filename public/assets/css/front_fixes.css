@@ -155,8 +155,10 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .deal-listing .experience-grid, .deal-listing .top-filter ul{}
 #desc_tag_exp{margin-bottom: 101px !important;}
 
+.overlay .signup-wrapper #signinForm{ display:none;}
+
 @media screen and (min-width: 768px){
-	.carousel-caption{ left: initial; right:9%;}
+	.carousel-caption{ left: auto; right:9%;}
 }
 
 @media screen and (max-width: 720px){
