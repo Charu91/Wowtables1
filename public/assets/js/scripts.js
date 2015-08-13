@@ -1121,31 +1121,77 @@ $(document).ready(function() {
         user = $("input[name=user_email]").val();
         reservType = $("input[name=reserv_type]").val();
         if (reservType == "alacarte") {
-            restid = $("input[name=restaurantid]").val();
-            url = "/thankyou/ac_sharedetails"
-        } else {
-            restid = "";
-            url = "/thankyou/sharedetails"
+            restlocid = $("input[name=vendorLocationID]").val();
+            reservid = $("input[name=reservid]").val();
+            expid =  0;
+            explocid = 0;
+            guests = $("input[name=number_guests]").val();
+            date_reservation = $("input[name=date_reservation]").val();
+            date_seating = $("input[name=date_seating]").val();
+            outlet_name = $("input[name=outlet_name]").val();
+            expname =  0;
+        } else if(reservType == "experience") {
+            restlocid = 0;
+            expid =  $("input[name=experienceid]").val();
+            explocid = $("input[name=experienceLocationID]").val();
+            guests = $("input[name=number_guests]").val();
+            date_reservation = $("input[name=date_reservation]").val();
+            date_seating = $("input[name=date_seating]").val();
+            outlet_name = $("input[name=outlet_name]").val();
+            expname =  0;
+        } else if(reservType == "experience_detail") {
+            restlocid = 0;
+            reservid = 0;
+            expid =  $("input[name=experienceid]").val();
+            expname =  $("input[name=experience_name]").val();
+            explocid = 0;
+            guests = 0;
+            date_reservation = 0;
+            date_seating = 0;
+            outlet_name = 0;
+        } else if(reservType == "alacarte_detail"){
+            restlocid = 0;
+            reservid = 0;
+            expid =  0;
+            expname =  0;
+            explocid = 0;
+            guests = 0;
+            date_reservation = 0;
+            date_seating = 0;
+            outlet_name = $("input[name=outlet_name]").val();
         }
         if (emails != "" || content != "") {
             $.ajax({
-                url: url,
+                url: '/thankyou/sharedetails',
                 type: "post",
                 data: {
                     content: content,
                     emails: emails,
                     user: user,
-                    reservid: $("input[name=reservid]").val(),
+                    reservid: reservid,
                     userid: $("input[name=userid]").val(),
-                    expid: $("input[name=experienceid]").val(),
-                    restid: restid
+                    expid: expid,
+                    explocid: explocid,
+                    restid: $("input[name=restaurantID]").val(),
+                    url_product: $("input[name=url_product]").val(),
+                    reservation_type: $("input[name=reserv_type]").val(),
+                    guests: guests,
+                    date_reservation: date_reservation,
+                    date_seating: date_seating,
+                    restaurant: $("input[name=restaurant]").val(),
+                    outlet_name: outlet_name,
+                    short_description: $("input[name=short_description]").val(),
+                    restlocid: restlocid,
+                    expname:expname
                 },
                 success: function(e) {
                     if (e == 1) {
                         $("#error_email").addClass("hidden");
                         $("#error_content").addClass("hidden");
                         $("#email_form").addClass("hidden");
-                        $("#email_sent_confirmation").removeClass("hidden")
+                        $("#email_sent_confirmation").removeClass("hidden");
+                        $("#guest_emails").val('');
+                        $("#det_content").val('');
                     }
                 }
             })
@@ -1155,6 +1201,8 @@ $(document).ready(function() {
         }
     });
     $("#send_reservation").click(function() {
+        $("#guest_emails").val('');
+        $("#det_content").val('');
         $("#email_form").removeClass("hidden");
         $("#email_sent_confirmation").addClass("hidden")
     });
