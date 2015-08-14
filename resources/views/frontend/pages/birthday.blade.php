@@ -245,7 +245,7 @@
                     <div class="col-sm-4 wow fadeInUp">
                         <h5>Spa</h5>
                         <img src="/assets/birthday/images/mumbaispa.jpg" alt="lunch2">
-                        <p>Four Fountains De-Stress Spa, Pali Naka, Bandra</p>
+                        <p>A rejuvenating massage at Four Fountains De-Stress Spa, Pali Naka, Bandra</p>
                     </div>
                     <div class="col-sm-4 wow fadeInUp">
                         <h5>Drinks and a bite</h5>
