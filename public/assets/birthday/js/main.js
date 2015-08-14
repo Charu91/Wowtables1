@@ -251,6 +251,35 @@ jQuery(function($) {'use strict';
         //this is for dynamic lunch option
         $(".lunch-sel").empty();
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra'>");
+        $('#twitter-share').twitterbutton({
+
+            title:'I want to get a taste of #TheGoodLife with @Wow_Tables because   http://wowtables.com/birthday-bash/thegoodlife',
+            layout:'none',
+            url:'false',
+            ontweet:function(response){
+                //ajax call
+                $("#promotion_type").val("Twitter");
+                $.ajax({
+                    type: "POST",
+                    url: "/promotion/birthday/save",
+                    data: $("#main-contact-form").serialize(),
+                    timeout: 3000,
+                    success: function(response) {
+                        $.parseJSON(response);
+                        if(response){
+                            $(".hit").show();
+
+                        } else{
+                            $(".fail").show();
+                        }
+                    },
+                    error: function() {
+                        $(".fail").show();
+                    }
+                });
+            },
+            lang:'en'
+        });
     });
 
     $("#wowtbales_delhi_menu").on('click',function(){
@@ -340,35 +369,7 @@ jQuery(function($) {'use strict';
 
 
 
-    $('#twitter-share').twitterbutton({
 
-        title:'I want to get a taste of #TheGoodLife with @Wow_Tables because',
-        layout:'none',
-        url:'false',
-        ontweet:function(response){
-            //ajax call
-            $("#promotion_type").val("Twitter");
-            $.ajax({
-                type: "POST",
-                url: "/promotion/birthday/save",
-                data: $("#main-contact-form").serialize(),
-                timeout: 3000,
-                success: function(response) {
-                    $.parseJSON(response);
-                    if(response){
-                        $(".hit").show();
-
-                    } else{
-                        $(".fail").show();
-                    }
-                },
-                error: function() {
-                    $(".fail").show();
-                }
-            });
-        },
-        lang:'en'
-    });
 
 
 

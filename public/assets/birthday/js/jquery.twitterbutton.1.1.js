@@ -40,10 +40,35 @@ $.fn.twitterbutton = function(options) {
 	
 	if(!script_loaded){
 		var e = document.createElement('script'); e.type="text/javascript"; e.async = true; 
-		e.src = 'http://platform.twitter.com/widgets.js';
+		e.src = 'https://platform.twitter.com/widgets.js';
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(e);
 		
 		$(e).load(function() {
+
+            if(o.action=='tweet'){
+                var via = '';
+                var related = '';
+                if(o.user!=false){
+                    via = 'data-via="'+o.user+'" ';
+                    if(o.user_description!=false){
+                        related = 'data-related="'+o.user+':'+o.user_description+'" ';
+                    }
+                }
+                var counturl = '';
+                if(o.count_url!=dynUrl)counturl = 'data-counturl="'+o.count_url+'" ';
+                var thtml = '<div><a href="http://twitter.com/share" class="twitter-share-button test" data-size="large" data-url="'+dynUrl+'" '+counturl+''+via+'data-text="'+dynTitle+'" data-lang="'+o.lang+'" '+related+'data-count="'+o.layout+'">Tweet</a></div>';
+            } else {
+                var thtml = '<div><a href="http://twitter.com/'+o.user+'" class="twitter-follow-button">Follow</a></div>';
+            }
+
+            if(o.mode=='append') {
+                $(obj).append(thtml);
+            } else {
+                console.log("yoo");
+                $(obj).html(thtml);
+            }
+            twttr.widgets.load(); //very important
+
 			function clickEvent(intent_event) {
 			  if (intent_event) {
 					var label = intent_event.region;
@@ -102,35 +127,22 @@ $.fn.twitterbutton = function(options) {
 			  	if(o.hideafterlike)$(obj).hide();
 			  };      
 			}       
-			//twttr.events.bind('click',    clickEvent);
+			twttr.events.bind('click',    clickEvent);
 			twttr.events.bind('tweet',    tweetIntent);
-			//twttr.events.bind('retweet',  retweetIntent);
-			//twttr.events.bind('favorite', favIntent);
-			//twttr.events.bind('follow',   followIntent);
+			twttr.events.bind('retweet',  retweetIntent);
+			twttr.events.bind('favorite', favIntent);
+			twttr.events.bind('follow',   followIntent);
             script_loaded = true;
 
 
 		});
+
+
 	}
 
 	
-	  if(o.action=='tweet'){
-	  	var via = '';
-	  	var related = '';
-	  	if(o.user!=false){
-	  		via = 'data-via="'+o.user+'" ';
-	  		if(o.user_description!=false){
-	  			related = 'data-related="'+o.user+':'+o.user_description+'" ';
-	  		}
-	  	}
-	  	var counturl = '';
-	  	if(o.count_url!=dynUrl)counturl = 'data-counturl="'+o.count_url+'" ';
-	  	var thtml = '<div><a href="http://twitter.com/share" class="twitter-share-button test" data-size="large" data-url="'+dynUrl+'" '+counturl+''+via+'data-text="'+dynTitle+'" data-lang="'+o.lang+'" '+related+'data-count="'+o.layout+'">Tweet</a></div>';
-	  } else {
-	  	var thtml = '<div><a href="http://twitter.com/'+o.user+'" class="twitter-follow-button">Follow</a></div>';
-	  }
-	  if(o.mode=='append')$(obj).append(thtml);
-	  else $(obj).html(thtml);
+
+
 
   });  
 }  

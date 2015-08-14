@@ -82,7 +82,11 @@
                             js.src = "//connect.facebook.net/en_US/all.js";
                             fjs.parentNode.insertBefore(js, fjs);
                         }(document, 'script', 'facebook-jssdk'));
+
+
     </script>
+
+
 
     <header id="header">
         <nav id="main-menu" class="navbar navbar-default navbar-fixed-top" role="banner">
@@ -525,9 +529,7 @@
                             <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="block">
-                                                                    <p>Eg; "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables."
-                                                                       Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter.
-                                                                       Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
+                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -546,6 +548,8 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <div id="twitter-share"></div>
+
+
                                                             </div>
                                                         </div>
                         </form>
@@ -553,6 +557,8 @@
                 </div>
             </div>
         </div>
+
+
     </section><!--/#bottom-->
 
     <footer id="footer">
@@ -583,7 +589,9 @@
 
 
 
+    <script>
 
+    </script>
 
    <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
