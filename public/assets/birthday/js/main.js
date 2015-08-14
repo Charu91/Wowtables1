@@ -248,8 +248,9 @@ jQuery(function($) {'use strict';
         /*$("#lunch-option").append($("<option>").attr("value", "Hakkasan,BKC").attr("selected", "selected").text("Hakkasan,BKC"));
         $('#lunch-option').selectmenu('refresh');
         $('#lunch-option').prop("readonly",true);*/
+        //this is for dynamic lunch option
         $(".lunch-sel").empty();
-        $(".lunch-sel").html("<input type='text' id='lunch_option' class='form-control' name='lunch_option' value='Hakkasan,BKC' readonly>");
+        $(".lunch-sel").html("<input type='text' id='lunch_option' class='form-control' name='lunch_option' value='Hakkasan, Linking Road, Bandra' readonly>");
     });
 
     $("#wowtbales_delhi_menu").on('click',function(){

@@ -96,15 +96,25 @@
         <div class="block text-center">
             <div class="row">
                 <div class="col-sm-12">
-                    <p>On our third birthday, we want to give you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're gifting you the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife. </p>
+                    <p>It's our third birthday - and there's no one we'd rather celebrate it with than you. We want to gift you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're giving you the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife. </p>
                 </div>
             </div>
-
             <div class="row">
-                            <div class="col-sm-12">
-                                <p><strong>What's on the itinerary</strong>  decadent lunch, a rejuvenating time at the spa, a happy round of drinks with snacks - your day will be planned to perfection.</p>
-                            </div>
-                        </div>
+                <div class="col-sm-12">
+                    <p><strong>When:</strong> Mumbai, Delhi, Pune - <strong>August 22</strong></p>
+                    <p>Bangalore - <strong>August 29</strong></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                      <p><strong>What's on the Itinerary:</strong></p>
+                      <ul style="list-style: none">
+                        <li>A decadent lunch</li>
+                        <li>A rejuvenating massage</li>
+                        <li>A happy round of drinks and appetisers</li>
+                      </ul>
+                </div>
+            </div>
             <!--<div class="row">
                 <div class="col-xs-4 ">
                     <div class="btn btn-sm btn-primary full">WHEN</div>
@@ -188,7 +198,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="block text-center wow fadeInUp">
-                        <div class="btn btn-lg btn-primary full" id="howitworks"><strong>Click here to find out how to enter the contest</strong> It's easy!</div>
+                        <div class="btn btn-lg btn-primary full" id="howitworks"><strong>Click here to enter the contest!</strong></div>
                     </div>
                 </div>
             </div>
@@ -229,28 +239,28 @@
                 <div class="row top-buffer lunch">
                     <div class="col-sm-4 wow fadeInUp">
                        <h5>Lunch</h5>
-                       <img src="/assets/birthday/images/mumbai-lunch.jpg" alt="lunch1">
-                       <p>A luxurious lunch at Hakkasan, BKC</p>
+                       <img src="/assets/birthday/images/mumbailunch.jpg" alt="lunch1">
+                       <p>A luxurious five course lunch at Hakkasan, Linking Road, Bandra</p>
                     </div>
                     <div class="col-sm-4 wow fadeInUp">
                         <h5>Spa</h5>
-                        <img src="/assets/birthday/images/mumbai-spa.jpg" alt="lunch2">
-                        <p>A rejuvenating massage at Four Fountain Spa, Bandra</p>
+                        <img src="/assets/birthday/images/mumbaispa.jpg" alt="lunch2">
+                        <p>Four Fountains De-Stress Spa, Pali Naka, Bandra</p>
                     </div>
                     <div class="col-sm-4 wow fadeInUp">
                         <h5>Drinks and a bite</h5>
                         <img src="/assets/birthday/images/mumbai-pbcl.jpg" alt="lunch3">
-                        <p>Unlimited drinks - with an appetiser at Tilt, Lower Parel!</p>
+                        <p>2 drinks and an appetiser at Tilt All Day, Lower Parel</p>
                     </div>
                 </div>
                 <div class="row top-buffer">
                     <div class="col-sm-4">
-                        <img src="/assets/birthday/images/uber.jpg" alt="uber">
+                        <a href="https://www.uber.com/" target="_blank"><img src="/assets/birthday/images/mumbaiuberfinal.jpg" alt="uber"></a>
                     </div>
                     <div class="col-sm-8">
-                        <p><strong>And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them. Yes, really.</strong></p>
+                        <p><strong>And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really.</strong></p>
                     </div>
-                </div>
+                </div><!-- uber code -->
                 <!--<div class="row top-buffer wow fadeInUp">
                     <div class="col-sm-4">
                         <img src="/assets/birthday/images/spa.jpg" alt="spa">
