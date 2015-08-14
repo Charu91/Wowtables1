@@ -364,7 +364,7 @@
                         <p>3 cocktails and an appetiser, Market Cafe GK -2</p>
                     </div>
                     <div class="col-sm-4">
-                         <img src="/assets/birthday/images/delhipbcl.JPG" alt="pbcl">
+                         <img src="/assets/birthday/images/delhipbcl.jpg" alt="pbcl">
                     </div>
                 </div>
             </div>
