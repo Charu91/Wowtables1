@@ -340,7 +340,35 @@ jQuery(function($) {'use strict';
 
 
 
+    $('#twitter-share').twitterbutton({
 
+        title:'I want to get a taste of #TheGoodLife with @Wow_Tables because',
+        layout:'none',
+        url:'false',
+        ontweet:function(response){
+            //ajax call
+            $("#promotion_type").val("Twitter");
+            $.ajax({
+                type: "POST",
+                url: "/promotion/birthday/save",
+                data: $("#main-contact-form").serialize(),
+                timeout: 3000,
+                success: function(response) {
+                    $.parseJSON(response);
+                    if(response){
+                        $(".hit").show();
+
+                    } else{
+                        $(".fail").show();
+                    }
+                },
+                error: function() {
+                    $(".fail").show();
+                }
+            });
+        },
+        lang:'en'
+    });
 
 
 

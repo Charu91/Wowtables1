@@ -26,8 +26,6 @@
     {!! Html::style('assets/birthday/css/main.css') !!}
 
     {!! Html::script('assets/birthday/js/jquery.js') !!}
-    <script src='http://connect.facebook.net/en_US/all.js'></script>
-      {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
 
     <!--[if lt IE 9]>
     {!! Html::script('assets/birthday/js/html5shiv.js') !!}
@@ -57,35 +55,7 @@
             });
 
 
-            $('#twitter-share').twitterbutton({
 
-                            title:'I want to get a taste of #TheGoodLife with @Wow_Tables because',
-                            layout:'none',
-                            url:'false',
-                            ontweet:function(response){
-                                //ajax call
-                                $("#promotion_type").val("Twitter");
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/promotion/birthday/save",
-                                    data: $("#main-contact-form").serialize(),
-                                    timeout: 3000,
-                                    success: function(response) {
-                                        $.parseJSON(response);
-                                        if(response){
-                                            $(".hit").show();
-
-                                        } else{
-                                            $(".fail").show();
-                                        }
-                                    },
-                                    error: function() {
-                                        $(".fail").show();
-                                    }
-                                });
-                            },
-                            lang:'en'
-                        });
 
 
         });
@@ -113,8 +83,6 @@
                             fjs.parentNode.insertBefore(js, fjs);
                         }(document, 'script', 'facebook-jssdk'));
     </script>
-
-
 
     <header id="header">
         <nav id="main-menu" class="navbar navbar-default navbar-fixed-top" role="banner">
@@ -607,7 +575,8 @@
     {!! Html::script('assets/birthday/js/jquery.isotope.min.js') !!}
     {!! Html::script('assets/birthday/js/jquery.inview.min.js') !!}
     {!! Html::script('assets/birthday/js/wow.min.js') !!}
-
+    <script src='http://connect.facebook.net/en_US/all.js'></script>
+    {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
     {!! Html::script('assets/birthday/js/main.js') !!}
 
 
