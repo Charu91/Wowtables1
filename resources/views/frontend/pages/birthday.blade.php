@@ -575,8 +575,9 @@
     {!! Html::script('assets/birthday/js/jquery.isotope.min.js') !!}
     {!! Html::script('assets/birthday/js/jquery.inview.min.js') !!}
     {!! Html::script('assets/birthday/js/wow.min.js') !!}
-    <script src='http://connect.facebook.net/en_US/all.js'></script>
+
     {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
+    <script src='http://connect.facebook.net/en_US/all.js'></script>
     {!! Html::script('assets/birthday/js/main.js') !!}
 
 
