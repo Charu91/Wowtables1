@@ -250,7 +250,7 @@ jQuery(function($) {'use strict';
         $('#lunch-option').prop("readonly",true);*/
         //this is for dynamic lunch option
         $(".lunch-sel").empty();
-        $(".lunch-sel").html("<input type='text' id='lunch_option' class='form-control' name='lunch_option' value='Hakkasan, Linking Road, Bandra' readonly>");
+        $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra' readonly>");
     });
 
     $("#wowtbales_delhi_menu").on('click',function(){
