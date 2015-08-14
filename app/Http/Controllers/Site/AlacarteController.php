@@ -378,11 +378,12 @@ class AlacarteController extends Controller {
         $userData = Profile::getUserProfileWeb($userID);
 
         $outlet = $this->alacarte_model->getOutlet($dataPost['vendorLocationID']);
-
+        //echo "<pre>"; print_r($outlet);
         $locationDetails = $this->alacarte_model->getLocationDetails($dataPost['vendorLocationID']);
-
+        //echo "<pre>"; print_r($locationDetails);
         $vendorDetails = $this->repository->getByRestaurantLocationId($dataPost['vendorLocationID']);
         //echo "sfa = ".$vendorDetails['attributes']['reward_points_per_reservation'];
+        //echo $vendorDetails['RestaurantLocation']->slug;
         //echo "<pre>"; print_r($vendorDetails); die;
 
         $arrRules = array(
@@ -560,16 +561,21 @@ class AlacarteController extends Controller {
         $arrResponse['current_city_id']        = $city_id;
 
         $arrResponse['restaurant_name'] = $outlet->vendor_name;
+        $arrResponse['restaurantID'] = $outlet->vendor_id;
+        $arrResponse['vendorLocationID'] = $dataPost['vendorLocationID'];
         $arrResponse['reservation_date'] = $dataPost['reservationDate'];
         $arrResponse['reservation_time'] = $dataPost['reservationTime'];
         $arrResponse['order_id'] = $mergeReservationsArray['order_id'];
         $arrResponse['guests'] = $dataPost['partySize'];
+        $arrResponse['outlet_name'] = $outlet->name;
         $arrResponse['terms_and_conditions'] = $vendorDetails['attributes']['terms_and_conditions'];
         $arrResponse['address'] = $locationDetails->address;
         $arrResponse['lat'] = $locationDetails->latitude;
         $arrResponse['long'] = $locationDetails->longitude;
         $arrResponse['city'] = $arrResponse['current_city'];
         $arrResponse['guestEmail'] = $dataPost['guestEmail'];
+        $arrResponse['guestName'] = $dataPost['guestName'];
+        $arrResponse['slug'] = $vendorDetails['RestaurantLocation']->slug;
         //echo "<pre>"; print_r($arrResponse); die;
         //return response()->view('frontend.pages.thankyou',$arrResponse);
         return Redirect::to('/alacarte/thankyou/A'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);

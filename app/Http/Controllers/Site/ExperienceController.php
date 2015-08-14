@@ -72,7 +72,7 @@ class ExperienceController extends Controller {
         $data['allow_guest']            ='Yes'; 
         $data['current_city']           = strtolower($city);
         $data['current_city_id']        = $city_id;
-
+        //echo "<pre>"; print_r($data);
         //$arrSubmittedData['city_id']    = $city_id;
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
         //echo "<pre>"; print_r($arrExperience);die;
@@ -707,6 +707,7 @@ class ExperienceController extends Controller {
 
         //die;
         $productDetails = $this->repository->getByExperienceId($outlet->product_id);
+        //echo "<pre>"; print_r($productDetails); die;
         $dataPost['product_id'] = (isset($outlet->product_id) && $outlet->product_id != 0 ? $outlet->product_id : 0);
         $dataPost['vendor_location_id'] = (isset($outlet->vendor_location_id) && $outlet->vendor_location_id != 0 ? $outlet->vendor_location_id : 0);
         //echo "<pre>"; print_r($dataPost); //die;
@@ -772,6 +773,7 @@ class ExperienceController extends Controller {
                                 'addons_special_request' => $dataPost['addons_special_request'],
                                 'product_id' => $dataPost['product_id'],
                                 'vendor_location_id' => $dataPost['vendor_location_id'],
+                                'vendor_id' => $outlet->vendor_id,
                                 'total_amount' => $dataPost['total_amount'],
                                 'order_id' => $reservationResponse['data']['reservationID'],
                                 'user_id' => $userID,
@@ -786,6 +788,7 @@ class ExperienceController extends Controller {
                                 'order_id_digits' => sprintf("%06d",$reservationResponse['data']['reservationID']),
                                 'experience_includes' => $productDetails['attributes']['experience_includes'],
                                 'terms_and_conditions' => $productDetails['attributes']['terms_and_conditions'],
+                                'short_description' => $productDetails['attributes']['short_description'],
                                 'address' => $locationDetails->address,
                                 'lat' => $locationDetails->latitude,
                                 'long' => $locationDetails->longitude,
@@ -976,6 +979,7 @@ class ExperienceController extends Controller {
                             $arrResponse['guests'] = $dataPost['partySize'];
                             $arrResponse['experience_includes'] = $productDetails['attributes']['experience_includes'];
                             $arrResponse['terms_and_conditions'] = $productDetails['attributes']['terms_and_conditions'];
+                            $arrResponse['short_description'] = $productDetails['attributes']['short_description'];
                             $arrResponse['address'] = $locationDetails->address;
                             $arrResponse['lat'] = $locationDetails->latitude;
                             $arrResponse['long'] = $locationDetails->longitude;
@@ -983,7 +987,12 @@ class ExperienceController extends Controller {
                             $arrResponse['slug'] = $outlet->slug;
                             $arrResponse['total_amount'] = $dataPost['total_amount'];
                             $arrResponse['guestEmail'] = $dataPost['guestEmail'];
-
+                            $arrResponse['guestName'] = $dataPost['guestName'];
+                            $arrResponse['outlet_name'] = $outlet->name;
+                            $arrResponse['product_id'] = $outlet->product_id;
+                            $arrResponse['vendor_location_id'] = $outlet->vendor_location_id;
+                            $arrResponse['vendor_id'] = $outlet->vendor_id;
+                            //echo "<pre>"; print_r($arrResponse); die;
                             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
                         }
 
@@ -1190,6 +1199,10 @@ class ExperienceController extends Controller {
             $arrResponse['slug'] = $fetch_cookie['slug'];
             $arrResponse['total_amount'] = $fetch_cookie['total_amount'];
             $arrResponse['guestEmail'] = $fetch_cookie['guestEmail'];
+            $arrResponse['guestName'] = $fetch_cookie['guestName'];
+            $arrResponse['outlet_name'] = $outlet->name;
+            $arrResponse['product_id'] = $outlet->product_id;
+            $arrResponse['vendor_location_id'] = $outlet->vendor_location_id;
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 

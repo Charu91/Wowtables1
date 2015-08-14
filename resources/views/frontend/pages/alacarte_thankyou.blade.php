@@ -147,6 +147,66 @@
         </div>
     </div>
     <img style="position:absolute; visibility:hidden" src="http://www.ref-r.com/campaign/t1/settings?bid_e=D604D097C8F8B0C4D3A75B7D7F4772E0&bid=4944&t=420&orderID=<?php echo "A".$result['order_id']; ?>&email=<?php echo $result['guestEmail']; ?>" />
+    <!--Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Share Reservation Details</h4>
+                </div>
+                <div class="modal-body" style="min-height: 110px;">
+                    <div id="email_form">
+                        <form>
+                            <div class="form-group">
+                                <label for="">Add Email Addresses</label>
+                                <textarea class="form-control" rows="3" id='guest_emails'></textarea>
+                                <div class="row">
+                                    <div class="col-xs-6"><small>seperate with commas (,)</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 error hidden" id="error_email"><small>Please enter a valid email.</small></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" placeholder="Enter a personal message here." id='det_content'></textarea>
+                                <div class="row">
+                                    <div class="col-xs-12 hidden" id="error_content"><small>Please enter your message.</small></div>
+                                </div>
+                                <div class="col-xs-12 reservation-msg">
+                                    <p>The email to your party will include your personal message above as well as details about the date, time, location and experience details.</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name='reserv_type' value='alacarte' id='reserv_type'>
+                            <input type="hidden" name='reservid' value='A{{$result['order_id']}}' id='reservid'>
+                            <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>
+                            <input type="hidden" name="vendorLocationID" value="{{$result['vendorLocationID']}}">
+                            <input type="hidden" name="restaurantID" value="{{$result['restaurantID']}}">
+                            <input type="hidden" name='user_email' value="{{$result['guestEmail']}}" id="customer_email">
+                            <input type="hidden" name='full_name' value="{{$result['guestName']}}" id="customer_name">
+                            <input type="hidden" name="restaurant" value="{{$result['restaurant_name']}}" id="restaurant">
+                            <input type="hidden" name='number_guests' value="{{$result['guests']}}" id="number_guests">
+                            <input type="hidden" name='date_reservation' value="{{ date('m/d/Y',strtotime($result['reservation_date']))}}" id="date_reservation">
+                            <input type="hidden" name='date_seating' value="{{date("g:i A", strtotime($result['reservation_time']))}}" id="date_seating">
+                            <input type="hidden" name='url_product' value="<?=URL::to('/');?>/{{$result['city']}}/alacarte/{{$result['slug']}}" id="url_product">
+                            <input type="hidden" name='outlet_name' value="{{$result['outlet_name']}}" id="outlet_name">
+
+                            <button type="submit" class="btn btn-warning btn-block" id="thank_details">Share Details</button>
+                        </form>
+                    </div>
+                    <div id="email_sent_confirmation" class="hidden">
+                        <div class="col-xs-12 reservation-msg">
+                            <p>Your message has been sent</p>
+                    <span style="padding: 10px">
+                    <button type="button" class="btn btn-warning btn-block" data-dismiss="modal" aria-hidden="true">Close This</button>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol ) ? "https://ssl." : "http://www.");
         document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
