@@ -74,7 +74,7 @@
 
     <section id="main-slider">
         <div class="owl-carousel">
-            <div class="item" style="background-image: url('/assets/birthday/images/bg1.jpg');">
+            <div class="item" style="background-image: url('/assets/birthday/images/tgl.jpg');">
                 <div class="slider-inner">
                 </div>
             </div><!--/.item-->
