@@ -137,7 +137,7 @@
         <div class="block text-center">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <p>It's our third birthday - and there's no one we'd rather celebrate it with than you. We want to gift you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're giving you the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife. </p>
+                    <p>It's our third birthday - and there's no one we'd rather celebrate it with than you. We want to gift you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're giving you - and one lucky companion - the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife.</p>
                 </div>
             </div>
             <div class="row">
