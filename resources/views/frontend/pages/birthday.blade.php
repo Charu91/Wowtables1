@@ -25,6 +25,8 @@
     {!! Html::style('assets/birthday/css/prettyPhoto.css') !!}
     {!! Html::style('assets/birthday/css/main.css') !!}
 
+    {!! Html::script('assets/birthday/js/jquery.js') !!}
+
     <!--[if lt IE 9]>
     {!! Html::script('assets/birthday/js/html5shiv.js') !!}
     {!! Html::script('assets/birthday/js/respond.js') !!}
@@ -52,24 +54,7 @@
                 $(this).addClass('selected-data');
             });
 
-            window.fbAsyncInit = function() {
-                    // init the FB JS SDK
-                    FB.init({
-                        appId      : '487953444640436',
-                        status     : true,
-                        xfbml      : true
-                    });
 
-                };
-
-                // Load the SDK asynchronously
-                (function(d, s, id){
-                    var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) {return;}
-                    js = d.createElement(s); js.id = id;
-                    js.src = "//connect.facebook.net/en_US/all.js";
-                    fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));
 
 
 
@@ -78,6 +63,26 @@
 </head><!--/head-->
 
 <body id="home" class="homepage">
+    <script>
+        window.fbAsyncInit = function() {
+                            // init the FB JS SDK
+                            FB.init({
+                                appId      : '487953444640436',
+                                status     : true,
+                                xfbml      : true
+                            });
+
+                        };
+
+                        // Load the SDK asynchronously
+                        (function(d, s, id){
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) {return;}
+                            js = d.createElement(s); js.id = id;
+                            js.src = "//connect.facebook.net/en_US/all.js";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <header id="header">
         <nav id="main-menu" class="navbar navbar-default navbar-fixed-top" role="banner">
@@ -561,7 +566,7 @@
     </footer><!--/#footer-->
 
 
-    {!! Html::script('assets/birthday/js/jquery.js') !!}
+
     {!! Html::script('assets/birthday/js/jquery.validate.min.js') !!}
     {!! Html::script('assets/birthday/js/bootstrap.min.js') !!}
     {!! Html::script('assets/birthday/js/mousescroll.js') !!}
