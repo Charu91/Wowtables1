@@ -592,9 +592,9 @@
     <script>
          $('#twitter-share').twitterbutton({
 
-                title:'I want to get a taste of #TheGoodLife with @Wow_Tables because',
+                title:'I want to get a taste of #TheGoodLife with @Wow_Tables because   http://wowtables.dev/birthday-bash/thegoodlife',
                 layout:'none',
-                url:'http://wowtables.com/birthday-bash/thegoodlife',
+                url:'false',
                 ontweet:function(response){
                     //ajax call
                     $("#promotion_type").val("Twitter");
