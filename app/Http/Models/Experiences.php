@@ -65,7 +65,12 @@ class Experiences {
 		$queryExperience = DB::table('products')
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
 							->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
-							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
+							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')							
+							->leftJoin('product_attributes_boolean as pab', 'products.id','=','pab.product_id')
+							->leftJoin('product_attributes as patt', function($join){
+								$join->on('patt.id','=','pab.product_attribute_id')
+									->where('patt.alias','=','prepayment_allowed');
+							})							
 							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 							->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
@@ -86,7 +91,7 @@ class Experiences {
 	                        ->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
 	                        ->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
 							->join('locations as loc5','loc5.id','=','vl.location_id')
-							->where('products.id',$experienceID)
+							->where('products.id',$experienceID)							
 							->where('pvl.status','Active');							
 		
 		//adding additional parameters in case of simple experience
@@ -109,7 +114,8 @@ class Experiences {
 									'vendors.name as vendor_name',
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
-                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
+                                	'pab.attribute_value as prepayment_allowed');
 							
 		}
 		else {
@@ -126,7 +132,8 @@ class Experiences {
 									'pat5.attribute_value as experience_includes','vendors.name as vendor_name', 'reward_points',
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
-                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
+                                	'pab.attribute_value as prepayment_allowed');
 		}
 
 		//running the query to get the results
@@ -181,6 +188,7 @@ class Experiences {
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
 										'similar_option' => array(),
+										'prepayment_allowed' => (empty($expResult->prepayment_allowed)) ? '': $expResult->prepayment_allowed,
 										'addons' => $arrAddOn,
 										//Added on 05-08-2015
 										'location_address' => array(
