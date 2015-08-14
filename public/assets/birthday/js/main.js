@@ -378,7 +378,7 @@ jQuery(function($) {'use strict';
         if(status){
             var product_name   = 	'The Good Life with WowTables';
             var description	   =	'Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding.';
-            var share_image	   =	'https://s3-eu-west-1.amazonaws.com/wowtables/uploads/gallery/media_55b203f4ea9e9_651x269.jpg';
+            var share_image	   =	'http://wowtables.com/assets/birthday/images/tgl.jpg';
             var share_url	   =	'http://wowtables.com';
             FB.ui({
                 method: 'share',

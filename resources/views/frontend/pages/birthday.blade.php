@@ -57,15 +57,15 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html">
-                        {!! HTML::image('assets/birthday/images/logo.png', $alt="logo", $attributes = array()) !!}
+                    <a class="navbar-brand" href="http://wowtables.com/">
+                        {!! HTML::image('assets/birthday/images/wowtables-logo.png', $alt="logo", $attributes = array('style'=>'width:50%')) !!}
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse navbar-right">
                     <ul class="nav navbar-nav">
-                        <li class="scroll"><a href="#features">A la carte</a></li>
-                        <li class="scroll"><a href="#services">Dining Experiance</a></li>
+                        <li class="scroll"><a href="http://wowtables.com/">Fine dining experiences</a></li>
+                        <!--<li class="scroll"><a href="#services">Dining Experiance</a></li>-->
                     </ul>
                 </div>
             </div><!--/.container-->
@@ -95,7 +95,7 @@
         <div class="container">
         <div class="block text-center">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8 col-sm-offset-2">
                     <p>It's our third birthday - and there's no one we'd rather celebrate it with than you. We want to gift you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're giving you the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife. </p>
                 </div>
             </div>
@@ -108,11 +108,10 @@
             <div class="row">
                 <div class="col-sm-12">
                       <p><strong>What's on the Itinerary:</strong></p>
-                      <ul style="list-style: none">
-                        <li>A decadent lunch</li>
-                        <li>A rejuvenating massage</li>
-                        <li>A happy round of drinks and appetisers</li>
-                      </ul>
+                      <p>A decadent lunch</p>
+                      <p>A rejuvenating massage</p>
+                      <p>A happy round of drinks and appetisers</p>
+
                 </div>
             </div>
             <!--<div class="row">
@@ -257,8 +256,8 @@
                     <div class="col-sm-4">
                         <a href="https://www.uber.com/" target="_blank"><img src="/assets/birthday/images/mumbaiuberfinal.jpg" alt="uber"></a>
                     </div>
-                    <div class="col-sm-8">
-                        <p><strong>And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really.</strong></p>
+                    <div class="col-sm-4">
+                        <p><strong>Optional:</strong> And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really</p>
                     </div>
                 </div><!-- uber code -->
                 <!--<div class="row top-buffer wow fadeInUp">
