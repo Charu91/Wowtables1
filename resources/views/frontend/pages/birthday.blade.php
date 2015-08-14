@@ -85,7 +85,7 @@
 
 
     </script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 
 
     <header id="header">
@@ -529,7 +529,7 @@
                             <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="block">
-                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
+                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. IMPORTANT: Make sure to keep the link while sharing on Twitter. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -547,8 +547,8 @@
                                                                 <p><strong>Tell us on Twitter</strong></p>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <!--<div id="twitter-share"></div>-->
-                                                                <a href="https://twitter.com/intent/tweet?text=I want to get a taste of #TheGoodLife with @Wow_Tables because" class="twitter-share-button">Tweet</a>
+                                                                <div id="twitter-share"></div>
+
 
                                                             </div>
                                                         </div>
@@ -582,14 +582,44 @@
     {!! Html::script('assets/birthday/js/jquery.inview.min.js') !!}
     {!! Html::script('assets/birthday/js/wow.min.js') !!}
 
-    <!--{!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!} -->
+    {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
     <script src='http://connect.facebook.net/en_US/all.js'></script>
     {!! Html::script('assets/birthday/js/main.js') !!}
 
 
 
 
+    <script>
+         $('#twitter-share').twitterbutton({
 
+                title:'I want to get a taste of #TheGoodLife with @Wow_Tables because',
+                layout:'none',
+                url:'http://wowtables.com/birthday-bash/thegoodlife',
+                ontweet:function(response){
+                    //ajax call
+                    $("#promotion_type").val("Twitter");
+                    $.ajax({
+                        type: "POST",
+                        url: "/promotion/birthday/save",
+                        data: $("#main-contact-form").serialize(),
+                        timeout: 3000,
+                        success: function(response) {
+                            $.parseJSON(response);
+                            if(response){
+                                $(".hit").show();
+
+                            } else{
+                                $(".fail").show();
+                            }
+                        },
+                        error: function() {
+                            $(".fail").show();
+                        }
+                    });
+                },
+                lang:'en'
+            });
+    </script>
 
    <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
