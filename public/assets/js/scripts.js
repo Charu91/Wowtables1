@@ -1132,6 +1132,7 @@ $(document).ready(function() {
             expname =  0;
         } else if(reservType == "experience") {
             restlocid = 0;
+            reservid = $("input[name=reservid]").val();
             expid =  $("input[name=experienceid]").val();
             explocid = $("input[name=experienceLocationID]").val();
             guests = $("input[name=number_guests]").val();

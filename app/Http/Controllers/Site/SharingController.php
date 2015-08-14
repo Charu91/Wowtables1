@@ -42,6 +42,7 @@ class SharingController extends Controller {
 
 	public function shareDetails(){
 		//echo "<pre>"; print_r(Input::all()); die;
+
 		$emails_list = Input::get('emails');
 		$emails_content = Input::get('content');
 		$reservid = Input::get('reservid');
@@ -56,10 +57,22 @@ class SharingController extends Controller {
 		$date_reservation = Input::get('date_reservation');
 		$date_seating = Input::get('date_seating');
 		$guests = Input::get('guests');
-		$url_product = Input::get('url_product');
+		$url_product1 = Input::get('url_product');
 		$short_description = Input::get('short_description');
 		$restlocid = Input::get('restlocid');
 		$expname = Input::get('expname');
+		//echo "sd = ".$reservation_type;
+		if($reservation_type == "experience"){
+			$append_url = "?utm_source=Website&utm_campaign=Referral%20Experiences%20Thank%20You";
+		} else if($reservation_type == "alacarte"){
+			$append_url = "?utm_source=Website&utm_campaign=Referral%20A%20La%20Carte%20Thank%20You";
+		} else if($reservation_type == "experience_detail"){
+			$append_url = "?utm_source=Website&utm_campaign=Referral%20Experiences%20Detail";
+		} else if($reservation_type == "alacarte_detail"){
+			$append_url = "?utm_source=Website&utm_campaign=Referral%20A%20La%20Carte%20Detail";
+		}
+		$url_product = $url_product1.$append_url;
+		//echo $url_product; die;
 		$sharearray = array('content'=>$emails_content,
 			'user'=>((isset($user) && $user != "") ? $user : "Your Friend" ),
 			'restaurant_name'=>$restaurant_name,

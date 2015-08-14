@@ -788,7 +788,7 @@
                 <input type="hidden" name="userid" value="<?php echo (Session::has('id')) ? Session::get('id') : 0;?>">
                 <input type="hidden" name='outlet_name' value="{{$arrALaCarte['data']['location_address']['area']}}" id="outlet_name">
                 <input type="hidden" name="restaurant" value="{{$arrALaCarte['data']['title']}}" id="restaurant">
-                <input type="hidden" name='url_product' value="<?=URL::to('/');?>/{{$current_city}}/experiences/{{$arrALaCarte['data']['slug']}}" id="url_product">
+                <input type="hidden" name='url_product' value="<?=URL::to('/');?>/{{$current_city}}/alacarte/{{$arrALaCarte['data']['slug']}}" id="url_product">
               <button type="submit" class="btn btn-warning btn-block" id="thank_details">Share Details</button>
             </form>
             </div>
