@@ -260,7 +260,7 @@
                     <div class="col-sm-8">
                         <p><strong>And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really.</strong></p>
                     </div>
-                </div>
+                </div><!-- uber code -->
                 <!--<div class="row top-buffer wow fadeInUp">
                     <div class="col-sm-4">
                         <img src="/assets/birthday/images/spa.jpg" alt="spa">
