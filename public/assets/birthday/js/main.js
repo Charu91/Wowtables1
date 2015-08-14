@@ -253,7 +253,7 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra'>");
         $('#twitter-share').twitterbutton({
 
-            title:'I want to get a taste of #TheGoodLife with @Wow_Tables because   http://wowtables.com/birthday-bash/thegoodlife',
+            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
             layout:'none',
             url:'false',
             ontweet:function(response){

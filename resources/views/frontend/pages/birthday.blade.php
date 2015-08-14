@@ -336,11 +336,11 @@
                     </div>
                 </div>
                 <div class="row top-buffer lunch">
-                    <div class="col-sm-4 wow fadeInUp">
+                    <!--<div class="col-sm-4 wow fadeInUp">
                         <img src="/assets/birthday/images/delhilunch1.jpg" alt="lunch1">
                         <p>A four course multi-cuisine feast at Market Cafe, GK -2</p>
-                    </div>
-                    <div class="col-sm-4 wow fadeInUp">
+                    </div>-->
+                    <div class="col-sm-4 col-sm-offset-2 wow fadeInUp">
                         <img src="/assets/birthday/images/delhilunch2.jpg" alt="lunch2">
                         <p>A five course Italian feast at Caffe Tonino, Connaught Place</p>
                     </div>
@@ -353,7 +353,7 @@
 
                     <div class="col-sm-2">
                         <h5>SPA</h5>
-                        <p>A rejuvenating massage at the Four Fountain Spa, NDSE Market</p>
+                        <p>A rejuvenating massage at Four Fountains De-Stress Spa, NDSE Market and Shivalik Road,Malviya Nagar</p>
                     </div>
                     <div class="col-sm-4">
                          <img src="/assets/birthday/images/delhispa.jpg" alt="spa">
@@ -361,7 +361,7 @@
 
                     <div class="col-sm-2">
                         <h5>Drinks and a bite</h5>
-                        <p>Drinks with an appetiser at Pamphilos, GK -1</p>
+                        <p>3 cocktails and an appetiser, Market Cafe GK -2</p>
                     </div>
                     <div class="col-sm-4">
                          <img src="/assets/birthday/images/delhipbcl.jpg" alt="pbcl">
