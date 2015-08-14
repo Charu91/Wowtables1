@@ -221,7 +221,7 @@
                     <ul class="portfolio-filter">
                         <li><a class="#" id="wowtbales_mumbai_menu">Mumbai</a></li>
                         <li><a href="#" id="wowtbales_delhi_menu">Delhi</a></li>
-                        <li><a href="#" id="wowtbales_banglore_menu">Banglore</a></li>
+                        <li><a href="#" id="wowtbales_banglore_menu">Bangalore</a></li>
                         <!--<li><a href="#" id="wowtbales_pune_menu">Pune</a></li>-->
                     </ul><!--/#portfolio-filter-->
                 </div>
@@ -348,11 +348,11 @@
                                 <div class="row top-buffer lunch">
                                     <div class="col-sm-4 wow fadeInUp">
                                         <img src="/assets/birthday/images/bangalorelunch1.jpg" alt="lunch1">
-                                        <p>A wholesome Mediterranean lunch at Om Made Cafe, Koramangala</p>
+                                        <p>A wholesome three course Mediterranean lunch at Om Made Cafe, Koramangala</p>
                                     </div>
                                     <div class="col-sm-4 wow fadeInUp">
                                         <img src="/assets/birthday/images/bangalorelunch2.jpg" alt="lunch2">
-                                        <p>A delectable European lunch at 100 Ft Bar Boutique Restaurant, Indiranagar</p>
+                                        <p>A delectable five course European lunch at 100 Ft Bar Boutique Restaurant, Indiranagar</p>
                                     </div>
                                     <div class="col-sm-4 wow fadeInUp">
                                         <img src="/assets/birthday/images/bangalorelunch3.jpg" alt="lunch3">

@@ -284,8 +284,8 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").empty();
         var arr = [
             {val : "", text: "Preferred Lunch Option"},
-            {val : "Om Made Cafe, Koramangala ", text: "Om Made Cafe, Koramangala"},
-            {val : "Boutique Restaurant, Indiranagar", text: "Boutique Restaurant, Indiranagar"},
+            {val : "Om Made Cafe, Koramangala", text: "Om Made Cafe, Koramangala"},
+            {val : "100 Ft Bar Boutique Restaurant, Indiranagar", text: "100 Ft Bar Boutique Restaurant, Indiranagar"},
             {val : "Bluefrog, 3 Church Street", text: "BlueFROG, 3 Church Street"}
         ];
 
