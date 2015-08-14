@@ -529,7 +529,7 @@
                             <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="block">
-                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. IMPORTANT: Make sure to keep the link while sharing on Twitter. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
+                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
                                                                 </div>
                                                             </div>
                                                         </div>
