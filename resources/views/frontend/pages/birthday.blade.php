@@ -10,6 +10,7 @@
     <meta property="og:type"          content="article" />
     <meta property="og:title"         content="The Good Life with WowTables" />
     <meta property="og:description"   content="Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding." />
+    <meta property="fb:app_id" content="487953444640436" />
     <title>Wowtables</title>
     <!-- core CSS -->
     <!--<link href="assets/css/bootstrap.min.css" rel="stylesheet">
