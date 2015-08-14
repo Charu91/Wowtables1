@@ -222,7 +222,7 @@
                         <li><a class="#" id="wowtbales_mumbai_menu">Mumbai</a></li>
                         <li><a href="#" id="wowtbales_delhi_menu">Delhi</a></li>
                         <li><a href="#" id="wowtbales_banglore_menu">Bangalore</a></li>
-                        <!--<li><a href="#" id="wowtbales_pune_menu">Pune</a></li>-->
+                        <li><a href="#" id="wowtbales_pune_menu">Pune</a></li>
                     </ul><!--/#portfolio-filter-->
                 </div>
             </div>
@@ -378,9 +378,9 @@
                                 </div>
             </div>
 
-            <!-- Pune
+            <!-- Pune -->
             <div class="options-display-pune" style="display: none">
-                <h3>2) Check out what's been planned for you</h3>
+                <!--<h3>2) Check out what's been planned for you</h3>
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="block text-center">
@@ -417,8 +417,32 @@
                                         <h5>PBCL</h5>
                                         <p>This sample text.This sample text.This sample text.This sample text.</p>
                                     </div>
+                                </div>-->
+                        <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="block text-center">
+                                            <h3>Check out what's been planned for you</h3>
+                                        </div>
+                                    </div>
                                 </div>
-            </div>-->
+                                <div class="row top-buffer lunch">
+                                    <div class="col-sm-4 wow fadeInUp">
+                                       <h5>Lunch</h5>
+                                       <img src="/assets/birthday/images/punelunch.jpg" alt="lunch1">
+                                       <p>A three course lunch at Cafe 1730, Koregaon Park</p>
+                                    </div>
+                                    <div class="col-sm-4 wow fadeInUp">
+                                        <h5>Spa</h5>
+                                        <img src="/assets/birthday/images/punespa.jpg" alt="lunch2">
+                                        <p>A rejuvenating massage at Four Fountains De-Stress Spa, Koregaon Park</p>
+                                    </div>
+                                    <div class="col-sm-4 wow fadeInUp">
+                                        <h5>Drinks and a bite</h5>
+                                        <img src="/assets/birthday/images/punepbcl.jpg" alt="lunch3">
+                                        <p>2 cocktails and an appetiser at 11 East Street Cafe, Camp</p>
+                                    </div>
+                                </div>
+            </div>
         </div>
     </section>
 

@@ -250,7 +250,7 @@ jQuery(function($) {'use strict';
         $('#lunch-option').prop("readonly",true);*/
         //this is for dynamic lunch option
         $(".lunch-sel").empty();
-        $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra' readonly>");
+        $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra'>");
     });
 
     $("#wowtbales_delhi_menu").on('click',function(){
@@ -302,6 +302,8 @@ jQuery(function($) {'use strict';
         $(".options-display-pune").show();
         $("#contact").show();
         $("#city_sel").val("pune");
+        $(".lunch-sel").empty();
+        $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Cafe 1730, Koregaon Park'>");
     });
 
     $("#main-contact-form").validate({
