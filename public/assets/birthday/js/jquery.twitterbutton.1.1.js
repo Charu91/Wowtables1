@@ -67,7 +67,7 @@ $.fn.twitterbutton = function(options) {
                 console.log("yoo");
                 $(obj).html(thtml);
             }
-
+            twttr.widgets.load(); //very important
 
 			function clickEvent(intent_event) {
 			  if (intent_event) {
@@ -127,11 +127,11 @@ $.fn.twitterbutton = function(options) {
 			  	if(o.hideafterlike)$(obj).hide();
 			  };      
 			}       
-			//twttr.events.bind('click',    clickEvent);
+			twttr.events.bind('click',    clickEvent);
 			twttr.events.bind('tweet',    tweetIntent);
-			//twttr.events.bind('retweet',  retweetIntent);
-			//twttr.events.bind('favorite', favIntent);
-			//twttr.events.bind('follow',   followIntent);
+			twttr.events.bind('retweet',  retweetIntent);
+			twttr.events.bind('favorite', favIntent);
+			twttr.events.bind('follow',   followIntent);
             script_loaded = true;
 
 
