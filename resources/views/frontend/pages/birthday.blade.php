@@ -255,7 +255,7 @@
                 </div>
                 <div class="row top-buffer">
                     <div class="col-sm-4">
-                        <a href="https://www.uber.com/"><img src="/assets/birthday/images/mumbaiuberfinal.jpg" alt="uber"></a>
+                        <a href="https://www.uber.com/" target="_blank"><img src="/assets/birthday/images/mumbaiuberfinal.jpg" alt="uber"></a>
                     </div>
                     <div class="col-sm-8">
                         <p><strong>And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really.</strong></p>
