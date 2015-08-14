@@ -27,7 +27,7 @@
 
     {!! Html::script('assets/birthday/js/jquery.js') !!}
     <script src='http://connect.facebook.net/en_US/all.js'></script>
-        {{--{!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}--}}
+      {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
 
     <!--[if lt IE 9]>
     {!! Html::script('assets/birthday/js/html5shiv.js') !!}
