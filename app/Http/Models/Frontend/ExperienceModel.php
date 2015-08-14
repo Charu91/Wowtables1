@@ -1222,7 +1222,7 @@ class ExperienceModel {
           ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
           ->leftJoin('products as p','pvl.product_id','=','p.id')
           ->where('pvl.id',$vendorLocationID)
-          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id','pvl.vendor_location_id as vendor_location_id')
+          ->select('l.name', 'pvl.descriptive_title' ,'p.slug', 'p.name as product_name', 'v.name as vendor_name','p.id as product_id','pvl.vendor_location_id as vendor_location_id','vl.vendor_id as vendor_id')
           ->first();
 
 

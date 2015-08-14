@@ -1052,7 +1052,7 @@ class AlacarteModel{
             ->leftJoin('locations as l','vl.location_id','=','l.id')
             ->leftJoin('vendors as v','vl.vendor_id','=','v.id')
             ->where('vl.id',$vendorLocationID)
-            ->select('l.name', 'v.name as vendor_name')
+            ->select('l.name', 'v.name as vendor_name','vl.vendor_id as vendor_id')
             ->first();
 
 

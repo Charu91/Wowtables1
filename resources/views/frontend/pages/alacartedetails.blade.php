@@ -39,8 +39,8 @@
                     </span>
                     <span style="float: right;cursor: pointer;">
                       
-                      <a data-page_loc="Email Tip Widget" data-target="#redirectAlacarteEmailModal" data-toggle="modal">
-                        <img src="/assets/img/share-48.png" title="Email a Friend" />
+                      <a data-page_loc="Email Tip Widget" data-target="#shareModal" data-toggle="modal">
+                          <img src="/assets/img/share-48.png" title="Email a Friend" id="send_reservation" />
                       </a>
                       
                     </span>
@@ -83,8 +83,8 @@
                    
             </div>
             <div class="booking clearfix visible-xs">
-        <?php echo $ptype = $arrALaCarte['data']['pricing'];?>
-        <!--<div class="col-md-6 sm_price"><p class="lead"><?php echo $ptype;?> <span>Per Person</span></p></div>-->
+        <?php $ptype = $arrALaCarte['data']['pricing'];?>
+        <!--<div class="col-md-6 sm_price"><p class="lead"><?php $ptype;?> <span>Per Person</span></p></div>-->
         <!--<div class="col-md-6 mk_reserv"><a href="#ReservationBox" class="btn btn-warning">MAKE A RESERVATION</a></div>-->
         <div class="scrollingBox"><a href="#ReservationBox" class="btn btn-warning">MAKE A RESERVATION</a></div>
       </div>
@@ -751,43 +751,48 @@
 </div><!-- /.modal-dialog -->
 <!-- Modal for email alacarte starts here-->
   <!--Share Modal -->
-    <div class="modal fade" id="redirectAlacarteEmailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title text-center" id="myModalLabel">Share Special Offer</h4>
+            <h4 class="modal-title text-center" id="myModalLabel">Share Restaurant Details</h4>
           </div>
           <div class="modal-body" style="min-height: 100px;">
-          <div id="ala_email_form">
+          <div id="email_form">
             <form>
               <div class="form-group">
                 <label for="">Add Email Addresses</label>
-                <textarea class="form-control" rows="3" id='ala_guest_emails'></textarea> 
+                <textarea class="form-control" rows="3" id='guest_emails'></textarea>
                 <div class="row">
                   <div class="col-xs-6"><small>seperate with commas (,)</small></div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-12 hidden" id="ala_error_email"><small class="error">Please enter a valid email.</small></div>
+                  <div class="col-xs-12 hidden" id="error_email"><small class="error">Please enter a valid email.</small></div>
                   <div class="col-xs-12 hidden" id="ala_error_email_count"><small class="error">You cannot enter more than 10 email ids.</small></div>
                 </div>
               </div>
 
               <div class="form-group">
-                <textarea class="form-control" rows="3" placeholder="Enter a personal message here." id='ala_det_content'></textarea>
+                <textarea class="form-control" rows="3" placeholder="Enter a personal message here." id='det_content'></textarea>
                 <!--<div class="row">
                   <div class="col-xs-12 hidden" id="error_content"><small>Please enter your message.</small></div>
                 </div>-->
                 <div class="col-xs-12 reservation-msg">
                     <p>The email to your party will include your personal message above and link to this page and share this restaurant detail.</p>
-                </div>                
+                </div>
               </div>
-        <input type="hidden" name="email_alacarte_id" value="<?php echo $arrALaCarte['data']['id']?>">
-        <input type="hidden" name="ala_user_email" value="<?php echo (Session::get('email') ? Session::get('email') : "null");?>">
-              <button type="submit" class="btn btn-warning btn-block" id="share_ala_details">Share Details</button>
+                <input type="hidden" name='reserv_type' value='alacarte_detail' id='reservation_id'>
+                <input type="hidden" name="restaurantID" value="<?php echo $arrALaCarte['data']['id']?>">
+                <input type="hidden" name="user_email" value="<?php echo (Session::has('email')) ? Session::get('email') : "";?>">
+                <input type="hidden" name="userid" value="<?php echo (Session::has('id')) ? Session::get('id') : 0;?>">
+                <input type="hidden" name='outlet_name' value="{{$arrALaCarte['data']['location_address']['area']}}" id="outlet_name">
+                <input type="hidden" name="restaurant" value="{{$arrALaCarte['data']['title']}}" id="restaurant">
+                <input type="hidden" name='url_product' value="<?=URL::to('/');?>/{{$current_city}}/alacarte/{{$arrALaCarte['data']['slug']}}" id="url_product">
+              <button type="submit" class="btn btn-warning btn-block" id="thank_details">Share Details</button>
             </form>
             </div>
-            <div id="ala_email_sent_confirmation" class="hidden">
+            <div id="email_sent_confirmation" class="hidden">
                 <div class="col-xs-12 reservation-msg">
                     <p>Your message has been sent</p>
                     <button type="button" class="btn btn-warning btn-block" id="close_ala_mail_sent" data-dismiss="modal" aria-hidden="true">Close This</button>
