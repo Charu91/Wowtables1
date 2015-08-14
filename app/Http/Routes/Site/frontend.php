@@ -406,7 +406,7 @@ Route::post('/payment/process_response',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('/promotions/birthday',[
+Route::get('/birthday-bash/thegoodlife',[
    'uses' => 'Site\BirthdayController@index',
    'as' => '',
    'domain' => env('WEBSITE_URL'),
