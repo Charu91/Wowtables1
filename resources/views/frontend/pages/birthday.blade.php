@@ -44,6 +44,37 @@
         }
     </style>
 
+
+<script type="text/javascript">
+        $(document).ready(function(){
+            $(".img-design").click(function(){
+                $('.img-design').removeClass('selected-data');
+                $(this).addClass('selected-data');
+            });
+
+            window.fbAsyncInit = function() {
+                    // init the FB JS SDK
+                    FB.init({
+                        appId      : '487953444640436',
+                        status     : true,
+                        xfbml      : true
+                    });
+
+                };
+
+                // Load the SDK asynchronously
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/all.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+
+
+
+        });
+   </script>
 </head><!--/head-->
 
 <body id="home" class="homepage">
@@ -546,36 +577,7 @@
 
 
 
-   <script type="text/javascript">
-        $(document).ready(function(){
-            $(".img-design").click(function(){
-                $('.img-design').removeClass('selected-data');
-                $(this).addClass('selected-data');
-            });
 
-            window.fbAsyncInit = function() {
-                    // init the FB JS SDK
-                    FB.init({
-                        appId      : '487953444640436',
-                        status     : true,
-                        xfbml      : true
-                    });
-
-                };
-
-                // Load the SDK asynchronously
-                (function(d, s, id){
-                    var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) {return;}
-                    js = d.createElement(s); js.id = id;
-                    js.src = "//connect.facebook.net/en_US/all.js";
-                    fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));
-
-
-
-        });
-   </script>
 
    <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
