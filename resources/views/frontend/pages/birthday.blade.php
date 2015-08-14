@@ -82,7 +82,11 @@
                             js.src = "//connect.facebook.net/en_US/all.js";
                             fjs.parentNode.insertBefore(js, fjs);
                         }(document, 'script', 'facebook-jssdk'));
+
+
     </script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 
     <header id="header">
         <nav id="main-menu" class="navbar navbar-default navbar-fixed-top" role="banner">
@@ -525,9 +529,7 @@
                             <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="block">
-                                                                    <p>Eg; "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables."
-                                                                       Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter.
-                                                                       Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
+                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -545,7 +547,9 @@
                                                                 <p><strong>Tell us on Twitter</strong></p>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <div id="twitter-share"></div>
+                                                                <!--<div id="twitter-share"></div>-->
+                                                                <a href="https://twitter.com/intent/tweet?text=I want to get a taste of #TheGoodLife with @Wow_Tables because" class="twitter-share-button">Tweet</a>
+
                                                             </div>
                                                         </div>
                         </form>
@@ -553,6 +557,8 @@
                 </div>
             </div>
         </div>
+
+
     </section><!--/#bottom-->
 
     <footer id="footer">
@@ -576,7 +582,7 @@
     {!! Html::script('assets/birthday/js/jquery.inview.min.js') !!}
     {!! Html::script('assets/birthday/js/wow.min.js') !!}
 
-    {!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!}
+    <!--{!! Html::script('assets/birthday/js/jquery.twitterbutton.1.1.js') !!} -->
     <script src='http://connect.facebook.net/en_US/all.js'></script>
     {!! Html::script('assets/birthday/js/main.js') !!}
 
