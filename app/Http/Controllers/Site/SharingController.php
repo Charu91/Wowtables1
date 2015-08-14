@@ -63,13 +63,13 @@ class SharingController extends Controller {
 		$expname = Input::get('expname');
 		//echo "sd = ".$reservation_type;
 		if($reservation_type == "experience"){
-			$append_url = "?utm_source=Website&utm_campaign=Referral%20Experiences%20Thank%20You";
+			$append_url = "?utm_source=Website&utm_campaign=Share%20Experiences%20Thank%20You";
 		} else if($reservation_type == "alacarte"){
-			$append_url = "?utm_source=Website&utm_campaign=Referral%20A%20La%20Carte%20Thank%20You";
+			$append_url = "?utm_source=Website&utm_campaign=Share%20A%20La%20Carte%20Thank%20You";
 		} else if($reservation_type == "experience_detail"){
-			$append_url = "?utm_source=Website&utm_campaign=Referral%20Experiences%20Detail";
+			$append_url = "?utm_source=Website&utm_campaign=Share%20Experiences%20Detail";
 		} else if($reservation_type == "alacarte_detail"){
-			$append_url = "?utm_source=Website&utm_campaign=Referral%20A%20La%20Carte%20Detail";
+			$append_url = "?utm_source=Website&utm_campaign=Share%20A%20La%20Carte%20Detail";
 		}
 		$url_product = $url_product1.$append_url;
 		//echo $url_product; die;
