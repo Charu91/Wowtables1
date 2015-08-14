@@ -508,7 +508,7 @@
                                 <input type="email" name="email" class="form-control" placeholder="Enter Your Email">
                             </div>
                             <div class="form-group">
-                                <input type="number" name="phone_no" class="form-control" placeholder="Enter Your Contact No">
+                                <input type="text" name="phone_no" class="form-control" placeholder="Enter Your Contact No">
                             </div>
                             <div class="form-group lunch-sel" id="lunch-sel">
 
