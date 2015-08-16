@@ -253,9 +253,9 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra'>");
         $('#twitter-share').twitterbutton({
 
-            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
+            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
             layout:'none',
-            url:'false',
+
             ontweet:function(response){
                 //ajax call
                 $("#promotion_type").val("Twitter");
@@ -302,9 +302,9 @@ jQuery(function($) {'use strict';
         });
         $('#twitter-share').twitterbutton({
 
-            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
+            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
             layout:'none',
-            url:'false',
+
             ontweet:function(response){
                 //ajax call
                 $("#promotion_type").val("Twitter");
@@ -352,9 +352,9 @@ jQuery(function($) {'use strict';
         });
         $('#twitter-share').twitterbutton({
 
-            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
+            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
             layout:'none',
-            url:'false',
+
             ontweet:function(response){
                 //ajax call
                 $("#promotion_type").val("Twitter");
@@ -392,7 +392,7 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Cafe 1730, Koregaon Park'>");
         $('#twitter-share').twitterbutton({
 
-            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
+            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
             layout:'none',
             ontweet:function(response){
                 //ajax call
