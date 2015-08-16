@@ -292,7 +292,6 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").empty();
         var arr = [
             {val : "", text: "Preferred Lunch Option"},
-            {val : "Market Cafe, GK -2", text: "Market Cafe, GK -2"},
             {val : "Caffe Tonino, Connaught Place", text: "Caffe Tonino, Connaught Place"},
             {val : "Thai High, Mehrauli", text: "Thai High, Mehrauli"}
         ];
@@ -395,7 +394,6 @@ jQuery(function($) {'use strict';
 
             title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
             layout:'none',
-            url:'false',
             ontweet:function(response){
                 //ajax call
                 $("#promotion_type").val("Twitter");
