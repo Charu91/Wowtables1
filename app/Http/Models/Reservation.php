@@ -435,7 +435,7 @@ class Reservation {
 						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
 						->where('rd.user_id', $userID)
 						//->where('pvl.status', 'Active')
-						->whereIn('reservation_status',array('new','edited'))
+						//->whereIn('reservation_status',array('new','edited'))
 						->select('rd.id','rd.user_id','rd.reservation_status','rd.reservation_date',
 									'rd.reservation_time','rd.no_of_persons', 'products.name as product_name','vendors.id as vendor_id',
 									 'vendors.name as vendor_name', 'rd.reservation_type', 'products.id as product_id',
@@ -536,7 +536,7 @@ class Reservation {
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 								);
 				
-				if($reservationTimestamp >= $currentTimestamp ) {
+				if($reservationTimestamp >= $currentTimestamp && $row->reservation_status != 'cancel' ) {
 					array_push($arrData['data']['upcomingReservation'],$arrDatum);
 				}
 				else {
