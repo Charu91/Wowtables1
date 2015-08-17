@@ -83,7 +83,27 @@ $.fn.twitterbutton = function(options) {
 			}       
 			function tweetIntent(intent_event) {
 
-			  if (intent_event) {
+				$("#promotion_type").val("Twitter");
+				$.ajax({
+					type: "POST",
+					url: "/promotion/birthday/save",
+					data: $("#main-contact-form").serialize(),
+					timeout: 3000,
+					success: function(response) {
+						$.parseJSON(response);
+						if(response){
+							$(".hit").show();
+
+						} else{
+							$(".fail").show();
+						}
+					},
+					error: function() {
+						$(".fail").show();
+					}
+				});
+
+				if (intent_event) {
 					var label = intent_event.data.tweet_id;
 				  if(o.googleanalytics){
 						if(o.googleanalytics_obj!='_gaq'){
@@ -132,6 +152,30 @@ $.fn.twitterbutton = function(options) {
 			twttr.events.bind('retweet',  retweetIntent);
 			twttr.events.bind('favorite', favIntent);
 			twttr.events.bind('follow',   followIntent);
+			twttr.events.bind('tweet',function(event){
+				console.log("bind call");
+				$("#promotion_type").val("Facebook");
+				$.ajax({
+					type: "POST",
+					url: "/promotion/birthday/save",
+					data: $("#main-contact-form").serialize(),
+					timeout: 3000,
+					success: function(response) {
+						$.parseJSON(response);
+						if(response){
+							$(".hit").show();
+
+						} else{
+							$(".fail").show();
+						}
+					},
+					error: function() {
+						$(".fail").show();
+					}
+				});
+
+			});
+
             script_loaded = true;
 
 
