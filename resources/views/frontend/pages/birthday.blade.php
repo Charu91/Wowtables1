@@ -495,15 +495,16 @@
                             Tell us who you are and why you should win!
                         </div>
                     </div>
-                    <div class="contact-form" style="margin-top:0px !important;">
-                        <div class="row">
-                            <div class="text-center message hit" style="display: none;">
-                                <p><strong>You have successfully entered</strong></p>
-                            </div>
-                            <div class="text-center message fail" style="display: none;">
-                                <p><strong>Something went wrong.Try again</strong></p>
-                            </div>
+                    <div class="row">
+                        <div class="text-center message hit" style="display: none;">
+                            <p><strong>You have successfully entered</strong></p>
                         </div>
+                        <div class="text-center message fail" style="display: none;">
+                            <p><strong>Something went wrong.Try again</strong></p>
+                        </div>
+                    </div>
+                    <div class="contact-form content-form" style="">
+
                         <form id="main-contact-form" name="contact-form" method="post" action="{{URL::to('/')}}/birthday">
                             <div class="form-group">
                                 <input type="text" name="name" class="form-control" placeholder="Enter Your Name">
@@ -522,45 +523,43 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="block text-center">
-                                <button id="cust-details" name="cust-details" class="btn btn-primary">Enter Contest</button>
+                                <button id="cust-details" name="cust-details" class="btn btn-primary">Enter Contest to Share on FB, Twitter</button>
                                  </div>
                                  </div>
                             </div>
-                            <div class="row top-buffer">
-                                <div class="col-sm-12">
-                                    <div class="block text-center">
-                                        <p><strong>Tell us why you should win a taste of #TheGoodLife.</strong></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <div class="block">
-                                                                    <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p><strong>Tell us on Facebook</strong></p>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div id='fb-root'></div>
-                                    <a id="facebook-share" style="display:none;"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                                            <div class="col-sm-4">
-                                                                <p><strong>Tell us on Twitter</strong></p>
-                                                            </div>
-                                                            <div class="col-sm-3">
-                                                                <div id="twitter-share"></div>
-
-
-                                                            </div>
-                                                        </div>
                         </form>
+                    </div>
+                    <div class="row top-buffer">
+                        <div class="col-sm-12">
+                            <div class="block text-center">
+                                <p><strong>Tell us why you should win a taste of #TheGoodLife.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="block">
+                                <p>Eg: "I want a taste of #TheGoodLife with @WowTables because I love food, I love unwinding and I love WowTables." Make sure to use the hashtag #TheGoodLife and tag @WowTables on Facebook and @Wow_Tables on Twitter. <strong>IMPORTANT: Make sure to keep the link while sharing on Twitter</strong>. Remember - there's no such thing as too many reasons. The more you post and tweet - the more you increase your chances of winning!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-1">
+                            <p><strong>Tell us on Facebook</strong></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <div id='fb-root'></div>
+                            <a id="facebook-share" style="display:none;"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-1">
+                            <p><strong>Tell us on Twitter</strong></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <div id="twitter-share"></div>
+                        </div>
                     </div>
                 </div>
             </div>

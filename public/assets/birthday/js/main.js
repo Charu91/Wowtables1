@@ -355,6 +355,7 @@ jQuery(function($) {'use strict';
                     $.parseJSON(response);
                     if(response){
                         $(".hit").show();
+						$(".content-form").hide();
                         $("#facebook-share").show();
 
 
