@@ -503,7 +503,7 @@
                             <p><strong>Something went wrong.Try again</strong></p>
                         </div>
                     </div>
-                    <div class="contact-form content-form" style="">
+                    <div class="contact-form content-form" style="margin-top:0 !important;">
 
                         <form id="main-contact-form" name="contact-form" method="post" action="{{URL::to('/')}}/birthday">
                             <div class="form-group">
