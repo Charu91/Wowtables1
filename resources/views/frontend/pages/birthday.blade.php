@@ -522,10 +522,18 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="block text-center">
+                                <button id="cust-details" name="cust-details" class="btn btn-primary">Enter Contest</button>
+                                 </div>
+                                 </div>
+                            </div>
+                            <div class="row top-buffer">
+                                <div class="col-sm-12">
+                                    <div class="block text-center">
                                         <p><strong>Tell us why you should win a taste of #TheGoodLife.</strong></p>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                                             <div class="col-sm-12">
                                                                 <div class="block">
@@ -539,7 +547,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div id='fb-root'></div>
-                                    <a id="facebook-share"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
+                                    <a id="facebook-share" style="display:none;"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
                                 </div>
                             </div>
                             <div class="row">
