@@ -794,7 +794,7 @@ class ExperienceController extends Controller {
                                 'long' => $locationDetails->longitude,
                                 'slug' => $outlet->slug,
                             );
-                            //echo "<pre>"; print_r($cookiearray); die;
+                            echo "<pre>"; print_r($cookiearray); die;
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
                                 //echo "set addons in cookie";
                                 foreach($dataPost['addon'] as $prod_id => $qty) {
