@@ -1192,6 +1192,7 @@ class ExperienceController extends Controller {
             $arrResponse['guests'] = $fetch_cookie['partySize'];
             $arrResponse['experience_includes'] = $fetch_cookie['experience_includes'];
             $arrResponse['terms_and_conditions'] = $fetch_cookie['terms_and_conditions'];
+            $arrResponse['short_description'] = $fetch_cookie['short_description'];
             $arrResponse['address'] = $fetch_cookie['address'];
             $arrResponse['lat'] = $fetch_cookie['lat'];
             $arrResponse['long'] = $fetch_cookie['long'];
