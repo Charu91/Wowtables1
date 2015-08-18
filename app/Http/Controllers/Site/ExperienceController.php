@@ -1192,6 +1192,7 @@ class ExperienceController extends Controller {
             $arrResponse['guests'] = $fetch_cookie['partySize'];
             $arrResponse['experience_includes'] = $fetch_cookie['experience_includes'];
             $arrResponse['terms_and_conditions'] = $fetch_cookie['terms_and_conditions'];
+            $arrResponse['short_description'] = $fetch_cookie['short_description'];
             $arrResponse['address'] = $fetch_cookie['address'];
             $arrResponse['lat'] = $fetch_cookie['lat'];
             $arrResponse['long'] = $fetch_cookie['long'];
@@ -1203,6 +1204,7 @@ class ExperienceController extends Controller {
             $arrResponse['outlet_name'] = $outlet->name;
             $arrResponse['product_id'] = $outlet->product_id;
             $arrResponse['vendor_location_id'] = $outlet->vendor_location_id;
+            $arrResponse['vendor_id'] = $outlet->vendor_id;
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 

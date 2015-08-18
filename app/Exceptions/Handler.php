@@ -4,6 +4,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use \Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Mail;
 
 class Handler extends ExceptionHandler {
 
@@ -44,12 +45,17 @@ class Handler extends ExceptionHandler {
 	public function render($request, Exception $e)
 	{
 		 if ($this->isHttpException($e))
-        {
+        {   //echo "asd";
             return $this->renderHttpException($e);
         }
         else
+
         {
             /*$error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+
+        { //echo "sadsad";
+            $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+
             $user_ip = $this->getUserIP();
             $browser_details =  $_SERVER['HTTP_USER_AGENT'];
             $errorarray = array('error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
