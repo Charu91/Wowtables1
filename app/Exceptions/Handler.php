@@ -44,11 +44,11 @@ class Handler extends ExceptionHandler {
 	public function render($request, Exception $e)
 	{
 		 if ($this->isHttpException($e))
-        {
+        {   echo "asd";
             return $this->renderHttpException($e);
         }
         else
-        {
+        { echo "sadsad";
             $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
             $user_ip = $this->getUserIP();
             $browser_details =  $_SERVER['HTTP_USER_AGENT'];
