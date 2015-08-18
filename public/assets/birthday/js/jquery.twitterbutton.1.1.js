@@ -82,8 +82,7 @@ $.fn.twitterbutton = function(options) {
 			  };      
 			}       
 			function tweetIntent(intent_event) {
-
-			  if (intent_event) {
+				if (intent_event) {
 					var label = intent_event.data.tweet_id;
 				  if(o.googleanalytics){
 						if(o.googleanalytics_obj!='_gaq'){

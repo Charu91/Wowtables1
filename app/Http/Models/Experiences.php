@@ -65,7 +65,12 @@ class Experiences {
 		$queryExperience = DB::table('products')
 							->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
 							->leftJoin('product_attributes as pa', 'pa.id','=','pat.product_attribute_id')
-							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')
+							->leftJoin('product_pricing as pp', 'pp.product_id','=','products.id')							
+							->leftJoin('product_attributes_boolean as pab', 'products.id','=','pab.product_id')
+							->leftJoin('product_attributes as patt', function($join){
+								$join->on('patt.id','=','pab.product_attribute_id')
+									->where('patt.alias','=','prepayment_allowed');
+							})							
 							->leftJoin('price_types as pt','pt.id','=','pp.price_type')
 							->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','products.id')
 							->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
@@ -86,7 +91,7 @@ class Experiences {
 	                        ->join('locations as loc3', 'loc3.id', '=', 'vla.state_id')
 	                        ->join('locations as loc4', 'loc4.id', '=', 'vla.country_id')
 							->join('locations as loc5','loc5.id','=','vl.location_id')
-							->where('products.id',$experienceID)
+							->where('products.id',$experienceID)							
 							->where('pvl.status','Active');							
 		
 		//adding additional parameters in case of simple experience
@@ -109,7 +114,8 @@ class Experiences {
 									'vendors.name as vendor_name',
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
-                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
+                                	'pab.attribute_value as prepayment_allowed');
 							
 		}
 		else {
@@ -126,11 +132,12 @@ class Experiences {
 									'pat5.attribute_value as experience_includes','vendors.name as vendor_name', 'reward_points',
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
-                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude');
+                                	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
+                                	'pab.attribute_value as prepayment_allowed');
 		}
 
 		//running the query to get the results
-		//echo $queryExperience->toSql();
+		//echo $queryExperience->t`oSql();
 		$expResult = $queryExperience->first();		
 		
 		//array to store the experience details
@@ -154,11 +161,11 @@ class Experiences {
 			$arrExpDetails['data'] = array(
 										'id' => $expResult->id,
 										'name' => $expResult->name,
-										'vendor_name' => $expResult->vendor_name,
-										'experience_info' => $expResult->experience_info,
-										'experience_includes' => $expResult->experience_includes,
-										'short_description' => $expResult->short_description,
-										'terms_and_condition' => $expResult->terms_and_conditions,
+										'vendor_name' => (is_null($expResult->vendor_name)) ?  "" : $expResult->vendor_name,
+										'experience_info' => (is_null($expResult->experience_info)) ?  "" : $expResult->experience_info,
+										'experience_includes' => (is_null($expResult->experience_includes)) ?  "" : $expResult->experience_includes,
+										'short_description' => (is_null($expResult->short_description)) ?  "" : $expResult->short_description,
+										'terms_and_condition' => (is_null($expResult->terms_and_conditions)) ?  "" : $expResult->terms_and_conditions,
 										'image' => $arrImage,
 										'type' => $expResult->type,
 										'reward_points' => (is_null($expResult->reward_points)) ? 0 : $expResult->reward_points,
@@ -175,24 +182,25 @@ class Experiences {
                                                                         'curator_designation' => (is_null($expResult->designation)) ? "":$expResult->designation,
                                                                         'suggestions' => (is_null($expResult->tips)) ? "": $expResult->tips,
                                                                       ),
-										'menu' => $expResult->menu,
+										'menu' => (is_null($expResult->menu)) ? "": $expResult->menu,
 										'rating' => (is_null($arrReviews['avg_rating'])) ? 0 : $arrReviews['avg_rating'],
 										'total_reviews' => $arrReviews['total_rating'],
 										'review_detail' => $arrReviews['reviews'],
 										'location' => $arrLocation,
 										'similar_option' => array(),
+										'prepayment_allowed' => (empty($expResult->prepayment_allowed)) ? '': $expResult->prepayment_allowed,
 										'addons' => $arrAddOn,
 										//Added on 05-08-2015
 										'location_address' => array(
-																	  "address_line" => $expResult->address,
-																	  "locality" 	=> $expResult->locality,
-																	  "area" 		=> $expResult->area,
-																	  "city" 		=> $expResult->city,
-																	  "pincode" 	=> $expResult->pin_code,
-																	  "state" 		=> $expResult->state_name,																
-																	  "country" 	=> $expResult->country,
-																	  "latitude" 	=> $expResult->latitude,
-																	  "longitude" 	=> $expResult->longitude																
+																	  "address_line"=> (is_null($expResult->address)) ? "": $expResult->address,
+																	  "locality" 	=> (is_null($expResult->locality)) ? "": $expResult->locality,
+																	  "area" 		=> (is_null($expResult->area)) ? "": $expResult->area,
+																	  "city" 		=> (is_null($expResult->city)) ? "": $expResult->city,
+																	  "pincode" 	=> (is_null($expResult->pin_code)) ? "": $expResult->pin_code,
+																	  "state" 		=> (is_null($expResult->state_name)) ? "": $expResult->state_name,																
+																	  "country" 	=> (is_null($expResult->country)) ? "": $expResult->country,
+																	  "latitude" 	=> (is_null($expResult->latitude)) ? "": $expResult->latitude,
+																	  "longitude" 	=> (is_null($expResult->longitude)) ? "": $expResult->longitude																
 																   ),
 									);
 
@@ -297,15 +305,15 @@ class Experiences {
 			foreach($queryResult as $row) {
 				$arrLocation[] = array(
 									//'area' => $row->area,
-									'latitude' => $row->latitude,
-									'longitude' => $row->longitude,
-									"address_line" 	=> $row->address,
-									"locality" 		=> $row->locality,
-									"area"			=> $row->area,
-									"city" 			=> $row->city,
-									"pincode" 		=> $row->pin_code,
-									"state" 		=> $row->state_name,																
-									"country" 		=> $row->country,
+									'latitude' 		=> (is_null($row->latitude)) ? "" : $row->latitude,
+									'longitude' 	=> (is_null($row->longitude)) ? "" : $row->longitude,
+									"address_line" 	=> (is_null($row->address)) ? "" : $row->address,
+									"locality" 		=> (is_null($row->locality)) ? "" : $row->locality,
+									"area"			=> (is_null($row->area)) ? "" : $row->area,
+									"city" 			=> (is_null($row->city)) ? "" : $row->city,
+									"pincode" 		=> (is_null($row->pin_code)) ? "" : $row->pin_code,
+									"state" 		=> (is_null($row->state_name)) ? "" : $row->state_name,																
+									"country" 		=> (is_null($row->country)) ? "" : $row->country,
 								);
 			}
 		}		

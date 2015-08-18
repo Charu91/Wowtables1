@@ -251,35 +251,7 @@ jQuery(function($) {'use strict';
         //this is for dynamic lunch option
         $(".lunch-sel").empty();
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Hakkasan, Linking Road, Bandra'>");
-        $('#twitter-share').twitterbutton({
 
-            title:'I want to taste the #TheGoodLife with @Wow_Tables because  http://wowtables.com/birthday-bash/thegoodlife',
-            layout:'none',
-            url:'false',
-            ontweet:function(response){
-                //ajax call
-                $("#promotion_type").val("Twitter");
-                $.ajax({
-                    type: "POST",
-                    url: "/promotion/birthday/save",
-                    data: $("#main-contact-form").serialize(),
-                    timeout: 3000,
-                    success: function(response) {
-                        $.parseJSON(response);
-                        if(response){
-                            $(".hit").show();
-
-                        } else{
-                            $(".fail").show();
-                        }
-                    },
-                    error: function() {
-                        $(".fail").show();
-                    }
-                });
-            },
-            lang:'en'
-        });
     });
 
     $("#wowtbales_delhi_menu").on('click',function(){
@@ -292,7 +264,6 @@ jQuery(function($) {'use strict';
         $(".lunch-sel").empty();
         var arr = [
             {val : "", text: "Preferred Lunch Option"},
-            {val : "Market Cafe, GK -2", text: "Market Cafe, GK -2"},
             {val : "Caffe Tonino, Connaught Place", text: "Caffe Tonino, Connaught Place"},
             {val : "Thai High, Mehrauli", text: "Thai High, Mehrauli"}
         ];
@@ -301,6 +272,7 @@ jQuery(function($) {'use strict';
         $(arr).each(function() {
             sel.append($("<option>").attr('value',this.val).text(this.text));
         });
+
     });
 
     $("#wowtbales_banglore_menu").on('click',function(){
@@ -322,6 +294,7 @@ jQuery(function($) {'use strict';
         $(arr).each(function() {
             sel.append($("<option>").attr('value',this.val).text(this.text));
         });
+
     });
 
     $("#wowtbales_pune_menu").on('click',function(){
@@ -333,6 +306,7 @@ jQuery(function($) {'use strict';
         $("#city_sel").val("pune");
         $(".lunch-sel").empty();
         $(".lunch-sel").html("<input type='hidden' id='lunch_option' name='lunch_option' value='Cafe 1730, Koregaon Park'>");
+
     });
 
     $("#main-contact-form").validate({
@@ -351,7 +325,7 @@ jQuery(function($) {'use strict';
                 success: function() {alert('works');},
                 error: function() {alert('failed');}
             });*/
-            alert('yo!');
+
             return false;
         }
     });
@@ -368,51 +342,73 @@ jQuery(function($) {'use strict';
     //share on twitter
 
 
+    $("#cust-details").on('click',function(){
+
+       var status = $("#main-contact-form").valid();
+        if(status) {
+            $.ajax({
+                type: "POST",
+                url: "/promotion/birthday/save",
+                data: $("#main-contact-form").serialize(),
+                timeout: 3000,
+                success: function(response) {
+                    $.parseJSON(response);
+                    if(response){
+                        $(".hit").show();
+						$(".content-form").hide();
+                        $("#facebook-share").show();
 
 
+                        $("#facebook-share").on('click',function(){
 
 
+                                var product_name   = 	'The Good Life with WowTables';
+                                var description	   =	'Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding.';
+                                var share_image	   =	'http://wowtables.com/assets/birthday/images/tgl.jpg';
+                                var share_url	   =	'http://wowtables.com';
+                                FB.ui({
+                                    method: 'share',
+                                    href: share_url,
+                                    title: product_name,
+                                    link: share_url,
+                                    picture: share_image,
+                                    description: description
+                                }, function(response) {
+                                    /*if(response && response.post_id){}
+                                     else{}*/
 
-    $("#facebook-share").on('click',function(){
+                                });
 
-        var status = $("#main-contact-form").valid();
-        if(status){
-            var product_name   = 	'The Good Life with WowTables';
-            var description	   =	'Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding.';
-            var share_image	   =	'http://wowtables.com/assets/birthday/images/tgl.jpg';
-            var share_url	   =	'http://wowtables.com';
-            FB.ui({
-                method: 'share',
-                href: share_url,
-                title: product_name,
-                link: share_url,
-                picture: share_image,
-                description: description
-            }, function(response) {
-                /*if(response && response.post_id){}
-                else{}*/
-                $("#promotion_type").val("Facebook");
-                $.ajax({
-                    type: "POST",
-                    url: "/promotion/birthday/save",
-                    data: $("#main-contact-form").serialize(),
-                    timeout: 3000,
-                    success: function(response) {
-                        $.parseJSON(response);
-                        if(response){
-                            $(".hit").show();
+                        });
 
-                        } else{
-                            $(".fail").show();
-                        }
-                    },
-                    error: function() {
+                        $('#twitter-share').twitterbutton({
+
+                            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
+                            layout:'none',
+                            ontweet:function(response){
+
+                            },
+                            lang:'en'
+                        });
+
+                    } else{
                         $(".fail").show();
                     }
-                });
+                },
+                error: function() {
+                    $(".fail").show();
+                }
             });
         }
+
+
+
     });
+
+
+
+
+
 
     /*$(".facebook-share").on('click',function(){
 
