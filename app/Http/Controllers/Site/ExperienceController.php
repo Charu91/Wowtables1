@@ -794,7 +794,7 @@ class ExperienceController extends Controller {
                                 'long' => $locationDetails->longitude,
                                 'slug' => $outlet->slug,
                             );
-                            echo "<pre>"; print_r($cookiearray); die;
+                            //echo "<pre>"; print_r($cookiearray); die;
                             if(isset($dataPost['addon']) && !empty($dataPost['addon'])){
                                 //echo "set addons in cookie";
                                 foreach($dataPost['addon'] as $prod_id => $qty) {
@@ -1203,6 +1203,7 @@ class ExperienceController extends Controller {
             $arrResponse['outlet_name'] = $outlet->name;
             $arrResponse['product_id'] = $outlet->product_id;
             $arrResponse['vendor_location_id'] = $outlet->vendor_location_id;
+            $arrResponse['vendor_id'] = $outlet->vendor_id;
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
