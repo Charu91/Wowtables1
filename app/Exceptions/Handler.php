@@ -50,7 +50,7 @@ class Handler extends ExceptionHandler {
         }
         else
         { //echo "sadsad";
-            $error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+            /*$error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
             $user_ip = $this->getUserIP();
             $browser_details =  $_SERVER['HTTP_USER_AGENT'];
             $errorarray = array('error_url'=>$error_url,'ip_address'=>$user_ip,'browser_details'=>$browser_details);
@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler {
                 $message->to('concierge@wowtables.com')->subject('404 error on website');
                 $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
 
-            });
+            });*/
             //return parent::render($request, $e);
             return response()->view('errors.404');
         }
