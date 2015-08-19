@@ -695,7 +695,7 @@ if (strpos($url,'alacarte') !== false) {
                   <a href="{{URL::to('/')}}/<?php echo $current_city;?>" class="wowtable_dining_menu">Experiences</a>
                 </div>
                 <div class="col-xs-4"  id="wowtables_width_size2" style="border-right:1px solid #9d9d9c !important;">
-                  <a href="{{URL::to('/')}}/<?php echo $current_city;?>/alacarte" class="wowtable_dining_menu">A la carte</a>
+                  <a href="{{URL::to('/')}}/<?php echo $current_city;?>/alacarte" class="wowtable_dining_menu">Classic</a>
                 </div>
           <?php }?>
                 <div class="col-xs-4" id="wowtables_width_size3">
