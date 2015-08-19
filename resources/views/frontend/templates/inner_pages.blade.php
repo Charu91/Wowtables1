@@ -557,7 +557,7 @@ if (strpos($url,'alacarte') !== false) {
             </li>
           
             <li>
-              <a href="{{URL::to('/')}}/<?php echo $current_city;?>/alacarte" class="wowtable_font"> A la carte Reservations</a>
+              <a href="{{URL::to('/')}}/<?php echo $current_city;?>/alacarte" class="wowtable_font"> Classic Reservations</a>
             </li>
           <?php }?>
 
@@ -680,7 +680,7 @@ if (strpos($url,'alacarte') !== false) {
     <div class="col-sm-12">
       <span class="glyphicon glyphicon-triangle-top" id="wowtables_glyphicon_user"></span>
       <button type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Dining Experience</button>
-      <button type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">A la Carte Reservation</button>
+      <button type="button" class="btn btn-primary btn-block wowtables_big_btn wowtables_border_width">Classic Reservations</button>
     </div>
   </div>
 
