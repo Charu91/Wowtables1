@@ -754,7 +754,8 @@ class ReservationDetails extends Model {
 		    $config = array(
 		        //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
 		        //'authtoken' => 'f31eb33749ce0f39a7917dc5e1879a9c',
-		        'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+		        //'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+		        'authtoken' => 'a905350ac6562ec91e9a5ae0025bb9b2',
 		        'scope' => 'creatorapi',
 		    );
 		    $curlConfig = array(
@@ -1367,7 +1368,8 @@ class ReservationDetails extends Model {
 		$ch = curl_init();
 		$config = array(
 			//'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-			'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+			//'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+			'authtoken' => 'a905350ac6562ec91e9a5ae0025bb9b2',
 			'scope' => 'creatorapi',
 			'criteria'=>'Alternate_ID='.$order_id,
 		);
