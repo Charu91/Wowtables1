@@ -25,12 +25,14 @@
                                 Job Title
                             </th>
                             <th>Location</th>
+                            <th></th>
                         </thead>
                         <tbody>
                             @foreach($careers as $career)
-                                <tr onclick="window.open('/pages/careers/apply/{!! $career->id !!}')">
+                                <tr onclick="window.open('/pages/careers/apply/{!! $career->id !!}')" style="cursor: pointer;">
                                     <td>{!! $career->job_title !!}</td>
                                     <td>{!! $career->location !!}</td>
+                                    <td><a class="btn btn-primary" href="/pages/careers/apply/{!! $career->id !!}">Apply Now</a></td>
                                 </tr>
                             @endforeach
                         </tbody>
