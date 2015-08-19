@@ -198,7 +198,9 @@ class CareerController extends Controller {
 				'salary' => $request->get('salary'),
 		], function($message) use ($request){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-				$message->to(['deepa@wowtables.com','hr@wowtables.com','x+15629009601835@mail.asana.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
+				//$message->to(['deepa@wowtables.com','hr@wowtables.com','x+15629009601835@mail.asana.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
+
+			    $message->to(['manan@wowtables.com','hr@wowtables.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
 				//$message->to(['manan@wowtables.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
 				$message->attach($request->file('resume'),array(
         'as' => $request->get('name').'-resume.' .$request->file('resume')->getClientOriginalExtension(),
