@@ -113,14 +113,12 @@
         </nav><!--/nav-->
     </header><!--/header-->
 
-    <section id="main-slider">
-        <div class="owl-carousel">
-            <div class="item" style="background-image: url('/assets/birthday/images/tgl.jpg');">
-                <div class="slider-inner">
-                </div>
-            </div><!--/.item-->
-        </div><!--/.owl-carousel-->
-    </section><!--/#main-slider-->
+
+    <div class="row top-buffer">
+        <div class="row top-buffer">
+          <img src="/assets/birthday/images/tgl.jpg" alt="banner" class="img-responsive"/>
+        </div>
+    </div>
 
     <!--<section>
         <div class="control-panel">
@@ -238,7 +236,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="block text-center wow fadeInUp">
-                        <div class="btn btn-lg btn-primary full" id="howitworks"><strong>Click here to enter the contest!</strong></div>
+                        <div class="btn btn-lg btn-primary" id="howitworks"><strong>Click here to enter the contest!</strong></div>
                     </div>
                 </div>
             </div>
