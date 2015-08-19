@@ -14,7 +14,7 @@
       {!! $career->job_title !!} - {!! $career->location !!}
   </p>
   <div class="row">
-			<div class="col-md-12 entry-content">
+      <div class="col-md-12 entry-content">
 				<div class="row" style="margin-top:10px;">
 					<div class="col-md-4 col-sm-8"><h4>Job Description</h4></div>
 					<div class="col-md-9 col-sm-8">
@@ -31,24 +31,24 @@
             <header class="panel-heading">
                 <h2 class="panel-title">Apply for {!! $career->job_title !!}</h2>
             </header>
-          <section>
-				  <div>
+
+
           {!! Form::open(['url'=>'/pages/careers/apply/send_details','files' => true]) !!}
-					<div class="panel-body">
+		<div class="panel-body">
             <div class="form-group">
-                {!! Form::label("name","Name",['class'=>'col-sm-4 control-label']) !!}
+                {!! Form::label("name","Name*",['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::text('name',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("email","Email",['class'=>'col-sm-4 control-label']) !!}
+                {!! Form::label("email","Email*",['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::text('email',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("phone_no","Phone No",['class'=>'col-sm-4 control-label']) !!}
+                {!! Form::label("phone_no","Phone No*",['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::text('phone_no',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("resume","Upload Resume",['class'=>'col-sm-4 control-label']) !!}
+                {!! Form::label("resume","Upload Resume*",['class'=>'col-sm-4 control-label']) !!}
                 <div class="col-sm-8">
                     {!! Form::file('resume',null,['class'=>'form-control','required'=>'']) !!}
                 </div>
@@ -108,7 +108,7 @@
 							<tr><td colspan=2><center><input class="btn btn-warning" type="submit" name="submit" id="send_info" value="Send"></center></td></tr>
 						</table>-->
 					</form>
-				  </div>
+          </section>
 			</div>
     </div>
 </div>
