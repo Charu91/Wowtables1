@@ -85,6 +85,24 @@ Route::get('pages/gift-cards',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('pages/careers',[
+    'uses' => 'CareerController@frontend',
+    'as' => 'careers',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('pages/careers/apply/{id}',[
+    'uses' => 'CareerController@apply',
+    'as' => '',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('pages/careers/apply/send_details',[
+    'uses' => 'CareerController@send_details',
+    'as' => '',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('pages/{pages}',[
     'uses' => 'Site\StaticPagesController@pages',
     'as' => 'aboutus',
