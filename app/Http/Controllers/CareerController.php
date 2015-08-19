@@ -177,17 +177,18 @@ class CareerController extends Controller {
 
 
 
-  	$validation = Validator::make($request->all(), $rules);
+  		$validation = Validator::make($request->all(), $rules);
+
 
 		$validation->after(function($validation) use ($request)
 		{
-		    if ($request->hasFile('resume'))
+		    if (!$request->hasFile('resume'))
 		    {
 		        $validation->errors()->add('resume', 'Please upload your resume');
 		    }
 		});
 		if ($validation->fails()){
-				return redirect()->back()->withErrors($validation->errors());
+			return redirect()->back()->withErrors($validation->errors());
 		}
 
 		Mail::send('site.pages.careers_email',[
@@ -198,13 +199,12 @@ class CareerController extends Controller {
 				'salary' => $request->get('salary'),
 		], function($message) use ($request){
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-				//$message->to(['deepa@wowtables.com','hr@wowtables.com','x+15629009601835@mail.asana.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
-
-			    $message->to(['manan@wowtables.com','hr@wowtables.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
-				//$message->to(['manan@wowtables.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
+				$message->to(['deepa@wowtables.com','hr@wowtables.com','x+15629009601835@mail.asana.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
+				//$message->to(['manan@wowtables.com','hr@wowtables.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
+				//$message->to(['manan@wowtables.com','mannanbshah@gmail.com'])->subject('Application: '.$request->get('job_role').' by '.$request->get('name'));
 				$message->attach($request->file('resume'),array(
-        'as' => $request->get('name').'-resume.' .$request->file('resume')->getClientOriginalExtension(),
-        'mime' => $request->file('resume')->getMimeType()));
+        			'as' => $request->get('name').'-resume.' .$request->file('resume')->getClientOriginalExtension(),
+        			'mime' => $request->file('resume')->getMimeType()));
 		});
 
 		flash()->success('Your application has successfully submitted');
