@@ -236,6 +236,18 @@ jQuery(function($) {'use strict';
     $("#howitworks").on('click',function(){
         $("#portfolio").show();
         $(".city").show();
+		$("#contact").show();
+		var arr = [
+			{val : "", text: "Preferred Lunch Option"},
+			{val : "Om Made Cafe, Koramangala", text: "Om Made Cafe, Koramangala"},
+			{val : "100 Ft Bar Boutique Restaurant, Indiranagar", text: "100 Ft Bar Boutique Restaurant, Indiranagar"},
+			{val : "Bluefrog, 3 Church Street", text: "BlueFROG, 3 Church Street"}
+		];
+
+		var sel = $('<select class="form-control" id="lunch_option" name="lunch_option">').appendTo('#lunch-sel');
+		$(arr).each(function() {
+			sel.append($("<option>").attr('value',this.val).text(this.text));
+		});
     });
 
     $("#wowtbales_mumbai_menu").on('click',function(){
