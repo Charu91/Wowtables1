@@ -424,11 +424,11 @@ Route::post('/payment/process_response',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-/*Route::get('/birthday-bash/thegoodlife',[
+Route::get('/birthday-bash/thegoodlife',[
    'uses' => 'Site\BirthdayController@index',
    'as' => '',
    'domain' => env('WEBSITE_URL'),
-]);*/
+]);
 
 Route::post('promotion/birthday/save',[
     'uses' => 'Site\BirthdayController@enter_details',
