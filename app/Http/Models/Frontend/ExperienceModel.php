@@ -985,6 +985,7 @@ class ExperienceModel {
         $formatted_date = '';
         if(!empty($row->block_date))
         {
+          //$formatted_date =  date('Y-m-d',strtotime($row->block_date));
           $formatted_date =  date('m-d-Y',strtotime($row->block_date));
         }
 
