@@ -29,7 +29,7 @@ $name_arr = explode(" ",$cookie_array['guestName']);
 $order_id = $cookie_array['order_id'] ;
 $email = $cookie_array['guestEmail'];
 $amount = $cookie_array['total_amount'];
-$description = $cookie_array['addons_special_request'];
+$description = $cookie_array['short_description'];
 $phone = $cookie_array['phone'];
 
 $hash = $MerchantID."|".$order_id."|".$amount."|".$description."|".$name_arr['0']."|".$email."|||||||||||".$salt;
