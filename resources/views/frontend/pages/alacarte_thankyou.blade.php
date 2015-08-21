@@ -19,7 +19,7 @@
                         </div>
 
                         <p class="lead">
-                            {{$result['restaurant_name']}}: A la carte Reservation
+                            {{$result['restaurant_name']}}: Classic Reservation
                         </p>
 
 
