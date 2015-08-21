@@ -153,6 +153,11 @@
 
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <p style="color:red;"><strong>Note:- Entries closed for Mumbai, Delhi & Pune. Use #TheGoodLife all this week on Twitter and Instagram to follow the journeys of our respective winners.</strong></p>
+                </div>
+            </div>
             <!--<div class="row">
                 <div class="col-xs-4 ">
                     <div class="btn btn-sm btn-primary full">WHEN</div>
@@ -247,25 +252,26 @@
     <section id="portfolio" style="display: none;">
         <div class="container">
             <div class="city" style="display: none;">
-            <div class="row">
+            <!--<div class="row">
                                 <div class="col-sm-12">
                                     <div class="block text-center">
                                         <h3>Select Your City</h3>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                 <div class="text-center top-buffer">
-                    <ul class="portfolio-filter">
+                    <a href="#" id="" class="btn btn-primary">Bangalore</a>
+                    <!--<ul class="portfolio-filter">
                         <li><a class="#" id="wowtbales_mumbai_menu">Mumbai</a></li>
                         <li><a href="#" id="wowtbales_delhi_menu">Delhi</a></li>
-                        <li><a href="#" id="wowtbales_banglore_menu">Bangalore</a></li>
+
                         <li><a href="#" id="wowtbales_pune_menu">Pune</a></li>
-                    </ul><!--/#portfolio-filter-->
+                    </ul>portfolio-filter-->
                 </div>
             </div>
 
-            <!--mumbai-->
+            <!--mumbai
             <div class="options-display-mumbai" style="display: none">
                 <div class="row">
                     <div class="col-sm-12">
@@ -298,7 +304,7 @@
                     <div class="col-sm-4">
                         <p><strong>Optional:</strong> And if you would like to be chauffeured around in style, we've tied up with the inimitable Uber, providing you with a promo code that gives you Rs. 300 off on every ride you book with them during this journey. Yes, really</p>
                     </div>
-                </div><!-- uber code -->
+                </div><!-- uber code
                 <!--<div class="row top-buffer wow fadeInUp">
                     <div class="col-sm-4">
                         <img src="/assets/birthday/images/spa.jpg" alt="spa">
@@ -314,10 +320,10 @@
                         <h5>PBCL</h5>
                         <p>This sample text.This sample text.This sample text.This sample text.</p>
                     </div>
-                </div>-->
+                </div>
             </div>
 
-            <!--delhi-->
+            delhi
             <div class="options-display-delhi" style="display: none">
                 <div class="row">
                                     <div class="col-sm-12">
@@ -337,7 +343,7 @@
                     <!--<div class="col-sm-4 wow fadeInUp">
                         <img src="/assets/birthday/images/delhilunch1.jpg" alt="lunch1">
                         <p>A four course multi-cuisine feast at Market Cafe, GK -2</p>
-                    </div>-->
+                    </div>
                     <div class="col-sm-4 col-sm-offset-2 wow fadeInUp">
                         <img src="/assets/birthday/images/delhilunch2.jpg" alt="lunch2">
                         <p>A five course Italian feast at Caffe Tonino, Connaught Place</p>
@@ -368,7 +374,7 @@
             </div>
 
             <!--Bangalore-->
-            <div class="options-display-bangalore" style="display: none">
+            <div class="options-display-bangalore">
                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="block text-center">
@@ -408,15 +414,17 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <h5>Drinks and a bite</h5>
-                                        <p>Drinks with an appetiser at Loft 38, Indiranagar</p>
+                                        <p>A bottle of wine (to be shared between 2) with an appetiser at Loft 38, Indiranagar</p>
                                     </div>
                                     <div class="col-sm-4">
                                          <img src="/assets/birthday/images/bangalorepbcl.jpg" alt="pbcl">
                                     </div>
                                 </div>
+                </div>
             </div>
+        </div>
 
-            <!-- Pune -->
+            <!-- Pune
             <div class="options-display-pune" style="display: none">
                 <!--<h3>2) Check out what's been planned for you</h3>
                                 <div class="row">
@@ -455,7 +463,7 @@
                                         <h5>PBCL</h5>
                                         <p>This sample text.This sample text.This sample text.This sample text.</p>
                                     </div>
-                                </div>-->
+                                </div>
                         <div class="row">
                                     <div class="col-sm-12">
                                         <div class="block text-center">
@@ -480,8 +488,8 @@
                                         <p>2 cocktails and an appetiser at 11 East Street Cafe, Camp</p>
                                     </div>
                                 </div>
-            </div>
-        </div>
+            </div>-->
+
     </section>
 
     <section id="contact" style="display: none;">
