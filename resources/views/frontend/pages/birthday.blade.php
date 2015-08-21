@@ -414,7 +414,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <h5>Drinks and a bite</h5>
-                                        <p>Drinks with an appetiser at Loft 38, Indiranagar</p>
+                                        <p>A bottle of wine (to be shared between 2) with an appetiser at Loft 38, Indiranagar</p>
                                     </div>
                                     <div class="col-sm-4">
                                          <img src="/assets/birthday/images/bangalorepbcl.jpg" alt="pbcl">

@@ -154,7 +154,8 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .modal-body form .wowtable_enter_btn{font-family: 'swiss_721light' !important;}
 .deal-listing .experience-grid, .deal-listing .top-filter ul{}
 #desc_tag_exp{margin-bottom: 101px !important;}
-
+.star-icon.half:before{margin-top:1px;}
+.star-icon{padding:0px 0px;}
 .overlay .signup-wrapper #signinForm{ display:none;}
 
 @media screen and (min-width: 768px){
@@ -165,8 +166,11 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 	.deal-listing .experience-grid li{ margin-bottom: 20px;}
 	#redirectloginModal .modal-body .nav-justified.wowtables-nav > li a{padding: 2px 5px !important;}
 }
+
+
 @media (max-width: 359px) and (min-width: 320px){
 	#review-menu-tab-detail{ height: 40px;}
+	#party_size1 {margin-right: -11px !important; width: 75px; font-size: 13px;}
 }
 
 /* Landscape */
