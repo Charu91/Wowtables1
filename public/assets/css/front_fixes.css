@@ -154,7 +154,8 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .modal-body form .wowtable_enter_btn{font-family: 'swiss_721light' !important;}
 .deal-listing .experience-grid, .deal-listing .top-filter ul{}
 #desc_tag_exp{margin-bottom: 101px !important;}
-
+.star-icon.half:before{margin-top:1px;}
+.star-icon{padding:0px 0px;}
 .overlay .signup-wrapper #signinForm{ display:none;}
 
 @media screen and (min-width: 768px){
@@ -167,6 +168,8 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 }
 @media (max-width: 359px) and (min-width: 320px){
 	#review-menu-tab-detail{ height: 40px;}
+	.panel-title{font-size:14px;}
+	.deal-detail-right .reservation-box .reservation-accordian{padding: 0px;}
 }
 
 /* Landscape */
