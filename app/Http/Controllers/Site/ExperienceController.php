@@ -81,6 +81,8 @@ class ExperienceController extends Controller {
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
+        $data['relatedExperiences']     = $this->experiences_model->getExperienceWithSameBrand($id,$city_id);
+         //echo "<pre>"; print_r($data['relatedExperiences']); die;
         /*echo "<pre>"; print_r($data['block_dates']);
          $stdate = Carbon::today()->startOfDay();
          $eddate = Carbon::createFromFormat('Y-m-d H:i:s', $arrExperience['data']['end_date'])->endOfDay();
@@ -266,7 +268,7 @@ class ExperienceController extends Controller {
         $arrSubmittedData['city_id'] = $city_id;
 
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
-                
+
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
             $data['resultCount'] = $searchResult['resultCount'];

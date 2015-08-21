@@ -697,6 +697,30 @@ class ExperienceModel {
         
         return $arrCuisines;
     }
+
+    public static function getExperienceCuisineID($exp_id) {
+        //query to read cuisines
+    $queryCuisine = DB::table('product_attributes_select_options as paso')
+                ->join('product_attributes as pa','pa.id','=','paso.product_attribute_id')
+                ->join('product_attributes_multiselect as pam','pam.product_attributes_select_option_id','=','paso.id')
+                ->where('pa.alias','cuisines')
+                ->where('pam.product_id',$exp_id)
+                ->select('paso.id','paso.option','pam.product_id')
+                ->get();
+
+      $arrCuisines = array();
+
+      if($queryCuisine) {
+            foreach($queryCuisine as $row) {
+                if(!array_key_exists($row->product_id, $arrCuisines)) {
+                    $arrCuisines[$row->product_id] = array();
+                }
+                $arrCuisines[$row->product_id][] = $row->id;
+            }
+        }
+
+        return $arrCuisines;
+    }
   
   //-----------------------------------------------------------------
   
@@ -793,17 +817,437 @@ class ExperienceModel {
   //-----------------------------------------------------------------
   
   /**
-   * 
+   *
    */
-  public static function getSimilarProductListing() {
-    $queryResult = DB::table('products')
-            ->leftJoin(DB::raw('product_attributes_text as pat1'),'pat1.product_id','=','products.id')
-            ->leftJoin(DB::raw('product_attributes_text as pat2'),'pat2.product_id','=','products.id')
-            ->leftJoin(DB::raw('product_attributes as pa1'), 'pa1.id','=','pat1.product_attribute_id')
-            ->leftJoin(DB::raw('product_attributes as pa2'), 'pa2.id','=','pat2.product_attribute_id')
-            ->leftJoin(DB::raw('product_pricing as pp'), 'pp.product_id','=','products.id')
-            ->where()
-            ->where();
+  public static function getExperienceWithSameBrand($productID,$city_id) { //echo "sad"; die;
+      $query = DB::table('product_vendor_locations as pvl')
+          ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+          ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+          ->leftJoin('products as p','p.id','=','pvl.product_id')
+          ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+          ->where('pvl.product_id',$productID)
+          ->where('vla.city_id',$city_id)
+          ->where('pvl.status','Active')
+          ->select('vl.vendor_id','pp.price','vla.area_id','pvl.vendor_location_id')
+          ->get();
+
+        //echo "<pre>"; print_r($query); die;
+
+      //checking different expererience with same vendor_id
+      $samebrand = DB::table('products as p')
+                   ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+                   ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+                   ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+                   ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+                   ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+                   ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+                   ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+                   ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+                   ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+                   ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+                   ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+                   ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+                   ->leftJoin('locations as l','l.id','=','vla.city_id')
+                   ->where('vl.vendor_id',$query[0]->vendor_id)
+                   ->whereNotIn('pvl.product_id',array($productID))
+                   ->where('mrn.image_type','listing')
+                   ->where('vla.city_id',$city_id)
+                   ->where('pvl.status','Active')
+                   ->groupBy('p.id')
+                   ->limit(1)
+                   ->select('vl.vendor_id',
+                            'p.name AS productname',
+                            'p.slug AS slug',
+                            'pa.name as productattrname',
+                            'pp.price',
+                            'pt.type_name',
+                            'mrn.file',
+                            'f.name as flagname',
+                            'f.color',
+                            'l.name as cityname',
+                            'p.id as product_id',
+                            'pvl.vendor_location_id',
+                            DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                            DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+                            )
+                   //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+                    ->get();
+
+      //echo "<pre>sb"; print_r($samebrand); //die;
+        $relatedExperiencesArray = array();
+      if(!empty($samebrand)){
+          $num_of_full_starts = round($samebrand[0]->avg_rating,1);// number of full stars
+          $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+          $number_of_blank_starts = 5-($samebrand[0]->avg_rating); //number of white stars
+
+          $relatedExperiencesArray[] = array('productname' => $samebrand[0]->productname,
+                                             'slug' => $samebrand[0]->slug,
+                                             'short_description' => $samebrand[0]->short_description,
+                                             'price' => $samebrand[0]->price,
+                                             'type_name' => $samebrand[0]->type_name,
+                                             'file' => $samebrand[0]->file,
+                                             'flagname' => $samebrand[0]->flagname,
+                                             'color' => $samebrand[0]->color,
+                                             'cityname' => $samebrand[0]->cityname,
+                                             'averageRating' => $samebrand[0]->avg_rating,
+                                             'totalRating' => $samebrand[0]->total_ratings,
+                                             'full_stars' => $num_of_full_starts,
+                                             'half_stars' => $num_of_half_starts,
+                                             'blank_stars' => $number_of_blank_starts,
+                                             'product_id' => $samebrand[0]->product_id,
+                                             'vendor_location_id' => $samebrand[0]->vendor_location_id,
+                                             'vendor_id' => $samebrand[0]->vendor_id,
+                                            );
+      }
+
+      //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+      $c1ProductID = array($productID);
+      $c1VLID = array($query[0]->vendor_location_id);
+      $c1VID = array($query[0]->vendor_id);
+      if(!empty($relatedExperiencesArray)){
+          foreach($relatedExperiencesArray as $v1){
+              array_push($c1ProductID,$v1['product_id']);
+              array_push($c1VLID,$v1['vendor_location_id']);
+              array_push($c1VID,$v1['vendor_id']);
+          }
+      }
+      $arrCuisines = Self::getExperienceCuisineID($productID);
+      //echo "<pre>c1"; print_r($c1ProductID);print_r($c1VLID);print_r($c1VID); //die;
+
+      //checking experiences with cuisines,price, and location_id
+      $condition1 = DB::table('products as p')
+          ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+          ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+          ->leftJoin('product_attributes_select_options AS paso','paso.product_attribute_id','=','pa.id')
+          ->leftJoin('product_attributes_multiselect AS pams','pams.product_attributes_select_option_id','=','paso.id')
+          ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+          ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+          ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+          ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+          ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+          ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+          ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+          ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+          ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+          ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+          ->leftJoin('locations as l','l.id','=','vla.city_id')
+          ->where('pams.product_attributes_select_option_id',$arrCuisines[$productID][0])
+          ->where('pp.price',$query[0]->price)
+          ->where('vla.area_id',$query[0]->area_id)
+          ->whereNotIn('pvl.product_id',$c1ProductID)
+          ->whereNotIn('pvl.vendor_location_id',$c1VLID)
+          ->whereNotIn('vl.vendor_id',$c1VID)
+          ->where('mrn.image_type','listing')
+          ->where('vla.city_id',$city_id)
+          ->where('pvl.status','Active')
+          ->groupBy('p.id')
+          ->limit(1)
+          ->select('vl.vendor_id',
+                  'p.name AS productname',
+                  'p.slug AS slug',
+                  'pa.name as productattrname',
+                  'pp.price',
+                  'pt.type_name',
+                  'mrn.file',
+                  'f.name as flagname',
+                  'f.color',
+                  'l.name as cityname',
+                  'p.id as product_id',
+                  'pvl.vendor_location_id',
+                  DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                  DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+               )
+          //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+          ->get();
+       //echo "<br/>----<pre>1"; print_r($condition1);
+      if(!empty($condition1)){
+          $num_of_full_starts = round($condition1[0]->avg_rating,1);// number of full stars
+          $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+          $number_of_blank_starts = 5-($condition1[0]->avg_rating); //number of white stars
+
+          $relatedExperiencesArray[] = array('productname' => $condition1[0]->productname,
+              'slug' => $condition1[0]->slug,
+              'short_description' => $condition1[0]->short_description,
+              'price' => $condition1[0]->price,
+              'type_name' => $condition1[0]->type_name,
+              'file' => $condition1[0]->file,
+              'flagname' => $condition1[0]->flagname,
+              'color' => $condition1[0]->color,
+              'cityname' => $condition1[0]->cityname,
+              'averageRating' => $condition1[0]->avg_rating,
+              'totalRating' => $condition1[0]->total_ratings,
+              'full_stars' => $num_of_full_starts,
+              'half_stars' => $num_of_half_starts,
+              'blank_stars' => $number_of_blank_starts,
+              'product_id' => $condition1[0]->product_id,
+              'vendor_location_id' => $condition1[0]->vendor_location_id,
+              'vendor_id' => $condition1[0]->vendor_id,
+          );
+      }
+      //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+      $c2ProductID = array($productID);
+      $c2VLID = array($query[0]->vendor_location_id);
+      $c2VID = array($query[0]->vendor_id);
+      if(!empty($relatedExperiencesArray)){
+          foreach($relatedExperiencesArray as $v1){
+              array_push($c2ProductID,$v1['product_id']);
+              array_push($c2VLID,$v1['vendor_location_id']);
+              array_push($c2VID,$v1['vendor_id']);
+          }
+      }
+      //echo "<pre>c2"; print_r($c2ProductID);print_r($c2VLID);print_r($c2VID);
+      //echo "<pre>c22"; print_r($c2ProductID);
+      //checking experiences with cuisines and price
+      $condition2 = DB::table('products as p')
+          ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+          ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+          ->leftJoin('product_attributes_select_options AS paso','paso.product_attribute_id','=','pa.id')
+          ->leftJoin('product_attributes_multiselect AS pams','pams.product_attributes_select_option_id','=','paso.id')
+          ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+          ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+          ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+          ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+          ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+          ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+          ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+          ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+          ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+          ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+          ->leftJoin('locations as l','l.id','=','vla.city_id')
+          ->where('pams.product_attributes_select_option_id',$arrCuisines[$productID][0])
+          ->where('pp.price',$query[0]->price)
+          //->where('vla.area_id',$query[0]->area_id)
+          ->whereNotIn('pvl.product_id',$c2ProductID)
+          ->whereNotIn('pvl.vendor_location_id',$c2VLID)
+          ->whereNotIn('vl.vendor_id',$c2VID)
+          ->where('mrn.image_type','listing')
+          ->where('pvl.status','Active')
+          ->where('vla.city_id',$city_id)
+          ->groupBy('p.id')
+          ->limit(1)
+          ->select('vl.vendor_id',
+              'p.name AS productname',
+              'p.slug AS slug',
+              'pa.name as productattrname',
+              'pp.price',
+              'pt.type_name',
+              'mrn.file',
+              'f.name as flagname',
+              'f.color',
+              'l.name as cityname',
+              'p.id as product_id',
+              'pvl.vendor_location_id',
+              DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+              DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+           )
+          //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+          ->get();
+      //echo "<br/>----<pre>2"; print_r($condition2);
+      if(!empty($condition2)){
+          $num_of_full_starts = round($condition2[0]->avg_rating,1);// number of full stars
+          $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+          $number_of_blank_starts = 5-($condition2[0]->avg_rating); //number of white stars
+
+          $relatedExperiencesArray[] = array('productname' => $condition2[0]->productname,
+              'slug' => $condition2[0]->slug,
+              'short_description' => $condition2[0]->short_description,
+              'price' => $condition2[0]->price,
+              'type_name' => $condition2[0]->type_name,
+              'file' => $condition2[0]->file,
+              'flagname' => $condition2[0]->flagname,
+              'color' => $condition2[0]->color,
+              'cityname' => $condition2[0]->cityname,
+              'averageRating' => $condition2[0]->avg_rating,
+              'totalRating' => $condition2[0]->total_ratings,
+              'full_stars' => $num_of_full_starts,
+              'half_stars' => $num_of_half_starts,
+              'blank_stars' => $number_of_blank_starts,
+              'product_id' => $condition2[0]->product_id,
+              'vendor_location_id' => $condition2[0]->vendor_location_id,
+              'vendor_id' => $condition2[0]->vendor_id,
+          );
+      }
+
+      //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+      $c3ProductID = array($productID);
+      $c3VLID = array($query[0]->vendor_location_id);
+      $c3VID = array($query[0]->vendor_id);
+      if(!empty($relatedExperiencesArray)){
+          foreach($relatedExperiencesArray as $v1){
+              array_push($c3ProductID,$v1['product_id']);
+              array_push($c3VLID,$v1['vendor_location_id']);
+              array_push($c3VID,$v1['vendor_id']);
+          }
+      }
+      //echo "<pre>c3"; print_r($c3ProductID);print_r($c3VLID);print_r($c3VID);
+      //checking experiences with location_id
+      $condition3 = DB::table('products as p')
+          ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+          ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+          ->leftJoin('product_attributes_select_options AS paso','paso.product_attribute_id','=','pa.id')
+          ->leftJoin('product_attributes_multiselect AS pams','pams.product_attributes_select_option_id','=','paso.id')
+          ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+          ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+          ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+          ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+          ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+          ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+          ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+          ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+          ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+          ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+          ->leftJoin('locations as l','l.id','=','vla.city_id')
+          ->where('vla.area_id',$query[0]->area_id)
+          ->whereNotIn('pvl.product_id',$c3ProductID)
+          ->whereNotIn('pvl.vendor_location_id',$c3VLID)
+          ->whereNotIn('vl.vendor_id',$c3VID)
+          ->where('mrn.image_type','listing')
+          ->where('pvl.status','Active')
+          ->where('vla.city_id',$city_id)
+          ->groupBy('p.id')
+          ->select('vl.vendor_id',
+              'p.name AS productname',
+              'p.slug AS slug',
+              'pa.name as productattrname',
+              'pp.price',
+              'pt.type_name',
+              'mrn.file',
+              'f.name as flagname',
+              'f.color',
+              'l.name as cityname',
+              'vla.area_id',
+              'p.id as product_id',
+              'pvl.vendor_location_id',
+              DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+              DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+            )
+          ->orderByRaw("RAND()")
+          ->get();
+      //echo "<br/>----<pre>3"; print_r($condition3);
+      if(count($relatedExperiencesArray) != 3) {
+          if(!empty($condition3)){
+              foreach ($condition3 as $values) {
+
+                  $num_of_full_starts = round($values->avg_rating,1);// number of full stars
+                  $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+                  $number_of_blank_starts = 5-($values->avg_rating); //number of white stars
+
+                  if (count($relatedExperiencesArray) == 3) {
+                      break;
+                  } else {
+                      $relatedExperiencesArray[] = array('productname' => $values->productname,
+                          'slug' => $values->slug,
+                          'short_description' => $values->short_description,
+                          'price' => $values->price,
+                          'type_name' => $values->type_name,
+                          'file' => $values->file,
+                          'flagname' => $values->flagname,
+                          'color' => $values->color,
+                          'cityname' => $values->cityname,
+                          'averageRating' => $values->avg_rating,
+                          'totalRating' => $values->total_ratings,
+                          'full_stars' => $num_of_full_starts,
+                          'half_stars' => $num_of_half_starts,
+                          'blank_stars' => $number_of_blank_starts,
+                          'product_id' => $values->product_id,
+                          'vendor_location_id' => $values->vendor_location_id,
+                          'vendor_id' => $values->vendor_id,
+                      );
+                  }
+              }
+          }
+      }
+
+      //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+      $c4ProductID = array($productID);
+      $c4VLID = array($query[0]->vendor_location_id);
+      $c4VID = array($query[0]->vendor_id);
+      if(!empty($relatedExperiencesArray)){
+          foreach($relatedExperiencesArray as $v1){
+              array_push($c4ProductID,$v1['product_id']);
+              array_push($c4VLID,$v1['vendor_location_id']);
+              array_push($c4VID,$v1['vendor_id']);
+          }
+      }
+      //echo "<pre>c4"; print_r($c4ProductID);print_r($c4VLID);print_r($c4VID);
+      //checking experiences with cuisine or areaid or price just in case if the above all conditions return null results
+      $condition4 = DB::table('products as p')
+          ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+          ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+          ->leftJoin('product_attributes_select_options AS paso','paso.product_attribute_id','=','pa.id')
+          ->leftJoin('product_attributes_multiselect AS pams','pams.product_attributes_select_option_id','=','paso.id')
+          ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+          ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+          ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+          ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+          ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+          ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+          ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+          ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+          ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+          ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+          ->leftJoin('locations as l','l.id','=','vla.city_id')
+          ->whereNotIn('pvl.product_id',$c4ProductID)
+          ->whereNotIn('pvl.vendor_location_id',$c4VLID)
+          ->whereNotIn('vl.vendor_id',$c4VID)
+          ->where('mrn.image_type','listing')
+          ->where('pvl.status','Active')
+          ->where('vla.city_id',$city_id)
+          ->groupBy('p.id')
+          //->limit(1)
+          ->select('vl.vendor_id',
+              'p.name AS productname',
+              'p.slug AS slug',
+              'pa.name as productattrname',
+              'pp.price',
+              'pt.type_name',
+              'mrn.file',
+              'f.name as flagname',
+              'f.color',
+              'l.name as cityname',
+              'vla.area_id',
+              'p.id as product_id',
+              'pvl.vendor_location_id',
+              DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+              DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+          )
+          ->orderByRaw("RAND()")
+          //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+          ->get();
+      //echo "<br/>----<pre>4"; print_r($condition4);
+      if(count($relatedExperiencesArray) != 3) {
+          if(!empty($condition4)){
+              foreach ($condition4 as $values) {
+                  $num_of_full_starts = round($values->avg_rating,1);// number of full stars
+                  $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+                  $number_of_blank_starts = 5-($values->avg_rating); //number of white stars
+                  if (count($relatedExperiencesArray) == 3) {
+                      break;
+                  } else {
+                      $relatedExperiencesArray[] = array('productname' => $values->productname,
+                          'slug' => $values->slug,
+                          'short_description' => $values->short_description,
+                          'price' => $values->price,
+                          'type_name' => $values->type_name,
+                          'file' => $values->file,
+                          'flagname' => $values->flagname,
+                          'color' => $values->color,
+                          'cityname' => $values->cityname,
+                          'averageRating' => $values->avg_rating,
+                          'totalRating' => $values->total_ratings,
+                          'full_stars' => $num_of_full_starts,
+                          'half_stars' => $num_of_half_starts,
+                          'blank_stars' => $number_of_blank_starts,
+                          'product_id' => $values->product_id,
+                          'vendor_location_id' => $values->vendor_location_id,
+                          'vendor_id' => $values->vendor_id,
+                      );
+                  }
+              }
+          }
+      }
+      //echo "<pre>ar"; print_r($relatedExperiencesArray); die;
+      return $relatedExperiencesArray;
   }
 
   public static function readProductReviews($productID) {
