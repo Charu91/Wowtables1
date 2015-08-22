@@ -237,6 +237,7 @@ jQuery(function($) {'use strict';
         $("#portfolio").show();
         $(".city").show();
 		$("#contact").show();
+		$("#city_sel").val("bangalore");
 		var arr = [
 			{val : "", text: "Preferred Lunch Option"},
 			{val : "Om Made Cafe, Koramangala", text: "Om Made Cafe, Koramangala"},
@@ -247,6 +248,16 @@ jQuery(function($) {'use strict';
 		var sel = $('<select class="form-control" id="lunch_option" name="lunch_option">').appendTo('#lunch-sel');
 		$(arr).each(function() {
 			sel.append($("<option>").attr('value',this.val).text(this.text));
+		});
+
+		$('#twitter-share').twitterbutton({
+
+			title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
+			layout:'none',
+			ontweet:function(response){
+
+			},
+			lang:'en'
 		});
     });
 
@@ -352,9 +363,55 @@ jQuery(function($) {'use strict';
 
 
     //share on twitter
+	$("#facebook-share").on('click',function(){
 
 
-    $("#cust-details").on('click',function(){
+		var product_name   = 	'The Good Life with WowTables';
+		var description	   =	'Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding.';
+		var share_image	   =	'http://wowtables.com/assets/birthday/images/tgl.jpg';
+		var share_url	   =	'http://wowtables.com';
+		FB.ui({
+			method: 'share',
+			href: share_url,
+			title: product_name,
+			link: share_url,
+			picture: share_image,
+			description: description
+		}, function(response) {
+			/*if(response && response.post_id){}
+			 else{}*/
+			$("#promotion_type").val("facebook");
+			var status = $("#main-contact-form").valid();
+			if(status) {
+				$.ajax({
+					type: "POST",
+					url: "/promotion/birthday/save",
+					data: $("#main-contact-form").serialize(),
+					timeout: 3000,
+					success: function(response) {
+						$.parseJSON(response);
+						if(response){
+							$(".hit").show();
+							$(".content-form").hide();
+						} else{
+							$(".fail").show();
+						}
+					},
+					error: function() {
+						$(".fail").show();
+					}
+				});
+			}
+
+		});
+
+	});
+
+
+
+
+
+    /*$("#cust-details").on('click',function(){
 
        var status = $("#main-contact-form").valid();
         if(status) {
@@ -368,42 +425,7 @@ jQuery(function($) {'use strict';
                     if(response){
                         $(".hit").show();
 						$(".content-form").hide();
-                        $("#facebook-share").show();
-
-
-                        $("#facebook-share").on('click',function(){
-
-
-                                var product_name   = 	'The Good Life with WowTables';
-                                var description	   =	'Join me in celebrating the third birthday of WowTables with a luxurious day of dining, relaxing and unwinding.';
-                                var share_image	   =	'http://wowtables.com/assets/birthday/images/tgl.jpg';
-                                var share_url	   =	'http://wowtables.com';
-                                FB.ui({
-                                    method: 'share',
-                                    href: share_url,
-                                    title: product_name,
-                                    link: share_url,
-                                    picture: share_image,
-                                    description: description
-                                }, function(response) {
-                                    /*if(response && response.post_id){}
-                                     else{}*/
-
-                                });
-
-                        });
-
-                        $('#twitter-share').twitterbutton({
-
-                            title:'I want to taste the #TheGoodLife with @Wow_Tables because  ',
-                            layout:'none',
-                            ontweet:function(response){
-
-                            },
-                            lang:'en'
-                        });
-
-                    } else{
+					} else{
                         $(".fail").show();
                     }
                 },
@@ -415,7 +437,7 @@ jQuery(function($) {'use strict';
 
 
 
-    });
+    });*/
 
 
 
