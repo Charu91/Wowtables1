@@ -133,6 +133,32 @@ $.fn.twitterbutton = function(options) {
 			twttr.events.bind('follow',   followIntent);
             script_loaded = true;
 
+			twttr.events.bind('click',    function(event){
+				$("#promotion_type").val("twitter");
+				var status = $("#main-contact-form").valid();
+				if(status) {
+					$.ajax({
+						type: "POST",
+						url: "/promotion/birthday/save",
+						data: $("#main-contact-form").serialize(),
+						timeout: 3000,
+						success: function(response) {
+							$.parseJSON(response);
+							if(response){
+								$(".hit").show();
+								$(".content-form").hide();
+							} else{
+								$(".fail").show();
+							}
+						},
+						error: function() {
+							$(".fail").show();
+						}
+					});
+				}
+
+			});
+
 
 		});
 

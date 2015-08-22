@@ -114,11 +114,11 @@
     </header><!--/header-->
 
 
-    <div class="row top-buffer">
+    <!--<div class="row top-buffer">
         <div class="row top-buffer">
           <img src="/assets/birthday/images/tgl.jpg" alt="banner" class="img-responsive"/>
         </div>
-    </div>
+    </div>-->
 
     <!--<section>
         <div class="control-panel">
@@ -132,8 +132,13 @@
 
     <section id="cta" class="wow fadeInUp">
         <div class="container">
+            <div class="row top-buffer">
+                <div class="row top-buffer">
+                    <img src="/assets/birthday/images/tgl.jpg" alt="banner" class="img-responsive"/>
+                </div>
+            </div>
         <div class="block text-center">
-            <div class="row">
+            <div class="row top-buffer">
                 <div class="col-sm-8 col-sm-offset-2">
                     <p>It's our third birthday - and there's no one we'd rather celebrate it with than you. We want to gift you, our dear diners, a little complimentary taste of a truly luxurious lifestyle. We're giving you - and one lucky companion - the chance to win one glorious, all-inclusive day of feasting, relaxing and unwinding.  All you have to do to win is participate in our contest, telling us on Facebook and Twitter why you want a taste of #TheGoodLife.</p>
                 </div>
@@ -526,13 +531,13 @@
                             </div>
                             <input type="hidden" name="promotion_type" id="promotion_type">
                             <input type="hidden" name="city_sel" id="city_sel">
-                            <div class="row">
+                            <!--<div class="row">
                                 <div class="col-sm-12">
                                     <div class="block text-center">
                                 <button id="cust-details" name="cust-details" class="btn btn-primary">Enter Contest to Share on FB, Twitter</button>
                                  </div>
                                  </div>
-                            </div>
+                            </div>-->
                         </form>
                     </div>
                     <div class="row top-buffer">
@@ -556,7 +561,7 @@
                         </div>
                         <div class="col-sm-3">
                             <div id='fb-root'></div>
-                            <a id="facebook-share" style="display:none;"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
+                            <a id="facebook-share"><img src="/assets/birthday/images/facebook-share.png" alt="facebook" width="70" height="30" /></a>
                         </div>
                     </div>
                     <div class="row">
