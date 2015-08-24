@@ -158,6 +158,22 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .star-icon{padding:0px 0px;}
 .overlay .signup-wrapper #signinForm{ display:none;}
 
+.star-all .star-icon.half:before{margin-top: 4px;}
+.deal-detail-left .resturant_listing_exp{list-style:none; padding-left: 0;}
+.deal-detail-left .resturant_listing_exp li{max-width: 400px; min-height: 400px; margin: 0 auto 20px;}
+.deal-detail-left .resturant_listing_exp li .deal-head{background: none repeat scroll 0 0 #EA9403; width: 100%;}
+.deal-detail-left .resturant_listing_exp li table.deal-head td{color: #FFF; font-size: 16px; line-height: 20px; text-align: left;
+ width: 50%; padding: 10px;}
+.deal-detail-left .resturant_listing_exp li table.deal-head td:first-child{background: none repeat scroll 0 0 #000; color: #EAB703;
+ font-weight: 700; width: 70%;}
+.deal-detail-left .resturant_listing_exp li table.deal-head td:last-child span{display: block; font-size: 24px;}
+.deal-detail-left .resturant_listing_exp li table.deal-head td:last-child{font-weight: 700; text-shadow: 0 0 2px rgba(0,0,0,.3);
+  text-transform: uppercase; width: 30%;}
+.deal-detail-left .resturant_listing_exp li .deal-img {position: relative; width:100%;}
+.deal-detail-left .resturant_listing_exp .deal-desc{background: rgba(0,0,0,0.7); position: absolute; bottom: 0; width: 100%;
+ padding: 5px 10px;}
+.deal-detail-left .resturant_listing_exp li .deal-desc p{font-style: italic; line-height: 16px; color: #ea9403; margin: 0;}
+
 @media screen and (min-width: 768px){
 	.carousel-caption{ left: auto; right:9%;}
 }
@@ -170,7 +186,7 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 
 @media (max-width: 359px) and (min-width: 320px){
 	#review-menu-tab-detail{ height: 40px;}
-	#party_size1 {margin-right: -11px !important; width: 75px; font-size: 13px;}
+	#party_size1 {margin-right: -11px !important; width: 80px; font-size: 13px;}
 }
 
 /* Landscape */

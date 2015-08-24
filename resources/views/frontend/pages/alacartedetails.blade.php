@@ -474,13 +474,13 @@
           <p class="col-md-12">
               <strong>WowTables experiences at this restaurant</strong>
           </p>
-          <ul>
+          <ul class="row resturant_listing_exp">
 
               <?php foreach($relatedExperiences as $exp):?>
               <?php
 
               ?>
-              <li class="col-md-4 col-sm-4">
+              <li class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                   <div>
                       <a href="{{URL::to('/')}}/<?php echo $exp['cityname'];?>/experiences/<?php echo $exp['slug'];?>">
                           <table class="deal-head">
