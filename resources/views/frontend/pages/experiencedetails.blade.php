@@ -885,7 +885,7 @@
 
                                 <p id="or_reservation" class="text-center or-reservation ">OR</p>
                                 <a class="alacarte_reservation_text" href="<?php echo URL::to("/$city/alacarte/$alacart_slug");?> ">
-                                    <small>Make An A la carte Reservation at <br>
+                                    <small>Make a Classic Reservation at <br>
                             <span>
                               <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
                             </span>
@@ -897,7 +897,7 @@
 
                                 <p id="or_reservation" class="text-center or-reservation ">OR</p>
                                 <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
-                                    <small>Make An A la carte Reservation at <br>
+                                    <small>Make a Classic Reservation at <br>
                           <span>
                             <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
                           </span>
