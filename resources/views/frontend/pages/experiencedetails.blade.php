@@ -43,9 +43,76 @@
                     <div class="row">
 
                         <h3 class="col-md-10">Sorry, this experience is no longer available.</h3>
+                        <p class="col-md-12"><strong>Other Experiences You Might Enjoy</strong></p>
+                        <ul>
 
+                            <?php foreach($relatedExperiences as $exp):?>
+                            <?php
 
+                            ?>
+                            <li class="col-md-4 col-sm-4">
+                                <div>
+                                    <a href="{{URL::to('/')}}/<?php echo $exp['cityname'];?>/experiences/<?php echo $exp['slug'];?>">
+                                        <table class="deal-head">
+                                            <tr>
+                                                <td>
+                                                    <?php echo $exp['productname'];?>
+                                                </td>
+                                                <td>
+                                                    <span> View</span> Details
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </a>
 
+                                    <div class="deal-img">
+                                        <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/<?php echo $exp['file'];?>" alt="image1" class="img-responsive"/>
+                                        <?php
+                                        if(isset($exp['flagname']) && $exp['flagname'] != "") {?>
+                                        <div class="flag new valign" id="top_paddin"style="background:<?php echo $exp['color'];?>"><?php echo $data[$j_count]['flag'];?></div>
+                                        <?php }
+                                        /*
+                                        <div class="bookmark valign balign" id="top_alignmen">
+                                            <div class="<?php echo ((isset($data[$j_count]['bookmark_status']) && $data[$j_count]['bookmark_status'] == 1 && (isset($data[$j_count]['bookmark_userid']) && $data[$j_count]['bookmark_userid'] == $set_user_id))? "bookmark_marked" : "bookmark_plain")?>" onclick="toggleClass(this,<?php echo $data[$j_count]['id']?>,<?php echo $set_user_id?>)"></div>
+                                        </div>
+                                        */?>
+                                        <div class="deal-desc" >
+                                            <p><?php echo $exp['short_description'];?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="discount">
+                                        <div class="col-xs-7">
+                                            <div>
+													<span class="star-all">
+														<?php if((isset($exp['full_stars']) && $exp['full_stars'] != "" && $exp['full_stars'] != 0)) {?>
+                                                        <?php for($c=0;$c<floor($exp['full_stars']);$c++){ ?>
+                                                        <span class="star-icon full star_icon_exper">&#9733;</span>
+                                                        <?php }
+                                                        }?>
+                                                        <?php if((isset($exp['half_stars']) && $exp['half_stars'] != "" && $exp['half_stars'] != 0)) {?>
+                                                        <span class="star-icon half">&#9733;</span>
+                                                        <?php } ?>
+                                                        <?php if((isset($exp['blank_stars']) && $exp['blank_stars'] != "" && $exp['blank_stars'] != 0)){?>
+                                                        <?php for($c=1;$c<=$exp['blank_stars'];$c++){?>
+                                                        <span class="star-icon">&#9733;</span>
+                                                        <?php }?>
+                                                        <?php } ?>
+													</span>
+                                                <span class="rating text-center"><?php echo (isset($exp['total_reviews']) && $exp['total_reviews'] > 0) ? "(".$data[$j_count]['total_reviews']." Reviews)" : "";?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 desc-price text-center">
+                                            <?php if(isset($exp['price']) && $exp['price'] > 0 ) {?>
+                                            <p>Rs <?php echo number_format($exp['price'],0);?><span class="small">(<?php echo $exp['type_name'];?>)</span></p>
+                                            <?php } else {?> <p>&nbsp;<span class="small">&nbsp;</span></p><?php } ?>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <?php endforeach ?>
+                        </ul>
                     </div>
                 </div>
             </section>
@@ -543,7 +610,7 @@
                                 </a>
                                 <?php } else { ?>
                                 <a class="alacarte_reservation_text" data-page_loc="Suggest Tip Widget" data-target="#redirectAlacarteLocationModal" data-toggle="modal">
-                                    <small>Make An A la carte Reservation at <br>
+                                    <small>Make a Classic Reservation at <br>
                 <span>
                   <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
                 </span>
@@ -877,7 +944,8 @@
             </div>
         </div>
     </div>
-
+    <?php
+    if(isset($arrExperience['data']['pvl_status']) && ($arrExperience['data']['pvl_status'] == "Active" || $arrExperience['data']['pvl_status'] == "Hidden")) { ?>
     <section class="related-experiences deal-detail">
         <div class="container">
             <div class="row wowtables_padding_left">
@@ -925,7 +993,7 @@
                                     <div>
 													<span class="star-all">
 														<?php if((isset($exp['full_stars']) && $exp['full_stars'] != "" && $exp['full_stars'] != 0)) {?>
-                                                        <?php for($c=0;$c<$exp['full_stars'];$c++){ ?>
+                                                        <?php for($c=0;$c<floor($exp['full_stars']);$c++){ ?>
                                                         <span class="star-icon full star_icon_exper">&#9733;</span>
                                                         <?php }
                                                         }?>
@@ -956,6 +1024,7 @@
             </div>
         </div>
     </section>
+    <?php } ?>
     <div class="modal fade" id="alacarteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
