@@ -602,7 +602,7 @@
                                 <p style="padding-top: 13px;">OR</p>
                                 <?php if(isset($rest_detail_alacarte) && count($rest_detail_alacarte) == 1){ ?>
                                 <a class="alacarte_reservation_text" href="<?php echo URL::to();?><?php echo $rest_detail_alacarte[0]['city']."/alacarte/".$rest_detail_alacarte[0]['slug'];?>">
-                                    <small>Make An A la carte Reservation at <br>
+                                    <small>Make a Classic Reservation at <br>
                 <span>
                   <?php echo ucfirst($arrExperience['data']['name'])?></span><br><span>(500 Gourmet Points)
                 </span>
