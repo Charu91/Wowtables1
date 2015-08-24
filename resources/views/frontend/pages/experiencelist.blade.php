@@ -395,18 +395,18 @@ $(document).ready(function(){
 										<div class="discount">
 											<div class="col-xs-7">
 												<div>
-													<span class="star-all">
+													<span class="star-all"> <?php ?>
 														<?php if((isset($data[$j_count]['full_stars']) && $data[$j_count]['full_stars'] != "" && $data[$j_count]['full_stars'] != 0)) {?>
-														<?php for($c=0;$c<$data[$j_count]['full_stars'];$c++){ ?>
-														<span class="star-icon full star_icon_exper">&#9733;</span>	
+														<?php for($c=0;$c<floor($data[$j_count]['full_stars']);$c++){ ?>
+															<span class="star-icon full star_icon_exper">&#9733;</span>
 														<?php }
 														}?>
 														<?php if((isset($data[$j_count]['half_stars']) && $data[$j_count]['half_stars'] != "" && $data[$j_count]['half_stars'] != 0)) {?>
-														<span class="star-icon half">&#9733;</span>
+															<span class="star-icon half">&#9733;</span>
 														<?php } ?>
 														<?php if((isset($data[$j_count]['blank_stars']) && $data[$j_count]['blank_stars'] != "" && $data[$j_count]['blank_stars'] != 0)){?>
 														<?php for($c=1;$c<=$data[$j_count]['blank_stars'];$c++){?>
-														<span class="star-icon">&#9733;</span>
+															<span class="star-icon">&#9733;</span>
 														<?php }?>
 														<?php } ?>
 													</span>

@@ -156,12 +156,14 @@ class AlacarteController extends Controller {
         //echo "==".$alacarte_id    = Vendor::where(['slug' => $alaslug])->first()->id;
         $aLaCarteID = DB::table('vendor_locations')->where('slug',$alaslug)->first()->id;
         $arrALaCarte = $this->alacarte_model->getALaCarteDetails($aLaCarteID);
-
+        //echo "<pre>"; print_r($arrALaCarte); die;
         $data['arrALaCarte']= $arrALaCarte;
         $data['reserveData']            = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates']            = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
         $data['schedule']               = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);
-        
+        $data['relatedRestaurants']     = $this->alacarte_model->getRelatedRestaurants($aLaCarteID,$city_id,$data['arrALaCarte']['data']['cuisineID']);
+        $data['relatedExperiences']     = $this->alacarte_model->getRelatedExperiences($aLaCarteID,$city_id);
+        //echo "<pre>"; print_r($data['relatedExperiences']); die;
         /*echo '<pre>';
         print_r($data['arrALaCarte']);
         print_r( $data['reserveData']);
@@ -653,7 +655,8 @@ class AlacarteController extends Controller {
         $ch = curl_init();
         $config = array(
             //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
-            'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+            //'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+            'authtoken' => 'a905350ac6562ec91e9a5ae0025bb9b2',
             'scope' => 'creatorapi',
         );
         $curlConfig = array(
