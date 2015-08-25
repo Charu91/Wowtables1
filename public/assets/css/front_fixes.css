@@ -173,6 +173,7 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .deal-detail-left .resturant_listing_exp .deal-desc{background: rgba(0,0,0,0.7); position: absolute; bottom: 0; width: 100%;
  padding: 5px 10px;}
 .deal-detail-left .resturant_listing_exp li .deal-desc p{font-style: italic; line-height: 16px; color: #ea9403; margin: 0;}
+.deal-detail.related-experiences{background:#fff;}
 
 @media screen and (min-width: 768px){
 	.carousel-caption{ left: auto; right:9%;}
@@ -186,7 +187,9 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 
 @media (max-width: 359px) and (min-width: 320px){
 	#review-menu-tab-detail{ height: 40px;}
-	#party_size1 {margin-right: -11px !important; width: 80px; font-size: 13px;}
+	#party_size1 {margin-right: -7px !important; width: 85px; font-size: 13px;}
+	.deal-detail-right #reserv_table .panel.panel-default .panel-heading{padding: 10px 5px;}
+	.deal-detail-right #reserv_table .panel.panel-default .panel-heading .panel-title{font-size: 14px;}
 }
 
 /* Landscape */
