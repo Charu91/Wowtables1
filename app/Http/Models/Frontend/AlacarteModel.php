@@ -440,7 +440,7 @@ class AlacarteModel{
                         ->leftJoin(DB::raw('vendor_attributes as va6'),'va6.id','=','vlat5.vendor_attribute_id')
                         ->where('vl.id',$aLaCarteID)
                         ->where('vl.a_la_carte','=',1)
-                        ->where('vl.status','Active')
+                        //->where('vl.status','Active')
                         ->where('va1.alias','restaurant_info')
                         ->where('va2.alias','short_description')
                         ->where('va3.alias','terms_and_conditions')
@@ -449,7 +449,7 @@ class AlacarteModel{
                         ->where('va5.alias','reward_points_per_reservation')
                         ->where('va6.alias','expert_tips')
                         ->groupBy('vl.id')
-                        ->select('vl.id as vl_id','vl.slug as vl_slug','vl.vendor_id', 'vla.address','vla.pin_code', 
+                        ->select('vl.id as vl_id','vl.slug as vl_slug','vl.vendor_id', 'vl.status as vl_status','vla.address','vla.pin_code',
                                     'vla.latitude', 'vla.longitude', 'vendors.name as title', 'vlat1.attribute_value as resturant_info', 
                                     'vlat2.attribute_value as short_description', 'vlat3.attribute_value as terms_conditions', 
                                     'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
@@ -466,7 +466,8 @@ class AlacarteModel{
             
             //reading vendor-cuisine
             $arrVendorCuisine = Self::getVendorLocationCuisine(array($queryResult->vl_id));
-            
+            $arrVendorCuisineID = Self::getRestaurantCuisineID(array($queryResult->vl_id));
+
             //reading vendor-cuisine
             $seo_meta_description = DB::select("SELECT vat.attribute_value AS seo_meta_description
                                         FROM vendor_attributes_text AS vat
@@ -542,6 +543,7 @@ class AlacarteModel{
                                     'slug'  => $queryResult->vl_slug,
                                     'id' => $queryResult->vl_id,
                                     'title' => $queryResult->title,
+                                    'vl_status' => $queryResult->vl_status,
                                     'resturant_information' => $queryResult->resturant_info,
                                     'short_description' => $queryResult->short_description,
                                     'terms_and_condition' => $queryResult->terms_conditions,
@@ -553,6 +555,7 @@ class AlacarteModel{
                                     'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
                                     'review_count' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['totalRating']:0,
                                     'cuisine' => (array_key_exists($queryResult->vl_id, $arrVendorCuisine)) ? $arrVendorCuisine[$queryResult->vl_id]:array(),
+                                    'cuisineID' => (array_key_exists($queryResult->vl_id, $arrVendorCuisineID)) ? $arrVendorCuisineID[$queryResult->vl_id]:array(),
                                     'experience_available' => $experienceAvailable,
                                     'experience_url' => $experienceURL,
                                     'location_address' => array(
@@ -728,6 +731,34 @@ class AlacarteModel{
         
         return $arrVendorCuisine;
     }
+
+    public static function getRestaurantCuisineID($arrVendorLocation) {
+        //query to read cuisines
+        $queryResult = DB::table(DB::raw('vendor_locations as vl'))
+            ->join(DB::raw('vendor_location_attributes_multiselect as vlam'),'vlam.vendor_location_id','=','vl.id')
+            ->join(DB::raw('vendor_attributes_select_options as vaso'), 'vaso.id', '=', 'vlam.vendor_attributes_select_option_id')
+            ->join(DB::raw('vendor_attributes as va'),'va.id', '=', 'vaso.vendor_attribute_id')
+            ->whereIn('vl.id', $arrVendorLocation)
+            ->where('va.name','cuisines')
+            ->orderBy('vl.id','desc')
+            ->select('vaso.id as option_id','vl.id','vaso.option')
+            ->get();
+
+        //array to store vendor cuisine details
+        $arrVendorCuisine = array();
+
+        if($queryResult) {
+            foreach($queryResult as $row) {
+                if(!array_key_exists($row->id, $arrVendorCuisine)) {
+                    $arrVendorCuisine[$row->id] = array();
+                }
+                $arrVendorCuisine[$row->id][] = $row->option_id;
+            }
+        }
+
+
+        return $arrVendorCuisine;
+    }
     
     //-----------------------------------------------------------------
     
@@ -889,6 +920,338 @@ class AlacarteModel{
     }
     return $arrData;
   }
+    //function to get related experiences which are active and allocated to selected vendor_location_id
+    public static function getRelatedExperiences($aLaCarteID,$city_id){
+
+        $samebrand = DB::table('products as p')
+            ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+            ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+            ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+            ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+            ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+            ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+            ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+            ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+            ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+            ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->where('pvl.vendor_location_id',$aLaCarteID)
+            ->where('mrn.image_type','listing')
+            ->where('vla.city_id',$city_id)
+            ->where('pvl.status','Active')
+            ->groupBy('p.id')
+            ->limit(2)
+            ->select('vl.vendor_id',
+                'p.name AS productname',
+                'p.slug AS slug',
+                'pa.name as productattrname',
+                'pp.price',
+                'pt.type_name',
+                'mrn.file',
+                'f.name as flagname',
+                'f.color',
+                'l.name as cityname',
+                'p.id as product_id',
+                'pvl.vendor_location_id',
+                DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+            )
+            ->orderByRaw("RAND()")
+            //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+            ->get();
+        $relatedExperiencesArray = array();
+        if(!empty($samebrand)){
+            foreach ($samebrand as $values) {
+
+                $num_of_full_starts = round($values->avg_rating,1);// number of full stars
+                $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+                $number_of_blank_starts = 5-($values->avg_rating); //number of white stars
+
+                if (count($relatedExperiencesArray) == 3) {
+                    break;
+                } else {
+                    $relatedExperiencesArray[] = array('productname' => $values->productname,
+                        'slug' => $values->slug,
+                        'short_description' => $values->short_description,
+                        'price' => $values->price,
+                        'type_name' => $values->type_name,
+                        'file' => $values->file,
+                        'flagname' => $values->flagname,
+                        'color' => $values->color,
+                        'cityname' => $values->cityname,
+                        'averageRating' => $values->avg_rating,
+                        'totalRating' => $values->total_ratings,
+                        'full_stars' => $num_of_full_starts,
+                        'half_stars' => $num_of_half_starts,
+                        'blank_stars' => $number_of_blank_starts,
+                        'product_id' => $values->product_id,
+                        'vendor_location_id' => $values->vendor_location_id,
+                        'vendor_id' => $values->vendor_id,
+                    );
+                }
+            }
+        }
+
+        return $relatedExperiencesArray;
+    }
+
+    //function to get related restaurants on detail page
+    public static function getRelatedRestaurants($vendorLocationID,$city_id,$cuisineid) {
+        //echo "vendorLocationID = ".$vendorLocationID." , city_id = ".$city_id." , cuisineid<pre>"; print_r($cuisineid); die;
+        $query = DB::table('vendor_locations as vl')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+            ->where('vl.id',$vendorLocationID)
+            ->where('vla.city_id',$city_id)
+            //->where('pvl.status','Active')
+            ->select('vl.id as vendor_location_id','vl.vendor_id','vl.pricing_level','vla.area_id')
+            ->get();
+
+        //echo "<pre>"; print_r($query); //die;
+
+        //checking restaurants with cuisines,price, and area_id
+        $condition1 = DB::table('vendors AS v')
+            ->leftJoin('vendor_locations as vl','vl.vendor_id','=','v.id')
+            ->leftJoin('vendor_location_attributes_multiselect AS vlams','vlams.vendor_location_id','=','vl.id')
+            ->leftJoin('vendor_attributes_select_options AS vaso','vaso.id','=','vlams.vendor_attributes_select_option_id')
+            ->leftJoin('vendor_attributes AS va','va.id','=','vaso.vendor_attribute_id')
+            ->leftJoin('vendor_locations_media_map AS vlmm','vlmm.vendor_location_id','=','vl.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','vlmm.media_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->leftJoin('locations as loc','loc.id','=','vla.area_id')
+            ->where('vlams.vendor_attributes_select_option_id',$cuisineid[0])
+            ->where('vl.pricing_level',$query[0]->pricing_level)
+            ->where('vla.area_id',$query[0]->area_id)
+            ->whereNotIn('vl.id',array($query[0]->vendor_location_id))
+            ->where('mrn.image_type','listing')
+            ->where('vla.city_id',$city_id)
+            ->where('vl.status','Active')
+            ->where('vl.a_la_carte','=',1)
+            //->groupBy('p.id')
+            ->limit(1)
+            ->select('vl.vendor_id',
+                'v.name AS restaurantName',
+                'vl.slug AS slug',
+                'vl.pricing_level',
+                'mrn.file',
+                'l.name as cityname',
+                'vl.id as vendor_location_id',
+                'loc.name as area_name',
+                'vaso.option as cuisine'
+            )
+            ->get();
+        //echo "<br/>----<pre>1"; print_r($condition1); die;
+        $relatedRestaurantsArray = array();
+        if(!empty($condition1)){
+
+            $relatedRestaurantsArray[] = array('restaurantName' => $condition1[0]->restaurantName,
+                'slug' => $condition1[0]->slug,
+                'price' => $condition1[0]->pricing_level,
+                'file' => $condition1[0]->file,
+                'cityname' => $condition1[0]->cityname,
+                'vendor_location_id' => $condition1[0]->vendor_location_id,
+                'vendor_id' => $condition1[0]->vendor_id,
+                'area_name' => $condition1[0]->area_name,
+                'cuisine' => $condition1[0]->cuisine,
+            );
+        }
+        //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+        $c2VLID = array($query[0]->vendor_location_id);
+        $c2VID = array($query[0]->vendor_id);
+        if(!empty($relatedRestaurantsArray)){
+            foreach($relatedRestaurantsArray as $v1){
+                array_push($c2VLID,$v1['vendor_location_id']);
+                array_push($c2VID,$v1['vendor_id']);
+                //echo "<pre>"; print_r($v1);
+            }
+        }
+        //echo "<pre>c2asd"; print_r($c2VLID);print_r($c2VID); //die;
+        //echo "<pre>c22"; print_r($c2ProductID);
+        //checking restaurants with cuisines and price
+        $condition2 = DB::table('vendors AS v')
+            ->leftJoin('vendor_locations as vl','vl.vendor_id','=','v.id')
+            ->leftJoin('vendor_location_attributes_multiselect AS vlams','vlams.vendor_location_id','=','vl.id')
+            ->leftJoin('vendor_attributes_select_options AS vaso','vaso.id','=','vlams.vendor_attributes_select_option_id')
+            ->leftJoin('vendor_attributes AS va','va.id','=','vaso.vendor_attribute_id')
+            ->leftJoin('vendor_locations_media_map AS vlmm','vlmm.vendor_location_id','=','vl.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','vlmm.media_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->leftJoin('locations as loc','loc.id','=','vla.area_id')
+            ->where('vlams.vendor_attributes_select_option_id',$cuisineid[0])
+            ->where('vl.pricing_level',$query[0]->pricing_level)
+            //->where('vla.area_id',$query[0]->area_id)
+            ->whereNotIn('vl.id',$c2VLID)
+            ->whereNotIn('v.id',$c2VID)
+            ->where('mrn.image_type','listing')
+            ->where('vla.city_id',$city_id)
+            ->where('vl.status','Active')
+            ->where('vl.a_la_carte','=',1)
+            //->groupBy('p.id')
+            ->limit(1)
+            ->select('vl.vendor_id',
+                'v.name AS restaurantName',
+                'vl.slug AS slug',
+                'vl.pricing_level',
+                'mrn.file',
+                'l.name as cityname',
+                'vl.id as vendor_location_id',
+                'loc.name as area_name',
+                'vaso.option as cuisine'
+            )
+            ->get();
+        //echo "<br/>----<pre>2"; print_r($condition2); //die;
+        if(!empty($condition2)){
+
+            $relatedRestaurantsArray[] = array('restaurantName' => $condition2[0]->restaurantName,
+                'slug' => $condition2[0]->slug,
+                'price' => $condition2[0]->pricing_level,
+                'file' => $condition2[0]->file,
+                'cityname' => $condition2[0]->cityname,
+                'vendor_location_id' => $condition2[0]->vendor_location_id,
+                'vendor_id' => $condition2[0]->vendor_id,
+                'area_name' => $condition2[0]->area_name,
+                'cuisine' => $condition2[0]->cuisine,
+            );
+        }
+        //echo "<pre>"; print_r($relatedRestaurantsArray); //die;
+        //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+
+        $c3VLID = array($query[0]->vendor_location_id);
+        $c3VID = array($query[0]->vendor_id);
+        if(!empty($relatedRestaurantsArray)){
+            foreach($relatedRestaurantsArray as $v1){
+                array_push($c3VLID,$v1['vendor_location_id']);
+                array_push($c3VID,$v1['vendor_id']);
+            }
+        }
+        //echo "<pre>c3"; print_r($c3VLID);print_r($c3VID); //die;
+
+        //checking restaurants with location_id
+        $condition3 = DB::table('vendors AS v')
+            ->leftJoin('vendor_locations as vl','vl.vendor_id','=','v.id')
+            ->leftJoin('vendor_location_attributes_multiselect AS vlams','vlams.vendor_location_id','=','vl.id')
+            ->leftJoin('vendor_attributes_select_options AS vaso','vaso.id','=','vlams.vendor_attributes_select_option_id')
+            ->leftJoin('vendor_attributes AS va','va.id','=','vaso.vendor_attribute_id')
+            ->leftJoin('vendor_locations_media_map AS vlmm','vlmm.vendor_location_id','=','vl.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','vlmm.media_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->leftJoin('locations as loc','loc.id','=','vla.area_id')
+            //->where('vlams.vendor_attributes_select_option_id',$cuisineid[0])
+            //->where('vl.pricing_level',$query[0]->pricing_level)
+            ->where('vla.area_id',$query[0]->area_id)
+            ->whereNotIn('vl.id',$c2VLID)
+            ->whereNotIn('v.id',$c2VID)
+            ->where('mrn.image_type','listing')
+            ->where('vla.city_id',$city_id)
+            ->where('vl.status','Active')
+            ->where('vl.a_la_carte','=',1)
+            //->groupBy('p.id')
+            //->limit(1)
+            ->select('vl.vendor_id',
+                'v.name AS restaurantName',
+                'vl.slug AS slug',
+                'vl.pricing_level',
+                'mrn.file',
+                'l.name as cityname',
+                'vl.id as vendor_location_id',
+                'loc.name as area_name',
+                'vaso.option as cuisine'
+            )
+            ->orderByRaw("RAND()")
+            ->get();
+        //echo "<br/>----<pre>3"; print_r($condition3); //die;
+        if(count($relatedRestaurantsArray) != 3) {
+            if(!empty($condition3)){
+                foreach ($condition3 as $values) {
+
+                    if (count($relatedRestaurantsArray) == 3) {
+                        break;
+                    } else {
+                        $relatedRestaurantsArray[] = array('restaurantName' => $values->restaurantName,
+                            'slug' => $values->slug,
+                            'price' => $values->pricing_level,
+                            'file' => $values->file,
+                            'cityname' => $values->cityname,
+                            'vendor_location_id' => $values->vendor_location_id,
+                            'vendor_id' => $values->vendor_id,
+                            'area_name' => $values->area_name,
+                            'cuisine' => $values->cuisine,
+                        );
+                    }
+                }
+            }
+        }
+
+        //product_id, vendor_location_id and vendor_id should not be which exist in $relatedExperiencesArray
+        $c4VLID = array($query[0]->vendor_location_id);
+        $c4VID = array($query[0]->vendor_id);
+        if(!empty($relatedExperiencesArray)){
+            foreach($relatedExperiencesArray as $v1){
+                array_push($c4VLID,$v1['vendor_location_id']);
+                array_push($c4VID,$v1['vendor_id']);
+            }
+        }
+        //echo "<pre>c4"; print_r($c4ProductID);print_r($c4VLID);print_r($c4VID);
+        //checking restaurants with cuisine or areaid or price just in case if the above all conditions return null results
+        $condition4 = DB::table('vendors AS v')
+            ->leftJoin('vendor_locations as vl','vl.vendor_id','=','v.id')
+            ->leftJoin('vendor_location_attributes_multiselect AS vlams','vlams.vendor_location_id','=','vl.id')
+            ->leftJoin('vendor_attributes_select_options AS vaso','vaso.id','=','vlams.vendor_attributes_select_option_id')
+            ->leftJoin('vendor_attributes AS va','va.id','=','vaso.vendor_attribute_id')
+            ->leftJoin('vendor_locations_media_map AS vlmm','vlmm.vendor_location_id','=','vl.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','vlmm.media_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','vl.id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->leftJoin('locations as loc','loc.id','=','vla.area_id')
+            ->whereNotIn('vl.id',$c2VLID)
+            ->whereNotIn('v.id',$c2VID)
+            ->where('mrn.image_type','listing')
+            ->where('vla.city_id',$city_id)
+            ->where('vl.status','Active')
+            ->where('vl.a_la_carte','=',1)
+            //->groupBy('p.id')
+            //->limit(1)
+            ->select('vl.vendor_id',
+                'v.name AS restaurantName',
+                'vl.slug AS slug',
+                'vl.pricing_level',
+                'mrn.file',
+                'l.name as cityname',
+                'vl.id as vendor_location_id',
+                'loc.name as area_name',
+                'vaso.option as cuisine'
+            )
+            ->orderByRaw("RAND()")
+            ->get();
+        //echo "<br/>----<pre>4"; print_r($condition4);
+        if(count($relatedRestaurantsArray) != 3) {
+            if(!empty($condition4)){
+                foreach ($condition4 as $values) {
+
+                    if (count($relatedRestaurantsArray) == 3) {
+                        break;
+                    } else {
+                        $relatedRestaurantsArray[] = array('restaurantName' => $values->restaurantName,
+                            'slug' => $values->slug,
+                            'price' => $values->pricing_level,
+                            'file' => $values->file,
+                            'cityname' => $values->cityname,
+                            'vendor_location_id' => $values->vendor_location_id,
+                            'vendor_id' => $values->vendor_id,
+                            'area_name' => $values->area_name,
+                            'cuisine' => $values->cuisine,
+                        );
+                    }
+                }
+            }
+        }
+        //echo "<pre>ar"; print_r($relatedExperiencesArray); die;
+        return $relatedRestaurantsArray;
+    }
 
 
   public static function checkBookingTimeRangeLimits($arrData) {

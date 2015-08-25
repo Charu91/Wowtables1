@@ -76,7 +76,7 @@ class ExperienceController extends Controller {
         //echo "<pre>"; print_r($data);
         //$arrSubmittedData['city_id']    = $city_id;
         $arrExperience                  = $this->experiences_model->find($id,$city_id);
-
+        //echo "<pre>"; print_r($arrExperience); die;
         $data['arrExperience']          = $arrExperience;
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
@@ -268,7 +268,7 @@ class ExperienceController extends Controller {
         $arrSubmittedData['city_id'] = $city_id;
 
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
-
+        //echo "<pre>"; print_r($searchResult); die;
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
             $data['resultCount'] = $searchResult['resultCount'];

@@ -125,7 +125,7 @@
                             <?php } ?>
 
                             <tr>
-                                <td class="heading-content" style="float:left; margin-top:10px; height:25px; width:535px; background:#000; line-height:25px; color:#fff; font-weight:bold; font-size:16px; letter-spacing:2px; text-align:center; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; ">Restaurant Details (Reservation ID:A<?php echo sprintf("%06d",$order_bookingno);?>)</td>
+                                <td class="heading-content" style="float:left; margin-top:10px; height:25px; width:535px; background:#000; line-height:25px; color:#fff; font-weight:bold; font-size:16px; letter-spacing:2px; text-align:center; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; ">Classic Reservation (Reservation ID:A<?php echo sprintf("%06d",$order_bookingno);?>)</td>
                             </tr>
 
                             <tr>
@@ -133,7 +133,7 @@
 
 
                                     <div style="margin: 5px 0; color: #000">Restaurant: <?php echo $exp_venue;?></div>
-                                    <div style="margin: 5px 0; color: #000">Reservation Type: A la carte</div>
+                                    <div style="margin: 5px 0; color: #000">Reservation Type: Classic Reservation</div>
                                     <div style="margin: 5px 0; color: #000">Address: <?php echo $exp_address;?></div>
 
                                 </td>

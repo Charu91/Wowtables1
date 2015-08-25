@@ -18,6 +18,96 @@
 </style>
    
     <div class="container deal-detail">
+        <?php
+        if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status'] == "Inactive") { ?>
+        <section class="related-experiences deal-detail discontinued">
+            <div class="container">
+                <div class="row">
+
+                    <h3 class="col-md-10">Sorry, this experience is no longer available.</h3>
+                    <p class="col-md-12"><strong>Other restaurants recommended for you</strong></p>
+                    <ul class="experience-grid">
+
+                        <?php
+                        if(isset($relatedRestaurants) && is_array($relatedRestaurants) )
+                        {
+                        foreach($relatedRestaurants as $row){?>
+                        <li class="col-md-4 col-sm-4">
+                            <div class="deal-img">
+                                <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/<?php echo isset($row['file'])?$row['file']:'';?>" alt="" class="img-responsive">
+                                <?php if(isset($row['flag_name']) && $row['flag_name'] != "") {?>
+                                <div class="flag new alatop" id="flag_alcart_listing"style="background:<?php echo $row['color'];?>"><?php echo $row['flag_name']?></div>
+                                <?php } ?>
+                                <!--<div class="bookmark_overlay">
+                                    <div class="bookmark_plain" onclick="toggleClass(this)"></div>
+                                </div>-->
+                            </div>
+
+                            <div class="discountingclass" id="big_div_height">
+                                <div class="col-xs-12 rest_name">
+                                    <a style="color:black;cursor:pointer;" href="{{URL::to('/')}}/<?php echo $row['cityname'];?><?php echo '/alacarte/'.$row['slug'];?>">
+                                        <h3><?php echo $row['restaurantName'];?></h3>
+                                    </a>
+                                </div>
+                                <div class="col-xs-5 text-center">
+                                    <p><?php echo $row['cuisine'];?></p>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>&bull;</span>
+                                </div>
+
+                                <div class="col-xs-5 text-center" id="rupee_symobol">
+                                    <?php
+                                    if(strtolower($row['price']) == 'low'){
+                                        $price_tag = "<img src='/assets/img/ruppee_14.png' title='Low' />";
+                                    } else if(strtolower($row['price']) == 'medium'){
+                                        $price_tag = "<img src='/assets/img/ruppee14x2.png' title='Medium' />";
+                                    } else if(strtolower($row['price']) == 'high'){
+                                        $price_tag = "<img src='/assets/img/ruppee14x3.png' title='High' />";
+                                    }
+                                    ?>
+                                    <p><?php echo $price_tag;?></p>
+                                </div>
+
+                                <div class="col-xs-12 location text-center">
+                                    <p><?php echo $row['area_name'];?></p>
+                                </div>
+                                <?php if(isset($row['review_count']) && $row['review_count'] > 0) {?>
+                                <div class="col-xs-12 text-center" style="padding-bottom:10px;float:left;">
+                                    <div>
+											<span class="star-all">
+												<?php for($c=0;$c<$row['full_stars'];$c++){ ?>
+                                                <span class="ala-star-icon full">&#9733;</span>
+                                                <?php } ?>
+                                                <?php if(isset($row['half_stars']) && $row['half_stars'] == 1) {?>
+                                                <span class="ala-star-icon half">&#9733;</span>
+                                                <?php }?>
+                                                <?php for($c=1;$c<=$row['blank_stars'];$c++){?>
+                                                <span class="ala-star-icon">&#9733;</span>
+                                                <?php } ?>
+											</span>
+                                        <div class="rating_ala rating_review_point" id="rating_review">(<?php echo $row['review_count']; ?> <?php echo (($row['review_count'] > 1) ? 'Reviews' : 'Review');?>)</div>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                <div><br></div>
+
+
+                                <div class="col-xs-6 col-sm-12 col-md-6 text-center" id="reserve_table reserve_a_table" style="padding-bottom:8px;width:100%;">
+                                    <a href="{{URL::to('/')}}/<?php echo $row['cityname'];?><?php echo '/alacarte/'.$row['slug'];?>" class="btn btn-inverse">Reserve A Table</a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </li>
+                        <?php }
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <?php }?>
       <div class="row">
       <div class="col-md-8 col-sm-8 deal-detail-left"  itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
                       <div id="breadcrumb">
@@ -379,15 +469,91 @@
            </div>
            
           </div>
+
+          <?php if(isset($relatedExperiences) && is_array($relatedExperiences) ) { ?>
+          <p class="col-md-12">
+              <strong>WowTables experiences at this restaurant</strong>
+          </p>
+          <ul class="row resturant_listing_exp">
+
+              <?php foreach($relatedExperiences as $exp):?>
+              <?php
+
+              ?>
+              <li class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <div>
+                      <a href="{{URL::to('/')}}/<?php echo $exp['cityname'];?>/experiences/<?php echo $exp['slug'];?>">
+                          <table class="deal-head">
+                              <tr>
+                                  <td>
+                                      <?php echo $exp['productname'];?>
+                                  </td>
+                                  <td>
+                                      <span> View</span> Details
+                                  </td>
+                              </tr>
+                          </table>
+                      </a>
+
+                      <div class="deal-img">
+                          <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/<?php echo $exp['file'];?>" alt="image1" class="img-responsive"/>
+                          <?php
+                          if(isset($exp['flagname']) && $exp['flagname'] != "") {?>
+                          <div class="flag new valign" id="top_paddin"style="background:<?php echo $exp['color'];?>"><?php echo $data[$j_count]['flag'];?></div>
+                          <?php }
+                          /*
+                          <div class="bookmark valign balign" id="top_alignmen">
+                              <div class="<?php echo ((isset($data[$j_count]['bookmark_status']) && $data[$j_count]['bookmark_status'] == 1 && (isset($data[$j_count]['bookmark_userid']) && $data[$j_count]['bookmark_userid'] == $set_user_id))? "bookmark_marked" : "bookmark_plain")?>" onclick="toggleClass(this,<?php echo $data[$j_count]['id']?>,<?php echo $set_user_id?>)"></div>
+                          </div>
+                          */?>
+                          <div class="deal-desc" >
+                              <p><?php echo $exp['short_description'];?></p>
+                          </div>
+                      </div>
+
+                      <div class="discount">
+                          <div class="col-xs-7">
+                              <div>
+													<span class="star-all">
+														<?php if((isset($exp['full_stars']) && $exp['full_stars'] != "" && $exp['full_stars'] != 0)) {?>
+                                                        <?php for($c=0;$c<floor($exp['full_stars']);$c++){ ?>
+                                                        <span class="star-icon full star_icon_exper">&#9733;</span>
+                                                        <?php }
+                                                        }?>
+                                                        <?php if((isset($exp['half_stars']) && $exp['half_stars'] != "" && $exp['half_stars'] != 0)) {?>
+                                                        <span class="star-icon half">&#9733;</span>
+                                                        <?php } ?>
+                                                        <?php if((isset($exp['blank_stars']) && $exp['blank_stars'] != "" && $exp['blank_stars'] != 0)){?>
+                                                        <?php for($c=1;$c<=$exp['blank_stars'];$c++){?>
+                                                        <span class="star-icon">&#9733;</span>
+                                                        <?php }?>
+                                                        <?php } ?>
+													</span>
+                                  <span class="rating text-center"><?php echo (isset($exp['total_reviews']) && $exp['total_reviews'] > 0) ? "(".$data[$j_count]['total_reviews']." Reviews)" : "";?></span>
+                              </div>
+                          </div>
+                          <div class="col-xs-5 desc-price text-center">
+                              <?php if(isset($exp['price']) && $exp['price'] > 0 ) {?>
+                              <p>Rs <?php echo number_format($exp['price'],0);?><span class="small">(<?php echo $exp['type_name'];?>)</span></p>
+                              <?php } else {?> <p>&nbsp;<span class="small">&nbsp;</span></p><?php } ?>
+                          </div>
+                          <div class="clearfix"></div>
+                      </div>
+                  </div>
+              </li>
+              <?php endforeach ?>
+          </ul>
+          <?php }?>
         </div>
+
         <div class="col-md-4 col-sm-4 deal-detail-right">
-    
+        <?php if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status'] == "Active") { ?>
         <div class="widget reservation-box" id="ReservationBox">
              <h3 class="text-center">RESERVE A TABLE</h3>
              <form role='form' method="post" action="{{URL::to('/')}}/orders/restaurant_checkout" id="alacarte_booking_form">  
              <div class="panel-group reservation-accordian" id="ac_accordion">
              <div id="ac_reserv_table2">
-        <input type="hidden" name="address" id='ac_locations2' value="<?php echo $arrALaCarte['data']['id'];?>">   
+               <input type="hidden" name="address" id='ac_locations2' value="<?php echo $arrALaCarte['data']['id'];?>">
               <div class="panel panel-default">
                 <div class="panel-heading <?php echo ($hasOrder) ? '' : 'active'?>">
                   <h4 class="panel-title">
@@ -463,9 +629,9 @@
                           $week_number = date('w',strtotime($order['date']));
                           $week = $weeks[$week_number];
                           if(isset($schedule)):
-                if(isset($alacarte_schedule_times)):
-                  $schedule = $alacarte_schedule_times;
-                endif;
+                            if(isset($alacarte_schedule_times)):
+                              $schedule = $alacarte_schedule_times;
+                            endif;
                                 foreach($schedule[$week] as $time=>$hours):?>
                                   <label class="btn btn-warning btn-xs time_tab <?=(in_array($order['time'],$hours))? 'active':'';?>" id="ac_<?=$time?>" style="padding:2px"><?=strtoupper($time);?></label> 
                          <?php   
@@ -564,26 +730,26 @@
                 <a  class="btn btn-warning <?php //=($hasOrder)? '' : 'hidden';?>" <?=(!(Session::has('logged_in')) && isset($allow_guest) && $allow_guest == "Yes") ? 'data-target="#redirectloginModal" data-toggle="modal"':'';?> id='ac_select_table2_ala'>SELECT TABLE</a>
               </div>
 
-        <p class="text-center" style="margin-top:-7px;">
-          <a style="text-decoration:none;">
-            <small><br><span style="color:#eab703;">(<?php echo $arrALaCarte['data']["reward_point"] ?> Gourmet Points)
-              </span>
-            </small>
-          </a>
-        </p>
+                <p class="text-center" style="margin-top:-7px;">
+                  <a style="text-decoration:none;">
+                    <small><br><span style="color:#eab703;">(<?php echo $arrALaCarte['data']["reward_point"] ?> Gourmet Points)
+                      </span>
+                    </small>
+                  </a>
+                </p>
 
                 <input type="hidden" id="ac_slug2" value="<?php echo $arrALaCarte['data']['slug']; ?>">
                 <input type="hidden" name="time" id="ac_fulltime2">
                 <input type="hidden" name="amount" id="ac_amount2">
-        <input type="hidden" name="restaurant_id" id="ac_restaurant_id2" value="<?=$arrALaCarte['data']['id']?>">
+                <input type="hidden" name="restaurant_id" id="ac_restaurant_id2" value="<?=$arrALaCarte['data']['id']?>">
                 <input type="hidden" name="city" value="<?php echo $current_city?>">
                  <input type="hidden" name="city_id" value="<?php echo $current_city_id;?>">
-        <input type="hidden" name="alacarte_id" value="<?php echo $arrALaCarte['data']['id']?>">
-        <input type="hidden" name="alacarte_reward_points" value="<?php echo $arrALaCarte['data']["reward_point"] ?>">
+                <input type="hidden" name="alacarte_id" value="<?php echo $arrALaCarte['data']['id']?>">
+                <input type="hidden" name="alacarte_reward_points" value="<?php echo $arrALaCarte['data']["reward_point"] ?>">
                 <input type="hidden" name="send">
             </form>
-          </div>
-          
+        </div>
+        <?php } ?>
                     <div class="widget query-contact">
             <p>Got a question? <br> Call our Concierge at 09619551387</p>
           </div>
@@ -624,98 +790,96 @@
            }
   </script><!--==============Start Google Addwords=================-->
 <!--==============End Google Addwords=================-->
-   
-<section class="related-experiences deal-detail">
-      <div class="container">
-        <div class="row">  
+<?php
+if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status'] == "Active") { ?>
+    <section class="related-experiences deal-detail">
+          <div class="container">
+            <div class="row">
 
-<p class="col-md-12"><strong>Other restaurants recommended for you</strong></p>
-<ul>
-    <?php $i=0;?>
-  <?php 
-  if(isset($arrALaCarte['data']['similar_option']) && is_array($arrALaCarte['data']['similar_option']) && count($arrALaCarte['data']['similar_option'])>0)
-  {
-  foreach($alacartes as $row){?>
-    <li class="col-md-4 col-sm-4">
-            
-      <div class="deal-img">
-        <img src="<?php echo base_url($row['list_image']);?>" alt="" class="img-responsive">
-    <?php if(isset($row['flag_name']) && $row['flag_name'] != "") {?> 
-      <div class="new_flag_listing" id="popular_listing" style="background:<?php echo "#".$row['color']?>">
-        <?php echo $row['flag_name']?>
-      </div>
-    <?php }?>
-        <!--<div class="bookmark_overlay">
-          <div class="bookmark_plain" onclick="toggleClass(this)"></div>
-        </div>-->
-      </div>
-          
-          <div class="discountingclass" id="discount_class">
-            <div class="col-xs-12 rest_name">
-              <a style="color:black;cursor:pointer;" href="<?php echo base_url($row['city'].'/alacarte/'.$row['slug'])?>">
-                <h3><?php echo $row['venue'];?></h3>
-              </a>
-            </div>
-                     <!-- <div class="col-xs-12">
-                    <div class="divider"></div>
-                    </div>
-                    -->
-            <div class="col-xs-5 text-center">
-                  <p><?php echo $row['cuisine'];?></p>
-                </div>
-                <div class="col-xs-2">
-                  <span style="color:black;">&bull;</span>
-                </div>               
+                <p class="col-md-12"><strong>Other restaurants recommended for you</strong></p>
+                <ul class="experience-grid">
 
-                <div class="col-xs-5 text-center">
-                  <?php if($row['price'] == 1){
-              $price_tag = "<img src='/assets/img/ruppee_14.png' title='Low' />";
-            } else if($row['price'] == 2){
-              $price_tag = "<img src='/assets/img/ruppee14x2.png' title='Medium' />";
-            } else if($row['price'] == 3){
-              $price_tag = "<img src='/assets/img/ruppee14x3.png' title='High' />";
-            }
-        ?>
-                  <p><?php echo $price_tag;?></p>                    
-              </div>
-            <div class="col-xs-12 location text-center">
-              <p><?php echo $row['area'];?></p>
+                    <?php
+                    if(isset($relatedRestaurants) && is_array($relatedRestaurants) )
+                    {
+                    foreach($relatedRestaurants as $row){?>
+                    <li class="col-md-4 col-sm-4">
+                        <div class="deal-img">
+                            <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/<?php echo isset($row['file'])?$row['file']:'';?>" alt="" class="img-responsive">
+                            <?php if(isset($row['flag_name']) && $row['flag_name'] != "") {?>
+                            <div class="flag new alatop" id="flag_alcart_listing"style="background:<?php echo $row['color'];?>"><?php echo $row['flag_name']?></div>
+                            <?php } ?>
+                            <!--<div class="bookmark_overlay">
+                                <div class="bookmark_plain" onclick="toggleClass(this)"></div>
+                            </div>-->
+                        </div>
+
+                        <div class="discountingclass" id="big_div_height">
+                            <div class="col-xs-12 rest_name">
+                                <a style="color:black;cursor:pointer;" href="{{URL::to('/')}}/<?php echo $row['cityname'];?><?php echo '/alacarte/'.$row['slug'];?>">
+                                    <h3><?php echo $row['restaurantName'];?></h3>
+                                </a>
+                            </div>
+                            <div class="col-xs-5 text-center">
+                                <p><?php echo $row['cuisine'];?></p>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>&bull;</span>
+                            </div>
+
+                            <div class="col-xs-5 text-center" id="rupee_symobol">
+                                <?php
+                                if(strtolower($row['price']) == 'low'){
+                                $price_tag = "<img src='/assets/img/ruppee_14.png' title='Low' />";
+                                } else if(strtolower($row['price']) == 'medium'){
+                                $price_tag = "<img src='/assets/img/ruppee14x2.png' title='Medium' />";
+                                } else if(strtolower($row['price']) == 'high'){
+                                $price_tag = "<img src='/assets/img/ruppee14x3.png' title='High' />";
+                                }
+                                ?>
+                                <p><?php echo $price_tag;?></p>
+                            </div>
+
+                            <div class="col-xs-12 location text-center">
+                                <p><?php echo $row['area_name'];?></p>
+                            </div>
+                            <?php if(isset($row['review_count']) && $row['review_count'] > 0) {?>
+                            <div class="col-xs-12 text-center" style="padding-bottom:10px;float:left;">
+                                <div>
+                                                <span class="star-all">
+                                                    <?php for($c=0;$c<$row['full_stars'];$c++){ ?>
+                                                    <span class="ala-star-icon full">&#9733;</span>
+                                                    <?php } ?>
+                                                    <?php if(isset($row['half_stars']) && $row['half_stars'] == 1) {?>
+                                                    <span class="ala-star-icon half">&#9733;</span>
+                                                    <?php }?>
+                                                    <?php for($c=1;$c<=$row['blank_stars'];$c++){?>
+                                                    <span class="ala-star-icon">&#9733;</span>
+                                                    <?php } ?>
+                                                </span>
+                                    <div class="rating_ala rating_review_point" id="rating_review">(<?php echo $row['review_count']; ?> <?php echo (($row['review_count'] > 1) ? 'Reviews' : 'Review');?>)</div>
+                                </div>
+                            </div>
+                            <?php } ?>
+                            <div><br></div>
+
+
+                            <div class="col-xs-6 col-sm-12 col-md-6 text-center" id="reserve_table reserve_a_table" style="padding-bottom:8px;width:100%;">
+                                <a href="{{URL::to('/')}}/<?php echo $row['cityname'];?><?php echo '/alacarte/'.$row['slug'];?>" class="btn btn-inverse">Reserve A Table</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </li>
+                    <?php }
+                    }
+                    ?>
+                </ul>
+                <div class="clearfix"></div>
+
             </div>
-            <?php if(isset($arrALaCarte['data']['review_count']) && $arrALaCarte['data']['review_count'] > 0) {?>
-        <div class="col-xs-12 text-center" style="padding-bottom:10px;">
-          <div>
-          <span class="star-all">
-            <?php for($c=0;$c<$row['full_stars'];$c++){ ?>
-              <span class="ala-star-icon full">&#9733;</span>
-            <?php } ?>
-            <?php if(isset($row['half_stars']) && $row['half_stars'] == 1) {?>
-              <span class="ala-star-icon half">&#9733;</span>
-            <?php }?>
-            <?php for($c=1;$c<=$row['blank_stars'];$c++){?>
-              <span class="ala-star-icon">&#9733;</span>
-            <?php } ?>
-          </span>
-            <div class="rating_ala" style="color:black;">(<?php echo $row['review_count']; ?> <?php echo (($row['review_count'] > 1) ? 'Reviews' : 'Review');?>)</div>
-          </div>   
-        </div>
-      <?php } ?>
-            <div><br></div>
-                 
-            <div class="col-xs-6 col-sm-12 col-md-6 text-center" id="reserve_table" style="padding-bottom:8px; width:100%;">
-            <a href="{{URL::to('/')}}/<?php echo $current_city.'/alacarte/'.$arrALaCarte['data']['slug'];?>" class="btn btn-inverse">Reserve A Table</a>
-            </div>
-            <div class="clearfix"></div>
           </div>
-          </li>
-  <?php } 
-  }
-  ?>
-  <?php $i++; ?>
-    </ul>
-<div class="clearfix"></div>
-    
-</div>
-</div>
+    </section>
+<?php } ?>
 <div class="modal fade" id="redirecttipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
@@ -804,66 +968,66 @@
       </div><!-- /.modal-dialog -->
   
 
-  <!-- Modal for email alacarte ends here-->
-<style>
-#redirecttipModal .modal-header {
-    background: none repeat scroll 0 0 #000;
-}
-#redirecttipModal .modal-header h4 {
-    color: #fff;
-}
-#alacarte_cant_do_reserv1, #alacarte_cant_do_reserv2, #ac_select_all_data2, #alacarte_cant_select_table{
-    color: #fff;
-    padding: 0 10px;
-}
-#redirectAlacarteEmailModal .modal-header {
-    background: none repeat scroll 0 0 #000;
-}
-#redirectAlacarteEmailModal .modal-header h4{
-    color: #fff;
-}
-#redirectAlacarteEmailModal .modal-content{
-  margin-left: 16%;
-    margin-top: 20%;
-    width: 59% !important;  
-}
-#redirectAlacarteEmailModal .panel {
-    background: none repeat scroll 0 0 transparent;
-    border: medium none;
-    margin-bottom: 0;
-}
- /*
- body {
-         margin: 0;
-         padding: 0;
-         font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-         font-size: 10pt;
-         line-height: 150%;
-         border-top: 8px solid #106870;
-                 }*/
- 
-       .contentBox {
-               max-width: 1000px;
-               margin: 30px auto 0 auto;
-       }
-       .contentLeft {
-               width: 670px;
-               float: left;
-               text-align: justify;
+    <!-- Modal for email alacarte ends here-->
+    <style>
+    #redirecttipModal .modal-header {
+        background: none repeat scroll 0 0 #000;
+    }
+    #redirecttipModal .modal-header h4 {
+        color: #fff;
+    }
+    #alacarte_cant_do_reserv1, #alacarte_cant_do_reserv2, #ac_select_all_data2, #alacarte_cant_select_table{
+        color: #fff;
+        padding: 0 10px;
+    }
+    #redirectAlacarteEmailModal .modal-header {
+        background: none repeat scroll 0 0 #000;
+    }
+    #redirectAlacarteEmailModal .modal-header h4{
+        color: #fff;
+    }
+    #redirectAlacarteEmailModal .modal-content{
+      margin-left: 16%;
+        margin-top: 20%;
+        width: 59% !important;
+    }
+    #redirectAlacarteEmailModal .panel {
+        background: none repeat scroll 0 0 transparent;
+        border: medium none;
+        margin-bottom: 0;
+    }
+     /*
+     body {
+             margin: 0;
+             padding: 0;
+             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+             font-size: 10pt;
+             line-height: 150%;
+             border-top: 8px solid #106870;
+                     }*/
+
+           .contentBox {
+                   max-width: 1000px;
+                   margin: 30px auto 0 auto;
+           }
+           .contentLeft {
+                   width: 670px;
+                   float: left;
+                   text-align: justify;
+                   z-index: 1;
+           }
+           .sidebarBox {
+                   width: 300px; /* Replace with your sidebar width */
                z-index: 1;
        }
-       .sidebarBox {
-               width: 300px; /* Replace with your sidebar width */
-           z-index: 1;
-   }
-   .scrollingBox {
-           width: 300px; /* Replace with the same width as sidebar */
-           background:none;
-           z-index: 1;
-           padding-left: 20% !important;
-   }
-</style>
-</section> 
+       .scrollingBox {
+               width: 300px; /* Replace with the same width as sidebar */
+               background:none;
+               z-index: 1;
+               padding-left: 20% !important;
+       }
+    </style>
+
 <script type="text/javascript">
        $(function() {
                var offsetPixels = 10; // change with your sidebar height

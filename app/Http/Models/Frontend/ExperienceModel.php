@@ -559,8 +559,8 @@ class ExperienceModel {
               ->leftJoin('media','media.id','=','pmm.media_id')
               ->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
               ->join('vendors','vendors.id','=','vl.vendor_id')
-              ->where('products.id',$experienceID)
-              ->where('pvl.status','Active');
+              ->where('products.id',$experienceID);
+              //->where('pvl.status','Active');
               //->where('pa1.alias','experience_info')
               //->where('pa2.alias','short_description')
               //->where('pa4.alias','terms_and_conditions')
@@ -788,7 +788,7 @@ class ExperienceModel {
               ->select('pvl.id as vendor_location_id','l1.name as area','l2.name as city','l3.name as state_name','vla.address','vla.pin_code','vla.latitude','vla.longitude')
               ->where('pvl.product_id',$productID)
               ->where('vla.city_id',$cityID)
-              ->where('pvl.status','Active')
+              ->whereIn('pvl.status',array('Active','Hidden'))
               //->orWhere('pvl.status','Hidden')
               ->get();
     
@@ -817,7 +817,7 @@ class ExperienceModel {
   //-----------------------------------------------------------------
   
   /**
-   *
+   * Fetching related experience
    */
   public static function getExperienceWithSameBrand($productID,$city_id) { //echo "sad"; die;
       $query = DB::table('product_vendor_locations as pvl')
@@ -827,7 +827,7 @@ class ExperienceModel {
           ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
           ->where('pvl.product_id',$productID)
           ->where('vla.city_id',$city_id)
-          ->where('pvl.status','Active')
+          //->where('pvl.status','Active')
           ->select('vl.vendor_id','pp.price','vla.area_id','pvl.vendor_location_id')
           ->get();
 
