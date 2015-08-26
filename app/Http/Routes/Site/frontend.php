@@ -147,6 +147,12 @@ Route::get('/{city}/experiences/{experience}/',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('/{city}/giftcard-experiences',[
+    'uses' => 'Site\StaticPagesController@getGiftcardExperiences',
+    'as' => 'giftcardExperiences',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('/experiences/thankyou/{orderid}',[
     'uses' => 'Site\ExperienceController@thankyou',
     //'where' => '*',
@@ -424,7 +430,7 @@ Route::post('/payment/process_response',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('/birthday-bash/thegoodlife',[
+/*Route::get('/birthday-bash/thegoodlife',[
    'uses' => 'Site\BirthdayController@index',
    'as' => '',
    'domain' => env('WEBSITE_URL'),
@@ -434,4 +440,4 @@ Route::post('promotion/birthday/save',[
     'uses' => 'Site\BirthdayController@enter_details',
     'as' => '',
     'domain' => env('WEBSITE_URL'),
-]);
+]);*/
