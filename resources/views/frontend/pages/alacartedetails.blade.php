@@ -470,7 +470,7 @@
            
           </div>
 
-          <?php if(isset($relatedExperiences) && is_array($relatedExperiences) ) { ?>
+          <?php if(isset($relatedExperiences) && is_array($relatedExperiences) && !empty($relatedExperiences)) { ?>
           <p class="col-md-12">
               <strong>WowTables experiences at this restaurant</strong>
           </p>
