@@ -1065,16 +1065,16 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
           <div class="col-md-3 col-sm-6">
             <h4 class="foot-widget-title">Follow us on</h4>
               <ul class="inline-list socialicons">
-                  <li><a href="http://www.facebook.com/WowTables" target="blank"><img src="/assets/img/fb_icon.png" alt="Wowtables FB"></a></li>
-                  <li><a href="https://twitter.com/wow_tables" target="blank"><img src="/assets/img/tw_icon.png" alt="Wowtables twitter"></a></li>
-                  <li><a href="https://instagram.com/WowTables/" target="blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
+                  <li><a href="http://www.facebook.com/WowTables" target="_blank"><img src="/assets/img/fb_icon.png" alt="Wowtables FB"></a></li>
+                  <li><a href="https://twitter.com/wow_tables" target="_blank"><img src="/assets/img/tw_icon.png" alt="Wowtables twitter"></a></li>
+                  <li><a href="https://instagram.com/WowTables/" target="_blank"><img src="/assets/img/instagram.png" alt="Wowtables Instagram"></a></li>
               </ul>
           </div>
             <div class="col-md-3 col-sm-6">
                 <h4 class="foot-widget-title">Download our app from</h4>
                 <ul class="inline-list socialicons">
-                    <li><a href="https://itunes.apple.com/app/id983901046" target="blank"><img src="/assets/img/apple.jpg" alt="Wowtables Apple iTunes"></a></li>
-                    <li><a href="https://play.google.com/store/apps/details?id=com.wowtables.android&hl=en" target="blank"><img src="/assets/img/android.jpg" alt="Wowtables Andriod Playstore"></a></li>
+                    <li><a href="https://itunes.apple.com/app/id983901046" target="_blank"><img src="/assets/img/apple.jpg" alt="Wowtables Apple iTunes"></a></li>
+                    <li><a href="https://play.google.com/store/apps/details?id=com.wowtables.android&hl=en" target="_blank"><img src="/assets/img/android.jpg" alt="Wowtables Andriod Playstore"></a></li>
                 </ul>
             </div>
         </div>
