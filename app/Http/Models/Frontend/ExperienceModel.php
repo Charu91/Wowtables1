@@ -559,8 +559,8 @@ class ExperienceModel {
               ->leftJoin('media','media.id','=','pmm.media_id')
               ->leftJoin('media_resized_new as cm','cm.id','=','curators.media_id')
               ->join('vendors','vendors.id','=','vl.vendor_id')
-              ->where('products.id',$experienceID);
-              //->where('pvl.status','Active');
+              ->where('products.id',$experienceID)
+              ->where('pvl.status','Active');
               //->where('pa1.alias','experience_info')
               //->where('pa2.alias','short_description')
               //->where('pa4.alias','terms_and_conditions')
