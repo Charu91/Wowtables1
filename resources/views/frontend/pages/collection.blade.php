@@ -152,7 +152,7 @@ else{?>
 				 {
 				 	$cityname = strtolower($aladata['city']);
 				?>
-				<li class="col-md-6 col-sm-6"> 
+				<li class="col-md-4 col-sm-4">
 								<div class="deal-img">
 									<img src="{{Config::get('media.base_s3_url_listing')}}{{$aladata['imagename']}}" alt="" class="img-responsive">
 												

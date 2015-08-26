@@ -410,8 +410,7 @@ class ExperienceController extends Controller {
              //start query a lart cart query
               $alacartQuery = DB::select("SELECT t.name AS tagsname, t.slug AS tagsslug, vl.slug AS vendorlocationslug,
                                          v.name AS vendorlocations,v.id, l.name AS city,l.slug, mrn.file AS imagename, 
-                                         vl.pricing_level, vlat.attribute_value,f.name as flagname,
-                                         f.color,la.name as locationarea,vaso.option
+                                         vl.pricing_level, vlat.attribute_value,la.name as locationarea,vaso.option
                                             FROM tags AS t
                                             INNER JOIN vendor_locations_tags_map AS vltm ON t.id = vltm.tag_id
                                             INNER JOIN vendor_locations AS vl ON vl.id = vltm.vendor_location_id
@@ -422,8 +421,6 @@ class ExperienceController extends Controller {
                                             INNER JOIN media_resized_new AS mrn ON mrn.media_id = vlmm.media_id
                                             INNER JOIN vendor_location_attributes_text AS vlat ON vlat.vendor_location_id = vl.id
                                             INNER JOIN vendor_attributes AS va ON va.id = vlat.vendor_attribute_id
-                                            INNER JOIN vendor_locations_flags_map AS vlfm ON vlfm.vendor_location_id = vl.id
-                                            INNER JOIN flags AS f ON f.id = vlfm.flag_id
                                             INNER JOIN locations AS la ON la.id = vla.area_id
                                             INNER JOIN vendor_location_attributes_multiselect AS vlam ON vlam.vendor_location_id = vl.id
                                             INNER JOIN vendor_attributes_select_options AS vaso ON vaso.id = vlam.vendor_attributes_select_option_id
@@ -450,8 +447,8 @@ class ExperienceController extends Controller {
                           'imagename'=>$row2->imagename,
                           'pricing_level'=>$row2->pricing_level,
                           'attribute_value'=>$row2->attribute_value,
-                          'flagname'=>$row2->flagname,
-                          'color'=>$row2->color,
+                          //'flagname'=>$row2->flagname,
+                          //'color'=>$row2->color,
                           'locationarea'=>$row2->locationarea,
                           'option'=>$row2->option,
                           'review_detail' => $this->getVendorLocationRatingDetails($row2->id)
