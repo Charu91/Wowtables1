@@ -3,6 +3,9 @@ namespace WowTables\Http\Models;
 
 use DB;
 use Config;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 //use WowTables\Http\Models\Eloquent\Products\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\Vendors\VendorLocationBlockedSchedules;
@@ -92,10 +95,17 @@ class Reservation {
 		#reading the blocked dates
 		foreach ($queryResult as $row) {
 			$arrLocation[] = $row -> id;
-		}
+		}		
 		$arrBlockedDates = VendorLocationBlockedSchedules::getBlockedDate($arrLocation);
 
+		
+
 		foreach ($queryResult as $row) {
+
+			$blockedDates = (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array();
+			//Call to get available dates
+			$availableDates = self::getAvailableDates($blockedDates);
+
 			$arrLocLmt[] = array(
 								'vl_id' => $row -> id, 
 								'area' => $row -> area, 
@@ -105,6 +115,7 @@ class Reservation {
 								'latitude' => $row -> latitude, 
 								'longitude' => $row -> longitude, 
 								'blocked_dates' => (array_key_exists($row -> id, $arrBlockedDates)) ? $arrBlockedDates[$row -> id] : array(), 
+								'available_dates' => $availableDates,
 							);
 		}
 
@@ -175,6 +186,11 @@ class Reservation {
 		$arrBlockedDates = ProductVendorLocationBlockedSchedule::getBlockedDate($arrLocation);
 		
 		foreach ($queryResult as $row) {
+
+			$blockedDates = (array_key_exists($row->pvl_id, $arrBlockedDates)) ? $arrBlockedDates[$row->pvl_id] : array();
+			//Call to get available dates
+			$availableDates = self::getAvailableDates($blockedDates);
+
 			$arrLocLmt[] = array(
 									'experience_id' => $row->experience_id,
 									'vl_id' => $row->pvl_id,
@@ -184,13 +200,53 @@ class Reservation {
 									'increment' => (is_null($row->min_people_increments)) ? '' : $row->min_people_increments, 
 									'latitude' => $row->latitude, 
 									'longitude' => $row->longitude, 
-									'blocked_dates' => (array_key_exists($row->pvl_id, $arrBlockedDates)) ? $arrBlockedDates[$row->pvl_id] : array(), 
+									'blocked_dates' => (array_key_exists($row->pvl_id, $arrBlockedDates)) ? $arrBlockedDates[$row->pvl_id] : array(),
+									'available_dates' => $availableDates, 
 								);
 		}
 
 		return $arrLocLmt;
 	}
 
+	//-----------------------------------------------------------------
+
+	/**
+	 * Function to read the available dates 
+	 *
+	 * @access	public
+	 * @param	array $blockedDates
+	 * @return	array $dates
+	 * @since	1.0.0
+	 */
+	public static function getAvailableDates($blockedDates) { 
+
+		$d1= date('Y-m-d');  
+		$d2= strtotime(date("Y-m-d").' +2 Months');  
+		$d2= date('Y-m-d', $d2); 
+		$begin = new DateTime($d1);   
+		$end = new DateTime($d2);$daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);//$dataes = array();
+		
+		foreach($daterange as $date){
+		 //echo $date->format("Y-m-d") . "<br>";
+		 $dates[] = $date->format("Y-m-d");
+		}
+
+		foreach ($blockedDates as $value) {			
+			//echo $value; 
+			$key = array_search($value, $dates);
+			//echo $key;
+			if($key!==false)  
+				unset($dates[$key]);
+		}
+
+		//print_r($dates); die("jabardst");
+
+		foreach($dates as $value) {
+			$arrAvailableDates[] = $value;
+		}
+
+		return $arrAvailableDates;
+	}
 	//-----------------------------------------------------------------
 
 	/**
