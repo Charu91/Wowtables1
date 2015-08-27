@@ -149,12 +149,7 @@ $(document).ready(function(){
 <input type="hidden" id="slug" value="listing">
 		<div class="col-md-8 col-sm-8 deal-listing-left">
 			<div style="padding-bottom:10px;">
-				<?php if($current_city == "bangalore"){?>
-					<a href="http://wowtables.com/birthday-bash/thegoodlife" target="_blank"><img src="/assets/img/bday.jpg" class="img-responsive"/></a>
-				<?php } else {?>
-					<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
-				<?php }?>
-
+				<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
 			</div>
 			<div class="row">
             <!-- filter for small screen -->
