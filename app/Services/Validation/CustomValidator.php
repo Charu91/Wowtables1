@@ -42,6 +42,8 @@ class CustomValidator extends Validator {
 	        foreach ($query as $value) {
 	           //$reserv_date = $value->reservation_date;
 	           //$reserv_time = $value->reservation_time;
+	        	if($reservationID==$value->id)
+	        		{ continue; }
 
 	                  $last_reserv_date = date('Y-m-d',strtotime($value->reservation_date));
 	                  $last_reserv_time =  strtotime($value->reservation_time);
