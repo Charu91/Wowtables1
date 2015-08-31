@@ -258,7 +258,7 @@
                   <span class="star-mob visible-xs">
                     <span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">
                       <span itemprop="average"><?PHP echo $arrExperience['data']['rating'];?></span>/<span itemprop="best">5</span>
-                    </span>                    
+                    </span>
                   </span>
                                     <span>)</span>
 
@@ -976,7 +976,7 @@
                                 <img src="https://s3-eu-west-1.amazonaws.com/wowtables/uploads/listing/<?php echo $exp['file'];?>" alt="image1" class="img-responsive"/>
                                 <?php
                                 if(isset($exp['flagname']) && $exp['flagname'] != "") {?>
-                                <div class="flag new valign" id="top_paddin"style="background:<?php echo $exp['color'];?>"><?php echo $data[$j_count]['flag'];?></div>
+                                <div class="flag new valign" id="top_paddin"style="background:<?php echo $exp['color'];?>"><?php echo $exp['flagname'];?></div>
                                 <?php }
                                 /*
                                 <div class="bookmark valign balign" id="top_alignmen">
