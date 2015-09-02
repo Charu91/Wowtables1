@@ -629,7 +629,7 @@ class ReservationDetails extends Model {
 								'v.name as vendor_name','pvl.descriptive_title',
 								 //DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
  								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat3.attribute_value, "")) AS terms_and_conditions'),
- 								 DB::raw('MAX(IF(pa2.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
+ 								 DB::raw('MAX(IF(pa3.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
 								)
                         ->first(); 
 		
