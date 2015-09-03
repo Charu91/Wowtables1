@@ -428,7 +428,7 @@ class ExperienceController extends Controller {
                                             AND t.status = 'available'
                                             AND mrn.image_type = 'listing'
                                             AND vl.status = 'Active'
-                                            AND va.alias = 'short_description'");
+                                            AND va.alias = 'short_description' GROUP BY vl.id");
              /*print_r($arrData);
              foreach ($arrData['data'] as $data)
              {

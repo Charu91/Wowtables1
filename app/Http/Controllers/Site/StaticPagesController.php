@@ -294,7 +294,7 @@ class StaticPagesController extends Controller {
 				'phone' => $userData['data']['phone_number'],
 				'order_id' => 'G'.$insertedId,
 				'actual_order_id' => $insertedId,
-				'total_amount' => 1,
+				'total_amount' => $totalAmount,
 				'short_description' => $short_description,
 				'receiverName' => $receiverName,
 				'receiverEmail' => $receiverEmail,
