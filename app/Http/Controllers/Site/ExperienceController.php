@@ -1067,6 +1067,7 @@ class ExperienceController extends Controller {
             $transaction['amount_paid']=$requestarray['amount'];
             $transaction['transaction_number']=$requestarray['mihpayid'];
             $transaction['transaction_details']=$details."~~".$requestarray['status'];
+            $transaction['source_type']="experience";
 
             $lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
 

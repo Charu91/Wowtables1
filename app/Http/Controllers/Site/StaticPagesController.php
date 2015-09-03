@@ -354,10 +354,11 @@ class StaticPagesController extends Controller {
 			$transaction['response_code']=$requestarray['unmappedstatus'];
 			$transaction['response_message']=$requestarray['status'];
 			$transaction['transaction_date']=date('Y-m-d H:i:s');
-			$transaction['reservation_id']=$requestarray['txnid'];
+			$transaction['reservation_id']=$id;
 			$transaction['amount_paid']=$requestarray['amount'];
 			$transaction['transaction_number']=$requestarray['mihpayid'];
 			$transaction['transaction_details']=$details."~~".$requestarray['status'];
+			$transaction['source_type']="gift_cards";
 
 			$lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
 

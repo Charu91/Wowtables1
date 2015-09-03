@@ -146,6 +146,7 @@ class AlacarteModel{
             ->where('v.publish_time', '<', DB::raw('NOW()'))
             ->where('vladd.city_id', $filters['city_id'])
             ->where('vl.a_la_carte', 1)
+            ->where('vl.status', 'Inactive')
             ->groupBy('vl.id');
 
 
