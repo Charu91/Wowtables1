@@ -107,10 +107,11 @@
                                 <ul class="dropdown-menu" id='city_list'>
                                     <?php foreach($cities as $city_id=>$cityName):?>
                                     <li>
-                                        <a href="javascript:" class="list-group-item" data-cityID = "<?=$city_id;?>" rel="<?=$cityName;?>">
+                                        <a href="javascript:" data-cityID = "<?=$city_id;?>" rel="<?=$cityName;?>">
                                             <h5 class="list-group-item-heading"><?=ucfirst($cityName);?></h5>
                                         </a>
                                     </li>
+                                        <li role="separator" class="divider"></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
