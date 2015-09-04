@@ -1694,6 +1694,111 @@ class ExperienceModel {
         return $userDetails;
     }
 
+    public static function getExperiencesAddons($product_id){
+        $samebrand = DB::table('products as p')
+            ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+            ->where('p.product_parent_id',$product_id)
+            ->where('p.status','Publish')
+            ->where('p.type','addon')
+            ->select('p.id as addon_id','p.name as addon_name','pp.post_tax_price as addon_post_tax_price')
+            ->get();
+
+        $relatedExperiencesArray = array();
+        if(!empty($samebrand)){
+            foreach ($samebrand as $values) {
+
+                $relatedExperiencesArray[] = array('addonName' => $values->addon_name,
+                    'post_tax_price' => $values->addon_post_tax_price,
+                    'addonID' => $values->addon_id,
+                );
+
+            }
+        }
+
+        return $relatedExperiencesArray;
+    }
+
+    public static function getGiftcardExperiences($city_id){
+        $samebrand = DB::table('products as p')
+            ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+            ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+            ->leftJoin('product_attributes_boolean AS pab','pab.product_id','=','p.id')
+            ->leftJoin('product_attributes AS pa1','pa1.id','=','pab.product_attribute_id')
+            ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+            ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+            ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+            ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+            ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+            ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+            ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+            ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+            ->leftJoin('vendors as v','v.id','=','vl.vendor_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->where('mrn.image_type','listing')
+            ->where('pab.attribute_value',1)
+            ->where('vla.city_id',$city_id)
+            ->where('pvl.status','Active')
+            ->groupBy('p.id')
+            ->select('vl.vendor_id',
+                'v.name as vendor_name',
+                'p.name AS productname',
+                'p.slug AS slug',
+                'pp.price',
+                'pp.post_tax_price',
+                'pt.type_name',
+                'mrn.file',
+                'f.name as flagname',
+                'f.color',
+                'l.name as cityname',
+                'p.id as product_id',
+                'pvl.vendor_location_id',
+                'pvl.descriptive_title',
+                DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+            )
+            //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+            ->get();
+
+        //echo "<pre>"; print_r($samebrand); die;
+        $relatedExperiencesArray = array();
+        if(!empty($samebrand)){
+            foreach ($samebrand as $values) {
+
+                $num_of_full_starts = round($values->avg_rating,1);// number of full stars
+                $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+                $number_of_blank_starts = 5-($values->avg_rating); //number of white stars
+
+
+                    $relatedExperiencesArray[] = array('productname' => $values->productname,
+                        'slug' => $values->slug,
+                        'short_description' => $values->short_description,
+                        'price' => $values->price,
+                        'post_tax_price' => $values->post_tax_price,
+                        'type_name' => $values->type_name,
+                        'file' => $values->file,
+                        'flagname' => $values->flagname,
+                        'color' => $values->color,
+                        'cityname' => $values->cityname,
+                        'averageRating' => $values->avg_rating,
+                        'totalRating' => $values->total_ratings,
+                        'full_stars' => $num_of_full_starts,
+                        'half_stars' => $num_of_half_starts,
+                        'blank_stars' => $number_of_blank_starts,
+                        'product_id' => $values->product_id,
+                        'vendor_location_id' => $values->vendor_location_id,
+                        'vendor_id' => $values->vendor_id,
+                        'vendor_name' => $values->vendor_name,
+                        'descriptive_title' => $values->descriptive_title,
+                    );
+
+            }
+        }
+
+        return $relatedExperiencesArray;
+    }
+
 
 
 }

@@ -56,7 +56,7 @@ exit;*/
                   } 
                   else
                   {
-                    echo $data['vendor_name'] .': '.'A la carte Reservation';
+                    echo $data['vendor_name'] .': '.'Classic Reservation';
                   }
                   ?>
                 </span>
@@ -97,7 +97,7 @@ exit;*/
                   } 
                   else
                   {
-                    //echo $data['name'] .' : '.'A la carte Reservation';
+                    //echo $data['name'] .' : '.'Classic Reservation';
                   }
 
                   ?>
@@ -193,7 +193,7 @@ agm.cpkbandra@jsmcorp.in
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
                           <li class="active"><a href="#details" data-toggle="tab">
-                              A la carte T&amp;C
+                              Classic T&amp;C
                           </a>
                           </li>
                         </ul>
@@ -240,7 +240,7 @@ agm.cpkbandra@jsmcorp.in
                   } 
                   else
                   {
-                    echo $data['name'] .' : '.'A la carte Reservation';
+                    echo $data['name'] .' : '.'Classic Reservation';
                   }
                   ?>
                   
@@ -254,7 +254,7 @@ agm.cpkbandra@jsmcorp.in
                   } 
                   else
                   {
-                    //echo $data['name'] .' : '.'A la carte Reservation';
+                    //echo $data['name'] .' : '.'Classic Reservation';
                   }
 
                   ?>
@@ -350,7 +350,7 @@ agm.cpkbandra@jsmcorp.in
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs">
                           <li class="active"><a href="#details" data-toggle="tab">
-                              A la carte T&amp;C
+                              Classic T&amp;C
                           </a>
                           </li>
                         </ul>

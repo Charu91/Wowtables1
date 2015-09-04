@@ -279,7 +279,7 @@ class ExperienceController extends Controller {
             $data['resultCount'] = 0;
         }
 
-        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_experience = 1');
+        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_experience = 1 ORDER BY order_status asc');
         $data['listpage_sidebar_url'] = Config::get('constants.LISTPAGE_SIDEBAR_WEB_URL');
         //echo "url = ".$data['listpage_sidebar_url'];
         //echo "<br/><pre>"; print_r($data['ListpageSidebars']); die;
@@ -862,14 +862,6 @@ class ExperienceController extends Controller {
 
                             $cookiearray['current_city_id']        = $city_id;
 
-                            /*foreach($cookiearray as $key => $val)
-                            {
-                                //echo "key  = ".$key." , val = ".$val." , ";
-                                $name = "email_cookie[".$key."]";
-                                $time = time()+ 86500;
-                                //echo " name = ".$name." , time = ".$time."<br/>";
-                                //cookie($name, $val, $time, "/");
-                            }*/
                             Session::put('email_session',$cookiearray);
 
                             //die;
@@ -1075,6 +1067,7 @@ class ExperienceController extends Controller {
             $transaction['amount_paid']=$requestarray['amount'];
             $transaction['transaction_number']=$requestarray['mihpayid'];
             $transaction['transaction_details']=$details."~~".$requestarray['status'];
+            $transaction['source_type']="experience";
 
             $lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
 
@@ -1251,7 +1244,7 @@ class ExperienceController extends Controller {
 
             return Redirect::to('/experiences/thankyou/E'.$mergeReservationsArray['order_id'])->with('response' , $arrResponse);
 
-            Session::forget('email_session');
+            //Session::forget('email_session');
 
         }
 

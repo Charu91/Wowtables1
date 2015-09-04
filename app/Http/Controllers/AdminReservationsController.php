@@ -205,7 +205,7 @@ class AdminReservationsController extends Controller{
                                                               }
                                                               else
                                                               {
-                                                                  $arrUpcomingReservations .= $data['vendor_name'] .': '.'A la carte Reservation';
+                                                                  $arrUpcomingReservations .= $data['vendor_name'] .': '.'Classic Reservation';
                                                               }
 
                                 $arrUpcomingReservations .= '</span>
@@ -307,7 +307,7 @@ class AdminReservationsController extends Controller{
                                                       }
                                                       else
                                                       {
-                                                          $arrPastReservations .= $data['name'] .' : '.'A la carte Reservation';
+                                                          $arrPastReservations .= $data['name'] .' : '.'Classic Reservation';
                                                       }
 
 
