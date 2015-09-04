@@ -150,8 +150,11 @@ $(document).ready(function(){
 		<div class="col-md-8 col-sm-8 deal-listing-left">
 			<div style="padding-bottom:10px;">
 
-					<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
-
+					<?php if($current_city == "mumbai"){?>
+						<a href="http://wowtables.com/collection/the-buzz" target="_blank"><img src="/assets/img/buzz.jpg" class="img-responsive"/></a>
+					<?php } else {?>
+						<a href="http://go.onelink.me/1433356199?pid=Website&c=Listing_Banner" target="_blank"><img src="/assets/img/app.jpg" class="img-responsive"/></a>
+					<?php }?>
 			</div>
 			<div class="row">
             <!-- filter for small screen -->
