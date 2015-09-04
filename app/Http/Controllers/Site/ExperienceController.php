@@ -279,7 +279,7 @@ class ExperienceController extends Controller {
             $data['resultCount'] = 0;
         }
 
-        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_experience = 1');
+        $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_experience = 1 ORDER BY order_status asc');
         $data['listpage_sidebar_url'] = Config::get('constants.LISTPAGE_SIDEBAR_WEB_URL');
         //echo "url = ".$data['listpage_sidebar_url'];
         //echo "<br/><pre>"; print_r($data['ListpageSidebars']); die;

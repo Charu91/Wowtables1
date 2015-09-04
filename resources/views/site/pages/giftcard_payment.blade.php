@@ -4,7 +4,7 @@
 //$url=  "http://boot.gourmetitup.com/response";
 //$url="http://dev.buzzr.in/gourmet_project/response.php?DR={DR}";
 //$url="http://wowtables.app/giftcard_payment/process_response";
-$url="http://dev.wowtables.com/giftcard_payment/process_response";
+$url="http://sit.wowtables.com/giftcard_payment/process_response";
 //$url="http://wowtables.com/giftcard_payment/process_response";
 
 //$MerchantID='C0Dr8m';
