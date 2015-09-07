@@ -7,8 +7,12 @@ use WowTables\Http\Models\User;
 use WowTables\Http\Requests\Api\UserLoginRequest;
 use WowTables\Http\Requests\Api\UserRegistrationRequest;
 use WowTables\Http\Requests\Api\UserFBLoginRequest;
+use Mailchimp;
 
 class UserController extends Controller {
+
+    protected $mailchimp;
+    protected $listId = '986c01a26a';
 
     /**
      * The user Model Object
@@ -30,12 +34,13 @@ class UserController extends Controller {
      * @param Request $request
      * @param User $user
      */
-    public function __construct(Request $request, User $user)
+    public function __construct(Request $request, User $user, Mailchimp $mailchimp)
     {
         $this->middleware('mobile.app.access', ['only' => ['set_location_id_phone']]);
 
         $this->user = $user;
         $this->request = $request;
+        $this->mailchimp = $mailchimp;
     }
 
 	/**
@@ -47,7 +52,7 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        $userRegister = $this->user->mobileRegister($input);
+        $userRegister = $this->user->mobileRegister($input, $this->mailchimp);
 
         return response()->json($userRegister['data'], $userRegister['code']);
 	}

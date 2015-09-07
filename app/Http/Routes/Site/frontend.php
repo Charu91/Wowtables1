@@ -109,6 +109,12 @@ Route::get('pages/{pages}',[
     'domain' => env('WEBSITE_URL'),
 ])->where(['pages' => '.*']);
 
+Route::get('/app/pages/{pages}',[
+    'uses' => 'Site\StaticPagesController@pages',
+    'as' => 'aboutus1',
+    'domain' => env('WEBSITE_URL'),
+])->where(['pages' => '.*']);
+
 Route::get('/{city}/',[
     'uses' => 'Site\ExperienceController@lists',
     'as' => 'experience.lists',
@@ -150,6 +156,24 @@ Route::get('/{city}/experiences/{experience}/',[
 Route::get('/{city}/giftcard-experiences',[
     'uses' => 'Site\StaticPagesController@getGiftcardExperiences',
     'as' => 'giftcardExperiences',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/gift_cards/show_exp',[
+    'uses' => 'Site\StaticPagesController@getGiftcardExperiencesFromCity',
+    'as' => 'getGiftcardExperiencesFromCity',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/gift_cards/getRelatedAddons',[
+    'uses' => 'Site\StaticPagesController@getExperiencesRelatedAddons',
+    'as' => 'getExperiencesRelatedAddons',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/gift_cards/checkout',[
+    'uses' => 'Site\StaticPagesController@giftcardCheckout',
+    'as' => 'giftcardCheckout',
     'domain' => env('WEBSITE_URL'),
 ]);
 
@@ -391,6 +415,12 @@ Route::get('/users/redeem-rewards', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::get('/app/users/redeem-rewards', [
+    'uses' => 'Site\ProfileController@redeemRewards',
+    'as' => 'redeemRewards',
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::get('/review/add_a_review/{reservid}', [
     'uses' => 'Site\ReviewController@addReview',
     'as' => 'addReview',
@@ -426,6 +456,12 @@ Route::get('/payment/request',[
 
 Route::post('/payment/process_response',[
     'uses' => 'Site\ExperienceController@process_response',
+    'as' => '',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/giftcard_payment/process_response',[
+    'uses' => 'Site\StaticPagesController@process_response',
     'as' => '',
     'domain' => env('WEBSITE_URL'),
 ]);
