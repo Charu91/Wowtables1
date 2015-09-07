@@ -377,9 +377,11 @@ class AlacarteController extends Controller {
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']          = Input::get('add_ons');
         //var_dump($this->request->get('special_offer'));die;
-        $special_offer = $this->request->get('special_offer');
-        $dataPost['special_offer'] = ((!empty($special_offer) && $special_offer != "") ? $special_offer : "") ;
-        //var_dump($dataPost['special_offer']);die;
+        $special_offer_title = $this->request->get('special_offer_title');
+        $special_offer_desc = $this->request->get('special_offer_desc');
+        $dataPost['special_offer_title'] = ((!empty($special_offer_title) && $special_offer_title != "") ? $special_offer_title : "") ;
+        $dataPost['special_offer_desc'] = ((!empty($special_offer_desc) && $special_offer_desc != "") ? $special_offer_desc : "") ;
+        //var_dump($dataPost['special_offer_desc']);die;
         //$dataPost['access_token'] = Session::get('id');
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
@@ -474,7 +476,8 @@ class AlacarteController extends Controller {
                         //'Points_Notes'=>'test',
                         'AR_Confirmation_ID'=>'0',
                         'Auto_Reservation'=>'Not available',
-                        'Special_offer'=>$dataPost['special_offer'],
+                        'Special_offer_title'=>$dataPost['special_offer_title'],
+                        'Special_offer_desc'=>$dataPost['special_offer_desc'],
                         //'telecampaign' => $campaign_id,
                         //'total_no_of_reservations'=> '1',
                         'Calling_option' => 'No'

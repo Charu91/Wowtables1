@@ -496,12 +496,20 @@ class AlacarteModel{
                                   WHERE vat.vendor_id = '$queryResult->vendor_id'
                                   AND va.alias = 'seo_title'");
             //print_r($queryResult);die;
-            $special_offer =  DB::select("SELECT vat.attribute_value AS special_offer
+            $special_offer_title =  DB::select("SELECT vat.attribute_value AS special_offer_title
                                   FROM vendor_location_attributes_text AS vat
                                   LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
                                     WHERE vat.vendor_location_id = '$queryResult->vl_id'
-                                  AND va.alias = 'special_offer'");
+                                  AND va.alias = 'special_offer_title'");
 
+
+
+            $special_offer_desc =  DB::select("SELECT vat.attribute_value AS special_offer_desc
+                                  FROM vendor_location_attributes_text AS vat
+                                  LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                    WHERE vat.vendor_location_id = '$queryResult->vl_id'
+                                  AND va.alias = 'special_offer_desc'");
+            //print_r($special_offer_desc);die;
 
          /* $seoDetails = array('seo_meta_description' =>$seo_meta_description,
                                'seo_meta_keywords'=>$seo_meta_keywords,'seo_title'=>$seo_title);
@@ -517,14 +525,23 @@ class AlacarteModel{
               $seoMetaDesc = $seo_meta_description['0']->seo_meta_description;
           }
 
-          if(empty($special_offer))
+          if(empty($special_offer_title))
           {
-            $specialOffer = '';
+            $specialOfferTitle = '';
           }
           else
           {
-            $specialOffer = $special_offer[0]->special_offer;
+            $specialOfferTitle = $special_offer_title[0]->special_offer_title;
           }
+
+            if(empty($special_offer_desc))
+            {
+                $specialOfferDesc = '';
+            }
+            else
+            {
+                $specialOfferDesc = $special_offer_desc[0]->special_offer_desc;
+            }
 
           //print_r($specialOffer);die;
 
@@ -604,7 +621,8 @@ class AlacarteModel{
                                     'similar_option' => $arrSimilarVendor,
                                     'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
                                     'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
-                                    'special_offer' => $specialOffer,
+                                    'special_offer_title' => $specialOfferTitle,
+                                    'special_offer_desc' => $specialOfferDesc,
                                     'curator_tips' => (is_null($queryResult->curator_tips)) ? "" : $queryResult->curator_tips
                                 );
 

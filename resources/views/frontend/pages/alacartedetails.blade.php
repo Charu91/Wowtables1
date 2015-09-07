@@ -549,12 +549,12 @@
 
         <div class="col-md-4 col-sm-4 deal-detail-right">
 
-          @if(!empty($arrALaCarte['data']['special_offer']))
+          @if(!empty($arrALaCarte['data']['special_offer_title']))
           <div class="widget reservation-box">
               <h3 class="text-center">Special Offer</h3>
               <br/>
-
-              <p class="text-center" style="color:#fff">{!! $arrALaCarte['data']['special_offer'] !!}</p>
+              <p class="text-center" style="color:#fff"><strong>{!! $arrALaCarte['data']['special_offer_title'] !!}</strong></p>
+              <p class="text-center" style="color:#fff">{!! $arrALaCarte['data']['special_offer_desc'] !!}</p>
           </div>
           @endif
         <?php if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status'] == "Active") { ?>
@@ -756,7 +756,8 @@
                  <input type="hidden" name="city_id" value="<?php echo $current_city_id;?>">
                 <input type="hidden" name="alacarte_id" value="<?php echo $arrALaCarte['data']['id']?>">
                 <input type="hidden" name="alacarte_reward_points" value="<?php echo $arrALaCarte['data']["reward_point"] ?>">
-                <input type="hidden" name="special_offer" value="{!! $arrALaCarte['data']['special_offer'] !!}" />
+                <input type="hidden" name="special_offer_title" value="{!! $arrALaCarte['data']['special_offer_title'] !!}" />
+                 <input type="hidden" name="special_offer_desc" value="{!! $arrALaCarte['data']['special_offer_desc'] !!}" />
                 <input type="hidden" name="send">
             </form>
         </div>

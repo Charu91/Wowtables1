@@ -533,6 +533,20 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="attributes[special_offer_title]" class="col-sm-3 control-label">Special Offer Title </label>
+                    <div class="col-sm-6">
+                        <?php $special_offer_title = (isset($restaurant['attributes']['special_offer_title']) && $restaurant['attributes']['special_offer_title'] !="" ? $restaurant['attributes']['special_offer_title'] : ' ') ?>
+                        {!! Form::text('attributes[special_offer_title]',$special_offer_title,['class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="attributes[special_offer_desc]" class="col-sm-3 control-label">Special Offer Desc </label>
+                    <div class="col-sm-6">
+                        <?php $special_offer_desc = (isset($restaurant['attributes']['special_offer_desc']) && $restaurant['attributes']['special_offer_desc'] !="" ? $restaurant['attributes']['special_offer_desc'] : ' ') ?>
+                        {!! Form::textarea('attributes[special_offer_desc]',$special_offer_desc,['class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
                         <?php $set_curators = (isset($restaurantLocationCurators->curator_id) && $restaurantLocationCurators->curator_id !="" ? $restaurantLocationCurators->curator_id : ' ');
@@ -549,13 +563,7 @@
                         {{--{!! Form::text('curators',$restaurantLocationCurators->curator_id,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="attributes[special_offer]" class="col-sm-3 control-label">Special Offer </label>
-                    <div class="col-sm-6">
-                        <?php $special_offer = (isset($restaurant['attributes']['special_offer']) && $restaurant['attributes']['special_offer'] !="" ? $restaurant['attributes']['special_offer'] : ' ') ?>
-                        {!! Form::textarea('attributes[special_offer]',$special_offer,['class'=>'form-control','required'=>'']) !!}
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
                     <div class="col-sm-6">

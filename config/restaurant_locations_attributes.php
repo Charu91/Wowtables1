@@ -178,10 +178,17 @@ return [
             'value' => 'single'
         ],
 
-        'special_offer' => [
-            'name' => 'Special Offer',
+        'special_offer_title' => [
+            'name' => 'Special Offer Title',
+            'type' => 'text',
+            'value' => 'single'
+        ],
+
+        'special_offer_desc' => [
+            'name' => 'Special Offer Desc',
             'type' => 'text',
             'value' => 'single'
         ]
+
     ]
 ];
