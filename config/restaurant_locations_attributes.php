@@ -176,6 +176,12 @@ return [
             'name' => 'Off Peak Hour Discount Minimum Covers',
             'type' => 'integer',
             'value' => 'single'
+        ],
+
+        'special_offer' => [
+            'name' => 'Special Offer',
+            'type' => 'text',
+            'value' => 'single'
         ]
     ]
 ];
