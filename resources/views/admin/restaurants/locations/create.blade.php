@@ -360,6 +360,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="attributes[special_offer]" class="col-sm-3 control-label">Special Offer </label>
+                    <div class="col-sm-6">
+                        <?php $special_offer = (isset($restaurant['attributes']['special_offer']) && $restaurant['attributes']['special_offer'] !="" ? $restaurant['attributes']['special_offer'] : ' ') ?>
+                        {!! Form::textarea('attributes[special_offer]',$special_offer,['class'=>'form-control','required'=>'']) !!}
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="curators" class="col-sm-3 control-label">Guest Curator </label>
                     <div class="col-sm-6">
                         <?php //$a = array_unshift($curator_list,'Select'); ?>
@@ -373,6 +380,7 @@
                         {{--{!! Form::text('curators',null,['class'=>'form-control populate curators-select-box curatorsList']) !!}--}}
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="curator_tips" class="col-sm-3 control-label">Guest Curator Recommendations </label>
                     <div class="col-sm-6">
