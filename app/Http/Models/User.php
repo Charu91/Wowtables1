@@ -47,9 +47,7 @@ class User {
      *
      * @var int
      */
-    public $phone_number;
-
-    protected $listId = '986c01a26a';
+    public $phone_number;    
 
 	/**
 	 * The database table used by the model.
@@ -483,6 +481,7 @@ class User {
             });
 
             //Mail by MailChimp 
+            $listId = '986c01a26a';
             $merge_vars = array(
                        'NAME'       => isset($data['full_name'] )? $data['full_name']: '',
                        'SIGNUPTP'   => isset($facebook_id)? 'Facebook': 'Email',

@@ -65,7 +65,7 @@ use Config;
 						->join('locations as loc5','loc5.id','=','vl.location_id')
 						->leftJoin(DB::raw('media_resized_new as m2'), 'm2.id', '=', 'curators.media_id')
 						->leftJoin(DB::raw('vendor_location_attributes_integer as vlai'),'vlai.vendor_location_id','=','vl.id')
-						->leftJoin(DB::raw('vendor_attributes as va2'),'va2.id','=','vlai.vendor_attribute_id')
+						->leftJoin(DB::raw('vendor_attributes as va2'),'va2.id','=','vlai.vendor_attribute_id')					
 						->where('vl.id',$aLaCarteID)
 						->where('vl.a_la_carte','=',1)
 						->where('vl.status','Active')
@@ -77,7 +77,9 @@ use Config;
 								DB::raw('MAX(IF(va.alias = "short_description", vlat.attribute_value, "")) AS short_description'),
 								DB::raw('MAX(IF(va.alias = "terms_and_conditions", vlat.attribute_value, "")) AS terms_conditions'),
 								DB::raw('MAX(IF(va.alias = "menu_picks", vlat.attribute_value, "")) AS menu_picks'),
-								DB::raw('MAX(IF(va.alias = "expert_tips", vlat.attribute_value, "")) AS expert_tips'),
+								DB::raw('MAX(IF(va.alias = "expert_tips", vlat.attribute_value, "")) AS expert_tips'),								
+								DB::raw('MAX(IF(va.alias = "special_offer_title", vlat.attribute_value, "")) AS special_offer_title'),
+								DB::raw('MAX(IF(va.alias = "special_offer_desc", vlat.attribute_value, "")) AS special_offer_desc'),
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 								'loc4.name as country', 'loc5.name as locality', 'curators.name as curator_name', 'curators.bio as curator_bio',
 								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
@@ -118,9 +120,11 @@ use Config;
 									'type' => 'A-La-Carte Details',
 									'id' => $queryResult->vl_id,
 									'title' => $queryResult->title,
-									'resturant_information' => $queryResult->resturant_info,
-									'short_description' => $queryResult->short_description,
-									'terms_and_condition' => $queryResult->terms_conditions,
+									'resturant_information' => (empty($queryResult->resturant_info)) ? "" : $queryResult->resturant_info,
+									'short_description' => (empty($queryResult->short_description)) ? "" : $queryResult->short_description,
+									'terms_and_condition' =>(empty($queryResult->terms_conditions)) ? "" : $queryResult->terms_conditions,
+									'special_offer_title' => (empty($queryResult->special_offer_title)) ? "" : $queryResult->special_offer_title,
+									'special_offer_desc' => (empty($queryResult->special_offer_desc)) ? "" : $queryResult->special_offer_desc,
 									'pricing' => $queryResult->pricing_level,
 									'image' => $arrImage,									
 									'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,

@@ -258,7 +258,7 @@
                   <span class="star-mob visible-xs">
                     <span itemprop="rating" itemscope itemtype="http://data-vocabulary.org/Rating">
                       <span itemprop="average"><?PHP echo $arrExperience['data']['rating'];?></span>/<span itemprop="best">5</span>
-                    </span>                    
+                    </span>
                   </span>
                                     <span>)</span>
 

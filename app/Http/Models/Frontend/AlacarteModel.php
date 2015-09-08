@@ -25,27 +25,27 @@ class AlacarteModel{
     protected $filterOptions = ['date', 'time', 'tags', 'areas','cuisines','pricing_level'];
 
     public $sort_options = ['Latest','Popular'];
-    
+
     public $arr_result;
 
     /**
      * Minimum Price for experiences in the given city.
-     * 
+     *
      * @var   float
      * @access  protected
      * @since 1.0.0
      */
     protected $minPrice;
-    
+
     /**
      * Maximum price for experiences in the given city.
-     * 
+     *
      * @var   float
      * @access  protected
      * @since 1.0.0
      */
     protected $maxPrice;
-    
+
 
     public function getAlaCarteSearchFilters()
     {
@@ -54,21 +54,21 @@ class AlacarteModel{
 
      public function getAlaCarteAreaCuisineByName($arrData = array())
     {
-      
-      $experienceQuery = 'select `products`.`id`, `locations`.`name` as `location_name`, 
-                  `locations`.`id` as `location_id`, `vendors`.`name` as `vendor_name`, 
-                  `vendors`.`id` as `vendor_id`, `paso`.`id` as `cuisine_id`, `paso`.`option` as `cuisine_name` 
-                  from `products` 
-                  inner join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `products`.`id` 
-                  left join `vendor_location_address` as `vla` on `vla`.`vendor_location_id` = `pvl`.`vendor_location_id` 
-                  left join `vendor_locations` as `vl` on `vl`.`id` = `pvl`.`vendor_location_id` 
-                  left join `locations` on `locations`.`id` = `vl`.`location_id` 
-                  left join `product_attributes_multiselect` as `pam` on `pam`.`product_id` = `products`.`id` 
-                  left join `product_attributes_select_options` as `paso` on `paso`.`id` = `pam`.`product_attributes_select_option_id` 
-                  inner join `vendors` on `vendors`.`id` = `vl`.`vendor_id` 
-                  where `pvl`.`status` = "Active" and `vla`.`city_id` = "'.$arrData['city_id'].'" 
+
+      $experienceQuery = 'select `products`.`id`, `locations`.`name` as `location_name`,
+                  `locations`.`id` as `location_id`, `vendors`.`name` as `vendor_name`,
+                  `vendors`.`id` as `vendor_id`, `paso`.`id` as `cuisine_id`, `paso`.`option` as `cuisine_name`
+                  from `products`
+                  inner join `product_vendor_locations` as `pvl` on `pvl`.`product_id` = `products`.`id`
+                  left join `vendor_location_address` as `vla` on `vla`.`vendor_location_id` = `pvl`.`vendor_location_id`
+                  left join `vendor_locations` as `vl` on `vl`.`id` = `pvl`.`vendor_location_id`
+                  left join `locations` on `locations`.`id` = `vl`.`location_id`
+                  left join `product_attributes_multiselect` as `pam` on `pam`.`product_id` = `products`.`id`
+                  left join `product_attributes_select_options` as `paso` on `paso`.`id` = `pam`.`product_attributes_select_option_id`
+                  inner join `vendors` on `vendors`.`id` = `vl`.`vendor_id`
+                  where `pvl`.`status` = "Active" and `vla`.`city_id` = "'.$arrData['city_id'].'"
                   and `products`.`visible` = 1 and `products`.`type` in ("simple","complex") AND
-                  (`paso`.`option` like  "%'.$arrData['term'].'%"  or `locations`.`name` like  "%'.$arrData['term'].'%" 
+                  (`paso`.`option` like  "%'.$arrData['term'].'%"  or `locations`.`name` like  "%'.$arrData['term'].'%"
                    or `vendors`.`name` like  "%'.$arrData['term'].'%" )';
 
       //executing the query
@@ -94,7 +94,7 @@ class AlacarteModel{
      // echo '<pre>';print_r($arrData['data']);
       $arrDataNew =  array_unique( $arrData);
       return $arrDataNew;
-    } 
+    }
 
 
     public function findMatchingAlacarte(array $filters)
@@ -107,7 +107,9 @@ class AlacarteModel{
             ->join('locations AS la', 'la.id', '=', 'vladd.area_id')
             ->join('locations AS lc', 'lc.id', '=', 'vladd.city_id')
             ->join('vendor_location_attributes_varchar AS vlav', 'vl.id', '=', 'vlav.vendor_location_id')
+            ->join('vendor_location_attributes_text AS vlat', 'vl.id', '=', 'vlat.vendor_location_id')
             ->join('vendor_attributes AS va', 'va.id', '=', 'vlav.vendor_attribute_id')
+            ->join('vendor_attributes AS va1', 'va1.id', '=', 'vlat.vendor_attribute_id')
             ->leftJoin('vendor_location_attributes_multiselect AS vlam', 'vl.id', '=', 'vlam.vendor_location_id')
             ->leftJoin('vendor_attributes AS vamso', function($join){
                 $join->on('va.id', '=', 'vlav.vendor_attribute_id')
@@ -134,6 +136,7 @@ class AlacarteModel{
                 'vl.slug',
                 'l.id as location_id',
                 DB::raw('MAX(IF(va.alias = "short_description", vlav.attribute_value, null)) AS short_description'),
+                DB::raw('MAX(IF(va1.alias = "special_offer", vlat.attribute_value, null)) AS special_offer'),
                 DB::raw('MAX(vlbs.off_peak_schedule) AS off_peak_available'),
                 DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
                 DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),
@@ -201,17 +204,19 @@ class AlacarteModel{
          }
         //echo "sad = ".$select;
         //echo $select->toSql();
-        $queryResult = $select->get();
 
+        $queryResult = $select->get();
+        //var_dump($queryResult);die;
+        //print_r($queryResult);die;
         //echo "<pre>"; print_r($queryResult); die;
 
-      
+
         //array to hold all the alacarte ids
         $arrAlaCarte    = array();
-        
+
         //array to store location IDs
         $arrLocationId  = array();
-        
+
       #query executed successfully
       if($queryResult) {
           $arrData['resultCount'] = 0;
@@ -226,10 +231,10 @@ class AlacarteModel{
 
         $arrImage = $this->getVendorImages($arrAlaCarte);
         $this->initializeAlacarteFilters($arrAlaCarte);
-        
+
         //array to store location IDs
         $arrLocationId = array();
-        
+        //var_dump($row);die;
         foreach($queryResult as $row) {
          // $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
          // $this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
@@ -254,9 +259,10 @@ class AlacarteModel{
                                 "flag_name" => (is_null($row->flag_name)) ? "":$row->flag_name,
                                 "color" => (is_null($row->flag_color)) ? "#fff":$row->flag_color,
                                 'cuisine' =>  $row->cuisine,
-                                'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : "" 
+                                'special_offer' => $row->special_offer,
+                                'image' => (array_key_exists($row->id, $arrImage)) ? $arrImage[$row->id] : ""
                             );
-                            
+
                     #setting up the value for the location filter
                     if( !in_array($row->location_id, $arrLocationId)) {
                         $arrLocationId[] = $row->location_id;
@@ -272,13 +278,13 @@ class AlacarteModel{
                                     $this->filters['locations'][$key]['count']++;
                                 }
                             }
-                        }    
+                        }
         }
 
       }else{
           $arrData = array();
       }
-     
+
          //echo '<pre>';print_r($arrData);
         return $arrData;
     }
@@ -292,13 +298,13 @@ class AlacarteModel{
                                 ->whereIn('vlam.vendor_location_id',$arrVendorLocation)
                                 ->select('vaso.id','vaso.option')
                                 ->get();
-        
+
         #setting up the cuisines filter information
         $arrCuisineProduct = array();
         if($queryCuisine) {
             foreach ($queryCuisine as $row) {
                 if( ! in_array($row->id, $arrCuisineProduct)) {
-                    $arrCuisineProduct[] = $row->id; 
+                    $arrCuisineProduct[] = $row->id;
                     $this->filters['cuisines'][] = array(
                                                                 "id" => $row->id,
                                                                 "name" => $row->option,
@@ -323,13 +329,13 @@ class AlacarteModel{
                         ->whereIn('vltm.vendor_location_id', $arrVendorLocation)
                         ->select('tags.name', 'tags.id')
                         ->get();
-        
+
         #setting up the tag filter information
         $arrTagProduct = array();
         if($queryTag) {
             foreach ($queryTag as $row) {
                 if( ! in_array($row->id, $arrTagProduct)) {
-                    $arrTagProduct[] = $row->id; 
+                    $arrTagProduct[] = $row->id;
                     $this->filters['tags'][] = array(
                                                             "id" => $row->id,
                                                             "name" => $row->name,
@@ -345,14 +351,14 @@ class AlacarteModel{
                 }
             }
         }
-        
-    } 
+
+    }
 
     //-----------------------------------------------------------------
-    
+
     /**
      * Returns the images for the passed vendor location id.
-     * 
+     *
      * @static  true
      * @access  public
      * @since   1.0.0
@@ -367,10 +373,10 @@ class AlacarteModel{
                         ->select('mrn.id','mrn.file as image','mrn.image_type','vlmm.vendor_location_id')
                         ->groupBy('mrn.id')
                         ->get();
-        
+
         //array to hold images
         $arrImage = array();
-        
+
         if($queryImages) {
             foreach($queryImages as $row) {
                 if(!array_key_exists($row->vendor_location_id, $arrImage)) {
@@ -378,12 +384,12 @@ class AlacarteModel{
                 }
                 if(in_array($row->image_type, array('listing'))) {
                     $arrImage[$row->vendor_location_id][$row->image_type] = Config::get('constants.API_LISTING_IMAGE_URL').$row->image;
-                }                           
+                }
             }
-        }       
-        return $arrImage;       
+        }
+        return $arrImage;
     }
-    
+
 
     public static function getVendorImagesDetails($vendorLocationID) {
         //query to read media details
@@ -394,10 +400,10 @@ class AlacarteModel{
                         ->select('mrn.id','mrn.file as image','mrn.image_type')
                         ->groupBy('mrn.id')
                         ->get();
-        
+
         //array to hold images
         $arrImage = array();
-        
+
         if($queryImages) {
             foreach($queryImages as $row) {
                 if(in_array($row->image_type, array('listing'))) {
@@ -408,9 +414,9 @@ class AlacarteModel{
                 }
             }
         }
-        
+
         return $arrImage;
-            
+
     }
 
     public  function getALaCarteDetails( $aLaCarteID ) {
@@ -451,20 +457,20 @@ class AlacarteModel{
                         ->where('va6.alias','expert_tips')
                         ->groupBy('vl.id')
                         ->select('vl.id as vl_id','vl.slug as vl_slug','vl.vendor_id', 'vl.status as vl_status','vla.address','vla.pin_code',
-                                    'vla.latitude', 'vla.longitude', 'vendors.name as title', 'vlat1.attribute_value as resturant_info', 
-                                    'vlat2.attribute_value as short_description', 'vlat3.attribute_value as terms_conditions', 
-                                    'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 
+                                    'vla.latitude', 'vla.longitude', 'vendors.name as title', 'vlat1.attribute_value as resturant_info',
+                                    'vlat2.attribute_value as short_description', 'vlat3.attribute_value as terms_conditions',
+                                    'vlat4.attribute_value as menu_picks', 'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city',
                                     'loc3.name as state_name', 'loc4.name as country', 'curators.name as curator_name', 'curators.bio as curator_bio',
                                     'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point',
                                     'vlat5.attribute_value as expert_tips', 'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips')
                         ->first();
 
         //echo "<pre>"; print_r($queryResult); die;
-                        
+
         if($queryResult) {
             //reading the review ratings
             $arrReview = Self::findRatingByVendorLocation(array($queryResult->vl_id));
-            
+
             //reading vendor-cuisine
             $arrVendorCuisine = Self::getVendorLocationCuisine(array($queryResult->vl_id));
             $arrVendorCuisineID = Self::getRestaurantCuisineID(array($queryResult->vl_id));
@@ -489,11 +495,27 @@ class AlacarteModel{
                                   LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
                                   WHERE vat.vendor_id = '$queryResult->vendor_id'
                                   AND va.alias = 'seo_title'");
+            //print_r($queryResult);die;
+            $special_offer_title =  DB::select("SELECT vat.attribute_value AS special_offer_title
+                                  FROM vendor_location_attributes_text AS vat
+                                  LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                    WHERE vat.vendor_location_id = '$queryResult->vl_id'
+                                  AND va.alias = 'special_offer_title'");
+
+
+
+            $special_offer_desc =  DB::select("SELECT vat.attribute_value AS special_offer_desc
+                                  FROM vendor_location_attributes_text AS vat
+                                  LEFT JOIN vendor_attributes AS va ON va.id = vat.vendor_attribute_id
+                                    WHERE vat.vendor_location_id = '$queryResult->vl_id'
+                                  AND va.alias = 'special_offer_desc'");
+            //print_r($special_offer_desc);die;
+
          /* $seoDetails = array('seo_meta_description' =>$seo_meta_description,
                                'seo_meta_keywords'=>$seo_meta_keywords,'seo_title'=>$seo_title);
           print_r($seo_title);
           echo $seo_meta_description['0']->seo_meta_description;*/
-          
+
           if(empty($seo_meta_description))
           {
             $seoMetaDesc = '';
@@ -502,6 +524,26 @@ class AlacarteModel{
           {
               $seoMetaDesc = $seo_meta_description['0']->seo_meta_description;
           }
+
+          if(empty($special_offer_title))
+          {
+            $specialOfferTitle = '';
+          }
+          else
+          {
+            $specialOfferTitle = $special_offer_title[0]->special_offer_title;
+          }
+
+            if(empty($special_offer_desc))
+            {
+                $specialOfferDesc = '';
+            }
+            else
+            {
+                $specialOfferDesc = $special_offer_desc[0]->special_offer_desc;
+            }
+
+          //print_r($specialOffer);die;
 
            if(empty($seo_meta_keywords))
           {
@@ -524,7 +566,7 @@ class AlacarteModel{
 
             //reading the similar vendors
             $arrSimilarVendor =  Self::getSimilarALaCarte(array('location_id' => $queryResult->area_id, 'pricing_level' => $queryResult->pricing_level));
-            
+
             //initializing the values for experience
             if(Self::isExperienceAvailable($queryResult->vl_id)) {
                 $experienceAvailable = 'true';
@@ -537,7 +579,7 @@ class AlacarteModel{
 
             //getting the images
             $arrImage = $this->getVendorImagesDetails($queryResult->vl_id);
-                        
+
             //formatting the array for the data
             $arrData['data'] = array(
                                     'type' => 'A-La-Carte Details',
@@ -552,7 +594,7 @@ class AlacarteModel{
                                     'seo_meta_keywords' => $seoMetaKey,
                                     'seo_title' => $seoTitle,
                                     'pricing' => $queryResult->pricing_level,
-                                    'image' => $arrImage,                                   
+                                    'image' => $arrImage,
                                     'rating' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['averageRating']:0,
                                     'review_count' => (array_key_exists($queryResult->vl_id, $arrReview)) ? $arrReview[$queryResult->vl_id]['totalRating']:0,
                                     'cuisine' => (array_key_exists($queryResult->vl_id, $arrVendorCuisine)) ? $arrVendorCuisine[$queryResult->vl_id]:array(),
@@ -564,10 +606,10 @@ class AlacarteModel{
                                                                 "area" => $queryResult->area,
                                                                 "city" => $queryResult->city,
                                                                 "pincode" => $queryResult->pin_code,
-                                                                "state" => $queryResult->state_name,                                                                
+                                                                "state" => $queryResult->state_name,
                                                                 "country" => $queryResult->country,
                                                                 "latitude" => $queryResult->latitude,
-                                                                "longitude" => $queryResult->longitude                                                              
+                                                                "longitude" => $queryResult->longitude
                                                             ),
                                     'curator_information' => array(
                                                                 'name' => (is_null($queryResult->curator_name)) ? "" : $queryResult->curator_name,
@@ -579,18 +621,20 @@ class AlacarteModel{
                                     'similar_option' => $arrSimilarVendor,
                                     'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
                                     'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
+                                    'special_offer_title' => $specialOfferTitle,
+                                    'special_offer_desc' => $specialOfferDesc,
                                     'curator_tips' => (is_null($queryResult->curator_tips)) ? "" : $queryResult->curator_tips
                                 );
-            
+
             //reading the review details
             $arrData['data']['review_detail'] = $this->getVendorLocationRatingDetails($queryResult->vl_id);
-            
+
             //reading the locations
             $arrData['data']['other_location'] = $this->getVendorLocation($queryResult->vendor_id, $queryResult->vl_location_id);
-            
-            
+
+
         }
-        return $arrData;                
+        return $arrData;
     }
 
     public static function findRatingByVendorLocation($arrVendorLocation) {
@@ -600,26 +644,26 @@ class AlacarteModel{
                         ->where('status','Approved')
                         ->select(DB::raw('AVG(rating) as avg_rating, COUNT(*) as total_ratings,vendor_location_id'))
                         ->get();
-        
+
         //array to store the result
         $arrRating = array();
-        
+
         //reading the results
         foreach($queryResult as $row) {
             $arrRating[$row->vendor_location_id] = array(
                                                         'averageRating' => $row->avg_rating,
                                                         'totalRating' => $row->total_ratings
                                                     );
-        }       
+        }
         return $arrRating;
     }
 
     //-----------------------------------------------------------------
-    
+
     /**
      * Returns the aLacarte details matching the passed
      * parameters.
-     * 
+     *
      * @static  true
      * @access  public
      * @param   array $arrData
@@ -634,8 +678,8 @@ class AlacarteModel{
                     ->where('vl.a_la_carte','=',1)
                     ->where('vmm.media_type','=','listing')
                     ->where('loc.id','=', $arrData['location_id']);
-        
-        //adding filter info            
+
+        //adding filter info
         if($arrData['pricing_level'] == "High") {
             $strQuery->where('vl.pricing_level', 'High')
                     ->where('vl.pricing_level', 'Medium')
@@ -648,34 +692,34 @@ class AlacarteModel{
         else {
             $strQuery->where('vl.pricing_level', 'Low');
         }
-        
+
         #executing the query
         $queryResult = $strQuery->select('vl.id', 'vendors.name', 'vl.pricing_level',
                                     DB::raw('loc.name as location_name,vl.slug as vendor_slug')
                                     //DB::raw('media.file as image')
                                     )
                                     ->get();
-                                    
+
         //array to hold the vendors information
-        $arrVendorInformation = array();        
+        $arrVendorInformation = array();
         //array to hold the vendor ids
-        $arrVendorId = array();     
+        $arrVendorId = array();
         //array to hold vendor reviews
-        $arrReview = array();       
+        $arrReview = array();
         //array to hold vendor cuisines
         $arrVendorCuisine = array();
-        
+
         if($queryResult) {
             foreach($queryResult as $row) {
                 $arrVendorId[] = $row->id;
             }
-            
+
             //getting vendors review details
             $arrReview = Self::findRatingByVendorLocation($arrVendorId);
-            
+
             //getting vendors available cuisine
             $arrVendorCuisine = Self::getVendorLocationCuisine($arrVendorId);
-            
+
             foreach($queryResult as $row) {
                 $arrVendorInformation = array(
                                             'id' => $row->id,
@@ -690,16 +734,16 @@ class AlacarteModel{
                                         );
             }
         }
-        
-        return $arrVendorInformation;   
+
+        return $arrVendorInformation;
     }
 
     //-----------------------------------------------------------------
-    
+
     /**
      * Returns the cuisine details of the vendors
      * based on their location id.
-     * 
+     *
      * @static  true
      * @access  public
      * @param   array   $arrVendor
@@ -716,10 +760,10 @@ class AlacarteModel{
                             ->orderBy('vl.id','desc')
                             ->select('vl.id','vaso.option')
                             ->get();
-        
+
         //array to store vendor cuisine details
         $arrVendorCuisine = array();
-        
+
         if($queryResult) {
             foreach($queryResult as $row) {
                 if(!array_key_exists($row->id, $arrVendorCuisine)) {
@@ -728,8 +772,8 @@ class AlacarteModel{
                 $arrVendorCuisine[$row->id][] = $row->option;
             }
         }
-        
-        
+
+
         return $arrVendorCuisine;
     }
 
@@ -760,13 +804,13 @@ class AlacarteModel{
 
         return $arrVendorCuisine;
     }
-    
+
     //-----------------------------------------------------------------
-    
+
     /**
      * Checks if any experience is availabe at the passed
      * vendor location id.
-     * 
+     *
      * @access  public
      * @param   integer $locationId
      * @return  boolean
@@ -780,10 +824,10 @@ class AlacarteModel{
         if($queryResult) {
             return TRUE;
         }
-        
+
         return FALSE;
     }
-    
+
     public static function getVendorLocationRatingDetails($vendorLocationID, $start = NULL, $limit = NULL) {
         $strQuery = DB::table(DB::raw('vendor_location_reviews as vlr'))
                         ->join('users','users.id','=', 'vlr.user_id')
@@ -793,13 +837,13 @@ class AlacarteModel{
         if(!empty($start) && !empty($limit)) {
             $strQuery = $strQuery->skip($start)->take($limit);
         }
-        
+
         //executing the query
-        $queryResult = $strQuery->get();        
-        
+        $queryResult = $strQuery->get();
+
         //array to store the result
         $arrReviewDetail = array();
-        
+
         //initializing the results
         if($queryResult) {
             foreach($queryResult as $row) {
@@ -815,38 +859,38 @@ class AlacarteModel{
         }
         return $arrReviewDetail;
     }
-    
-    
+
+
     public static function getVendorLocation($vendorID,$locationID=0) {
         //array to contain the list of locations
         $arrLocation = array();
-        
+
         $queryResult = DB::table('vendor_locations as vl')
                             ->leftJoin('locations as loc', 'loc.id','=','vl.location_id')
                             ->where('vl.vendor_id','=',$vendorID)
                             ->where('vl.location_id','!=',$locationID)
                             ->select('loc.name','vl.slug')
                             ->get();
-        
-        foreach( $queryResult as $vendorLocation) {             
+
+        foreach( $queryResult as $vendorLocation) {
             $arrLocation[] = array(
                                     'name' => $vendorLocation->name,
-                                    'slug' => $vendorLocation->slug 
+                                    'slug' => $vendorLocation->slug
                                 );
         }
-        
+
         return $arrLocation;
     }
 
     public static function getAlacarteLimit($vendorLocationID) {
-     $queryResult = DB::table(DB::raw('vendor_locations as vl')) 
-              ->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id') 
-              ->join('locations', 'locations.id', '=', 'vla.area_id') 
-              ->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id') 
-              ->where('vl.id', $vendorLocationID) 
-              ->select('vl.id', 'locations.name as area', 'vla.latitude', 
-                    'vla.longitude', 'vll.min_people_per_reservation', 
-                    'vll.max_people_per_reservation', 'vll.min_people_increments') 
+     $queryResult = DB::table(DB::raw('vendor_locations as vl'))
+              ->leftJoin(DB::raw('vendor_location_address as vla'), 'vla.vendor_location_id', '=', 'vl.id')
+              ->join('locations', 'locations.id', '=', 'vla.area_id')
+              ->leftJoin('vendor_locations_limits as vll', 'vll.vendor_location_id', '=', 'vl.id')
+              ->where('vl.id', $vendorLocationID)
+              ->select('vl.id', 'locations.name as area', 'vla.latitude',
+                    'vla.longitude', 'vll.min_people_per_reservation',
+                    'vll.max_people_per_reservation', 'vll.min_people_increments')
               ->get();
 
       //array to read the locations and limits
@@ -854,31 +898,31 @@ class AlacarteModel{
 
       foreach ($queryResult as $row) {
         $arrLocLmt[$row -> id] = array(
-                  'vl_id' => $row -> id, 
-                  'area' => $row -> area, 
-                  'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation, 
-                  'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation, 
-                  'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments, 
-                  'latitude' => $row -> latitude, 
-                  'longitude' => $row -> longitude, 
+                  'vl_id' => $row -> id,
+                  'area' => $row -> area,
+                  'min_people' => (is_null($row -> min_people_per_reservation)) ? '' : $row -> min_people_per_reservation,
+                  'max_people' => (is_null($row -> max_people_per_reservation)) ? '' : $row -> max_people_per_reservation,
+                  'increment' => (is_null($row -> min_people_increments)) ? '' : $row -> min_people_increments,
+                  'latitude' => $row -> latitude,
+                  'longitude' => $row -> longitude,
                 );
       }
 
       return $arrLocLmt;
   }
 
-  
+
 
   public static function getAlacarteBlockDates($vendor_location_id)
   {
        //query to read all the block dates for the locations
-      $queryResult = DB::table(DB::raw('vendor_location_blocked_schedules')) 
+      $queryResult = DB::table(DB::raw('vendor_location_blocked_schedules'))
               ->where('vendor_location_id',$vendor_location_id)
               ->select('id','vendor_location_id','block_date')
               ->get();
       //array to store the block dates
       $arrBlockedDate = array();
-      
+
       foreach($queryResult as $row){
         $formatted_date = '';
         if(!empty($row->block_date))
@@ -893,7 +937,7 @@ class AlacarteModel{
           $arrBlockedDate[$row->vendor_location_id][] = $formatted_date;
         }
       }
-      
+
       return $arrBlockedDate;
 
   }
@@ -901,22 +945,22 @@ class AlacarteModel{
   public static function getAlacarteLocationSchedule($vendorLocationID) {
     //initializing the value of day
     //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
-    
+
      $schedules = DB::table('schedules')
             ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
             ->join(DB::raw('vendor_location_booking_schedules as vlbs'),'vlbs.schedule_id','=','schedules.id')
             ->where('vlbs.vendor_location_id', $vendorLocationID)
-            ->select('vlbs.vendor_location_id','schedules.day_short','schedules.id','ts.time','ts.slot_type') 
+            ->select('vlbs.vendor_location_id','schedules.day_short','schedules.id','ts.time','ts.slot_type')
             ->get();
-             
+
     #array to hold information
     $arrData = array();
-    
+
     if($schedules) {
       foreach($schedules as $row) {
 
         $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = date('g:i A',strtotime($row->time));
-        
+
       }
     }
     return $arrData;
@@ -1261,10 +1305,10 @@ class AlacarteModel{
               ->where('day',$arrData['reservationDay'])
               ->orWhere('date',$arrData['reservationDate'])
               ->get();
-    
+
     //array to save the details
     $arrData = array();
-    
+
     foreach($queryResult as $row) {
        $arrData[] = array(
                 'id' => $row->id,
@@ -1275,9 +1319,9 @@ class AlacarteModel{
                 'start_time' => $row->start_time,
                 'end_time' => $row->end_time,
                 'max_covers_limit' => $row->max_covers_limit,
-                'max_tables_limit' => $row->max_tables_limit                 
+                'max_tables_limit' => $row->max_tables_limit
               );
-      
+
     }
     return $arrData;
   }
@@ -1291,7 +1335,7 @@ class AlacarteModel{
             ->groupBy('vendor_location_id')
             ->select(\DB::raw('SUM(no_of_persons) as person_count'))
             ->first();
-    
+
     if($queryResult) {
       return $queryResult->person_count;
     }
@@ -1315,7 +1359,7 @@ class AlacarteModel{
 
         $startTime = strtotime($value['start_time']);
         $endTime = strtotime($value['end_time']);
-        
+
         if ($startTime <= $reservationTime && $endTime >= $reservationTime) {
           if ($maxCount == $existingReservationCount) {
             $arrResponse['status'] = 'error';
@@ -1337,34 +1381,34 @@ class AlacarteModel{
   }
 
   public static function addReservationDetails($arrData, $userID) {
-    
+
     $reservation = array();
-    
+
     //initializing the data
     $reservation['reservation_status'] = 'new';
     $reservation['reservation_date'] = $arrData['reservationDate'];
     $reservation['reservation_time'] = $arrData['reservationTime'];
-    $reservation['no_of_persons'] = $arrData['partySize'];    
+    $reservation['no_of_persons'] = $arrData['partySize'];
     $reservation['guest_name'] = $arrData['guestName'];
     $reservation['guest_email'] = $arrData['guestEmail'];
     $reservation['guest_phone'] = $arrData['phone'];
     $reservation['reservation_type'] = $arrData['reservationType'];
     $reservation['order_amount'] = 0;
     $reservation['user_id'] = $userID;
-    
+
     //setting up the variables that may be present
     if(isset($arrData['specialRequest'])) {
       $reservation['special_request'] = $arrData['specialRequest'];
     }
-    
+
     if(isset($arrData['addedBy'])) {
       $reservation['added_by'] = $arrData['addedBy'];
     }
-    
+
     if(isset($arrData['giftCardID'])) {
       $reservation['giftcard_id'] = $arrData['giftCardID'];
     }
-    
+
     //reading the product detail
     $aLaCarteDetail = self::readVendorDetailByLocationID($arrData['vendorLocationID']);
     $reservation['points_awarded']             = isset($aLaCarteDetail['reward_point'])?$aLaCarteDetail['reward_point']:'0';
@@ -1372,9 +1416,9 @@ class AlacarteModel{
     $reservation['product_vendor_location_id'] = 0;
     #saving the information into the DB
     $reservationId = DB::table('reservation_details')->insertGetId($reservation);
-    
+
     if($reservationId) {
-     
+
       $arrResponse['status'] = 'success';
       //$arrResponse['data']['name'] = isset($productDetail['name'])?$productDetail['name']:'';
       //$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
@@ -1386,14 +1430,14 @@ class AlacarteModel{
       //$arrResponse['data']['reward_point'] = $productDetail['reward_point'];
       return $arrResponse;
     }
-    
+
     return FALSE;
   }
 
    public static function readVendorDetailByLocationID($vendorLocationID) {
     //array to store the data
     $arrData = array();
-    
+
     $queryResult = \DB::table('vendors')
             ->join('vendor_locations as vl','vl.vendor_id','=','vendors.id')
             ->leftJoin('vendor_location_attributes_integer as vai','vai.vendor_location_id','=','vl.id')
@@ -1407,7 +1451,7 @@ class AlacarteModel{
       $arrData['name'] = $queryResult->name;
       $arrData['reward_point'] = (empty($queryResult->reward_point))? 0.00 : $queryResult->reward_point;
     }
-    
+
     return $arrData;
   }
 
@@ -1434,6 +1478,5 @@ class AlacarteModel{
 
         return $queryResult;
     }
-    
-}
 
+}

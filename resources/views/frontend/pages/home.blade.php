@@ -281,7 +281,7 @@
 
                   </div>
 
-                 <div id="signinForm">
+                 <div id="signinForm" <?=(!empty($errors->has()))? 'style="display:block;"' : '' ;?>>
                
                     <div id="signinForm-wrap">
                       <div class="info-text new clearfix">                        
