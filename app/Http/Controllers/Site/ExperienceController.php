@@ -214,7 +214,7 @@ class ExperienceController extends Controller {
 
 
     function lists($city='',$start_from=0,$areas='',$cousines='',$prices=''){
-    	
+            
     	//DB::connection()->enableQueryLog();
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
@@ -225,7 +225,7 @@ class ExperienceController extends Controller {
         $check_userid = '`order`,id desc';
         $data['user']   = Auth::user();
         $city_name      = 'mumbai';
-       
+
         if(!empty($data['user']))
         {
             $users_city     = $data['user']->location_id;
@@ -239,7 +239,7 @@ class ExperienceController extends Controller {
             $check_userid = "if(bookmark_userid = ".$user_id.", 0, if(bookmark_userid != ".$user_id.", 1, 1)),`order` asc";
         }
        
-        $areas_footer = $areas; 
+        $areas_footer = $areas;
 
         if($city == '')
         {

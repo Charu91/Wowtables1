@@ -416,7 +416,7 @@ agm.cpkbandra@jsmcorp.in
                 <div class="panel-heading active">
                   <h4 class="panel-title">
                      <a href="javascript:" style="text-decoration: none;">
-                      Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="http://wowtables.app/images/question_icon_small_display.png"></a>
+                      Select Party Size </a><a  href="javascript:" data-original-title="Select the total number of guests at the table. If a larger table size is needed, please contact the WowTables Concierge." data-placement="top" data-toggle="tooltip" class="btn tooltip1"><img src="{{URL::to('/')}}/images/question_icon_small_display.png"></a>
                       <select name="qty" id="party_size1"  class="pull-right space hidden">
                             <option value="0">SELECT</option>
                          
