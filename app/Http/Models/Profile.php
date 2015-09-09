@@ -47,11 +47,13 @@ class Profile {
                                         ->leftjoin('user_attributes as ua2', function($join) {
                                                                                                 $join->on('uaso.user_attribute_id','=','ua2.id')
                                                                                                      ->where('ua2.alias','=','gender');
-                                                                                         })
+                                                                                         })                                        
                                         ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
                                         ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
                                         ->leftjoin('user_attributes as ua4', 'ua4.id','=','uad.user_attribute_id')
                                         ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
+                                        ->leftjoin('user_attributes_varchar as uav','uav.user_id','=','u.id')
+                                        ->leftjoin('user_attributes as ua5', 'ua5.id','=','uav.user_attribute_id')
                                         //->where('u.id',$userID)
                                         ->where('ud.access_token',$token)                                        
                                         ->select('u.id as user_id','u.full_name','u.email','phone_number','u.zip_code',
@@ -59,6 +61,7 @@ class Profile {
                                                 'u.points_earned', 'u.points_spent',
                                                 //DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
                                                 //DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),
+                                                DB::raw('MAX(IF(ua5.alias = "membership_number", uav.attribute_value, 0)) AS membership_number'),
                                                 DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
                                                 DB::raw('MAX(IF(ua4.alias = "date_of_birth", date(uad.attribute_value), 0)) AS dob'),
                                                 DB::raw('MAX(IF(ua4.alias = "anniversary_date", date(uad.attribute_value), 0)) AS anniversary_date'))
@@ -95,6 +98,7 @@ class Profile {
                                             'points_spent' => $queryProfileResult->points_spent,
                                             'points_remaining' => $queryProfileResult->points_earned - $queryProfileResult->points_spent,
                                             'bookings_made' => $queryProfileResult->bookings_made,
+                                            'membership_number' => $queryProfileResult->membership_number,
                                             'dob' => $queryProfileResult->dob,
                                             'anniversary_date' => $queryProfileResult->anniversary_date,
                                             'selectedPreferences' => $preferredLocations['data'],
