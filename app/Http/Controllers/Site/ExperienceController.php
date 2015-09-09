@@ -81,61 +81,9 @@ class ExperienceController extends Controller {
         $data['reserveData']            = $this->experiences_model->getExperienceLimit($id);
         $data['block_dates']            = $this->experiences_model->getExperienceBlockDates($id);
         $data['schedule']               = $this->experiences_model->getExperienceLocationSchedule($id);
+        $data['scheduleDays']               = $this->experiences_model->getExperienceLocationScheduleDay($id);
         $data['relatedExperiences']     = $this->experiences_model->getExperienceWithSameBrand($id,$city_id);
-         //echo "<pre>"; print_r($data['relatedExperiences']); die;
-        /*echo "<pre>"; print_r($data['block_dates']);
-         $stdate = Carbon::today()->startOfDay();
-         $eddate = Carbon::createFromFormat('Y-m-d H:i:s', $arrExperience['data']['end_date'])->endOfDay();
-         $datediff = $stdate->diffInDays($eddate);
-         $startDate = $stdate->format('Y-m-d');
-         $dateArray[] = $startDate;
-
-         for($i = 0; $i <= $datediff; $i++){
-             $d2[] = $stdate->addDays(1)->format('Y-m-d');
-         }
-         //echo "<pre>"; print_r($d2); die;
-         //var_dump($dateArray);die();
-         foreach($data['block_dates'] as $vlid => $dates){
-
-             echo "<pre>"; print_r($dates);
-             if($dates[0] != ""){
-
-                 foreach($d2 as $data1){
-                    foreach($dates as $date){
-                     //echo "<pre>"; print_r($date);
-
-                         $d = Carbon::createFromFormat('Y-m-d', $date);
-                         //echo "asd = ".$d;
-
-                             $d3 = Carbon::createFromFormat('Y-m-d', $data1);
-                             //echo "d = ".$d." , d3 = ".$d3;
-                             //var_dump($d3->ne($d)); echo "<br/>";
-                             if($d->eq($d3)){ //echo "here <br/>";
-                                 echo "equal = ".$d3;
-                             }else{
-                                 echo "not equal = ".$d3;
-                             }
-                            echo "<br/>";
-                         }
-                         //$blockDatesArray[$vlid] = array_unique($blockDatesArray[$vlid]);
-
-
-
-
-                 }
-             } else {
-                 //echo "there<br/>";
-                 foreach($d2 as $data1){
-                     $d3 = Carbon::createFromFormat('Y-m-d', $data1);
-                     $blockDatesArray[$vlid][] = $d3->format('d-m-Y');
-                 }
-             }
-         } die;
-         //echo "<pre>"; print_r($blockDatesArray); die;
-         //echo json_encode($blockDatesArray); die;
-         $data['availableDates']= json_encode($blockDatesArray);*/
-
-
+        $data['availableDates']         = $this->experiences_model->getAvailableDates($data['block_dates'],$data['scheduleDays']);
 
         $commonmodel = new CommonModel();
         $data['allCuisines']  = $commonmodel->getAllCuisines();
@@ -195,18 +143,6 @@ class ExperienceController extends Controller {
             }
         }
 
-        /*echo"<pre>";print_r($arrExperience['data']['location']);
-
-
-        echo"<pre>";print_r($alacarte_jump);
-
-
-
-        exit;*/
-        /*echo"<pre>";print_r($alacarte_jump);
-        echo"<pre>";print_r($data);
-        exit;*/
-         //echo "<pre>"; print_r($data); die;
         return view('frontend.pages.experiencedetails',$data)
                         ->with('meta_information', $meta_information)
                         ->with('alacarteJumpDetails', $alacarte_jump);
@@ -214,7 +150,7 @@ class ExperienceController extends Controller {
 
 
     function lists($city='',$start_from=0,$areas='',$cousines='',$prices=''){
-            
+
     	//DB::connection()->enableQueryLog();
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;

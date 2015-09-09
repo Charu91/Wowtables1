@@ -1430,8 +1430,8 @@ class ExperienceModel {
         $formatted_date = '';
         if(!empty($row->block_date))
         {
-          //$formatted_date =  date('Y-m-d',strtotime($row->block_date));
-          $formatted_date =  date('m-d-Y',strtotime($row->block_date));
+          $formatted_date =  date('Y-m-d',strtotime($row->block_date));
+          //$formatted_date =  date('m-d-Y',strtotime($row->block_date));
         }
 
         if(array_key_exists($row->vendor_location_id, $arrBlockedDate)) {
@@ -1447,6 +1447,56 @@ class ExperienceModel {
      return $arrBlockedDate;
 
   }
+    /*
+     * This function removes the blockdates and only returns available dates for next 2 months
+     * */
+    public function getAvailableDates($blockedDates,$scheduleDays) {
+
+        $d1= date('Y-m-d');
+        $d2= strtotime(date("Y-m-d").' +2 Months');
+        $d2= date('Y-m-d', $d2);
+        $begin = new \DateTime($d1);
+        $end = new \DateTime($d2);
+        $daterange = new \DatePeriod($begin, new \DateInterval('P1D'), $end);
+
+        $dates = array();
+        $arrAvailableDates = array();
+        foreach($daterange as $date){
+            $dates[] = $date->format("Y-m-d");
+        }
+
+        foreach ($blockedDates as $key => $value) {
+
+            if(!empty($value) && $value[0] != ""){
+                foreach($value as $blockDate){
+                    $checkBlockDate = array_search($blockDate, $dates);
+
+                    if($checkBlockDate!==false)
+                        unset($dates[$checkBlockDate]);
+                }
+
+
+                $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+            }else{
+                $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+            }
+
+        }
+        //echo "<pre>"; print_r($arrAvailableDates); die;
+        return $arrAvailableDates;
+    }
+
+    protected function sortByDays($dates,$scheduleDays){
+        $finalDates = array();
+        foreach($dates as $date){
+            if(in_array(date('N',strtotime($date)),$scheduleDays)){
+                $finalDates[] = date('Y-n-j',strtotime($date));
+            }
+        }
+        //echo "<pre>fd"; print_r($finalDates);die;
+        return $finalDates;
+    }
+
 
   public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
     //initializing the value of day
@@ -1469,6 +1519,32 @@ class ExperienceModel {
 
         $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = date('g:i A',strtotime($row->time));
         
+      }
+    }
+    return $arrData;
+  }
+
+    public static function getExperienceLocationScheduleDay($productID, $productVendorLocationID = NULL,  $day=NULL) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID)
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.day_numeric','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+
+    #array to hold information
+    $arrData = array();
+
+    if($schedules) {
+      foreach($schedules as $row) {
+            //echo "<prE>"; print_r($row);
+        $arrData[$row->vendor_location_id][$row->day_short] = $row->day_numeric;
+
       }
     }
     return $arrData;
