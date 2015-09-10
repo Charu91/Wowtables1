@@ -114,7 +114,12 @@ class ReservationDetails extends Model {
 													  ->where('reservation_date', '=', $arrData['reservationDate'])
 													  ->where('reservation_time', '=', $arrData['reservationTime'])
 													  ->select('id')
-													  ->first();				
+													  ->first();
+
+			//Reading user detail to get membership number(GIU_Membership_ID)
+			$token = $_SERVER['HTTP_X_WOW_TOKEN'];
+			$userDetail = Profile::getUserProfile($token);	
+
 
 			if($arrData['reservationType'] == 'alacarte') {
 				
@@ -155,7 +160,7 @@ class ReservationDetails extends Model {
 					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
 					                    'API_added' => 'Mobile',
-					                    //'GIU_Membership_ID' => '1001010',
+					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
 					                    'Outlet' => $aLaCarteDetail['location'],
 					                    //'Points_Notes'=>'test',
 					                    'AR_Confirmation_ID'=>'0',
@@ -255,7 +260,7 @@ class ReservationDetails extends Model {
 					                    'Occasion' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
 					                    'API_added' => 'Mobile',
-					                    //'GIU_Membership_ID' => '1001010',
+					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
 					                    'Outlet' => $productDetail['location'],
 					                    //'Points_Notes'=>'test',
 					                    'AR_Confirmation_ID'=>'0',

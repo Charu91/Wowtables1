@@ -47,11 +47,13 @@ class Profile {
                                         ->leftjoin('user_attributes as ua2', function($join) {
                                                                                                 $join->on('uaso.user_attribute_id','=','ua2.id')
                                                                                                      ->where('ua2.alias','=','gender');
-                                                                                         })
+                                                                                         })                                        
                                         ->leftjoin('user_attributes_integer as uai','uai.user_id','=','u.id')
                                         ->leftjoin('user_attributes as ua3', 'ua3.id','=','uai.user_attribute_id')
                                         ->leftjoin('user_attributes as ua4', 'ua4.id','=','uad.user_attribute_id')
                                         ->leftjoin('user_devices as ud','u.id','=','ud.user_id')
+                                        ->leftjoin('user_attributes_varchar as uav','uav.user_id','=','u.id')
+                                        ->leftjoin('user_attributes as ua5', 'ua5.id','=','uav.user_attribute_id')
                                         //->where('u.id',$userID)
                                         ->where('ud.access_token',$token)                                        
                                         ->select('u.id as user_id','u.full_name','u.email','phone_number','u.zip_code',
@@ -59,6 +61,7 @@ class Profile {
                                                 'u.points_earned', 'u.points_spent',
                                                 //DB::raw('MAX(IF(ua3.alias = "points_earned", uai.attribute_value, 0)) AS points_earned'),
                                                 //DB::raw('MAX(IF(ua3.alias = "points_spent", uai.attribute_value, 0)) AS points_spent'),
+                                                DB::raw('MAX(IF(ua5.alias = "membership_number", uav.attribute_value, 0)) AS membership_number'),
                                                 DB::raw('MAX(IF(ua3.alias = "bookings_made", uai.attribute_value, 0)) AS bookings_made'),
                                                 DB::raw('MAX(IF(ua4.alias = "date_of_birth", date(uad.attribute_value), 0)) AS dob'),
                                                 DB::raw('MAX(IF(ua4.alias = "anniversary_date", date(uad.attribute_value), 0)) AS anniversary_date'))
@@ -82,23 +85,24 @@ class Profile {
             if($queryProfileResult) {
                 $arrResponse['status'] = Config::get('constants.API_SUCCESS');
                 $arrResponse['data']=array(
-                                            'user_id' => $queryProfileResult->user_id,
+                                            'user_id'       => (empty($queryProfileResult->user_id)) ? "" : $queryProfileResult->user_id,
                                             //'access_token' => $queryProfileResult->access_token,
-                                            'full_name' => $queryProfileResult->full_name,
-                                            'email' => $queryProfileResult->email,
-                                            'phone_number' => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
-                                            'zip_code' => $queryProfileResult->zip_code,
-                                            'gender' => $queryProfileResult->gender,
-                                            'location_id' => $queryProfileResult->location_id,
-                                            'location' => $queryProfileResult->location,
-                                            'points_earned' => $queryProfileResult->points_earned,
-                                            'points_spent' => $queryProfileResult->points_spent,
+                                            'full_name'     => (empty($queryProfileResult->full_name)) ? "" : $queryProfileResult->full_name,
+                                            'email'         => (empty($queryProfileResult->email)) ? "" : $queryProfileResult->email,
+                                            'phone_number'  => ($queryProfileResult->phone_number == 0) ? "" : (string) $queryProfileResult->phone_number,
+                                            'zip_code'      => (empty($queryProfileResult->zip_code)) ? "" : $queryProfileResult->zip_code,
+                                            'gender'        => (empty($queryProfileResult->gender)) ? "" : $queryProfileResult->gender, 
+                                            'location_id'   => (empty($queryProfileResult->location_id)) ? "" : $queryProfileResult->location_id,
+                                            'location'      => (empty($queryProfileResult->location)) ? "" : $queryProfileResult->location,
+                                            'points_earned' => (empty($queryProfileResult->points_earned)) ? "" : $queryProfileResult->points_earned,
+                                            'points_spent'  => (empty($queryProfileResult->points_spent)) ? "" : $queryProfileResult->points_spent,
                                             'points_remaining' => $queryProfileResult->points_earned - $queryProfileResult->points_spent,
-                                            'bookings_made' => $queryProfileResult->bookings_made,
-                                            'dob' => $queryProfileResult->dob,
-                                            'anniversary_date' => $queryProfileResult->anniversary_date,
-                                            'selectedPreferences' => $preferredLocations['data'],
-                                            'areas' => $cityAreas['data'],
+                                            'bookings_made'     => (empty($queryProfileResult->bookings_made)) ? "" : $queryProfileResult->bookings_made,
+                                            'membership_number' => (empty($queryProfileResult->membership_number)) ? "" : $queryProfileResult->membership_number,
+                                            'dob'               => (empty($queryProfileResult->dob)) ? "" : $queryProfileResult->dob,
+                                            'anniversary_date'  => (empty($queryProfileResult->anniversary_date)) ? "" : $queryProfileResult->anniversary_date,
+                                            'selectedPreferences' => (empty($preferredLocations['data'])) ? "" : $preferredLocations['data'],
+                                            'areas'             => (empty($cityAreas['data'])) ? "" : $cityAreas['data'],
                                             'last_reservation_date' => (empty($lastReservationDetail->reservation_date)) ? "" : $lastReservationDetail->reservation_date,
                                             'last_reservation_time' => (empty($lastReservationDetail->reservation_time)) ? "" : date('H:i:s', strtotime($lastReservationDetail->reservation_time)),
                                           );
