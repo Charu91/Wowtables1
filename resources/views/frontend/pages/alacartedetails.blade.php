@@ -552,7 +552,6 @@
           @if(!empty($arrALaCarte['data']['special_offer_title']))
           <div class="widget reservation-box">
               <h3 class="text-center">Special Offer</h3>
-              <br/>
               <p class="text-center" style="color:#fff"><strong>{!! $arrALaCarte['data']['special_offer_title'] !!}</strong></p>
               <p class="text-center" style="color:#fff">{!! $arrALaCarte['data']['special_offer_desc'] !!}</p>
           </div>
