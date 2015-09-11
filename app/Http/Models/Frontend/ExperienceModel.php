@@ -1478,7 +1478,10 @@ class ExperienceModel {
 
                 $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
             }else{
-                $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+                if(isset($scheduleDays[$key])){
+                    $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+                }
+
             }
 
         }
