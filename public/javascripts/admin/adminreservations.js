@@ -517,7 +517,7 @@
                         var loID = $('#ac_addr').val();
                         var actualSchedule = data.ala_schedule[loID][getSelectedDay];
                         var actualSchedule1 = $.map(actualSchedule, function(el) { return el; });
-                        console.log(actualSchedule1);
+                        //console.log(actualSchedule1);
                         if(schedule != undefined)
                         {
                             for(key_sch in schedule[datestrInNewFormat])
