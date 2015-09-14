@@ -9,6 +9,7 @@ use WowTables\Http\Requests\Api\UserRegistrationRequest;
 use WowTables\Http\Requests\Api\UserFBLoginRequest;
 use Mailchimp;
 use WowTables\Http\Models\Eloquent\Location;
+use DB;
 
 class UserController extends Controller {
 
