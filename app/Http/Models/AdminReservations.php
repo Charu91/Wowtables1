@@ -92,6 +92,56 @@ class AdminReservations {
         return $queryExperience;
     }
 
+    public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
+        //initializing the value of day
+        //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+        $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID)
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+
+        #array to hold information
+        $arrData = array();
+
+        if($schedules) {
+            foreach($schedules as $row) {
+
+                $arrData[$row->vendor_location_id][$row->day_short][date('g:i',strtotime($row->time))] = date('g:i A',strtotime($row->time));
+
+            }
+        }
+        return $arrData;
+    }
+
+    public static function getAlacarteLocationSchedule($vendorLocationID) {
+        //initializing the value of day
+        //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+        $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('vendor_location_booking_schedules as vlbs'),'vlbs.schedule_id','=','schedules.id')
+            ->where('vlbs.vendor_location_id', $vendorLocationID)
+            ->select('vlbs.vendor_location_id','schedules.day_short','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+        #array to hold information
+        $arrData = array();
+
+        if($schedules) {
+            foreach($schedules as $row) {
+
+                $arrData[$row->vendor_location_id][$row->day_short][date('g:i',strtotime($row->time))] = date('g:i A',strtotime($row->time));
+
+            }
+        }
+        return $arrData;
+    }
+
     public static function getExperienceBlockDates($expId=0)
     {
         $queryResult = DB::table('product_vendor_locations as pvl')

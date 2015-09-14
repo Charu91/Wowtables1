@@ -1108,11 +1108,12 @@ if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status']
           loadDatePicker();
        });
 
-        var disabledAllDays = <?php echo json_encode($block_dates);?>;
+        //var disabledAllDays = <?php //echo json_encode($block_dates);?>;
+       var disabledAllDays = <?php echo json_encode($availableDates);?>;
         var allschedule = <?php echo json_encode($schedule);  ?>;
         var reserveminmax = <?php echo json_encode($reserveData);  ?>;
 
-        function disableAllTheseDays(date) {
+        /*function disableAllTheseDays(date) {
             var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
             var location_id = $('#ac_locations2').val();
             var disabledDays = disabledAllDays[location_id];
@@ -1134,7 +1135,22 @@ if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status']
               }
             }
             return [true];
-        }
+        }*/
+
+       function disableAllTheseDays(date) {
+           //var location_id = $('#locations1').val();
+           var disabledDays = disabledAllDays;
+           //console.log("sad = "+disabledDays);
+
+           dmy = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+           //console.log("sad = "+dmy);
+           if ($.inArray(dmy, disabledDays) != -1) {
+               return [true, "","Available"];
+           } else {
+               return [false,"","unAvailable"];
+           }
+           //loadDatePicker();
+       }
 
 
 

@@ -510,7 +510,7 @@ if (strpos($url,'alacarte') !== false) {
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-sm-4 col-xs-4">
-          <a href="{{URL::to('/')}}/" class="site-logo"><img src="{{URL::to('/')}}//assets/img/wow.png" alt="GourmetItUp" id="wowtable_img_margin"></a>
+          <a href="{{URL::to('/')}}" class="site-logo"><img src="{{URL::to('/')}}//assets/img/wow.png" alt="GourmetItUp" id="wowtable_img_margin"></a>
         </div>
         <?php
           if (isset($referral) && is_array($referral) && !empty($referral['logo_image'])) {

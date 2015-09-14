@@ -24,11 +24,13 @@ use Auth;
 use Redirect;
 use WowTables\Http\Models\Profile;
 use Mail;
+use WowTables\Http\Models\UserDevices;
 
 class StaticPagesController extends Controller {
 
-	function __construct(ExperienceModel $experiences_model){
+	function __construct(ExperienceModel $experiences_model,Request $request){
 		$this->experiences_model = $experiences_model;
+		$this->request = $request;
 	}
 
 	public function home()
@@ -62,6 +64,7 @@ class StaticPagesController extends Controller {
 
 	public function giftCard()
 	{
+
 		//echo "<pre>"; print_r(Input::all()); die;
 		$cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
@@ -83,7 +86,29 @@ class StaticPagesController extends Controller {
 
 	public function pages($pages="")
 	{
+		$accessToken = $this->request->get('access_token');
 
+		if($accessToken != ""){
+			Session::flush();
+			$accessDetails = UserDevices::getUserDetailsByAccessToken($accessToken);
+
+			$user_array = Auth::loginUsingId($accessDetails);
+			//echo "<pre>"; print_r($user_array);
+			$userdata = array(
+				'id'  => $user_array->id,
+				'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+				'email'     => $user_array->email,
+				'full_name' =>$user_array->full_name,
+				'user_role' =>$user_array->role_id,
+				'phone'     =>$user_array->phone_number,
+				'city_id'   =>$user_array->location_id,
+				'facebook_id'=>@$user_array->fb_token,
+				'exp'=>"10",
+				'logged_in' => TRUE,
+			);
+			Session::put($userdata);
+
+		}
 		//return view('site.users.home');
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
