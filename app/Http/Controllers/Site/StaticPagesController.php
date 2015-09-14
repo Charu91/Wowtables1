@@ -52,9 +52,16 @@ class StaticPagesController extends Controller {
 	public function loggedInHome()
 	{
 		$userRole = Auth::user()->role_id;
+		$user = Auth::user();
+		$city_name  = Location::where(['Type' => 'City', 'id' => $user->location_id])->pluck('name');
+		if(empty($city_name))
+		{
+			$city_name = 'mumbai';
+		}
 		if($userRole=='1' || $userRole=='2' || $userRole=='3' || $userRole=='4')
 		{
-			return Redirect::to('/mumbai');
+			//return Redirect::to('/mumbai');
+			return redirect('/'.strtolower($city_name));
 		}
 		else
 		{
