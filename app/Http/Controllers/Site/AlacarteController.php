@@ -161,10 +161,11 @@ class AlacarteController extends Controller {
         $data['reserveData']            = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates']            = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
         $data['schedule']               = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);
-        //echo "<pre>"; print_r($data); die;
+        $data['scheduleDays']               = $this->alacarte_model->getAlacarteLocationScheduleDays($aLaCarteID);
         $data['relatedRestaurants']     = $this->alacarte_model->getRelatedRestaurants($aLaCarteID,$city_id,$data['arrALaCarte']['data']['cuisineID']);
         $data['relatedExperiences']     = $this->alacarte_model->getRelatedExperiences($aLaCarteID,$city_id);
-        //echo "<pre>"; print_r($data['relatedExperiences']); die;
+        $data['availableDates']         = $this->alacarte_model->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+        //echo "<pre>"; print_r($data['scheduleDays']); print_r($data['availableDates']); die;
         /*echo '<pre>';
         print_r($data['arrALaCarte']);
         print_r( $data['reserveData']);
@@ -468,7 +469,7 @@ class AlacarteController extends Controller {
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                         'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-                        'Occasion' => $dataPost['specialRequest'],
+                        'Special_Request' => $dataPost['specialRequest'],
                         'Type' => "Alacarte",
                         'API_added' => 'Yes',
                         'GIU_Membership_ID' => $userData['data']['membership_number'],

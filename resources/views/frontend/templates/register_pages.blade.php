@@ -183,7 +183,7 @@ if(isset($_REQUEST['gclid'])){
                 <li><a href="{{URL::to('/')}}/pages/gift-cards">Gift cards</a></li>
                 <li><a href="{{URL::to('/')}}/pages/corporate">Corporate Solutions</a></li>
                 <li><a href="{{URL::to('/')}}/pages/event-planning">Parties & Private Events</a></li>
-                <li><a href="{{URL::to('/')}}/pages/gourmet-rewards">Gourmet Rewards</a></li>
+                <li><a href="{{URL::to('/')}}/users/redeem-rewards">Gourmet Rewards</a></li>
                 <li><a href="{{URL::to('/')}}/pages/terms-of-use">Terms of Use</a></li>
                 <li><a href="{{URL::to('/')}}/pages/privacy-policy">Privacy Statement</a></li>
               </ul>

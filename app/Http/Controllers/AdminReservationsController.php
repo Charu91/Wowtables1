@@ -388,7 +388,10 @@ class AdminReservationsController extends Controller{
         $data['locations']            = $this->experiences_model->getProductLocations($product_id, $pvl_id,$city_id);
         $data['reserveData']            = $this->experiences_model->getExperienceLimitWithCity($product_id,$city_id);
         $data['block_dates']            = AdminReservations::getExperienceBlockDates($product_id);
-        $data['exp_schedule']               = $this->experiences_model->getExperienceLocationSchedule($product_id);
+        $data['exp_schedule']               = AdminReservations::getExperienceLocationSchedule($product_id);
+        $data['scheduleDays']               = $this->experiences_model->getExperienceLocationScheduleDay($product_id);
+        $data['availableDates']         = $this->experiences_model->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+        //echo "<pre>"; print_r($data['exp_schedule']); die;
         $dataEnddate               = AdminReservations::getExperienceEndDate($product_id);
         $data['schedule'] = Array
         (
@@ -850,6 +853,7 @@ class AdminReservationsController extends Controller{
             $endDate = '\'\'';
         }
         $data['enddate'] = $endDate;
+        //echo "<pre>"; print_r($data); die;
         echo json_encode($data);
     }
 
@@ -857,11 +861,12 @@ class AdminReservationsController extends Controller{
         $vl_id = Input::get('id');
         $city_id = Input::get('city_id');
 
-        $data['reserveData']   = $this->alacarte_model->getAlacarteLimit($vl_id);
-        //$data['ala_schedule']  = $this->alacarte_model->getAlacarteLocationSchedule($vl_id);
-        $data['block_dates']   = $this->alacarte_model->getAlacarteBlockDates($vl_id);
-
-
+        $data['reserveData']    = $this->alacarte_model->getAlacarteLimit($vl_id);
+        $data['ala_schedule']   = AdminReservations::getAlacarteLocationSchedule($vl_id);
+        $data['block_dates']    = $this->alacarte_model->getAlacarteBlockDates($vl_id);
+        $data['scheduleDays']   = $this->alacarte_model->getAlacarteLocationScheduleDays($vl_id);
+        $data['availableDates'] = $this->alacarte_model->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+        //echo "<pre>"; print_r($data['ala_schedule']); print_r($data['scheduleDays']); print_r($data['availableDates']); die;
         $data['schedule'] = Array
         (
 
@@ -1316,7 +1321,7 @@ class AdminReservationsController extends Controller{
     }
 
     public function experienceCheckout(){
-        //echo "<pre>"; print_r(Input::all());
+        //echo "<pre>"; print_r(Input::all()); die;
         $dataPost['reservationDate'] = Input::get('booking_date');
         $dataPost['reservationDay'] =  date("D", strtotime($dataPost['reservationDate']));//
         $dataPost['reservationTime'] = Input::get('booking_time');
@@ -1405,7 +1410,7 @@ class AdminReservationsController extends Controller{
             'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
             'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
             'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-            'Occasion' => $dataPost['addons_special_request'],
+            'Special_Request' => $dataPost['addons_special_request'],
             'Type' => "Experience",
             'API_added' => 'Admin',
             'GIU_Membership_ID' => $userData['data']['membership_number'],
@@ -1588,7 +1593,7 @@ class AdminReservationsController extends Controller{
                     'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                     'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                     'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-                    'Occasion' => $dataPost['specialRequest'],
+                    'Special_Request' => $dataPost['specialRequest'],
                     'Type' => "Alacarte",
                     'API_added' => 'Admin',
                     'GIU_Membership_ID' => $userData['data']['membership_number'],

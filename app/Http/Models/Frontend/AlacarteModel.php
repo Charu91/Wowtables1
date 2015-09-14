@@ -927,7 +927,8 @@ class AlacarteModel{
         $formatted_date = '';
         if(!empty($row->block_date))
         {
-          $formatted_date =  date('m-d-Y',strtotime($row->block_date));
+          //$formatted_date =  date('m-d-Y',strtotime($row->block_date));
+            $formatted_date =  date('Y-m-d',strtotime($row->block_date));
         }
 
         if(!array_key_exists($row->vendor_location_id, $arrBlockedDate)) {
@@ -965,6 +966,85 @@ class AlacarteModel{
     }
     return $arrData;
   }
+
+    public static function getAlacarteLocationScheduleDays($vendorLocationID) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('vendor_location_booking_schedules as vlbs'),'vlbs.schedule_id','=','schedules.id')
+            ->where('vlbs.vendor_location_id', $vendorLocationID)
+            ->select('vlbs.vendor_location_id','schedules.day_short','schedules.day_numeric','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+    #array to hold information
+    $arrData = array();
+
+    if($schedules) {
+      foreach($schedules as $row) {
+
+        $arrData[$row->day_short] = $row->day_numeric;
+
+      }
+    }
+    return $arrData;
+  }
+
+    /*
+     * This function removes the blockdates and only returns available dates for next 2 months
+     * */
+    public function getAvailableDates($blockedDates,$scheduleDays) {
+        //echo "<pre>"; print_r($blockedDates); print_r($scheduleDays); //die;
+        $d1= date('Y-m-d');
+        $d2= strtotime(date("Y-m-d").' +2 Months');
+        $d2= date('Y-m-d', $d2);
+        $begin = new \DateTime($d1);
+        $end = new \DateTime($d2);
+        $daterange = new \DatePeriod($begin, new \DateInterval('P1D'), $end);
+
+        $dates = array();
+        $arrAvailableDates = array();
+        foreach($daterange as $date){
+            $dates[] = $date->format("Y-m-d");
+        }
+        //echo "<pre>"; print_r($dates); die;
+        if(!empty($blockedDates)){ //echo "null";
+            foreach ($blockedDates as $key => $value) {
+                //echo $key." , ".$value;
+                if(!empty($value) && $value[0] != ""){
+                    foreach($value as $blockDate){
+                        $checkBlockDate = array_search($blockDate, $dates);
+
+                        if($checkBlockDate!==false)
+                            unset($dates[$checkBlockDate]);
+                    }
+
+                    $arrAvailableDates = $this->sortByDays($dates,$scheduleDays);
+                }else{
+                    $arrAvailableDates = $this->sortByDays($dates,$scheduleDays);
+                }
+
+            }
+        } else { //echo "not null";
+            $arrAvailableDates = $this->sortByDays($dates,$scheduleDays);
+        }
+
+        //echo "<pre>"; print_r($arrAvailableDates); die;
+        return $arrAvailableDates;
+    }
+
+    protected function sortByDays($dates,$scheduleDays){
+        $finalDates = array();
+        //echo "<pre>as"; print_r($scheduleDays);
+        foreach($dates as $date){
+            if(in_array(date('N',strtotime($date)),$scheduleDays)){
+                $finalDates[] = date('Y-n-j',strtotime($date));
+            }
+        }
+        //echo "<pre>fd"; print_r($finalDates);//die;
+        return $finalDates;
+    }
     //function to get related experiences which are active and allocated to selected vendor_location_id
     public static function getRelatedExperiences($aLaCarteID,$city_id){
 

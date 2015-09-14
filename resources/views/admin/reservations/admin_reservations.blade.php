@@ -51,11 +51,25 @@
         }
 
         .Highlighted a{
-            background-color : #b94a39 !important;
+            background-color : #f0c140 !important;
             background-image :none !important;
             color: White !important;
             font-weight:bold !important;
             font-size: 12pt;
+        }
+
+        .time-highlight{
+            background: none repeat scroll 0 0 #f0c140 !important;
+            border-radius: 2px;
+            color: #fff;
+            height: 25px;
+            margin-bottom: 6px;
+            margin-left: 6px;
+            margin-right: 6px;
+            padding: 2px 0;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
         }
     </style>
     <h1 class="cms-title text-center">Add / Modify Reservations</h1>

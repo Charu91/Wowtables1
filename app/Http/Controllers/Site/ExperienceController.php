@@ -174,7 +174,7 @@ class ExperienceController extends Controller {
 
             $check_userid = "if(bookmark_userid = ".$user_id.", 0, if(bookmark_userid != ".$user_id.", 1, 1)),`order` asc";
         }
-       
+
         $areas_footer = $areas;
 
         if($city == '')
@@ -196,7 +196,9 @@ class ExperienceController extends Controller {
                $redirect_url = "/mumbai";
             }  
             return redirect()->route('experience.lists',[$redirect_url]);
-        }
+        } /*else {
+            $city = $city_name;
+        }*/
 
 
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
