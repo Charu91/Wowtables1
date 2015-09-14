@@ -56,7 +56,7 @@ class UserController extends Controller {
 
         //$userRegister = $this->user->mobileRegister($input, $this->mailchimp);
         $userRegister = $this->user->mobileRegister($input);        
-        /*if($userRegister['code'] == 200) {
+        if($userRegister['code'] == 200) {
         //===================Mail Chimp Start ======================
         $users = $input;
 
@@ -97,7 +97,7 @@ class UserController extends Controller {
             
         $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
         //===================MAil Chimp End ========================
-        }*/
+        }
 
         return response()->json($userRegister['data'], $userRegister['code']);
 	}
