@@ -55,9 +55,8 @@ class UserController extends Controller {
         $input = $this->request->all();
 
         //$userRegister = $this->user->mobileRegister($input, $this->mailchimp);
-        $userRegister = $this->user->mobileRegister($input);
-        
-        if($userRegister['code'] == 200) {
+        $userRegister = $this->user->mobileRegister($input);        
+        /*if($userRegister['code'] == 200) {
         //===================Mail Chimp Start ======================
         $users = $input;
 
@@ -77,12 +76,12 @@ class UserController extends Controller {
             'MERGE11'   => 0,
             'MERGE17'   => 'Has WowTables account',
             'PHONE'     => isset($users['phone'])? $users['phone']: '',
-            'MERGE18'   => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
-            'MERGE19'   => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
-            'MERGE20'   => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
+            //'MERGE18'   => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
+            //'MERGE19'   => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
+            //'MERGE20'   => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
         );
 
-        $this->mailchimp->lists->subscribe($this->listId, ["email"=>$users['email']],$merge_vars,"html",false,true );
+        $this->mailchimp->lists->subscribe($this->listId, ["email" => $users['email']],$merge_vars,"html",false,true );
         
         $my_email = $users['email'];
         
@@ -98,7 +97,7 @@ class UserController extends Controller {
             
         $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
         //===================MAil Chimp End ========================
-        }
+        }*/
 
         return response()->json($userRegister['data'], $userRegister['code']);
 	}
