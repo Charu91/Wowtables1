@@ -59,7 +59,10 @@ class UserController extends Controller {
         if($userRegister['code'] == 200) {
         //===================Mail Chimp Start ======================
         $users = $input;
-        $city_name = Location::where(['Type' => 'City', 'id' => $users['city']])->pluck('name');
+
+        $cityarray = DB::select("SELECT name FROM locations WHERE id=".$data['location_id']);
+        $city_name = $cityarray[0]->name; 
+        //$city_name = Location::where(['Type' => 'City', 'id' => $users['city']])->pluck('name');
         if(empty($city_name))
         {
             $city_name = 'mumbai';
