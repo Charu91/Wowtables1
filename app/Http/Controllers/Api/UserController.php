@@ -81,7 +81,8 @@ class UserController extends Controller {
             //'MERGE20'   => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
         );
 
-        $this->mailchimp->lists->subscribe($this->listId, ["email" => $users['email']],$merge_vars,"html",false,true );
+        //$this->mailchimp->lists->subscribe($this->listId, ["email" => $users['email']],$merge_vars,"html",false,true );
+        $this->mailchimp->lists->subscribe($this->listId, "email" => ["email" => $users['email']] ,$merge_vars,"html",false,true );
         
         $my_email = $users['email'];
         
