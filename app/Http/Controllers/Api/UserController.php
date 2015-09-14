@@ -61,7 +61,7 @@ class UserController extends Controller {
         //===================Mail Chimp Start ======================
         $users = $input;
 
-        $cityarray = DB::select("SELECT name FROM locations WHERE id=".$data['location_id']);
+        $cityarray = DB::select("SELECT name FROM locations WHERE id=".$users['location_id']);
         $city_name = $cityarray[0]->name; 
         //$city_name = Location::where(['Type' => 'City', 'id' => $users['city']])->pluck('name');
         if(empty($city_name))
