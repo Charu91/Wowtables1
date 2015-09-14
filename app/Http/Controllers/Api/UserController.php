@@ -8,6 +8,7 @@ use WowTables\Http\Requests\Api\UserLoginRequest;
 use WowTables\Http\Requests\Api\UserRegistrationRequest;
 use WowTables\Http\Requests\Api\UserFBLoginRequest;
 use Mailchimp;
+use WowTables\Http\Models\Eloquent\Location;
 
 class UserController extends Controller {
 
@@ -52,7 +53,48 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        $userRegister = $this->user->mobileRegister($input, $this->mailchimp);
+        //$userRegister = $this->user->mobileRegister($input, $this->mailchimp);
+        $userRegister = $this->user->mobileRegister($input);
+        
+        if($userRegister['code'] == 200) {
+        //===================Mail Chimp Start ======================
+        $users = $input;
+        $city_name = Location::where(['Type' => 'City', 'id' => $users['city']])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+        
+        $merge_vars = array(
+            'NAME'      => isset($users['full_name'] )? $users['full_name']: '',
+            'SIGNUPTP'  => isset($facebook_id)? 'Facebook': 'Email',
+            'BDATE'     => isset($users['dob'])? $users['dob']: '',
+            'GENDER'    => isset($users['gender'])? $users['gender']: '',
+            'MERGE11'   => 0,
+            'MERGE17'   => 'Has WowTables account',
+            'PHONE'     => isset($users['phone'])? $users['phone']: '',
+            'MERGE18'   => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
+            'MERGE19'   => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
+            'MERGE20'   => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
+        );
+
+        $this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
+        
+        $my_email = $users['email_address'];
+        
+        $city = $city_name;
+            $mergeVars = array(
+                'GROUPINGS' => array(
+                    array(
+                        'id' => 9613,
+                        'groups' => ucfirst($city),
+                    )
+                )
+            );
+            
+        $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+        //===================MAil Chimp End ========================
+        }
 
         return response()->json($userRegister['data'], $userRegister['code']);
 	}
