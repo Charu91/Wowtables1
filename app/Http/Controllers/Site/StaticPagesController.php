@@ -98,23 +98,23 @@ class StaticPagesController extends Controller {
 		if($accessToken != ""){
 			Session::flush();
 			$accessDetails = UserDevices::getUserDetailsByAccessToken($accessToken);
-
-			$user_array = Auth::loginUsingId($accessDetails);
-			//echo "<pre>"; print_r($user_array);
-			$userdata = array(
-				'id'  => $user_array->id,
-				'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
-				'email'     => $user_array->email,
-				'full_name' =>$user_array->full_name,
-				'user_role' =>$user_array->role_id,
-				'phone'     =>$user_array->phone_number,
-				'city_id'   =>$user_array->location_id,
-				'facebook_id'=>@$user_array->fb_token,
-				'exp'=>"10",
-				'logged_in' => TRUE,
-			);
-			Session::put($userdata);
-
+			if($accessDetails > 0){
+				$user_array = Auth::loginUsingId($accessDetails);
+				//echo "<pre>"; print_r($user_array);
+				$userdata = array(
+					'id'  => $user_array->id,
+					'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+					'email'     => $user_array->email,
+					'full_name' =>$user_array->full_name,
+					'user_role' =>$user_array->role_id,
+					'phone'     =>$user_array->phone_number,
+					'city_id'   =>$user_array->location_id,
+					'facebook_id'=>@$user_array->fb_token,
+					'exp'=>"10",
+					'logged_in' => TRUE,
+				);
+				Session::put($userdata);
+			}
 		}
 		//return view('site.users.home');
 		//this code is start in header and footer page.
