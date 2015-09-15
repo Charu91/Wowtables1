@@ -417,7 +417,7 @@ $(window).load(function(){
     if(check_menu > 0){
         $(".wowtables_header1").addClass("hidden");
         $(".wowtables_header2").addClass("hidden");
-        document.querySelector('footer').style = 'display: none';
+        $(".wowtables_footer1").addClass("hidden");
     }
 })
 </script>
@@ -985,7 +985,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
     </div>
 <a href="#" class="scrollToTop"><span id="scroll_top_display">Top</span> &and;</a>
 <!--Footer starts from here-->
-<footer>
+<footer class="wowtables_footer1">
 
       <div class="container">
         <div class="row">
