@@ -91,6 +91,7 @@ class ReservationDetails extends Model {
 			$reservation->points_awarded = $aLaCarteDetail['reward_point'];
  			$reservation->vendor_location_id = $arrData['vendorLocationID'];
 			$reservation->product_vendor_location_id = 0;
+
  		}
 		else if($arrData['reservationType'] == 'experience') {
 			
@@ -113,7 +114,12 @@ class ReservationDetails extends Model {
 													  ->where('reservation_date', '=', $arrData['reservationDate'])
 													  ->where('reservation_time', '=', $arrData['reservationTime'])
 													  ->select('id')
-													  ->first();				
+													  ->first();
+
+			//Reading user detail to get membership number(GIU_Membership_ID)
+			$token = $_SERVER['HTTP_X_WOW_TOKEN'];
+			$userDetail = Profile::getUserProfile($token);	
+
 
 			if($arrData['reservationType'] == 'alacarte') {
 				
@@ -138,6 +144,9 @@ class ReservationDetails extends Model {
 				//Mail by mailchimp
 				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );	 		
 
+				//Reading offers detail
+				$offersResult = self::getSpecialOfferDetail($arrData['vendorLocationID']);
+
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
@@ -148,14 +157,16 @@ class ReservationDetails extends Model {
 					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Alternate_ID' =>  'A'.sprintf("%06d",$reservation_id['id']),					                    
-					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Special_Request' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
 					                    'API_added' => 'Mobile',
-					                    //'GIU_Membership_ID' => '1001010',
+					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
 					                    'Outlet' => $aLaCarteDetail['location'],
 					                    //'Points_Notes'=>'test',
 					                    'AR_Confirmation_ID'=>'0',
 					                    'Auto_Reservation'=>'Not available',
+					                    'Special_offer_title' => $offersResult['special_offer_title'],
+					                    'Special_offer_desc' => $offersResult['special_offer_desc'],
 					                    //'telecampaign' => $campaign_id,
 					                    //'total_no_of_reservations'=> '1',
 					                    'Calling_option' => 'No'
@@ -246,10 +257,10 @@ class ReservationDetails extends Model {
 					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Alternate_ID' =>  'E'.sprintf("%06d",$reservation_id['id']),
-					                    'Occasion' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Special_Request' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
 					                    'API_added' => 'Mobile',
-					                    //'GIU_Membership_ID' => '1001010',
+					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
 					                    'Outlet' => $productDetail['location'],
 					                    //'Points_Notes'=>'test',
 					                    'AR_Confirmation_ID'=>'0',
@@ -628,7 +639,7 @@ class ReservationDetails extends Model {
 								'l.name as location', 'pat.attribute_value as short_description',
 								'v.name as vendor_name','pvl.descriptive_title',
 								 //DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
- 								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat.attribute_value, "")) AS terms_and_conditions'),
+ 								 DB::raw('MAX(IF(pa3.alias = "terms_and_conditions", pat3.attribute_value, "")) AS terms_and_conditions'),
  								 DB::raw('MAX(IF(pa3.alias = "experience_includes", pat.attribute_value, "")) AS experience_includes')
 								)
                         ->first(); 
@@ -1163,7 +1174,7 @@ class ReservationDetails extends Model {
 															->where('uai.user_id', $userID)												
 															->where('ua.alias', '=', 'a_la_carte_reservation')
 															->select('attribute_value as count')
-															->first();
+															->first();				
 
   				$merge_vars = array(
                     'MERGE1'=>$arrData['guestName'],
@@ -1706,7 +1717,40 @@ class ReservationDetails extends Model {
 			}
 			
 			return $arrResponse;							
-	} 
+	}
+	//-------------------------------------------------------------------------------------------------
+
+
+	/**
+	 * Read special_offer_title and special_offer_desc of vendor of alacarte by vendor location id.
+	 * 
+	 * @access	public
+	 * @return	 
+	 * @since	1.0.0
+	 */
+	public static function  getSpecialOfferDetail($vendorId) { 
+
+		$queryResult = DB::table('vendor_locations as vl')
+						->join('vendors','vendors.id','=','vl.vendor_id')
+						->join('vendor_location_attributes_text as vlat', 'vlat.vendor_location_id', '=', 'vl.id')
+						->join('vendor_attributes as va', 'va.id', '=', 'vlat.vendor_attribute_id')
+						->where('vl.id',$vendorId)
+						->where('vl.a_la_carte','=',1)
+						->where('vl.status','Active')						
+						->groupBy('vl.id')
+						->select( 
+								'vl.id as vl_id',						
+								DB::raw('MAX(IF(va.alias = "special_offer_title", vlat.attribute_value, "")) AS special_offer_title'),
+								DB::raw('MAX(IF(va.alias = "special_offer_desc", vlat.attribute_value, "")) AS special_offer_desc')
+								)						
+						->first();
+
+		$offerDetail['special_offer_title'] = (empty($queryResult->special_offer_title)) ? "" : $queryResult->special_offer_title;
+		$offerDetail['special_offer_desc'] = (empty($queryResult->special_offer_desc)) ? "" : $queryResult->special_offer_desc;  
+
+		return $offerDetail; 
+	}
+
 }
 //end of class Reservation
 //end of file app/Http/Models/Eloquent/Reservation.php

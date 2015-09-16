@@ -1430,8 +1430,8 @@ class ExperienceModel {
         $formatted_date = '';
         if(!empty($row->block_date))
         {
-          //$formatted_date =  date('Y-m-d',strtotime($row->block_date));
-          $formatted_date =  date('m-d-Y',strtotime($row->block_date));
+          $formatted_date =  date('Y-m-d',strtotime($row->block_date));
+          //$formatted_date =  date('m-d-Y',strtotime($row->block_date));
         }
 
         if(array_key_exists($row->vendor_location_id, $arrBlockedDate)) {
@@ -1447,6 +1447,59 @@ class ExperienceModel {
      return $arrBlockedDate;
 
   }
+    /*
+     * This function removes the blockdates and only returns available dates for next 2 months
+     * */
+    public function getAvailableDates($blockedDates,$scheduleDays) {
+
+        $d1= date('Y-m-d');
+        $d2= strtotime(date("Y-m-d").' +2 Months');
+        $d2= date('Y-m-d', $d2);
+        $begin = new \DateTime($d1);
+        $end = new \DateTime($d2);
+        $daterange = new \DatePeriod($begin, new \DateInterval('P1D'), $end);
+
+        $dates = array();
+        $arrAvailableDates = array();
+        foreach($daterange as $date){
+            $dates[] = $date->format("Y-m-d");
+        }
+
+        foreach ($blockedDates as $key => $value) {
+
+            if(!empty($value) && $value[0] != ""){
+                foreach($value as $blockDate){
+                    $checkBlockDate = array_search($blockDate, $dates);
+
+                    if($checkBlockDate!==false)
+                        unset($dates[$checkBlockDate]);
+                }
+
+
+                $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+            }else{
+                if(isset($scheduleDays[$key])){
+                    $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+                }
+
+            }
+
+        }
+        //echo "<pre>"; print_r($arrAvailableDates); die;
+        return $arrAvailableDates;
+    }
+
+    protected function sortByDays($dates,$scheduleDays){
+        $finalDates = array();
+        foreach($dates as $date){
+            if(in_array(date('N',strtotime($date)),$scheduleDays)){
+                $finalDates[] = date('Y-n-j',strtotime($date));
+            }
+        }
+        //echo "<pre>fd"; print_r($finalDates);die;
+        return $finalDates;
+    }
+
 
   public static function getExperienceLocationSchedule($productID, $productVendorLocationID = NULL,  $day=NULL) {
     //initializing the value of day
@@ -1469,6 +1522,32 @@ class ExperienceModel {
 
         $arrData[$row->vendor_location_id][$row->day_short][$row->slot_type][$row->id] = date('g:i A',strtotime($row->time));
         
+      }
+    }
+    return $arrData;
+  }
+
+    public static function getExperienceLocationScheduleDay($productID, $productVendorLocationID = NULL,  $day=NULL) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID)
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.day_numeric','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+
+    #array to hold information
+    $arrData = array();
+
+    if($schedules) {
+      foreach($schedules as $row) {
+            //echo "<prE>"; print_r($row);
+        $arrData[$row->vendor_location_id][$row->day_short] = $row->day_numeric;
+
       }
     }
     return $arrData;
@@ -1692,6 +1771,112 @@ class ExperienceModel {
         $userDetails = DB::table('users')->where('id', $id)->first();
 
         return $userDetails;
+    }
+
+    public static function getExperiencesAddons($product_id){
+        $samebrand = DB::table('products as p')
+            ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+            ->where('p.product_parent_id',$product_id)
+            ->where('p.status','Publish')
+            ->where('p.type','addon')
+            ->select('p.id as addon_id','p.name as addon_name','pp.post_tax_price as addon_post_tax_price')
+            ->get();
+
+        $relatedExperiencesArray = array();
+        if(!empty($samebrand)){
+            foreach ($samebrand as $values) {
+
+                $relatedExperiencesArray[] = array('addonName' => $values->addon_name,
+                    'post_tax_price' => $values->addon_post_tax_price,
+                    'addonID' => $values->addon_id,
+                );
+
+            }
+        }
+
+        return $relatedExperiencesArray;
+    }
+
+    public static function getGiftcardExperiences($city_id){
+        $samebrand = DB::table('products as p')
+            ->leftJoin('product_attributes_text AS pat','pat.product_id','=','p.id')
+            ->leftJoin('product_attributes AS pa','pa.id','=','pat.product_attribute_id')
+            ->leftJoin('product_attributes_boolean AS pab','pab.product_id','=','p.id')
+            ->leftJoin('product_attributes AS pa1','pa1.id','=','pab.product_attribute_id')
+            ->leftJoin('product_pricing AS pp','pp.product_id','=','p.id')
+            ->leftJoin('product_reviews AS pr','pr.product_id','=','p.id')
+            ->leftJoin('price_types AS pt','pt.id','=','pp.price_type')
+            ->leftJoin('product_media_map AS pmm','pmm.product_id','=','p.id')
+            ->leftJoin('media_resized_new AS mrn','mrn.media_id','=','pmm.media_id')
+            ->leftJoin('product_flag_map as pfm','pfm.product_id','=','p.id')
+            ->leftJoin('flags as f','pfm.flag_id','=','f.id')
+            ->leftJoin('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+            ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+            ->leftJoin('vendors as v','v.id','=','vl.vendor_id')
+            ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+            ->leftJoin('locations as l','l.id','=','vla.city_id')
+            ->where('mrn.image_type','listing')
+            ->where('pab.product_attribute_id',10)
+            ->where('pab.attribute_value',1)
+            ->where('vla.city_id',$city_id)
+            ->where('pvl.status','Active')
+            ->groupBy('p.id')
+            ->select('vl.vendor_id',
+                'v.name as vendor_name',
+                'p.name AS productname',
+                'p.slug AS slug',
+                'pp.price',
+                'pp.post_tax_price',
+                'pt.type_name',
+                'mrn.file',
+                'f.name as flagname',
+                'f.color',
+                'l.name as cityname',
+                'p.id as product_id',
+                'pvl.vendor_location_id',
+                'pvl.descriptive_title',
+                DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+                DB::raw('AVG(pr.rating) as avg_rating, COUNT(*) as total_ratings,pr.product_id as product_review_id')
+            )
+            //->select('vl.vendor_id','p.name AS productname','p.slug AS slug','pat.attribute_value','pa.name as productattrname','pp.price','pt.type_name','mrn.file','f.name as flagname','f.color','p.id','l.name as cityname')->max("(IF(pa.alias = 'short_description', pat.attribute_value, NULL)) AS short_description")
+            ->get();
+
+        //echo "<pre>"; print_r($samebrand); die;
+        $relatedExperiencesArray = array();
+        if(!empty($samebrand)){
+            foreach ($samebrand as $values) {
+
+                $num_of_full_starts = round($values->avg_rating,1);// number of full stars
+                $num_of_half_starts     = $num_of_full_starts-floor($num_of_full_starts); //number of half stars
+                $number_of_blank_starts = 5-($values->avg_rating); //number of white stars
+
+
+                    $relatedExperiencesArray[] = array('productname' => $values->productname,
+                        'slug' => $values->slug,
+                        'short_description' => $values->short_description,
+                        'price' => $values->price,
+                        'post_tax_price' => $values->post_tax_price,
+                        'type_name' => $values->type_name,
+                        'file' => $values->file,
+                        'flagname' => $values->flagname,
+                        'color' => $values->color,
+                        'cityname' => $values->cityname,
+                        'averageRating' => $values->avg_rating,
+                        'totalRating' => $values->total_ratings,
+                        'full_stars' => $num_of_full_starts,
+                        'half_stars' => $num_of_half_starts,
+                        'blank_stars' => $number_of_blank_starts,
+                        'product_id' => $values->product_id,
+                        'vendor_location_id' => $values->vendor_location_id,
+                        'vendor_id' => $values->vendor_id,
+                        'vendor_name' => $values->vendor_name,
+                        'descriptive_title' => $values->descriptive_title,
+                    );
+
+            }
+        }
+
+        return $relatedExperiencesArray;
     }
 
 

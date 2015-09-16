@@ -144,7 +144,7 @@ else{?>
 <!-- start code form alacart product-->
 <div class="clearfix"></div>
 
-			<h3 style="padding-bottom:10px;margin-left:15px;">A la carte Reservations: </h3>
+			<h3 style="padding-bottom:10px;margin-left:15px;">Classic Reservations: </h3>
 			<ul class="experience-grid">
 				<?php //$total_rows = count($exclusiveExperiences);
 					//$total_rows =5;

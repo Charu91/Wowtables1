@@ -90,7 +90,7 @@ $(document).ready(function() {
         var t = 0;
 		if($("#check_allow_guest").val() == 'Yes'){
 				//
-				var rec_email = $("#receiver_email").val();
+				/*var rec_email = $("#receiver_email").val();
 				var rec_name = $("#receiver_name").val();
 				var gift_no_people = $("#gift_no_people").val();
 				var sel_gift_opt = $("input[type='radio'][name='gift_opt']:checked").val();
@@ -107,7 +107,7 @@ $(document).ready(function() {
 						type: "POST",
 						dataType: "json",
 						data:{receiver_email: rec_email,receiver_name: rec_name, gift_num_ppl: gift_no_people,  select_gift_opt: sel_gift_opt, gift_chse_exp: gift_choose_exp, amount : amt, other_amount: oth_amt, send_gift: gift_send, mailing_address: mail_address, special_insts: spl_inst,exp_price: exp_pri},
-					});
+					});*/
 				$("#gift_pay").attr("data-target","#redirectloginModal").attr("data-toggle","modal");
 				
 		} else {
@@ -264,13 +264,15 @@ $(document).ready(function() {
     });
     $("#city_list li").click(function(e) {
         var t = $(this).find("a").attr("rel");
+        var v = $(this).find("a").attr("data-cityID");
+        //console.log('v = '+v);
         $("#gift_choose_city").html(ucfirst(t) + ' <span class="caret"></span>');
         $.ajax({
             url: "/gift_cards/show_exp",
             type: "POST",
             dataType: "json",
             data: {
-                city: t
+                city: v
             },
             async: false,
             success: function(e) {
@@ -281,6 +283,8 @@ $(document).ready(function() {
         $("#one_price").removeClass("hidden")
     });
     $("#location_list").on("click", "li", function(e) {
+        $(".addons_price_listing").css('display','none');
+        $("#addons_list").css('display','none');
         $("#total_amount_error").text("");
         mylocation = $(this).find("a").attr("rel");
         info = mylocation.split("|");
@@ -289,6 +293,7 @@ $(document).ready(function() {
         $("#gift_choose_exp").html(button_name + ' <span class="caret"></span>');
         one_price = info[2];
         $("#one_price span").text("Rs. " + one_price);
+        $("#experiencePrice").val(one_price);
 		$("#single_exp_price").val(one_price);
         gift_no_people = $("#gift_no_people").val();
         total = gift_no_people * one_price;
@@ -296,16 +301,54 @@ $(document).ready(function() {
         $("#total").text("Rs. " + total);
 		$("#amount").val(total);
         link = $(this).find("a").children().eq(3).val();
-        $("#link_to_experience_description").attr("href", link)
+        $("#link_to_experience_description").attr("href", link);
+        var product_id = $(this).find("input[name=product_id]").val();
+        //console.log("product_id = "+product_id);
+        $.ajax({
+            url: "/gift_cards/getRelatedAddons",
+            type: "POST",
+            dataType: "json",
+            data: {
+                pid: product_id
+            },
+            async: false,
+            success: function(e) { //console.log(e);
+                if(e.content != "" && e.addons_content != ""){
+                    $("#addons_list").html('<p class="col-md-12"><strong>Meal Options:</strong></p>'+e.content).css('display','inline');
+                    $(".addons_price_listing").html('<p class="col-md-12"><strong>This experiences have following addons</strong></p>'+e.addons_content).css('display','inline');
+                }
+            }
+        });
     });
     $("#gift_no_people").change(function() {
         gift_no_people = $(this).val();
+        str = "";
+        for (var e = 0; e <= gift_no_people; e++) {
+            str += "<option value='" + e + "'>" + e + "</option>"
+        }
+        $("#addons_list select").html(str);
         if (one_price != 0) {
             total = gift_no_people * one_price;
             total = parseFloat(total).toFixed(2);
             $("#total").text("Rs. " + total);
 			$("#amount").val(total);
+			$("#grandTotal").val(total);
         }
+    });
+
+    $("body").delegate(".giftcard_addons_list","change",function(){
+        adi = $(this).attr('data-addonid');
+        addonPrice = $("#"+adi).val();
+        ppl = $(this).val();
+        total2 = Math.floor($("#amount").val());
+        addonamount = addonPrice * ppl;
+        tamount = total2 + addonamount;
+        total1 = parseFloat(tamount).toFixed(2);
+
+        $("#total").text("Rs. " + total1);
+        $("#grandTotal").val(total1);
+
+
     });
     if ($("input[name=checking]").val() != "") {
         $("#rewards").html($("input[name=checking]").val() + '<span class="caret"></span>')

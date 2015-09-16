@@ -10,6 +10,7 @@ use Rhumsaa\Uuid\Uuid;
 use Illuminate\Contracts\Hashing\Hasher;
 use Hash;
 use Config as Confg;
+use Mailchimp;
 
 /**
  * Class User
@@ -46,7 +47,7 @@ class User {
      *
      * @var int
      */
-    public $phone_number;
+    public $phone_number;    
 
 	/**
 	 * The database table used by the model.
@@ -426,6 +427,7 @@ class User {
         }
     }
 
+    //public function mobileRegister(array $data, $objMailChimp)
     public function mobileRegister(array $data)
     {
         DB::beginTransaction();
@@ -478,6 +480,40 @@ class User {
                 $message->to($registerarray['email_to'])->subject('New app registration in '.$registerarray['city']);
                 $message->cc(['kunal@wowtables.com', 'rooshabh@wowtables.com','concierge@wowtables.com']);
             });
+
+         /*   //Mail by MailChimp 
+            $listId = '986c01a26a';
+            $merge_vars = array(
+                       'NAME'       => isset($data['full_name'] )? $data['full_name']: '',
+                       'SIGNUPTP'   => isset($facebook_id)? 'Facebook': 'Email',
+                       'BDATE'      => isset($data['dob'])? $data['dob']: '',
+                       'GENDER'     => isset($data['gender'])? $data['gender']: '',
+                       'MERGE11'    => 0,
+                       'MERGE17'    => 'Has WowTables account',
+                       'PHONE'      => isset($data['phone_number'])? $data['phone_number']: '',
+                       'MERGE18'    => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
+                       'MERGE19'    => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
+                       'MERGE20'    => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
+                   );                    
+            //$this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
+            $objMailChimp->lists->subscribe($listId, ["email"=>$data['email']],$merge_vars,"html",false,true );
+            
+                   //echo "<pre>"; print_r($api); die;
+                   //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
+                   $my_email = $data['email']; //$users['email_address'];
+                   //$city = $users['city'];
+                   $city = $cityname; //$city_name;
+                   $mergeVars = array(
+                                        'GROUPINGS' => array(
+                                             array(
+                                                   'id' => 9613,
+                                                   'groups' => ucfirst($city),
+                                                  )
+                                        )
+                                     );
+               //echo "asd , ";
+               $objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
+            //----end Mailchimp Mail*/
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();

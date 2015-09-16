@@ -27,7 +27,7 @@ use WowTables\Http\Models\Profile;
 class AlacarteController extends Controller {
 
     protected $listId = '986c01a26a';
-	
+
 	function __construct(RestaurantLocationsRepository $repository, Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp){
         $this->request = $request;
         $this->alacarte_model = $alacarte_model;
@@ -41,7 +41,7 @@ class AlacarteController extends Controller {
     }
 
     function lists($city='',$start_from=0,$areas='',$cousines='',$prices=''){
-    	
+
     	//DB::connection()->enableQueryLog();
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $data['cities'] = $cities;
@@ -52,7 +52,7 @@ class AlacarteController extends Controller {
         $check_userid = '`order`,id desc';
         $data['user']   = Auth::user();
         $city_name      = 'mumbai';
-       
+
         if(!empty($data['user']))
         {
             $users_city     = $data['user']->location_id;
@@ -64,7 +64,7 @@ class AlacarteController extends Controller {
             }
 
         }
-       
+
         if($city == '')
         {
             if (Input::has('signup'))
@@ -74,25 +74,25 @@ class AlacarteController extends Controller {
                 } else {
                     $redirect_url = '/mumbai/alacarte';
                 }
-            } 
+            }
             else if(!empty($data['user']))
             {
-                $redirect_url = '/'.strtolower($city_name).'/alacarte/';                
-            } 
-            else 
+                $redirect_url = '/'.strtolower($city_name).'/alacarte/';
+            }
+            else
             {
                $redirect_url = "/mumbai".'/alacarte/';
-            }  
+            }
             return redirect()->route('alacarte.lists',[$redirect_url]);
         }
 
-        
+
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
-        
+
         $arrSubmittedData['city_id'] = $city_id;
 
-        $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);       
-                
+        $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);
+          //var_dump($searchResult);die;
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
             $data['resultCount'] = $searchResult['resultCount'];
@@ -107,7 +107,7 @@ class AlacarteController extends Controller {
         $data['ListpageSidebars']     = DB::select('SELECT ls.*,mrn.file as imagename FROM listpage_sidebar as ls LEFT JOIN media_resized_new as mrn ON ls.media_id = mrn.media_id WHERE city_id = '.$city_id.' AND show_in_alacarte = 1');
         $data['listpage_sidebar_url'] = Config::get('constants.LISTPAGE_SIDEBAR_WEB_URL');
 
-        $data['allow_guest']='Yes'; 
+        $data['allow_guest']='Yes';
         $data['current_city']  = strtolower($city);
         $data['current_city_id']        = $city_id;
 
@@ -115,13 +115,13 @@ class AlacarteController extends Controller {
         $data['allCuisines']  = $commonmodel->getAllCuisines();
         $data['allAreas']  =   $commonmodel->getAllAreas();
         $data['allPrices']  = $commonmodel->getAllPrices();
-        
+
 
         if(Input::get('ref')){
-            $refid = Input::get('ref'); 
+            $refid = Input::get('ref');
         } else {
             $refid = Cookie::get('referral');
-        }    
+        }
         if (!empty($refid)) {
             //$data['referral'] = $this->partners_model->get_row_by_refid($refid);
         }
@@ -139,7 +139,7 @@ class AlacarteController extends Controller {
         $check_userid = '`order`,id desc';
         $data['user']   = Auth::user();
         $city_name      = 'mumbai';
-       
+
         if(!empty($data['user']))
         {
             $users_city     = $data['user']->location_id;
@@ -156,14 +156,16 @@ class AlacarteController extends Controller {
         //echo "==".$alacarte_id    = Vendor::where(['slug' => $alaslug])->first()->id;
         $aLaCarteID = DB::table('vendor_locations')->where('slug',$alaslug)->first()->id;
         $arrALaCarte = $this->alacarte_model->getALaCarteDetails($aLaCarteID);
-        //echo "<pre>"; print_r($arrALaCarte); die;
+        //echo "<pre>"; print_r($data); die;
         $data['arrALaCarte']= $arrALaCarte;
         $data['reserveData']            = $this->alacarte_model->getAlacarteLimit($aLaCarteID);
         $data['block_dates']            = $this->alacarte_model->getAlacarteBlockDates($aLaCarteID);
         $data['schedule']               = $this->alacarte_model->getAlacarteLocationSchedule($aLaCarteID);
+        $data['scheduleDays']               = $this->alacarte_model->getAlacarteLocationScheduleDays($aLaCarteID);
         $data['relatedRestaurants']     = $this->alacarte_model->getRelatedRestaurants($aLaCarteID,$city_id,$data['arrALaCarte']['data']['cuisineID']);
         $data['relatedExperiences']     = $this->alacarte_model->getRelatedExperiences($aLaCarteID,$city_id);
-        //echo "<pre>"; print_r($data['relatedExperiences']); die;
+        $data['availableDates']         = $this->alacarte_model->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+        //echo "<pre>"; print_r($data['scheduleDays']); print_r($data['availableDates']); die;
         /*echo '<pre>';
         print_r($data['arrALaCarte']);
         print_r( $data['reserveData']);
@@ -171,7 +173,7 @@ class AlacarteController extends Controller {
         print_r( $data['schedule']);
         echo '</pre>';*/
 
-        $data['hasOrder']   =''; 
+        $data['hasOrder']   ='';
         $data['allow_guest']='Yes';
         $data['current_city']  = strtolower($city);
         $data['current_city_id']        = $city_id;
@@ -182,7 +184,7 @@ class AlacarteController extends Controller {
         $data['allAreas']  =   $commonmodel->getAllAreas();
         $data['allPrices']  = $commonmodel->getAllPrices();
         $data['dropdowns_opt']  = 0; //1 for disp
-        
+
 
         //$seo_title = (isset($data['arrALaCarte']['data']['seo_title']) && $data['arrALaCarte']['data']['seo_title'] != "" ? $data['arrALaCarte']['data']['seo_title'] : 'Wowtables');
         //$meta_desc = (isset($data['arrALaCarte']['data']['seo_meta_description']) && $data['arrALaCarte']['data']['seo_meta_description'] != "" ? $data['arrALaCarte']['data']['seo_meta_description'] : 'Wowtables');
@@ -207,7 +209,7 @@ class AlacarteController extends Controller {
 
         if($meta_desc=='')
         {
-          $metaDescDetails = 'Reserve a table at '.$data['arrALaCarte']['data']['title']. 
+          $metaDescDetails = 'Reserve a table at '.$data['arrALaCarte']['data']['title'].
                  'Enjoy in '.$data['arrALaCarte']['data']['location_address']['area']. ', '. $data['arrALaCarte']['data']['location_address']['city'].' Find information, curators suggestions, maps, address, photos and reviews';
         }
         else
@@ -224,13 +226,13 @@ class AlacarteController extends Controller {
           $metaKeyDetails = $meta_keywords;
         }
 
-        
+
         $meta_information = array('seo_title'      => $seoTitleDetails,
-                                   'meta_desc'     => $metaDescDetails, 
+                                   'meta_desc'     => $metaDescDetails,
                                    'meta_keywords' => $metaKeyDetails);
        /* print_r($meta_information);
         exit;*/
-
+        //var_dump($data);die;
         return view('frontend.pages.alacartedetails',$data)
                     ->with('meta_information', $meta_information);
     }
@@ -245,13 +247,13 @@ class AlacarteController extends Controller {
         //$price_start_range = Input::get('start_price');
         //$price_end_with = Input::get('end_price');
         $arrAreasList = Input::get('area_values');
-        $arrCuisineList = Input::get('cuisine_values');   
+        $arrCuisineList = Input::get('cuisine_values');
         $arrTagsList = Input::get('tags_values');
         $arrVendorList = Input::get('vendor_value');
         $price = Input::get('price');
 
         $search_city = Input::get('city');
-       
+
         $city       = Location::where(['Type' => 'City', 'id' => $search_city])->first()->name;
 
         if(isset($format_date_value) && $format_date_value != "") {
@@ -268,7 +270,7 @@ class AlacarteController extends Controller {
         }
 
         if($time_value != "") {
-            
+
             if($time_value == "lunch") {
                 $set_start_time = "11:00:00";
                 $set_end_time = "14:00:00";
@@ -283,7 +285,7 @@ class AlacarteController extends Controller {
             }
 
         } else {
-            
+
             $set_start_time = "";
             $set_end_time = "";
 
@@ -318,7 +320,7 @@ class AlacarteController extends Controller {
             $arrSubmittedData['vendor']  = explode(',',$arrVendorList);
         }
         //echo "<pre>"; print_r($arrSubmittedData); die;
-        $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);       
+        $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);
 
         if(!empty($searchResult)) {
             //setting up the array to be formatted as json
@@ -342,7 +344,7 @@ class AlacarteController extends Controller {
 
 
         return Response::json(array('restaurant_data'=> $restaurant_data,'area_count' => $data['filters']['locations'], 'cuisine_count' => $data['filters']['cuisines'], 'tags_count' => $data['filters']['tags']), 200);
-        
+
     }
 
     public function new_custom_search()
@@ -353,7 +355,7 @@ class AlacarteController extends Controller {
 
         $term = strip_tags($term_str);
         $city = Input::get('city');
-        
+
         $arrSubmittedData['city_id'] = $city;
         $arrSubmittedData['term']    = $term_str;
 
@@ -375,6 +377,12 @@ class AlacarteController extends Controller {
         $dataPost['reservationType'] = 'alacarte';
         $dataPost['specialRequest'] = Input::get('special');
         $dataPost['addon']          = Input::get('add_ons');
+        //var_dump($this->request->get('special_offer'));die;
+        $special_offer_title = $this->request->get('special_offer_title');
+        $special_offer_desc = $this->request->get('special_offer_desc');
+        $dataPost['special_offer_title'] = ((!empty($special_offer_title) && $special_offer_title != "") ? $special_offer_title : "") ;
+        $dataPost['special_offer_desc'] = ((!empty($special_offer_desc) && $special_offer_desc != "") ? $special_offer_desc : "") ;
+        //var_dump($dataPost['special_offer_desc']);die;
         //$dataPost['access_token'] = Session::get('id');
         $userID = Session::get('id');
         $userData = Profile::getUserProfileWeb($userID);
@@ -403,7 +411,7 @@ class AlacarteController extends Controller {
                         ) ;
 
         $validator = Validator::make($dataPost,$arrRules);
-        
+
         if($validator->fails()) {
             $message = $validator->messages();
             $errorMessage = "";
@@ -412,8 +420,8 @@ class AlacarteController extends Controller {
                     $errorMessage .= $message->first($key).'\n ';
                 }
             }
-            
-           return redirect()->back()->withErrors($validator);          
+
+           return redirect()->back()->withErrors($validator);
         }
         else {
 
@@ -437,7 +445,7 @@ class AlacarteController extends Controller {
             if($userID > 0) {
                 //validating the information submitted by users
                 $arrResponse = $this->alacarte_model->validateReservationData($dataPost);
-            
+
             if($arrResponse['status'] == 'success') {
                     $reservationResponse = $this->alacarte_model->addReservationDetails($dataPost,$userID);
 
@@ -461,7 +469,7 @@ class AlacarteController extends Controller {
                         'Date_of_Visit' => date('d-M-Y', strtotime($dataPost['reservationDate'])),
                         'Time' => date("g:i A", strtotime($dataPost['reservationTime'])),
                         'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
-                        'Occasion' => $dataPost['specialRequest'],
+                        'Special_Request' => $dataPost['specialRequest'],
                         'Type' => "Alacarte",
                         'API_added' => 'Yes',
                         'GIU_Membership_ID' => $userData['data']['membership_number'],
@@ -469,6 +477,8 @@ class AlacarteController extends Controller {
                         //'Points_Notes'=>'test',
                         'AR_Confirmation_ID'=>'0',
                         'Auto_Reservation'=>'Not available',
+                        'Special_offer_title'=>$dataPost['special_offer_title'],
+                        'Special_offer_desc'=>$dataPost['special_offer_desc'],
                         //'telecampaign' => $campaign_id,
                         //'total_no_of_reservations'=> '1',
                         'Calling_option' => 'No'
@@ -544,21 +554,21 @@ class AlacarteController extends Controller {
                 }
             }
             else {
-                return redirect()->back()->withErrors($validator);   
+                return redirect()->back()->withErrors($validator);
             }
         }
 
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
 
-        $city_id    = Input::get('city');        
+        $city_id    = Input::get('city');
         $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
         {
             $city_name = 'mumbai';
         }
 
-        $arrResponse['allow_guest']            ='Yes'; 
+        $arrResponse['allow_guest']            ='Yes';
         $arrResponse['current_city']           = strtolower($city_name);
         $arrResponse['current_city_id']        = $city_id;
 
@@ -633,10 +643,10 @@ class AlacarteController extends Controller {
                     if($reserv_date_new == $last_reserv_date){
                         //echo 'if';
                         $new_reserv = strtotime($reserv_time_new);
-                        
+
                         if( $new_reserv >= $last_reserv_time_2_hours_before && $new_reserv <= $last_reserv_time_2_hours_after){
                             $success =1;
-                           break; 
+                           break;
                         }
                     }
 

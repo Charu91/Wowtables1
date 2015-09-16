@@ -28,10 +28,32 @@ class Handler extends ExceptionHandler {
 	public function report(Exception $e)
 	{
 		if ($e instanceof Exception)
-    {
-        echo '';
-    }
+        {
+            echo '';
+        }
 
+        //echo $e->getCode();die();
+        //var_dump($e->ge());die();
+        /*$error_url = $_SERVER['SERVER_NAME']."".$_SERVER['REQUEST_URI'];
+        //$user_ip = $e->get;
+
+        $browser_details =  $_SERVER['HTTP_USER_AGENT'];
+        //echo $browser_details;
+        $file_name = $e->getFile();
+        $message = $e->getMessage();
+        $line_no = $e->getLine();
+
+        $error_array = array('error_url'=>$error_url,'browser_details'=>$browser_details,'file_name'=>$file_name,'message'=>$message,'line_no'=>$line_no);
+
+        //print_r($error_array);die();
+        Mail::send('site.pages.page_error_404',[
+            'error_array'=> $error_array,
+        ], function($message) use ($error_array)
+        {
+            $message->from('manan@gourmetitup.com', 'WowTables by GourmetItUp');
+            $message->to(['x+46554753315426@mail.asana.com'])->subject('Exception- '.$error_array['message']);
+
+        });*/
 		//return parent::report($e);
 	}
 
@@ -74,8 +96,8 @@ class Handler extends ExceptionHandler {
                 $message->cc(['kunal@wowtables.com','tech@wowtables.com']);
 
             });*/
-            //return parent::render($request, $e);
-            return response()->view('errors.404');
+            return parent::render($request, $e);
+            //return response()->view('errors.404');
         }
 	}
 
