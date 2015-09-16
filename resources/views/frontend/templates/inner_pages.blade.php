@@ -1242,7 +1242,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
     margin-top: -12px !important;
   }
 .scrollToTop{
-  width:60px; 
+  width:70px;
   height:30px;
   padding:5px; 
   padding-right: 19px;

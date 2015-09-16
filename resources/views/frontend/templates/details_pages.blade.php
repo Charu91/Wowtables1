@@ -417,7 +417,7 @@ $(window).load(function(){
     if(check_menu > 0){
         $(".wowtables_header1").addClass("hidden");
         $(".wowtables_header2").addClass("hidden");
-        document.querySelector('footer').style = 'display: none';
+        $(".wowtables_footer1").addClass("hidden");
     }
 })
 </script>
@@ -709,7 +709,7 @@ if (strpos($url,'alacarte') !== false) {
 $findme   = 'access_token';
 $pos = strpos($CPL, $findme);
 if ($pos > 0) { ?>
-<div class="col-md-12 col-sm-12 col-xs-12" style="background: #f6f6f6 !important;padding-top:4px !important;padding-bottom: 0px !important;margin-bottom: 30px !important;margin-top: -35px;border-bottom:1px solid #e7e7e7 !important;text-align: right;">
+<div class="col-md-12 col-sm-12 col-xs-12" style="background: #f6f6f6 !important;padding-top:4px !important;padding-bottom: 0px !important;margin-bottom: 30px !important;margin-top: -25px;border-bottom:1px solid #e7e7e7 !important;text-align: right;">
     <?php echo $uname; ?>
 </div>
 <?php }   ?>
@@ -985,7 +985,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
     </div>
 <a href="#" class="scrollToTop"><span id="scroll_top_display">Top</span> &and;</a>
 <!--Footer starts from here-->
-<footer>
+<footer class="wowtables_footer1">
 
       <div class="container">
         <div class="row">
