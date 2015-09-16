@@ -657,10 +657,10 @@
 						//->get();  
 					
 		//checking if city has been passed in 
-		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+		/*if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
 			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
 									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
-		}
+		}*/
 		
 		//executing the query
 		$queryResult = $queryResult->get();
@@ -715,8 +715,7 @@
 																				"longitude" 	=> $row->longitude																
 																			),												
 											);
-				}
-				break; //For test
+				}				
 			}
 			if(array_key_exists('data', $data)) { 
 				$data['alacarteCount'] = count($data['data']['alacarte']);
@@ -860,8 +859,7 @@
 																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 															 )
 										);
-				}
-			 break; //For Test	
+				}			 	
 			}
 		}		
 		return $data;							
