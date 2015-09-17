@@ -481,7 +481,7 @@ class User {
                 $message->cc(['kunal@wowtables.com', 'rooshabh@wowtables.com','concierge@wowtables.com']);
             });
 
-            //Mail by MailChimp 
+         /*   //Mail by MailChimp 
             $listId = '986c01a26a';
             $merge_vars = array(
                        'NAME'       => isset($data['full_name'] )? $data['full_name']: '',
@@ -513,7 +513,7 @@ class User {
                                      );
                //echo "asd , ";
                $objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
-            //----end Mailchimp Mail
+            //----end Mailchimp Mail*/
 
             if($userInsertId){
                 $access_token = Uuid::uuid1()->toString();
