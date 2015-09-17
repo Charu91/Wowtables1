@@ -778,7 +778,14 @@
 							->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
 							->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
 							->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
-							->join('locations as loc5','loc5.id','=','vl.location_id')														
+							->join('locations as loc5','loc5.id','=','vl.location_id')
+							->leftJoin('product_attributes_varchar AS pav', 'p.id', '=', 'pav.product_id')
+							->join('product_attributes_multiselect as pam', 'pam.product_id','=', 'p.id')
+							->leftJoin('product_attributes AS vamso', function($join){
+													               	 				$join->on('pa.id', '=', 'pav.product_attribute_id')
+													                    			->on('vamso.alias','=', DB::raw('"cuisines"'));
+													            					})
+							->leftJoin('product_attributes_select_options AS paso', 'paso.id', '=', 'pam.product_attributes_select_option_id')							
 							->where('p.status', 'Publish')
 							->where('pvl.status','Active')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
@@ -786,6 +793,7 @@
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('GROUP_CONCAT(DISTINCT paso.option separator ", ") as cuisine'),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
 									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),									
@@ -835,7 +843,7 @@
 											'name' 				=> $row->name,
 											'total_reviews' 	=> $row->total_reviews,
 											'rating' 			=> $row->rating,
-											'cuisine' 			=> "",//(empty($row->cuisine)) ? "" : $row->cuisine,
+											'cuisine' 			=> (empty($row->cuisine)) ? "" : $row->cuisine,
 											'price' 			=> $row->price,
 											'post_tax_price' 	=> $row->post_tax_price,
 											'taxes' 			=> $row->taxes,
