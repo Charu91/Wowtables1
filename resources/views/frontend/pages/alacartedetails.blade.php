@@ -145,23 +145,28 @@
               <!-- Wrapper for slides -->
               <div class="carousel-inner">
 
-                <div class="item active">
+                  <!--<div class="item active">
                   <img  itemprop="photo" src="<?php echo isset($arrALaCarte['data']['image']['gallery'][0])?$arrALaCarte['data']['image']['gallery'][0]:'';?>" alt="deal1">
-                </div>
+                </div>-->
 
-                <?php $i=2;
-                if(isset($arrALaCarte['data']['image']['gallery']) && is_array($arrALaCarte['data']['image']['gallery']))
-                {
+                  <?php $i=1;
+                  if(isset($arrALaCarte['data']['image']['gallery']) && is_array($arrALaCarte['data']['image']['gallery']))
+                  {
                   foreach($arrALaCarte['data']['image']['gallery'] as $key => $value)
                   {
-                    ?>
-                    <div class="item">
-                        <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
-                    </div>
-                    <?php $i++;
+                  if($i == 1){
+                      $className =  "item active";
+                  } else {
+                      $className = "item";
                   }
-                }
-                ?>
+                  ?>
+                  <div class="<?php echo $className;?>">
+                      <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
+                  </div>
+                  <?php $i++;
+                  }
+                  }
+                  ?>
 
               </div>
                 <a class="left carousel-control" href="#deal-detail-carousel" data-slide="prev">
