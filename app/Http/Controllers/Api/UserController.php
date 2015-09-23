@@ -54,8 +54,8 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        //$userRegister = $this->user->mobileRegister($input, $this->mailchimp);
-        $userRegister = $this->user->mobileRegister($input);        
+        $userRegister = $this->user->mobileRegister($input, $this->mailchimp);
+        //$userRegister = $this->user->mobileRegister($input);
         /*if($userRegister['code'] == 200) {
         //===================Mail Chimp Start ======================
         $users = $input;
