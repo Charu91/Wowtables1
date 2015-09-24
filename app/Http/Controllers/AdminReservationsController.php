@@ -143,12 +143,12 @@ class AdminReservationsController extends Controller{
                 $city_name = 'mumbai';
             }
 
-            $city = $city_name;
+            $city = ucfirst($city_name);
             $mergeVars = array(
                 'GROUPINGS' => array(
                     array(
                         'id' => 9613,
-                        'groups' => ucfirst($city),
+                        'groups' => [$city],
                     )
                 )
             );

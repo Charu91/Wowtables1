@@ -412,6 +412,17 @@ class AlacarteController extends Controller {
 
         $validator = Validator::make($dataPost,$arrRules);
 
+        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+        $arrResponse['cities'] = $cities;
+
+        $city_id    = Input::get('city');
+        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+
+
         if($validator->fails()) {
             $message = $validator->messages();
             $errorMessage = "";
@@ -439,6 +450,22 @@ class AlacarteController extends Controller {
                 );
                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+
+                $my_email = $dataPost['guestEmail'];
+                //$city = $users['city'];
+                $city = ucfirst($city_name);
+                $mergeVars = array(
+                    'GROUPINGS' => array(
+                        array(
+                            'id' => 9613,
+                            'groups' => [$city],
+                        )
+                    )
+                );
+                //echo "asd , ";
+                //$this->mailchimp->lists->interestGroupings($this->listId,true);
+                //print_r($test);die;
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
             }
             //End MailChimp
             $getReservationID = '';
@@ -558,15 +585,6 @@ class AlacarteController extends Controller {
             }
         }
 
-        $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
-        $arrResponse['cities'] = $cities;
-
-        $city_id    = Input::get('city');
-        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
-        if(empty($city_name))
-        {
-            $city_name = 'mumbai';
-        }
 
         $arrResponse['allow_guest']            ='Yes';
         $arrResponse['current_city']           = strtolower($city_name);
