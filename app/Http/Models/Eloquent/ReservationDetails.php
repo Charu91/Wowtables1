@@ -83,6 +83,11 @@ class ReservationDetails extends Model {
 		if(isset($arrData['giftCardID'])) {
 			$reservation->giftcard_id = $arrData['giftCardID'];
 		}
+
+		//get the user city for mailchimp
+		if(isset($reservation->user_id)){
+			$city_name = self::getLocationOfUser($reservation->user_id);
+		}
 		
 		//setting up the value of the location id as per type
  		if($arrData['reservationType'] == 'alacarte') {
@@ -144,7 +149,7 @@ class ReservationDetails extends Model {
 				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);
 
 				//Mail by mailchimp
-				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );	 		
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
 
 				//Reading offers detail
 				$offersResult = self::getSpecialOfferDetail($arrData['vendorLocationID']);
@@ -273,7 +278,7 @@ class ReservationDetails extends Model {
 				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point'], $reservation_id['id']);	 
 				
 				//Mail by mailchimp
-				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp );
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
 
 				$arrData['giftCardID'] = (isset($arrData['giftCardID']) && !empty($arrData['giftCardID'])) ? $arrData['giftCardID'] : "" ;
 
@@ -670,6 +675,22 @@ class ReservationDetails extends Model {
 		}
 		
 		return $arrData;
+	}
+
+
+	//added by mannan on Sep 23 2015
+	public static function getLocationOfUser($userId) {
+		//array to store the data
+		$city_name = "";
+		$queryResult = \DB::table('users')
+			->join('locations as l','users.location_id','=','l.id')
+			->where('users.id',21330)
+			->select('l.name')
+			->first();
+		if($queryResult) {
+			$city_name = $queryResult->name;
+		}
+		return $city_name;
 	}
 
 	//-----------------------------------------------------------------
@@ -1233,7 +1254,7 @@ class ReservationDetails extends Model {
 	 * @return	 
 	 * @since	1.0.0
 	 */
-  	public static function mailByMailChimp( $arrData, $userID ,$objMailChimp) {
+  	public static function mailByMailChimp( $arrData, $userID ,$objMailChimp, $city_name) {
 
   		$listId = '986c01a26a';
 
@@ -1255,7 +1276,19 @@ class ReservationDetails extends Model {
                 );
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
-                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+
+				$my_email = $arrData['guestEmail'];
+				//$city = $users['city'];
+				$city = ucfirst($city_name);
+				$mergeVars = array(
+					'GROUPINGS' => array(
+						array(
+							'id' => 9613,
+							'groups' => [$city],
+						)
+					)
+				);
+				$objMailChimp->mailchimp->lists->updateMember($listId, $my_email, $mergeVars);
   		}
   		else if ($arrData['reservationType'] == "experience") {
 
@@ -1275,7 +1308,19 @@ class ReservationDetails extends Model {
                 );
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
-                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+
+				$my_email = $arrData['guestEmail'];
+				//$city = $users['city'];
+				$city = ucfirst($city_name);
+				$mergeVars = array(
+					'GROUPINGS' => array(
+						array(
+							'id' => 9613,
+							'groups' => [$city],
+						)
+					)
+				);
+				$objMailChimp->mailchimp->lists->updateMember($listId, $my_email, $mergeVars);
   		}
 
   	}

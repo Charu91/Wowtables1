@@ -657,10 +657,10 @@
 						//->get();  
 					
 		//checking if city has been passed in 
-		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+		/*if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
 			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
 									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
-		}
+		}*/
 		
 		//executing the query
 		$queryResult = $queryResult->get();
@@ -715,7 +715,7 @@
 																				"longitude" 	=> $row->longitude																
 																			),												
 											);
-				}
+				}				
 			}
 			if(array_key_exists('data', $data)) { 
 				$data['alacarteCount'] = count($data['data']['alacarte']);
@@ -778,7 +778,14 @@
 							->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
 							->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
 							->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
-							->join('locations as loc5','loc5.id','=','vl.location_id')														
+							->join('locations as loc5','loc5.id','=','vl.location_id')
+							->leftJoin('product_attributes_varchar AS pav', 'p.id', '=', 'pav.product_id')
+							->join('product_attributes_multiselect as pam', 'pam.product_id','=', 'p.id')
+							->leftJoin('product_attributes AS vamso', function($join){
+													               	 				$join->on('pa.id', '=', 'pav.product_attribute_id')
+													                    			->on('vamso.alias','=', DB::raw('"cuisines"'));
+													            					})
+							->leftJoin('product_attributes_select_options AS paso', 'paso.id', '=', 'pam.product_attributes_select_option_id')							
 							->where('p.status', 'Publish')
 							->where('pvl.status','Active')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
@@ -786,6 +793,7 @@
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('GROUP_CONCAT(DISTINCT paso.option separator ", ") as cuisine'),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
 									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),									
@@ -830,17 +838,18 @@
 				if( $distance <= $input['distance'] ) {
 
 					$data[] = array(
-											'prod_id' => $row->product_id,
-											'pvl_id' => $row->pvl_id,
-											'name' => $row->name,
-											'total_reviews' => $row->total_reviews,
-											'rating' => $row->rating,
-											'price' => $row->price,
-											'post_tax_price' => $row->post_tax_price,
-											'taxes' => $row->taxes,
-											'price_type' => $row->price_type,
-											'location' => $row->location_name,
-											'distance' 		=> $distance, 
+											'prod_id' 			=> $row->product_id,
+											'pvl_id' 			=> $row->pvl_id,
+											'name' 				=> $row->name,
+											'total_reviews' 	=> $row->total_reviews,
+											'rating' 			=> $row->rating,
+											'cuisine' 			=> (empty($row->cuisine)) ? "" : $row->cuisine,
+											'price' 			=> $row->price,
+											'post_tax_price' 	=> $row->post_tax_price,
+											'taxes' 			=> $row->taxes,
+											'price_type' 		=> $row->price_type,
+											'location' 			=> $row->location_name,
+											'distance' 			=> $distance, 
 											'location_address' => array(
 																			"address_line" 	=> $row->address,
 																			"locality" 		=> $row->locality,
@@ -859,7 +868,7 @@
 																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 															 )
 										);
-				}
+				}			 	
 			}
 		}		
 		return $data;							

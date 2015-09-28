@@ -422,7 +422,7 @@ class RestaurantLocations extends VendorLocations{
 										'off_peak_available' => (is_null($row->off_peak_available)) ? "": $row->off_peak_available,
 										'total_reviews' => $row->total_reviews,
 										'rating' => $row->rating,
-										'flag_name' => $row->flag_name,
+										'flag' => $row->flag_name,
 										'cuisine' =>  $row->cuisine,
                                         'coordinates' => array(
                                                                             'latitude' => (is_null($row->latitude)) ? "" : $row->latitude,

@@ -428,6 +428,7 @@ class User {
     }
 
     public function mobileRegister(array $data, $objMailChimp)
+    //public function mobileRegister(array $data)
     {
         DB::beginTransaction();
 
@@ -480,7 +481,7 @@ class User {
                 $message->cc(['kunal@wowtables.com', 'rooshabh@wowtables.com','concierge@wowtables.com']);
             });
 
-            //Mail by MailChimp 
+            //Mail by MailChimp
             $listId = '986c01a26a';
             $merge_vars = array(
                        'NAME'       => isset($data['full_name'] )? $data['full_name']: '',
@@ -501,12 +502,12 @@ class User {
                    //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                    $my_email = $data['email']; //$users['email_address'];
                    //$city = $users['city'];
-                   $city = $cityname; //$city_name;
+                   $city = ucfirst($cityname); //$city_name;
                    $mergeVars = array(
                                         'GROUPINGS' => array(
                                              array(
                                                    'id' => 9613,
-                                                   'groups' => ucfirst($city),
+                                                   'groups' => [$city],
                                                   )
                                         )
                                      );

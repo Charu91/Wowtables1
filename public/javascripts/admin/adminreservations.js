@@ -84,6 +84,7 @@
             },
             async: false,
             success: function(data) {
+                //console.log(data);
                 $(".add_loader").hide();
                 $("#save_changes").addClass("hidden");
 
@@ -132,9 +133,10 @@
                     SelectedDates[new Date(v)] = new Date(v);
                 });*/
 
-                var disabledAllDays = data.block_dates;
-
-                function disableAllTheseDays(date) {
+                //var disabledAllDays = data.block_dates;
+                var disabledAllDays = data.availableDates;
+                //console.log("sadsd = "+disabledAllDays);
+                /*function disableAllTheseDays(date) {
                     var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
                     //var location_id = $('#locations1').val();
                     var disabledDays = disabledAllDays[exp_location_id];
@@ -157,6 +159,25 @@
                         }
                     }
                     return [true];
+                }*/
+
+                function disableAllTheseDays(date) {
+                    //var location_id = $('#locations').val();
+                    var location_id = $('#addr').val();
+                    //console.log("loc = "+location_id);
+                    var disabledDays = disabledAllDays[location_id];
+                    //  console.log("sad = "+disabledDays);
+
+                    dmy = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                    //console.log("sad = "+dmy);
+                    if ($.inArray(dmy, disabledDays) != -1) {
+                        return [true, "Highlighted","Available"];
+                        //return [true, "Highlighted", disabledDays];
+                    } else {
+                        //return [false,"","unAvailable"];
+                        return [true,"","Available"];
+                    }
+                    //loadDatePicker();
                 }
                 //console.log("block dates "+SelectedDates);
                 //var nowTemp = new Date;
@@ -192,6 +213,7 @@
                         //console.log("d == "+d);
                         $("#reserv_date").val(dateText);
                         var datestrInNewFormat = $.datepicker.formatDate( "D", d).toLowerCase();
+                        var datestrInNewFormat1 = $.datepicker.formatDate( "D", d).toLowerCase();
                         var txt = '<div class="btn-group col-lg-10 pull-right actives ">';
                         var txt2 = '';
                         var g = 1;
@@ -209,8 +231,35 @@
                         //$("#select_date").removeClass("hidden");
                         var location_id = $('#addr').val();
                         //var schedule = data.schedule[location_id];
+                        var getSelectedDay;
+                        switch (d.getDay()) {
+                            case 0:
+                                getSelectedDay = "sun";
+                                break;
+                            case 1:
+                                getSelectedDay = "mon";
+                                break;
+                            case 2:
+                                getSelectedDay = "tue";
+                                break;
+                            case 3:
+                                getSelectedDay = "wed";
+                                break;
+                            case 4:
+                                getSelectedDay = "thu";
+                                break;
+                            case 5:
+                                getSelectedDay = "fri";
+                                break;
+                            case 6:
+                                getSelectedDay = "sat";
+                                break;
+                        }
                         var schedule = data.schedule;
-                        //console.log("schedule == "+schedule);
+                        var loID = $('#addr').val();
+                        var actualSchedule = data.exp_schedule[loID][getSelectedDay];
+                        var actualSchedule1 = $.map(actualSchedule, function(el) { return el; });
+                        //console.log(actualSchedule1);
                         if(schedule != undefined)
                         {
                             for(key_sch in schedule[datestrInNewFormat])
@@ -221,22 +270,38 @@
                                 active_blck = (g == obj_length) ? '' : 'hidden' ;
                                 txt+= '<label class="btn btn-warning btn-xs time_tab ' + active_tab + '" id="'+key_sch.toLowerCase()+'">'+key_sch.toUpperCase()+'</label>';
                                 txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
+
                                 for(key_sch_time in schedule[datestrInNewFormat][key_sch])
-                                {
+                                {var dynamicClass;
+                                    if ($.inArray(String(schedule[datestrInNewFormat][key_sch][key_sch_time]),actualSchedule1) != -1) {
+                                    //if (actualSchedule.indexOf(schedule[datestrInNewFormat][key_sch][key_sch_time]) >= 0) {
+                                        dynamicClass = "time-highlight";
+                                        //console.log("exist");
+                                    } else {
+                                        dynamicClass = "";
+                                        //console.log("not exist");
+                                    }
+
+                                    //console.log(acsc);
                                     if(c_date == dateText)
                                     {
                                         if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
-                                            txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                            //txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a>'+actualSchedule[datestrInNewFormat1][key_sch1][key_sch_time1]+'</div>';
+
+                                            txt2 += '<div class="time col-lg-3 col-xs-5 '+dynamicClass+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                         }
                                     }
                                     else
                                     {
-                                        txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                        //txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a>'+actualSchedule[datestrInNewFormat1][key_sch1][key_sch_time1]+'</div>';
+                                        txt2 += '<div class="time col-lg-3 col-xs-5 '+dynamicClass+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                     }
+
 
                                 }
                                 txt2+= '</div>';
                                 g++;
+
                             }
                         }
                         /*Time display container*/
@@ -376,9 +441,31 @@
                 cur_date = cur_year + "-" + cur_month + "-" + cur_day;
                 cur_time = now.getHours();
                 cur_minute = now.getMinutes();
+
+                var disabledAllDays = data.availableDates;
+
+                function disableAllTheseAlacarteDays(date) {
+                    //var location_id = $('#locations').val();
+                    var location_id = $('#ac_addr').val();
+                    //console.log("loc = "+location_id);
+                    var disabledDays = disabledAllDays;
+                      //console.log("sad = "+disabledDays);
+
+                    dmy = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                    //console.log("sad = "+dmy);
+                    if ($.inArray(dmy, disabledDays) != -1) {
+                        return [true, "Highlighted","Available"];
+                        //return [true, "Highlighted", disabledDays];
+                    } else {
+                        //return [false,"","unAvailable"];
+                        return [true,"","Available"];
+                    }
+                    //loadDatePicker();
+                }
                 $("#ac_party_date").datepicker("destroy");
                 dtp = $("#ac_party_date").datepicker({
                     dateFormat: "yy-m-d",
+                    beforeShowDay: disableAllTheseAlacarteDays,
                     onSelect: function(dateText, inst)
                     {
                         var d = $.datepicker.parseDate("yy-m-dd",  dateText);
@@ -394,16 +481,43 @@
                         c_time = cur_date.getHours()+":"+((cur_date.getMinutes()<10)?'0':'')+cur_date.getMinutes()+':00';
 
                         //console.log(c_date);
-                        console.log(dateText);
+                        //console.log(dateText);
                         $('#ac_booking_date').val(dateText);
                         /*Time display container*/
                         $("#ac_select_time").click();
                         $("#ac_select_date span").text(formatDate(dateText));
                         $("#ac_select_date").removeClass("hidden");
                         var location_id = $('#addr').val();
+                        var getSelectedDay;
+                        switch (d.getDay()) {
+                            case 0:
+                                getSelectedDay = "sun";
+                                break;
+                            case 1:
+                                getSelectedDay = "mon";
+                                break;
+                            case 2:
+                                getSelectedDay = "tue";
+                                break;
+                            case 3:
+                                getSelectedDay = "wed";
+                                break;
+                            case 4:
+                                getSelectedDay = "thu";
+                                break;
+                            case 5:
+                                getSelectedDay = "fri";
+                                break;
+                            case 6:
+                                getSelectedDay = "sat";
+                                break;
+                        }
                         //var schedule = data.schedule[location_id];
                         var schedule = data.schedule;
-                        //console.log("schedule == "+schedule);
+                        var loID = $('#ac_addr').val();
+                        var actualSchedule = data.ala_schedule[loID][getSelectedDay];
+                        var actualSchedule1 = $.map(actualSchedule, function(el) { return el; });
+                        //console.log(actualSchedule1);
                         if(schedule != undefined)
                         {
                             for(key_sch in schedule[datestrInNewFormat])
@@ -416,15 +530,24 @@
                                 txt2 +=    '<div id="' + key_sch.toLowerCase() + '_tab"  class="'+active_blck+'">';
                                 for(key_sch_time in schedule[datestrInNewFormat][key_sch])
                                 {
+                                    var dynamicClass1;
+                                    if ($.inArray(String(schedule[datestrInNewFormat][key_sch][key_sch_time]),actualSchedule1) != -1) {
+                                        //if (actualSchedule.indexOf(schedule[datestrInNewFormat][key_sch][key_sch_time]) >= 0) {
+                                        dynamicClass1 = "time-highlight";
+                                        //console.log("exist");
+                                    } else {
+                                        dynamicClass1 = "";
+                                        //console.log("not exist");
+                                    }
                                     if(c_date == dateText)
                                     {
                                         if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
-                                            txt2 += '<div class="ac_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                            txt2 += '<div class="ac_time col-lg-3 col-xs-5 '+dynamicClass1+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                         }
                                     }
                                     else
                                     {
-                                        txt2 += '<div class="ac_time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
+                                        txt2 += '<div class="ac_time col-lg-3 col-xs-5 '+dynamicClass1+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
                                     }
 
                                 }

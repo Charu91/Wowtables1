@@ -21,10 +21,13 @@ use Hash;
 use DB;
 use Auth;
 use Redirect;
-use Request;
+use Illuminate\Http\Request;
 use Mail;
 class ProfileController extends Controller {
 
+	function __construct(Request $request){
+		$this->request = $request;
+	}
 
 	/**
 	 * Handles requst for displaying the my account reservation.
@@ -76,11 +79,12 @@ class ProfileController extends Controller {
 	public function updateInfo()
 	{
 		$user_array = Session::all();
+
 		//$userID =Session::get('id');
 		//this code is start in header and footer page.
         $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
         $arrResponse['cities'] = $cities;
-
+		$arrResponse['user']   = Auth::user();
         $city_id    = Input::get('city');        
         $city_name  = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
         if(empty($city_name))
@@ -113,10 +117,10 @@ class ProfileController extends Controller {
 	public function updateUserinfo()
 	{
 		$user_array = Session::all();
-		
+
        	$userID = Session::get('id');
-		$data = Request::all();
-		
+		$data = $this->request->all();
+		$data['user']   = Auth::user();
 			$rules = array(
         		'full_name' => 'required',
 				'zip_code' => 'required',
@@ -157,6 +161,29 @@ class ProfileController extends Controller {
 	 */
 	public function redeemRewards()
 	{
+		$accessToken = $this->request->get('access_token');
+
+		if($accessToken != ""){
+			Session::flush();
+			$accessDetails = UserDevices::getUserDetailsByAccessToken($accessToken);
+			if($accessDetails > 0){
+				$user_array = Auth::loginUsingId($accessDetails);
+				//echo "<pre>"; print_r($user_array);
+				$userdata = array(
+					'id'  => $user_array->id,
+					'username'  => substr($user_array->email,0,strpos($user_array->email,"@")),
+					'email'     => $user_array->email,
+					'full_name' =>$user_array->full_name,
+					'user_role' =>$user_array->role_id,
+					'phone'     =>$user_array->phone_number,
+					'city_id'   =>$user_array->location_id,
+					'facebook_id'=>@$user_array->fb_token,
+					'exp'=>"10",
+					'logged_in' => TRUE,
+				);
+				Session::put($userdata);
+			}
+		}
 		$user_array = Session::all();
 		//$userID =Session::get('id');
 		//this code is start in header and footer page.

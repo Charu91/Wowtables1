@@ -189,7 +189,8 @@ class Reservation {
 
 			$blockedDates = (array_key_exists($row->pvl_id, $arrBlockedDates)) ? $arrBlockedDates[$row->pvl_id] : array();
 			//Call to get available dates
-			$availableDates = self::getAvailableDates($blockedDates);
+			//$availableDates = self::getAvailableDates($blockedDates);
+			$availableDates = self::getExperienceAvailableDates($experienceID, $blockedDates);
 
 			$arrLocLmt[] = array(
 									'experience_id' => $row->experience_id,
@@ -207,7 +208,93 @@ class Reservation {
 
 		return $arrLocLmt;
 	}
+	//-----------------------------------------------------------------
 
+
+	/**
+	 * Function to read the available dates for experience only
+	 *
+	 * @access	public
+	 * @param	array $blockedDates
+	 * @param	int   $experienceID
+	 * @return	array $dates
+	 * @since	1.0.0
+	 */
+	public static function getExperienceAvailableDates($experienceID, $blockedDates) { 
+
+		$queryResult = DB::table('products as p') 
+									->join('product_attributes_date as pad1', 'pad1.product_id', '=', 'p.id')
+									->join('product_attributes_date as pad2', 'pad2.product_id', '=', 'p.id')
+									->join('product_attributes as pa1', 'pa1.id', '=', 'pad1.product_attribute_id')
+									->join('product_attributes as pa2', 'pa2.id', '=', 'pad2.product_attribute_id')
+									->where('pa1.alias', "start_date")
+									->where('pa2.alias', "end_date")
+									->where('p.id', $experienceID)
+									->select('pad1.attribute_value as start_date', 'pad2.attribute_value as end_date')									
+									->first(); 									
+
+		//print_r($queryResult);  		
+
+		$d1= date('Y-m-d');  
+		$d2= strtotime(date("Y-m-d").' +2 Months');  
+		$d2= date('Y-m-d', $d2); 
+		$begin = new DateTime($d1);   
+		$end = new DateTime($d2);
+		//$end = $end->modify( '+1 day' ); //To include the last date
+
+		//============Setting date range according to entry in product_attributes_date table =============
+		if($queryResult){
+			//Dates are available but not in the current range
+			if($queryResult->start_date == $queryResult->end_date && $queryResult->start_date > $d2) {			
+				return $data = array(); 
+			}
+			if($queryResult->start_date > $d2) {			
+				return $data = array(); 
+			}
+			//Dates are available but both start & end date are same
+			if($queryResult->start_date == $queryResult->end_date && $queryResult->start_date >= date('Y-m-d')) {
+				$data = date('Y-m-d', strtotime($queryResult->start_date));
+				return $data;
+			}
+			
+			$begin = new DateTime(date('Y-m-d', strtotime($queryResult->start_date)));
+			$end = new DateTime(date('Y-m-d', strtotime($queryResult->end_date)));
+			//If start_date is more than range then restrict the start_date wthin range
+			if($queryResult->start_date < $d1){
+				$begin = new DateTime($d1);
+			}		
+			//If end_date is more than range then restrict the end_date wthin range
+			if($queryResult->end_date > $d2){
+				$end = new DateTime($d2);				
+			}
+		}
+		//============================ END of setting date range ====================
+
+		$end = $end->modify( '+1 day' ); //To include the last date
+		$daterange = new DatePeriod($begin, new DateInterval('P1D'), $end);  
+		//$dataes = array();
+		
+		foreach($daterange as $date){
+		 //echo $date->format("Y-m-d") . "<br>";
+		 $dates[] = $date->format("Y-m-d");
+		}
+
+		foreach ($blockedDates as $value) {			
+			//echo $value; 
+			$key = array_search($value, $dates);
+			//echo $key;
+			if($key!==false)  
+				unset($dates[$key]);
+		}
+
+		//print_r($dates); die("jabardst");
+
+		foreach($dates as $value) {
+			$arrAvailableDates[] = $value;
+		}
+		//print_r($arrAvailableDates); die('dates');
+		return $arrAvailableDates;
+	}
 	//-----------------------------------------------------------------
 
 	/**
@@ -248,6 +335,7 @@ class Reservation {
 		return $arrAvailableDates;
 	}
 	//-----------------------------------------------------------------
+
 
 	/**
 	 * Validates the information provided by the user for booking

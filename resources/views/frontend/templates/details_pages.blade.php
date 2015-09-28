@@ -405,9 +405,21 @@ if((Session::get('add_mixpanel_event') != 0 || Session::get('add_mixpanel_event'
       //mixpanel.register({'registered':true});
     //}
     }
-  });
-  
 
+
+
+  });
+
+$(window).load(function(){
+    var current_url = window.location.href;
+    var check_menu = current_url.indexOf("access_token");
+    //console.log("checkmenu = "+check_menu);
+    if(check_menu > 0){
+        $(".wowtables_header1").addClass("hidden");
+        $(".wowtables_header2").addClass("hidden");
+        $(".wowtables_footer1").addClass("hidden");
+    }
+})
 </script>
 
 <script type="text/javascript">
@@ -494,6 +506,7 @@ if (strpos($url,'alacarte') !== false) {
   $set_referal_url = "referrals";
 }
 ?>
+<!--Div starts for showing wowtables logo, city dropdown and user dropdown in mobile resolutions-->
 <header id="header" class="wowtables_header1" style="border-bottom:1px solid #b4b4b4;">
     <div class="container">
       <div class="row">
@@ -557,6 +570,7 @@ if (strpos($url,'alacarte') !== false) {
       </div>
     </div>
   </header>
+<!--Div ends for showing wowtables logo, city dropdown and user dropdown in mobile resolutions-->
 <div class="clearfix"></div>
 
 <header id="header1" class="wowtables_header2" style="background: #f6f6f6 !important;padding-top:4px !important;padding-bottom: 0px !important;margin-bottom: 30px !important;border-bottom:1px solid #e7e7e7 !important;">
@@ -639,7 +653,7 @@ if (strpos($url,'alacarte') !== false) {
       </div>
     </header>
 <div class="clearfix"></div>
-
+<!--Div starts for showing the dropdown list in mobile resolution-->
  <div class="row wowtables_services" id="wowtables_services_list" style="display:none;">
     <div class="col-sm-12">
       <!-- <span class="glyphicon glyphicon glyphicon-chevron-up" id="wowtables_glyphicon_services"></span> -->
@@ -654,7 +668,8 @@ if (strpos($url,'alacarte') !== false) {
       <button type="button" onClick="window.location.href='{{URL::to('/')}}/logout'" class="btn btn-primary btn-block wowtables_big_btn">Logout</button>
       <?php endif; ?>
       </div>
-  </div>
+ </div>
+<!--Div ends for showing the dropdown list in mobile resolution-->
   <div class="row wowtables_user_info" id="wowtables_user_information" style="display:none;">
     <div class="col-sm-12">
       <span class="glyphicon glyphicon-triangle-top" id="wowtables_glyphicon_user"></span>
@@ -663,6 +678,7 @@ if (strpos($url,'alacarte') !== false) {
     </div>
   </div>
 
+<!--Div starts for showing the experiences,classic reservation and refer a friend link for mobile resolutions-->
 <header id="header" class="wowtables_header3 add_additional_class" style="background: #f6f6f6 !important;padding-top:4px !important;padding-bottom: 0px !important;margin-bottom: 30px !important;margin-top: -45px;border-bottom:1px solid #e7e7e7 !important;">
       <div class="container">
         <div class="row">
@@ -687,9 +703,16 @@ if (strpos($url,'alacarte') !== false) {
           </div>
         </div>
       </div>
-    </header>    
-      
-<?php    ?>
+</header>
+<!--Div ends for showing the experiences,classic reservation and refer a friend link for mobile resolutions-->
+<?php $CPL =  current_page_url();
+$findme   = 'access_token';
+$pos = strpos($CPL, $findme);
+if ($pos > 0) { ?>
+<div class="col-md-12 col-sm-12 col-xs-12" style="background: #f6f6f6 !important;padding-top:4px !important;padding-bottom: 0px !important;margin-bottom: 30px !important;margin-top: -25px;border-bottom:1px solid #e7e7e7 !important;text-align: right;">
+    <?php echo $uname; ?>
+</div>
+<?php }   ?>
 <div class="clearfix"></div>
 
 
@@ -961,8 +984,9 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
       </div>
     </div>
 <a href="#" class="scrollToTop"><span id="scroll_top_display">Top</span> &and;</a>
-<footer>
-    
+<!--Footer starts from here-->
+<footer class="wowtables_footer1">
+
       <div class="container">
         <div class="row">
           <div class="col-md-3 visible-xs">
@@ -1071,6 +1095,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
       </div>
 
 </footer>
+<!--Footer ends here-->
 <?php    
 
      $old_query=Request::segment(1);

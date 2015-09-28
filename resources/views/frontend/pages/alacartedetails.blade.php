@@ -143,31 +143,30 @@
 
             <div id="deal-detail-carousel" class="carousel slide" data-ride="carousel">
               <!-- Wrapper for slides -->
-
               <div class="carousel-inner">
 
-                <!--<div class="item active">
+                  <!--<div class="item active">
                   <img  itemprop="photo" src="<?php echo isset($arrALaCarte['data']['image']['gallery'][0])?$arrALaCarte['data']['image']['gallery'][0]:'';?>" alt="deal1">
                 </div>-->
 
-                <?php $i=1;
-                if(isset($arrALaCarte['data']['image']['gallery']) && is_array($arrALaCarte['data']['image']['gallery']))
-                {
+                  <?php $i=1;
+                  if(isset($arrALaCarte['data']['image']['gallery']) && is_array($arrALaCarte['data']['image']['gallery']))
+                  {
                   foreach($arrALaCarte['data']['image']['gallery'] as $key => $value)
                   {
-                        if($i == 1){
-                            $className =  "item active";
-                        } else {
-                            $className = "item";
-                        }
-                  ?>
-                    <div class="<?php echo $className;?>">
-                        <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
-                    </div>
-                    <?php $i++;
+                  if($i == 1){
+                      $className =  "item active";
+                  } else {
+                      $className = "item";
                   }
-                }
-                ?>
+                  ?>
+                  <div class="<?php echo $className;?>">
+                      <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
+                  </div>
+                  <?php $i++;
+                  }
+                  }
+                  ?>
 
               </div>
                 <a class="left carousel-control" href="#deal-detail-carousel" data-slide="prev">
@@ -555,7 +554,7 @@
 
         <div class="col-md-4 col-sm-4 deal-detail-right">
 
-          @if(!empty(trim($arrALaCarte['data']['special_offer_title'])))
+          @if(!empty($arrALaCarte['data']['special_offer_title']))
           <div class="widget reservation-box">
               <h3 class="text-center">Special Offer</h3>
               <p class="text-center" style="color:#fff"><strong>{!! $arrALaCarte['data']['special_offer_title'] !!}</strong></p>
@@ -1114,11 +1113,12 @@ if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status']
           loadDatePicker();
        });
 
-        var disabledAllDays = <?php echo json_encode($block_dates);?>;
+        //var disabledAllDays = <?php //echo json_encode($block_dates);?>;
+       var disabledAllDays = <?php echo json_encode($availableDates);?>;
         var allschedule = <?php echo json_encode($schedule);  ?>;
         var reserveminmax = <?php echo json_encode($reserveData);  ?>;
 
-        function disableAllTheseDays(date) {
+        /*function disableAllTheseDays(date) {
             var m = date.getMonth(), d = date.getDate(), y = date.getFullYear(),mon="",day="";
             var location_id = $('#ac_locations2').val();
             var disabledDays = disabledAllDays[location_id];
@@ -1140,7 +1140,22 @@ if(isset($arrALaCarte['data']['vl_status']) && $arrALaCarte['data']['vl_status']
               }
             }
             return [true];
-        }
+        }*/
+
+       function disableAllTheseDays(date) {
+           //var location_id = $('#locations1').val();
+           var disabledDays = disabledAllDays;
+           //console.log("sad = "+disabledDays);
+
+           dmy = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+           //console.log("sad = "+dmy);
+           if ($.inArray(dmy, disabledDays) != -1) {
+               return [true, "","Available"];
+           } else {
+               return [false,"","unAvailable"];
+           }
+           //loadDatePicker();
+       }
 
 
 

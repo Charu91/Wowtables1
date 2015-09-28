@@ -175,7 +175,7 @@ class ExperienceController extends Controller {
 
             $check_userid = "if(bookmark_userid = ".$user_id.", 0, if(bookmark_userid != ".$user_id.", 1, 1)),`order` asc";
         }
-       
+
         $areas_footer = $areas;
 
         if($city == '')
@@ -197,7 +197,9 @@ class ExperienceController extends Controller {
                $redirect_url = "/mumbai";
             }  
             return redirect()->route('experience.lists',[$redirect_url]);
-        }
+        } /*else {
+            $city = $city_name;
+        }*/
 
 
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
@@ -946,6 +948,18 @@ class ExperienceController extends Controller {
                             //echo "userid == ".$userID;
                             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
+
+
+                            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+                            $arrResponse['cities'] = $cities;
+
+                            $city_id    = Input::get('city');
+                            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+                            if(empty($city_name))
+                            {
+                                $city_name = 'mumbai';
+                            }
+
                             //Start MailChimp
                             if(!empty($getUsersDetails)){
 
@@ -958,16 +972,22 @@ class ExperienceController extends Controller {
                                 );
                                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
-                            }
 
-                            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
-                            $arrResponse['cities'] = $cities;
-
-                            $city_id    = Input::get('city');
-                            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
-                            if(empty($city_name))
-                            {
-                                $city_name = 'mumbai';
+                                $my_email = $dataPost['guestEmail'];
+                                //$city = $users['city'];
+                                $city = ucfirst($city_name);
+                                $mergeVars = array(
+                                    'GROUPINGS' => array(
+                                        array(
+                                            'id' => 9613,
+                                            'groups' => [$city],
+                                        )
+                                    )
+                                );
+                                //echo "asd , ";
+                                //$this->mailchimp->lists->interestGroupings($this->listId,true);
+                                //print_r($test);die;
+                                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
                             }
 
                             $arrResponse['allow_guest']            ='Yes';
@@ -1160,6 +1180,18 @@ class ExperienceController extends Controller {
             //echo "userid == ".$userID;
             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
+
+
+            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
+            $arrResponse['cities'] = $cities;
+
+            $city_id    = Input::get('city');
+            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+            if(empty($city_name))
+            {
+                $city_name = 'mumbai';
+            }
+
             //Start MailChimp
             if(!empty($getUsersDetails)){
 
@@ -1172,16 +1204,22 @@ class ExperienceController extends Controller {
                 );
                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$fetch_cookie['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
-            }
 
-            $cities = Location::where(['Type' => 'City', 'visible' =>1])->lists('name','id');
-            $arrResponse['cities'] = $cities;
-
-            $city_id    = Input::get('city');
-            $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
-            if(empty($city_name))
-            {
-                $city_name = 'mumbai';
+                $my_email = $dataPost['guestEmail'];
+                //$city = $users['city'];
+                $city = ucfirst($city_name);
+                $mergeVars = array(
+                    'GROUPINGS' => array(
+                        array(
+                            'id' => 9613,
+                            'groups' => [$city],
+                        )
+                    )
+                );
+                //echo "asd , ";
+                //$this->mailchimp->lists->interestGroupings($this->listId,true);
+                //print_r($test);die;
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
             }
 
             $arrResponse['allow_guest']            ='Yes';

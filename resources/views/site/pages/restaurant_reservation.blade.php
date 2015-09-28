@@ -54,7 +54,7 @@
                                 $exp_address= $location_details->address;
                                 $terms_conditions= $productDetails['attributes']['terms_and_conditions'];
 
-                                $exp_short_desc= $productDetails['attributes']['short_description'];
+                                //$exp_short_desc= $productDetails['attributes']['short_description'];
                                 $guest = $post_data['partySize'];
 
                                 $date = date('d-F-Y',strtotime($post_data['reservationDate']));

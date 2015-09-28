@@ -408,17 +408,20 @@ The WowTables Team";
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
                     $my_email = $users['email_address'];
                     //$city = $users['city'];
-                    $city = $city_name;
+                    $city = ucfirst($city_name);
                         $mergeVars = array(
                             'GROUPINGS' => array(
                                 array(
                                     'id' => 9613,
-                                    'groups' => ucfirst($city),
+                                    'groups' => [$city],
                                 )
                             )
                         );
                 //echo "asd , ";
+                //$this->mailchimp->lists->interestGroupings($this->listId,true);
+                //print_r($test);die;
                 $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                //print_r($test);die;
 
                     //End MailChimp
                      echo 1;

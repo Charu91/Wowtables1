@@ -1481,7 +1481,10 @@ class ExperienceModel {
 
                 $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
             }else{
-                $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+                if(isset($scheduleDays[$key])){
+                    $arrAvailableDates[$key] = $this->sortByDays($dates,$scheduleDays[$key]);
+                }
+
             }
 
         }
@@ -1824,6 +1827,7 @@ class ExperienceModel {
             ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
             ->leftJoin('locations as l','l.id','=','vla.city_id')
             ->where('mrn.image_type','listing')
+            ->where('pab.product_attribute_id',10)
             ->where('pab.attribute_value',1)
             ->where('vla.city_id',$city_id)
             ->where('pvl.status','Active')
