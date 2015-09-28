@@ -105,7 +105,7 @@ class ReservationDetails extends Model {
 			//reading the product detail
 			$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
 			$arrResult = self::readProductIdAndVendorLocation($arrData['vendorLocationID']);
-
+			//print_r($arrResult);die;
 			$reservation->points_awarded = $productDetail['reward_point'];
 			$reservation->vendor_location_id = $arrResult->vendor_location_id;
 			$reservation->product_id = $arrResult->product_id;
@@ -124,7 +124,7 @@ class ReservationDetails extends Model {
 													  ->first();
 
 			//Reading user detail to get membership number(GIU_Membership_ID)
-			$token = $_SERVER['HTTP_X_WOW_TOKEN'];
+			$token = 'a5cdd998-20c2-11e5-bd32-f23c913353fa';
 			$userDetail = Profile::getUserProfile($token);	
 
 

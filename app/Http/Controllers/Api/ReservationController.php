@@ -157,7 +157,7 @@ use Mailchimp;
 		//reading data input by the user
 		$data =  $this->request->all();
 
-		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
+		$data['access_token']='a5cdd998-20c2-11e5-bd32-f23c913353fa';
 
 
 		//validating user data
