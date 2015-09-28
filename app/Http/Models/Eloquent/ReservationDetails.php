@@ -1288,7 +1288,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->mailchimp->lists->updateMember($listId, $my_email, $mergeVars);
+				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
   		}
   		else if ($arrData['reservationType'] == "experience") {
 
@@ -1320,7 +1320,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->mailchimp->lists->updateMember($listId, $my_email, $mergeVars);
+				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
   		}
 
   	}
