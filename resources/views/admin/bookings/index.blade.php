@@ -110,7 +110,7 @@
                             <td>{!! $un_booking->name !!}</td>
                             <td>{!! $un_booking->restaurant_name !!}</td>
                             <td>{!! $un_booking->city !!}</td>
-                            <td>{!! $un_booking->email !!}</td>
+                            <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
                             <td>{!! $un_booking->phone_no !!}</td>
                             <td>{!! $un_booking->no_of_persons !!}</td>
                             <td>
@@ -218,7 +218,7 @@
                             <td>{!! $booking->name !!}</td>
                             <td>{!! $booking->restaurant_name !!}</td>
                             <td>{!! $booking->city !!}</td>
-                            <td>{!! $booking->email !!}</td>
+                            <td><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a></td>
                             <td>{!! $booking->phone_no !!}</td>
                             <td>{!! $booking->no_of_persons !!}</td>
                             <td>
@@ -333,7 +333,7 @@
                             <td>{!! $todaysbooking->name !!}</td>
                             <td>{!! $todaysbooking->restaurant_name !!}</td>
                             <td>{!! $todaysbooking->city !!}</td>
-                            <td>{!! $todaysbooking->email !!}</td>
+                            <td><a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a></td>
                             <td>{!! $todaysbooking->phone_no !!}</td>
                             <td>{!! $todaysbooking->no_of_persons !!}</td>
                             <td>
