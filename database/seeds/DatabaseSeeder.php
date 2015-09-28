@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 		Model::unguard();
 
 		// $this->call('UserTableSeeder');
-		//$this->call('ReservationAttributesSeeder');
+		$this->call('ReservationAttributesSeeder');
 		$this->call('ReservationStatusesSeeder');
 	}
 }
