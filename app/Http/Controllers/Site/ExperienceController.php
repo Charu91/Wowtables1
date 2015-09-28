@@ -23,6 +23,7 @@ use Mail;
 use Mailchimp;
 use WowTables\Http\Models\Profile;
 use Carbon\Carbon;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
 
 class ExperienceController extends Controller {
 
@@ -731,7 +732,40 @@ class ExperienceController extends Controller {
                         echo "<pre>"; print_r($getUsersDetails); die;*/
                     //echo "status is success";
                         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
+                        //die;
 
+                        //for the new db structure support
+                        $combined_date_and_time = $dataPost['reservationDate'] . ' ' . $dataPost['reservationTime'];
+                        //echo Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();die;
+                        $newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+                        //$newDb['attributes']['time'] = date("g:i A", strtotime($dataPost['reservationTime']));
+                        $newDb['attributes']['no_of_people_booked'] = $dataPost['partySize'];
+                        $newDb['attributes']['cust_name'] = $dataPost['guestName'];
+                        $newDb['attributes']['email'] = $dataPost['guestEmail'];
+                        $newDb['attributes']['contact_no'] = $dataPost['phone'];
+                        $newDb['attributes']['reserv_type'] = "Experience";
+                        $newDb['attributes']['gift_card_id_reserv'] = $dataPost['giftCardID'];
+                        $newDb['attributes']['loyalty_points_awarded'] =  $productDetails['attributes']['reward_points_per_reservation'];
+                        $newDb['attributes']['special_request'] = $dataPost['addons_special_request'];
+                        $newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
+                        $newDb['attributes']['api_added'] = "Web Reservation";
+                        $newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
+                        $newDb['attributes']['outlet'] = $outlet->name;
+                        $newDb['attributes']['auto_reservation'] = "Not available";
+                        $newDb['attributes']['ar_confirmation_id'] = "0";
+                        $newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']);
+                        $newDb['userdetails']['user_id'] = $userID;
+                        $newDb['userdetails']['status'] = 1;
+                        $newDb['userdetails']['addons'] = $dataPost['addon'];
+
+
+
+                        //print_r($newDb);die;
+                        $reservDetails = new ReservationDetails();
+                        $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+                        //print_r($newDbStatus);die;
+                        /*TODO: Add the status of success check and include added_by and transaction_id attributes */
+                        //die;
                         if(isset($dataPost['prepaid']) && $dataPost['prepaid'] == 1){
                                 //echo "prepaid is true";
                             Session::forget('email_session');
@@ -830,7 +864,7 @@ class ExperienceController extends Controller {
                                 'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                                 'Special_Request' => $dataPost['addons_special_request'],
                                 'Type' => "Experience",
-                                'API_added' => 'Yes',
+                                'API_added' => 'Web Reservation',
                                 'GIU_Membership_ID' => $userData['data']['membership_number'],
                                 'Outlet' => $outlet->name,
                                 //'Points_Notes'=>'test',
@@ -1039,7 +1073,7 @@ class ExperienceController extends Controller {
                 'Alternate_ID' =>  'E'.sprintf("%06d",$fetch_cookie['order_id']),
                 'Special_Request' => $fetch_cookie['addons_special_request'],
                 'Type' => "Experience",
-                'API_added' => 'Yes',
+                'API_added' => 'Web Reservation',
                 'GIU_Membership_ID' => $fetch_cookie['membership_number'],
                 'Outlet' => $fetch_cookie['outlet_name'],
                 //'Points_Notes'=>'test',

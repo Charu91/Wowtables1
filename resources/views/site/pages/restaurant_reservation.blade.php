@@ -99,7 +99,12 @@
 
                             <tr>
                                 <td class="title-content" style='float:left; padding:5px 57px 10px 70px; width:408px; background:#eab703; color:#fff; font-size:14px; font-style:italic; font-family:Times New Roman, Times, serif; letter-spacing:1px; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; position:relative; z-index:9;'>
-
+                                    <?php $special_offer = trim($post_data['special_offer_title']); ?>
+                                    @if(!empty($special_offer))
+                                        <div style="margin: 5px 0; color: #000">WowTables Special Offer: {!! $post_data['special_offer_title'] !!}
+                                            - {!! $post_data['special_offer_desc'] !!}
+                                        </div>
+                                    @endif
                                     <?php
                                     $special = trim($post_data['specialRequest']);
                                     if(!empty($special)): ?>

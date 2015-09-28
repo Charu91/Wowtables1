@@ -11,6 +11,8 @@ use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use Mailchimp;
 use WowTables\Http\Models\Profile;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as ReservationModel;
+use Carbon\Carbon;
 /**
  * Model class Reservation.
  * 
@@ -98,7 +100,7 @@ class ReservationDetails extends Model {
 			//reading the product detail
 			$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
 			$arrResult = self::readProductIdAndVendorLocation($arrData['vendorLocationID']);
-			
+
 			$reservation->points_awarded = $productDetail['reward_point'];
 			$reservation->vendor_location_id = $arrResult->vendor_location_id;
 			$reservation->product_id = $arrResult->product_id;
@@ -147,6 +149,34 @@ class ReservationDetails extends Model {
 				//Reading offers detail
 				$offersResult = self::getSpecialOfferDetail($arrData['vendorLocationID']);
 
+				//for the new db structure support
+				$combined_date_and_time = $arrData['reservationDate'] . ' ' . $arrData['reservationTime'];
+				$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+				$newDb['attributes']['no_of_people_booked'] = $arrData['partySize'];
+				$newDb['attributes']['cust_name'] = $arrData['guestName'];
+				$newDb['attributes']['email'] = $arrData['guestEmail'];
+				$newDb['attributes']['contact_no'] = $arrData['phone'];
+				$newDb['attributes']['reserv_type'] = "Alacarte";
+				//$newDb['attributes']['gift_card_id_reserv'] = $dataPost['giftCardID'];
+				$newDb['attributes']['loyalty_points_awarded'] =  $aLaCarteDetail['reward_point'];
+				$newDb['attributes']['special_request'] = (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "";
+				$newDb['attributes']['experience'] = $aLaCarteDetail['name'].' - Ala Carte';
+				$newDb['attributes']['api_added'] = "Mobile";
+				$newDb['attributes']['giu_membership_id'] = $userDetail['data']['membership_number'];
+				$newDb['attributes']['outlet'] = $aLaCarteDetail['location'];
+				$newDb['attributes']['auto_reservation'] = "Not available";
+				$newDb['attributes']['ar_confirmation_id'] = "0";
+				$newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservation_id['id']);
+				$newDb['userdetails']['user_id'] = $userID;
+				$newDb['userdetails']['status'] = 1;
+
+				//print_r($newDb);die;
+				$reservDetails = new ReservationModel();
+				$newDbStatus = $reservDetails->updateAttributes($reservation_id['id'],$newDb);
+				//print_r($newDbStatus);die;
+				/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+				//echo "alacarte success";die;
+
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
@@ -157,7 +187,7 @@ class ReservationDetails extends Model {
 					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'A'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Alternate_ID' =>  'A'.sprintf("%06d",$reservation_id['id']),					                    
-					                    'Occasion' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Special_Request' => (isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Alacarte",
 					                    'API_added' => 'Mobile',
 					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
@@ -247,6 +277,35 @@ class ReservationDetails extends Model {
 
 				$arrData['giftCardID'] = (isset($arrData['giftCardID']) && !empty($arrData['giftCardID'])) ? $arrData['giftCardID'] : "" ;
 
+				//for the new db structure support
+				$combined_date_and_time = $arrData['reservationDate'] . ' ' . $arrData['reservationTime'];
+				$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+				$newDb['attributes']['no_of_people_booked'] = $arrData['partySize'];
+				$newDb['attributes']['cust_name'] = $arrData['guestName'];
+				$newDb['attributes']['email'] = $arrData['guestEmail'];
+				$newDb['attributes']['contact_no'] = $arrData['phone'];
+				$newDb['attributes']['reserv_type'] = "Experience";
+				$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
+				$newDb['attributes']['loyalty_points_awarded'] =  $productDetail['reward_point'];
+				$newDb['attributes']['special_request'] = $arrData['addons_special_request'];
+				$newDb['attributes']['experience'] = $productDetail['vendor_name'].' - '.$productDetail['descriptive_title'];
+				$newDb['attributes']['api_added'] = "Mobile";
+				$newDb['attributes']['giu_membership_id'] = $userDetail['data']['membership_number'];
+				$newDb['attributes']['outlet'] =  $productDetail['location'];
+				$newDb['attributes']['auto_reservation'] = "Not available";
+				$newDb['attributes']['ar_confirmation_id'] = "0";
+				$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservation_id['id']);
+				$newDb['userdetails']['user_id'] = $userID;
+				$newDb['userdetails']['status'] = 1;
+				$newDb['userdetails']['addons'] = $arrData['addon'];
+
+				//print_r($newDb);die;
+				$reservDetails = new ReservationModel();
+				$newDbStatus = $reservDetails->updateAttributes($reservation_id['id'],$newDb);
+				//print_r($newDbStatus);die;
+				/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+				//echo "experience success";die;
+
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
 					                    'Email_ids' => $arrData['guestEmail'],
@@ -257,7 +316,7 @@ class ReservationDetails extends Model {
 					                    'Time' => date("g:ia", strtotime($arrData['reservationTime'])),
 					                    //'Alternate_ID' =>  'E'.sprintf("%06d",$arrResponse['data']['reservationID']),//sprintf("%06d",$this->data['order_id1']);
 					                    'Alternate_ID' =>  'E'.sprintf("%06d",$reservation_id['id']),
-					                    'Occasion' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
+					                    'Special_Request' => $arrData['addons_special_request'],//(isset($arrData['specialRequest']) && !empty($arrData['specialRequest'])) ? $arrData['specialRequest'] : "" ,
 					                    'Type' => "Experience",
 					                    'API_added' => 'Mobile',
 					                    'GIU_Membership_ID' => $userDetail['data']['membership_number'],
@@ -324,7 +383,7 @@ class ReservationDetails extends Model {
 	 * @return	array
 	 * @since	1.0.0
 	 */
-	public static function cancelReservation($reservationID, $objMailChimp) {
+	public static function cancelReservation($reservationID, $objMailChimp,$userID) {
 		//array to hold response
 		$arrResponse = array();
 		
@@ -337,6 +396,17 @@ class ReservationDetails extends Model {
 			$reservation = Self::find($reservationID);
 			$reservation->reservation_status = 'cancel';
 			$reservation->save();
+
+			//for the new db structure support
+
+			$newDb['userdetails']['user_id'] = $userID;
+			$newDb['userdetails']['status'] = 3;
+			//print_r($newDb);die;
+			$reservDetails = new ReservationModel();
+			$newDbStatus = $reservDetails->updateAttributes($reservationID,$newDb);
+			//print_r($newDbStatus);die;
+			/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+			//die;
 
 			//Remove the points earned for the cancelled reservation
 			$cancelReward = self::cancelRewardPoint( $reservationID );
@@ -1446,6 +1516,35 @@ class ReservationDetails extends Model {
     		if(!array_key_exists('giftCardID', $arrData)) {
     			$arrData['giftCardID'] = '';
     		}
+
+
+			//for the new db structure support
+			$combined_date_and_time = $arrData['reservationDate'] . ' ' . $arrData['reservationTime'];
+			$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+			$newDb['attributes']['no_of_people_booked'] = $arrData['partySize'];
+			$newDb['attributes']['cust_name'] = $userData['data']['full_name'];
+			$newDb['attributes']['email'] = $userData['data']['email'];
+			$newDb['attributes']['contact_no'] = $userData['data']['phone_number'];
+			$newDb['attributes']['reserv_type'] = "Experience";
+			$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
+			$newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
+			$newDb['attributes']['api_added'] = "Mobile";
+			$newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
+			$newDb['attributes']['special_request'] =  $outlet->name;
+			$newDb['attributes']['auto_reservation'] = "Not available";
+			$newDb['attributes']['ar_confirmation_id'] = "0";
+			$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$arrData['reservationID']);
+			$newDb['attributes']['occasion'] = $arrData['addons_special_request'];
+			$newDb['attributes']['order_completed'] = 'User Changed';
+			$newDb['userdetails']['user_id'] = $queryResult->user_id;
+			$newDb['userdetails']['status'] = 2;
+			$newDb['userdetails']['addons'] = $arrData['addon'];
+			//print_r($newDb);die;
+			$reservDetails = new ReservationModel();
+			$newDbStatus = $reservDetails->updateAttributes($arrData['reservationID'],$newDb);
+			//print_r($newDbStatus);die;
+			/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+
 			$zoho_data = array(
 				'Name' => $userData['data']['full_name'],
 				'Email_ids' => $userData['data']['email'],
@@ -1463,7 +1562,7 @@ class ReservationDetails extends Model {
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>'User Changed',
-				'Occasion' => $arrData['addons_special_request'],
+				'Special_Request' => $arrData['addons_special_request'],
 				'gift_card_id_from_reservation' => $arrData['giftCardID']
 			);
 
@@ -1546,6 +1645,34 @@ class ReservationDetails extends Model {
 			//-------------------------------------------------------------------------------------------------------
 
 
+			//for the new db structure support
+			$combined_date_and_time = $arrData['reservationDate'] . ' ' . $arrData['reservationTime'];
+			$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+			$newDb['attributes']['no_of_people_booked'] = $arrData['partySize'];
+			$newDb['attributes']['cust_name'] = $userData['data']['full_name'];
+			$newDb['attributes']['email'] = $userData['data']['email'];
+			$newDb['attributes']['contact_no'] = $userData['data']['phone_number'];
+			$newDb['attributes']['reserv_type'] = "Alacarte";
+			$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
+			$newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
+			$newDb['attributes']['api_added'] = "Mobile";
+			$newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
+			$newDb['attributes']['outlet'] =  $outlet->name;
+			$newDb['attributes']['auto_reservation'] = "Not available";
+			$newDb['attributes']['ar_confirmation_id'] = "0";
+			$newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$arrData['reservationID']);
+			$newDb['attributes']['order_completed'] = 'User Changed';
+			$newDb['userdetails']['user_id'] = $queryResult->user_id;
+			$newDb['userdetails']['status'] = 2;
+			//print_r($newDb);die;
+			$reservDetails = new ReservationModel();
+			$newDbStatus = $reservDetails->updateAttributes($arrData['reservationID'],$newDb);
+			//print_r($newDbStatus);die;
+			/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+			//echo "experience success";die;
+
+
+
 			$zoho_data = array(
 				'Name' => $userData['data']['full_name'],
 				'Email_ids' => $userData['data']['email'],
@@ -1556,7 +1683,7 @@ class ReservationDetails extends Model {
 				'Time' => date("g:i a", strtotime($arrData['reservationTime'])),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'alacarte',
-				'API_added' => 'Yes',
+				'API_added' => 'Mobile',
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],

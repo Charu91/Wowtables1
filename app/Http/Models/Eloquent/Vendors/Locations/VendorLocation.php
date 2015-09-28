@@ -27,6 +27,10 @@ class VendorLocation extends Model {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Vendors\Vendor','vendor_id','id');
     }
 
+    public function address(){
+        return $this->belongsTo('WowTables\VendorLocationAddress','id','vendor_location_id');
+    }
+
     public function location()
     {
         return $this->belongsTo('WowTables\Http\Models\Eloquent\Location','location_id','id');

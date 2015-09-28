@@ -143,19 +143,25 @@
 
             <div id="deal-detail-carousel" class="carousel slide" data-ride="carousel">
               <!-- Wrapper for slides -->
+
               <div class="carousel-inner">
 
-                <div class="item active">
+                <!--<div class="item active">
                   <img  itemprop="photo" src="<?php echo isset($arrALaCarte['data']['image']['gallery'][0])?$arrALaCarte['data']['image']['gallery'][0]:'';?>" alt="deal1">
-                </div>
+                </div>-->
 
-                <?php $i=2;
+                <?php $i=1;
                 if(isset($arrALaCarte['data']['image']['gallery']) && is_array($arrALaCarte['data']['image']['gallery']))
                 {
                   foreach($arrALaCarte['data']['image']['gallery'] as $key => $value)
                   {
-                    ?>
-                    <div class="item">
+                        if($i == 1){
+                            $className =  "item active";
+                        } else {
+                            $className = "item";
+                        }
+                  ?>
+                    <div class="<?php echo $className;?>">
                         <img  itemprop="photo" src="<?php echo $value;?>" alt="<?php echo $value;?>" alt="deal<?=$i;?>">
                     </div>
                     <?php $i++;
@@ -549,7 +555,7 @@
 
         <div class="col-md-4 col-sm-4 deal-detail-right">
 
-          @if(!empty($arrALaCarte['data']['special_offer_title']))
+          @if(!empty(trim($arrALaCarte['data']['special_offer_title'])))
           <div class="widget reservation-box">
               <h3 class="text-center">Special Offer</h3>
               <p class="text-center" style="color:#fff"><strong>{!! $arrALaCarte['data']['special_offer_title'] !!}</strong></p>

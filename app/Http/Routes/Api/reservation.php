@@ -45,7 +45,7 @@
  				array(
  					'uses' => 'Api\ReservationController@changeReservation',
 					'as' => '',
-					'middleware' => 'wow.api',
+					/*'middleware' => 'wow.api',*/
 					'where' => array(),
 					'domain' => env('WEBSITE_URL'),
 				));
