@@ -155,7 +155,7 @@ class AdminReservationsController extends Controller{
                 )
             );
             //echo "asd , ";
-            $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+            $this->mailchimp->lists->updateMember($this->listId, ["email"=>$createPasswordRequest['email']], $mergeVars);
             $success_message = "Email ".$my_email." has been registered as a member.";
             $data = array(
                 'user_id'=>$user_id,
