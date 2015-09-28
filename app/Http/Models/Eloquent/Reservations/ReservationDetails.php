@@ -385,7 +385,7 @@ class ReservationDetails extends Model {
     protected function getLastStatusLogId($reservId){
 
         $statusLogId = DB::select(DB::raw('SELECT max(id) as statusId FROM reservation_status_log where reservation_id = '.$reservId.' group by reservation_id'));
-        print_r($statusLogId[0]->statusId);die;
+        //print_r($statusLogId[0]->statusId);die;
         return $statusLogId[0]->statusId;
 
     }
