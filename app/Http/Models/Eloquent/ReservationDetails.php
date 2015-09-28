@@ -148,8 +148,7 @@ class ReservationDetails extends Model {
 				//Insert record for new reward point
 				$storeRewardPoint = self::storeRewardPoint($userID, $aLaCarteDetail['reward_point'], $reservation_id['id']);
 
-				//Mail by mailchimp
-				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
+
 
 				//Reading offers detail
 				$offersResult = self::getSpecialOfferDetail($arrData['vendorLocationID']);
@@ -181,6 +180,9 @@ class ReservationDetails extends Model {
 				//print_r($newDbStatus);die;
 				/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 				//echo "alacarte success";die;
+
+				//Mail by mailchimp
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -277,8 +279,7 @@ class ReservationDetails extends Model {
 				//Insert record for new reward point
 				$storeRewardPoint = self::storeRewardPoint($userID, $productDetail['reward_point'], $reservation_id['id']);	 
 				
-				//Mail by mailchimp
-				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
+
 
 				$arrData['giftCardID'] = (isset($arrData['giftCardID']) && !empty($arrData['giftCardID'])) ? $arrData['giftCardID'] : "" ;
 
@@ -310,6 +311,9 @@ class ReservationDetails extends Model {
 				//print_r($newDbStatus);die;
 				/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 				//echo "experience success";die;
+
+				//Mail by mailchimp
+				$mailStatus = self::mailByMailChimp( $arrData, $userID ,$objMailChimp ,$city_name);
 
 				$zoho_data = array(
 					                    'Name' => $arrData['guestName'],
@@ -910,7 +914,7 @@ class ReservationDetails extends Model {
         if($arrData['reservationType'] == 'alacarte') {
 
         	//====================================
-         	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']); 
+         	$outlet = self::getAlacarteOutlet($arrData['vendorLocationID']);
          	
             $locationDetails = self::getAlacarteLocationDetails($arrData['vendorLocationID']);
               		
@@ -1282,7 +1286,7 @@ class ReservationDetails extends Model {
                 //$objMailChimp->lists->subscribe($listId, $guestEmail,$merge_vars,"html",false,true );
 				$objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
 
-				//$my_email = $arrData['guestEmail'];
+				$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1293,7 +1297,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
+				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
   		}
   		else if ($arrData['reservationType'] == "experience") {
 
@@ -1314,7 +1318,7 @@ class ReservationDetails extends Model {
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
 
-				//$my_email = $arrData['guestEmail'];
+				$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1325,7 +1329,8 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
+				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
+
   		}
 
   	}
