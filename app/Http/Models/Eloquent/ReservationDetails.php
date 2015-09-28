@@ -1274,10 +1274,15 @@ class ReservationDetails extends Model {
                     'MERGE13'=>$arrData['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate']))
                 );
-                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
-                $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+				//
+				//$guestEmail['email'] = $arrData['guestEmail'];
 
-				$my_email = $arrData['guestEmail'];
+				//print_r($guestEmail);die;
+                //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+                //$objMailChimp->lists->subscribe($listId, $guestEmail,$merge_vars,"html",false,true );
+				$objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
+
+				//$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1288,7 +1293,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
+				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
   		}
   		else if ($arrData['reservationType'] == "experience") {
 
@@ -1309,7 +1314,7 @@ class ReservationDetails extends Model {
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
 
-				$my_email = $arrData['guestEmail'];
+				//$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1320,7 +1325,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
+				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
   		}
 
   	}
