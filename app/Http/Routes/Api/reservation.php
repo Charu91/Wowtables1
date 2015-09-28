@@ -26,6 +26,7 @@
  				array(
  					'uses' => 'Api\ReservationController@reserveTable',
 					'as' => '',
+					'middleware' => 'wow.api',
 					'where' => array(),
 					'domain' => env('WEBSITE_URL'),
 				));

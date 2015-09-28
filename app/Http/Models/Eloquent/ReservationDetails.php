@@ -124,7 +124,7 @@ class ReservationDetails extends Model {
 													  ->first();
 
 			//Reading user detail to get membership number(GIU_Membership_ID)
-			$token = 'a5cdd998-20c2-11e5-bd32-f23c913353fa';
+			$token = $_SERVER['HTTP_X_WOW_TOKEN'];
 			$userDetail = Profile::getUserProfile($token);	
 
 
