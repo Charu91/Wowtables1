@@ -302,7 +302,7 @@ class ReservationDetails extends Model {
 				$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservation_id['id']);
 				$newDb['userdetails']['user_id'] = $userID;
 				$newDb['userdetails']['status'] = 1;
-				$newDb['userdetails']['addons'] = $arrData['addon'];
+				$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "") ;
 
 				//print_r($newDb);die;
 				$reservDetails = new ReservationModel();
