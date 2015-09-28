@@ -47,6 +47,8 @@
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Status</th>
+                        <th>Special Request</th>
+                        <th>Gift Card Id</th>
 
                     </tr>
                     </thead>
@@ -129,6 +131,8 @@
                                     </div>
                                 </div>
                             </td>
+                            <td>{!! $un_booking->special_request !!}</td>
+                            <td>{!! $un_booking->gift_card_id !!}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -152,6 +156,8 @@
                         <th>No of People</th>
                         <th>Status</th>
                         <th>Order Completed</th>
+                        <th>Special Request</th>
+                        <th>Gift Card Id</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -240,6 +246,8 @@
                                     <input type="checkbox" class="checkbox" id="order_completed" name="attributes[order_completed]" data-reserv-id="{!! $booking->id !!}" />
                                 @endif
                             </td>
+                            <td>{!! $booking->special_request !!}</td>
+                            <td>{!! $booking->gift_card_id !!}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -263,6 +271,8 @@
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Status</th>
+                        <th>Special Request</th>
+                        <th>Gift Card Id</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -344,6 +354,8 @@
                                     </div>
                                 </div>
                             </td>
+                            <td>{!! $todaysbooking->special_request !!}</td>
+                            <td>{!! $todaysbooking->gift_card_id !!}</td>
 
                         </tr>
                     @endforeach

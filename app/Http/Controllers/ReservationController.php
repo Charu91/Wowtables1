@@ -107,7 +107,10 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id];
 			$booking->statusArr = $statusArr;
 
-
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
+			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
+			//print_r($unconfirmedBookings);die;
 			$un_bookings[$count] = $booking;
 			$count++;
 
@@ -185,6 +188,10 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$allbookings->id];
 			$booking->statusArr = $statusArr;
 
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
+			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
+
 			$bookings[$count] = $booking;
 			$count++;
 
@@ -252,6 +259,9 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$today->id];
 			$booking->statusArr = $statusArr;
 
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
+			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$todayBookings[$count] = $booking;
 			$count++;
 

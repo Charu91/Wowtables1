@@ -3,7 +3,8 @@
     $(document).on('ready', function(){
       $('#unbookings').DataTable({
         "order": [], //for getting latest on top
-        columnDefs: [{ targets: 'no-sort', orderable: false }]
+        columnDefs: [{ targets: 'no-sort', orderable: false }],
+        "scrollX": true
       });
 
         $('#reserv_time').timepicker({

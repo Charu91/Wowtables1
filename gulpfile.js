@@ -37,6 +37,7 @@ elixir(function(mix) {
             "stylesheets/skins/default.css",
             "stylesheets/theme-custom.css",
             "stylesheets/admin_reservations.css",
+            "stylesheets/bookings.css",
         ], "public/css", "public")
 
         .scripts([
@@ -99,6 +100,7 @@ elixir(function(mix) {
             "javascripts/admin/promotions.js",
             "javascripts/admin/curator.js",
             "javascripts/admin/career.js",
+            "javascripts/admin/bookings.js",
             "javascripts/admin/experiences.js",
             "javascripts/admin/adminreservations.js",
             "vendor/bootstrap-markdown/js/markdown.js",
