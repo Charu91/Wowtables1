@@ -812,7 +812,7 @@ class RegistrationsController extends Controller {
 		$combined_date_and_time = $final_date_format . ' ' . $edit_time;
 		$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
 		$newDb['attributes']['no_of_people_booked'] = $party_size;
-		$newDb['attributes']['gift_card_id'] = (isset($giftcard_id)) ? $giftcard_id : "";
+		$newDb['attributes']['gift_card_id_reserv'] = (isset($giftcard_id)) ? $giftcard_id : "";
 		$newDb['attributes']['special_request'] = ($special_request) ? $special_request : "";
 		$newDb['userdetails']['user_id'] = $user_id;
 		$newDb['userdetails']['status'] = 2;
