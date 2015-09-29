@@ -111,7 +111,8 @@ class ReservationController extends Controller {
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
-			//print_r($unconfirmedBookings);die;
+			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			//print_r($booking);die;
 			$un_bookings[$count] = $booking;
 			$count++;
 
@@ -193,7 +194,7 @@ class ReservationController extends Controller {
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
-
+			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$bookings[$count] = $booking;
 			$count++;
 
@@ -265,6 +266,7 @@ class ReservationController extends Controller {
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
+			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$todayBookings[$count] = $booking;
 			$count++;
 

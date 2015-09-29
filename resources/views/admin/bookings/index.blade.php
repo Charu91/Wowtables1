@@ -46,9 +46,10 @@
                         <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
-                        <th>Status</th>
+                        <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
+                        <th>Status</th>
 
                     </tr>
                     </thead>
@@ -113,6 +114,10 @@
                             <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
                             <td>{!! $un_booking->phone_no !!}</td>
                             <td>{!! $un_booking->no_of_persons !!}</td>
+                            <td>{!! $un_booking->outlet !!}</td>
+
+                            <td>{!! $un_booking->special_request !!}</td>
+                            <td>{!! $un_booking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $un_booking->reserv_status !!} by {!! $un_booking->lastmodified !!}</span>
                                 <div class="btn-group pull-right">
@@ -131,8 +136,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{!! $un_booking->special_request !!}</td>
-                            <td>{!! $un_booking->gift_card_id !!}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -154,10 +157,11 @@
                         <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
-                        <th>Status</th>
-                        <th>Order Completed</th>
+                        <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
+                        <th>Status</th>
+                        <th>Order Completed</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -221,6 +225,9 @@
                             <td><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a></td>
                             <td>{!! $booking->phone_no !!}</td>
                             <td>{!! $booking->no_of_persons !!}</td>
+                            <td>{!! $booking->outlet !!}</td>
+                            <td>{!! $booking->special_request !!}</td>
+                            <td>{!! $booking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $booking->reserv_status !!} by {!! $booking->lastmodified !!}</span>
                                 <div class="btn-group pull-right">
@@ -246,8 +253,7 @@
                                     <input type="checkbox" class="checkbox" id="order_completed" name="attributes[order_completed]" data-reserv-id="{!! $booking->id !!}" />
                                 @endif
                             </td>
-                            <td>{!! $booking->special_request !!}</td>
-                            <td>{!! $booking->gift_card_id !!}</td>
+
                         </tr>
                     @endforeach
                     </tbody>
@@ -270,9 +276,10 @@
                         <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
-                        <th>Status</th>
+                        <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -336,6 +343,9 @@
                             <td><a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a></td>
                             <td>{!! $todaysbooking->phone_no !!}</td>
                             <td>{!! $todaysbooking->no_of_persons !!}</td>
+                            <td>{!! $todaysbooking->outlet !!}</td>
+                            <td>{!! $todaysbooking->special_request !!}</td>
+                            <td>{!! $todaysbooking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $todaysbooking->reserv_status !!} by {!! $todaysbooking->lastmodified !!}</span>
                                 <div class="btn-group pull-right">
@@ -354,8 +364,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{!! $todaysbooking->special_request !!}</td>
-                            <td>{!! $todaysbooking->gift_card_id !!}</td>
+
 
                         </tr>
                     @endforeach
