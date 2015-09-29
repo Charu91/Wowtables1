@@ -467,7 +467,7 @@ class AlacarteController extends Controller {
                 //echo "asd , ";
                 //$this->mailchimp->lists->interestGroupings($this->listId,true);
                 //print_r($test);die;
-                $this->mailchimp->lists->updateMember($this->listId, ["email"=>$dataPost['guestEmail']], $mergeVars);
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
             }
             //End MailChimp
             $getReservationID = '';
