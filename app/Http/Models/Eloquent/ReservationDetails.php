@@ -1709,7 +1709,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['contact_no'] = $userData['data']['phone_number'];
 			$newDb['attributes']['reserv_type'] = "Alacarte";
 			//$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
-			$newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
+			$newDb['attributes']['experience'] = $outlet->vendor_name.' - Ala Carte';
 			$newDb['attributes']['api_added'] = "Mobile";
 			$newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
 			$newDb['attributes']['outlet'] =  $outlet->name;
