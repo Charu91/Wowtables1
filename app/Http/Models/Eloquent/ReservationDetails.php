@@ -1708,7 +1708,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['email'] = $userData['data']['email'];
 			$newDb['attributes']['contact_no'] = $userData['data']['phone_number'];
 			$newDb['attributes']['reserv_type'] = "Alacarte";
-			$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
+			//$newDb['attributes']['gift_card_id_reserv'] = $arrData['giftCardID'];
 			$newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
 			$newDb['attributes']['api_added'] = "Mobile";
 			$newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
@@ -1716,7 +1716,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['auto_reservation'] = "Not available";
 			$newDb['attributes']['ar_confirmation_id'] = "0";
 			$newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$arrData['reservationID']);
-			$newDb['attributes']['order_completed'] = 'User Changed';
+			//$newDb['attributes']['order_completed'] = 'User Changed';
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
 			//print_r($newDb);die;
