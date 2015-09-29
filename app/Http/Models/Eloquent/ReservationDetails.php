@@ -1585,11 +1585,11 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
 			$newDb['attributes']['api_added'] = "Mobile";
 			$newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
-			$newDb['attributes']['special_request'] =  $outlet->name;
+			$newDb['attributes']['outlet'] =  $outlet->name;
 			$newDb['attributes']['auto_reservation'] = "Not available";
 			$newDb['attributes']['ar_confirmation_id'] = "0";
 			$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$arrData['reservationID']);
-			$newDb['attributes']['occasion'] = $arrData['addons_special_request'];
+			$newDb['attributes']['special_request'] = $arrData['addons_special_request'];
 			$newDb['attributes']['order_completed'] = 'User Changed';
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
