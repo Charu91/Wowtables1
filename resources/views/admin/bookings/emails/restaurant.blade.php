@@ -21,6 +21,7 @@
             <br/>Special Request: {{ $data['special_request'] }}
         </td>
     </tr>
+    <tr><td>{{ $data['end_text'] }}</td></tr>
     <tr><td>&nbsp;</td></tr>
     <tr>
         <td>Regards,</td>
