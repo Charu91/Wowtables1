@@ -120,12 +120,12 @@ class ReservationController extends Controller {
 		}
 		//die;
 
-		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (3,8,6) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
+		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,3,4,5,6,7,8) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[] = $reservId->reservation_id;
 		}
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[8,6]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,3,4,5,6,7,8]);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
