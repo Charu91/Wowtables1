@@ -571,7 +571,7 @@ class ReservationController extends Controller {
 									  ->select(DB::raw('reservation_statuses.*, user_id'));
 
 					 }])*/
-		$reservationDetails = ReservationDetails::with(['attributesText' => function($query)
+		$reservationDetails = ReservationDetails::with('vendor_location')->with(['attributesText' => function($query)
 		{
 			$query->where('reservation_attribute_id',5);
 
@@ -580,6 +580,7 @@ class ReservationController extends Controller {
 
 		$reservationAttrs = $this->reservationDetails->getByReservationId($reservation_id);
 		//print_r($reservationDetails);die;
+		//print_r($reservationDetails[0]->vendor_location->vendor->name);die;
 		$cust_email = $reservationDetails[0]->attributesText[0]->attribute_value;
 		//print_r($cust_email);die;
 		$data['cust_name'] = $reservationAttrs['attributes']['cust_name'];
@@ -594,6 +595,7 @@ class ReservationController extends Controller {
 		$data['experience'] = $reservationAttrs['attributes']['experience'];
 		$data['special_request'] = $reservationAttrs['attributes']['special_request'];
 		$data['booking_type'] = $reservationAttrs['attributes']['reserv_type'];
+		$data['restaurant_name'] = $reservationDetails[0]->attributesText[0]->attribute_value;
 
 		//print_r($data);die;
 		//$vendor_name = explode('-',$data['experience']);
@@ -615,7 +617,7 @@ class ReservationController extends Controller {
 	protected function smsconfirmation($data) {
 
 
-		$smsBody = "Your reservation for the WowTables experience at ". $data['outlet'] . " is confirmed for ".$data['no_of_people']." guests at ".$data['time']." on ".$data['date'].". Enjoy your meal. Regards, WowTables";
+		$smsBody = "Your reservation for the WowTables experience at ".$data['restaurant_name'].",". $data['outlet'] . " is confirmed for ".$data['no_of_people']." guests at ".$data['time']." on ".$data['date'].". Enjoy your meal. Regards, WowTables";
 		if ($data['booking_type']  ==  "Alacarte")
 		{
 			$smsBody = "Your A la Carte reservation at ".$data['outlet']." is confirmed for ".$data['no_of_people']." guests at ".$data['time']." on ".$data['date'].". Enjoy your meal. Regards, WowTables";
