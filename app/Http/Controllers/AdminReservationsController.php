@@ -1403,11 +1403,11 @@ class AdminReservationsController extends Controller{
         $newDb['attributes']['reserv_type'] = "Experience";
         $newDb['attributes']['gift_card_id_reserv'] = $dataPost['giftCardID'];
         $newDb['attributes']['loyalty_points_awarded'] =  $productDetails['attributes']['reward_points_per_reservation'];
-        $newDb['attributes']['occasion'] = $dataPost['addons_special_request'];
+        $newDb['attributes']['special_request'] = $dataPost['addons_special_request'];
         $newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
         $newDb['attributes']['api_added'] = "Admin Reservation";
         $newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
-        $newDb['attributes']['special_request'] = $outlet->name;
+        $newDb['attributes']['outlet'] = $outlet->name;
         $newDb['attributes']['auto_reservation'] = "Not available";
         $newDb['attributes']['ar_confirmation_id'] = "0";
         $newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']);
