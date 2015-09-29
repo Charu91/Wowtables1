@@ -499,6 +499,12 @@ class ReservationController extends Controller {
 			$data['time'] = $dateObject->format('h:i A');
 			$data['outlet'] = $reservationAttrs['attributes']['outlet'];
 			$data['experience'] = $reservationAttrs['attributes']['experience'];
+			$data['special_request'] = $reservationAttrs['attributes']['special_request'];
+			if(isset($reservationAttrs['attributes']['gift_card_id']) && $reservationAttrs['attributes']['reserv_type'] == "Experience" ){
+				//$data['end_text'] = "";
+			} else {
+				$data['end_text'] = "This experience will be post-paid by the customer. Please bill the customer for the WowTables experience bill in the restaurant.";
+			}
 
 			//print_r($data);die;
 			$vendor_email = 'durgesh@wowtables.com';
@@ -541,7 +547,7 @@ class ReservationController extends Controller {
 			$data['experience'] = $reservationAttrs['attributes']['experience'];
 			$data['special_request'] = $reservationAttrs['attributes']['special_request'];
 
-			if(isset($reservationAttrs['attributes']['gift_card_id'])){
+			if(isset($reservationAttrs['attributes']['gift_card_id']) && $reservationAttrs['attributes']['reserv_type'] == "Experience"){
 				//$data['end_text'] = "";
 			} else {
 				$data['end_text'] = "This experience will be post-paid by the customer. Please bill the customer for the WowTables experience bill in the restaurant.";
