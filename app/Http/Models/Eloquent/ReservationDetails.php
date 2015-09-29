@@ -1590,7 +1590,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['ar_confirmation_id'] = "0";
 			$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$arrData['reservationID']);
 			$newDb['attributes']['special_request'] = $arrData['addons_special_request'];
-			$newDb['attributes']['order_completed'] = 'User Changed';
+			//$newDb['attributes']['order_completed'] = 'User Changed';
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
 			$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "") ;
