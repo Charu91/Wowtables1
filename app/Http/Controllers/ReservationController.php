@@ -47,13 +47,13 @@ class ReservationController extends Controller {
 		$count = 1;
 
 		//unconfirmed bookings
-		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
+		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7,3) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[] = $reservId->reservation_id;
 		}
 
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3]);
 		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
@@ -125,7 +125,7 @@ class ReservationController extends Controller {
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[] = $reservId->reservation_id;
 		}
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[3,8,6]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[8,6]);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
@@ -506,7 +506,7 @@ class ReservationController extends Controller {
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-				$message->to($vendor_email)->subject('Change in existing reservation Test');
+				$message->to($vendor_email)->subject('Change in existing reservation');
 				$message->cc('concierge@wowtables.com');
 			});
 			//die;
