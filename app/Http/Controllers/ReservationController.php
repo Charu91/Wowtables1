@@ -467,7 +467,7 @@ class ReservationController extends Controller {
 			], function ($message) use ($vendor_email) {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 				$message->to($vendor_email)->subject('Booking Cancelled');
-				//$message->cc('concierge@wowtables.com');
+				$message->cc('concierge@wowtables.com');
 			});
 			flash()->success('Cancellation Email has been send to restaurant');
 			return redirect()->route('BookingList');
@@ -505,7 +505,7 @@ class ReservationController extends Controller {
 			], function ($message) use ($vendor_email) {
 				$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 				$message->to($vendor_email)->subject('Change in existing reservation Test');
-				//$message->cc('concierge@wowtables.com');
+				$message->cc('concierge@wowtables.com');
 			});
 			//die;
 			flash()->success('Change Email has been send to restaurant');
@@ -547,7 +547,7 @@ class ReservationController extends Controller {
 			], function($message) use ($vendor_email,$vendor_name){
 				$message->from('concierge@wowtables.com','WowTables by GourmetItUp');
 				$message->to($vendor_email)->subject($vendor_name[0].' New Reservations');
-				//$message->cc('concierge@wowtables.com');
+				$message->cc('concierge@wowtables.com');
 			});
 			//die;
 			flash()->success('Reservation Information Email has been send to restaurant');
@@ -603,7 +603,7 @@ class ReservationController extends Controller {
 		], function($message) use ($cust_email) {
 			$message->from('concierge@wowtables.com','WowTables by GourmetItUp');
 			$message->to($cust_email)->subject('Your WowTables reservation is confirmed');
-			//$message->cc('concierge@wowtables.com');
+			$message->cc('concierge@wowtables.com');
 		});
 		//die;
 		$smsStatus = $this->smsconfirmation($data);
