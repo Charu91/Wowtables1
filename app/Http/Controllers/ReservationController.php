@@ -461,7 +461,7 @@ class ReservationController extends Controller {
 			$dateObject = Carbon::createFromFormat('Y-m-d H:i:s',$reservationAttrs['attributes']['reserv_datetime']);
 			$data['date'] = $dateObject->format('d/m/y');
 			$data['time'] = $dateObject->format('h:i A');
-
+			$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.cancel', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -499,7 +499,7 @@ class ReservationController extends Controller {
 			$data['experience'] = $reservationAttrs['attributes']['experience'];
 
 			//print_r($data);die;
-
+			$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.change', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -541,6 +541,7 @@ class ReservationController extends Controller {
 
 			//print_r($data);die;
 			$vendor_name = explode('-',$data['experience']);
+			$vendor_email = 'durgesh@wowtables.com';
 
 			Mail::send('admin.bookings.emails.restaurant',[
 				'data' =>$data,
