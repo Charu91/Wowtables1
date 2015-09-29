@@ -69,12 +69,14 @@
 
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
-            columnDefs: [{ targets: 'no-sort', orderable: false }]
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true
         });
 
         $('#todaybookings').DataTable({
             "order": [], //for getting latest on top
-            columnDefs: [{ targets: 'no-sort', orderable: false }]
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true
         });
 
         $(".dropdown").hover(
