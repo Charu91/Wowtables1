@@ -486,7 +486,7 @@ class ReservationDetails extends Model {
 
     }
 
-    protected function changeStatusInZoho($order_id,$data){
+    public function changeStatusInZoho($order_id,$data){
 
         $ch = curl_init();
         $config = array(

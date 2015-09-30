@@ -109,8 +109,8 @@ class ReservationController extends Controller {
 			//echo $reservStatusArr[$unconfirmedBookings->id];
 			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id][0];
 			$booking->statusArr = $statusArr;
-
-			if($reservStatusArr[$unconfirmedBookings->id][0] == 3){
+			//echo $reservStatusArr[$unconfirmedBookings->id][0];
+			if($reservStatusArr[$unconfirmedBookings->id][1] == 3){
 				$booking->zoho_cancelled = 1;
 			} else {
 				$booking->zoho_cancelled = 0;
@@ -190,7 +190,7 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$postBookings->id][0];
 			$booking->statusArr = $statusArr;
 
-			if($reservStatusArr[$postBookings->id][0] == 6){
+			if($reservStatusArr[$postBookings->id][1] == 6){
 				$booking->zoho_cancelled = 1;
 			} else {
 				$booking->zoho_cancelled = 0;
@@ -557,7 +557,7 @@ class ReservationController extends Controller {
 			$dateObject = Carbon::createFromFormat('Y-m-d H:i:s',$reservationAttrs['attributes']['reserv_datetime']);
 			$data['date'] = $dateObject->format('d/m/y');
 			$data['time'] = $dateObject->format('h:i A');
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.cancel', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -601,7 +601,7 @@ class ReservationController extends Controller {
 			}
 
 			//print_r($data);die;
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.change', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -649,7 +649,7 @@ class ReservationController extends Controller {
 
 			//print_r($data);die;
 			$vendor_name = explode('-',$data['experience']);
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 
 			Mail::send('admin.bookings.emails.restaurant',[
 				'data' =>$data,
@@ -862,11 +862,12 @@ class ReservationController extends Controller {
 			'Order_completed'=>'booking cancelled',
 		);
 		if($reservType == "Experience"){
-			$this->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);
+			$this->reservationDetails->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);
 		} else if($reservType == "Alacarte") {
-			$this->changeStatusInZoho('A'.sprintf("%06d",$reservation_id),$zoho_data);
+			$this->reservationDetails->changeStatusInZoho('A'.sprintf("%06d",$reservation_id),$zoho_data);
 		}
-		$this->reservationDetails->changeStatusInZoho($reservation_id,$zoho_data);
+		//print_r($this->reservationDetails);die;
+		//$this->reservationDetails->changeStatusInZoho($reservation_id,$zoho_data);
 
 
 		$data['attributes']['zoho_booking_cancelled'] = "yes";
