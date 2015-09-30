@@ -651,9 +651,18 @@
 								'loc4.name as country', 'loc5.name as locality',								
 								DB::raw('IFNULL(flags.name,"") AS flag_name'),								
 								'mrn1.file as ios_image',
-								'mrn2.file as android_image'
+								'mrn2.file as android_image',
+								DB::raw( 
+											'(((acos(sin(('.$input['lat'].'*pi()/180)) * 
+												sin((vlaa.latitude*pi()/180))+cos(('.$input['lat'].'*pi()/180)) * 
+												cos((vlaa.latitude*pi()/180)) * 
+												cos((('.$input['log'].' - vlaa.longitude)*
+													pi()/180))))*180/pi())*60*1.1515*1.609344) as distance'
+										  )
 								)
-						->groupBy('vl.id');
+						->groupBy('vl.id')
+						->orderBy('distance')
+						->havingRaw('distance <= 15');
 						//->get();  
 					
 		//checking if city has been passed in 
@@ -675,20 +684,7 @@
 
 		if($queryResult) {
 			foreach($queryResult as $row) {
-
-					$lat1 = $input['lat'];
-					$log1 = $input['log'];						
-					$lat2 = $row->latitude ;
-					$log2 = $row->longitude ;  					
-
-					$dist = (((acos(sin(($lat1*pi()/180)) * sin(($lat2*pi()/180))+cos(($lat1*pi()/180)) *
-					cos(($lat2*pi()/180)) * cos((($log1 - $log2)*pi()/180))))*180/pi())*60*1.1515);
-
-					$dist =$dist * 1.609344;
-					$distance =round($dist,2);  
-						
-
-				if($distance <= $input['distance']) {
+					
 
 					$data['data']['alacarte'][] = array(
 												'vl_id' 		=> $row->vl_id,
@@ -703,7 +699,7 @@
 																	'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 																	'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 																 ),
-												'distance' 		=> $distance, 
+												'distance' 		=> round($row->distance, 2), 
 												'location_address' => array(
 																				"address_line" 	=> $row->address,
 																				"locality" 		=> $row->locality,
@@ -715,8 +711,7 @@
 																				"latitude" 		=> $row->latitude,
 																				"longitude" 	=> $row->longitude																
 																			),												
-											);
-				}				
+											);								
 			}
 			if(array_key_exists('data', $data)) { 
 				$data['alacarteCount'] = count($data['data']['alacarte']);
@@ -790,7 +785,7 @@
 							->where('p.status', 'Publish')
 							->where('pvl.status','Active')
 							->where('mrn1.image_type','mobile_listing_ios_experience')
-							->where('mrn2.image_type', 'mobile_listing_android_experience')						
+							->where('mrn2.image_type', 'mobile_listing_android_experience')
 							->select(
 									'p.id as product_id','p.name', 'pvl.id as pvl_id',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
@@ -804,11 +799,22 @@
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 									'loc4.name as country', 'loc5.name as locality',
 									'pp.post_tax_price','pp.price',
-									'pp.taxes', 'pt.type_name as price_type'
+									'pp.taxes', 'pt.type_name as price_type',
+								   DB::raw( 
+											'(((acos(sin(('.$input['lat'].'*pi()/180)) * 
+												sin((vlaa.latitude*pi()/180))+cos(('.$input['lat'].'*pi()/180)) * 
+												cos((vlaa.latitude*pi()/180)) * 
+												cos((('.$input['log'].' - vlaa.longitude)*
+													pi()/180))))*180/pi())*60*1.1515*1.609344) as distance'
+										  )	
 									)
-							->groupBy('pvl.id');
+							->groupBy('pvl.id')
+							->orderBy('distance')
+							->havingRaw('distance <= 15');
+
+							//echo $queryResult->toSql(); die();
 							//->groupBy('p.id');
-						//	->get();
+							//->get();
 
 		//checking if city has been passed in 
 		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
@@ -817,27 +823,14 @@
 		}
 
 		//executing the query
-		$queryResult = $queryResult->get();
+		$queryResult = $queryResult->get();  
+		//return $queryResult; 
 							
 		//array to store the information from the DB
 		$data = array();
 		if($queryResult) {
-			foreach($queryResult as $row) {   
+			foreach($queryResult as $row) {   				
 				
-					$lat1 = $input['lat'];
-					$log1 = $input['log'];
-						
-					$lat2 = $row->latitude ;
-					$log2 = $row->longitude ;  
-						
-
-					$dist = (((acos(sin(($lat1*pi()/180)) * sin(($lat2*pi()/180))+cos(($lat1*pi()/180)) *
-					cos(($lat2*pi()/180)) * cos((($log1 - $log2)*pi()/180))))*180/pi())*60*1.1515);
-
-					$dist =$dist * 1.609344;
-					$distance =round($dist,2);  						
-
-				if( $distance <= $input['distance'] ) {
 
 					$data[] = array(
 											'prod_id' 			=> $row->product_id,
@@ -851,7 +844,7 @@
 											'taxes' 			=> $row->taxes,
 											'price_type' 		=> $row->price_type,
 											'location' 			=> $row->location_name,
-											'distance' 			=> $distance, 
+											'distance' 			=> round($row->distance,2), 
 											'location_address' => array(
 																			"address_line" 	=> $row->address,
 																			"locality" 		=> $row->locality,
@@ -869,8 +862,7 @@
 																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 															 )
-										);
-				}			 	
+										);						 	
 			}
 		}		
 		return $data;							
