@@ -512,7 +512,7 @@ class User {
                                         )
                                      );
                //echo "asd , ";
-               $objMailChimp->lists->updateMember($listId, ["email"=>$data['email']], $mergeVars);
+               $objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
             //----end Mailchimp Mail
 
             if($userInsertId){

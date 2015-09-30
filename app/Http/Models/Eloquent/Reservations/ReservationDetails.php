@@ -329,11 +329,21 @@ class ReservationDetails extends Model {
         //$reservStatus->save();
         if(!empty($data['addons'])){
             //print_r($data['addons']);die;
-            foreach($data['addons'] as $prod_id => $count){
-                $result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
-                $result->reservation_status_id = $statusId;
-                $result->save();
-                //print_r($result);die;
+            if($data['mobile'] == 1){
+
+                foreach($data['addons'] as $key => $detail) {
+                    $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
+                    $result->reservation_status_id = $statusId;
+                    $result->save();
+                }
+
+            } else {
+                foreach ($data['addons'] as $prod_id => $count) {
+                    $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
+                    $result->reservation_status_id = $statusId;
+                    $result->save();
+                    //print_r($result);die;
+                }
             }
         }
 

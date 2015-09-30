@@ -304,6 +304,7 @@ class ReservationDetails extends Model {
 				$newDb['userdetails']['user_id'] = $userID;
 				$newDb['userdetails']['status'] = 1;
 				$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "") ;
+				$newDb['userdetails']['mobile'] = 1;
 
 				//print_r($newDb);die;
 				$reservDetails = new ReservationModel();
