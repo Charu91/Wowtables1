@@ -197,6 +197,35 @@
                         </ul>
                     </li>
 
+                    <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/bookings') !== false)? 'nav-expanded nav-active':''}}">
+                        <a>
+                            <i class="fa fa-th-list" aria-hidden="true"></i>
+                            <span>Bookings</span>
+                        </a>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admin/bookings')? 'nav-active':'' }}">
+                                <a href="/admin/bookings">Bookings List</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/invoices') !== false)? 'nav-expanded nav-active':''}}">
+                        <a>
+                            <i class="fa fa-th-list" aria-hidden="true"></i>
+                            <span>Invoices</span>
+                        </a>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admin/invoices')? 'nav-active':'' }}">
+                                <a href="/admin/invoices">Invoices List</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admin/create/invoices')? 'nav-active':'' }}">
+                                <a href="/admin/create/invoices">Create Invoice</a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
             </nav>
 

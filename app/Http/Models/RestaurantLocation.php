@@ -642,7 +642,7 @@ class RestaurantLocation extends VendorLocation{
                 }
 
                 $attributeInserts = true;
-
+                //var_dump($attribute_inserts);die;
                 foreach($attribute_inserts as $table => $insertData){
                     //echo "table <pre>"; print_r($table); echo " , insert data = "; print_r($insertData);
                     $restauranrAttrInsert = DB::table($table)->insert($insertData);

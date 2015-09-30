@@ -16,6 +16,8 @@ use WowTables\Http\Models\Frontend\AlacarteModel;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Models\Profile;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
+use Carbon\Carbon;
 
 /**
  * Class AdminExperiencesController
@@ -153,7 +155,7 @@ class AdminReservationsController extends Controller{
                 )
             );
             //echo "asd , ";
-            $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+            $this->mailchimp->lists->updateMember($this->listId, ["email"=>$createPasswordRequest['email']], $mergeVars);
             $success_message = "Email ".$my_email." has been registered as a member.";
             $data = array(
                 'user_id'=>$user_id,
@@ -1389,6 +1391,36 @@ class AdminReservationsController extends Controller{
 
         $reservationResponse = $this->experiences_model->addReservationDetails($dataPost,$userID);
 
+        //for the new db structure support
+        /*$newDb['attributes']['date'] = date('d-M-Y', strtotime($dataPost['reservationDate']));
+                $newDb['attributes']['time'] = date("g:i A", strtotime($dataPost['reservationTime']));*/
+        $combined_date_and_time = $dataPost['reservationDate'] . ' ' . $dataPost['reservationTime'];
+        $newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+        $newDb['attributes']['no_of_people_booked'] = $dataPost['partySize'];
+        $newDb['attributes']['cust_name'] = $dataPost['guestName'];
+        $newDb['attributes']['email'] = $dataPost['guestEmail'];
+        $newDb['attributes']['contact_no'] = $dataPost['phone'];
+        $newDb['attributes']['reserv_type'] = "Experience";
+        $newDb['attributes']['gift_card_id_reserv'] = $dataPost['giftCardID'];
+        $newDb['attributes']['loyalty_points_awarded'] =  $productDetails['attributes']['reward_points_per_reservation'];
+        $newDb['attributes']['special_request'] = $dataPost['addons_special_request'];
+        $newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
+        $newDb['attributes']['api_added'] = "Admin Reservation";
+        $newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
+        $newDb['attributes']['outlet'] = $outlet->name;
+        $newDb['attributes']['auto_reservation'] = "Not available";
+        $newDb['attributes']['ar_confirmation_id'] = "0";
+        $newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']);
+        $newDb['userdetails']['user_id'] = $userID;
+        $newDb['userdetails']['status'] = 1;
+        $newDb['userdetails']['addons'] = $dataPost['addon'];
+
+        //print_r($newDb);die;
+        $reservDetails = new ReservationDetails();
+        $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+        //print_r($newDbStatus);die;
+        /*TODO: Add the status of success check and include added_by and transaction_id attributes */
+        //die;
         $rewardsPoints = (isset($award) && $award != 0 ? $productDetails['attributes']['reward_points_per_reservation'] : 0);
         $bookingsMade = $userData['data']['bookings_made'] + 1;
         $type = "new";
@@ -1412,7 +1444,7 @@ class AdminReservationsController extends Controller{
             'Alternate_ID' =>  'E'.sprintf("%06d",$reservationResponse['data']['reservationID']),
             'Special_Request' => $dataPost['addons_special_request'],
             'Type' => "Experience",
-            'API_added' => 'Admin',
+            'API_added' => 'Admin Reservation',
             'GIU_Membership_ID' => $userData['data']['membership_number'],
             'Outlet' => $outlet->name,
             //'Points_Notes'=>'test',
@@ -1584,6 +1616,36 @@ class AdminReservationsController extends Controller{
                     ->where('id', $userID)
                     ->update(array('full_name' => $dataPost['guestName'],'phone_number'=>$dataPost['phone']));
                 $getReservationID = $reservationResponse['data']['reservationID'];
+
+                //for the new db structure support
+                /*$newDb['attributes']['date'] = date('d-M-Y', strtotime($dataPost['reservationDate']));
+                $newDb['attributes']['time'] = date("g:i A", strtotime($dataPost['reservationTime']));*/
+                $combined_date_and_time = $dataPost['reservationDate'] . ' ' . $dataPost['reservationTime'];
+                $newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+                $newDb['attributes']['no_of_people_booked'] = $dataPost['partySize'];
+                $newDb['attributes']['cust_name'] = $dataPost['guestName'];
+                $newDb['attributes']['email'] = $dataPost['guestEmail'];
+                $newDb['attributes']['contact_no'] = $dataPost['phone'];
+                $newDb['attributes']['reserv_type'] = "Alacarte";
+                $newDb['attributes']['loyalty_points_awarded'] =  $rewardsPoints;
+                $newDb['attributes']['special_request'] = $dataPost['specialRequest'];
+                $newDb['attributes']['experience'] = $outlet->vendor_name.' - Ala Carte';
+                $newDb['attributes']['api_added'] = "Admin Reservation";
+                $newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];
+                $newDb['attributes']['outlet'] = $outlet->name;
+                $newDb['attributes']['auto_reservation'] = "Not available";
+                $newDb['attributes']['ar_confirmation_id'] = "0";
+                $newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']);
+                $newDb['userdetails']['user_id'] = $userID;
+                $newDb['userdetails']['status'] = 1;
+
+                //print_r($newDb);die;
+                $reservDetails = new ReservationDetails();
+                $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+                //print_r($newDbStatus);die;
+                /*TODO: Add the status of success check and include added_by and transaction_id attributes */
+                //die;
+
                 $zoho_data = array(
                     'Name' => $dataPost['guestName'],
                     'Email_ids' => $dataPost['guestEmail'],
@@ -1595,7 +1657,7 @@ class AdminReservationsController extends Controller{
                     'Alternate_ID' =>  'A'.sprintf("%06d",$reservationResponse['data']['reservationID']),
                     'Special_Request' => $dataPost['specialRequest'],
                     'Type' => "Alacarte",
-                    'API_added' => 'Admin',
+                    'API_added' => 'Admin Reservation',
                     'GIU_Membership_ID' => $userData['data']['membership_number'],
                     'Outlet' => $outlet->name,
                     //'Points_Notes'=>'test',

@@ -3,6 +3,7 @@
 use DB;
 use URL;
 use Config;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
 
 class AlacarteModel{
 

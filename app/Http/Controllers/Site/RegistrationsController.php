@@ -10,6 +10,7 @@ use WowTables\Http\Models\Eloquent\Vendors\VendorLocationLimit;
 use WowTables\Http\Models\Schedules;
 use WowTables\Http\Models\Eloquent\ProductVendorLocationBlockSchedule;
 use WowTables\Http\Models\Eloquent\ReservationDetails;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as ReservDetailsModel;
 use WowTables\Http\Models\Frontend\AlacarteModel;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 use WowTables\Http\Models\UserDevices;
@@ -26,6 +27,7 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
+use Carbon\Carbon;
 
 class RegistrationsController extends Controller {
 
@@ -464,7 +466,16 @@ class RegistrationsController extends Controller {
 		$userID = $user_id;
 		$userData = Profile::getUserProfileWeb($userID);
 
+		//for the new db structure support
 
+		$newDb['userdetails']['user_id'] = $userID;
+		$newDb['userdetails']['status'] = 3;
+		//print_r($newDb);die;
+		$reservDetails = new ReservDetailsModel();
+		$newDbStatus = $reservDetails->updateAttributes($reservationID,$newDb);
+		//print_r($newDbStatus);die;
+		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+		//die;
 
 
 		$rewardsPoints = '';
@@ -796,6 +807,22 @@ class RegistrationsController extends Controller {
 		//exit;
 		DB::update("update reservation_details set giftcard_id='$giftcard_id', special_request = '$special_request' where id = '$reserv_id'");
 
+
+		//code for new db structure changes
+		$combined_date_and_time = $final_date_format . ' ' . $edit_time;
+		$newDb['attributes']['reserv_datetime'] = Carbon::createFromFormat('Y-m-d H:i A',$combined_date_and_time)->toDateTimeString();
+		$newDb['attributes']['no_of_people_booked'] = $party_size;
+		$newDb['attributes']['gift_card_id_reserv'] = (isset($giftcard_id)) ? $giftcard_id : "";
+		$newDb['attributes']['special_request'] = ($special_request) ? $special_request : "";
+		$newDb['userdetails']['user_id'] = $user_id;
+		$newDb['userdetails']['status'] = 2;
+		$newDb['userdetails']['addons'] = $addonsArray;
+		//print_r($newDb);die;
+		$reservDetails = new ReservDetailsModel();
+		$newDbStatus = $reservDetails->updateAttributes($reserv_id,$newDb);
+		//print_r($newDbStatus);die;
+		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
+		//die;
 		$userID = $user_id;
 		$userData = Profile::getUserProfileWeb($userID);
 
@@ -827,7 +854,7 @@ class RegistrationsController extends Controller {
 				'Time' => date("g:ia", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
-				'API_added' => (($added_by == 'user') ? 'Yes' : 'Admin'),
+				'API_added' => (($added_by == 'user') ? 'Web Updated' : 'Admin Updated'),
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
@@ -916,13 +943,14 @@ class RegistrationsController extends Controller {
 				'Time' => date("g:i a", strtotime($this->request->input('edit_time'))),
 				//'Refferal' => (isset($ref['partner_name'])) ? $ref['partner_name'] : $google_add,
 				'Type' => 'Experience',
-				'API_added' => (($added_by == 'user') ? 'Yes' : 'Admin'),
+				'API_added' => (($added_by == 'user') ? 'Web Updated' : 'Admin Updated'),
 				'GIU_Membership_ID' =>$userData['data']['membership_number'],
 				'Outlet' => $outlet->name,
 				//'Points_Notes'=>$this->data['bonus_reason'],
 				'AR_Confirmation_ID'=>'0',
 				'Auto_Reservation'=>'Not available',
 				'Order_completed'=>(($added_by == 'user') ? 'User Changed' : 'Admin Changed'),
+				'Special_Request' => $addons_special_request,
 			);
 
 			$this->zoho_edit_booking('A'.sprintf("%06d",$reserv_id),$zoho_data);

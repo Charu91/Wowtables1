@@ -158,8 +158,8 @@ use Mailchimp;
 		$data =  $this->request->all();
 
 		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
-		
-		
+
+
 		//validating user data
 		$validator = Validator::make($data,Reservation::$arrRules);
 		
@@ -205,9 +205,12 @@ use Mailchimp;
 	 * @since	1.0.0
 	 */
 	public function cancelReservation() {
+		//reading data input by the user
+		$data =  $this->request->all();
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
 		$reservationID = $this->request->input('reservationID');
 		
-		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp);
+		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp,$userID);
 		
 		return response()->json($arrResponse,200);		
 	}
@@ -237,8 +240,10 @@ use Mailchimp;
 		 */
 		 //print_r($data); die();
 		 //validating user data
+
 		 $validator = Validator::make($data,Reservation::$arrRules); 
-		 
+			//print_r($validator->fails());die;
+
 		 if($validator->fails()) {
 		 	$message = $validator->messages();
 			$errorMessage = "";
@@ -257,8 +262,7 @@ use Mailchimp;
 			$arrResponse = Reservation::validateEditReservationData($data);
 		
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
-				$arrResponse 
-				= ReservationDetails::updateReservationDetail($data);
+				$arrResponse = ReservationDetails::updateReservationDetail($data);
 			} 
 			 
 		 }				

@@ -2,6 +2,9 @@
 use DB;
 use Config;
 use URL;
+use WowTables\Http\Models\Eloquent\Reservations\ReservAddonVarientDetails;
+
+
 /**
  * Class User
  * @package WowTables\Http\Models
@@ -1678,8 +1681,8 @@ class ExperienceModel {
       $arrResponse['status'] = 'success';
       if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
         self::addReservationAddonDetails($reservationId, $arrData['addon']);
-      }       
-      
+      }
+
       //$arrResponse['data']['name'] = isset($productDetail['name'])?$productDetail['name']:'';
       //$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];
       $arrResponse['data']['reservationDate'] = $arrData['reservationDate'];
@@ -1739,6 +1742,14 @@ class ExperienceModel {
     //writing data to reservation_addons_variants_details table
     DB::table('reservation_addons_variants_details')->insert($arrInsertData);
   }
+
+    public static function getReservationAddonDetails($reservationID) {
+
+        $addonDetails = ReservAddonVarientDetails::where('reservation_id',$reservationID)->get();
+        return $addonDetails;
+
+    }
+
 
   public function getOutlet($vendorLocationID){
       $queryResult = \DB::table('product_vendor_locations as pvl')

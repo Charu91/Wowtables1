@@ -420,7 +420,7 @@ The WowTables Team";
                 //echo "asd , ";
                 //$this->mailchimp->lists->interestGroupings($this->listId,true);
                 //print_r($test);die;
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                $this->mailchimp->lists->updateMember($this->listId, ["email"=>$_POST['email']], $mergeVars);
                 //print_r($test);die;
 
                     //End MailChimp
