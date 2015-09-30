@@ -670,7 +670,8 @@
 		$data['status']=Config::get('constants.API_SUCCESS');
 
 		//reading the experiences
-		$arrExperience = self::readNearbyRestaurantsExperiences($input);
+		//$arrExperience = self::readNearbyRestaurantsExperiences($input);
+		$arrExperience = self::readAllNearbyRestaurantsExperiences($input);
 
 		if($queryResult) {
 			foreach($queryResult as $row) {
@@ -742,6 +743,140 @@
 	}
 	
 	//-----------------------------------------------------------------
+
+	/**
+	 * Reads all the experiences avalilable at a particular
+	 * restaurant.
+	 * 
+	 * @access	public
+	 * @static	true
+	 * @param	array	
+	 * @return	array
+	 * @since	1.0.0
+	 */
+	public static function readAllNearbyRestaurantsExperiences($input) {
+		
+		//query to read experiences available at the Restaurant
+		$queryResult = DB::table('products as p')
+							->join('product_vendor_locations as pvl','pvl.product_id','=','p.id')
+							->join('vendor_locations as vl', 'vl.id','=', 'pvl.vendor_location_id')
+							->leftJoin('product_attributes_text as pat','pat.product_id','=','p.id')
+							->leftJoin('product_attributes as pa', 'pa.id', '=', 'pat.product_attribute_id')
+							->leftJoin('product_pricing as pp', 'pp.product_id', '=', 'p.id')
+							->leftJoin('product_reviews AS pr', function($join){
+                														$join->on('p.id', '=', 'pr.product_id')
+                    													->on('pr.status','=', DB::raw('"Approved"'));
+                    												})
+							->leftJoin('locations as loc','loc.id','=','vl.location_id')
+							->leftJoin('product_flag_map as pfm','pfm.product_id', '=', 'p.id')
+							->leftJoin('flags','flags.id', '=', 'pfm.flag_id')
+							->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'p.id')
+							->leftJoin('media_resized_new as mrn1', 'mrn1.media_id', '=', 'pmm.media_id')
+							->leftJoin('media_resized_new as mrn2', 'mrn2.media_id', '=', 'pmm.media_id')
+							->leftjoin('price_types as pt', 'pt.id','=','pp.price_type')
+							->leftjoin('vendor_location_address as vlaa', 'vlaa.vendor_location_id', '=', 'vl.id')							
+							->join('locations as loc1','loc1.id', '=' , 'vlaa.area_id')
+							->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
+							->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
+							->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
+							->join('locations as loc5','loc5.id','=','vl.location_id')
+							->leftJoin('product_attributes_varchar AS pav', 'p.id', '=', 'pav.product_id')
+							->join('product_attributes_multiselect as pam', 'pam.product_id','=', 'p.id')
+							->leftJoin('product_attributes AS vamso', function($join){
+													               	 				$join->on('pa.id', '=', 'pav.product_attribute_id')
+													                    			->on('vamso.alias','=', DB::raw('"cuisines"'));
+													            					})
+							->leftJoin('product_attributes_select_options AS paso', 'paso.id', '=', 'pam.product_attributes_select_option_id')							
+							->where('p.status', 'Publish')
+							->where('pvl.status','Active')
+							->where('mrn1.image_type','mobile_listing_ios_experience')
+							->where('mrn2.image_type', 'mobile_listing_android_experience')						
+							->select(
+									'p.id as product_id','p.name', 'pvl.id as pvl_id',
+									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
+									DB::raw('GROUP_CONCAT(DISTINCT paso.option separator ", ") as cuisine'),
+									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
+									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
+									DB::raw('GROUP_CONCAT(DISTINCT loc.name separator ", ") as location_name'),									
+									'mrn1.file as ios_image','mrn2.file as android_image',
+									'flags.name as flag_name',
+									'vlaa.latitude','vlaa.longitude', 'vlaa.address', 'vlaa.pin_code', 								
+									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
+									'loc4.name as country', 'loc5.name as locality',
+									'pp.post_tax_price','pp.price',
+									'pp.taxes', 'pt.type_name as price_type'
+									)
+							->groupBy('pvl.id');
+							//->groupBy('p.id');
+						//	->get();
+
+		//checking if city has been passed in 
+		if(array_key_exists('HTTP_X_WOW_CITY', $_SERVER)) { 
+			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
+									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
+		}
+
+		//executing the query
+		$queryResult = $queryResult->get();
+							
+		//array to store the information from the DB
+		$data = array();
+		if($queryResult) {
+			foreach($queryResult as $row) {   
+				
+					$lat1 = $input['lat'];
+					$log1 = $input['log'];
+						
+					$lat2 = $row->latitude ;
+					$log2 = $row->longitude ;  
+						
+
+					$dist = (((acos(sin(($lat1*pi()/180)) * sin(($lat2*pi()/180))+cos(($lat1*pi()/180)) *
+					cos(($lat2*pi()/180)) * cos((($log1 - $log2)*pi()/180))))*180/pi())*60*1.1515);
+
+					$dist =$dist * 1.609344;
+					$distance =round($dist,2);  						
+
+				if( $distance <= $input['distance'] ) {
+
+					$data[] = array(
+											'prod_id' 			=> $row->product_id,
+											'pvl_id' 			=> $row->pvl_id,
+											'name' 				=> $row->name,
+											'total_reviews' 	=> $row->total_reviews,
+											'rating' 			=> $row->rating,
+											'cuisine' 			=> (empty($row->cuisine)) ? "" : $row->cuisine,
+											'price' 			=> $row->price,
+											'post_tax_price' 	=> $row->post_tax_price,
+											'taxes' 			=> $row->taxes,
+											'price_type' 		=> $row->price_type,
+											'location' 			=> $row->location_name,
+											'distance' 			=> $distance, 
+											'location_address' => array(
+																			"address_line" 	=> $row->address,
+																			"locality" 		=> $row->locality,
+																			"area"			=> $row->area,
+																			"city" 			=> $row->city,
+																			"pincode" 		=> $row->pin_code,
+																			"state" 		=> $row->state_name,																
+																			"country" 		=> $row->country,
+																			"latitude" 		=> $row->latitude,
+																			"longitude" 	=> $row->longitude																
+																		),
+											'flag' => (empty($row->flag_name)) ? "" : $row->flag_name ,
+											'short_description' => $row->short_description ,
+											'image' => array(
+																'mobile_listing_android_experience' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
+																'mobile_listing_ios_experience' => (empty($row->ios_image)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
+															 )
+										);
+				}			 	
+			}
+		}		
+		return $data;							
+	}
+
+	//------------------------------------------------------------------
 	
 	/**
 	 * Reads all the experiences avalilable at a particular
