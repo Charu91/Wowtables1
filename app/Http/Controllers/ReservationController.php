@@ -282,7 +282,7 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$allbookings->id][0];
 			$booking->statusArr = $statusArr;
 
-			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($allbookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
@@ -355,7 +355,7 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$today->id][0];
 			$booking->statusArr = $statusArr;
 
-			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($today->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
