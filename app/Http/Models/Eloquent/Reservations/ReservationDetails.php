@@ -326,10 +326,11 @@ class ReservationDetails extends Model {
         $userModel = User::find($data['user_id']);
         //$reservStatus = new ReservationStatus();
         $statusId = $data['status'];
+        $reservType = (isset($data['reserv_type']) ? $data['reserv_type'] : "");
         //$reservStatus->save();
         if(!empty($data['addons'])){
             //print_r($data['addons']);die;
-            if($data['mobile'] == 1){
+            if(isset($data['mobile']) && $data['mobile'] == 1){
 
                 foreach($data['addons'] as $key => $detail) {
                     $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
@@ -339,9 +340,11 @@ class ReservationDetails extends Model {
 
             } else {
                 foreach ($data['addons'] as $prod_id => $count) {
-                    $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
-                    $result->reservation_status_id = $statusId;
-                    $result->save();
+                    if($count > 0) {
+                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
+                        $result->reservation_status_id = $statusId;
+                        $result->save();
+                    }
                     //print_r($result);die;
                 }
             }
@@ -367,7 +370,68 @@ class ReservationDetails extends Model {
             $statusLogEntry->save();
 
         }
+        if(!empty($reservType)) {
+            switch ($statusId) {
+                case 2:
+                    //for edited status
+                    //prepare the array for sending status to zoho
+                    $zoho_data = array(
+                        'Order_completed' => 'User Changed',
+                    );
+                    if ($reservType == "Experience") {
+                        $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+                    } else if ($reservType == "Alacarte") {
+                        $this->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+                    }
 
+
+                    break;
+                case 3:
+                    //for cancelled status
+                    $zoho_data = array(
+                        'Order_completed' => 'User Cancelled',
+                    );
+                    if ($reservType == "Experience") {
+                        $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+                    } else if ($reservType == "Alacarte") {
+                        $this->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+                    }
+                    break;
+                case 6:
+                    //for accepted status
+                    $zoho_data = array(
+                        'Order_completed' => 'Confirmed with rest & customer',
+                    );
+                    if ($reservType == "Experience") {
+                        $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+                    } else if ($reservType == "Alacarte") {
+                        $this->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+                    }
+                    break;
+                case 7:
+                    //for rejected status
+                    $zoho_data = array(
+                        'Order_completed' => 'Rejected by restaurant',
+                    );
+                    if ($reservType == "Experience") {
+                        $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+                    } else if ($reservType == "Alacarte") {
+                        $this->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+                    }
+                    break;
+                case 8:
+                    //for closed status
+                    $zoho_data = array(
+                        'Order_completed' => 'yes',
+                    );
+                    if ($reservType == "Experience") {
+                        $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+                    } else if ($reservType == "Alacarte") {
+                        $this->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+                    }
+                    break;
+            }
+        }
         return "Success";
     }
 
@@ -382,11 +446,12 @@ class ReservationDetails extends Model {
                     ->whereIn('reservation_id', $reserv_ids)
                     ->groupBy('reservation_id');
             })
-            ->select(DB::raw('reservation_statuses.status,reservation_id'))->get();
+            ->select(DB::raw('reservation_statuses.status,reservation_id,reservation_statuses.id'))->get();
 
         $reservStatusArr = array();
         foreach($reservStatus as $rs){
-            $reservStatusArr[$rs->reservation_id] = $rs->status;
+            $reservStatusArr[$rs->reservation_id][] = $rs->status;
+            $reservStatusArr[$rs->reservation_id][] = $rs->id;
         }
         //print_r($reservStatusArr);die;
         return $reservStatusArr;
@@ -419,6 +484,28 @@ class ReservationDetails extends Model {
 
         }
 
+    }
+
+    protected function changeStatusInZoho($order_id,$data){
+
+        $ch = curl_init();
+        $config = array(
+            //'authtoken' => 'e56a38dab1e09933f2a1183818310629',
+            // 'authtoken' => '7e8e56113b2c2eb898bca9916c52154c',
+            'authtoken' => 'a905350ac6562ec91e9a5ae0025bb9b2',
+            'scope' => 'creatorapi',
+            'criteria'=>'Alternate_ID='.$order_id,
+        );
+        $curlConfig = array(
+            CURLOPT_URL            => "https://creator.zoho.com/api/gourmetitup/xml/experience-bookings/form/bookings/record/update/",
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS     => $config + $data,
+        );
+        curl_setopt_array($ch, $curlConfig);
+        $result = curl_exec($ch);
+        //echo "<pre> results == "; print_r($result);die;
+        curl_close($ch);
     }
 
 }

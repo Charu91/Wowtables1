@@ -145,7 +145,7 @@ class AdminReservationsController extends Controller{
                 $city_name = 'mumbai';
             }
 
-            $city = ucfirst($city_name);
+            /*$city = ucfirst($city_name);
             $mergeVars = array(
                 'GROUPINGS' => array(
                     array(
@@ -153,9 +153,9 @@ class AdminReservationsController extends Controller{
                         'groups' => [$city],
                     )
                 )
-            );
+            );*/
             //echo "asd , ";
-            $this->mailchimp->lists->updateMember($this->listId, ["email"=>$createPasswordRequest['email']], $mergeVars);
+            //$this->mailchimp->lists->updateMember($this->listId, ["email"=>$createPasswordRequest['email']], $mergeVars);
             $success_message = "Email ".$my_email." has been registered as a member.";
             $data = array(
                 'user_id'=>$user_id,

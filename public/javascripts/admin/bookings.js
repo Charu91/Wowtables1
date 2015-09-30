@@ -67,6 +67,31 @@
             }
         });
 
+
+
+        $('#zoho_booking_cancelled').click(function() {
+            if (this.checked) {
+                var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
+                var reservId = $(this).data('reserv-id');
+                var reservType = $(this).data('reserv-type');
+                if(sure){
+                    $.ajax({
+                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType,
+                        type: 'post',
+                        success: function( data){
+                            if(data == "success"){
+                                alert("Status changed to Booking Cancelled In Zoho");
+                            }
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log( errorThrown );
+                        }
+                    });
+                }
+            }
+
+        });
+
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
@@ -78,6 +103,14 @@
             columnDefs: [{ targets: 'no-sort', orderable: false }],
             "scrollX": true
         });
+
+        $('#postbookings').DataTable({
+            "order": [], //for getting latest on top
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true
+        });
+
+
 
         $(".dropdown").hover(
             function() {
@@ -170,9 +203,11 @@
             e.preventDefault();
             var reservId = $(this).data('reserv-id');
             var reservStatus = $(this).data('reserv-status');
+            var reservType = $(this).data('reserv-type');
             //console.log(reservId);
             $('#reserv_status').val(reservStatus);
             $('#reserv_id').val(reservId);
+            $('#reserv_type').val(reservType);
             $('#adminComments').modal('show');
             //return false;
         });

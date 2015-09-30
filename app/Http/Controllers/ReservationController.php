@@ -44,6 +44,7 @@ class ReservationController extends Controller {
 		$un_bookings = array();
 		$bookings = array();
 		$todayBookings = array();
+		$postReservation = array();
 		$count = 1;
 
 		//unconfirmed bookings
@@ -54,6 +55,7 @@ class ReservationController extends Controller {
 		}
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3]);
+
 		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
@@ -67,7 +69,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 13:05:00')
+					 ->where('created_at','>=','2015-09-30 19:15:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
@@ -105,13 +107,20 @@ class ReservationController extends Controller {
 				unset($statusArr[$statusKey]);
 			}
 			//echo $reservStatusArr[$unconfirmedBookings->id];
-			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id];
+			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id][0];
 			$booking->statusArr = $statusArr;
+
+			if($reservStatusArr[$unconfirmedBookings->id][0] == 3){
+				$booking->zoho_cancelled = 1;
+			} else {
+				$booking->zoho_cancelled = 0;
+			}
 
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
 			//print_r($booking);die;
 			$un_bookings[$count] = $booking;
 			$count++;
@@ -119,6 +128,88 @@ class ReservationController extends Controller {
 
 		}
 		//die;
+		//post reservation bookings
+		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (6) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
+		$reservationIdArr = array();
+		foreach($statusCancelledNew as $reservId){
+			$reservationIdArr[] = $reservId->reservation_id;
+		}
+
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[6]);
+		//print_r($reservStatusArr);die;
+
+		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+					 /*->with(['reservationStatus' => function($query)
+							{
+								$query->whereIn('reservation_statuses.id',[1,2,7])
+									  ->orderBy('reservation_statuses.id','desc')
+									  ->select(DB::raw('reservation_statuses.*, user_id'));
+
+					 }])*/
+					 ->where('vendor_location_id','!=','0')
+					 ->where('vendor_location_id','!=','54')
+					 ->whereIn('id',$reservationIdArr)
+					 ->where('created_at','>=','2015-09-30 19:15:00')
+					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
+		{
+			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
+			$booking = new \stdClass();
+			$booking->id = $postBookings->id;
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$postBookings->attributesDatetime->attribute_value);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
+			if($postBookings->product_id == 0){
+				$booking->name = "Classic Reservation";
+			} else {
+				$booking->name = $postBookings->experience->name;
+			}
+			$booking->cust_name = $postBookings->guest_name;
+			$booking->restaurant_name = $postBookings->vendor_location->vendor->name;
+			if(empty($postBookings->vendor_location->address->city_name)){
+				$booking->city =  "";
+			} else {
+				$booking->city = $postBookings->vendor_location->address->city_name->name;
+			}
+			//$reservStatus = $unconfirmedBookings->reservationStatus->first();
+			//dd($reservStatus->status);
+			$booking->email = $postBookings->guest_email;
+			$booking->phone_no = $postBookings->guest_phone;
+			$booking->no_of_persons = $postBookings->no_of_persons;
+			//$booking->status = $reservStatus->status;
+			$userModel = User::find($postBookings->user_id);
+			$booking->lastmodified = $userModel->role->name;
+			$booking->user_id = $postBookings->user_id;
+
+			$statusArr = $this->reservStatuses;
+			$statusKey = array_search($reservStatusArr[$postBookings->id],$statusArr);
+			//echo $statusKey."<br/>";
+			if($statusKey != -1){
+				unset($statusArr[$statusKey]);
+			}
+			//echo $reservStatusArr[$unconfirmedBookings->id];
+			$booking->reserv_status = $reservStatusArr[$postBookings->id][0];
+			$booking->statusArr = $statusArr;
+
+			if($reservStatusArr[$postBookings->id][0] == 6){
+				$booking->zoho_cancelled = 1;
+			} else {
+				$booking->zoho_cancelled = 0;
+			}
+
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($postBookings->id);
+			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
+			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
+			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			//print_r($booking);die;
+			$postReservation[$count] = $booking;
+			$count++;
+
+
+		}
+
+
+
 
 		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,3,4,5,6,7,8) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
@@ -145,7 +236,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 13:05:00')
+					 ->where('created_at','>=','2015-09-30 19:15:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
@@ -188,13 +279,14 @@ class ReservationController extends Controller {
 			if($statusKey != -1){
 				unset($statusArr[$statusKey]);
 			}
-			$booking->reserv_status = $reservStatusArr[$allbookings->id];
+			$booking->reserv_status = $reservStatusArr[$allbookings->id][0];
 			$booking->statusArr = $statusArr;
 
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
 			$bookings[$count] = $booking;
 			$count++;
 
@@ -223,7 +315,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-09-30 13:05:00')
+					 ->where('created_at','>=','2015-09-30 19:15:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
@@ -260,13 +352,14 @@ class ReservationController extends Controller {
 			if($statusKey != -1){
 				unset($statusArr[$statusKey]);
 			}
-			$booking->reserv_status = $reservStatusArr[$today->id];
+			$booking->reserv_status = $reservStatusArr[$today->id][0];
 			$booking->statusArr = $statusArr;
 
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
 			$todayBookings[$count] = $booking;
 			$count++;
 
@@ -277,6 +370,7 @@ class ReservationController extends Controller {
 		//die;
 
 		return view('admin.bookings.index')->with('un_bookings',$un_bookings)
+										   ->with('post_bookings',$postReservation)
 										   ->with('bookings',$bookings)
 			 					           ->with('todaysbookings',$todayBookings);
 	}
@@ -610,7 +704,8 @@ class ReservationController extends Controller {
 		$data['experience'] = $reservationAttrs['attributes']['experience'];
 		$data['special_request'] = $reservationAttrs['attributes']['special_request'];
 		$data['booking_type'] = $reservationAttrs['attributes']['reserv_type'];
-		$data['restaurant_name'] = $reservationDetails[0]->attributesText[0]->attribute_value;
+		$temp = explode("-",$reservationAttrs['attributes']['experience']);
+		$data['restaurant_name'] = $temp[0];
 
 		//print_r($data);die;
 		//$vendor_name = explode('-',$data['experience']);
@@ -672,7 +767,9 @@ class ReservationController extends Controller {
 		$reservation_id = $this->request->get('reserv_id');
 		$data['user_id'] = Auth::user()->id;
 		$data['status'] = $this->request->get('reserv_status');
+		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
+
 		//print_r($data);die;
 		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 
@@ -756,6 +853,27 @@ class ReservationController extends Controller {
 		echo json_encode($pricing);
 		die;
 
+	}
+
+	public function changeStatusBookingCancelled($id,$reservtype){
+		$reservation_id = $id;
+		$reservType = $reservtype;
+		$zoho_data = array(
+			'Order_completed'=>'booking cancelled',
+		);
+		if($reservType == "Experience"){
+			$this->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);
+		} else if($reservType == "Alacarte") {
+			$this->changeStatusInZoho('A'.sprintf("%06d",$reservation_id),$zoho_data);
+		}
+		$this->reservationDetails->changeStatusInZoho($reservation_id,$zoho_data);
+
+
+		$data['attributes']['zoho_booking_cancelled'] = "yes";
+		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+
+		echo "success";
+		die;
 	}
 
 }

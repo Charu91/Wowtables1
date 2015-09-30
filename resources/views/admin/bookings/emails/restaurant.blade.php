@@ -13,7 +13,6 @@
         <td>The new reservation is as follows:
             <br/>Guest Name: {{ $data['cust_name'] }}
             <br/>Guest Contact: {{ $data['contact'] }}
-            <br/>Guest Email: {{ $data['email'] }}
             <br/>No Of Guests: {{ $data['no_of_people'] }} Guests
             <br/>Time Of Reservation: {{ $data['time'] }}
             <br/>Experience: {{ $data['experience'] }}
