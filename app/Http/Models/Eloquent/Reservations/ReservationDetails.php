@@ -340,9 +340,11 @@ class ReservationDetails extends Model {
 
             } else {
                 foreach ($data['addons'] as $prod_id => $count) {
-                    $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
-                    $result->reservation_status_id = $statusId;
-                    $result->save();
+                    if($count > 0) {
+                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
+                        $result->reservation_status_id = $statusId;
+                        $result->save();
+                    }
                     //print_r($result);die;
                 }
             }
