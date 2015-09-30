@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
 		// $this->call('UserTableSeeder');
 		$this->call('ReservationAttributesSeeder');
-		$this->call('ReservationStatusesSeeder');
+		//$this->call('ReservationStatusesSeeder');
 	}
 }
 
@@ -59,6 +59,7 @@ class DatabaseSeeder extends Seeder
 				array('name'=>'Actual Alacarte Takers','alias'=>'actual_alacarte_takers','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 				array('name'=>'Total Billings','alias'=>'total_billings','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 				array('name'=>'Total Commission','alias'=>'total_commission','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+				array('name'=>'Zoho Booking Cancelled','alias'=>'zoho_booking_cancelled','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 			));
 		}
 

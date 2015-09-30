@@ -1287,7 +1287,7 @@ class ReservationDetails extends Model {
                 //$objMailChimp->lists->subscribe($listId, $guestEmail,$merge_vars,"html",false,true );
 				$objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
 
-				$my_email = $arrData['guestEmail'];
+				/*$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1298,7 +1298,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
+				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);*/
   		}
   		else if ($arrData['reservationType'] == "experience") {
 
@@ -1319,7 +1319,7 @@ class ReservationDetails extends Model {
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
 
-				$my_email = $arrData['guestEmail'];
+				/*$my_email = $arrData['guestEmail'];
 				//$city = $users['city'];
 				$city = ucfirst($city_name);
 				$mergeVars = array(
@@ -1330,7 +1330,7 @@ class ReservationDetails extends Model {
 						)
 					)
 				);
-				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);
+				$objMailChimp->lists->updateMember($listId, ['email' => $arrData['guestEmail']], $mergeVars);*/
 
   		}
 

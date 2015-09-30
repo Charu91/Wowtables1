@@ -453,7 +453,7 @@ class AlacarteController extends Controller {
                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 
-                $my_email = $dataPost['guestEmail'];
+                /*$my_email = $dataPost['guestEmail'];
                 //$city = $users['city'];
                 $city = ucfirst($city_name);
                 $mergeVars = array(
@@ -467,7 +467,7 @@ class AlacarteController extends Controller {
                 //echo "asd , ";
                 //$this->mailchimp->lists->interestGroupings($this->listId,true);
                 //print_r($test);die;
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);*/
             }
             //End MailChimp
             $getReservationID = '';
