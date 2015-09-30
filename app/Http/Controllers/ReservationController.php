@@ -704,7 +704,8 @@ class ReservationController extends Controller {
 		$data['experience'] = $reservationAttrs['attributes']['experience'];
 		$data['special_request'] = $reservationAttrs['attributes']['special_request'];
 		$data['booking_type'] = $reservationAttrs['attributes']['reserv_type'];
-		$data['restaurant_name'] = $reservationDetails[0]->attributesText[0]->attribute_value;
+		$temp = explode("-",$reservationAttrs['attributes']['experience']);
+		$data['restaurant_name'] = $temp[0];
 
 		//print_r($data);die;
 		//$vendor_name = explode('-',$data['experience']);
