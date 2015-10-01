@@ -438,7 +438,7 @@ class AlacarteController extends Controller {
         }
         else {
 
-            $getUsersDetails = $this->experiences_model->fetchDetails($userID);
+            /*$getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
             //Start MailChimp
             if(!empty($getUsersDetails)){
@@ -448,7 +448,8 @@ class AlacarteController extends Controller {
                     'MERGE10'=>date('m/d/Y'),
                     'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
                     'MERGE13'=>$dataPost['phone'],
-                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate'])),
+                    'GROUPINGS' => array(array('id' => 9613, 'groups' => [$city]))
                 );
                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
@@ -467,8 +468,8 @@ class AlacarteController extends Controller {
                 //echo "asd , ";
                 //$this->mailchimp->lists->interestGroupings($this->listId,true);
                 //print_r($test);die;
-                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);*/
-            }
+                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);
+            }*/
             //End MailChimp
             $getReservationID = '';
             if($userID > 0) {
@@ -579,8 +580,24 @@ class AlacarteController extends Controller {
                                                 'username' => $dataPost['guestName']
                                             );
 
-                //echo "<pre>"; print_r($mergeReservationsArray); die;
+                //start mailchimp
                 $city_id    = Input::get('city_id');
+                $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+                if(empty($city_name))
+                {
+                    $city_name = 'mumbai';
+                }
+                $city = ucfirst($city_name);
+                $merge_vars = array(
+                    'MERGE1'=>$dataPost['guestName'],
+                    'MERGE10'=>date('m/d/Y'),
+                    'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
+                    'MERGE13'=>$dataPost['phone'],
+                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate'])),
+                    'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+                );
+                $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
+                //end mailchimp
 
                 $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_alacarte = 1 AND efp.city_id = '.$city_id);
 

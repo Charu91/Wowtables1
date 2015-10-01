@@ -1270,14 +1270,16 @@ class ReservationDetails extends Model {
 															->where('uai.user_id', $userID)												
 															->where('ua.alias', '=', 'a_la_carte_reservation')
 															->select('attribute_value as count')
-															->first();				
+															->first();
 
-  				$merge_vars = array(
+				$city = ucfirst($city_name);
+				$merge_vars = array(
                     'MERGE1'=>$arrData['guestName'],
                     'MERGE10'=>date('m/d/Y'),
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
-                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate']))
+                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                 );
 				//
 				//$guestEmail['email'] = $arrData['guestEmail'];
@@ -1309,12 +1311,14 @@ class ReservationDetails extends Model {
 															->select('attribute_value as count')
 															->first();
 
-  				$merge_vars = array(
+				$city = ucfirst($city_name);
+				$merge_vars = array(
                     'MERGE1'=>$arrData['guestName'],
                     'MERGE10'=>date('m/d/Y'),
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
-                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate']))
+                    'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                 );
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
@@ -1344,7 +1348,9 @@ class ReservationDetails extends Model {
 	 * @return	 
 	 * @since	1.0.0
 	 */
-  		public static function sendMailchimp( $reservationID, $objMailChimp ) { 
+  		public static function sendMailchimp( $reservationID, $objMailChimp ) {
+
+
 
   		$listId = '986c01a26a';
   		$queryResult = DB::table('reservation_details')
@@ -1378,11 +1384,14 @@ class ReservationDetails extends Model {
 										->where('reservation_details.id', $reservationID)
 										->select('users.email')
 										->first();
-		
+
+		$userData = Profile::getUserProfileWeb($queryResult->user_id);
+
 		if($queryResult) {
 				$merge_vars = array(
 						$setBookingKey => $arrResult->attribute_value,
 						//$setBookingKey => $setBookingsValue - 1,
+						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]))
 					);
 
 					//$email = ["email"["email":]];

@@ -878,7 +878,7 @@ class ExperienceController extends Controller {
                                 'gift_card_id_from_reservation' => $dataPost['giftCardID']
                             );
                             //echo "<pre>"; print_r($zoho_data);
-                            $zoho_res = $this->zoho_add_booking($zoho_data);
+                            /*$zoho_res = $this->zoho_add_booking($zoho_data);
                             $zoho_success = $zoho_res->result->form->add->status;
                             //echo "<pre>"; print_r($zoho_success); die;
                             if($zoho_success[0] != "Success"){
@@ -943,7 +943,13 @@ class ExperienceController extends Controller {
 
                                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
                                 $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
-                            });
+                            });*/
+                            $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
+                                'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
+                                'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),
+                                'venue' => $outlet->vendor_name,
+                                'username' => $dataPost['guestName']
+                            );
 
                             //echo "userid == ".$userID;
                             $getUsersDetails = $this->experiences_model->fetchDetails($userID);
@@ -961,6 +967,7 @@ class ExperienceController extends Controller {
                             }
 
                             //Start MailChimp
+                            $city = ucfirst($city_name);
                             if(!empty($getUsersDetails)){
 
                                 $merge_vars = array(
@@ -968,26 +975,11 @@ class ExperienceController extends Controller {
                                     'MERGE10'=>date('m/d/Y'),
                                     'MERGE11'=>$userData['data']['bookings_made'] + 1,
                                     'MERGE13'=>$dataPost['phone'],
-                                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+                                    'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate'])),
+                                    'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                                 );
                                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
-                                //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
 
-                                /*$my_email = $dataPost['guestEmail'];
-                                //$city = $users['city'];
-                                $city = ucfirst($city_name);
-                                $mergeVars = array(
-                                    'GROUPINGS' => array(
-                                        array(
-                                            'id' => 9613,
-                                            'groups' => [$city],
-                                        )
-                                    )
-                                );
-                                //echo "asd , ";
-                                //$this->mailchimp->lists->interestGroupings($this->listId,true);
-                                //print_r($test);die;
-                                $this->mailchimp->lists->updateMember($this->listId, $my_email, $mergeVars);*/
                             }
 
                             $arrResponse['allow_guest']            ='Yes';
@@ -1191,6 +1183,7 @@ class ExperienceController extends Controller {
             {
                 $city_name = 'mumbai';
             }
+            $city = ucfirst($city_name);
 
             //Start MailChimp
             if(!empty($getUsersDetails)){
@@ -1200,7 +1193,8 @@ class ExperienceController extends Controller {
                     'MERGE10'=>date('m/d/Y'),
                     'MERGE11'=>$fetch_cookie['bookingsMade'],
                     'MERGE13'=>$fetch_cookie['phone'],
-                    'MERGE27'=>date("m/d/Y",strtotime($fetch_cookie['reservationDate']))
+                    'MERGE27'=>date("m/d/Y",strtotime($fetch_cookie['reservationDate'])),
+                    'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                 );
                 $this->mailchimp->lists->subscribe($this->listId, ["email"=>$fetch_cookie['guestEmail']],$merge_vars,"html",false,true );
                 //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );

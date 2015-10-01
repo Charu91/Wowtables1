@@ -70,11 +70,13 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
 			$booking->id = $unconfirmedBookings->id;
+			//echo "<pre>".print_r($unconfirmedBookings);
 			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$unconfirmedBookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
 			$booking->btime = $reservCarbonDate->format('h:i A');
@@ -243,6 +245,8 @@ class ReservationController extends Controller {
 
 			$booking = new \stdClass();
 			$booking->id = $allbookings->id;
+			//print_r($allbookings);
+			//echo "<br/><br/>";
 			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$allbookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
 			$booking->btime = $reservCarbonDate->format('h:i A');
