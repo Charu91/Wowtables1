@@ -182,6 +182,13 @@ class Facebook {
                             );
             Session::put($userdata);
 
+                $merge_vars = array(
+                    'MERGE1'=>$userdata['full_name'],
+                    'GROUPINGS' => array(array('id' => 9713, 'groups' => [ucfirst($location_slug)])),
+                    'SIGNUPTP'  => 'Facebook'
+                );
+                $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userdata['email']],$merge_vars,"html",false,true );
+
             $order = unserialize(Cookie::get('order'));
 
 
