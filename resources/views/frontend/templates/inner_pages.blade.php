@@ -980,7 +980,7 @@ if(isset($dropdowns_opt) && $dropdowns_opt == 1)
                 <li class="list-group-item"><a href="#" data-dismiss="modal">Mumbai</a></li>
                 <li class="list-group-item"><a href="#" data-dismiss="modal">Delhi</a></li>
                 <li class="list-group-item"><a href="#" data-dismiss="modal">Pune</a></li>
-        <li class="list-group-item"><a href="#" data-dismiss="modal">Bangalore</a></li>
+                <li class="list-group-item"><a href="#" data-dismiss="modal">Bangalore</a></li>
               </ul>
             </div>
           </div>
@@ -2245,7 +2245,7 @@ var google_remarketing_only = true;
               var city_name = $(this).text().toLowerCase();
                 $.ajax({
                   type:'GET',
-                  url:'users/addCity/'+city_name,
+                  url:'fbAddCity/'+city_name,
                   data:{city:city_name},
                   success:function(data){
                           window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";
