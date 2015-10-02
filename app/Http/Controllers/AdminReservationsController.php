@@ -1519,7 +1519,7 @@ class AdminReservationsController extends Controller{
         $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
         //Start MailChimp
-        $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+        $city_name      = Location::where(['Type' => 'City', 'id' => $getUsersDetails->location_id])->pluck('name');
         if(empty($city_name))
         {
             $city_name = 'mumbai';
@@ -1686,7 +1686,7 @@ class AdminReservationsController extends Controller{
 
                 //echo "<pre>"; print_r($mergeReservationsArray); die;
                 $city_id    = $locationDetails->city_id;
-                $city_name      = Location::where(['Type' => 'City', 'id' => $city_id])->pluck('name');
+                $city_name      = Location::where(['Type' => 'City', 'id' => $userData['data']['location_id']])->pluck('name');
                 if(empty($city_name))
                 {
                     $city_name = 'mumbai';
