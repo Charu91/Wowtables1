@@ -4,7 +4,9 @@
       $('#unbookings').DataTable({
         "order": [], //for getting latest on top
         columnDefs: [{ targets: 'no-sort', orderable: false }],
-        "scrollX": true
+        "scrollX": true,
+          "scrollY":        "300px",
+          "scrollCollapse": true
       });
 
         $('#reserv_time').timepicker({
@@ -95,19 +97,25 @@
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
-            "scrollX": true
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
         });
 
         $('#todaybookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
-            "scrollX": true
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
         });
 
         $('#postbookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
-            "scrollX": true
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
         });
 
 
@@ -208,7 +216,24 @@
             $('#reserv_status').val(reservStatus);
             $('#reserv_id').val(reservId);
             $('#reserv_type').val(reservType);
-            $('#adminComments').modal('show');
+            if(reservStatus == 6){
+                $('#adminComments').modal('show');
+            } else {
+                $.ajax({
+                    url: '/admin/bookings/changestatus',
+                    type: 'post',
+                    data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
+                    success: function( data){
+                        if(data == "success"){
+                            alert("Status changed");
+                        }
+                    },
+                    error: function( jqXhr, textStatus, errorThrown ){
+                        console.log( errorThrown );
+                    }
+                });
+            }
+
             //return false;
         });
 

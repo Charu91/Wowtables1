@@ -123,8 +123,14 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
+			//echo $unconfirmedBookings->id;
+			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_cancelled'])){
+				$un_bookings[$count] = $booking;
+			}
+			//$un_bookings[$count] = $booking;
 			//print_r($booking);die;
-			$un_bookings[$count] = $booking;
+
 			$count++;
 
 
@@ -864,6 +870,8 @@ class ReservationController extends Controller {
 		$reservType = $reservtype;
 		$zoho_data = array(
 			'Order_completed'=>'booking cancelled',
+			'Total_Seated'=>'0',
+			'Actual_attendees'=>'0'
 		);
 		if($reservType == "Experience"){
 			$this->reservationDetails->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);

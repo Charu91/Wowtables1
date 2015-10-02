@@ -878,7 +878,7 @@ class ExperienceController extends Controller {
                                 'gift_card_id_from_reservation' => $dataPost['giftCardID']
                             );
                             //echo "<pre>"; print_r($zoho_data);
-                            /*$zoho_res = $this->zoho_add_booking($zoho_data);
+                            $zoho_res = $this->zoho_add_booking($zoho_data);
                             $zoho_success = $zoho_res->result->form->add->status;
                             //echo "<pre>"; print_r($zoho_success); die;
                             if($zoho_success[0] != "Success"){
@@ -943,7 +943,7 @@ class ExperienceController extends Controller {
 
                                 $message->to('concierge@wowtables.com')->subject('NR - #E'.$mergeReservationsArray['order_id'].' | '.$mergeReservationsArray['reservation_date'].' , '.$mergeReservationsArray['reservation_time'].' | '.$mergeReservationsArray['venue'].' | '.$mergeReservationsArray['username']);
                                 $message->cc(['kunal@wowtables.com', 'deepa@wowtables.com','abhishek.n@wowtables.com']);
-                            });*/
+                            });
                             $mergeReservationsArray = array('order_id'=> sprintf("%06d",$reservationResponse['data']['reservationID']),
                                 'reservation_date'=> date('d-F-Y',strtotime($dataPost['reservationDate'])),
                                 'reservation_time'=> date('g:i a',strtotime($dataPost['reservationTime'])),

@@ -600,6 +600,18 @@ The WowTables Team";
     public function fbAddCity($cityName) {
         $this->facebook->addUserCity($cityName);
 
+
+        //mailchimp call
+        $city = ucfirst($cityName);
+        $userId = Session::get('id');
+        $userResult = $user = DB::table('users')->where('id',$userId)->first();
+        $merge_vars = array(
+            'MERGE1'=>$userResult->full_name,
+            'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+        );
+        $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userResult->email],$merge_vars,"html",false,true );
+
+
         return response()->json('',200);
     }
 

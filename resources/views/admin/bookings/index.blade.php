@@ -28,7 +28,7 @@
             <a href="#unconfirmed_bookings" data-toggle="tab" class="text-center">Unconfirmed Bookings</a>
         </li>
         <li>
-            <a href="#post_bookings" data-toggle="tab" class="text-center">Post Process Bookings</a>
+            <a href="#post_bookings" data-toggle="tab" class="text-center">Missing Attendees</a>
         </li>
         <li><a href="#allbookings" data-toggle="tab" class="text-center">All Bookings</a></li>
         <li><a href="#todaysbookings" data-toggle="tab" class="text-center">Today's Bookings</a></li>
@@ -46,7 +46,7 @@
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
-                        <th>Email Ids</th>
+
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Outlet</th>
@@ -54,6 +54,7 @@
                         <th>Gift Card Id</th>
                         <th>Status</th>
                         <th>Zoho Booking Cancelled</th>
+                        <th>Email Ids</th>
 
                     </tr>
                     </thead>
@@ -115,7 +116,6 @@
                             <td>{!! $un_booking->name !!}</td>
                             <td>{!! $un_booking->restaurant_name !!}</td>
                             <td>{!! $un_booking->city !!}</td>
-                            <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
                             <td>{!! $un_booking->phone_no !!}</td>
                             <td>{!! $un_booking->no_of_persons !!}</td>
                             <td>{!! $un_booking->outlet !!}</td>
@@ -145,6 +145,7 @@
                                     <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $un_booking->id !!}" data-reserv-type="{!! $un_booking->reserv_type !!}" />
                                 @endif
                             </td>
+                            <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
 
                         </tr>
                     @endforeach
@@ -164,7 +165,6 @@
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
-                        <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Outlet</th>
@@ -172,6 +172,7 @@
                         <th>Gift Card Id</th>
                         <th>Status</th>
                         <th>Zoho Booking Cancelled</th>
+                        <th>Email Ids</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -232,7 +233,6 @@
                             <td>{!! $post_booking->name !!}</td>
                             <td>{!! $post_booking->restaurant_name !!}</td>
                             <td>{!! $post_booking->city !!}</td>
-                            <td><a href="mailto:{!! $post_booking->email !!}">{!! $post_booking->email !!}</a></td>
                             <td>{!! $post_booking->phone_no !!}</td>
                             <td>{!! $post_booking->no_of_persons !!}</td>
                             <td>{!! $post_booking->outlet !!}</td>
@@ -262,6 +262,7 @@
                                     <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" />
                                 @endif
                             </td>
+                            <td><a href="mailto:{!! $post_booking->email !!}">{!! $post_booking->email !!}</a></td>
 
                         </tr>
                     @endforeach
@@ -281,13 +282,13 @@
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
-                        <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
+                        <th>Email Ids</th>
                         <!--<th>Order Completed</th>-->
                     </tr>
                     </thead>
@@ -349,7 +350,6 @@
                             <td>{!! $booking->name !!}</td>
                             <td>{!! $booking->restaurant_name !!}</td>
                             <td>{!! $booking->city !!}</td>
-                            <td><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a></td>
                             <td>{!! $booking->phone_no !!}</td>
                             <td>{!! $booking->no_of_persons !!}</td>
                             <td>{!! $booking->outlet !!}</td>
@@ -373,6 +373,7 @@
                                     </div>
                                 </div>
                             </td>
+                            <td><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a></td>
                             <!--<td>
                                 @if($booking->order_completed == 1)
                                     <input type="checkbox" class="checkbox" id="order_completed" name="attributes[order_completed]" data-reserv-id="{!! $booking->id !!}" checked />
@@ -400,13 +401,13 @@
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
-                        <th>Email Ids</th>
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
+                        <th>Email Ids</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -467,7 +468,6 @@
                             <td>{!! $todaysbooking->name !!}</td>
                             <td>{!! $todaysbooking->restaurant_name !!}</td>
                             <td>{!! $todaysbooking->city !!}</td>
-                            <td><a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a></td>
                             <td>{!! $todaysbooking->phone_no !!}</td>
                             <td>{!! $todaysbooking->no_of_persons !!}</td>
                             <td>{!! $todaysbooking->outlet !!}</td>
@@ -491,6 +491,7 @@
                                     </div>
                                 </div>
                             </td>
+                            <td><a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a></td>
 
 
                         </tr>
