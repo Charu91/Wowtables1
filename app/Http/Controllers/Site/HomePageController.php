@@ -607,7 +607,8 @@ The WowTables Team";
         $userResult = $user = DB::table('users')->where('id',$userId)->first();
         $merge_vars = array(
             'MERGE1'=>$userResult->full_name,
-            'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+            'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city])),
+            'SIGNUPTP'  => 'Facebook'
         );
         $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userResult->email],$merge_vars,"html",false,true );
 
