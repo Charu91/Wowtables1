@@ -11,6 +11,7 @@ use Mailchimp;
 use WowTables\Http\Models\Eloquent\Location;
 use DB;
 
+
 class UserController extends Controller {
 
     protected $mailchimp;
@@ -151,6 +152,19 @@ class UserController extends Controller {
                     'location_id' => $input['location_id']
                 ]
             );
+
+            $city_name      = Location::where(['Type' => 'City', 'id' => $input['location_id']])->pluck('name');
+            if(empty($city_name))
+            {
+                $city_name = 'mumbai';
+            }
+            $city = ucfirst($city_name);
+            $merge_vars = array(
+                'MERGE1'=>$input['user']->full_name,
+                'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city])),
+                'SIGNUPTP'  => 'Facebook'
+            );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$input['user']->email],$merge_vars,"html",false,true );
 
             return response()->json($updateUser['data'], $updateUser['code']);
         }

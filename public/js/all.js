@@ -62835,7 +62835,9 @@ function removeLocation(id)
       $('#unbookings').DataTable({
         "order": [], //for getting latest on top
         columnDefs: [{ targets: 'no-sort', orderable: false }],
-        "scrollX": true
+        "scrollX": true,
+          "scrollY":        "300px",
+          "scrollCollapse": true
       });
 
         $('#reserv_time').timepicker({
@@ -62898,15 +62900,56 @@ function removeLocation(id)
             }
         });
 
+
+
+        $('#zoho_booking_cancelled').click(function() {
+            if (this.checked) {
+                var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
+                var reservId = $(this).data('reserv-id');
+                var reservType = $(this).data('reserv-type');
+                if(sure){
+                    $.ajax({
+                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType,
+                        type: 'post',
+                        success: function( data){
+                            if(data == "success"){
+                                alert("Status changed to Booking Cancelled In Zoho");
+                            }
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log( errorThrown );
+                        }
+                    });
+                }
+            }
+
+        });
+
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
-            columnDefs: [{ targets: 'no-sort', orderable: false }]
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
         });
 
         $('#todaybookings').DataTable({
             "order": [], //for getting latest on top
-            columnDefs: [{ targets: 'no-sort', orderable: false }]
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
         });
+
+        $('#postbookings').DataTable({
+            "order": [], //for getting latest on top
+            columnDefs: [{ targets: 'no-sort', orderable: false }],
+            "scrollX": true,
+            "scrollY":        "300px",
+            "scrollCollapse": true
+        });
+
+
 
         $(".dropdown").hover(
             function() {
@@ -62999,10 +63042,29 @@ function removeLocation(id)
             e.preventDefault();
             var reservId = $(this).data('reserv-id');
             var reservStatus = $(this).data('reserv-status');
+            var reservType = $(this).data('reserv-type');
             //console.log(reservId);
             $('#reserv_status').val(reservStatus);
             $('#reserv_id').val(reservId);
-            $('#adminComments').modal('show');
+            $('#reserv_type').val(reservType);
+            if(reservStatus == 6){
+                $('#adminComments').modal('show');
+            } else {
+                $.ajax({
+                    url: '/admin/bookings/changestatus',
+                    type: 'post',
+                    data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
+                    success: function( data){
+                        if(data == "success"){
+                            alert("Status changed");
+                        }
+                    },
+                    error: function( jqXhr, textStatus, errorThrown ){
+                        console.log( errorThrown );
+                    }
+                });
+            }
+
             //return false;
         });
 
@@ -65220,7 +65282,7 @@ function removeLocation(id)
             }
         })
     });
-    $("#ac_confirm_cancel").on('click',function(event) {
+    $("#ac_confirm_cancel").click(function() {
         var e = $("#ac_cancel_reserv_id").val();
         var t = $("#user_id").val();
         var n = $("#customerEmail").val();
@@ -65249,7 +65311,6 @@ function removeLocation(id)
             }
         })
     });
-
     $("#upcomings_reservs").on("click", ".change_but", function() {
         $(".cant_change").addClass("hidden");
         var e = $(this).attr("rel");
