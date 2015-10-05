@@ -967,7 +967,7 @@ class ExperienceController extends Controller {
                             }
 
                             //Start MailChimp
-                            $city = ucfirst($city_name);
+                            $city = ucfirst($userData['data']['location']);
                             if(!empty($getUsersDetails)){
 
                                 $merge_vars = array(

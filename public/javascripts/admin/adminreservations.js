@@ -285,7 +285,8 @@
                                     //console.log(acsc);
                                     if(c_date == dateText)
                                     {
-                                        if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                        var key_sch_time_string = convert_time_format(String(schedule[datestrInNewFormat][key_sch][key_sch_time]));
+                                        if(String(c_time) < key_sch_time_string) {
                                             //txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a>'+actualSchedule[datestrInNewFormat1][key_sch1][key_sch_time1]+'</div>';
 
                                             txt2 += '<div class="time col-lg-3 col-xs-5 '+dynamicClass+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
@@ -381,6 +382,21 @@
                 $("#select_table").addClass("hidden")
             }
         })
+    }
+
+    //convert time into 24 formart for time comparision
+    function convert_time_format(str) {
+        var time = str;
+        var hours = Number(time.match(/^(\d+)/)[1]);
+        var minutes = Number(time.match(/:(\d+)/)[1]);
+        var AMPM = time.match(/\s(.*)$/)[1];
+        if (AMPM == "PM" && hours < 12) hours = hours + 12;
+        if (AMPM == "AM" && hours == 12) hours = hours - 12;
+        var sHours = hours.toString();
+        var sMinutes = minutes.toString();
+        if (hours < 10) sHours = "0" + sHours;
+        if (minutes < 10) sMinutes = "0" + sMinutes;
+        return sHours + ":" + sMinutes+":00";
     }
 
     function ac_get_info(url, id,city_id,vendor_name) {
