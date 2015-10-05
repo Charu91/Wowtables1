@@ -401,14 +401,8 @@ class ReservationDetails extends Model {
 							//->where('user_id', $userID)
 							->where('reservation_status','!=','cancel')
 							->first();
-		
-		if($queryResult) {
-			$reservation = Self::find($reservationID);
-			$reservation->reservation_status = 'cancel';
-			$reservation->save();
 
-			//for the new db structure support
-
+		if(!empty($reservationID)){
 			$newDb['userdetails']['user_id'] = $userID;
 			$newDb['userdetails']['status'] = 3;
 			//print_r($newDb);die;
@@ -417,6 +411,16 @@ class ReservationDetails extends Model {
 			//print_r($newDbStatus);die;
 			/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 			//die;
+		}
+		
+		if($queryResult) {
+			$reservation = Self::find($reservationID);
+			$reservation->reservation_status = 'cancel';
+			$reservation->save();
+
+			//for the new db structure support
+
+
 
 			//Remove the points earned for the cancelled reservation
 			$cancelReward = self::cancelRewardPoint( $reservationID );
