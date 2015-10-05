@@ -1050,6 +1050,7 @@ class ExperienceController extends Controller {
             $transaction['transaction_number']=$requestarray['mihpayid'];
             $transaction['transaction_details']=$details."~~".$requestarray['status'];
             $transaction['source_type']="experience";
+            $userData = Profile::getUserProfileWeb($transaction['user_id']);
 
             $lastTransactionID = DB::table('transactions_details')->insertGetId($transaction);
 
@@ -1183,7 +1184,7 @@ class ExperienceController extends Controller {
             {
                 $city_name = 'mumbai';
             }
-            $city = ucfirst($city_name);
+            $city = ucfirst($userData['data']['location']);
 
             //Start MailChimp
             if(!empty($getUsersDetails)){

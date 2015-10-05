@@ -587,7 +587,7 @@ class AlacarteController extends Controller {
                 {
                     $city_name = 'mumbai';
                 }
-                $city = ucfirst($city_name);
+                $city = ucfirst($userData['data']['location']);
                 $merge_vars = array(
                     'MERGE1'=>$dataPost['guestName'],
                     'MERGE10'=>date('m/d/Y'),
