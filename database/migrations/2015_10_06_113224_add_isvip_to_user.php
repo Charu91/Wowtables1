@@ -14,7 +14,7 @@ class AddIsvipToUser extends Migration {
 	{
 		Schema::table('users', function(Blueprint $table)
 		{
-			$table->boolean('is_vip');
+			$table->boolean('is_vip')->default(false);
 		});
 	}
 
