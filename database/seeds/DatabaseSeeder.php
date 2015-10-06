@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
 
 		$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
-		$this->call('VendorLocationContactsSeeder');
-		//$this->call('ReservationAttributesSeeder');
+		//$this->call('VendorLocationContactsSeeder');
+		$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
