@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
 		Model::unguard();
 
 		$this->call('RolesSeeder');
-		$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');
+		//$this->call('UsersSeeder');
+		$this->call('VendorLocationContactsSeeder');
 		//$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
@@ -71,11 +71,10 @@ class DatabaseSeeder extends Seeder
 		public function run(){
 			//Assign vendor location to concierge users
 			DB::table('vendor_location_contacts')->insert(array(
-				array('vendor_location_id'=>185,'name'=>'Biju Chandran','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>36410,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>185,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>36412,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>190,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>36411,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>199,'name'=>'Kunal Jain','designation'=>'Restaurant Executive','email'=>'kunal@wowtables.com','phone_number'=>'9811111111','user_id'=>36419,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>199,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>36420,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>203,'name'=>'Biju Chandran','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>43645,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			));
 		}
 	}
