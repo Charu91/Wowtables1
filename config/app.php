@@ -152,7 +152,9 @@ return [
 		'WowTables\Providers\EventServiceProvider',
 		'WowTables\Providers\RouteServiceProvider',
         'WowTables\Providers\ViewServiceProvider',
-        'WowTables\Providers\ValidatorServiceProvider'
+        'WowTables\Providers\ValidatorServiceProvider',
+		//For Concierge app Push notifications
+		'Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider'
 	],
 
 	/*
@@ -206,6 +208,7 @@ return [
 		'Flash' 	=> 'Laracasts\Flash\Flash',
 
 		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
+		'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
 	],
 
 ];
