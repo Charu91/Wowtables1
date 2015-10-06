@@ -22,17 +22,17 @@ class DatabaseSeeder extends Seeder
 		$this->call('VendorLocationContactsSeeder');
 		$this->call('ReservationAttributesSeeder');
 		$this->call('ReservationStatusesSeeder');
-		$this->call('ReservationDetailsSeeder');
-		$this->call('ReservationStatusLogSeeder');
-		$this->call('ReservationAttrIntSeeder');
-		$this->call('ReservationAttrIntLogSeeder');
-		$this->call('ReservationAttrDateTimeSeeder');
-		$this->call('ReservationAttrDateTimeLogSeeder');
-		$this->call('ReservationAttrTextSeeder');
-		$this->call('ReservationAttrVarcharSeeder');
+		//$this->call('ReservationDetailsSeeder');
+		//$this->call('ReservationStatusLogSeeder');
+		//$this->call('ReservationAttrIntSeeder');
+		//$this->call('ReservationAttrIntLogSeeder');
+		//$this->call('ReservationAttrDateTimeSeeder');
+		//$this->call('ReservationAttrDateTimeLogSeeder');
+		//$this->call('ReservationAttrTextSeeder');
+		//$this->call('ReservationAttrVarcharSeeder');
 		$this->call('ReservationSeatingStatusSeeder');
 		$this->call('ReservationRejectionReasonSeeder');
-		$this->call('ReservationAddonsVariantsDetailsSeeder');
+		//$this->call('ReservationAddonsVariantsDetailsSeeder');
 	}
 }
 
