@@ -206,7 +206,7 @@ return [
         'Html'		=> 'Illuminate\Html\HtmlFacade',
         'Image'     => 'Intervention\Image\Facades\Image',
 		'Flash' 	=> 'Laracasts\Flash\Flash',
-
+		'JavaScript' => 'Laracasts\Utilities\JavaScript\JavaScriptFacade',
 		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
 		'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
 	],
