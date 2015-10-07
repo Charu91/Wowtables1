@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Laracasts\Utilities\JavaScript\JavaScriptFacade;
+use Laracasts\Utilities\JavaScript\JavaScriptFacade as JavaScript;
 use WowTables\Http\Models\Eloquent\Collection;
 use WowTables\Http\Models\Eloquent\Curator;
 use WowTables\Http\Models\Eloquent\Flag;
@@ -89,7 +89,7 @@ class AdminComposer {
         }
 
 
-        JavaScriptFacade::put([
+        JavaScript::put([
            'curatorsList' =>  $curatorsList,
            'flagsList' =>  $flagsList,
            'restaurantsList' => $restaurantsList,
