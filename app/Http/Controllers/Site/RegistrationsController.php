@@ -468,7 +468,7 @@ class RegistrationsController extends Controller {
 		//print_r($userData);die;
 
 		//for the new db structure support
-
+		$newDb['attributes']['reservation_status_id'] = 3;
 		$newDb['userdetails']['user_id'] = $userID;
 		$newDb['userdetails']['status'] = 3;
 		//print_r($newDb);die;
@@ -816,6 +816,7 @@ class RegistrationsController extends Controller {
 		$newDb['attributes']['no_of_people_booked'] = $party_size;
 		$newDb['attributes']['gift_card_id_reserv'] = (isset($giftcard_id)) ? $giftcard_id : "";
 		$newDb['attributes']['special_request'] = ($special_request) ? $special_request : "";
+		$newDb['attributes']['reservation_status_id'] = 2;
 		$newDb['userdetails']['user_id'] = $user_id;
 		$newDb['userdetails']['status'] = 2;
 		$newDb['userdetails']['addons'] = $addonsArray;

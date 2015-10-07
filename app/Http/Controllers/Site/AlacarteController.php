@@ -507,6 +507,7 @@ class AlacarteController extends Controller {
                 $newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']);
                 $newDb['attributes']['special_offer_title'] = $dataPost['special_offer_title'];
                 $newDb['attributes']['special_offer_desc'] = $dataPost['special_offer_desc'];
+                $newDb['attributes']['reservation_status_id'] = 1;
                 $newDb['userdetails']['user_id'] = $userID;
                 $newDb['userdetails']['status'] = 1;
 
