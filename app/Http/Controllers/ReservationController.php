@@ -69,7 +69,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
@@ -159,7 +159,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
@@ -250,7 +250,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
@@ -334,7 +334,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
