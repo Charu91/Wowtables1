@@ -88,7 +88,7 @@ class AdminComposer {
             $localitiesList[] = [ 'id' => $key , 'text' => $value];
         }
 
-        echo "test".die;
+        //echo "test".die;
 
         JavaScript::put([
            'curatorsList' =>  $curatorsList,
