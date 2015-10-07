@@ -793,9 +793,8 @@ class ReservationController extends Controller {
 		$data['attributes'] = $this->request->get('attributes');
 
 		//print_r($data);die;
-		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
-
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 
 		if($bookingUpdate['status'] === 'success'){
 			if($this->request->ajax()) {
