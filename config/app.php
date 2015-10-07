@@ -139,7 +139,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
 
 		'Laracasts\Flash\FlashServiceProvider',
-		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
+		/*'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',*/
 		'Skovmand\Mailchimp\MailchimpServiceProvider',
 		'Laravel\Socialite\SocialiteServiceProvider',
 
@@ -206,7 +206,7 @@ return [
         'Html'		=> 'Illuminate\Html\HtmlFacade',
         'Image'     => 'Intervention\Image\Facades\Image',
 		'Flash' 	=> 'Laracasts\Flash\Flash',
-		'JavaScript' => 'Laracasts\Utilities\JavaScript\JavaScriptFacade',
+		/*'JavaScript' => 'Laracasts\Utilities\JavaScript\JavaScriptFacade',*/
 		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
 		'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
 	],
