@@ -2,7 +2,6 @@
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use JavaScript;
 use WowTables\Http\Models\Eloquent\Collection;
 use WowTables\Http\Models\Eloquent\Curator;
 use WowTables\Http\Models\Eloquent\Flag;
