@@ -521,7 +521,11 @@ class ReservationDetails extends Model {
         $reservationDetails = ReservationDetails::find($reservation_id);
         $vendor_location_id = $reservationDetails->vendor_location_id;
         $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
-        print_r($vendorUsers);die;
+        //print_r($vendorUsers);die;
+        foreach($vendorUsers as $vendorUser){
+            echo $vendorUser->user_id;
+        }
+        die;
         /*$ch = curl_init();
         $curlConfig = array(
             CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
