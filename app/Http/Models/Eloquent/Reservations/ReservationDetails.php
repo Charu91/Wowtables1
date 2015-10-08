@@ -532,7 +532,7 @@ class ReservationDetails extends Model {
                 $tokens[] = $tokenStr;
             }
         }
-        print_r($tokens);
+        echo json_encode($tokens);
         die;
         /*$ch = curl_init();
         $curlConfig = array(
