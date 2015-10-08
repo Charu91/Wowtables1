@@ -532,19 +532,19 @@ class ReservationDetails extends Model {
                 $tokens[] = $tokenStr;
             }
         }
-        echo json_encode($tokens);
-        die;
-        /*$ch = curl_init();
+        //echo json_encode($tokens);
+        //die;
+        $ch = curl_init();
         $curlConfig = array(
             CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
             CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS     => $data,
+            CURLOPT_POSTFIELDS     => "tokens=".json_encode($tokens),
         );
         curl_setopt_array($ch, $curlConfig);
         $result = curl_exec($ch);
-        //echo "<pre> results == "; print_r($result);die;
-        curl_close($ch);*/
+        echo "<pre> results == "; print_r($result);die;
+        curl_close($ch);
     }
 
 }
