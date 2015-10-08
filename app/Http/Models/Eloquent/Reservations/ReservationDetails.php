@@ -520,7 +520,7 @@ class ReservationDetails extends Model {
 
         $reservationDetails = ReservationDetails::find($reservation_id);
         $vendor_location_id = $reservationDetails->vendor_location_id;
-        $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id);
+        $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
         print_r($vendorUsers);die;
         /*$ch = curl_init();
         $curlConfig = array(
