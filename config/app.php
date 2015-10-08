@@ -139,7 +139,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
 
 		'Laracasts\Flash\FlashServiceProvider',
-		/*'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',*/
+		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
 		'Skovmand\Mailchimp\MailchimpServiceProvider',
 		'Laravel\Socialite\SocialiteServiceProvider',
 
