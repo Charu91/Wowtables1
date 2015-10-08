@@ -17,69 +17,82 @@ class UserController extends Controller {
     private static $seo_meta_desc_attr_id = 3;
     public function login()
     {
-        $passwordMatch = false;
-        $userDeviceUpdated = false;
-        $access_token = '';
-        $input = Request::all();
-        $user = User::where('email',$input['email'])->first();
+        try {
+            $passwordMatch = false;
+            $userDeviceUpdated = false;
+            $access_token = '';
+            $input = Request::all();
+            $user = User::where('email', $input['email'])->first();
 
-        if($user) {
-            if (crypt($input['password'], $user->password) == $user->password)
-                $passwordMatch = true;
-        }
-        if($passwordMatch) {
-            $userDevice = UserDevice::where('user_id',$user->id)->first();
-            $access_token = Uuid::uuid1()->toString();
-            if ($userDevice) {
-                $userDeviceUpdated = $userDevice->update(['device_id'=>$input['device_id'],'access_token'=>$access_token
-                    ,'access_token_expires'=>Carbon::now()->addDays(360),'os_type'=>$input['os_type']
-                    ,'os_version'=>$input['os_version'],'hardware'=>$input['hardware']
-                    ,'app_version'=>  $input['app_version']]);
-            } else {
-                $userDeviceUpdated = UserDevice::create(['device_id'=>$input['device_id'],'access_token'=>$access_token
-                    ,'access_token_expires'=>Carbon::now()->addDays(360),'os_type'=>$input['os_type']
-                    ,'os_version'=>$input['os_version'],'hardware'=>$input['hardware']
-                    ,'app_version'=>  $input['app_version'],'user_id'=> $user->id]);
+            if ($user) {
+                if (crypt($input['password'], $user->password) == $user->password)
+                    $passwordMatch = true;
             }
-        }
-        if($userDeviceUpdated) {
-            $vendorLocationContact = VendorLocationContact::where('user_id',$user->id)->first();
-            $vendorLocation = VendorLocation::where('id',$vendorLocationContact->vendor_location_id)->first();
-            $vendor = Vendor::where('id',$vendorLocation->vendor_id)->first();
+            if ($passwordMatch) {
+                $userDevice = UserDevice::where('device_id', $input['device_id'])->first();
+                $access_token = Uuid::uuid1()->toString();
+                if ($userDevice) {
+                    $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'access_token' => $access_token
+                        , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                        , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
+                        , 'app_version' => $input['app_version']]);
+                } else {
+                    $userDeviceUpdated = UserDevice::create(['device_id' => $input['device_id'], 'access_token' => $access_token
+                        , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                        , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
+                        , 'app_version' => $input['app_version'], 'user_id' => $user->id]);
+                }
+            }
+            if ($userDeviceUpdated) {
+                $vendorLocationContact = VendorLocationContact::where('user_id', $user->id)->first();
+                $vendorLocation = VendorLocation::where('id', $vendorLocationContact->vendor_location_id)->first();
+                $vendor = Vendor::where('id', $vendorLocation->vendor_id)->first();
 
-            return response()->json(['id'=>$user->id,'access_token'=>$access_token,'full_name'=>$user->full_name,'email'=>$user->email,'phone_number'
-                =>$user->phone_number,'role'=>$user->role->name,
-                'vendor_name'=>$vendor->name], 200);
-        }else {
+                return response()->json(['id' => $user->id, 'access_token' => $access_token, 'full_name' => $user->full_name, 'email' => $user->email, 'phone_number'
+                => $user->phone_number, 'role' => $user->role->name,
+                    'vendor_name' => $vendor->name], 200);
+            } else {
+                return response()->json([
+                    'action' => 'Check if the email address and password match',
+                    'message' => 'There is an email password mismatch. Please check an try again'
+                ], 227);
+            }
+        }catch(\Exception $e){
             return response()->json([
-                'action' => 'Check if the email address and password match',
-                'message' => 'There is an email password mismatch. Please check an try again'
-            ], 227);
+            'message' => 'An application error occured.'
+            ], 500);
         }
 
-    }
+
+}
 
     public function addNotificationId(){
-        $userDeviceUpdated = false;
-        $input = Request::all();
-        $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token']
-        ]);
-        if($userDevice) {
-            $userDeviceUpdated = $userDevice->update(['notification_id' => $input['notification_id']]);
-        }
-        if($userDeviceUpdated) {
-            return [
-                'code' => 200,
-                'data' => new \stdClass()
-            ];
-        }else {
-            return [
-                'code' => 227,
-                'data' => [
-                    'action' => 'Check if access_token,device_id & user_id are valid',
-                    'message' => 'Access_token,device_id or user_id is not valid. Please check an try again'
-                ]
-            ];
+        try{
+            $userDeviceUpdated = false;
+            $input = Request::all();
+            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token']
+            ]);
+            if($userDevice) {
+                $userDeviceUpdated = $userDevice->update(['notification_id' => $input['notification_id']]);
+            }
+            if($userDeviceUpdated) {
+                return [
+                    'code' => 200,
+                    'data' => new \stdClass()
+                ];
+            }else {
+                return [
+                    'code' => 227,
+                    'data' => [
+                        'action' => 'Check if access_token,device_id & user_id are valid',
+                        'message' => 'Access_token,device_id or user_id is not valid. Please check an try again'
+                    ]
+                ];
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'An application error occured.'
+            ], 500);
         }
 
     }
