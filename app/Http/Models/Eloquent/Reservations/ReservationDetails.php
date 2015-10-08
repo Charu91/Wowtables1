@@ -521,10 +521,13 @@ class ReservationDetails extends Model {
         $reservationDetails = ReservationDetails::find($reservation_id);
         $vendor_location_id = $reservationDetails->vendor_location_id;
         $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
+        $tokens = array();
         //print_r($vendorUsers);die;
         foreach($vendorUsers as $vendorUser){
-            echo $vendorUser->user_id;
+            $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
+            $tokens[] = $userDevice->notification_id;
         }
+        print_r($tokens);
         die;
         /*$ch = curl_init();
         $curlConfig = array(
