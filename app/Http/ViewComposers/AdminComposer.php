@@ -90,7 +90,7 @@ class AdminComposer {
 
         //echo "test".die;
 
-        JavaScriptFacade::put([
+        JavaScript::put([
            'curatorsList' =>  $curatorsList,
            'flagsList' =>  $flagsList,
            'restaurantsList' => $restaurantsList,
