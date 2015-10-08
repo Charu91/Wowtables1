@@ -524,6 +524,7 @@ class ReservationDetails extends Model {
         $tokens = array();
         //print_r($vendorUsers);die;
         foreach($vendorUsers as $vendorUser){
+            echo $vendorUser->user_id."<br/>";
             $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
             //print_r($userDevice);
             //echo $userDevice->notification_id;
