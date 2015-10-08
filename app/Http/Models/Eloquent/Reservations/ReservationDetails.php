@@ -525,9 +525,10 @@ class ReservationDetails extends Model {
         //print_r($vendorUsers);die;
         foreach($vendorUsers as $vendorUser){
             $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
-            $tokens[] = $userDevice->notification_id;
+            print_r($userDevice);
+            //$tokens[] = $userDevice->notification_id;
         }
-        print_r($tokens);
+        //print_r($tokens);
         die;
         /*$ch = curl_init();
         $curlConfig = array(
