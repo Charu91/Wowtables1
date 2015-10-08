@@ -19,6 +19,7 @@ use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeListFlo
 use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeListIntegerLog;
 use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeDateTimeLog;
 use WowTables\Http\Models\Eloquent\User;
+use WowTables\VendorLocationContacts;
 
 
 class ReservationDetails extends Model {
@@ -513,6 +514,25 @@ class ReservationDetails extends Model {
         $result = curl_exec($ch);
         //echo "<pre> results == "; print_r($result);die;
         curl_close($ch);
+    }
+
+    public function pushToRestaurant($reservation_id){
+
+        $reservationDetails = ReservationDetails::find($reservation_id);
+        $vendor_location_id = $reservationDetails->vendor_location_id;
+        $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id);
+        print_r($vendorUsers);die;
+        /*$ch = curl_init();
+        $curlConfig = array(
+            CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
+            CURLOPT_POST           => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS     => $data,
+        );
+        curl_setopt_array($ch, $curlConfig);
+        $result = curl_exec($ch);
+        //echo "<pre> results == "; print_r($result);die;
+        curl_close($ch);*/
     }
 
 }

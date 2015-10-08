@@ -1400,6 +1400,7 @@ class AdminReservationsController extends Controller{
         $newDb['attributes']['auto_reservation'] = "Not available";
         $newDb['attributes']['ar_confirmation_id'] = "0";
         $newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservationResponse['data']['reservationID']);
+        $newDb['attributes']['reservation_status_id'] = 1;
         $newDb['userdetails']['user_id'] = $userID;
         $newDb['userdetails']['status'] = 1;
         $newDb['userdetails']['addons'] = $dataPost['addon'];
@@ -1619,6 +1620,7 @@ class AdminReservationsController extends Controller{
                 $newDb['attributes']['auto_reservation'] = "Not available";
                 $newDb['attributes']['ar_confirmation_id'] = "0";
                 $newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']);
+                $newDb['attributes']['reservation_status_id'] = 1;
                 $newDb['userdetails']['user_id'] = $userID;
                 $newDb['userdetails']['status'] = 1;
 

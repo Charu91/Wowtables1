@@ -12,6 +12,7 @@ use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Models\Frontend\ExperienceModel;
 
+
 class ReservationController extends Controller {
 
 	protected $reservationDetails;
@@ -40,6 +41,7 @@ class ReservationController extends Controller {
 	 */
 	public function index()
 	{
+		$this->reservationDetails->pushToRestaurant(3);
 
 		$un_bookings = array();
 		$bookings = array();
