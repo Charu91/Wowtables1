@@ -529,7 +529,7 @@ class ReservationDetails extends Model {
             if(isset($userDevice->notification_id)) {
                 $tokenStr = new \stdClass();
                 $tokenStr->token = $userDevice->notification_id;
-                $tokens[] = $tokenStr->token;
+                $tokens[] = $tokenStr;
             }
         }
         print_r($tokens);
