@@ -523,13 +523,13 @@ class ReservationDetails extends Model {
         $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
         $tokens = array();
         //print_r($vendorUsers);die;
+
         foreach($vendorUsers as $vendorUser){
-            //echo $vendorUser->user_id."<br/>";
             $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
-            //print_r($userDevice);
-            //echo $userDevice->notification_id;
             if(isset($userDevice->notification_id)) {
-                $tokens[] = $userDevice->notification_id;
+                $tokenStr = new \stdClass();
+                $tokenStr->token = $userDevice->notification_id;
+                $tokens[] = $tokenStr->token;
             }
         }
         print_r($tokens);
