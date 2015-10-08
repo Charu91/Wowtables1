@@ -11,6 +11,7 @@ use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesFloat;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesInteger;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesIntegerLog;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesText;
+use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesTextLog;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesVarchar;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationDetail;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationStatus;
@@ -154,7 +155,7 @@ class ReservationController extends Controller {
 					$reservationStatusLog = ReservationStatusLog::where(['reservation_id' => $reservationTextAttr->reservation_id,
 						'new_reservation_status_id' => ReservationController::$edited_status_id])->first();
 					if ($reservationStatusLog != null) {
-						$reservationTextAttrLogArr = ReservationAttributesText::where(['reservation_attribute_id' => $reservationTextAttr->attribute->id,
+						$reservationTextAttrLogArr = ReservationAttributesTextLog::where(['reservation_attribute_id' => $reservationTextAttr->attribute->id,
 							'reservation_status_log_id' => $reservationStatusLog->id])->get();
 						foreach ($reservationTextAttrLogArr as $reservationTextAttrLog) {
 							$key = "old_" . $reservationTextAttrLog->attribute->alias;
