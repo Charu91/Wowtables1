@@ -376,6 +376,10 @@ class ReservationDetails extends Model {
             $statusLogEntry->save();
 
         }
+        if($statusId == 1 || $statusId == 2 || $statusId == 3){
+            $this->pushToRestaurant($reservation_id);
+        }
+
         if(!empty($reservType)) {
             switch ($statusId) {
                 case 2:
@@ -522,7 +526,6 @@ class ReservationDetails extends Model {
         $vendor_location_id = $reservationDetails->vendor_location_id;
         $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
         $tokens = array();
-        //print_r($vendorUsers);die;
 
         foreach($vendorUsers as $vendorUser){
             $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
@@ -532,19 +535,21 @@ class ReservationDetails extends Model {
                 $tokens[] = $tokenStr;
             }
         }
-        //echo json_encode($tokens);
-        //die;
-        $ch = curl_init();
-        $curlConfig = array(
-            CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
-            CURLOPT_POST           => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POSTFIELDS     => "tokens=".json_encode($tokens),
-        );
-        curl_setopt_array($ch, $curlConfig);
-        $result = curl_exec($ch);
-        echo "<pre> results == "; print_r($result);die;
-        curl_close($ch);
+
+        if(!empty($tokens)){
+            $ch = curl_init();
+            $curlConfig = array(
+                CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
+                CURLOPT_POST           => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POSTFIELDS     => "tokens=".json_encode($tokens),
+            );
+            curl_setopt_array($ch, $curlConfig);
+            $result = curl_exec($ch);
+            //echo "<pre> results == "; print_r($result);die;
+            curl_close($ch);
+        }
+
     }
 
 }

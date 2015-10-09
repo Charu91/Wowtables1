@@ -41,7 +41,6 @@ class ReservationController extends Controller {
 	 */
 	public function index()
 	{
-		$this->reservationDetails->pushToRestaurant(3);
 
 		$un_bookings = array();
 		$bookings = array();
