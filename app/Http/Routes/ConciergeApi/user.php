@@ -1,6 +1,6 @@
 <?php
 
-Route::post('conciergeapi/login','App\Http\Controllers\ConciergeApi\UserController@login');
+Route::post('conciergeapi/login','ConciergeApi\UserController@login');
 
 Route::put('conciergeapi/addNotificationId','ConciergeApi\UserController@addNotificationId');
 
