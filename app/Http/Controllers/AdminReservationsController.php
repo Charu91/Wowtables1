@@ -31,6 +31,7 @@ class AdminReservationsController extends Controller{
     protected $listId = '986c01a26a';
 
     public function __construct(Mailchimp $mailchimp,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,ExperienceModel $experiences_model,AlacarteModel $alacarte_model) {
+        $this->middleware('admin.auth');
         $this->mailchimp = $mailchimp;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
@@ -125,6 +126,12 @@ class AdminReservationsController extends Controller{
                 $message->to($createPasswordRequest['email'])->subject('You have been registered as a WowTables member!');
             });
 
+            $city_name      = Location::where(['Type' => 'City', 'id' => $cityid])->pluck('name');
+            if(empty($city_name))
+            {
+                $city_name = 'mumbai';
+            }
+            $city = ucfirst($city_name);
             $merge_vars = array(
                 'NAME'         =>     isset($createPasswordRequest['userName'] )? $createPasswordRequest['userName']: '',
                 'SIGNUPTP'     =>     'Email',
@@ -133,29 +140,12 @@ class AdminReservationsController extends Controller{
                 'MERGE11'  => 0,
                 'MERGE17'=>'Admin added account',
                 'PHONE'=>   isset($phone) ? $phone: '',
+                'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
             );
 
             $this->mailchimp->lists->subscribe($this->listId, ["email"=>$createPasswordRequest['email']],$merge_vars,"html",false,true );
 
             $my_email = $createPasswordRequest['email'];
-
-            $city_name      = Location::where(['Type' => 'City', 'id' => $cityid])->pluck('name');
-            if(empty($city_name))
-            {
-                $city_name = 'mumbai';
-            }
-
-            /*$city = ucfirst($city_name);
-            $mergeVars = array(
-                'GROUPINGS' => array(
-                    array(
-                        'id' => 9613,
-                        'groups' => [$city],
-                    )
-                )
-            );*/
-            //echo "asd , ";
-            //$this->mailchimp->lists->updateMember($this->listId, ["email"=>$createPasswordRequest['email']], $mergeVars);
             $success_message = "Email ".$my_email." has been registered as a member.";
             $data = array(
                 'user_id'=>$user_id,
@@ -1530,6 +1520,12 @@ class AdminReservationsController extends Controller{
         $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
         //Start MailChimp
+        $city_name      = Location::where(['Type' => 'City', 'id' => $getUsersDetails->location_id])->pluck('name');
+        if(empty($city_name))
+        {
+            $city_name = 'mumbai';
+        }
+        $city = ucfirst($city_name);
         if(!empty($getUsersDetails)){
 
             $merge_vars = array(
@@ -1537,7 +1533,8 @@ class AdminReservationsController extends Controller{
                 'MERGE10'=>date('m/d/Y'),
                 'MERGE11'=>$userData['data']['bookings_made'] + 1,
                 'MERGE13'=>$dataPost['phone'],
-                'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
+                'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate'])),
+                'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
             );
             $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
             //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
@@ -1583,20 +1580,7 @@ class AdminReservationsController extends Controller{
 
         $getUsersDetails = $this->experiences_model->fetchDetails($userID);
 
-        //Start MailChimp
-        if(!empty($getUsersDetails)){
 
-            $merge_vars = array(
-                'MERGE1'=>$dataPost['guestName'],
-                'MERGE10'=>date('m/d/Y'),
-                'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
-                'MERGE13'=>$dataPost['phone'],
-                'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate']))
-            );
-            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
-            //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
-        }
-        //End MailChimp
         $getReservationID = '';
         if($userID > 0) {
             //validating the information submitted by users
@@ -1703,6 +1687,27 @@ class AdminReservationsController extends Controller{
 
                 //echo "<pre>"; print_r($mergeReservationsArray); die;
                 $city_id    = $locationDetails->city_id;
+                $city_name      = Location::where(['Type' => 'City', 'id' => $userData['data']['location_id']])->pluck('name');
+                if(empty($city_name))
+                {
+                    $city_name = 'mumbai';
+                }
+                $city = ucfirst($city_name);
+                //Start MailChimp
+                if(!empty($getUsersDetails)){
+
+                    $merge_vars = array(
+                        'MERGE1'=>$dataPost['guestName'],
+                        'MERGE10'=>date('m/d/Y'),
+                        'MERGE11'=>$userData['data']['a_la_carte_reservation'] + 1,
+                        'MERGE13'=>$dataPost['phone'],
+                        'MERGE27'=>date("m/d/Y",strtotime($dataPost['reservationDate'])),
+                        'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+                    );
+                    $this->mailchimp->lists->subscribe($this->listId, ["email"=>$dataPost['guestEmail']],$merge_vars,"html",false,true );
+                    //$this->mc_api->listSubscribe($list_id, $_POST['email'], $merge_vars,"html",true,true );
+                }
+                //End MailChimp
 
                 $footerpromotions = DB::select('SELECT efp.link,mrn.file  FROM email_footer_promotions as efp LEFT JOIN media_resized_new as mrn ON mrn.media_id = efp.media_id WHERE efp.show_in_alacarte = 1 AND efp.city_id = '.$city_id);
 

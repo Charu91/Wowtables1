@@ -390,6 +390,7 @@ The WowTables Team";
                     /*if(!isset($_GET["utm_source"])) $_GET["utm_source"] = "";
                     if(!isset($_GET["utm_medium"])) $_GET["utm_medium"] = "";
                     if(!isset($_GET["utm_campaign"])) $_GET["utm_campaign"] = "";*/
+                    $city = ucfirst($city_name);
                     $merge_vars = array(
                         'NAME'         =>     isset($users['full_name'] )? $users['full_name']: '',
                         'SIGNUPTP'     =>     isset($facebook_id)? 'Facebook': 'Email',
@@ -400,28 +401,21 @@ The WowTables Team";
                         'PHONE'=>   isset($users['phone'])? $users['phone']: '',
                         'MERGE18'=> isset($_GET["utm_source"])? $_GET["utm_source"]: '',
                         'MERGE19'=> isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
-                        'MERGE20'=> isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
+                        'MERGE20'=> isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: '',
+                        'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                     );
 
                     $this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
+                    //print_r($test);die;
                     //echo "<pre>"; print_r($api); die;
                     //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
-                    $my_email = $users['email_address'];
+                    //$my_email = $users['email_address'];
                     //$city = $users['city'];
-                    $city = ucfirst($city_name);
-                        $mergeVars = array(
-                            'GROUPINGS' => array(
-                                array(
-                                    'id' => 9613,
-                                    'groups' => [$city],
-                                )
-                            )
-                        );
-                //echo "asd , ";
-                //$this->mailchimp->lists->interestGroupings($this->listId,true);
-                //print_r($test);die;
-                $this->mailchimp->lists->updateMember($this->listId, ["email"=>$_POST['email']], $mergeVars);
-                //print_r($test);die;
+                    //echo "asd , ";
+                    //$this->mailchimp->lists->interestGroupings($this->listId,true);
+                    //print_r($test);die;
+                    //$test = $this->mailchimp->lists->updateMember($this->listId, ["email"=>$_POST['email']], $mergeVars);
+                    //print_r($test);die;
 
                     //End MailChimp
                      echo 1;
@@ -605,6 +599,19 @@ The WowTables Team";
      */
     public function fbAddCity($cityName) {
         $this->facebook->addUserCity($cityName);
+
+
+        //mailchimp call
+        $city = ucfirst($cityName);
+        $userId = Session::get('id');
+        $userResult = $user = DB::table('users')->where('id',$userId)->first();
+        $merge_vars = array(
+            'MERGE1'=>$userResult->full_name,
+            'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city])),
+            'SIGNUPTP'  => 'Facebook'
+        );
+        $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userResult->email],$merge_vars,"html",false,true );
+
 
         return response()->json('',200);
     }

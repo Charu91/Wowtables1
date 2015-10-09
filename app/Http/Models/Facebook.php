@@ -182,6 +182,8 @@ class Facebook {
                             );
             Session::put($userdata);
 
+
+
             $order = unserialize(Cookie::get('order'));
 
 

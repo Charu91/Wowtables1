@@ -482,6 +482,7 @@ class User {
             });
 
             //Mail by MailChimp
+            $city = ucfirst($cityname); //$city_name;
             $listId = '986c01a26a';
             $merge_vars = array(
                        'NAME'       => isset($data['full_name'] )? $data['full_name']: '',
@@ -493,26 +494,13 @@ class User {
                        'PHONE'      => isset($data['phone_number'])? $data['phone_number']: '',
                        'MERGE18'    => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
                        'MERGE19'    => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
-                       'MERGE20'    => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: ''
+                       'MERGE20'    => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: '',
+                       'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
                    );                    
             //$this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
             $objMailChimp->lists->subscribe($listId, ["email"=>$data['email']],$merge_vars,"html",false,true );
             
-                   //echo "<pre>"; print_r($api); die;
-                   //$api->listSubscribe($listId, $_POST['email'], $merge_vars,"html",false,true );
-                   $my_email = $data['email']; //$users['email_address'];
-                   //$city = $users['city'];
-                   $city = ucfirst($cityname); //$city_name;
-                   $mergeVars = array(
-                                        'GROUPINGS' => array(
-                                             array(
-                                                   'id' => 9613,
-                                                   'groups' => [$city],
-                                                  )
-                                        )
-                                     );
-               //echo "asd , ";
-               $objMailChimp->lists->updateMember($listId, $my_email, $mergeVars);
+
             //----end Mailchimp Mail
 
             if($userInsertId){

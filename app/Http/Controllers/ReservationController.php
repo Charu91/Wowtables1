@@ -69,15 +69,15 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 19:15:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
+					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
 			$booking->id = $unconfirmedBookings->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$unconfirmedBookings->attributesDatetime->attribute_value);
-			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			//echo "<pre>".print_r($unconfirmedBookings);
+
 			if($unconfirmedBookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -109,8 +109,8 @@ class ReservationController extends Controller {
 			//echo $reservStatusArr[$unconfirmedBookings->id];
 			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id][0];
 			$booking->statusArr = $statusArr;
-
-			if($reservStatusArr[$unconfirmedBookings->id][0] == 3){
+			//echo $reservStatusArr[$unconfirmedBookings->id][0];
+			if($reservStatusArr[$unconfirmedBookings->id][1] == 3){
 				$booking->zoho_cancelled = 1;
 			} else {
 				$booking->zoho_cancelled = 0;
@@ -121,8 +121,18 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
+			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
+			//echo $unconfirmedBookings->id;
+			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_cancelled'])){
+				$un_bookings[$count] = $booking;
+			}
+			//$un_bookings[$count] = $booking;
 			//print_r($booking);die;
-			$un_bookings[$count] = $booking;
+
 			$count++;
 
 
@@ -149,15 +159,16 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 19:15:00')
+					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
 			$booking->id = $postBookings->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$postBookings->attributesDatetime->attribute_value);
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$postBookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($postBookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -190,7 +201,7 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$postBookings->id][0];
 			$booking->statusArr = $statusArr;
 
-			if($reservStatusArr[$postBookings->id][0] == 6){
+			if($reservStatusArr[$postBookings->id][1] == 6){
 				$booking->zoho_cancelled = 1;
 			} else {
 				$booking->zoho_cancelled = 0;
@@ -201,6 +212,10 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			//print_r($booking);die;
 			$postReservation[$count] = $booking;
 			$count++;
@@ -236,16 +251,18 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 19:15:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
 
 			$booking = new \stdClass();
 			$booking->id = $allbookings->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$allbookings->attributesDatetime->attribute_value);
+			//print_r($allbookings);
+			//echo "<br/><br/>";
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$allbookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($allbookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -282,11 +299,14 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$allbookings->id][0];
 			$booking->statusArr = $statusArr;
 
-			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($allbookings->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			$bookings[$count] = $booking;
 			$count++;
 
@@ -315,16 +335,16 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-09-30 19:15:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
 
 			$booking = new \stdClass();
 			$booking->id = $today->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$today->attributesDatetime->attribute_value);
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$today->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($today->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -355,11 +375,14 @@ class ReservationController extends Controller {
 			$booking->reserv_status = $reservStatusArr[$today->id][0];
 			$booking->statusArr = $statusArr;
 
-			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($today->id);
 			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			$todayBookings[$count] = $booking;
 			$count++;
 
@@ -557,7 +580,7 @@ class ReservationController extends Controller {
 			$dateObject = Carbon::createFromFormat('Y-m-d H:i:s',$reservationAttrs['attributes']['reserv_datetime']);
 			$data['date'] = $dateObject->format('d/m/y');
 			$data['time'] = $dateObject->format('h:i A');
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.cancel', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -601,7 +624,7 @@ class ReservationController extends Controller {
 			}
 
 			//print_r($data);die;
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 			Mail::send('admin.bookings.emails.change', [
 				'data' => $data,
 			], function ($message) use ($vendor_email) {
@@ -649,7 +672,7 @@ class ReservationController extends Controller {
 
 			//print_r($data);die;
 			$vendor_name = explode('-',$data['experience']);
-			$vendor_email = 'durgesh@wowtables.com';
+			//$vendor_email = 'durgesh@wowtables.com';
 
 			Mail::send('admin.bookings.emails.restaurant',[
 				'data' =>$data,
@@ -771,9 +794,8 @@ class ReservationController extends Controller {
 		$data['attributes'] = $this->request->get('attributes');
 
 		//print_r($data);die;
-		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
-
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 
 		if($bookingUpdate['status'] === 'success'){
 			if($this->request->ajax()) {
@@ -860,13 +882,16 @@ class ReservationController extends Controller {
 		$reservType = $reservtype;
 		$zoho_data = array(
 			'Order_completed'=>'booking cancelled',
+			'Total_Seated'=>'0',
+			'Actual_attendees'=>'0'
 		);
 		if($reservType == "Experience"){
-			$this->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);
+			$this->reservationDetails->changeStatusInZoho('E'.sprintf("%06d",$reservation_id),$zoho_data);
 		} else if($reservType == "Alacarte") {
-			$this->changeStatusInZoho('A'.sprintf("%06d",$reservation_id),$zoho_data);
+			$this->reservationDetails->changeStatusInZoho('A'.sprintf("%06d",$reservation_id),$zoho_data);
 		}
-		$this->reservationDetails->changeStatusInZoho($reservation_id,$zoho_data);
+		//print_r($this->reservationDetails);die;
+		//$this->reservationDetails->changeStatusInZoho($reservation_id,$zoho_data);
 
 
 		$data['attributes']['zoho_booking_cancelled'] = "yes";

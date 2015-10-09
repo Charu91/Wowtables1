@@ -139,8 +139,11 @@ class ReservationDetails extends Model {
                                     $textLog->old_attribute_value = $attrText[0]->attribute_value;
                                     $textLog->new_attribute_value = $value;
                                     $textLog->save();
-
-                                    $attrText[0]->attribute_value = $value;
+                                    if($singleAttribute->alias == "admin_comments"){
+                                        $attrText[0]->attribute_value = $attrText[0]->attribute_value.$value;
+                                    } else {
+                                        $attrText[0]->attribute_value = $value;
+                                    }
                                     $attrText[0]->save();
                                 }
 
@@ -293,6 +296,8 @@ class ReservationDetails extends Model {
 
     public function getByReservationId($id){
 
+        $this->attributes = [];
+
         $reservationDetailsWithAttr = ReservationDetails::with('attributesText','attributesInteger','attributesFloat','attributesDatetime')->findOrFail($id);
 
         //print_r($reservationDetailsWithAttr);die;
@@ -399,8 +404,10 @@ class ReservationDetails extends Model {
                     break;
                 case 6:
                     //for accepted status
+                    $adminComments = DB::table('reservation_attributes_text')->where('reservation_id',$reservation_id)->where('reservation_attribute_id',17)->select('attribute_value')->first();;
                     $zoho_data = array(
                         'Order_completed' => 'Confirmed with rest & customer',
+                        'Satisfaction' => $adminComments->attribute_value,
                     );
                     if ($reservType == "Experience") {
                         $this->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
@@ -486,7 +493,7 @@ class ReservationDetails extends Model {
 
     }
 
-    protected function changeStatusInZoho($order_id,$data){
+    public function changeStatusInZoho($order_id,$data){
 
         $ch = curl_init();
         $config = array(

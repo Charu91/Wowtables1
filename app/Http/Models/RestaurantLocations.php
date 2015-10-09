@@ -140,7 +140,7 @@ class RestaurantLocations extends VendorLocations{
         	$select->whereIn('la.id', $filters['area']);
             //$this->filters['areas']['active'] = $filters['area'];
         }
-
+        /*
         if(isset($filters['pricing_level'])){
         	if(strtolower($filters['pricing_level']) == 'high') {
         		$select->whereIn('vl.pricing_level',array('Low','Medium','High'));
@@ -154,6 +154,12 @@ class RestaurantLocations extends VendorLocations{
             
             //$this->filters['pricing_level']['active'] = $filters['pricing_level'];
         }
+        */
+        /* setting up the pricing level filter */
+        if(isset($filters['pricing_level'])) {
+            $select->whereIn('vl.pricing_level',$filters['pricing_level']);
+        }
+
 
         if(isset($filters['tag'])){
             $select->whereIn('vltm.tag_id', $filters['tag']);

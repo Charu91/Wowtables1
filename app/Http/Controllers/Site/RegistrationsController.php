@@ -465,6 +465,7 @@ class RegistrationsController extends Controller {
 		$arrResponse = ReservationModel::cancelReservation($reservationID, $reservationType);
 		$userID = $user_id;
 		$userData = Profile::getUserProfileWeb($userID);
+		//print_r($userData);die;
 
 		//for the new db structure support
 
@@ -579,6 +580,7 @@ class RegistrationsController extends Controller {
 			if(!empty($userData)){
 					$merge_vars = array(
 						$setBookingKey=>$setBookingsValue - 1,
+						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]))
 					);
 
 					//$email = ["email"["email":]];

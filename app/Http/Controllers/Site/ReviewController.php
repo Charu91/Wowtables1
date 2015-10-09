@@ -27,6 +27,8 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
+use WowTables\Http\Models\VendorLocationsReviews;
+use WowTables\Http\Models\ProductReviews;
 
 class ReviewController extends Controller {
 
@@ -233,15 +235,39 @@ class ReviewController extends Controller {
         if($reservation_type == "experience")
         {
             $product_id = Input::get('product_id');
-            DB::insert("insert into product_reviews(product_id,user_id,reserv_id,review,server_name,service,suggestions,rating)
-                        values ('$product_id', '$user_id', '$reservid', '$review_para', '$name_server', '$service', '$suggestion', '$rating')");
+            $productReviews = new ProductReviews();
+            $productReviews->product_id = $product_id;
+            $productReviews->user_id = $user_id;
+            $productReviews->reserv_id = $reservid;
+            $productReviews->review = $review_para;
+            $productReviews->server_name = $name_server;
+            $productReviews->service = $service;
+            $productReviews->suggestions = $suggestion;
+            $productReviews->rating = $rating;
+            $productReviews->save();
+
+
+            /*DB::insert("insert into product_reviews(product_id,user_id,reserv_id,review,server_name,service,suggestions,rating)
+                        values ('$product_id', '$user_id', '$reservid', '$review_para', '$name_server', '$service', '$suggestion', '$rating')");*/
             //echo 'experience';
         }
         else if($reservation_type == "alacarte")
         {
             $vendor_location_id = Input::get('vendor_location_id');
-             DB::insert("insert into vendor_location_reviews(vendor_location_id,user_id,reserv_id,review,server_name,service,suggestions,rating)
-                        values ('$vendor_location_id', '$user_id', '$reservid', '$review_para', '$name_server', '$service', '$suggestion', '$rating')");
+            $vendorLocationReview = new VendorLocationsReviews();
+            $vendorLocationReview->vendor_location_id = $vendor_location_id;
+            $vendorLocationReview->user_id = $user_id;
+            $vendorLocationReview->reserv_id = $reservid;
+            $vendorLocationReview->review = $review_para;
+            $vendorLocationReview->server_name = $name_server;
+            $vendorLocationReview->service = $service;
+            $vendorLocationReview->suggestions = $suggestion;
+            $vendorLocationReview->rating = $rating;
+            $vendorLocationReview->save();
+
+
+             /*DB::insert("insert into vendor_location_reviews(vendor_location_id,user_id,reserv_id,review,server_name,service,suggestions,rating)
+                        values ('$vendor_location_id', '$user_id', '$reservid', '$review_para', '$name_server', '$service', '$suggestion', '$rating')");*/
              //echo 'alacarte';
         }
         $add_points = 500;
