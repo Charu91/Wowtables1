@@ -28,8 +28,7 @@
 	"autoload": {
 		"classmap": [
 			"database",
-		  	"app/Core",
-		  	"app/controllers/ConciergeAPI"
+		  	"app/Core"
 		],
 		"psr-4": {
 			"WowTables\\": "app/"
