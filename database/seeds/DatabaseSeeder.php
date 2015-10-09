@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
 
 		$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');
-		$this->call('ReservationAttributesSeeder');
+		$this->call('VendorLocationContactsSeeder');
+		//$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
@@ -59,10 +59,12 @@ class DatabaseSeeder extends Seeder
 			DB::table('users')->insert(array(
 				/*array('role_id'=>4,'location_id'=>3,'email'=>'kunal@wowtables.com','full_name'=>'Kunal Jain','phone_number'=>'9811111111','password'=>Hash::make('kunal'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 				array('role_id'=>4,'location_id'=>3,'email'=>'manan@wowtables.com','full_name'=>'Manan Shah','phone_number'=>'9811111111','password'=>Hash::make('manan'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('role_id'=>4,'location_id'=>3,'email'=>'tanvi@wowtables.com','full_name'=>'Tanvi','phone_number'=>'9811111111','password'=>Hash::make('tanvi'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
-				array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('role_id'=>4,'location_id'=>3,'email'=>'tanvi@wowtables.com','full_name'=>'Tanvi','phone_number'=>'9811111111','password'=>Hash::make('tanvi'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 				array('role_id'=>6,'location_id'=>3,'email'=>'aditya@binaryveda.com','full_name'=>'Aditya Gokula','phone_number'=>'9811111111','password'=>Hash::make('aditya'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 				array('role_id'=>6,'location_id'=>3,'email'=>'shishir@binaryveda.com','full_name'=>'Shishir Pednekar','phone_number'=>'9811111111','password'=>Hash::make('shishir'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+				array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
+
 			));
 		}
 	}
@@ -71,10 +73,10 @@ class DatabaseSeeder extends Seeder
 		public function run(){
 			//Assign vendor location to concierge users
 			DB::table('vendor_location_contacts')->insert(array(
-				array('vendor_location_id'=>203,'name'=>'Biju Chandran','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>43645,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>153,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>34685,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				/*array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 				array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-				array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
 			));
 		}
 	}
