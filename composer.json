@@ -29,7 +29,7 @@
 		"classmap": [
 			"database",
 		  	"app/Core",
-		  	"app/controllers/conciergeapi"
+		  	"app/controllers/ConciergeAPI"
 		],
 		"psr-4": {
 			"WowTables\\": "app/"
