@@ -17,7 +17,7 @@ class UserController extends Controller {
     private static $seo_meta_desc_attr_id = 3;
     public function login()
     {
-        try {
+        //try {
             $passwordMatch = false;
             $userDeviceUpdated = false;
             $access_token = '';
@@ -57,11 +57,11 @@ class UserController extends Controller {
                     'message' => 'There is an email password mismatch. Please check an try again'
                 ], 227);
             }
-        }catch(\Exception $e){
+        /*}catch(\Exception $e){
             return response()->json([
             'message' => 'An application error occured.'
             ], 500);
-        }
+        }*/
 
 
 }
