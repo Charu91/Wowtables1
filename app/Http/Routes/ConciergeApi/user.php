@@ -1,7 +1,7 @@
 <?php
 
-Route::post('conciergeapi/login','App\Http\Controllers\ConciergeApi\UserController@login');
+Route::post('conciergeapi/login','ConciergeAPI\UserController@login');
 
-Route::put('conciergeapi/addNotificationId','ConciergeApi\UserController@addNotificationId');
+Route::put('conciergeapi/addNotificationId','ConciergeAPI\UserController@addNotificationId');
 
-Route::post('conciergeapi/version', 'ConciergeApi\CheckVersionController@checkVersion');
+Route::post('conciergeapi/version', 'ConciergeAPI\CheckVersionController@checkVersion');
