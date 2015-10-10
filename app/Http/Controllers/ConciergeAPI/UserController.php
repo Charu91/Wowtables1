@@ -29,7 +29,7 @@ class UserController extends Controller {
                     $passwordMatch = true;
             }
             if ($passwordMatch) {
-                $userDevice = UserDevice::where('device_id', $input['device_id'])->first();
+                $userDevice = UserDevice::where(['device_id'=> $input['device_id'],'user_id'=>$user->id])->first();
                 $access_token = Uuid::uuid1()->toString();
                 if ($userDevice) {
                     $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'access_token' => $access_token
