@@ -27,8 +27,8 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
-use WowTables\Http\VendorLocationsReviews;
-use WowTables\Http\ProductReviews;
+use WowTables\Http\Models\VendorLocationsReviews;
+use WowTables\Http\Models\ProductReviews;
 
 class ReviewController extends Controller {
 

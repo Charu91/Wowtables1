@@ -31,6 +31,7 @@ class AdminReservationsController extends Controller{
     protected $listId = '986c01a26a';
 
     public function __construct(Mailchimp $mailchimp,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,ExperienceModel $experiences_model,AlacarteModel $alacarte_model) {
+        $this->middleware('admin.auth');
         $this->mailchimp = $mailchimp;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
