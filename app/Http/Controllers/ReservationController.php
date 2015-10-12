@@ -70,7 +70,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
@@ -78,9 +78,7 @@ class ReservationController extends Controller {
 			$booking = new \stdClass();
 			$booking->id = $unconfirmedBookings->id;
 			//echo "<pre>".print_r($unconfirmedBookings);
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$unconfirmedBookings->attributesDatetime->attribute_value);
-			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+
 			if($unconfirmedBookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -124,6 +122,10 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
 			//echo $unconfirmedBookings->id;
 			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_cancelled'])){
@@ -158,15 +160,16 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
 			$booking->id = $postBookings->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$postBookings->attributesDatetime->attribute_value);
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$postBookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($postBookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -210,6 +213,10 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			//print_r($booking);die;
 			$postReservation[$count] = $booking;
 			$count++;
@@ -245,7 +252,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
@@ -254,9 +261,9 @@ class ReservationController extends Controller {
 			$booking->id = $allbookings->id;
 			//print_r($allbookings);
 			//echo "<br/><br/>";
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$allbookings->attributesDatetime->attribute_value);
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$allbookings->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($allbookings->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -298,6 +305,9 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			$bookings[$count] = $booking;
 			$count++;
 
@@ -326,16 +336,16 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-09-30 20:31:00')
+					 ->where('created_at','>=','2015-10-07 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
 
 			$booking = new \stdClass();
 			$booking->id = $today->id;
-			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$today->attributesDatetime->attribute_value);
+			/*$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$today->attributesDatetime->attribute_value);
 			$booking->bdate = $reservCarbonDate->format('d-m-Y');
-			$booking->btime = $reservCarbonDate->format('h:i A');
+			$booking->btime = $reservCarbonDate->format('h:i A');*/
 			if($today->product_id == 0){
 				$booking->name = "Classic Reservation";
 			} else {
@@ -371,6 +381,9 @@ class ReservationController extends Controller {
 			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
 			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
 			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
 			$todayBookings[$count] = $booking;
 			$count++;
 
@@ -782,9 +795,8 @@ class ReservationController extends Controller {
 		$data['attributes'] = $this->request->get('attributes');
 
 		//print_r($data);die;
-		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
-
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 
 		if($bookingUpdate['status'] === 'success'){
 			if($this->request->ajax()) {
