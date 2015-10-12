@@ -120,6 +120,7 @@ class ReservationDetails extends Model {
 			$reservation_id = ReservationDetails::where('user_id', '=', $userID)
 													  ->where('reservation_date', '=', $arrData['reservationDate'])
 													  ->where('reservation_time', '=', $arrData['reservationTime'])
+													  ->where('reservation_status','!=','cancel')
 													  ->select('id')
 													  ->first();
 
