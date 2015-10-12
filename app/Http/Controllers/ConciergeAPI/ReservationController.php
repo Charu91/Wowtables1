@@ -357,7 +357,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:m:s');
+					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -378,8 +378,8 @@ class ReservationController extends Controller {
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
-					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:m:s');
+					$closeDateAttr->attribute_value = Carbon::now()->format('Y-m-d H:i:s');
+					$responseData = $closeDateAttr->attribute_value;
 					$closeDateAttr->save();
 					break;
 				}
@@ -401,7 +401,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:m:s');
+					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -490,7 +490,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:m:s');
+					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
