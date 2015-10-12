@@ -353,6 +353,12 @@ class ReservationController extends Controller {
 					$userId = $reservationDetail->user_id;
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
 					$reservationDetail->save();
+					$closeDateAttr = new ReservationAttributesDate();
+					$closeDateAttr->reservation_id = $reservationId;
+					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
+					$closeDateAttr->attribute_value = Carbon::now();
+					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:m:s');
+					$closeDateAttr->save();
 					break;
 				}
 				case ReservationController::$cancelled_status_id: {
