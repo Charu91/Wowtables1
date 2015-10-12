@@ -292,6 +292,8 @@ class ReservationController extends Controller {
 			$reservationId = (int)$id;
 			$newStatusId = (int)$input['new_status_id'];
 			$responseData = array();
+			$oldStatusId = -1;
+			$userId = -1;
 			DB::beginTransaction();
 			switch ($newStatusId) {
 				case ReservationController::$accepted_status_id: {
@@ -318,9 +320,11 @@ class ReservationController extends Controller {
 						$noteToWowTablesAttr->save();
 					}
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
+					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
+					$userId = $reservationDetail->user_id;
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
 					$reservationDetail->save();
 					break;
@@ -342,9 +346,11 @@ class ReservationController extends Controller {
 						$noteToWowTablesAttr->save();
 					}
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
+					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
+					$userId = $reservationDetail->user_id;
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
 					$reservationDetail->save();
 					break;
@@ -356,9 +362,11 @@ class ReservationController extends Controller {
 					$seatingStatusAttr->attribute_value = ReservationController::$cancelled_seating_status;
 					$seatingStatusAttr->save();
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
+					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
+					$userId = $reservationDetail->user_id;
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
 					$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
@@ -376,9 +384,11 @@ class ReservationController extends Controller {
 					$seatingStatusAttr->attribute_value = ReservationController::$noshow_seating_status;
 					$seatingStatusAttr->save();
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
+					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
+					$userId = $reservationDetail->user_id;
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
 					$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
@@ -455,6 +465,7 @@ class ReservationController extends Controller {
 						$alacarteAttendeesAttr->save();
 					}
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
+					$userId = $reservationDetail->user_id;
 					$userRating = new UserRating();
 					$userRating->user_id = $reservationDetail->user_id;
 					$userRating->reservation_id = $reservationDetail->id;
@@ -464,6 +475,7 @@ class ReservationController extends Controller {
 					$giftCardAttr->attribute_value = $input['gift_card'];
 					$giftCardAttr->save();
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
+					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
 					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
@@ -477,12 +489,12 @@ class ReservationController extends Controller {
 					break;
 				}
 			}
+			ReservationStatusLog::create(['reservation_id' => $reservationId, 'user_id' => $userId
+				, 'old_reservation_status_id' => $oldStatusId, 'new_reservation_status_id' => $newStatusId
+				]);
 			DB::commit();
 			return response()->json($responseData, 200);
-//		return [
-//			'code' => 200,
-//			'data' =>  $responseData
-//		];
+
 		}catch(\Exception $e){
 			return response()->json([
 				'message' => 'An application error occured.'
