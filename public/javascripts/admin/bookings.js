@@ -70,8 +70,33 @@
         });
 
 
+        $('#unbookings').on('change','#zoho_booking_cancelled', function() {
+            // From the other examples.
+            //console.log("yo tp");
+            if (this.checked) {
+                var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
+                var reservId = $(this).data('reserv-id');
+                var reservType = $(this).data('reserv-type');
+                var statusId = $(this).data('status-id');
+                if(sure){
+                    $.ajax({
+                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType+'/'+statusId,
+                        type: 'post',
+                        success: function( data){
+                            if(data == "success"){
+                                alert("status has been updated to zoho");
+                            }
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log( errorThrown );
+                        }
+                    });
+                }
+            }
+        });
 
-        $('#zoho_booking_cancelled').click(function() {
+
+        /*$('#zoho_booking_cancelled').click(function() {
             if (this.checked) {
                 var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
                 var reservId = $(this).data('reserv-id');
@@ -92,7 +117,7 @@
                 }
             }
 
-        });
+        });*/
 
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
@@ -212,7 +237,7 @@
             var reservId = $(this).data('reserv-id');
             var reservStatus = $(this).data('reserv-status');
             var reservType = $(this).data('reserv-type');
-            //console.log(reservId);
+
             $('#reserv_status').val(reservStatus);
             $('#reserv_id').val(reservId);
             $('#reserv_type').val(reservType);
@@ -223,7 +248,7 @@
                     url: '/admin/bookings/changestatus',
                     type: 'post',
                     data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
-                    success: function( data){
+                    success: function(data){
                         if(data == "success"){
                             alert("Status changed");
                         }

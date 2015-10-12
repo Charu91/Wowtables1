@@ -207,6 +207,12 @@ use Mailchimp;
 	public function cancelReservation() {
 		//reading data input by the user
 		$data =  $this->request->all();
+
+		//Setting token value if user has not sent the token in request
+		if(!isset($data['access_token'])){
+			$data['access_token'] = $_SERVER['HTTP_X_WOW_TOKEN'] ;
+		}
+
 		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
 		$reservationID = $this->request->input('reservationID');
 		
