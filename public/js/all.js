@@ -62901,8 +62901,32 @@ function removeLocation(id)
         });
 
 
+        $('#unbookings').on('change','#zoho_booking_cancelled', function() {
+            // From the other examples.
+            //console.log("yo tp");
+            if (this.checked) {
+                var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
+                var reservId = $(this).data('reserv-id');
+                var reservType = $(this).data('reserv-type');
+                if(sure){
+                    $.ajax({
+                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType,
+                        type: 'post',
+                        success: function( data){
+                            if(data == "success"){
+                                alert("Status changed to Booking Cancelled In Zoho");
+                            }
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log( errorThrown );
+                        }
+                    });
+                }
+            }
+        });
 
-        $('#zoho_booking_cancelled').click(function() {
+
+        /*$('#zoho_booking_cancelled').click(function() {
             if (this.checked) {
                 var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
                 var reservId = $(this).data('reserv-id');
@@ -62923,7 +62947,7 @@ function removeLocation(id)
                 }
             }
 
-        });
+        });*/
 
         $('#all_bookings').DataTable({
             "order": [], //for getting latest on top
@@ -63043,7 +63067,7 @@ function removeLocation(id)
             var reservId = $(this).data('reserv-id');
             var reservStatus = $(this).data('reserv-status');
             var reservType = $(this).data('reserv-type');
-            //console.log(reservId);
+
             $('#reserv_status').val(reservStatus);
             $('#reserv_id').val(reservId);
             $('#reserv_type').val(reservType);
@@ -63811,7 +63835,8 @@ function removeLocation(id)
                                     //console.log(acsc);
                                     if(c_date == dateText)
                                     {
-                                        if(String(c_time) < String(schedule[datestrInNewFormat][key_sch][key_sch_time])) {
+                                        var key_sch_time_string = convert_time_format(String(schedule[datestrInNewFormat][key_sch][key_sch_time]));
+                                        if(String(c_time) < key_sch_time_string) {
                                             //txt2 += '<div class="time col-lg-3 col-xs-5" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a>'+actualSchedule[datestrInNewFormat1][key_sch1][key_sch_time1]+'</div>';
 
                                             txt2 += '<div class="time col-lg-3 col-xs-5 '+dynamicClass+'" rel="' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '"><a href="javascript:">' + schedule[datestrInNewFormat][key_sch][key_sch_time] + '</a></div>';
@@ -63907,6 +63932,21 @@ function removeLocation(id)
                 $("#select_table").addClass("hidden")
             }
         })
+    }
+
+    //convert time into 24 formart for time comparision
+    function convert_time_format(str) {
+        var time = str;
+        var hours = Number(time.match(/^(\d+)/)[1]);
+        var minutes = Number(time.match(/:(\d+)/)[1]);
+        var AMPM = time.match(/\s(.*)$/)[1];
+        if (AMPM == "PM" && hours < 12) hours = hours + 12;
+        if (AMPM == "AM" && hours == 12) hours = hours - 12;
+        var sHours = hours.toString();
+        var sMinutes = minutes.toString();
+        if (hours < 10) sHours = "0" + sHours;
+        if (minutes < 10) sMinutes = "0" + sMinutes;
+        return sHours + ":" + sMinutes+":00";
     }
 
     function ac_get_info(url, id,city_id,vendor_name) {

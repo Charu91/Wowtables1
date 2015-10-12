@@ -152,7 +152,7 @@ class ReservationAttributesSeeder extends Seeder {
 			array('name'=>'Customer Preferences','alias'=>'customer_preferences','type'=>'varchar','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Reason for Rejection','alias'=>'rejection_reason_id','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Closed on','alias'=>'closed_on','type'=>'datetime','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('name'=>'Note from WowTables','alias'=>'note_from_wowtables','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('name'=>'Note from WowTables','alias'=>'note_from_wowtables','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 		));
 	}
 
