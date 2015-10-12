@@ -77,13 +77,14 @@
                 var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
                 var reservId = $(this).data('reserv-id');
                 var reservType = $(this).data('reserv-type');
+                var statusId = $(this).data('status-id');
                 if(sure){
                     $.ajax({
-                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType,
+                        url: '/admin/bookings/bookingcancel/'+reservId+'/'+reservType+'/'+statusId,
                         type: 'post',
                         success: function( data){
                             if(data == "success"){
-                                alert("Status changed to Booking Cancelled In Zoho");
+                                alert("status has been updated to zoho");
                             }
                         },
                         error: function( jqXhr, textStatus, errorThrown ){
@@ -247,7 +248,7 @@
                     url: '/admin/bookings/changestatus',
                     type: 'post',
                     data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
-                    success: function( data){
+                    success: function(data){
                         if(data == "success"){
                             alert("Status changed");
                         }

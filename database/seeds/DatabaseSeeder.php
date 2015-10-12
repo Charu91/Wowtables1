@@ -26,10 +26,7 @@ class DatabaseSeeder extends Seeder
 
 		public function run()
 		{
-			//delete users table records
-			//DB::table('reservation_attributes')->delete();
-			//insert some dummy records
-			//var_dump(Carbon::now());die;
+			DB::table('reservation_attributes')->truncate();
 			DB::table('reservation_attributes')->insert(array(
 				array('name'=>'Alternate Id','alias'=>'alternate_id','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 				array('name'=>'Gift Card Id (From Reservation)','alias'=>'gift_card_id_reserv','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
@@ -59,7 +56,20 @@ class DatabaseSeeder extends Seeder
 				array('name'=>'Actual Alacarte Takers','alias'=>'actual_alacarte_takers','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 				array('name'=>'Total Billings','alias'=>'total_billings','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 				array('name'=>'Total Commission','alias'=>'total_commission','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
-				array('name'=>'Zoho Booking Cancelled','alias'=>'zoho_booking_cancelled','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+				array('name'=>'Zoho Booking Update','alias'=>'zoho_booking_update','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+				//Added by Biju
+				array('name'=>'Reservation Status','alias'=>'reservation_status_id','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Special Request Accepted','alias'=>'is_request_accepted','type'=>'boolean','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Special Request Response','alias'=>'special_request_response','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Note to WowTables','alias'=>'note_to_wowtables','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Seating Status','alias'=>'seating_status','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Table Size','alias'=>'table_size','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Prepaid Amount','alias'=>'prepaid_amount','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Server Name','alias'=>'server_name','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Customer Preferences','alias'=>'customer_preferences','type'=>'varchar','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Reason for Rejection','alias'=>'rejection_reason_id','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Closed on','alias'=>'closed_on','type'=>'datetime','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+				array('name'=>'Note from WowTables','alias'=>'note_from_wowtables','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			));
 		}
 
@@ -70,7 +80,7 @@ class DatabaseSeeder extends Seeder
 
 		public function run()
 		{
-			DB::table('reservation_statuses')->delete();
+			DB::table('reservation_statuses')->truncate();
 			DB::table('reservation_statuses')->insert(array(
 				array('status' => 'new', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
 				array('status' => 'edited', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
@@ -79,7 +89,8 @@ class DatabaseSeeder extends Seeder
 				array('status' => 'prepaid', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
 				array('status' => 'accepted', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
 				array('status' => 'rejected', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
-				array('status' => 'closed', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now())
+				array('status' => 'closed', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()),
+				array('status' => 'no show', 'no_show' => Carbon::now(), 'updated_at' => Carbon::now())
 			));
 		}
 	}
