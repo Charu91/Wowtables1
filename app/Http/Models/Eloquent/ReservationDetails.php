@@ -1608,7 +1608,8 @@ class ReservationDetails extends Model {
 			//$newDb['attributes']['order_completed'] = 'User Changed';
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
-			$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "") ;
+			$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "");
+			$newDb['userdetails']['mobile'] = 1;
 			//print_r($newDb);die;
 			$reservDetails = new ReservationModel();
 			$newDbStatus = $reservDetails->updateAttributes($arrData['reservationID'],$newDb);
