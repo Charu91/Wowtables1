@@ -7,3 +7,9 @@ Route::get('restaurants', [
     'where' => [],
     'domain' => env('WEBSITE_URL')
 ]);
+
+Route::get('api/bookmark/{type}/{id}', [
+    'uses' => 'Api\RestaurantsController@bookmark',
+    'as' => 'Bookmark',
+    'domain' => env('WEBSITE_URL')
+]);

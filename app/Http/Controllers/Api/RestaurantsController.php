@@ -3,18 +3,21 @@
 use WowTables\Http\Controllers\Controller;
 use WowTables\Http\Models\RestaurantLocations;
 use WowTables\Http\Requests\Api\FetchRestaurantLocationsRequest;
+use WowTables\Http\Models\Eloquent\Api\UserBookmarks;
 
 use Illuminate\Http\Request;
 
 use Config;
 
+
 class RestaurantsController extends Controller {
 
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, UserBookmarks $userBookmarks)
     {
         $this->request = $request;
+		$this->user_bookmarks = $userBookmarks;
     }
 	/**
 	 * Display a listing of the resource.
@@ -63,5 +66,39 @@ class RestaurantsController extends Controller {
 	public function show($id)
 	{
 		//
+	}
+
+	public function bookmark($type,$id){
+
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
+
+		if(!empty($userID) && !empty($type) && !empty($id)){
+			$userBookmark = new UserBookmarks();
+			if($type == 'experience'){
+
+				$userBookmark->user_id = $userID;
+				$userBookmark->type = "Product";
+				$userBookmark->product_id = $id;
+				$userBookmark->save();
+			}
+
+			if($type == 'alacarte'){
+				$userBookmark->user_id = $userID;
+				$userBookmark->type = "VendorLocation";
+				$userBookmark->vendor_location_id = $id;
+				$userBookmark->save();
+			}
+
+			$lastSaveId = $userBookmark->id;
+			if(!empty($lastSaveId)){
+				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			} else {
+				$arrResponse['status'] = Config::get('constants.API_ERROR');
+			}
+			return $arrResponse;
+		}
+
+
 	}
 }
