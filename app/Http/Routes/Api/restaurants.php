@@ -14,3 +14,10 @@ Route::get('api/bookmark/{type}/{id}', [
     'middleware' => 'wow.api',
     'domain' => env('WEBSITE_URL')
 ]);
+
+Route::get('api/bookmarklist', [
+    'uses' => 'Api\RestaurantsController@bookmarklist',
+    'as' => 'BookmarkList',
+    /*'middleware' => 'wow.api',*/
+    'domain' => env('WEBSITE_URL')
+]);
