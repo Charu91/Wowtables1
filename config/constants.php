@@ -23,5 +23,11 @@
  	"MIN_SUPPORTED_IOS_VERSION" => '1.1.0',
  	"MIN_SUPPORTED_ANDROID_VERSION" => '1.0.9',
  	"API_UPDATE" => 'Update',
- 	"API_NEARBY_DISTANCE" => 15,  
+ 	"API_NEARBY_DISTANCE" => 15,
+
+
+
+ 	/* DETAILS for PAYU to be used for testing purpose */
+ 	"PAYU_MERCHANT_ID" => 'gtKFFX',
+ 	"PAYU_SALT"        => 'eCwWELxi',
  ];
