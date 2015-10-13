@@ -72,7 +72,7 @@ Route::post('admin/bookings/order_completed/{id}/{status}', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::post('admin/bookings/bookingcancel/{id}/{reservtype}', [
+Route::post('admin/bookings/bookingcancel/{id}/{reservtype}/{statusid}', [
     'uses' => 'ReservationController@changeStatusBookingCancelled',
     'as' => 'BookingCancelled',
     'middleware' => [],
