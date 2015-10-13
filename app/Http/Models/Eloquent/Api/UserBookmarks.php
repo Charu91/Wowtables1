@@ -3,6 +3,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Config;
+use DB;
 
 class UserBookmarks extends Model {
 
@@ -11,12 +12,7 @@ class UserBookmarks extends Model {
 
 	public static function getBookmarkedResturantInformation($expArr,$alaArr) {
 
-		if( !isset($input['distance']) || empty($input['distance'])) {
-			$input['distance'] = Config::get('constants.API_NEARBY_DISTANCE');
-		}
 
-		$lat = $input['lat'];
-		$log = $input['log'];
 
 		//query to read the vendor details
 		$queryResult = DB::table('vendors as v')
