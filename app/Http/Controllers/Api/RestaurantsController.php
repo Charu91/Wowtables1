@@ -96,9 +96,11 @@ class RestaurantsController extends Controller {
 			} else {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
 			}
-			return $arrResponse;
-		}
 
+		} else {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+		}
+		return $arrResponse;
 
 	}
 }
