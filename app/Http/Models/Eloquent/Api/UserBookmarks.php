@@ -100,7 +100,6 @@ class UserBookmarks extends Model {
 						'mobile_listing_ios_alacarte' => (empty($row->ios_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image,
 						'mobile_listing_android_alacarte' => (empty($row->android_image))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image,
 					),
-					'distance' 		=> round($row->distance, 2),
 					'location_address' => array(
 						"address_line" 	=> $row->address,
 						"locality" 		=> $row->locality,
@@ -225,7 +224,6 @@ class UserBookmarks extends Model {
 					'taxes' 			=> $row->taxes,
 					'price_type' 		=> $row->price_type,
 					'location' 			=> $row->location_name,
-					'distance' 			=> round($row->distance,2),
 					'location_address' => array(
 						"address_line" 	=> $row->address,
 						"locality" 		=> $row->locality,

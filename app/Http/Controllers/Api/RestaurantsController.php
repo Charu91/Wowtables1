@@ -110,8 +110,8 @@ class RestaurantsController extends Controller {
 		$experienceList = array();
 		$alacarteList = array();
 
-		//$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
-		$data['access_token']='935ab3e2-5dff-11e5-9216-f23c913353fa';
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];
+		//$data['access_token']='935ab3e2-5dff-11e5-9216-f23c913353fa';
 		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
 		if(!empty($userID)){
 
