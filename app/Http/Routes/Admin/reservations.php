@@ -86,6 +86,15 @@ Route::post('admin/bookings/pricing', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::get('admin/bookings/unconfirmedbookings', [
+    'uses' => 'ReservationController@ajaxLoadUnconfirmedBookings',
+    'as' => 'AjaxUnconfirmedBookings',
+    'middleware' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+
+
 /*Route::post('admin/bookings/admincomments', [
     'uses' => 'ReservationController@addAdminComments',
     'as' => 'AdminComments',

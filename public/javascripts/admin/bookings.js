@@ -1,12 +1,18 @@
 (function($){
   'use strict';
     $(document).on('ready', function(){
+
+      $('.nav-tabs').stickyTabs();
+
       $('#unbookings').DataTable({
         "order": [], //for getting latest on top
         columnDefs: [{ targets: 'no-sort', orderable: false }],
         "scrollX": true,
           "scrollY":        "300px",
-          "scrollCollapse": true
+          "scrollCollapse": true,
+          /*"ajax": {
+              "url": "/admin/bookings/unconfirmedbookings"
+          }*/
       });
 
         $('#reserv_time').timepicker({

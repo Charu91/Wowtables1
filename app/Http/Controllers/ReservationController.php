@@ -69,7 +69,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-10-12 15:20:00')
+					 ->where('created_at','>=','2015-10-13 11:20:00')
 					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
@@ -162,7 +162,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
-					 ->where('created_at','>=','2015-10-12 15:20:00')
+					 ->where('created_at','>=','2015-10-13 11:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
@@ -254,7 +254,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-10-12 15:20:00')
+					 ->where('created_at','>=','2015-10-13 11:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
@@ -338,7 +338,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-10-12 15:20:00')
+					 ->where('created_at','>=','2015-10-13 11:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
@@ -981,6 +981,109 @@ class ReservationController extends Controller {
 
 		echo "success";
 		die;
+	}
+
+	public function ajaxLoadUnconfirmedBookings(){
+		$un_bookings = array();
+		$count = 0;
+
+		//unconfirmed bookings
+		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7,3,6,7,8,9) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
+		$reservationIdArr = array();
+		foreach($statusCancelledNew as $reservId){
+			$reservationIdArr[] = $reservId->reservation_id;
+		}
+
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3,6,7,8,9]);
+
+		//print_r($reservStatusArr);die;
+
+		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+					 /*->with(['reservationStatus' => function($query)
+							{
+								$query->whereIn('reservation_statuses.id',[1,2,7])
+									  ->orderBy('reservation_statuses.id','desc')
+									  ->select(DB::raw('reservation_statuses.*, user_id'));
+
+					 }])*/
+					 ->where('vendor_location_id','!=','0')
+					 ->where('vendor_location_id','!=','54')
+					 ->whereIn('id',$reservationIdArr)
+					 ->where('created_at','>=','2015-10-12 15:20:00')
+					 ->where('id','!=','27355')
+					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
+		{
+			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
+			$booking = new \stdClass();
+			$booking->id = $unconfirmedBookings->id;
+			//echo "<pre>".print_r($unconfirmedBookings);
+
+			if($unconfirmedBookings->product_id == 0){
+				$booking->name = "Classic Reservation";
+			} else {
+				$booking->name = $unconfirmedBookings->experience->name;
+			}
+			$booking->cust_name = $unconfirmedBookings->guest_name;
+			$booking->restaurant_name = $unconfirmedBookings->vendor_location->vendor->name;
+			if(empty($unconfirmedBookings->vendor_location->address->city_name)){
+				$booking->city =  "";
+			} else {
+				$booking->city = $unconfirmedBookings->vendor_location->address->city_name->name;
+			}
+			//$reservStatus = $unconfirmedBookings->reservationStatus->first();
+			//dd($reservStatus->status);
+			$booking->email = $unconfirmedBookings->guest_email;
+			$booking->phone_no = $unconfirmedBookings->guest_phone;
+			$booking->no_of_persons = $unconfirmedBookings->no_of_persons;
+			//$booking->status = $reservStatus->status;
+			$userModel = User::find($unconfirmedBookings->user_id);
+			$booking->lastmodified = $userModel->role->name;
+			$booking->user_id = $unconfirmedBookings->user_id;
+
+			$statusArr = $this->reservStatuses;
+			$statusKey = array_search($reservStatusArr[$unconfirmedBookings->id],$statusArr);
+			//echo $statusKey."<br/>";
+			if($statusKey != -1){
+				unset($statusArr[$statusKey]);
+			}
+			//echo $reservStatusArr[$unconfirmedBookings->id];
+			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id][0];
+			$booking->reservation_status_id = $reservStatusArr[$unconfirmedBookings->id][1];
+			$booking->statusArr = $statusArr;
+			//echo $reservStatusArr[$unconfirmedBookings->id][0];
+			//if($reservStatusArr[$unconfirmedBookings->id][1] == 3){
+			if(array_search($reservStatusArr[$unconfirmedBookings->id][1],array(3,6,7,8,9)) != -1){
+				$booking->zoho_update = 1;
+			} else {
+				$booking->zoho_update = 0;
+			}
+
+			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
+			$booking->special_request = (isset($reservationDetailsAttr['attributes']['special_request']) ? $reservationDetailsAttr['attributes']['special_request'] : "");
+			$booking->gift_card_id = (isset($reservationDetailsAttr['attributes']['gift_card_id_reserv']) ? $reservationDetailsAttr['attributes']['gift_card_id_reserv'] : "");
+			$booking->outlet = (isset($reservationDetailsAttr['attributes']['outlet']) ? $reservationDetailsAttr['attributes']['outlet'] : "");
+			$booking->reserv_type = $reservationDetailsAttr['attributes']['reserv_type'];
+
+			$reservCarbonDate = Carbon::createFromFormat('Y-m-d H:i:s',$reservationDetailsAttr['attributes']['reserv_datetime']);
+			$booking->bdate = $reservCarbonDate->format('d-m-Y');
+			$booking->btime = $reservCarbonDate->format('h:i A');
+			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
+			//echo $unconfirmedBookings->id;
+			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_update'])){
+				$un_bookings[$count] = $booking;
+			}
+			//$un_bookings[$count] = $booking;
+			//print_r($booking);die;
+
+			$count++;
+
+
+		}
+		$dataJson = new \stdClass();
+		$dataJson->data = $un_bookings;
+
+		echo json_encode($dataJson);die;
+
 	}
 
 }
