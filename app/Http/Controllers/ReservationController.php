@@ -574,10 +574,11 @@ class ReservationController extends Controller {
 		//var_dump($reservation_id);die;
 		$reservationDetails = ReservationDetails::with('vendor_location_contacts')->where('id','=',$reservation_id)->get();
 		$reservationAttrs = $this->reservationDetails->getByReservationId($reservation_id);
-
-		if(isset($reservationDetails[0]->vendor_location_contacts->email)) {
-			$vendor_email = $reservationDetails[0]->vendor_location_contacts->email;
-			//print_r($vendor_email);die;
+		$vendor_email = array();
+		if(isset($reservationDetails[0]->vendor_location_contacts[0]->email)) {
+			foreach($reservationDetails[0]->vendor_location_contacts as $vendorEmail){
+				$vendor_email[] = $vendorEmail->email;
+			}
 			$data['cust_name'] = $reservationAttrs['attributes']['cust_name'];
 			$data['no_of_people'] = $reservationAttrs['attributes']['no_of_people_booked'];
 			$dateObject = Carbon::createFromFormat('Y-m-d H:i:s',$reservationAttrs['attributes']['reserv_datetime']);
@@ -606,10 +607,11 @@ class ReservationController extends Controller {
 		//var_dump($reservation_id);die;
 		$reservationDetails = ReservationDetails::with('vendor_location_contacts')->where('id','=',$reservation_id)->get();
 		$reservationAttrs = $this->reservationDetails->getByReservationId($reservation_id);
-
-		if(isset($reservationDetails[0]->vendor_location_contacts->email)) {
-			$vendor_email = $reservationDetails[0]->vendor_location_contacts->email;
-			//print_r($vendor_email);die;
+		$vendor_email = array();
+		if(isset($reservationDetails[0]->vendor_location_contacts[0]->email)) {
+			foreach($reservationDetails[0]->vendor_location_contacts as $vendorEmail){
+				$vendor_email[] = $vendorEmail->email;
+			}
 			$data['cust_name'] = $reservationAttrs['attributes']['cust_name'];
 			$data['contact'] = $reservationAttrs['attributes']['contact_no'];
 			$data['email'] = $reservationAttrs['attributes']['email'];
@@ -652,9 +654,16 @@ class ReservationController extends Controller {
 		$reservationDetails = ReservationDetails::with('vendor_location_contacts')->where('id','=',$reservation_id)->get();
 		//print_r($reservationDetails);die;
 		$reservationAttrs = $this->reservationDetails->getByReservationId($reservation_id);
+		$vendor_email = array();
+		//print_r($reservationDetails[0]->vendor_location_contacts[0]);die;
 
-		if(isset($reservationDetails[0]->vendor_location_contacts->email)){
-			$vendor_email = $reservationDetails[0]->vendor_location_contacts->email;
+		if(isset($reservationDetails[0]->vendor_location_contacts[0]->email)){
+
+			foreach($reservationDetails[0]->vendor_location_contacts as $vendorEmail){
+				$vendor_email[] = $vendorEmail->email;
+			}
+
+
 			//print_r($vendor_email);die;
 			$data['cust_name'] = $reservationAttrs['attributes']['cust_name'];
 			$data['contact'] = $reservationAttrs['attributes']['contact_no'];
