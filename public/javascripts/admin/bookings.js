@@ -250,7 +250,9 @@
             if(reservStatus == 6){
                 $('#adminComments').modal('show');
             } else {
-                $.ajax({
+
+                $("#admin_comments").submit();
+                /*$.ajax({
                     url: '/admin/bookings/changestatus',
                     type: 'post',
                     data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
@@ -262,7 +264,7 @@
                     error: function( jqXhr, textStatus, errorThrown ){
                         console.log( errorThrown );
                     }
-                });
+                });*/
             }
 
             //return false;

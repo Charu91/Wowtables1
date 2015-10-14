@@ -805,11 +805,17 @@ class ReservationController extends Controller {
 		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
 
-		//print_r($data);die;
-		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
-		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
+		//echo $data['attributes']['admin_comments'];die;
+		if(!empty($data['attributes']['admin_comments'])){
+			$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+		}
 
-		if($bookingUpdate['status'] === 'success'){
+		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
+		//print_r($data);die;
+		//$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+		//$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
+
+		/*if($bookingUpdate['status'] === 'success'){
 			if($this->request->ajax()) {
 				return response()->json(['status' => 'success'], 200);
 			}
@@ -820,7 +826,10 @@ class ReservationController extends Controller {
 				'action' => $bookingUpdate['action'],
 				'message' => $bookingUpdate['message']
 			], 400);
-		}
+		}*/
+
+		flash()->success('Reservation Status Changed.');
+		return redirect()->route('BookingList');
 		//flash()->success('Reservation Status Changed');
 		//return redirect()->route('BookingList');
 		/*$reservationDetails = ReservationDetails::with('vendor_location_contacts')->where('id','=',$reservation_id)->get();
