@@ -1,7 +1,7 @@
 <?php
 
 Route::get('admin/bookings', [
-    'uses' => 'ReservationController@index',
+    'uses' => 'ReservationController@unconfirmed',
     'as' => 'BookingList',
     'where' => [],
     'domain' => env('WEBSITE_URL'),
@@ -86,10 +86,27 @@ Route::post('admin/bookings/pricing', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::get('admin/bookings/unconfirmedbookings', [
-    'uses' => 'ReservationController@ajaxLoadUnconfirmedBookings',
-    'as' => 'AjaxUnconfirmedBookings',
-    'middleware' => [],
+Route::get('admin/bookings/unconfirmed', [
+    'uses' => 'ReservationController@unconfirmed',
+    'as' => 'Unconfirmed',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/bookings/missing', [
+    'uses' => 'ReservationController@missing',
+    'as' => 'Missing',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/bookings/all', [
+    'uses' => 'ReservationController@all',
+    'as' => 'All',
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::get('admin/bookings/today', [
+    'uses' => 'ReservationController@today',
+    'as' => 'Today',
     'domain' => env('WEBSITE_URL'),
 ]);
 
