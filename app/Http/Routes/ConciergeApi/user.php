@@ -4,4 +4,4 @@ Route::post('conciergeapi/login','ConciergeAPI\UserController@login');
 
 Route::put('conciergeapi/addNotificationId','ConciergeAPI\UserController@addNotificationId');
 
-Route::post('conciergeapi/version', 'ConciergeAPI\CheckVersionController@checkVersion');
+Route::post('conciergeapi/version', 'ConciergeAPI\MiscController@checkVersion');
