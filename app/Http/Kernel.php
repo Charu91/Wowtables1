@@ -48,6 +48,7 @@ class Kernel extends HttpKernel {
         'redirect.admin.auth' => 'WowTables\Http\Middleware\RedirectAdminIfAuthenticated',
         'mobile.app.access' => 'WowTables\Http\Middleware\CheckMobileAccess',
         'wow.api' => 'WowTables\Http\Middleware\AuthorizeMiddleware',
+        'concierge.api' => 'WowTables\Http\Middleware\ConciergeMiddleware',
 	];
 
     /**

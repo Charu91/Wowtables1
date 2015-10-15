@@ -13,7 +13,8 @@ class UserDevice extends Model {
         'os_type',
         'os_version',
         'hardware',
-        'app_version'
+        'app_version',
+        'rest_app_version'
     ];
 
 }

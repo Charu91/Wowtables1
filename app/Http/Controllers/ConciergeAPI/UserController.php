@@ -35,12 +35,12 @@ class UserController extends Controller {
                     $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'access_token' => $access_token
                         , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
-                        , 'app_version' => $input['app_version'],'user_id' => $user->id]);
+                        , 'rest_app_version' => $input['app_version'],'user_id' => $user->id]);
                 } else {
                     $userDeviceUpdated = UserDevice::create(['device_id' => $input['device_id'], 'access_token' => $access_token
                         , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
-                        , 'app_version' => $input['app_version'], 'user_id' => $user->id]);
+                        , 'rest_app_version' => $input['app_version'], 'user_id' => $user->id]);
                 }
             }
             if ($userDeviceUpdated) {

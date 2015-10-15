@@ -378,8 +378,8 @@ class ReservationController extends Controller {
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
-					$closeDateAttr->attribute_value = Carbon::now()->format('Y-m-d H:i:s');
-					$responseData = $closeDateAttr->attribute_value;
+					$closeDateAttr->attribute_value = Carbon::now();
+					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -578,7 +578,7 @@ class ReservationController extends Controller {
 					$reservationStatusLog = ReservationStatusLog::where(['reservation_id'=>$reservationTextAttr->reservation_id,
 						'new_reservation_status_id'=>ReservationController::$edited_status_id])->first();
 					if($reservationStatusLog!=null) {
-						$reservationTextAttrLogArr = ReservationAttributesText::where(['reservation_attribute_id' => $reservationTextAttr->attribute->id,
+						$reservationTextAttrLogArr = ReservationAttributesTextLog::where(['reservation_attribute_id' => $reservationTextAttr->attribute->id,
 							'reservation_status_log_id' => $reservationStatusLog->id])->get();
 						foreach($reservationTextAttrLogArr as $reservationTextAttrLog){
 							$key = "old_".$reservationTextAttrLog->attribute->alias;
@@ -659,12 +659,13 @@ class ReservationController extends Controller {
 			$tokenArr = json_decode($input['tokens'], true);
 			foreach ($tokenArr as $token) {
 				PushNotification::app('appNameAndroid')
-					//->to("fzJMChgLASw:APA91bFzpFm924MfXde6m0PE4PkibDkZga4XBnu2CxacW44XMZXvbuxKdGT-5no0-DRWp5cDvjqcWpOYTGvs0LjcCjkSeOJ_R2zHJU065VNH_Mv2bFLj7AQNYW-Xmxw1Ff4HoofBj31I")
+					//->to("dM6qYZxj59A:APA91bHrPZ26AzKmUFTMG_nKrTZ0O_NU6gmrBErx-D3IRlHTHFXm33mkYUfhZ0mCwn_-lt6dC5-NgwsS-vNV_bcPNxyIB_eTDmEcDN8HsOKWW56v4M1JUtEdg_CJ2YrFjIgdIv_zQJG3")
 					->to($token['token'])
 					->send(json_encode($reservation));
 
 			}
-			return response()->json($reservation, 200);
+			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			return response()->json($arrResponse, 200);
 	}catch(\Exception $e){
 			return response()->json([
 			'message' => 'An application error occured.'
