@@ -141,8 +141,8 @@
                                 </div>
                             </td>
                             <td>
-                                @if($un_booking->zoho_cancelled == 1)
-                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $un_booking->id !!}" data-reserv-type="{!! $un_booking->reserv_type !!}" />
+                                @if($un_booking->zoho_update == 1)
+                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $un_booking->id !!}" data-reserv-type="{!! $un_booking->reserv_type !!}" data-status-id="{!! $un_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
                             <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
@@ -259,7 +259,7 @@
                             </td>
                             <td>
                                 @if($post_booking->zoho_cancelled == 1)
-                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" />
+                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled1" name="attributes[zoho_booking_cancelled1]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" data-status-id="{!! $post_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
                             <td><a href="mailto:{!! $post_booking->email !!}">{!! $post_booking->email !!}</a></td>

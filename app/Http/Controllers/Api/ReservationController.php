@@ -266,6 +266,7 @@ use Mailchimp;
 		 	
 		 	//validating the user input data
 			$arrResponse = Reservation::validateEditReservationData($data);
+			die('hello');
 		
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
 				$arrResponse = ReservationDetails::updateReservationDetail($data);

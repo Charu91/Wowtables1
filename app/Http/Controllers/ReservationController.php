@@ -49,13 +49,13 @@ class ReservationController extends Controller {
 		$count = 1;
 
 		//unconfirmed bookings
-		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7,3) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
+		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7,3,6,7,8,9) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[] = $reservId->reservation_id;
 		}
 
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3,6,7,8,9]);
 
 		//print_r($reservStatusArr);die;
 
@@ -70,7 +70,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-10-07 15:20:00')
+					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
 		{
@@ -109,12 +109,14 @@ class ReservationController extends Controller {
 			}
 			//echo $reservStatusArr[$unconfirmedBookings->id];
 			$booking->reserv_status = $reservStatusArr[$unconfirmedBookings->id][0];
+			$booking->reservation_status_id = $reservStatusArr[$unconfirmedBookings->id][1];
 			$booking->statusArr = $statusArr;
 			//echo $reservStatusArr[$unconfirmedBookings->id][0];
-			if($reservStatusArr[$unconfirmedBookings->id][1] == 3){
-				$booking->zoho_cancelled = 1;
+			//if($reservStatusArr[$unconfirmedBookings->id][1] == 3){
+			if(array_search($reservStatusArr[$unconfirmedBookings->id][1],array(3,6,7,8,9)) != -1){
+				$booking->zoho_update = 1;
 			} else {
-				$booking->zoho_cancelled = 0;
+				$booking->zoho_update = 0;
 			}
 
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($unconfirmedBookings->id);
@@ -128,7 +130,7 @@ class ReservationController extends Controller {
 			$booking->btime = $reservCarbonDate->format('h:i A');
 			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
 			//echo $unconfirmedBookings->id;
-			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_cancelled'])){
+			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_update'])){
 				$un_bookings[$count] = $booking;
 			}
 			//$un_bookings[$count] = $booking;
@@ -161,7 +163,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
-					 ->where('created_at','>=','2015-10-07 15:20:00')
+					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
@@ -200,12 +202,13 @@ class ReservationController extends Controller {
 			}
 			//echo $reservStatusArr[$unconfirmedBookings->id];
 			$booking->reserv_status = $reservStatusArr[$postBookings->id][0];
+			$booking->reservation_status_id = $reservStatusArr[$postBookings->id][1];
 			$booking->statusArr = $statusArr;
 
 			if($reservStatusArr[$postBookings->id][1] == 6){
-				$booking->zoho_cancelled = 1;
+				$booking->zoho_update = 1;
 			} else {
-				$booking->zoho_cancelled = 0;
+				$booking->zoho_update = 0;
 			}
 
 			$reservationDetailsAttr = $this->reservationDetails->getByReservationId($postBookings->id);
@@ -252,7 +255,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
-					 ->where('created_at','>=','2015-10-07 15:20:00')
+					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
 
@@ -336,7 +339,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',$reservationIdArr)
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
-					 ->where('created_at','>=','2015-10-07 15:20:00')
+					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
 		{
 
@@ -878,10 +881,11 @@ class ReservationController extends Controller {
 
 	}
 
-	public function changeStatusBookingCancelled($id,$reservtype){
-		$reservation_id = $id;
+	public function changeStatusBookingCancelled($id,$reservtype,$statusid){
+		$reservation_id = (int)$id;
 		$reservType = $reservtype;
-		$zoho_data = array(
+		$statusId = (int)$statusid;
+		/*$zoho_data = array(
 			'Order_completed'=>'booking cancelled',
 			'Total_Seated'=>'0',
 			'Actual_attendees'=>'0'
@@ -896,7 +900,85 @@ class ReservationController extends Controller {
 
 
 		$data['attributes']['zoho_booking_cancelled'] = "yes";
+		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);*/
+
+		switch ($statusId) {
+			case 2:
+				//for edited status
+				//prepare the array for sending status to zoho
+				$zoho_data = array(
+					'Order_completed' => 'User Changed',
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+
+
+				break;
+			case 3:
+				//for cancelled status
+				$zoho_data = array(
+					'Order_completed'=>'booking cancelled',
+					'Total_Seated'=>'0',
+					'Actual_attendees'=>'0'
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+				break;
+			case 6:
+				//for accepted status
+				$adminComments = DB::table('reservation_attributes_text')->where('reservation_id',$reservation_id)->where('reservation_attribute_id',17)->select('attribute_value')->first();;
+				$zoho_data = array(
+					'Order_completed' => 'Confirmed with rest & customer'
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+				break;
+			case 7:
+				//for rejected status
+				$zoho_data = array(
+					'Order_completed' => 'Rejected by restaurant',
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+				break;
+			case 8:
+				//for closed status
+				$zoho_data = array(
+					'Order_completed' => 'yes',
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+				break;
+			case 9:
+				//for closed status
+				$zoho_data = array(
+					'Order_completed' => 'no show',
+				);
+				if ($reservType == "Experience") {
+					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
+				} else if ($reservType == "Alacarte") {
+					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
+				}
+				break;
+		}
+		$data['attributes']['zoho_booking_update'] = "yes";
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
+
 
 		echo "success";
 		die;
