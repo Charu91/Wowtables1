@@ -6,7 +6,7 @@ Route::post('conciergeapi/version', 'ConciergeAPI\MiscController@checkVersion');
 Route::get('download/{filename}', function($filename)
 {
     // Check if file exists in app/storage/file folder
-    $file_path = storage_path() .'/app/file/'. $filename;
+    $file_path = public_path() .'/downloads/'. $filename;
     if (file_exists($file_path))
     {
         // Send Download
