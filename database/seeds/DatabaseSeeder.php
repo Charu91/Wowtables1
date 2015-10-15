@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		//$this->call('RolesSeeder');
+		$this->call('RolesSeeder');
 		$this->call('UsersSeeder');
 		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
 		//$this->call('ReservationAttributesSeeder');
