@@ -69,6 +69,7 @@ elixir(function(mix) {
             "vendor/bootstrap-maxlength/bootstrap-maxlength.js",
             "vendor/slugit/jquery.slugit.js",
             "vendor/jquery-checkboxes/jquery.checkboxes-1.0.6.min.js",
+            "vendor/sticky-tabs/jquery.stickytabs.js",
             "/javascripts/admin/tableDnd.js",
             "javascripts/markdown/vue.min.js",
             "javascripts/markdown/marked.min.js",
