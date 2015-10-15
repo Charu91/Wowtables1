@@ -49,7 +49,7 @@ class ReservationDetails extends Model {
     }
 
     public function vendor_location_contacts(){
-        return $this->hasOne('WowTables\VendorLocationContacts','vendor_location_id','vendor_location_id');
+        return $this->hasMany('WowTables\VendorLocationContacts','vendor_location_id','vendor_location_id');
     }
 
     public function attributesText()

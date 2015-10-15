@@ -1,12 +1,18 @@
 (function($){
   'use strict';
     $(document).on('ready', function(){
+
+      $('.nav-tabs').stickyTabs();
+
       $('#unbookings').DataTable({
         "order": [], //for getting latest on top
         columnDefs: [{ targets: 'no-sort', orderable: false }],
         "scrollX": true,
           "scrollY":        "300px",
-          "scrollCollapse": true
+          "scrollCollapse": true,
+          /*"ajax": {
+              "url": "/admin/bookings/unconfirmedbookings"
+          }*/
       });
 
         $('#reserv_time').timepicker({
@@ -244,7 +250,9 @@
             if(reservStatus == 6){
                 $('#adminComments').modal('show');
             } else {
-                $.ajax({
+
+                $("#admin_comments").submit();
+                /*$.ajax({
                     url: '/admin/bookings/changestatus',
                     type: 'post',
                     data: {reserv_id:reservId,reserv_status:reservStatus,reserv_type:reservType},
@@ -256,7 +264,7 @@
                     error: function( jqXhr, textStatus, errorThrown ){
                         console.log( errorThrown );
                     }
-                });
+                });*/
             }
 
             //return false;
