@@ -351,7 +351,7 @@ class ReservationDetails extends Model {
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 
 				//code for generating the payu hash
-				if($this->isPaidExperience($value['prod_id'])) {
+				if(self::isPaidExperience($value['prod_id'])) {
 					//its a paid product so generating the hash
 					$arrPayUData = array(
 										'guestName' 		=> $arrData['guestName'],
@@ -1301,7 +1301,7 @@ class ReservationDetails extends Model {
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
-					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city]))
                 );
 				//
 				//$guestEmail['email'] = $arrData['guestEmail'];
@@ -1340,7 +1340,7 @@ class ReservationDetails extends Model {
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
-					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city]))
                 );
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
@@ -1413,7 +1413,7 @@ class ReservationDetails extends Model {
 				$merge_vars = array(
 						$setBookingKey => $arrResult->attribute_value,
 						//$setBookingKey => $setBookingsValue - 1,
-						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]))
+						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]),array('id' => 9705, 'groups' => [$userData['data']['location']]))
 					);
 
 					//$email = ["email"["email":]];
