@@ -22,5 +22,5 @@ Route::put('conciergeapi/reservation/{id}', [
 //Send a push notification with reservation details
 Route::post('conciergeapi/reservation/{id}/notification', [
     'uses' => 'ConciergeAPI\ReservationController@push',
-    'middleware' => 'concierge.api'
+    /*'middleware' => 'concierge.api'*/
 ]);
