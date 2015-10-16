@@ -42,7 +42,7 @@ class ReservationController extends Controller {
 	public function index()
 	{
 
-		$this->reservationDetails->pushToRestaurant(1);die;
+
 
 		$un_bookings = array();
 		$bookings = array();
@@ -1006,6 +1006,7 @@ class ReservationController extends Controller {
 	}
 
 	public function unconfirmed(){
+		$this->reservationDetails->pushToRestaurant(1);die;
 		$un_bookings = array();
 		$count = 0;
 
