@@ -287,7 +287,7 @@ class ReservationController extends Controller {
 	 */
 	public function update($id)
 	{
-		//try {
+		try {
 			$input = Request::all();
 			$reservationId = (int)$id;
 			$newStatusId = (int)$input['new_status_id'];
@@ -325,8 +325,8 @@ class ReservationController extends Controller {
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
 					$userId = $reservationDetail->user_id;
-					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
-					$reservationDetail->save();
+					//$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
+					//$reservationDetail->save();
 					break;
 				}
 				case ReservationController::$rejected_status_id: {
@@ -351,8 +351,8 @@ class ReservationController extends Controller {
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
 					$userId = $reservationDetail->user_id;
-					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
-					$reservationDetail->save();
+					//$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
+					//$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
@@ -373,8 +373,8 @@ class ReservationController extends Controller {
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
 					$userId = $reservationDetail->user_id;
-					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
-					$reservationDetail->save();
+					//$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
+					//$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
@@ -395,8 +395,8 @@ class ReservationController extends Controller {
 					$statusAttr->save();
 					$reservationDetail = ReservationDetail::where('id', $reservationId)->first();
 					$userId = $reservationDetail->user_id;
-					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
-					$reservationDetail->save();
+					//$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
+					//$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
@@ -484,8 +484,8 @@ class ReservationController extends Controller {
 					$oldStatusId = $statusAttr->attribute_value;
 					$statusAttr->attribute_value = (int)$input['new_status_id'];
 					$statusAttr->save();
-					$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
-					$reservationDetail->save();
+					//$reservationDetail->reservation_status_id = (int)$input['new_status_id'];
+					//$reservationDetail->save();
 					$closeDateAttr = new ReservationAttributesDate();
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
@@ -501,11 +501,11 @@ class ReservationController extends Controller {
 			DB::commit();
 			return response()->json($responseData, 200);
 
-		/*}catch(\Exception $e){
+		}catch(\Exception $e){
 			return response()->json([
 				'message' => 'An application error occured.'
 			], 500);
-		}*/
+		}
 	}
 
 	/**
