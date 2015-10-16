@@ -805,6 +805,7 @@ class ReservationController extends Controller {
 		$data['status'] = $this->request->get('reserv_status');
 		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
+		$data['attributes']['reservation_status_id'] = (int)$data['status'];
 
 		//echo $data['attributes']['admin_comments'];die;
 		if(!empty($data['attributes']['admin_comments'])){
