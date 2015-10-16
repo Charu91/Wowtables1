@@ -43,6 +43,7 @@ class ReservationController extends Controller {
 	private static $rejection_reason_attr_id = 38;
 	private static $exp_attendees_attr_id = 24;
 	private static $alacarte_attendees_attr_id = 25;
+	private static $zoho_booking_attr_id = 28;
 	public static $new_status_id = 1;
 	private static $accepted_status_id = 6;
 	private static $rejected_status_id = 7;
@@ -498,6 +499,13 @@ class ReservationController extends Controller {
 			ReservationStatusLog::create(['reservation_id' => $reservationId, 'user_id' => $userId
 				, 'old_reservation_status_id' => $oldStatusId, 'new_reservation_status_id' => $newStatusId
 				]);
+			$zohoUpdatedAttr = ReservationAttributesText::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$zoho_booking_attr_id])->first();
+			if (!$zohoUpdatedAttr)
+				$zohoUpdatedAttr = new ReservationAttributesText();
+			$zohoUpdatedAttr->reservation_id = $reservationId;
+			$zohoUpdatedAttr->reservation_attribute_id = ReservationController::$zoho_booking_attr_id;
+			$zohoUpdatedAttr->attribute_value = "yes";
+			$zohoUpdatedAttr->save();
 			DB::commit();
 			return response()->json($responseData, 200);
 
