@@ -1006,7 +1006,7 @@ class ReservationController extends Controller {
 	}
 
 	public function unconfirmed(){
-		$this->reservationDetails->pushToRestaurant(1);die;
+
 		$un_bookings = array();
 		$count = 0;
 
