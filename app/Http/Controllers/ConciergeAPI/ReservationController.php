@@ -1,6 +1,7 @@
 <?php namespace WowTables\Http\Controllers\ConciergeApi;
 
 use Carbon\Carbon;
+use Config;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use DB;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAddonsVariantsDetail;
