@@ -20,13 +20,13 @@ class Transaction extends Model {
 	 */
 	public static $arrRules = array(
 						'transaction_number'	=> 'required',
-						'reservation_id'		=>  'required|exists:reservation_details,id',
+						'reservation_id'		=> 'required|exists:reservation_details,id',
 						'amount_paid'			=> 'required',
 						'transaction_date'		=> 'required|date|date_format:Y-m-d',
-						'transaction_details'	=> 'required|2048',
+						'transaction_details'	=> 'required|max:2048',
 						'response_code'			=> 'required|max:255',
 						'response_message'		=> 'required|max:2048',
-						'source_type'			=>  'required'
+						'source_type'			=> 'required'
 					);
 
 	/**
@@ -35,7 +35,13 @@ class Transaction extends Model {
      * @access  protected
      * @var     string
      */
-    protected $table = 'transactions';
+    protected $table = 'transactions_details';
+
+    /**
+     * Disable Laravel's Eloquent timestamps for this model.
+     *
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are not mass assignable.
