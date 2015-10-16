@@ -49,7 +49,7 @@ class ReservationDetails extends Model {
     }
 
     public function vendor_location_contacts(){
-        return $this->hasOne('WowTables\VendorLocationContacts','vendor_location_id','vendor_location_id');
+        return $this->hasMany('WowTables\VendorLocationContacts','vendor_location_id','vendor_location_id');
     }
 
     public function attributesText()
@@ -539,7 +539,7 @@ class ReservationDetails extends Model {
         if(!empty($tokens)){
             $ch = curl_init();
             $curlConfig = array(
-                CURLOPT_URL            => "https://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
+                CURLOPT_URL            => "http://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
                 CURLOPT_POST           => true,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POSTFIELDS     => "tokens=".json_encode($tokens),

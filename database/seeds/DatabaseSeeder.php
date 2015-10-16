@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
 		//$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
 		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
-		//$this->call('ReservationAttributesSeeder');
-		//$this->call('ReservationStatusesSeeder');
+		$this->call('ReservationAttributesSeeder');
+		$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
 		//$this->call('ReservationAttrIntSeeder');
