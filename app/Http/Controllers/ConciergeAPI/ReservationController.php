@@ -287,7 +287,7 @@ class ReservationController extends Controller {
 	 */
 	public function update($id)
 	{
-		try {
+		//try {
 			$input = Request::all();
 			$reservationId = (int)$id;
 			$newStatusId = (int)$input['new_status_id'];
@@ -501,11 +501,11 @@ class ReservationController extends Controller {
 			DB::commit();
 			return response()->json($responseData, 200);
 
-		}catch(\Exception $e){
+		/*}catch(\Exception $e){
 			return response()->json([
 				'message' => 'An application error occured.'
 			], 500);
-		}
+		}*/
 	}
 
 	/**
