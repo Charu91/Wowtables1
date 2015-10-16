@@ -27,6 +27,7 @@ use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationAttributesTex
 use WowTables\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use Request;
+use Config;
 
 class ReservationController extends Controller {
 	public static $status_attr_id = 29;
