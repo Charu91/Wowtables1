@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
 		Model::unguard();
 
 		//$this->call('RolesSeeder');
-		//$this->call('UsersSeeder');
-		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
-		$this->call('ReservationAttributesSeeder');
-		$this->call('ReservationStatusesSeeder');
+		$this->call('UsersSeeder');
+		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		//$this->call('ReservationAttributesSeeder');
+		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
 		//$this->call('ReservationAttrIntSeeder');
@@ -63,8 +63,9 @@ class UsersSeeder extends Seeder{
             array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
             array('role_id'=>6,'location_id'=>3,'email'=>'aditya@binaryveda.com','full_name'=>'Aditya Gokula','phone_number'=>'9811111111','password'=>Hash::make('aditya'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('role_id'=>6,'location_id'=>3,'email'=>'shishir@binaryveda.com','full_name'=>'Shishir Pednekar','phone_number'=>'9811111111','password'=>Hash::make('shishir'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
-            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
-			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
+			array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 
 		));
 	}
