@@ -77,7 +77,7 @@ class Payment {
 
 		$dbResult = DB::table('payu_mobile_hash')
 						->where('reservation_id','=',$reservationID)
-						->where('hash','=',$data['hash'])
+						->where('hash','=',$hash)
 						->select('id')
 						->first();
 

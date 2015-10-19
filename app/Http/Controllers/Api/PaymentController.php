@@ -114,6 +114,7 @@ class PaymentController extends Controller {
 			$transaction->response_code			= $data['response_code'];
 			$transaction->response_message		= $data['response_message'];
 			$transaction->source_type			= $data['source_type'];
+			$transaction->user_id				= $userID;
 
 			//saving information into DB
 			$transaction->save();
