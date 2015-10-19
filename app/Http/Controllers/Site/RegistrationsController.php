@@ -28,12 +28,13 @@ use WowTables\Http\Models\Profile;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use Carbon\Carbon;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController;
 
 class RegistrationsController extends Controller {
 
 	protected $listId = '986c01a26a';
 
-	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp,RestaurantLocationsRepository $restaurantLocationsRepository,ExperiencesRepository $experiencesRepository,ExperienceModel $experiences_model)
+	function __construct(Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp,RestaurantLocationsRepository $restaurantLocationsRepository,ExperiencesRepository $experiencesRepository,ExperienceModel $experiences_model,ReservationController $restaurantapp)
 	{
 		$this->request = $request;
 		$this->alacarte_model = $alacarte_model;
@@ -41,6 +42,7 @@ class RegistrationsController extends Controller {
 		$this->mailchimp = $mailchimp;
 		$this->restaurantLocationsRepository = $restaurantLocationsRepository;
 		$this->experiencesRepository = $experiencesRepository;
+		$this->restaurantapp = $restaurantapp;
 	}
 
 	public function registerView()
@@ -474,6 +476,8 @@ class RegistrationsController extends Controller {
 		//print_r($newDb);die;
 		$reservDetails = new ReservDetailsModel();
 		$newDbStatus = $reservDetails->updateAttributes($reservationID,$newDb);
+		$tokens = $reservDetails->pushToRestaurant();
+		$this->restaurantapp->push($reservationID,$tokens);
 		//print_r($newDbStatus);die;
 		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 		//die;
@@ -823,6 +827,8 @@ class RegistrationsController extends Controller {
 		//print_r($newDb);die;
 		$reservDetails = new ReservDetailsModel();
 		$newDbStatus = $reservDetails->updateAttributes($reserv_id,$newDb);
+		$tokens = $reservDetails->pushToRestaurant();
+		$this->restaurantapp->push($reserv_id,$tokens);
 		//print_r($newDbStatus);die;
 		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 		//die;

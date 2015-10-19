@@ -24,16 +24,18 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use Carbon\Carbon;
 use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController;
 
 class ExperienceController extends Controller {
 
     protected $listId = '986c01a26a';
 
-	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp){
+	function __construct(Request $request, ExperienceModel $experiences_model, ExperiencesRepository $repository, Mailchimp $mailchimp,ReservationController $restaurantapp){
         $this->request = $request;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
         $this->mailchimp = $mailchimp;
+        $this->restaurantapp = $restaurantapp;
     }
 
     function index(){
@@ -766,6 +768,8 @@ class ExperienceController extends Controller {
                         //print_r($newDb);die;
                         $reservDetails = new ReservationDetails();
                         $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+                        $tokens = $reservDetails->pushToRestaurant();
+                        $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
                         //print_r($newDbStatus);die;
                         /*TODO: Add the status of success check and include added_by and transaction_id attributes */
                         //die;

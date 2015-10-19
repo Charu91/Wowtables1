@@ -18,6 +18,7 @@ use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Http\Models\Profile;
 use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
 use Carbon\Carbon;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController;
 
 /**
  * Class AdminExperiencesController
@@ -30,13 +31,14 @@ class AdminReservationsController extends Controller{
 
     protected $listId = '986c01a26a';
 
-    public function __construct(Mailchimp $mailchimp,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,ExperienceModel $experiences_model,AlacarteModel $alacarte_model) {
+    public function __construct(Mailchimp $mailchimp,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,ExperienceModel $experiences_model,AlacarteModel $alacarte_model, ReservationController $restaurantapp) {
         $this->middleware('admin.auth');
         $this->mailchimp = $mailchimp;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
         $this->alacarterepository = $alacarterepository;
         $this->alacarte_model = $alacarte_model;
+        $this->restaurantapp = $restaurantapp;
     }
 
     public function index(){
@@ -1409,6 +1411,9 @@ class AdminReservationsController extends Controller{
         //print_r($newDb);die;
         $reservDetails = new ReservationDetails();
         $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+        $tokens = $reservDetails->pushToRestaurant();
+        $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
+
         //print_r($newDbStatus);die;
         /*TODO: Add the status of success check and include added_by and transaction_id attributes */
         //die;
@@ -1628,6 +1633,8 @@ class AdminReservationsController extends Controller{
                 //print_r($newDb);die;
                 $reservDetails = new ReservationDetails();
                 $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+                $tokens = $reservDetails->pushToRestaurant();
+                $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
                 //print_r($newDbStatus);die;
                 /*TODO: Add the status of success check and include added_by and transaction_id attributes */
                 //die;
