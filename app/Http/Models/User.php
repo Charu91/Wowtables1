@@ -495,7 +495,7 @@ class User {
                        'MERGE18'    => isset($_GET["utm_source"])? $_GET["utm_source"]: '',
                        'MERGE19'    => isset($_GET["utm_medium"])? $_GET["utm_medium"]: '',
                        'MERGE20'    => isset($_GET["utm_campaign"])? $_GET["utm_campaign"]: '',
-                       'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+                       'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city]))
                    );                    
             //$this->mailchimp->lists->subscribe($this->listId, ["email"=>$_POST['email']],$merge_vars,"html",false,true );
             $objMailChimp->lists->subscribe($listId, ["email"=>$data['email']],$merge_vars,"html",false,true );

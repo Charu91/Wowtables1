@@ -13,6 +13,9 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as ReservationModel;
 use Carbon\Carbon;
+
+use WowTables\Http\Models\Payment;
+
 /**
  * Model class Reservation.
  * 
@@ -348,6 +351,20 @@ class ReservationDetails extends Model {
 
 				//Call zoho send mail method
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
+
+				//code for generating the payu hash
+				if(self::isPaidExperience($value['prod_id'])) {
+					//its a paid product so generating the hash
+					$arrPayUData = array(
+										'guestName' 		=> $arrData['guestName'],
+										'reservationID' 	=> $reservation->id,
+										'amount'			=> $arrData['total_amount'],
+										'shortDescription'	=> $productDetail['descriptive_title'],
+										'email'				=> $arrData['guestEmail'],
+									);
+					$arrResponse['data']['hash'] = Payment::getPayUHash($arrPayUData);
+
+				}
 			}
 			else {
 				$arrResponse['status'] = Config::get('constants.API_ERROR');
@@ -1287,7 +1304,7 @@ class ReservationDetails extends Model {
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
-					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city]))
                 );
 				//
 				//$guestEmail['email'] = $arrData['guestEmail'];
@@ -1326,7 +1343,7 @@ class ReservationDetails extends Model {
                     'MERGE11'=>$reservation->count,
                     'MERGE13'=>$arrData['phone'],
                     'MERGE27'=>date("m/d/Y",strtotime($arrData['reservationDate'])),
-					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]))
+					'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city]))
                 );
                 //$this->mailchimp->lists->subscribe($this->listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
                 $objMailChimp->lists->subscribe($listId, ['email' => $arrData['guestEmail']],$merge_vars,"html",false,true );
@@ -1399,7 +1416,7 @@ class ReservationDetails extends Model {
 				$merge_vars = array(
 						$setBookingKey => $arrResult->attribute_value,
 						//$setBookingKey => $setBookingsValue - 1,
-						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]))
+						'GROUPINGS' => array(array('id' => 9713, 'groups' => [$userData['data']['location']]),array('id' => 9705, 'groups' => [$userData['data']['location']]))
 					);
 
 					//$email = ["email"["email":]];
@@ -1952,6 +1969,30 @@ class ReservationDetails extends Model {
 		$offerDetail['special_offer_desc'] = (empty($queryResult->special_offer_desc)) ? "" : $queryResult->special_offer_desc;  
 
 		return $offerDetail; 
+	}
+
+	//--------------------------------------------------------------------
+
+	/**
+	 * Checks if a experience is paid experience.
+	 *
+	 * @param   integer  $experience
+	 * @return  boolean 
+	 */
+	public function isPaidExperience($experienceID) {
+		$dbResult = DB::table('products_attributes as pa')
+					->join('product_attribute_boolean as pab','pab.product_attribute_id','=', 'pa.id')
+					->where('pa.alias','=','prepayment_allowed')
+					->where('pab.product_id','=',$experienceID)
+					->select('pa.id','pab.attribute_value')
+					->first();
+
+		if($dbResult && $dbResult->attribute_value > 0) {
+			return TRUE;
+		}
+
+		return FALSE;
+
 	}
 
 }
