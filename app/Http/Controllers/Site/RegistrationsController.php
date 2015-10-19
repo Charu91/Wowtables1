@@ -471,6 +471,9 @@ class RegistrationsController extends Controller {
 
 		$newDb['userdetails']['user_id'] = $userID;
 		$newDb['userdetails']['status'] = 3;
+		$newDb['attributes']['seating_status'] = 3;
+		$newDb['attributes']['closed_on'] = Carbon::now()->toDateTimeString();
+
 		//print_r($newDb);die;
 		$reservDetails = new ReservDetailsModel();
 		$newDbStatus = $reservDetails->updateAttributes($reservationID,$newDb);
