@@ -768,7 +768,7 @@ class ExperienceController extends Controller {
                         //print_r($newDb);die;
                         $reservDetails = new ReservationDetails();
                         $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
-                        $tokens = $reservDetails->pushToRestaurant();
+                        $tokens = $reservDetails->pushToRestaurant($reservationResponse['data']['reservationID']);
                         $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
                         //print_r($newDbStatus);die;
                         /*TODO: Add the status of success check and include added_by and transaction_id attributes */

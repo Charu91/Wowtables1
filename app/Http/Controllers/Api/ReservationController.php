@@ -195,7 +195,7 @@ use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as Reservatio
 				}
 			}
 
-		$tokens = ReservationModel::pushToRestaurant();
+		$tokens = ReservationModel::pushToRestaurant($arrResponse['data']['reservation_id']);
 		$this->restaurantapp->push($arrResponse['data']['reservation_id'],$tokens);
 				
 		return response()->json($arrResponse,200);
@@ -224,7 +224,7 @@ use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as Reservatio
 		
 		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp,$userID);
 
-		$tokens = ReservationModel::pushToRestaurant();
+		$tokens = ReservationModel::pushToRestaurant($reservationID);
 		$this->restaurantapp->push($reservationID,$tokens);
 
 		return response()->json($arrResponse,200);		
@@ -283,7 +283,7 @@ use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as Reservatio
 			 
 		 }
 
-		$tokens = ReservationModel::pushToRestaurant();
+		$tokens = ReservationModel::pushToRestaurant($data['reservationID']);
 		$this->restaurantapp->push($data['reservationID'],$tokens);
 		return response()->json($arrResponse,200);		
 	}
