@@ -19,6 +19,7 @@ use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationStatus;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationStatusLog;
 use WowTables\Http\Models\Eloquent\ConciergeApi\User;
 use WowTables\Http\Models\Eloquent\ConciergeApi\UserDevice;
+use WowTables\Http\Models\Eloquent\ConciergeApi\UserPreference;
 use WowTables\Http\Models\Eloquent\ConciergeApi\UserRating;
 use WowTables\Http\Models\Eloquent\ConciergeApi\VendorLocationContact;
 use WowTables\Http\Models\Eloquent\Location;
@@ -214,6 +215,9 @@ class ReservationController extends Controller {
 						$customer['rating'] = UserRating::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->avg('rating');
 						if ($customer['rating'] == null)
 							$customer['rating'] = 0.0;
+						$customerPreferences = UserPreference::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->first();
+						if($customerPreferences)
+							$customer['customer_preferences'] = $customerPreferences;
 						$reservation['customer'] = $customer;
 						$reservationArr[(string)$reservationId] = $reservation;
 					}
@@ -460,6 +464,13 @@ class ReservationController extends Controller {
 					$userRating->reservation_id = $reservationDetail->id;
 					$userRating->rating = floatval($input['rating']);
 					$userRating->save();
+					if (array_key_exists('customer_preference', $input)) {
+						$customerPreference = new UserPreference();
+						$customerPreference->reservation_id = $reservationId;
+						$customerPreference->user_id = $reservationDetail->user_id;
+						$customerPreference->preferences_text = $input['customer_preference'];
+						$customerPreference->save();
+					}
 					$giftCardAttr->reservation_attribute_id = ReservationController::$gift_card_clo_attr_id;
 					$giftCardAttr->attribute_value = $input['gift_card'];
 					$giftCardAttr->save();
