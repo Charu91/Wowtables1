@@ -37,6 +37,13 @@ class Payment {
 
 		$secureHash  = hash("sha512", $payHashString);
 
+		//saving the information into DB
+		DB::table('payu_mobile_hash')
+			->insert([
+				'reservation_id'  => $data['reservationID'],
+				'hash'            => $secureHash
+				]);
+
 		return $secureHash;
 		
 	}
@@ -54,6 +61,31 @@ class Payment {
 		$secureCode = self::generateMobilePayUHash($data);
 
 		return $secureCode;
+	}
+
+	//-------------------------------------------------------------------------
+
+	/**
+	 * Matches the passed payu hash with the one stored in the 
+	 * database.
+	 *
+	 * @access  public
+	 * @param   array    $data
+	 * @since   1.0.0
+	 */
+	public function matchPayUHash($reservationID, $hash) {
+
+		$dbResult = DB::table('payu_mobile_hash')
+						->where('reservation_id','=',$reservationID)
+						->where('hash','=',$hash)
+						->select('id')
+						->first();
+
+		if($dbResult && $dbResult->id > 0) {
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 }

@@ -1014,10 +1014,11 @@ class ReservationController extends Controller {
 		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,7,3,6,7,8,9) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
-			$reservationIdArr[] = $reservId->reservation_id;
+			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
 
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,7,3,6,7,8,9]);
+
+		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
 
 		//print_r($reservStatusArr);die;
 
@@ -1031,7 +1032,7 @@ class ReservationController extends Controller {
 					 }])*/
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
-					 ->whereIn('id',$reservationIdArr)
+					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->where('id','!=','27355')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
@@ -1059,12 +1060,14 @@ class ReservationController extends Controller {
 			$booking->phone_no = $unconfirmedBookings->guest_phone;
 			$booking->no_of_persons = $unconfirmedBookings->no_of_persons;
 			//$booking->status = $reservStatus->status;
-			$userModel = User::find($unconfirmedBookings->user_id);
+			$userModel = User::find($reservationIdArr[$unconfirmedBookings->id]);
+			//echo $unconfirmedBookings->user_id."--";
+			//echo $userModel->role->name."<br/>";
 			$booking->lastmodified = $userModel->role->name;
 			$booking->user_id = $unconfirmedBookings->user_id;
 
 			$statusArr = $this->reservStatuses;
-			$statusKey = array_search($reservStatusArr[$unconfirmedBookings->id],$statusArr);
+			$statusKey = array_search($reservStatusArr[$unconfirmedBookings->id][0],$statusArr);
 			//echo $statusKey."<br/>";
 			if($statusKey != -1){
 				unset($statusArr[$statusKey]);
@@ -1102,6 +1105,7 @@ class ReservationController extends Controller {
 
 
 		}
+		//die;
 
 		return view('admin.bookings.list.unconfirmed')->with('un_bookings',$un_bookings);
 
@@ -1114,10 +1118,10 @@ class ReservationController extends Controller {
 		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (6) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
-			$reservationIdArr[] = $reservId->reservation_id;
+			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
 
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[6]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[6]);
 		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
@@ -1130,7 +1134,7 @@ class ReservationController extends Controller {
 					 }])*/
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
-					 ->whereIn('id',$reservationIdArr)
+					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
@@ -1159,7 +1163,7 @@ class ReservationController extends Controller {
 			$booking->phone_no = $postBookings->guest_phone;
 			$booking->no_of_persons = $postBookings->no_of_persons;
 			//$booking->status = $reservStatus->status;
-			$userModel = User::find($postBookings->user_id);
+			$userModel = User::find($reservationIdArr[$postBookings->id]);
 			$booking->lastmodified = $userModel->role->name;
 			$booking->user_id = $postBookings->user_id;
 
@@ -1206,9 +1210,9 @@ class ReservationController extends Controller {
 		$statusCancelledNew = DB::select(DB::raw('select * from reservation_status_log having new_reservation_status_id in (1,2,3,4,5,6,7,8) and created_at in (SELECT MAX(created_at) FROM reservation_status_log group by reservation_id)'));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
-			$reservationIdArr[] = $reservId->reservation_id;
+			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,3,4,5,6,7,8]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,3,4,5,6,7,8]);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
@@ -1227,7 +1231,7 @@ class ReservationController extends Controller {
 					 }])
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
-					 ->whereIn('id',$reservationIdArr)
+					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $allbookings)
 		{
@@ -1258,7 +1262,7 @@ class ReservationController extends Controller {
 			$booking->phone_no = $allbookings->guest_phone;
 			$booking->no_of_persons = $allbookings->no_of_persons;
 			//$booking->status = $reservStatus->status;
-			$userModel = User::find($allbookings->user_id);
+			$userModel = User::find($reservationIdArr[$allbookings->id]);
 			$booking->lastmodified = $userModel->role->name;
 			$booking->user_id = $allbookings->user_id;
 
@@ -1302,9 +1306,9 @@ class ReservationController extends Controller {
 		$statusCancelledNew = DB::select(DB::raw('select rd.id as id from reservation_details as rd left join reservation_attributes_date as rad on rd.id = rad.reservation_id where DATE(rad.attribute_value) = \''.Carbon::now()->format('Y-m-d').'\''));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
-			$reservationIdArr[] = $reservId->id;
+			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
-		$reservStatusArr = $this->reservationDetails->getReservationStatus($reservationIdArr,[1,2,3,6,7,8]);
+		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,3,6,7,8]);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
@@ -1315,7 +1319,7 @@ class ReservationController extends Controller {
 					 }])*/
 					 ->where('vendor_location_id','!=','0')
 					 ->where('vendor_location_id','!=','54')
-					 ->whereIn('id',$reservationIdArr)
+					 ->whereIn('id',array_keys($reservationIdArr))
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->orderBy('created_at','desc')->get() as $today)
@@ -1345,7 +1349,7 @@ class ReservationController extends Controller {
 			$booking->phone_no = $today->guest_phone;
 			$booking->no_of_persons = $today->no_of_persons;
 			//$booking->status = $reservStatus->status;
-			$userModel = User::find($today->user_id);
+			$userModel = User::find($reservationIdArr[$today->id]);
 			$booking->lastmodified = $userModel->role->name;
 			$booking->user_id = $today->user_id;
 
