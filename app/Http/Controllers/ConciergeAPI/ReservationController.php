@@ -212,7 +212,7 @@ class ReservationController extends Controller {
 						$customer['email'] = $reservationDetail->user->email;
 						$customer['phone_number'] = $reservationDetail->user->phone_number;
 						$customer['points_earned'] = $reservationDetail->user->points_earned;
-						$customer['rating'] = UserRating::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->avg('rating');
+						$customer['rating'] = UserRating::where('user_id',$reservationDetail->user)->avg('rating');
 						if ($customer['rating'] == null)
 							$customer['rating'] = 0.0;
 						$customerPreferences = UserPreference::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->first();
