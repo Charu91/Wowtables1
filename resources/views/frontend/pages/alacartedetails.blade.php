@@ -554,7 +554,7 @@
 
         <div class="col-md-4 col-sm-4 deal-detail-right">
 
-          @if(!empty($arrALaCarte['data']['special_offer_title']))
+          @if(!empty(trim($arrALaCarte['data']['special_offer_title'])))
           <div class="widget reservation-box">
               <h3 class="text-center">Special Offer</h3>
               <p class="text-center" style="color:#fff"><strong>{!! $arrALaCarte['data']['special_offer_title'] !!}</strong></p>
