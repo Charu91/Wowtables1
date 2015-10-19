@@ -10,3 +10,12 @@ Route::post('api/get_payu_hash',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));
+
+Route::post('api/save_transaction',
+				array(
+					'uses' => 'Api\PaymentController@savePaymentTransaction',
+					'as' => '',
+					'middleware' => 'wow.api',
+					'where' => array(),
+    				'domain' => env('WEBSITE_URL'),
+    			));

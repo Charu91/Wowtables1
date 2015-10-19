@@ -748,7 +748,7 @@ class ExperienceController extends Controller {
                         $newDb['attributes']['reserv_type'] = "Experience";
                         $newDb['attributes']['gift_card_id_reserv'] = $dataPost['giftCardID'];
                         $newDb['attributes']['loyalty_points_awarded'] =  $productDetails['attributes']['reward_points_per_reservation'];
-                        $newDb['attributes']['special_request'] = $dataPost['addons_special_request'];
+                        $newDb['attributes']['special_request'] = trim($dataPost['addons_special_request']);
                         $newDb['attributes']['experience'] = $outlet->vendor_name.' - '.$outlet->descriptive_title;
                         $newDb['attributes']['api_added'] = "Web Reservation";
                         $newDb['attributes']['giu_membership_id'] = $userData['data']['membership_number'];

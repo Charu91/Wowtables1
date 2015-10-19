@@ -161,7 +161,7 @@ class UserController extends Controller {
             $city = ucfirst($city_name);
             $merge_vars = array(
                 'MERGE1'=>$input['user']->full_name,
-                'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city])),
+                'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city])),
                 'SIGNUPTP'  => 'Facebook'
             );
             $this->mailchimp->lists->subscribe($this->listId, ["email"=>$input['user']->email],$merge_vars,"html",false,true );
