@@ -1311,7 +1311,7 @@ class ReservationController extends Controller {
 		$todayBookings = array();
 		$count = 0;
 
-		$statusCancelledNew = DB::select(DB::raw('select rd.id as id from reservation_details as rd left join reservation_attributes_date as rad on rd.id = rad.reservation_id where DATE(rad.attribute_value) = \''.Carbon::now()->format('Y-m-d').'\''));
+		$statusCancelledNew = DB::select(DB::raw('select rd.id as reservation_id,rd.user_id as user_id from reservation_details as rd left join reservation_attributes_date as rad on rd.id = rad.reservation_id where DATE(rad.attribute_value) = \''.Carbon::now()->format('Y-m-d').'\''));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
