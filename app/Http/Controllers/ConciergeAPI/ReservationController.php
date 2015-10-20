@@ -212,7 +212,7 @@ class ReservationController extends Controller {
 						$customer['email'] = $reservationDetail->user->email;
 						$customer['phone_number'] = $reservationDetail->user->phone_number;
 						$customer['points_earned'] = $reservationDetail->user->points_earned;
-						$customer['rating'] = UserRating::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->avg('rating');
+						$customer['rating'] = UserRating::where('user_id',$reservationDetail->user)->avg('rating');
 						if ($customer['rating'] == null)
 							$customer['rating'] = 0.0;
 						$customerPreferences = UserPreference::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->first();
@@ -506,7 +506,7 @@ class ReservationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function push($id)
+	public function push($id,$tokenArr)
 	{
 		try{
 			$input = Request::all();
@@ -648,7 +648,7 @@ class ReservationController extends Controller {
 					}
 
 			$reservation['reservation_status_id'] = 1;
-			$tokenArr = json_decode($input['tokens'], true);
+			//$tokenArr = json_decode($input['tokens'], true);
 			foreach ($tokenArr as $token) {
 				PushNotification::app('appNameAndroid')
 					//->to("dM6qYZxj59A:APA91bHrPZ26AzKmUFTMG_nKrTZ0O_NU6gmrBErx-D3IRlHTHFXm33mkYUfhZ0mCwn_-lt6dC5-NgwsS-vNV_bcPNxyIB_eTDmEcDN8HsOKWW56v4M1JUtEdg_CJ2YrFjIgdIv_zQJG3")
