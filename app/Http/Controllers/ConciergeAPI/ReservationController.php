@@ -24,6 +24,7 @@ use WowTables\Http\Models\Eloquent\ConciergeApi\UserRating;
 use WowTables\Http\Models\Eloquent\ConciergeApi\VendorLocationContact;
 use WowTables\Http\Models\Eloquent\Location;
 use WowTables\Http\Models\Eloquent\Products\Product;
+use WowTables\Http\Models\Eloquent\UserAttributesVarChar;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationAttributesText;
 use WowTables\Http\Requests;
@@ -41,7 +42,6 @@ class ReservationController extends Controller {
 	private static $total_bill_attr_id = 26;
 	private static $prepaid_attr_id = 35;
 	private static $server_attr_id = 36;
-	private static $cust_pref_attr_id = 37;
 	private static $rejection_reason_attr_id = 38;
 	private static $exp_attendees_attr_id = 24;
 	private static $alacarte_attendees_attr_id = 25;
@@ -55,6 +55,7 @@ class ReservationController extends Controller {
 	private static $closed_date_id = 39;
 	private static $cancelled_seating_status = 3;
 	private static $noshow_seating_status = 4;
+	private static $cust_pref_attr_id = 11;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -212,12 +213,13 @@ class ReservationController extends Controller {
 						$customer['email'] = $reservationDetail->user->email;
 						$customer['phone_number'] = $reservationDetail->user->phone_number;
 						$customer['points_earned'] = $reservationDetail->user->points_earned;
-						$customer['rating'] = UserRating::where('user_id',$reservationDetail->user)->avg('rating');
+						$customer['rating'] = UserRating::where('user_id',$reservationDetail->user->id)->avg('rating');
 						if ($customer['rating'] == null)
 							$customer['rating'] = 0.0;
-						$customerPreferences = UserPreference::where(['user_id' => $reservationDetail->user, 'id' => $reservationDetail->id])->first();
+						$customerPreferences  = UserAttributesVarChar::where(['user_id' => $reservationDetail->user->id,
+							'user_attribute_id' => ReservationController::$cust_pref_attr_id])->first();
 						if($customerPreferences)
-							$customer['customer_preferences'] = $customerPreferences;
+							$customer['customer_preferences'] = $customerPreferences->attribute_value;
 						$reservation['customer'] = $customer;
 						$reservationArr[(string)$reservationId] = $reservation;
 					}
@@ -353,7 +355,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
+					$responseData['closed_on'] = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -371,7 +373,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
+					$responseData['closed_on'] = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -389,7 +391,7 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
+					$responseData['closed_on'] = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
 					$closeDateAttr->save();
 					break;
 				}
@@ -426,11 +428,6 @@ class ReservationController extends Controller {
 					$giftCardAttr->reservation_attribute_id = ReservationController::$gift_card_clo_attr_id;
 					$giftCardAttr->attribute_value = $input['gift_card'];
 					$giftCardAttr->save();
-					$custPrefAttr = new ReservationAttributesVarchar();
-					$custPrefAttr->reservation_id = $reservationId;
-					$custPrefAttr->reservation_attribute_id = ReservationController::$cust_pref_attr_id;
-					$custPrefAttr->attribute_value = $custPrefAttr->attribute_value . "." . $input['customer_preference'];
-					$custPrefAttr->save();
 					if (array_key_exists('experience_attendees', $input)) {
 						$expAttendeesAttr = new ReservationAttributesInteger();
 						$expAttendeesAttr->reservation_id = $reservationId;
@@ -465,11 +462,15 @@ class ReservationController extends Controller {
 					$userRating->rating = floatval($input['rating']);
 					$userRating->save();
 					if (array_key_exists('customer_preference', $input)) {
-						$customerPreference = new UserPreference();
-						$customerPreference->reservation_id = $reservationId;
-						$customerPreference->user_id = $reservationDetail->user_id;
-						$customerPreference->preferences_text = $input['customer_preference'];
-						$customerPreference->save();
+						$customerPreferences  = UserAttributesVarChar::where(['user_id' => $reservationDetail->user->id,
+							'user_attribute_id' => ReservationController::$cust_pref_attr_id])->first();
+						if($customerPreferences==null) {
+							$customerPreferences = new UserAttributesVarChar();
+							$customerPreferences->user_id = $reservationDetail->user_id;
+							$customerPreferences->user_attribute_id = ReservationController::$cust_pref_attr_id;
+						}
+						$customerPreferences->attribute_value = $input['customer_preference'];
+						$customerPreferences->save();
 					}
 					$giftCardAttr->reservation_attribute_id = ReservationController::$gift_card_clo_attr_id;
 					$giftCardAttr->attribute_value = $input['gift_card'];
@@ -482,7 +483,10 @@ class ReservationController extends Controller {
 					$closeDateAttr->reservation_id = $reservationId;
 					$closeDateAttr->reservation_attribute_id = ReservationController::$closed_date_id;
 					$closeDateAttr->attribute_value = Carbon::now();
-					$responseData = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
+					$responseData['closed_on'] = $closeDateAttr->attribute_value->format('Y-m-d H:i:s');
+					$responseData['rating'] = UserRating::where('user_id',$reservationDetail->user->id)->avg('rating');
+					if ($responseData['rating'] == null)
+						$responseData['rating'] = 0.0;
 					$closeDateAttr->save();
 					break;
 				}
@@ -611,6 +615,10 @@ class ReservationController extends Controller {
 						$customer['rating'] = UserRating::where(['user_id'=>$reservationDetail->user,'id'=>$reservationDetail->id])->avg('rating');
 						if($customer['rating']==null)
 							$customer['rating'] = 0.0;
+						$customerPreferences  = UserAttributesVarChar::where(['user_id' => $reservationDetail->user->id,
+							'user_attribute_id' => ReservationController::$cust_pref_attr_id])->first();
+						if($customerPreferences)
+							$customer['customer_preferences'] = $customerPreferences->attribute_value;
 						$reservation['customer'] = $customer;
 					}
 				//Get Location
@@ -647,7 +655,7 @@ class ReservationController extends Controller {
 						$reservation['product'] = $product;
 					}
 
-			$reservation['reservation_status_id'] = 1;
+			//$reservation['reservation_status_id'] = 1;
 			//$tokenArr = json_decode($input['tokens'], true);
 			foreach ($tokenArr as $token) {
 				PushNotification::app('appNameAndroid')
