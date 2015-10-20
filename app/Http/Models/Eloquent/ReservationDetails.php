@@ -351,7 +351,7 @@ class ReservationDetails extends Model {
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 
 				//code for generating the payu hash
-				if(self::isPaidExperience($value['prod_id'])) {
+				if(self::isPaidExperience($arrResult->product_id)) {
 					//its a paid product so generating the hash
 					$arrPayUData = array(
 										'guestName' 		=> $arrData['guestName'],
@@ -1976,9 +1976,9 @@ class ReservationDetails extends Model {
 	 * @param   integer  $experience
 	 * @return  boolean 
 	 */
-	public function isPaidExperience($experienceID) {
-		$dbResult = DB::table('products_attributes as pa')
-					->join('product_attribute_boolean as pab','pab.product_attribute_id','=', 'pa.id')
+	public static function isPaidExperience($experienceID) {
+		$dbResult = DB::table('product_attributes as pa')
+					->join('product_attributes_boolean as pab','pab.product_attribute_id','=', 'pa.id')
 					->where('pa.alias','=','prepayment_allowed')
 					->where('pab.product_id','=',$experienceID)
 					->select('pa.id','pab.attribute_value')
