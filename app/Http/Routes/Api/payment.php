@@ -15,7 +15,7 @@ Route::post('api/save_transaction',
 				array(
 					'uses' => 'Api\PaymentController@savePaymentTransaction',
 					'as' => '',
-					'middleware' => 'wow.api',
+					'middleware' => '',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));

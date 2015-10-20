@@ -33,7 +33,7 @@ class Payment {
 
 		$payHashString = Config::get('PAYU_MERCHANT_ID') .'|'. $data['reservationID'] .'|'. 
 							$data['amount'] .'|'. $data['shortDescription'] . '|' . $arrName[0] .'|'.
-							$data['email'] .'|'. "|||||||||||". Config::get('PAYU_SALT');  
+							$data['email'] .'|'. "||||||||||". Config::get('PAYU_SALT');  
 
 		$secureHash  = hash("sha512", $payHashString);
 
