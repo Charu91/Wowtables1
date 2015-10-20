@@ -1976,7 +1976,7 @@ class ReservationDetails extends Model {
 	 * @param   integer  $experience
 	 * @return  boolean 
 	 */
-	public function isPaidExperience($experienceID) {
+	public static function isPaidExperience($experienceID) {
 		$dbResult = DB::table('products_attributes as pa')
 					->join('product_attribute_boolean as pab','pab.product_attribute_id','=', 'pa.id')
 					->where('pa.alias','=','prepayment_allowed')
