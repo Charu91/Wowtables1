@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
 		//$this->call('ReservationSeatingStatusSeeder');
 		//$this->call('ReservationRejectionReasonSeeder');
 		//$this->call('ReservationAddonsVariantsDetailsSeeder');
+		$this->call('UserAttributesSeeder');
 	}
 }
 
@@ -495,13 +496,13 @@ class ReservationAttrVarcharSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::table('reservation_attributes_text')->truncate();
+		DB::table('reservation_attributes_varchar')->truncate();
 		DB::table('reservation_attributes_varchar')->insert(array(
 			/*array('reservation_id'=>22983,'reservation_attribute_id' =>17,'attribute_value' =>'Well mannered & Courteous.',
                 'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('reservation_id'=>22984,'reservation_attribute_id' =>17,'attribute_value' =>'Prefers Family Section.',
                 'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
-			array('reservation_id'=>22993,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
+			/*array('reservation_id'=>22993,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
 				'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('reservation_id'=>22994,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
 				'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
@@ -565,6 +566,17 @@ class ReservationAddonsVariantsDetailsSeeder extends Seeder {
 			array('reservation_id'=>22993,'no_of_persons' =>2,'options_id'=>560,'option_type'=>'addon','reservation_type'=>'experience','reservation_status_id'=>ReservationController::$new_status_id,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('reservation_id'=>22996,'no_of_persons' =>2,'options_id'=>560,'option_type'=>'addon','reservation_type'=>'experience','reservation_status_id'=>ReservationController::$new_status_id,'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
 		));*/
+	}
+
+}
+
+class UserAttributesSeeder extends Seeder {
+
+	public function run()
+	{
+		DB::table('user_attributes')->insert(array(
+			array('name'=>'Customer Preferences','alias' =>'customer_preferences','type'=>'varchar')
+		));
 	}
 
 }
