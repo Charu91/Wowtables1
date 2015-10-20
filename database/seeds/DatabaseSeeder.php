@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
 		//$this->call('ReservationSeatingStatusSeeder');
 		//$this->call('ReservationRejectionReasonSeeder');
 		//$this->call('ReservationAddonsVariantsDetailsSeeder');
-		$this->call('UserAttributesSeeder');
+		//$this->call('UserAttributesSeeder');
 	}
 }
 
