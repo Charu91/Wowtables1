@@ -351,7 +351,7 @@ class ReservationDetails extends Model {
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 
 				//code for generating the payu hash
-				if(self::isPaidExperience($value['prod_id'])) {
+				if(self::isPaidExperience($arrResult->product_id)) {
 					//its a paid product so generating the hash
 					$arrPayUData = array(
 										'guestName' 		=> $arrData['guestName'],
