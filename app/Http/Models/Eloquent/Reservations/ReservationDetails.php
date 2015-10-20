@@ -101,6 +101,16 @@ class ReservationDetails extends Model {
 
     public function updateAttributes($reservation_id, $data)
     {
+
+        if(isset($data['userdetails'])){
+            /*if(isset($data['attributes']['addon'])){
+                $response = $this->addActualAddonTakers($data);
+                //echo $response;die;
+            }*/
+            $reservationStatus = $this->changeReservationStatus($reservation_id,$data['userdetails']);
+            //echo $reservationStatus;die;
+        }
+
         $attributeAlias = array_keys(isset($data['attributes']) ? $data['attributes'] : array());
         //print_r($attributeAlias);
         if(($key = array_search('date', $attributeAlias)) !== false) {
@@ -282,14 +292,7 @@ class ReservationDetails extends Model {
             $response = $this->addActualAddonTakers($reservation_id,$data['attributes']['actual_addon_takers']);
         }
 
-        if(isset($data['userdetails'])){
-            /*if(isset($data['attributes']['addon'])){
-                $response = $this->addActualAddonTakers($data);
-                //echo $response;die;
-            }*/
-            $reservationStatus = $this->changeReservationStatus($reservation_id,$data['userdetails']);
-            //echo $reservationStatus;die;
-        }
+
 
         return ['status' => 'success'];
     }

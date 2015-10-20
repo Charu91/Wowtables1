@@ -551,7 +551,7 @@ if (strpos($url,'alacarte') !== false) {
         <?php endif;?>
           <ul class="nav navbar-nav navbar-right">
           <?php
-          if ($current_city == "mumbai" || $current_city == "pune") {?>
+          if ($current_city == "mumbai" || $current_city == "pune" || $current_city == "bangalore") {?>
             <li>
               <a href="{{URL::to('/')}}/<?php echo $current_city;?>" class="wowtable_font"> Dining Experiences </a>
             </li>

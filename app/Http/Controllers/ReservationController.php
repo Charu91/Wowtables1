@@ -1043,7 +1043,12 @@ class ReservationController extends Controller {
 				$booking->name = $unconfirmedBookings->experience->name;
 			}
 			$booking->cust_name = $unconfirmedBookings->guest_name;
-			$booking->restaurant_name = $unconfirmedBookings->vendor_location->vendor->name;
+			if(isset($unconfirmedBookings->vendor_location->vendor->name)){
+				$booking->restaurant_name = $unconfirmedBookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
+
 			if(empty($unconfirmedBookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1146,7 +1151,11 @@ class ReservationController extends Controller {
 				$booking->name = $postBookings->experience->name;
 			}
 			$booking->cust_name = $postBookings->guest_name;
-			$booking->restaurant_name = $postBookings->vendor_location->vendor->name;
+			if(isset($postBookings->vendor_location->vendor->name)){
+				$booking->restaurant_name =$postBookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($postBookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1245,7 +1254,11 @@ class ReservationController extends Controller {
 				$booking->name = $allbookings->experience->name;
 			}
 			$booking->cust_name = $allbookings->guest_name;
-			$booking->restaurant_name = $allbookings->vendor_location->vendor->name;
+			if(isset($allbookings->vendor_location->vendor->name)){
+				$booking->restaurant_name =$allbookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($allbookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1332,7 +1345,11 @@ class ReservationController extends Controller {
 				$booking->name = $today->experience->name;
 			}
 			$booking->cust_name = $today->guest_name;
-			$booking->restaurant_name = $today->vendor_location->vendor->name;
+			if(isset($today->vendor_location->vendor->name)){
+				$booking->restaurant_name =$today->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($today->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
