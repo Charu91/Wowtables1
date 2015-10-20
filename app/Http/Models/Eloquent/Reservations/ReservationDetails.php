@@ -379,9 +379,9 @@ class ReservationDetails extends Model {
             $statusLogEntry->save();
 
         }
-        if($statusId == 1 || $statusId == 2 || $statusId == 3){
+        /*if($statusId == 1 || $statusId == 2 || $statusId == 3){
             $this->pushToRestaurant($reservation_id);
-        }
+        }*/
 
         if(!empty($reservType)) {
             switch ($statusId) {
@@ -523,7 +523,7 @@ class ReservationDetails extends Model {
         curl_close($ch);
     }
 
-    public function pushToRestaurant($reservation_id){
+    public static function pushToRestaurant($reservation_id){
 
         $reservationDetails = ReservationDetails::find($reservation_id);
         $vendor_location_id = $reservationDetails->vendor_location_id;
@@ -533,13 +533,13 @@ class ReservationDetails extends Model {
         foreach($vendorUsers as $vendorUser){
             $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
             if(isset($userDevice->notification_id)) {
-                $tokenStr = new \stdClass();
-                $tokenStr->token = $userDevice->notification_id;
+                $tokenStr = array();
+                $tokenStr['token'] = $userDevice->notification_id;
                 $tokens[] = $tokenStr;
             }
         }
-
-        if(!empty($tokens)){
+        return $tokens;
+        /*if(!empty($tokens)){
             $ch = curl_init();
             $curlConfig = array(
                 CURLOPT_URL            => "http://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
@@ -551,7 +551,7 @@ class ReservationDetails extends Model {
             $result = curl_exec($ch);
             //echo "<pre> results == "; print_r($result);die;
             curl_close($ch);
-        }
+        }*/
 
     }
 
