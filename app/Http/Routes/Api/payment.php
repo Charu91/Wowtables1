@@ -19,3 +19,21 @@ Route::post('api/save_transaction',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));
+
+Route::get('api/payu_success',
+				array(
+					'uses' => 'Api\PaymentController@getSuccessResponse',
+					'as' => '',
+					'middleware' => '',
+					'where' => array(),
+    				'domain' => env('WEBSITE_URL'),
+    			));
+
+Route::get('api/payu_failure',
+				array(
+					'uses' => 'Api\PaymentController@getFailureResponse',
+					'as' => '',
+					'middleware' => '',
+					'where' => array(),
+    				'domain' => env('WEBSITE_URL'),
+    			));
