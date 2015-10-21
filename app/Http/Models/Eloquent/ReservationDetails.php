@@ -619,8 +619,7 @@ class ReservationDetails extends Model {
 			$arrResponse['status'] = Config::get('constants.API_ERROR');
 		}
 
-		print_r($arrResponse); die("testing");
-		
+				
 		return $arrResponse;
 	}
 
