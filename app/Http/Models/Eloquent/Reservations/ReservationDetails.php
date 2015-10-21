@@ -531,12 +531,15 @@ class ReservationDetails extends Model {
         $tokens = array();
 
         foreach($vendorUsers as $vendorUser){
-            $userDevice = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->first();
-            if(isset($userDevice->notification_id)) {
-                $tokenStr = array();
-                $tokenStr['token'] = $userDevice->notification_id;
-                $tokens[] = $tokenStr;
+            $userDevices = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->get();
+            foreach($userDevices as $userDevice){
+                if(isset($userDevice->notification_id)) {
+                    $tokenStr = array();
+                    $tokenStr['token'] = $userDevice->notification_id;
+                    $tokens[] = $tokenStr;
+                }
             }
+
         }
         return $tokens;
         /*if(!empty($tokens)){
