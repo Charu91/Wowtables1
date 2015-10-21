@@ -14,7 +14,7 @@ class AddRestversionToDevicesTable extends Migration {
 	{
 		Schema::table('user_devices', function($table)
 		{
-			$table->string('rest_app_version')->default('1.0.4');
+			$table->string('rest_app_version')->after('app_version')->default('1.0.4');
 		});
 	}
 
