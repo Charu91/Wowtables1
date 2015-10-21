@@ -126,7 +126,7 @@ class ReservationAttributesSeeder extends Seeder {
 			array('name'=>'GIU Membership Id','alias'=>'giu_membership_id','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'No Of People Booked','alias'=>'no_of_people_booked','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Total Seated','alias'=>'total_seated','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			/*array('name'=>'Actual Experience Takers','alias'=>'actual_experience_takers','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
+			array('name'=>'Actual Experience Takers','alias'=>'','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Order Completed','alias'=>'order_completed','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Loyalty Points Awarded','alias'=>'loyalty_points_awarded','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Special Request','alias'=>'special_request','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
@@ -149,7 +149,7 @@ class ReservationAttributesSeeder extends Seeder {
 			array('name'=>'Special Request Response','alias'=>'special_request_response','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Note to WowTables','alias'=>'note_to_wowtables','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Seating Status','alias'=>'seating_status','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			/*array('name'=>'Table Size','alias'=>'table_size','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
+			array('name'=>'Table Size','alias'=>'table_size','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Prepaid Amount','alias'=>'prepaid_amount','type'=>'float','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Server Name','alias'=>'server_name','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Customer Preferences','alias'=>'customer_preferences','type'=>'varchar','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
