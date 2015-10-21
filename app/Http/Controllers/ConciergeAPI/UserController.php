@@ -96,5 +96,22 @@ class UserController extends Controller {
         }
 
     }
+
+    public function logout(){
+        //try{
+            $input = Request::all();
+            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token'],'user_id'=>$input['user_id']])->first();
+            if($userDevice)
+                $userDevice->delete();
+            return [
+                'code' => 200,
+                'data' => new \stdClass()
+            ];
+        /*}catch(\Exception $e){
+            return response()->json([
+                'message' => 'An application error occured.'
+            ], 500);
+        }*/
+    }
 }
 
