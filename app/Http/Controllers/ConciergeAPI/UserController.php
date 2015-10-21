@@ -98,7 +98,7 @@ class UserController extends Controller {
     }
 
     public function logout(){
-        //try{
+        try{
             $input = Request::all();
             $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token'],'user_id'=>$input['user_id']])->first();
             if($userDevice)
@@ -107,11 +107,11 @@ class UserController extends Controller {
                 'code' => 200,
                 'data' => new \stdClass()
             ];
-        /*}catch(\Exception $e){
+        }catch(\Exception $e){
             return response()->json([
                 'message' => 'An application error occured.'
             ], 500);
-        }*/
+        }
     }
 }
 
