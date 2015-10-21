@@ -37,7 +37,7 @@ class ReservationController extends Controller {
 	private static $special_request_resp_attr_id = 31;
 	private static $note_to_wow_attr_id = 32;
 	private static $seating_status_attr_id = 33;
-	private static $table_size_attr_id = 34;
+	private static $table_size_attr_id = 12;
 	private static $gift_card_clo_attr_id = 19;
 	private static $total_bill_attr_id = 26;
 	private static $prepaid_attr_id = 35;
