@@ -32,7 +32,7 @@ class ConciergeMiddleware {
 		if(!empty($accessDevice) && !empty($accessToken)) {
 			$queryResult = DB::table('user_devices as ud')
 								->where('ud.device_id',$accessDevice)
-								->where('ud.access_token',$accessToken)
+								->where('ud.rest_access_token',$accessToken)
 								->select('ud.user_id','rest_app_version','app_version', 'os_type')
 								->first();
 			if($queryResult){

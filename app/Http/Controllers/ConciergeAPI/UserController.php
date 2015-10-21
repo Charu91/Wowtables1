@@ -32,13 +32,13 @@ class UserController extends Controller {
                 $userDevice = UserDevice::where('device_id', $input['device_id'])->first();
                 $access_token = Uuid::uuid1()->toString();
                 if ($userDevice) {
-                    $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'access_token' => $access_token
-                        , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                    $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'rest_access_token' => $access_token
+                        , 'rest_access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
                         , 'rest_app_version' => $input['app_version'],'user_id' => $user->id]);
                 } else {
-                    $userDeviceUpdated = UserDevice::create(['device_id' => $input['device_id'], 'access_token' => $access_token
-                        , 'access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                    $userDeviceUpdated = UserDevice::create(['device_id' => $input['device_id'], 'rest_access_token' => $access_token
+                        , 'rest_access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
                         , 'rest_app_version' => $input['app_version'], 'user_id' => $user->id]);
                 }
@@ -70,10 +70,10 @@ class UserController extends Controller {
         try{
             $userDeviceUpdated = false;
             $input = Request::all();
-            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token']
+            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'rest_access_token'=>$input['access_token']
             ]);
             if($userDevice) {
-                $userDeviceUpdated = $userDevice->update(['notification_id' => $input['notification_id']]);
+                $userDeviceUpdated = $userDevice->update(['rest_notification_id' => $input['notification_id']]);
             }
             if($userDeviceUpdated) {
                 return [
@@ -100,7 +100,7 @@ class UserController extends Controller {
     public function logout(){
         try{
             $input = Request::all();
-            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'access_token'=>$input['access_token'],'user_id'=>$input['user_id']])->first();
+            $userDevice = UserDevice::where(['device_id'=>$input['device_id'],'rest_access_token'=>$input['access_token'],'user_id'=>$input['user_id']])->first();
             if($userDevice)
                 $userDevice->delete();
             return [
