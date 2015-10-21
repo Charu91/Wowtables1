@@ -66,7 +66,7 @@ class ReservationController extends Controller {
 		try {
 			$reservationIdArr = array();
 			$reservationArr = array();
-			$userDevice = UserDevice::where('access_token', $accessToken)->first();
+			$userDevice = UserDevice::where('rest_access_token', $accessToken)->first();
 			$conciergeLocations = VendorLocationContact::where('user_id', $userDevice->user_id)->get();
 			$reservationIntAttrArr = ReservationAttributesInteger::statusIn($statuses)->get();
 			foreach ($reservationIntAttrArr as $reservationIntAttr) {
