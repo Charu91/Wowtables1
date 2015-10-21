@@ -982,9 +982,11 @@ class ReservationController extends Controller {
 				}
 				break;
 			case 9:
-				//for closed status
+				//for no show status
 				$zoho_data = array(
 					'Order_completed' => 'no show',
+					'Total_Seated'=>'0',
+					'Actual_attendees'=>'0'
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
