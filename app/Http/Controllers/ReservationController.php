@@ -918,6 +918,7 @@ class ReservationController extends Controller {
 
 		$data['attributes']['zoho_booking_cancelled'] = "yes";
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);*/
+		$reservationDetailsAttr = $this->reservationDetails->getByReservationId($reservation_id);
 
 		switch ($statusId) {
 			case 2:
@@ -946,6 +947,8 @@ class ReservationController extends Controller {
 				} else if ($reservType == "Alacarte") {
 					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
 				}
+				$data['attributes']['total_seated'] = 0;
+				$data['attributes']['actual_experience_takers'] = 0;
 				break;
 			case 6:
 				//for accepted status
@@ -974,6 +977,8 @@ class ReservationController extends Controller {
 				//for closed status
 				$zoho_data = array(
 					'Order_completed' => 'yes',
+					'Total_Seated'=>$reservationDetailsAttr['attributes']['total_seated'],
+					'Actual_attendees'=>$reservationDetailsAttr['attributes']['actual_experience_takers']
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
@@ -993,6 +998,8 @@ class ReservationController extends Controller {
 				} else if ($reservType == "Alacarte") {
 					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
 				}
+				$data['attributes']['total_seated'] = 0;
+				$data['attributes']['actual_experience_takers'] = 0;
 				break;
 		}
 		$data['attributes']['zoho_booking_update'] = "yes";
