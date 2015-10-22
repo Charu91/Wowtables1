@@ -60,7 +60,7 @@ class MiscController extends Controller {
 			if ($retFlag) {
 				DB::table('user_devices as ud')
 					->where('ud.device_id', $accessDevice)
-					->where('ud.access_token', $accessToken)
+					->where('ud.rest_access_token', $accessToken)
 					->update(['rest_app_version' => $input['app_version']]);
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 			}else

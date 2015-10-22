@@ -33,12 +33,12 @@ class UserController extends Controller {
                 $access_token = Uuid::uuid1()->toString();
                 if ($userDevice) {
                     $userDeviceUpdated = $userDevice->update(['device_id' => $input['device_id'], 'rest_access_token' => $access_token
-                        , 'rest_access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                        , 'rest_access_token_expires' => Carbon::now()->addDays(360),'rest_notification_id'=>$input['notification_id'], 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
                         , 'rest_app_version' => $input['app_version'],'user_id' => $user->id]);
                 } else {
                     $userDeviceUpdated = UserDevice::create(['device_id' => $input['device_id'], 'rest_access_token' => $access_token
-                        , 'rest_access_token_expires' => Carbon::now()->addDays(360), 'os_type' => $input['os_type']
+                        , 'rest_access_token_expires' => Carbon::now()->addDays(360),'rest_notification_id'=>$input['notification_id'], 'os_type' => $input['os_type']
                         , 'os_version' => $input['os_version'], 'hardware' => $input['hardware']
                         , 'rest_app_version' => $input['app_version'], 'user_id' => $user->id]);
                 }
