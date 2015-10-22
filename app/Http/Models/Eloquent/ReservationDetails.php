@@ -598,7 +598,7 @@ class ReservationDetails extends Model {
 				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
 
 			}
-			else if($resultData['reservationType'] == 'experience'){
+			else if($resultData['reservation_type'] == 'experience'){
 				//reading the product detail
 				$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
 
