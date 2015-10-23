@@ -96,7 +96,7 @@ class ReservationController extends Controller {
 					$reservation[$key] = $value;
 					//Check log for same attribute
 					$reservationStatusLog = ReservationStatusLog::where(['reservation_id' => $reservationIntAttr->reservation_id,
-						'new_reservation_status_id' => ReservationController::$edited_status_id])->first();
+						'new_reservation_status_id' => ReservationController::$edited_status_id])->orderBy('created_at', 'DESC')->first();
 					if ($reservationStatusLog != null) {
 						$reservationIntAttrLogArr = ReservationAttributesIntegerLog::where(['reservation_attribute_id' => $reservationIntAttr->attribute->id,
 							'reservation_status_log_id' => $reservationStatusLog->id])->get();
@@ -132,7 +132,7 @@ class ReservationController extends Controller {
 					$reservation[$key] = $value;
 					//Check log for same attribute
 					$reservationStatusLog = ReservationStatusLog::where(['reservation_id' => $reservationDateAttr->reservation_id,
-						'new_reservation_status_id' => ReservationController::$edited_status_id])->first();
+						'new_reservation_status_id' => ReservationController::$edited_status_id])->orderBy('created_at', 'DESC')->first();
 					if ($reservationStatusLog != null) {
 						$reservationDateAttrLogArr = ReservationAttributesDateLog::where(['reservation_attribute_id' => $reservationDateAttr->attribute->id,
 							'reservation_status_log_id' => $reservationStatusLog->id])->get();
@@ -156,7 +156,7 @@ class ReservationController extends Controller {
 					$value = $reservationTextAttr->attribute_value;
 					$reservation[$key] = $value;
 					$reservationStatusLog = ReservationStatusLog::where(['reservation_id' => $reservationTextAttr->reservation_id,
-						'new_reservation_status_id' => ReservationController::$edited_status_id])->first();
+						'new_reservation_status_id' => ReservationController::$edited_status_id])->orderBy('created_at', 'DESC')->first();
 					if ($reservationStatusLog != null) {
 						$reservationTextAttrLogArr = ReservationAttributesTextLog::where(['reservation_attribute_id' => $reservationTextAttr->attribute->id,
 							'reservation_status_log_id' => $reservationStatusLog->id])->get();
