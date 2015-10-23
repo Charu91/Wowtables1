@@ -353,6 +353,9 @@ class ReservationDetails extends Model {
 				//code for generating the payu hash
 				if(self::isPaidExperience($arrResult->product_id)) {
 					//its a paid product so generating the hash
+					if(!array_key_exists('total_amount', $arrData)) {
+						$arrData['total_amount'] = 0;
+					}
 					$arrPayUData = array(
 										'guestName' 		=> $arrData['guestName'],
 										'reservationID' 	=> $reservation->id,
