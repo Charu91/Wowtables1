@@ -770,7 +770,7 @@ class ExperienceController extends Controller {
                         $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
                         $tokens = $reservDetails->pushToRestaurant($reservationResponse['data']['reservationID']);
                         //print_r($tokens);die;
-                        $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
+                        $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens,true);
                         //print_r($newDbStatus);die;
                         /*TODO: Add the status of success check and include added_by and transaction_id attributes */
                         //die;
