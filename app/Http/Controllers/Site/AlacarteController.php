@@ -517,7 +517,7 @@ class AlacarteController extends Controller {
                 $reservDetails = new ReservationDetails();
                 $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
                 $tokens = $reservDetails->pushToRestaurant($reservationResponse['data']['reservationID']);
-                $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens);
+                $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens,true);
                 //print_r($newDbStatus);die;
                 /*TODO: Add the status of success check and include added_by and transaction_id attributes */
                 //die;
