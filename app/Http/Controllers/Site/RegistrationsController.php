@@ -480,7 +480,7 @@ class RegistrationsController extends Controller {
 		$reservDetails = new ReservDetailsModel();
 		$newDbStatus = $reservDetails->updateAttributes($reservationID,$newDb);
 		$tokens = $reservDetails->pushToRestaurant($reservationID);
-		$this->restaurantapp->push($reservationID,$tokens);
+		$this->restaurantapp->push($reservationID,$tokens,true);
 		//print_r($newDbStatus);die;
 		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 		//die;
@@ -831,7 +831,7 @@ class RegistrationsController extends Controller {
 		$reservDetails = new ReservDetailsModel();
 		$newDbStatus = $reservDetails->updateAttributes($reserv_id,$newDb);
 		$tokens = $reservDetails->pushToRestaurant($reserv_id);
-		$this->restaurantapp->push($reserv_id,$tokens);
+		$this->restaurantapp->push($reserv_id,$tokens,true);
 		//print_r($newDbStatus);die;
 		/*TODO: Add the status of success check and include added_by and transaction_id attributes */
 		//die;
