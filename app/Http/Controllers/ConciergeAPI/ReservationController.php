@@ -510,10 +510,9 @@ class ReservationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function push($id,$tokenArr)
+	public function push($id,$tokenArr,$showNotification)
 	{
 		try{
-			$input = Request::all();
 			$reservation = array();
 			$key = 'reservation_id';
 			$value = (int)$id;
@@ -655,7 +654,10 @@ class ReservationController extends Controller {
 						$reservation['product'] = $product;
 					}
 
-			//$reservation['reservation_status_id'] = 1;
+			if($showNotification)
+				$reservation["show_notfn"]=1;
+			else
+				$reservation["show_notfn"]=0;
 			//$tokenArr = json_decode($input['tokens'], true);
 			foreach ($tokenArr as $token) {
 				PushNotification::app('appNameAndroid')
