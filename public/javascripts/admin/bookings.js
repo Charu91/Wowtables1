@@ -80,7 +80,7 @@
             // From the other examples.
             //console.log("yo tp");
             if (this.checked) {
-                var sure = confirm("Are you sure change the status in zoho to Booking Cancelled?");
+                var sure = confirm("Are you sure change the status in zoho?");
                 var reservId = $(this).data('reserv-id');
                 var reservType = $(this).data('reserv-type');
                 var statusId = $(this).data('status-id');
