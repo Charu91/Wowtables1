@@ -124,6 +124,41 @@ class PaymentController extends Controller {
 		
 	 }
 
+	 //------------------------------------------------------------------------
+
+	 /**
+	  * Handle requests for payment success response by PayU. 
+	  * 	  
+	  * @access  public
+	  * @return  response
+	  * @since   1.0.0
+	  */
+	 public function getSuccessResponse() {
+
+	 	//reading data input by the user
+		$data =  $this->request->all();
+
+		return response()->json($data,200);
+
+	 }
+	 //------------------------------------------------------------------------
+
+	 /**
+	  * Handle requests for payment failure response by PayU.	  
+	  * 
+	  * @access  public
+	  * @return  response
+	  * @since   1.0.0
+	  */
+	 public function getFailureResponse() {
+
+	 	//reading data input by the user
+		$data =  $this->request->all();
+
+		return response()->json($data,200);
+
+	 }
+
 }
 //end of class PaymentController
 //end of file PaymentController.php

@@ -275,7 +275,7 @@ use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as Reservatio
 		 	
 		 	//validating the user input data
 			$arrResponse = Reservation::validateEditReservationData($data);
-			die('hello');
+			//die('hello');
 		
 			if($arrResponse['status'] == Config::get('constants.API_SUCCESS')) {
 				$arrResponse = ReservationDetails::updateReservationDetail($data);

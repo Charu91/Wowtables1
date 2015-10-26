@@ -353,8 +353,11 @@ class ReservationDetails extends Model {
 				Self::zohoSendMail($zoho_res, $zoho_data, $reservation_id['id'], $arrData);
 
 				//code for generating the payu hash
-				if(self::isPaidExperience($value['prod_id'])) {
+				if(self::isPaidExperience($arrResult->product_id)) {
 					//its a paid product so generating the hash
+					if(!array_key_exists('total_amount', $arrData)) {
+						$arrData['total_amount'] = 0;
+					}
 					$arrPayUData = array(
 										'guestName' 		=> $arrData['guestName'],
 										'reservationID' 	=> $reservation->id,
@@ -601,7 +604,7 @@ class ReservationDetails extends Model {
 				$arrResponse['data']['reward_point'] = $aLaCarteDetail['reward_point'];	
 
 			}
-			else if($resultData['reservationType'] == 'experience'){
+			else if($resultData['reservation_type'] == 'experience'){
 				//reading the product detail
 				$productDetail = self::readProductDetailByProductVendorLocationID($arrData['vendorLocationID']);
 
@@ -621,7 +624,8 @@ class ReservationDetails extends Model {
 		else {
 			$arrResponse['status'] = Config::get('constants.API_ERROR');
 		}
-		
+
+				
 		return $arrResponse;
 	}
 
@@ -1981,9 +1985,9 @@ class ReservationDetails extends Model {
 	 * @param   integer  $experience
 	 * @return  boolean 
 	 */
-	public function isPaidExperience($experienceID) {
-		$dbResult = DB::table('products_attributes as pa')
-					->join('product_attribute_boolean as pab','pab.product_attribute_id','=', 'pa.id')
+	public static function isPaidExperience($experienceID) {
+		$dbResult = DB::table('product_attributes as pa')
+					->join('product_attributes_boolean as pab','pab.product_attribute_id','=', 'pa.id')
 					->where('pa.alias','=','prepayment_allowed')
 					->where('pab.product_id','=',$experienceID)
 					->select('pa.id','pab.attribute_value')

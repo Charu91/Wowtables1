@@ -924,6 +924,7 @@ class ReservationController extends Controller {
 
 		$data['attributes']['zoho_booking_cancelled'] = "yes";
 		$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);*/
+		$reservationDetailsAttr = $this->reservationDetails->getByReservationId($reservation_id);
 
 		switch ($statusId) {
 			case 2:
@@ -952,12 +953,15 @@ class ReservationController extends Controller {
 				} else if ($reservType == "Alacarte") {
 					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
 				}
+				$data['attributes']['total_seated'] = 0;
+				$data['attributes']['actual_experience_takers'] = 0;
 				break;
 			case 6:
 				//for accepted status
 				$adminComments = DB::table('reservation_attributes_text')->where('reservation_id',$reservation_id)->where('reservation_attribute_id',17)->select('attribute_value')->first();;
 				$zoho_data = array(
-					'Order_completed' => 'Confirmed with rest & customer'
+					'Order_completed' => 'Confirmed with rest & customer',
+					'Satisfaction' => $adminComments
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
@@ -980,6 +984,8 @@ class ReservationController extends Controller {
 				//for closed status
 				$zoho_data = array(
 					'Order_completed' => 'yes',
+					'Total_Seated'=>$reservationDetailsAttr['attributes']['total_seated'],
+					'Actual_attendees'=>$reservationDetailsAttr['attributes']['actual_experience_takers']
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
@@ -988,15 +994,19 @@ class ReservationController extends Controller {
 				}
 				break;
 			case 9:
-				//for closed status
+				//for no show status
 				$zoho_data = array(
 					'Order_completed' => 'no show',
+					'Total_Seated'=>'0',
+					'Actual_attendees'=>'0'
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);
 				} else if ($reservType == "Alacarte") {
 					$this->reservationDetails->changeStatusInZoho('A' . sprintf("%06d", $reservation_id), $zoho_data);
 				}
+				$data['attributes']['total_seated'] = 0;
+				$data['attributes']['actual_experience_takers'] = 0;
 				break;
 		}
 		$data['attributes']['zoho_booking_update'] = "yes";
@@ -1054,7 +1064,12 @@ class ReservationController extends Controller {
 				$booking->name = $unconfirmedBookings->experience->name;
 			}
 			$booking->cust_name = $unconfirmedBookings->guest_name;
-			$booking->restaurant_name = $unconfirmedBookings->vendor_location->vendor->name;
+			if(isset($unconfirmedBookings->vendor_location->vendor->name)){
+				$booking->restaurant_name = $unconfirmedBookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
+
 			if(empty($unconfirmedBookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1157,7 +1172,11 @@ class ReservationController extends Controller {
 				$booking->name = $postBookings->experience->name;
 			}
 			$booking->cust_name = $postBookings->guest_name;
-			$booking->restaurant_name = $postBookings->vendor_location->vendor->name;
+			if(isset($postBookings->vendor_location->vendor->name)){
+				$booking->restaurant_name =$postBookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($postBookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1256,7 +1275,11 @@ class ReservationController extends Controller {
 				$booking->name = $allbookings->experience->name;
 			}
 			$booking->cust_name = $allbookings->guest_name;
-			$booking->restaurant_name = $allbookings->vendor_location->vendor->name;
+			if(isset($allbookings->vendor_location->vendor->name)){
+				$booking->restaurant_name =$allbookings->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($allbookings->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
@@ -1309,7 +1332,7 @@ class ReservationController extends Controller {
 		$todayBookings = array();
 		$count = 0;
 
-		$statusCancelledNew = DB::select(DB::raw('select rd.id as id from reservation_details as rd left join reservation_attributes_date as rad on rd.id = rad.reservation_id where DATE(rad.attribute_value) = \''.Carbon::now()->format('Y-m-d').'\''));
+		$statusCancelledNew = DB::select(DB::raw('select rd.id as reservation_id,rd.user_id as user_id from reservation_details as rd left join reservation_attributes_date as rad on rd.id = rad.reservation_id where DATE(rad.attribute_value) = \''.Carbon::now()->format('Y-m-d').'\''));
 		$reservationIdArr = array();
 		foreach($statusCancelledNew as $reservId){
 			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
@@ -1343,7 +1366,11 @@ class ReservationController extends Controller {
 				$booking->name = $today->experience->name;
 			}
 			$booking->cust_name = $today->guest_name;
-			$booking->restaurant_name = $today->vendor_location->vendor->name;
+			if(isset($today->vendor_location->vendor->name)){
+				$booking->restaurant_name =$today->vendor_location->vendor->name;
+			} else {
+				$booking->restaurant_name = "";
+			}
 			if(empty($today->vendor_location->address->city_name)){
 				$booking->city =  "";
 			} else {
