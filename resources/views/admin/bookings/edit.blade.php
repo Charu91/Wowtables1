@@ -48,6 +48,11 @@
                     <input type="text" class="form-control" id="attributes[gift_card_id_reserv]" name="attributes[gift_card_id_reserv]" value="{{ $reservationDetailsAttr['attributes']['gift_card_id_reserv'] or '' }}"/>
                 </div>
 
+                {!! Form::label("prepaid_amount","Prepaid Amount",['class'=>'col-md-1 control-label']) !!}
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="attributes[prepaid_amount]" name="attributes[prepaid_amount]" value="{{ $reservationDetailsAttr['attributes']['prepaid_amount'] or '' }}"/>
+                </div>
+
 
             </div>
             <div class="form-group">
