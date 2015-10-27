@@ -49,13 +49,13 @@ class Payment {
      	if($data['userCredentials'] != NULL  && $data['userCredentials'] != '') {
      		//creating the user card hash
      		$cmnNameGetUserCard = 'get_user_cards';
-            $strGetUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameGetUserCard . '|' . $userCredentials . '|' . Config::get('constants.PAYU_SALT');
+            $strGetUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameGetUserCard . '|' . $data['userCredentials'] . '|' . Config::get('constants.PAYU_SALT');
             $getUserCardHash = strtolower(hash('sha512', $strGetUserCardHash));
             $arrHashes['getUserCardsHash'] = $getUserCardHash;
 
             //creating save user card hash
             $cmnNameSaveUserCard = 'save_user_card';
-           	$strSaveUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameSaveUserCard . '|' . $userCredentials . '|' . Config::get('constants.PAYU_SALT') ;
+           	$strSaveUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameSaveUserCard . '|' . $data['userCredentials'] . '|' . Config::get('constants.PAYU_SALT') ;
            	$saveUserCardHash = strtolower(hash('sha512', $strSaveUserCardHash));
            	$arrHashes['saveUserCardHash'] = $saveUserCardHash;
      	}
