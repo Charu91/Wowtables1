@@ -51,13 +51,13 @@ class Payment {
      		$cmnNameGetUserCard = 'get_user_cards';
             $strGetUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameGetUserCard . '|' . $userCredentials . '|' . Config::get('constants.PAYU_SALT');
             $getUserCardHash = strtolower(hash('sha512', $strGetUserCardHash));
-            $arr['getUserCardsHash'] = $getUserCardHash;
+            $arrHashes['getUserCardsHash'] = $getUserCardHash;
 
             //creating save user card hash
             $cmnNameSaveUserCard = 'save_user_card';
            	$strSaveUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameSaveUserCard . '|' . $userCredentials . '|' . Config::get('constants.PAYU_SALT') ;
            	$saveUserCardHash = strtolower(hash('sha512', $strSaveUserCardHash));
-           	$arr['saveUserCardHash'] = $saveUserCardHash;
+           	$arrHashes['saveUserCardHash'] = $saveUserCardHash;
      	}
 
 		//saving the information into DB
