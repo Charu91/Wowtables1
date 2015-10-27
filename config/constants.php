@@ -21,7 +21,7 @@
  	"NEXT_RESERVATION_TIME_RANGE_LIMIT" => 2, //hours after or before an existing reservation, next reservation is allowed to a user for same date
  	"SERVER_TIME_CUTOFF_FOR_RESERVATION" => '20:30:00', //time upto which server will accept the reservation requests
  	"MIN_SUPPORTED_IOS_VERSION" => '1.1.0',
- 	"MIN_SUPPORTED_ANDROID_VERSION" => '1.0.9',
+ 	"MIN_SUPPORTED_ANDROID_VERSION" => '1.1.7',
  	"API_UPDATE" => 'Update',
  	"API_NEARBY_DISTANCE" => 15,
 
