@@ -27,24 +27,48 @@ class Payment {
 	 * @since  1.0.0
 	 */
 	public static function generateMobilePayUHash($data) {
+		//array to store the various hashes
+		$arrHashes = array();
 
 		//splitting the guest name 
 		$arrName = explode(" ",$data['guestName']);
 
-		$payHashString = Config::get('PAYU_MERCHANT_ID') .'|'. $data['reservationID'] .'|'. 
+		//creating the payhash
+		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') .'|'. $data['reservationID'] .'|'. 
 							$data['amount'] .'|'. $data['shortDescription'] . '|' . $arrName[0] .'|'.
-							$data['email'] .'|'. "||||||||||". Config::get('PAYU_SALT');  
+							$data['email'] .'|'. "||||||||||". Config::get('constants.PAYU_SALT');  
 
-		$secureHash  = hash("sha512", $payHashString);
+		$arrHashes['paymentHash']  = hash("sha512", $payHashString);
+
+		//payment related details for mobile sdk hash
+		$cmnPaymentRelatedDetailsForMobileSdk1 = 'payment_related_details_for_mobile_sdk';
+		$strDetailsForMobileSdk = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnPaymentRelatedDetailsForMobileSdk1 . '|default|' . Config::get('constants.PAYU_SALT');
+     	$detailsForMobileSdk1 = strtolower(hash('sha512', $strDetailsForMobileSdk));
+     	$arrHashes['paymentRelatedDetailsForMobileSDKHash'] = $detailsForMobileSdk1;
+
+     	if($data['userCredentials'] != NULL  && $data['userCredentials'] != '') {
+     		//creating the user card hash
+     		$cmnNameGetUserCard = 'get_user_cards';
+            $strGetUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameGetUserCard . '|' . $data['userCredentials'] . '|' . Config::get('constants.PAYU_SALT');
+            $getUserCardHash = strtolower(hash('sha512', $strGetUserCardHash));
+            $arrHashes['getUserCardsHash'] = $getUserCardHash;
+
+            //creating save user card hash
+            $cmnNameSaveUserCard = 'save_user_card';
+           	$strSaveUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameSaveUserCard . '|' . $data['userCredentials'] . '|' . Config::get('constants.PAYU_SALT') ;
+           	$saveUserCardHash = strtolower(hash('sha512', $strSaveUserCardHash));
+           	$arrHashes['saveUserCardHash'] = $saveUserCardHash;
+     	}
 
 		//saving the information into DB
+		/*
 		DB::table('payu_mobile_hash')
 			->insert([
 				'reservation_id'  => $data['reservationID'],
 				'hash'            => $secureHash
-				]);
-
-		return $secureHash;
+				]); */
+		
+		return $arrHashes;
 		
 	}
 	//-------------------------------------------------------------------------

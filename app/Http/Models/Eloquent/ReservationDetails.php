@@ -362,8 +362,18 @@ class ReservationDetails extends Model {
 										'amount'			=> $arrData['total_amount'],
 										'shortDescription'	=> $productDetail['descriptive_title'],
 										'email'				=> $arrData['guestEmail'],
+										'userCredentials'	=> $arrData['userCredentials']
 									);
-					$arrResponse['data']['hash'] = Payment::getPayUHash($arrPayUData);
+
+					$arrHash = Payment::getPayUHash($arrPayUData);
+
+					//setting up the hash value
+					$arrResponse['data']['hash'] = array(
+														'paymentHash' 		=> $arrHash['paymentHash'],
+														'paymentRelatedDetailsForMobileSDKHash' => (array_key_exists('paymentRelatedDetailsForMobileSDKHash', $arrHash)) ? $arrHash['paymentRelatedDetailsForMobileSDKHash']:'',
+														'getUserCardsHash'	=> (array_key_exists('getUserCardsHash', $arrHash)) ? $arrHash['getUserCardsHash'] : '',
+														'saveUserCardHash'	=> (array_key_exists('saveUserCardHash', $arrHash)) ? $arrHash['saveUserCardHash'] : ''																							 
+													); 
 
 				}
 			}
