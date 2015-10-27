@@ -67,7 +67,7 @@ class Payment {
 				'reservation_id'  => $data['reservationID'],
 				'hash'            => $secureHash
 				]); */
-
+		print_r($arrHashes); die("...testing");
 		return $arrHashes;
 		
 	}
