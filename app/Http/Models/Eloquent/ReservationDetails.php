@@ -362,6 +362,7 @@ class ReservationDetails extends Model {
 										'amount'			=> $arrData['total_amount'],
 										'shortDescription'	=> $productDetail['descriptive_title'],
 										'email'				=> $arrData['guestEmail'],
+										'userCredentials'	=> $arrData['userCredentials']
 									);
 
 					$arrHash = Payment::getPayUHash($arrPayUData);
