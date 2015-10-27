@@ -46,7 +46,7 @@ class Payment {
      	$detailsForMobileSdk1 = strtolower(hash('sha512', $strDetailsForMobileSdk));
      	$arrHashes['paymentRelatedDetailsForMobileSDKHash'] = $detailsForMobileSdk1;
 
-     	if($userCredentials != NULL  && $userCredentials == '') {
+     	if($data['userCredentials'] != NULL  && $data['userCredentials'] == '') {
      		//creating the user card hash
      		$cmnNameGetUserCard = 'get_user_cards';
             $strGetUserCardHash = Config::get('constants.PAYU_MERCHANT_ID')  . '|' . $cmnNameGetUserCard . '|' . $userCredentials . '|' . Config::get('constants.PAYU_SALT');
