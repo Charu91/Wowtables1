@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
 
 		//$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
-		$this->call('ReservationAttributesSeeder');
-		$this->call('ReservationStatusesSeeder');
+		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		//$this->call('ReservationAttributesSeeder');
+		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
 		//$this->call('ReservationAttrIntSeeder');
@@ -76,7 +76,8 @@ class VendorLocationContactsSeeder extends Seeder{
 	public function run(){
 		//Assign vendor location to concierge users
 		DB::table('vendor_location_contacts')->insert(array(
-			array('vendor_location_id'=>153,'name'=>'Biju','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>44229,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			//array('vendor_location_id'=>153,'name'=>'Biju','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>44229,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>113,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>44226,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			/*array('vendor_location_id'=>153,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>44226,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
