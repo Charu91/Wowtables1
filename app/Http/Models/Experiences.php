@@ -115,7 +115,7 @@ class Experiences {
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
                                 	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
-                                	'pab.attribute_value as prepayment_allowed');
+                                	'pab.attribute_value as prepayment_allowed','products.slug');
 							
 		}
 		else {
@@ -133,7 +133,7 @@ class Experiences {
 									'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
                                 	'loc4.name as country', 'loc5.name as locality',
                                 	'vla.address', 'vla.pin_code', 'vla.latitude', 'vla.longitude',
-                                	'pab.attribute_value as prepayment_allowed');
+                                	'pab.attribute_value as prepayment_allowed','products.slug');
 		}
 
 		//running the query to get the results
@@ -202,6 +202,7 @@ class Experiences {
 																	  "latitude" 	=> (is_null($expResult->latitude)) ? "": $expResult->latitude,
 																	  "longitude" 	=> (is_null($expResult->longitude)) ? "": $expResult->longitude																
 																   ),
+										'slug' => $expResult->slug,
 									);
 
             $arrExpDetails['status'] = Config::get('constants.API_SUCCESS');
