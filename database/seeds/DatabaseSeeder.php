@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
 		Model::unguard();
 
 		//$this->call('RolesSeeder');
-		//$this->call('UsersSeeder');
-		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		$this->call('UsersSeeder');
+		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
 		//$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
@@ -66,7 +66,11 @@ class UsersSeeder extends Seeder{
             array('role_id'=>6,'location_id'=>3,'email'=>'shishir@binaryveda.com','full_name'=>'Shishir Pednekar','phone_number'=>'9811111111','password'=>Hash::make('shishir'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
             array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
 			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
-			array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'shiro@wowtables.com','full_name'=>'Demo Shiro','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'tastingroom@wowtables.com','full_name'=>'Demo The Tasting Room','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'bluefrog@wowtables.com','full_name'=>'Demo Bluefrog','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'ohcha@wowtables.com','full_name'=>'Demo Ohcha','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			//array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 
 		));
 	}
