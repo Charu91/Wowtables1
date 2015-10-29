@@ -60,6 +60,15 @@ class Experiences {
 						->first();
 
         //print_r($queryType); die();
+						
+		//Checking the bookmark status of the product
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];		
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);		
+		$bookmark = DB::table('user_bookmarks as ub')															
+					  	->where('user_id', '=', $userID)
+					   	->where('product_id','=',$experienceID)
+					   	->select('id','type')
+						->first();
 
        	//query to read the experience detail
 		$queryExperience = DB::table('products')
@@ -203,6 +212,7 @@ class Experiences {
 																	  "longitude" 	=> (is_null($expResult->longitude)) ? "": $expResult->longitude																
 																   ),
 										'slug' => $expResult->slug,
+										'bookmark_status' => (is_null($bookmark)) ? 0 : 1,
 									);
 
             $arrExpDetails['status'] = Config::get('constants.API_SUCCESS');

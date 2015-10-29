@@ -47,6 +47,15 @@ use Config;
 
 		}
 
+		//Checking the bookmark status of the product
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];		
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);		
+		$bookmark = DB::table('user_bookmarks as ub')															
+					  	->where('user_id', '=', $userID)
+					   	->where('vendor_location_id','=',$aLaCarteID)
+					   	->select('id','type')
+						->first();
+
 		//array to store the matching result
 		$arrData = array();
 		
@@ -155,7 +164,8 @@ use Config;
 									'similar_option' => $arrResultAlacarte, // Added on 4.6.15
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
 									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
-									'slug' => $queryResult->slug,																	
+									'slug' => $queryResult->slug,
+									'bookmark_status' => (is_null($bookmark)) ? 0 : 1,																	
 								);
 			
 			//reading the review details
