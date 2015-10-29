@@ -28,6 +28,6 @@
 
 
  	/* DETAILS for PAYU to be used for testing purpose */
- 	"PAYU_MERCHANT_ID" => 'gtKFFX',
- 	"PAYU_SALT"        => 'eCwWELxi',
+ 	"PAYU_MERCHANT_ID" => '0MQaQP',//'gtKFFX',
+ 	"PAYU_SALT"        => '13p0PXZk',//'eCwWELxi',
  ];

@@ -38,7 +38,7 @@ class Payment {
 							$data['amount'] .'|'. $data['shortDescription'] . '|' . $arrName[0] .'|'.
 							$data['email'] .'|'. "||||||||||". Config::get('constants.PAYU_SALT');  
 
-		$arrHashes['paymentHash']  = hash("sha512", $payHashString);
+		$arrHashes['paymentHash']  = strtolower(hash("sha512", $payHashString));
 
 		//payment related details for mobile sdk hash
 		$cmnPaymentRelatedDetailsForMobileSdk1 = 'payment_related_details_for_mobile_sdk';
