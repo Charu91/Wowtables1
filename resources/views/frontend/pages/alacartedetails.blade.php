@@ -772,7 +772,7 @@
           <div class="widget terms-box">
             <p class="lead">TERMS</p>
             <ul>
-        <li>WowTables Gift Cards are not valid for A la carte reservations</li>
+        <li>WowTables Gift Cards are not valid for Classic Reservations</li>
         <?php echo $arrALaCarte['data']['terms_and_condition']?>
             </ul>
           </div>
