@@ -1,8 +1,8 @@
 <?php
 //Get Reservations based on status
 Route::get('conciergeapi/reservation/{statuses}/{location}', [
-    'uses' => 'ConciergeAPI\ReservationController@index',
-    'middleware' => 'concierge.api'
+    'uses' => 'ConciergeAPI\ReservationController@index'//,
+    //'middleware' => 'concierge.api'
 ]);
 //Get a particular reservation for edit
 Route::get('conciergeapi/reservation/{id}/edit', [
@@ -22,6 +22,7 @@ Route::put('conciergeapi/reservation/{id}', [
 
 //Update a particular reservation
 Route::get('conciergeapi/reservation/experience/{id}', [
-    'uses' => 'ConciergeAPI\ReservationController@getExperienceDetails'
+    'uses' => 'ConciergeAPI\ReservationController@getExperienceDetails'//,
+    //'middleware' => 'concierge.api'
 ]);
 
