@@ -21,7 +21,7 @@ Route::put('conciergeapi/reservation/{id}', [
 ]);
 
 //Update a particular reservation
-Route::get('conciergeapi/reservation/experience/{id}', [
+Route::get('conciergeapi/experience/{id}', [
     'uses' => 'ConciergeAPI\ReservationController@getExperienceDetails'//,
     //'middleware' => 'concierge.api'
 ]);
