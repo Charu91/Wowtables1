@@ -686,7 +686,7 @@ class ReservationController extends Controller {
 
 	public function getExperienceDetails($id) {
 		return response()->json([
-			'message' => 'blah.'
+			'message' => 'blah..'
 		], 200);
 		//return $this->experiencesController->show($id);
 
