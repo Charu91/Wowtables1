@@ -47,6 +47,15 @@ use Config;
 
 		}
 
+		//Checking the bookmark status of the product
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];		
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);		
+		$bookmark = DB::table('user_bookmarks as ub')															
+					  	->where('user_id', '=', $userID)
+					   	->where('vendor_location_id','=',$aLaCarteID)
+					   	->select('id','type')
+						->first();
+
 		//array to store the matching result
 		$arrData = array();
 		
@@ -83,7 +92,7 @@ use Config;
 								'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
 								'loc4.name as country', 'loc5.name as locality', 'curators.name as curator_name', 'curators.bio as curator_bio',
 								'curators.designation as designation','vl.pricing_level','vlai.attribute_value as reward_point', 
-								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips', 'vla.city_id')						
+								'm2.file as curator_image','vl.location_id as vl_location_id','vlcm.curator_tips', 'vla.city_id','vl.slug')						
 						->first();
 						
 		if($queryResult) {
@@ -154,7 +163,9 @@ use Config;
 									'similar_option' => $arrSimilarAlacarteFilters, //$arrSimilarVendor,
 									'similar_option' => $arrResultAlacarte, // Added on 4.6.15
 									'reward_point' => (is_null($queryResult->reward_point)) ? 0:$queryResult->reward_point,
-									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,																	
+									'expert_tips' => (is_null($queryResult->expert_tips)) ? "" : $queryResult->expert_tips,
+									'slug' => $queryResult->slug,
+									'bookmark_status' => (is_null($bookmark)) ? 0 : 1,																	
 								);
 			
 			//reading the review details

@@ -73,7 +73,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="details">
                             <ul>
-                                {{$result['terms_and_conditions']}}
+                                {!! $result['terms_and_conditions'] !!}
                             </ul>
                         </div>
                     </div>

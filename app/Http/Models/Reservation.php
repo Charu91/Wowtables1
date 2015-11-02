@@ -589,12 +589,13 @@ class Reservation {
 									 DB::raw('MAX(IF(pa.alias="short_description", pat.attribute_value,"")) AS product_short_description'),
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
 									 'ploc.name as product_locality','pvla.address as product_address',
-									 'vloc.name as vendor_locality', 'vvla.address as vendor_address')
+									 'vloc.name as vendor_locality', 'vvla.address as vendor_address', 
+									 'products.slug as experience_slug', 'vl.slug as alacarte_slug')
 						->orderBy('rd.reservation_date','asc')
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();    
-		//echo $queryResult->toSql(); die();
+		//echo $queryResult->toSql(); die(); 
 		
 		//array to store the information
 		$arrData = array();
@@ -631,11 +632,12 @@ class Reservation {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
-						
+						$slug = $row->experience_slug;
 					}
 					else if($row->reservation_type == 'alacarte') {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getVendorLocationSchedule($row->vendor_location_id, $day);
+						$slug = $row->alacarte_slug;
 					}
 				}
 
@@ -678,6 +680,7 @@ class Reservation {
 														'locality' => (empty($locality)) ? "" : $locality,														
 													),
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
+									'slug' => (empty($slug)) ? "" : $slug,
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp && $row->reservation_status != 'cancel' ) {

@@ -21,7 +21,7 @@ class AppVersion {
 	 * @since	1.0.0
 	 * @version	1.0.0
 	 */
-	public static function updateAppVersion($data) {
+	public static function updateAppVersion($data) {  
 
 		$accessToken = (array_key_exists('HTTP_X_WOW_TOKEN', $_SERVER)) ? $_SERVER['HTTP_X_WOW_TOKEN']:"";
 

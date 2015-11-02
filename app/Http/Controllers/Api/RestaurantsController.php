@@ -138,4 +138,45 @@ class RestaurantsController extends Controller {
 			$arrResponse['status'] = Config::get('constants.API_ERROR');
 		}
 	}
+	//-------------------------------------------------------------------------
+
+	/**
+	 * Handle the request to unbookmark.
+	 *
+	 * @param  int  	$id
+	 * @param  string  	$type
+	 * @return Response
+	 */
+	public function unbookmark($type,$id){
+
+		$data['access_token']=$_SERVER['HTTP_X_WOW_TOKEN'];		
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
+
+		if(!empty($userID) && !empty($type) && !empty($id)){
+			$userBookmark = new UserBookmarks();
+			if($type == 'experience'){
+				
+				$status = $userBookmark->where('user_id', '=', $userID)
+									   ->where('product_id','=',$id)
+									   ->delete();				
+			}
+
+			if($type == 'alacarte'){				
+
+				$status = $userBookmark->where('user_id', '=', $userID)
+									   ->where('vendor_location_id','=',$id)
+									   ->delete();				
+			}		
+			
+			if($status){
+				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
+			} else {
+				$arrResponse['status'] = Config::get('constants.API_ERROR');
+			}
+
+		} else {
+			$arrResponse['status'] = Config::get('constants.API_ERROR');
+		}
+		return $arrResponse;
+	}
 }
