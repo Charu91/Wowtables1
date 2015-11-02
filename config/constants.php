@@ -27,7 +27,6 @@
  	"API_NEARBY_DISTANCE" => 15,
 
 
-
  	/* DETAILS for PAYU to be used for testing purpose */
  	"PAYU_MERCHANT_ID" => 'gtKFFX',
  	"PAYU_SALT"        => 'eCwWELxi',
