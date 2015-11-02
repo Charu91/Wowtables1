@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
 
 		//$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
-		$this->call('ReservationAttributesSeeder');
-		$this->call('ReservationStatusesSeeder');
+		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		//$this->call('ReservationAttributesSeeder');
+		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
 		//$this->call('ReservationStatusLogSeeder');
 		//$this->call('ReservationAttrIntSeeder');
@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
 		//$this->call('ReservationSeatingStatusSeeder');
 		//$this->call('ReservationRejectionReasonSeeder');
 		//$this->call('ReservationAddonsVariantsDetailsSeeder');
+		//$this->call('UserAttributesSeeder');
 	}
 }
 
@@ -63,8 +64,13 @@ class UsersSeeder extends Seeder{
             array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
             array('role_id'=>6,'location_id'=>3,'email'=>'aditya@binaryveda.com','full_name'=>'Aditya Gokula','phone_number'=>'9811111111','password'=>Hash::make('aditya'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('role_id'=>6,'location_id'=>3,'email'=>'shishir@binaryveda.com','full_name'=>'Shishir Pednekar','phone_number'=>'9811111111','password'=>Hash::make('shishir'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
-            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
-			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
+			array('role_id'=>5,'location_id'=>3,'email'=>'shiro@wowtables.com','full_name'=>'Demo Shiro','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'tastingroom@wowtables.com','full_name'=>'Demo The Tasting Room','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'bluefrog@wowtables.com','full_name'=>'Demo Bluefrog','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			array('role_id'=>5,'location_id'=>3,'email'=>'ohcha@wowtables.com','full_name'=>'Demo Ohcha','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			//array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 
 		));
 	}
@@ -74,8 +80,14 @@ class VendorLocationContactsSeeder extends Seeder{
 	public function run(){
 		//Assign vendor location to concierge users
 		DB::table('vendor_location_contacts')->insert(array(
-			array('vendor_location_id'=>153,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>43649,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			/*array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			//array('vendor_location_id'=>153,'name'=>'Biju','designation'=>'Restaurant Manager','email'=>'biju@binaryveda.com','phone_number'=>'9811111111','user_id'=>44229,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			//array('vendor_location_id'=>113,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>44226,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>172,'name'=>'Demo Shiro','designation'=>'Restaurant Manager','email'=>'shiro@wowtables.com','phone_number'=>'9811111111','user_id'=>44236,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>199,'name'=>'Demo The Tasting Room','designation'=>'Restaurant Manager','email'=>'tastingroom@wowtables.com','phone_number'=>'9811111111','user_id'=>44237,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>191,'name'=>'Demo BlueFrog','designation'=>'Restaurant Manager','email'=>'bluefrog@wowtables.com','phone_number'=>'9811111111','user_id'=>44238,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>142,'name'=>'Demo OhCha','designation'=>'Restaurant Manager','email'=>'ohcha@wowtables.com','phone_number'=>'9811111111','user_id'=>44239,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			/*array('vendor_location_id'=>153,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>44226,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
 		));
@@ -123,7 +135,7 @@ class ReservationAttributesSeeder extends Seeder {
 			array('name'=>'GIU Membership Id','alias'=>'giu_membership_id','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'No Of People Booked','alias'=>'no_of_people_booked','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Total Seated','alias'=>'total_seated','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('name'=>'Actual Experience Takers','alias'=>'actual_experience_takers','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('name'=>'Actual Experience Takers','alias'=>'','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Order Completed','alias'=>'order_completed','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Loyalty Points Awarded','alias'=>'loyalty_points_awarded','type'=>'integer','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('name'=>'Special Request','alias'=>'special_request','type'=>'text','created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
@@ -493,13 +505,13 @@ class ReservationAttrVarcharSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::table('reservation_attributes_text')->truncate();
+		DB::table('reservation_attributes_varchar')->truncate();
 		DB::table('reservation_attributes_varchar')->insert(array(
 			/*array('reservation_id'=>22983,'reservation_attribute_id' =>17,'attribute_value' =>'Well mannered & Courteous.',
                 'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('reservation_id'=>22984,'reservation_attribute_id' =>17,'attribute_value' =>'Prefers Family Section.',
                 'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
-			array('reservation_id'=>22993,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
+			/*array('reservation_id'=>22993,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
 				'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('reservation_id'=>22994,'reservation_attribute_id' =>37,'attribute_value' =>'Prefers Family Section.',
 				'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
@@ -563,6 +575,17 @@ class ReservationAddonsVariantsDetailsSeeder extends Seeder {
 			array('reservation_id'=>22993,'no_of_persons' =>2,'options_id'=>560,'option_type'=>'addon','reservation_type'=>'experience','reservation_status_id'=>ReservationController::$new_status_id,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('reservation_id'=>22996,'no_of_persons' =>2,'options_id'=>560,'option_type'=>'addon','reservation_type'=>'experience','reservation_status_id'=>ReservationController::$new_status_id,'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
 		));*/
+	}
+
+}
+
+class UserAttributesSeeder extends Seeder {
+
+	public function run()
+	{
+		DB::table('user_attributes')->insert(array(
+			array('name'=>'Customer Preferences','alias' =>'customer_preferences','type'=>'varchar')
+		));
 	}
 
 }

@@ -25,17 +25,19 @@ use Mailchimp;
 use WowTables\Http\Models\Profile;
 use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails;
 use Carbon\Carbon;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController;
 
 class AlacarteController extends Controller {
 
     protected $listId = '986c01a26a';
 
-	function __construct(RestaurantLocationsRepository $repository, Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp){
+	function __construct(RestaurantLocationsRepository $repository, Request $request, AlacarteModel $alacarte_model, ExperienceModel $experiences_model,Mailchimp $mailchimp,ReservationController $restaurantapp){
         $this->request = $request;
         $this->alacarte_model = $alacarte_model;
         $this->experiences_model = $experiences_model;
         $this->repository = $repository;
         $this->mailchimp = $mailchimp;
+        $this->restaurantapp = $restaurantapp;
     }
 
     function index(){
@@ -507,12 +509,15 @@ class AlacarteController extends Controller {
                 $newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservationResponse['data']['reservationID']);
                 $newDb['attributes']['special_offer_title'] = $dataPost['special_offer_title'];
                 $newDb['attributes']['special_offer_desc'] = $dataPost['special_offer_desc'];
+                $newDb['attributes']['reservation_status_id'] = 1;
                 $newDb['userdetails']['user_id'] = $userID;
                 $newDb['userdetails']['status'] = 1;
 
 
                 $reservDetails = new ReservationDetails();
                 $newDbStatus = $reservDetails->updateAttributes($reservationResponse['data']['reservationID'],$newDb);
+                $tokens = $reservDetails->pushToRestaurant($reservationResponse['data']['reservationID']);
+                $this->restaurantapp->push($reservationResponse['data']['reservationID'],$tokens,true);
                 //print_r($newDbStatus);die;
                 /*TODO: Add the status of success check and include added_by and transaction_id attributes */
                 //die;

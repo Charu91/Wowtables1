@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'debug' => env('APP_DEBUG'),
+	'debug' => true,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -139,7 +139,7 @@ return [
         'Intervention\Image\ImageServiceProvider',
 
 		'Laracasts\Flash\FlashServiceProvider',
-		'Laracasts\Utilities\JavaScript\JavascriptServiceProvider',
+		'Laracasts\Utilities\JavaScript\JavaScriptServiceProvider',
 		'Skovmand\Mailchimp\MailchimpServiceProvider',
 		'Laravel\Socialite\SocialiteServiceProvider',
 
@@ -152,7 +152,9 @@ return [
 		'WowTables\Providers\EventServiceProvider',
 		'WowTables\Providers\RouteServiceProvider',
         'WowTables\Providers\ViewServiceProvider',
-        'WowTables\Providers\ValidatorServiceProvider'
+        'WowTables\Providers\ValidatorServiceProvider',
+		//For Concierge app Push notifications
+		'Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider'
 	],
 
 	/*
@@ -204,8 +206,9 @@ return [
         'Html'		=> 'Illuminate\Html\HtmlFacade',
         'Image'     => 'Intervention\Image\Facades\Image',
 		'Flash' 	=> 'Laracasts\Flash\Flash',
-
+		'JavaScript' => 'Laracasts\Utilities\JavaScript\JavaScriptFacade',
 		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
+		'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification'
 	],
 
 ];
