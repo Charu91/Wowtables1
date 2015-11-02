@@ -486,6 +486,12 @@ $(document).ready(function(){
 </script> 
 </head>
 <body>
+<script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
+<script type="text/javascript">twttr.conversion.trackPid('ntp35', { tw_sale_amount: 0, tw_order_quantity: 0 });</script>
+<noscript>
+    <img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?txn_id=ntp35&p_id=Twitter&tw_sale_amount=0&tw_order_quantity=0" />
+    <img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?txn_id=ntp35&p_id=Twitter&tw_sale_amount=0&tw_order_quantity=0" />
+</noscript>
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PQHMSR"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

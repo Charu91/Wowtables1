@@ -117,7 +117,7 @@ class Experience extends Product{
                                         'product_id' => $productId,
                                         'product_attribute_id' => $attributeIdMap[$attribute],
                                         'attribute_value' => $this->parseMenu($value)
-                                        //'attribute_value' => $value
+                                        //'attribute_value' => json_encode($value)
                                     ];
                                 }else{
                                     if($value != "" || $value != " ") {

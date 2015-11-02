@@ -21,3 +21,10 @@ Route::get('api/bookmarklist', [
     'middleware' => 'wow.api',
     'domain' => env('WEBSITE_URL')
 ]);
+
+Route::get('api/unbookmark/{type}/{id}', [
+    'uses' => 'Api\RestaurantsController@unbookmark',
+    'as' => 'BookmarkList',
+    'middleware' => 'wow.api',
+    'domain' => env('WEBSITE_URL')
+]);
