@@ -57,7 +57,7 @@ class ConciergeMiddleware {
 		}
 		$response=array();
 		$response['status'] = Config::get('constants.API_ERROR');				
-		$response['msg']= "Please login into your Wowtables account.";
+		$response['msg']= "Please login into your Manager app account.";
 			return response()->json($response, 200);
 		}
 }

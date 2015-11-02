@@ -19,8 +19,10 @@ Route::put('conciergeapi/reservation/{id}', [
     'uses' => 'ConciergeAPI\ReservationController@update',
     'middleware' => 'concierge.api'
 ]);
-//Send a push notification with reservation details
-/*Route::post('conciergeapi/reservation/{id}/notification', [
-    'uses' => 'ConciergeAPI\ReservationController@push',
+
+//Update a particular reservation
+Route::get('conciergeapi/experience/{id}', [
+    'uses' => 'ConciergeAPI\ReservationController@getExperienceDetails',
     'middleware' => 'concierge.api'
-]);*/
+]);
+

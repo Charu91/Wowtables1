@@ -4,6 +4,8 @@ use Carbon\Carbon;
 use Config;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use DB;
+use Validator;
+use WowTables\Http\Controllers\Api\ExperiencesController;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAddonsVariantsDetail;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesBoolean;
 use WowTables\Http\Models\Eloquent\ConciergeApi\ReservationAttributesDate;
@@ -27,6 +29,7 @@ use WowTables\Http\Models\Eloquent\Products\Product;
 use WowTables\Http\Models\Eloquent\UserAttributesVarChar;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocation;
 use WowTables\Http\Models\Eloquent\Vendors\Locations\VendorLocationAttributesText;
+use WowTables\Http\Models\Experiences;
 use WowTables\Http\Requests;
 use WowTables\Http\Controllers\Controller;
 use Request;
@@ -56,6 +59,11 @@ class ReservationController extends Controller {
 	private static $cancelled_seating_status = 3;
 	private static $noshow_seating_status = 4;
 	private static $cust_pref_attr_id = 11;
+	function __construct(ExperiencesController $experiencesController){
+		$this->experiencesController = $experiencesController;
+	}
+
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -673,6 +681,11 @@ class ReservationController extends Controller {
 			'message' => 'An application error occured.'
 			], 500);
 	}
+
+	}
+
+	public function getExperienceDetails($id) {
+		return $this->experiencesController->show($id);
 
 	}
 
