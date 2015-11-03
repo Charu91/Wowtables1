@@ -69,8 +69,10 @@ $(document).ready(function(){
 	<img class="alacate_banner_img_mob img-responsive visible-xs" src="/assets/img/alacarte_img.jpg" alt="alacarte image" />
 	@if($current_city == "pune")
 	<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner.jpg" alt="alacarte image" />
-	@elseif($current_city == "mumbai" || $current_city == "bangalore")
+	@elseif($current_city == "mumbai")
 		<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner1.jpg" alt="alacarte image" />
+	@elseif($current_city == "bangalore")
+		<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner2.jpg" alt="alacarte image" />
 	@endif
 </div>
 
