@@ -341,21 +341,23 @@ class ReservationDetails extends Model {
             //print_r($data['addons']);die;
             if(isset($data['mobile']) && $data['mobile'] == 1){
 
-                foreach($data['addons'] as $key => $detail) {
+               /*foreach($data['addons'] as $key => $detail) {
                     $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
                     $result->reservation_status_id = $statusId;
                     $result->save();
-                }
+                }*/
+                self::addActualAddonTakers($reservation_id,$data['addons']);
 
             } else {
-                foreach ($data['addons'] as $prod_id => $count) {
+                /*foreach ($data['addons'] as $prod_id => $count) {
                     if($count > 0) {
                         $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
                         $result->reservation_status_id = $statusId;
                         $result->save();
                     }
                     //print_r($result);die;
-                }
+                }*/
+                self::addActualAddonTakers($reservation_id,$data['addons']);
             }
         }
 
@@ -492,12 +494,23 @@ class ReservationDetails extends Model {
         foreach($addonInfo as $prod_id => $count){
 
 
-                $result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
+                /*$result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
                 $result->reservation_status_id = $statusId;
-                $result->save();
+                $result->save();*/
+            if($count > 0) {
+
+                $result = new ReservAddonVarientDetails();
+                $result->no_of_persons = $count;
+                $result->options_id = $prod_id;
+                $result->option_type = 'addon';
+                $result->reservation_type = 'experience';
+                $result->reservation_id = $reservation_id;
+                $result->reservation_status_id = $statusId;
+            }
 
 
         }
+        return 1;
 
     }
 
