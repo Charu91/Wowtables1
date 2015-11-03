@@ -369,7 +369,27 @@ class ReservationDetails extends Model {
                      $result->reservation_status_id = $statusId;
                      $result->save();
                  }*/
-                self::addActualAddonTakers($reservation_id,$data['addons']);
+                foreach($data['addons'] as $addonInfo){
+                    //print_r($addonInfo['prod_id']);die;
+
+
+                        if($addonInfo['qty'] > 0) {
+
+                            $result = new ReservAddonVarientDetails();
+                            $result->no_of_persons =$addonInfo['qty'];
+                            $result->options_id = $addonInfo['prod_id'];
+                            $result->option_type = 'addon';
+                            $result->reservation_type = 'experience';
+                            $result->reservation_id = $reservation_id;
+                            $result->reservation_status_id = $statusId;
+                            $result->save();
+                        }
+
+
+
+                }
+                //self::addActualAddonTakers($reservation_id,$data['addons']);
+
 
             } else {
                 /*foreach ($data['addons'] as $prod_id => $count) {
