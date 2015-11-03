@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Models\Frontend\ExperienceModel;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController as RestaurantApp;
+
 
 class ReservationController extends Controller {
 
@@ -23,7 +25,7 @@ class ReservationController extends Controller {
 	 *
 	 *
 	 */
-	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository)
+	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,RestaurantApp $restaurantapp)
 	{
 		$this->middleware('admin.auth');
 		$this->request = $request;
@@ -31,6 +33,7 @@ class ReservationController extends Controller {
 		$this->alacarterepository = $alacarterepository;
 		$this->experiencemodel = $expModel;
 		$this->repository = $repository;
+		$this->restaurantapp = $restaurantapp;
 	}
 
 	/**
@@ -40,6 +43,8 @@ class ReservationController extends Controller {
 	 */
 	public function index()
 	{
+
+
 
 		$un_bookings = array();
 		$bookings = array();
@@ -804,6 +809,7 @@ class ReservationController extends Controller {
 		$data['status'] = $this->request->get('reserv_status');
 		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
+		$data['attributes']['reservation_status_id'] = (int)$data['status'];
 
 		//echo $data['attributes']['admin_comments'];die;
 		if(!empty($data['attributes']['admin_comments'])){
@@ -1014,6 +1020,11 @@ class ReservationController extends Controller {
 	}
 
 	public function unconfirmed(){
+
+		$tokens = $this->reservationDetails->pushToRestaurant(4);
+		$this->restaurantapp->push(4,$tokens,false);
+		die;
+
 		$un_bookings = array();
 		$count = 0;
 
