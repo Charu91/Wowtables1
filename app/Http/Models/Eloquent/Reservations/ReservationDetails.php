@@ -337,27 +337,7 @@ class ReservationDetails extends Model {
         $statusId = $data['status'];
         $reservType = (isset($data['reserv_type']) ? $data['reserv_type'] : "");
         //$reservStatus->save();
-        if(!empty($data['addons'])){
-            //print_r($data['addons']);die;
-            if(isset($data['mobile']) && $data['mobile'] == 1){
 
-                foreach($data['addons'] as $key => $detail) {
-                    $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
-                    $result->reservation_status_id = $statusId;
-                    $result->save();
-                }
-
-            } else {
-                foreach ($data['addons'] as $prod_id => $count) {
-                    if($count > 0) {
-                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
-                        $result->reservation_status_id = $statusId;
-                        $result->save();
-                    }
-                    //print_r($result);die;
-                }
-            }
-        }
 
         $statusLog = ReservStatusLog::where('reservation_id','=',$reservation_id)->orderBy('id','desc')->take(1)->get();
         if($statusLog->isEmpty()){
@@ -378,6 +358,50 @@ class ReservationDetails extends Model {
             $statusLogEntry->new_reservation_status_id = $statusId;
             $statusLogEntry->save();
 
+        }
+
+        if(!empty($data['addons'])){
+            //print_r($data['addons']);die;
+            if(isset($data['mobile']) && $data['mobile'] == 1){
+
+                /*foreach($data['addons'] as $key => $detail) {
+                     $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
+                     $result->reservation_status_id = $statusId;
+                     $result->save();
+                 }*/
+                foreach($data['addons'] as $addonInfo){
+                    //print_r($addonInfo['prod_id']);die;
+
+
+                        if($addonInfo['qty'] > 0) {
+
+                            $result = new ReservAddonVarientDetails();
+                            $result->no_of_persons =$addonInfo['qty'];
+                            $result->options_id = $addonInfo['prod_id'];
+                            $result->option_type = 'addon';
+                            $result->reservation_type = 'experience';
+                            $result->reservation_id = $reservation_id;
+                            $result->reservation_status_id = $statusId;
+                            $result->save();
+                        }
+
+
+
+                }
+                //self::addActualAddonTakers($reservation_id,$data['addons']);
+
+
+            } else {
+                /*foreach ($data['addons'] as $prod_id => $count) {
+                    if($count > 0) {
+                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
+                        $result->reservation_status_id = $statusId;
+                        $result->save();
+                    }
+                    //print_r($result);die;
+                }*/
+                self::addActualAddonTakers($reservation_id,$data['addons']);
+            }
         }
         /*if($statusId == 1 || $statusId == 2 || $statusId == 3){
             $this->pushToRestaurant($reservation_id);
@@ -492,12 +516,24 @@ class ReservationDetails extends Model {
         foreach($addonInfo as $prod_id => $count){
 
 
-                $result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
+                /*$result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
+                $result->reservation_status_id = $statusId;
+                $result->save();*/
+            if($count > 0) {
+
+                $result = new ReservAddonVarientDetails();
+                $result->no_of_persons = $count;
+                $result->options_id = $prod_id;
+                $result->option_type = 'addon';
+                $result->reservation_type = 'experience';
+                $result->reservation_id = $reservation_id;
                 $result->reservation_status_id = $statusId;
                 $result->save();
+            }
 
 
         }
+        return 1;
 
     }
 

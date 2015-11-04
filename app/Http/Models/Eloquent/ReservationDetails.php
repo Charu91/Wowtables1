@@ -224,7 +224,7 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
-					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
+					//self::addReservationAddonDetails($reservation->id, $arrData['addon']);
 					//Reading value for addon
 					$count = $arrData['addon'];
         			if($count=="") {  
@@ -547,7 +547,7 @@ class ReservationDetails extends Model {
 				$reservation->product_id = $arrResult->product_id;
 				//-----------------------------------------------------------------------
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
-					self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
+					//self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
 					//Reading value for addon
 					$count = $arrData['addon'];
         			if($count=="") {  
