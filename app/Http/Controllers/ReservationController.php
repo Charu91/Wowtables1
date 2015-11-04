@@ -811,10 +811,12 @@ class ReservationController extends Controller {
 		$data['attributes'] = $this->request->get('attributes');
 		$data['attributes']['reservation_status_id'] = (int)$data['status'];
 
+		//echo $data['attributes']['reservation_status_id'];die;
+
 		//echo $data['attributes']['admin_comments'];die;
-		if(!empty($data['attributes']['admin_comments'])){
+		//if(!empty($data['attributes']['admin_comments'])){
 			$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
-		}
+		//}
 
 		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 		//print_r($data);die;
