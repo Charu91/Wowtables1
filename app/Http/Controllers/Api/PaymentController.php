@@ -9,6 +9,8 @@ use Config;
 
 use WowTables\Http\Models\Eloquent\Transaction;
 use WowTables\Http\Models\UserDevices;
+use WowTables\Http\Models\Eloquent\ReservationDetails;
+use Mailchimp;
 
 class PaymentController extends Controller {
 
@@ -21,8 +23,12 @@ class PaymentController extends Controller {
 	 */
 	protected $request;
 
-	public function __construct(Request $request) {
-		$this->request = $request;		
+	protected $mailchimp;
+	protected $listId = '986c01a26a';
+
+	public function __construct(Request $request, Mailchimp $mailchimp) {
+		$this->request = $request;
+		$this->mailchimp = $mailchimp;	
 	}
 	//-----------------------------------------------------------------
 
@@ -155,6 +161,16 @@ class PaymentController extends Controller {
 	 	//reading data input by the user
 		$data =  $this->request->all();
 
+		//Setting token value if user has not sent the token in request
+		if(!isset($data['access_token'])){
+			$data['access_token'] = $_SERVER['HTTP_X_WOW_TOKEN'] ;
+		}
+
+		$userID = UserDevices::getUserDetailsByAccessToken($data['access_token']);
+		$reservationID = $this->request->input('reservationID');
+		
+		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp,$userID);
+		
 		return response()->json($data,200);
 
 	 }

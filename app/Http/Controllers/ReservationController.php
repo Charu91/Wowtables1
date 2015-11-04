@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Models\Frontend\ExperienceModel;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController as RestaurantApp;
+
 
 class ReservationController extends Controller {
 
@@ -23,7 +25,7 @@ class ReservationController extends Controller {
 	 *
 	 *
 	 */
-	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository)
+	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,RestaurantApp $restaurantapp)
 	{
 		$this->middleware('admin.auth');
 		$this->request = $request;
@@ -31,6 +33,7 @@ class ReservationController extends Controller {
 		$this->alacarterepository = $alacarterepository;
 		$this->experiencemodel = $expModel;
 		$this->repository = $repository;
+		$this->restaurantapp = $restaurantapp;
 	}
 
 	/**
@@ -40,6 +43,8 @@ class ReservationController extends Controller {
 	 */
 	public function index()
 	{
+
+
 
 		$un_bookings = array();
 		$bookings = array();
@@ -804,11 +809,14 @@ class ReservationController extends Controller {
 		$data['status'] = $this->request->get('reserv_status');
 		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
+		$data['attributes']['reservation_status_id'] = (int)$data['status'];
+
+		//echo $data['attributes']['reservation_status_id'];die;
 
 		//echo $data['attributes']['admin_comments'];die;
-		if(!empty($data['attributes']['admin_comments'])){
+		//if(!empty($data['attributes']['admin_comments'])){
 			$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
-		}
+		//}
 
 		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 		//print_r($data);die;
@@ -887,6 +895,8 @@ class ReservationController extends Controller {
 				$totalBilling += $totalAddonTakers[$ea->options_id] * $expAddOns[$ea->options_id]['post_tax_price'];
 				$totalCommission += $totalAddonTakers[$ea->options_id] * $expAddOns[$ea->options_id]['commission'];
 			}
+			$data['attributes']['actual_addon_takers'] = $totalAddonTakers;
+			$updatActualAddonTakers = $this->reservationDetails->updateAttributes($reservId,$data);
 		}
 
 		$pricing = new \stdClass();
@@ -1012,6 +1022,7 @@ class ReservationController extends Controller {
 	}
 
 	public function unconfirmed(){
+
 		$un_bookings = array();
 		$count = 0;
 
@@ -1025,7 +1036,6 @@ class ReservationController extends Controller {
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
 
-		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
@@ -1040,7 +1050,7 @@ class ReservationController extends Controller {
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->where('id','!=','27355')
-					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
+					 ->orderBy('reservation_details.created_at','desc')->take(150)->get() as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();

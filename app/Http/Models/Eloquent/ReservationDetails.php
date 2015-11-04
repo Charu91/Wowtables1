@@ -175,6 +175,7 @@ class ReservationDetails extends Model {
 				$newDb['attributes']['auto_reservation'] = "Not available";
 				$newDb['attributes']['ar_confirmation_id'] = "0";
 				$newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$reservation_id['id']);
+				$newDb['attributes']['reservation_status_id'] = 1;
 				$newDb['userdetails']['user_id'] = $userID;
 				$newDb['userdetails']['status'] = 1;
 
@@ -223,7 +224,7 @@ class ReservationDetails extends Model {
 				
 				$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
-					self::addReservationAddonDetails($reservation->id, $arrData['addon']);
+					//self::addReservationAddonDetails($reservation->id, $arrData['addon']);
 					//Reading value for addon
 					$count = $arrData['addon'];
         			if($count=="") {  
@@ -305,6 +306,7 @@ class ReservationDetails extends Model {
 				$newDb['attributes']['auto_reservation'] = "Not available";
 				$newDb['attributes']['ar_confirmation_id'] = "0";
 				$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$reservation_id['id']);
+				$newDb['attributes']['reservation_status_id'] = 1;
 				$newDb['userdetails']['user_id'] = $userID;
 				$newDb['userdetails']['status'] = 1;
 				$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "") ;
@@ -434,6 +436,7 @@ class ReservationDetails extends Model {
 							->first();
 
 		if(!empty($reservationID)){
+			$newDb['attributes']['reservation_status_id'] = 3;
 			$newDb['userdetails']['user_id'] = $userID;
 			$newDb['userdetails']['status'] = 3;
 			$newDb['attributes']['seating_status'] = 3;
@@ -544,7 +547,7 @@ class ReservationDetails extends Model {
 				$reservation->product_id = $arrResult->product_id;
 				//-----------------------------------------------------------------------
 				if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
-					self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
+					//self::updateReservationAddonDetails($arrData['reservationID'],$arrData['addon']);
 					//Reading value for addon
 					$count = $arrData['addon'];
         			if($count=="") {  
@@ -1639,6 +1642,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['alternate_id'] = 'E'.sprintf("%06d",$arrData['reservationID']);
 			$newDb['attributes']['special_request'] = $arrData['addons_special_request'];
 			//$newDb['attributes']['order_completed'] = 'User Changed';
+			$newDb['attributes']['reservation_status_id'] = 2;
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
 			$newDb['userdetails']['addons'] = (isset($arrData['addon']) ? $arrData['addon'] : "");
@@ -1766,6 +1770,7 @@ class ReservationDetails extends Model {
 			$newDb['attributes']['ar_confirmation_id'] = "0";
 			$newDb['attributes']['alternate_id'] = 'A'.sprintf("%06d",$arrData['reservationID']);
 			//$newDb['attributes']['order_completed'] = 'User Changed';
+			$newDb['attributes']['reservation_status_id'] = 2;
 			$newDb['userdetails']['user_id'] = $queryResult->user_id;
 			$newDb['userdetails']['status'] = 2;
 			//print_r($newDb);die;

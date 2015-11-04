@@ -19,6 +19,7 @@ use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeListFlo
 use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeListIntegerLog;
 use WowTables\Http\Models\Eloquent\Reservations\Logs\ReservationAttributeDateTimeLog;
 use WowTables\Http\Models\Eloquent\User;
+use WowTables\VendorLocationContacts;
 
 
 class ReservationDetails extends Model {
@@ -336,27 +337,7 @@ class ReservationDetails extends Model {
         $statusId = $data['status'];
         $reservType = (isset($data['reserv_type']) ? $data['reserv_type'] : "");
         //$reservStatus->save();
-        if(!empty($data['addons'])){
-            //print_r($data['addons']);die;
-            if(isset($data['mobile']) && $data['mobile'] == 1){
 
-                foreach($data['addons'] as $key => $detail) {
-                    $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
-                    $result->reservation_status_id = $statusId;
-                    $result->save();
-                }
-
-            } else {
-                foreach ($data['addons'] as $prod_id => $count) {
-                    if($count > 0) {
-                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
-                        $result->reservation_status_id = $statusId;
-                        $result->save();
-                    }
-                    //print_r($result);die;
-                }
-            }
-        }
 
         $statusLog = ReservStatusLog::where('reservation_id','=',$reservation_id)->orderBy('id','desc')->take(1)->get();
         if($statusLog->isEmpty()){
@@ -378,6 +359,54 @@ class ReservationDetails extends Model {
             $statusLogEntry->save();
 
         }
+
+        if(!empty($data['addons'])){
+            //print_r($data['addons']);die;
+            if(isset($data['mobile']) && $data['mobile'] == 1){
+
+                /*foreach($data['addons'] as $key => $detail) {
+                     $result = ReservAddonVarientDetails::where('options_id', $detail['prod_id'])->where('reservation_id', $reservation_id)->first();
+                     $result->reservation_status_id = $statusId;
+                     $result->save();
+                 }*/
+                foreach($data['addons'] as $addonInfo){
+                    //print_r($addonInfo['prod_id']);die;
+
+
+                        if($addonInfo['qty'] > 0) {
+
+                            $result = new ReservAddonVarientDetails();
+                            $result->no_of_persons =$addonInfo['qty'];
+                            $result->options_id = $addonInfo['prod_id'];
+                            $result->option_type = 'addon';
+                            $result->reservation_type = 'experience';
+                            $result->reservation_id = $reservation_id;
+                            $result->reservation_status_id = $statusId;
+                            $result->save();
+                        }
+
+
+
+                }
+                //self::addActualAddonTakers($reservation_id,$data['addons']);
+
+
+            } else {
+                /*foreach ($data['addons'] as $prod_id => $count) {
+                    if($count > 0) {
+                        $result = ReservAddonVarientDetails::where('options_id', $prod_id)->where('reservation_id', $reservation_id)->first();
+                        $result->reservation_status_id = $statusId;
+                        $result->save();
+                    }
+                    //print_r($result);die;
+                }*/
+                self::addActualAddonTakers($reservation_id,$data['addons']);
+            }
+        }
+        /*if($statusId == 1 || $statusId == 2 || $statusId == 3){
+            $this->pushToRestaurant($reservation_id);
+        }*/
+
         if(!empty($reservType)) {
             switch ($statusId) {
                 case 2:
@@ -487,12 +516,24 @@ class ReservationDetails extends Model {
         foreach($addonInfo as $prod_id => $count){
 
 
-                $result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
+                /*$result = ReservAddonVarientDetails::where('options_id',$prod_id)->where('reservation_id',$reservation_id)->first();
+                $result->reservation_status_id = $statusId;
+                $result->save();*/
+            if($count > 0) {
+
+                $result = new ReservAddonVarientDetails();
+                $result->no_of_persons = $count;
+                $result->options_id = $prod_id;
+                $result->option_type = 'addon';
+                $result->reservation_type = 'experience';
+                $result->reservation_id = $reservation_id;
                 $result->reservation_status_id = $statusId;
                 $result->save();
+            }
 
 
         }
+        return 1;
 
     }
 
@@ -516,6 +557,41 @@ class ReservationDetails extends Model {
         $result = curl_exec($ch);
         //echo "<pre> results == "; print_r($result);die;
         curl_close($ch);
+    }
+
+    public static function pushToRestaurant($reservation_id){
+
+        $reservationDetails = ReservationDetails::find($reservation_id);
+        $vendor_location_id = $reservationDetails->vendor_location_id;
+        $vendorUsers = VendorLocationContacts::where('vendor_location_id',$vendor_location_id)->get();
+        $tokens = array();
+
+        foreach($vendorUsers as $vendorUser){
+            $userDevices = DB::table('user_devices')->where('user_id',$vendorUser->user_id)->get();
+            foreach($userDevices as $userDevice){
+                if(isset($userDevice->rest_notification_id)) {
+                    $tokenStr = array();
+                    $tokenStr['token'] = $userDevice->rest_notification_id;
+                    $tokens[] = $tokenStr;
+                }
+            }
+
+        }
+        return $tokens;
+        /*if(!empty($tokens)){
+            $ch = curl_init();
+            $curlConfig = array(
+                CURLOPT_URL            => "http://concierge.wowtables.com/conciergeapi/reservation/".$reservation_id."/notification",
+                CURLOPT_POST           => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POSTFIELDS     => "tokens=".json_encode($tokens),
+            );
+            curl_setopt_array($ch, $curlConfig);
+            $result = curl_exec($ch);
+            //echo "<pre> results == "; print_r($result);die;
+            curl_close($ch);
+        }*/
+
     }
 
 }
