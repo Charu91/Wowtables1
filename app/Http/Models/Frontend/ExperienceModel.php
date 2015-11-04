@@ -1679,9 +1679,9 @@ class ExperienceModel {
     if($reservationId) {
      
       $arrResponse['status'] = 'success';
-      if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
+      /*if(array_key_exists('addon', $arrData) && !empty($arrData['addon'])) {
         self::addReservationAddonDetails($reservationId, $arrData['addon']);
-      }
+      }*/
 
       //$arrResponse['data']['name'] = isset($productDetail['name'])?$productDetail['name']:'';
       //$arrResponse['data']['url'] = URL::to('/').'/experiences/'.$productDetail['id'];

@@ -797,11 +797,11 @@ class RegistrationsController extends Controller {
 		//echo " addon special request = ".$addons_special_request;
 		//echo "<pre>"; print_r($addonsArray); die;
 
-		if(count($addonsArray)>=1)
+		/*if(count($addonsArray)>=1)
 		{
 			DB::delete("delete from reservation_addons_variants_details where reservation_id = '$reserv_id'");
 			$this->experiences_model->addReservationAddonDetails($reserv_id, $addonsArray);
-		}
+		}*/
 		//exit;
 		if($locality_val=="" || $locality_val=='0')
 		{
