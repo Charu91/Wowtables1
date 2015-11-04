@@ -22,7 +22,7 @@ return [
 	"SERVER_TIME_CUTOFF_FOR_RESERVATION" => '20:30:00', //time upto which server will accept the reservation requests
 	"MIN_SUPPORTED_IOS_VERSION" => '1.1.0',
 	"MIN_SUPPORTED_ANDROID_VERSION" => '1.1.7',
-	"MIN_SUPPORTED_ANDROID_VERSION_CONCIERGE" => '1.1.1',
+	"MIN_SUPPORTED_ANDROID_VERSION_CONCIERGE" => '1.0.0',
 	"API_UPDATE" => 'Update',
 	"API_NEARBY_DISTANCE" => 15,
 
@@ -32,6 +32,6 @@ return [
 	//"PAYU_MERCHANT_ID" => '0MQaQP',//'gtKFFX',
 	//"PAYU_SALT"        => '13p0PXZk',//'eCwWELxi',
 	/* Details of PAYU to be used for development purpose */
-	"PAYU_MERCHANT_ID" => "jvcsd3",
+	"PAYU_MERCHANT_ID" => "Jvcsd3",
 	"PAYU_SALT" => "U09bo7dx",
 ];
