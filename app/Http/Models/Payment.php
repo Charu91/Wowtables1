@@ -40,7 +40,7 @@ class Payment {
 
 		//creating the payhash
 		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') . '|' . $data['reservationID'] . '|' 
-							. $data['amount']  . '|' . $data['shortDescription']  . '|' 
+							. (string)$data['amount']  . '|' . $data['shortDescription']  . '|' 
 							. $arrName[0] . '|' . $data['email'] . '|' 
 							. '' . '|' . '' . '|' . '' . '|' 
 							. '' . '|' . '' . '||||||' 
