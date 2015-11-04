@@ -39,7 +39,7 @@ class Payment {
 							$data['email'] .'|'. "||||||||||". Config::get('constants.PAYU_SALT'); */
 
 		//creating the payhash
-		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') . '|' . $data['reservationID'] . '|' 
+		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') . '|' . (string)$data['reservationID'] . '|' 
 							. (string)$data['amount']  . '|' . $data['shortDescription']  . '|' 
 							. $arrName[0] . '|' . $data['email'] . '|' 
 							. '' . '|' . '' . '|' . '' . '|' 
