@@ -1021,10 +1021,6 @@ class ReservationController extends Controller {
 
 	public function unconfirmed(){
 
-		$tokens = $this->reservationDetails->pushToRestaurant(4);
-		$this->restaurantapp->push(4,$tokens,false);
-		die;
-
 		$un_bookings = array();
 		$count = 0;
 
@@ -1038,7 +1034,6 @@ class ReservationController extends Controller {
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
 
-		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
