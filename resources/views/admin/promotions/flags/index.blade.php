@@ -75,7 +75,7 @@
                     <div class="form-group">
                         {!! Form::label('color','Color',['class'=>'col-sm-4 control-label ']) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('color',['Red'=>'Red','Blue'=>'Blue','Green'=>'Green','Yellow'=>'Yellow','Black'=>'Black','White'=>'White'],null,['class'=>'form-control']) !!}
+                            {!! Form::select('color',['Red'=>'Red','Blue'=>'Blue','Green'=>'Green','Yellow'=>'Yellow','Black'=>'Black','White'=>'White','DarkOrange'=>'DarkOrange'],null,['class'=>'form-control']) !!}
                         </div>
                     </div>
 

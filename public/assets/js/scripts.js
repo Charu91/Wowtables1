@@ -1290,9 +1290,15 @@ $(document).ready(function() {
             $("#date_edit1").click()
         } else if ($("#time_edit1 span").text() == "") {
             $("#time_edit1").click()
-        } else if ($("#collapseFour").hasClass("in")) {
-            $("#meal_edit1").click()
         }
+		if ($("#collapseFour").hasClass("in")) {		
+            var party_count = $("#party_edit1 span").text();
+			str = "";
+			for (var e = 0; e <= party_count; e++) {
+				str += "<option value='" + e + "'>" + e + "</option>";
+			}
+			$(".meals select").html(str);
+        } 
     });
 
     $("#ac_party_size1").change(function(e) {
@@ -1339,8 +1345,6 @@ $(document).ready(function() {
             if ($("#time_edit1 span").text() != "") {
                 $("#time_edit1").removeClass("hidden")
             }
-        } else if ($("#collapseFour").hasClass("in")) {
-            $("#meal_edit1").click()
         }
 
         $("#party_size1").removeClass("hidden");

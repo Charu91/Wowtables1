@@ -67,7 +67,13 @@ $(document).ready(function(){
 <input type="hidden" name="current_city" value="<?php echo $current_city;?>">
 <div class="col-md-12 col-sm-12" style="padding-bottom: 15px;">
 	<img class="alacate_banner_img_mob img-responsive visible-xs" src="/assets/img/alacarte_img.jpg" alt="alacarte image" />
+	@if($current_city == "pune")
 	<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner.jpg" alt="alacarte image" />
+	@elseif($current_city == "mumbai")
+		<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner1.jpg" alt="alacarte image" />
+	@elseif($current_city == "bangalore")
+		<img class="alacate_banner_img_main img-responsive hidden-xs" src="/assets/img/alacarte_banner2.jpg" alt="alacarte image" />
+	@endif
 </div>
 
 <div class="col-md-8 col-sm-8 deal-listing-left">

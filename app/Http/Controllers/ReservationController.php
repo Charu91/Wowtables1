@@ -811,10 +811,12 @@ class ReservationController extends Controller {
 		$data['attributes'] = $this->request->get('attributes');
 		$data['attributes']['reservation_status_id'] = (int)$data['status'];
 
+		//echo $data['attributes']['reservation_status_id'];die;
+
 		//echo $data['attributes']['admin_comments'];die;
-		if(!empty($data['attributes']['admin_comments'])){
+		//if(!empty($data['attributes']['admin_comments'])){
 			$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
-		}
+		//}
 
 		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 		//print_r($data);die;
@@ -1021,10 +1023,6 @@ class ReservationController extends Controller {
 
 	public function unconfirmed(){
 
-		$tokens = $this->reservationDetails->pushToRestaurant(4);
-		$this->restaurantapp->push(4,$tokens,false);
-		die;
-
 		$un_bookings = array();
 		$count = 0;
 
@@ -1038,7 +1036,6 @@ class ReservationController extends Controller {
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
 
-		//print_r($reservStatusArr);die;
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
