@@ -521,6 +521,13 @@
                             $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="experience">');
                             $("#cancel_user_id").val(user_id);
                         });
+						  $("body").delegate('#event_reservation','click',function() {
+                            reserv = $(this).parent().next().val();
+                            var user_id = $("#user_id").val();
+                            $("#reserv_type").remove();
+                            $("#cancelModal").append('<input type="hidden" name="reserv_type" id="reserv_type" value="event">');
+                            $("#cancel_user_id").val(user_id);
+                        });
                         $("body").delegate('#ac_cancel_reservation','click',function() {
                             reserv = $(this).parent().next().val();
                             var user_id = $("#user_id").val();
