@@ -68,7 +68,8 @@ class MiscController extends Controller {
 			return response()->json($arrResponse, 200);
 		}catch(\Exception $e){
 			return response()->json([
-				'message' => 'An application error occured.'
+				'message' => 'An application error occured.',
+				'error' => $e->getMessage()
 			], 500);
 		}
 	}
@@ -80,7 +81,8 @@ class MiscController extends Controller {
 			return response()->json($faqArray, 200);
 		}catch(\Exception $e){
 			return response()->json([
-				'message' => 'An application error occured.'
+				'message' => 'An application error occured.',
+				'error' => $e->getMessage()
 			], 500);
 		}
 	}
