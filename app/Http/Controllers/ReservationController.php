@@ -1035,7 +1035,20 @@ class ReservationController extends Controller {
 
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
+		$unPaginate = ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+			/*->with(['reservationStatus' => function($query)
+                   {
+                       $query->whereIn('reservation_statuses.id',[1,2,7])
+                             ->orderBy('reservation_statuses.id','desc')
+                             ->select(DB::raw('reservation_statuses.*, user_id'));
 
+            }])*/
+			->where('vendor_location_id','!=','0')
+			->where('vendor_location_id','!=','54')
+			->whereIn('id',array_keys($reservationIdArr))
+			->where('created_at','>=','2015-10-12 15:20:00')
+			->where('id','!=','27355')
+			->orderBy('reservation_details.created_at','desc')->paginate(15);
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
@@ -1050,7 +1063,7 @@ class ReservationController extends Controller {
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->where('id','!=','27355')
-					 ->orderBy('reservation_details.created_at','desc')->take(150)->get() as $unconfirmedBookings)
+					 ->orderBy('reservation_details.created_at','desc')->paginate(15) as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
@@ -1127,7 +1140,8 @@ class ReservationController extends Controller {
 		}
 		//die;
 
-		return view('admin.bookings.list.unconfirmed')->with('un_bookings',$un_bookings);
+		return view('admin.bookings.list.unconfirmed')->with('un_bookings',$un_bookings)
+													  ->with('unpaginate',$unPaginate);
 
 	}
 
