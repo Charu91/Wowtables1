@@ -511,6 +511,7 @@ class ReservationController extends Controller {
 				'error' => $e->getMessage()
 			], 500);
 		}
+
 	}
 
 	/**
