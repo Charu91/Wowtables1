@@ -515,6 +515,7 @@
                             $("#clear_meal").remove()
                         });
                         $("body").delegate('#cancel_reservation','click',function() {
+						  $(".cancel_loader").hide();
                             reserv = $(this).parent().next().val();
                             var user_id = $("#user_id").val();
                             $("#reserv_type").remove();
@@ -522,6 +523,7 @@
                             $("#cancel_user_id").val(user_id);
                         });
 						  $("body").delegate('#event_reservation','click',function() {
+						    $(".cancel_loader").hide();
                             reserv = $(this).parent().next().val();
                             var user_id = $("#user_id").val();
                             $("#reserv_type").remove();
@@ -529,6 +531,7 @@
                             $("#cancel_user_id").val(user_id);
                         });
                         $("body").delegate('#ac_cancel_reservation','click',function() {
+						  $(".cancel_loader").hide();
                             reserv = $(this).parent().next().val();
                             var user_id = $("#user_id").val();
                             $("#reserv_type").remove();
@@ -583,6 +586,7 @@
 
                             e.preventDefault();
                             $(".cancel_loader").show();
+                          
                             var reserv_typee = $('#reserv_type').val();
                             var user_id = $('#cancel_user_id').val();
                             var added_by = $('#added_by').val();
