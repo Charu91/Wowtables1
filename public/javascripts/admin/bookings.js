@@ -2,6 +2,8 @@
   'use strict';
     $(document).on('ready', function(){
 
+      $('html').addClass('sidebar-left-collapsed');
+
       $('.nav-tabs').stickyTabs();
 
       /*$('#unbookings').DataTable({
@@ -125,7 +127,7 @@
 
         });*/
 
-        $('#all_bookings').DataTable({
+        /*$('#all_bookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
             "scrollX": true,
@@ -147,7 +149,7 @@
             "scrollX": true,
             "scrollY":        "300px",
             "scrollCollapse": true
-        });
+        });*/
 
 
 

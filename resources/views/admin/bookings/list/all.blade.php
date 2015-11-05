@@ -33,7 +33,14 @@
             </div>
         </div>
     </div>
-
+    <?php echo $all_paginate->render(); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group btn-group-md" role="group" aria-label="...">
+                <a class="btn btn-primary" href="javascript:void(0);" onclick="window.location.reload(true)">Refresh</a>
+            </div>
+        </div>
+    </div>
 
         <div id="allbookings" class="mt-lg">
             <div class="panel-body">
@@ -42,8 +49,6 @@
                     <tr>
                         <th class="no-sort"></th>
                         <th>Cust Name</th>
-                        <th>Date to Visit</th>
-                        <th>Time</th>
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
@@ -53,7 +58,6 @@
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
-                        <th>Email Ids</th>
                         <!--<th>Order Completed</th>-->
                     </tr>
                     </thead>
@@ -109,9 +113,7 @@
 
 
                             </td>
-                            <td>{!! $booking->cust_name !!}</td>
-                            <td>{!! $booking->bdate !!}</td>
-                            <td>{!! $booking->btime !!}</td>
+                            <td>{!! $booking->cust_name !!} <br/><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a><br/><b>Reservation DateTime:</b><br/>{!! $booking->bdate !!} {!! $booking->btime !!}</td>
                             <td>{!! $booking->name !!}</td>
                             <td>{!! $booking->restaurant_name !!}</td>
                             <td>{!! $booking->city !!}</td>
@@ -138,7 +140,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><a href="mailto:{!! $booking->email !!}">{!! $booking->email !!}</a></td>
                             <!--<td>
                                 @if($booking->order_completed == 1)
                                     <input type="checkbox" class="checkbox" id="order_completed" name="attributes[order_completed]" data-reserv-id="{!! $booking->id !!}" checked />
@@ -153,7 +154,7 @@
                 </table>
             </div>
         </div>
-
+    <?php echo $all_paginate->render(); ?>
     <!-- Modal -->
     <div id="adminComments" class="modal fade" role="dialog" style="top: 20%;left: 20%;outline: none;">
         <div class="modal-dialog modal-lg">
