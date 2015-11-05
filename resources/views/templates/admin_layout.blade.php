@@ -2111,5 +2111,6 @@
                     })
 
             </script>
+			@yield('bottom-script')
     </body>
 </html>
