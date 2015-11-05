@@ -80,7 +80,7 @@
 					forgotemail: forgotmail
 				},
 				success: function(e) {
-					alert(e.text());
+					alert($(e).text());
 				}
 			});
 		});
