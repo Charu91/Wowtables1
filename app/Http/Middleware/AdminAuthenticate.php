@@ -32,17 +32,25 @@ class AdminAuthenticate {
      */
     public function handle($request, Closure $next)
     {
+	//echo $this->user->auth->user()->role_id;
+	
         if ($this->user->auth->guest())
         {
             if ($request->ajax())
             {
                 return response('Unauthorized.', 401);
             }
+			
             else
             {
+			
                 return redirect()->route('AdminLogin');
             }
         }
+		elseif ($this->user->auth->user()->role_id !=1)
+		{
+			return redirect()->guest('/');
+		}
 
         return $next($request);
     }
