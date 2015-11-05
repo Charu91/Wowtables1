@@ -507,9 +507,11 @@ class ReservationController extends Controller {
 
 		}catch(\Exception $e){
 			return response()->json([
-				'message' => 'An application error occured.'
+				'message' => 'An application error occured.',
+				'error' => $e->getMessage()
 			], 500);
 		}
+
 	}
 
 	/**
