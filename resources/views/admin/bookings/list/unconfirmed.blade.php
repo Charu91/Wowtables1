@@ -34,30 +34,32 @@
         </div>
     </div>
 
-
+    <?php echo $unpaginate->render(); ?>
+    <div class="row">
+        <div class="col-md-12">
+                <div class="btn-group btn-group-md" role="group" aria-label="...">
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="window.location.reload(true)">Refresh</a>
+                </div>
+        </div>
+    </div>
 
         <div id="unconfirmed_bookings" class="mt-lg">
             <div class="panel-body">
-                <table class="table table-striped table-responsive mb-none" id="unbookings">
+                <table class="table table-striped" id="unbookings">
                     <thead>
                     <tr>
                         <th class="no-sort"></th>
                         <th>Cust Name</th>
-                        <th>Date to Visit</th>
-                        <th>Time</th>
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
-
                         <th>Contact</th>
                         <th>No of People</th>
                         <th>Outlet</th>
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
-                        <th>Zoho Booking Cancelled</th>
-                        <th>Email Ids</th>
-
+                        <th>Zoho Update</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -112,9 +114,7 @@
 
 
                             </td>
-                            <td>{!! $un_booking->cust_name !!}</td>
-                            <td>{!! $un_booking->bdate !!}</td>
-                            <td>{!! $un_booking->btime !!}</td>
+                            <td>{!! $un_booking->cust_name !!} <a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a> <b>Reservation DateTime:</b><br/>{!! $un_booking->bdate !!} {!! $un_booking->btime !!}</td>
                             <td>{!! $un_booking->name !!}</td>
                             <td>{!! $un_booking->restaurant_name !!}</td>
                             <td>{!! $un_booking->city !!}</td>
@@ -126,7 +126,7 @@
                             <td>{!! $un_booking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $un_booking->reserv_status !!} by {!! $un_booking->lastmodified !!}</span>
-                                <div class="btn-group pull-right">
+                                <div class="btn-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             {!! $un_booking->reserv_status !!}
@@ -147,14 +147,15 @@
                                     <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $un_booking->id !!}" data-reserv-type="{!! $un_booking->reserv_type !!}" data-status-id="{!! $un_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
-                            <td><a href="mailto:{!! $un_booking->email !!}">{!! $un_booking->email !!}</a></td>
-
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+    <?php echo $unpaginate->render(); ?>
+
+
 
     <!-- Modal -->
     <div id="adminComments" class="modal fade" role="dialog" style="top: 20%;left: 20%;outline: none;">

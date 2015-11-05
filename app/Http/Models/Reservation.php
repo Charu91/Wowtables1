@@ -723,6 +723,8 @@ class Reservation {
 							->whereIn('ravd.reservation_id',$arrReservation)
 							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
 										'ravd.reservation_id')
+							->orderBy('ravd.created_at','desc')
+							->groupBy('ravd.options_id') 
 							->get();
 		
 		//array to store the addons details
