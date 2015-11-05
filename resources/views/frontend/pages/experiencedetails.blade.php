@@ -238,7 +238,7 @@
 
                                     $average_rating 		= $arrExperience['data']['rating'];// number of full stars
                                     $average_rating_2	= $average_rating-floor($average_rating); //number of half stars
-                                    $average_rating_3	= 5-floor($average_rating); //number of white stars
+                                    $average_rating_3	= 5-ceil($average_rating); //number of white stars
 
                                     if($arrExperience['data']['total_reviews']){?>
                                     <span><span itemprop="votes"><?PHP echo $arrExperience['data']['total_reviews'];?></span>&nbsp;Reviews &nbsp;</span>
@@ -249,7 +249,7 @@
                       <span class="star-icon full large_star_icon list_star_icon">&#9733;</span>
                       <?PHP }?>
                       <?PHP if($average_rating_2>0){?>
-                      <span class="star-icon half">&#9733;</span>
+                      <span class="star-icon half list_star_icon">&#9733;</span>
                       <?PHP }?>
                       <?PHP for($j=1;$j<=$average_rating_3;$j++){?>
                       <span class="star-icon">&#9733;</span>

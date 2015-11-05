@@ -159,6 +159,7 @@ header .head-links ul.navbar-nav li a{font-family: 'swiss_721light' !important;}
 .overlay .signup-wrapper #signinForm{ display:none;}
 
 .star-all .star-icon.half:before{margin-top: 4px;}
+.star-all .list_star_icon:before{line-height:11px;}
 .deal-detail-left .resturant_listing_exp{list-style:none; padding-left: 0;}
 .deal-detail-left .resturant_listing_exp li{max-width: 400px; min-height: 400px; margin: 0 auto 20px;}
 .deal-detail-left .resturant_listing_exp li .deal-head{background: none repeat scroll 0 0 #EA9403; width: 100%;}
