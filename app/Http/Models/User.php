@@ -207,7 +207,8 @@ class User {
                             }
 
 
-                            return [ 'state' => 'success'];
+                           /* return [ 'state' => 'success'];*/
+							return [ 'state' => 'success' , 'role' => $user[0]->role];
                         }else{
                             return [
                                 'state' => 'failure',
@@ -242,7 +243,7 @@ class User {
                         }
                     }
 
-                    return [ 'state' => 'success'];
+                     return [ 'state' => 'success' , 'role' => $user[0]->role];
                 } else {
                     return [
                         'state' => 'failure',

@@ -76,11 +76,21 @@ class AdminController extends Controller {
 
         $login = $this->user->login($request->input('email'), $request->input('password'), 1);
 
-        if($login['state'] === 'success'){
-            return response()->json(['redirect_url' => '/admin/dashboard']);
-        }else{
+        if($login['state'] === 'success')
+			{
+				if($login['role'] === 'Admin')
+					{
+						return response()->json(['redirect_url' => '/admin/dashboard']);
+					}
+				else 
+					{
+						return response()->json(['message' => 'You are not admin'], 400);
+					}
+			}
+		else
+			{
             return response()->json(['message' => $login['message']], 400);
-        }
+			}
     }
 
     /**
