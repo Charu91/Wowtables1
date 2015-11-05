@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
 use WowTables\Http\Models\Frontend\ExperienceModel;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController as RestaurantApp;
+
 
 class ReservationController extends Controller {
 
@@ -23,7 +25,7 @@ class ReservationController extends Controller {
 	 *
 	 *
 	 */
-	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository)
+	function __construct(ExperienceModel $expModel,ReservationDetails $reservationDetails, Request $request,RestaurantLocationsRepository $alacarterepository,ExperiencesRepository $repository,RestaurantApp $restaurantapp)
 	{
 		$this->middleware('admin.auth');
 		$this->request = $request;
@@ -31,6 +33,7 @@ class ReservationController extends Controller {
 		$this->alacarterepository = $alacarterepository;
 		$this->experiencemodel = $expModel;
 		$this->repository = $repository;
+		$this->restaurantapp = $restaurantapp;
 	}
 
 	/**
@@ -40,6 +43,8 @@ class ReservationController extends Controller {
 	 */
 	public function index()
 	{
+
+
 
 		$un_bookings = array();
 		$bookings = array();
@@ -804,11 +809,14 @@ class ReservationController extends Controller {
 		$data['status'] = $this->request->get('reserv_status');
 		$data['reserv_type'] =  $this->request->get('reserv_type');
 		$data['attributes'] = $this->request->get('attributes');
+		$data['attributes']['reservation_status_id'] = (int)$data['status'];
+
+		//echo $data['attributes']['reservation_status_id'];die;
 
 		//echo $data['attributes']['admin_comments'];die;
-		if(!empty($data['attributes']['admin_comments'])){
+		//if(!empty($data['attributes']['admin_comments'])){
 			$bookingUpdate = $this->reservationDetails->updateAttributes($reservation_id, $data);
-		}
+		//}
 
 		$reservationStatus = $this->reservationDetails->changeReservationStatus($reservation_id,$data);
 		//print_r($data);die;
@@ -887,6 +895,8 @@ class ReservationController extends Controller {
 				$totalBilling += $totalAddonTakers[$ea->options_id] * $expAddOns[$ea->options_id]['post_tax_price'];
 				$totalCommission += $totalAddonTakers[$ea->options_id] * $expAddOns[$ea->options_id]['commission'];
 			}
+			$data['attributes']['actual_addon_takers'] = $totalAddonTakers;
+			$updatActualAddonTakers = $this->reservationDetails->updateAttributes($reservId,$data);
 		}
 
 		$pricing = new \stdClass();
@@ -1012,6 +1022,7 @@ class ReservationController extends Controller {
 	}
 
 	public function unconfirmed(){
+
 		$un_bookings = array();
 		$count = 0;
 
@@ -1024,8 +1035,20 @@ class ReservationController extends Controller {
 
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,7,3,6,7,8,9]);
+		$unPaginate = ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+			/*->with(['reservationStatus' => function($query)
+                   {
+                       $query->whereIn('reservation_statuses.id',[1,2,7])
+                             ->orderBy('reservation_statuses.id','desc')
+                             ->select(DB::raw('reservation_statuses.*, user_id'));
 
-		//print_r($reservStatusArr);die;
+            }])*/
+			->where('vendor_location_id','!=','0')
+			->where('vendor_location_id','!=','54')
+			->whereIn('id',array_keys($reservationIdArr))
+			->where('created_at','>=','2015-10-12 15:20:00')
+			->where('id','!=','27355')
+			->orderBy('reservation_details.created_at','desc')->paginate(15);
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
@@ -1040,7 +1063,7 @@ class ReservationController extends Controller {
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
 					 ->where('id','!=','27355')
-					 ->orderBy('reservation_details.created_at','desc')->get() as $unconfirmedBookings)
+					 ->orderBy('reservation_details.created_at','desc')->paginate(15) as $unconfirmedBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
@@ -1117,7 +1140,8 @@ class ReservationController extends Controller {
 		}
 		//die;
 
-		return view('admin.bookings.list.unconfirmed')->with('un_bookings',$un_bookings);
+		return view('admin.bookings.list.unconfirmed')->with('un_bookings',$un_bookings)
+													  ->with('unpaginate',$unPaginate);
 
 	}
 
@@ -1133,6 +1157,20 @@ class ReservationController extends Controller {
 
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[6]);
 		//print_r($reservStatusArr);die;
+		$missingPaginate = ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+			/*->with(['reservationStatus' => function($query)
+                   {
+                       $query->whereIn('reservation_statuses.id',[1,2,7])
+                             ->orderBy('reservation_statuses.id','desc')
+                             ->select(DB::raw('reservation_statuses.*, user_id'));
+
+            }])*/
+			->where('vendor_location_id','!=','0')
+			->where('vendor_location_id','!=','54')
+			->whereIn('id',array_keys($reservationIdArr))
+			->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
+			->where('created_at','>=','2015-10-12 15:20:00')
+			->orderBy('reservation_details.created_at','desc')->paginate(15);
 
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
@@ -1147,7 +1185,7 @@ class ReservationController extends Controller {
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('reservation_date','=',Carbon::yesterday()->format('Y-m-d'))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
-					 ->orderBy('reservation_details.created_at','desc')->get() as $postBookings)
+					 ->orderBy('reservation_details.created_at','desc')->paginate(15) as $postBookings)
 		{
 			//print_r($unconfirmedBookings->attributesDatetime->attribute_value);die;
 			$booking = new \stdClass();
@@ -1213,7 +1251,7 @@ class ReservationController extends Controller {
 
 
 		}
-		return view('admin.bookings.list.missing')->with('post_bookings',$postReservation);
+		return view('admin.bookings.list.missing')->with('post_bookings',$postReservation)->with('missing_paginate',$missingPaginate);
 
 	}
 
@@ -1227,6 +1265,27 @@ class ReservationController extends Controller {
 			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,3,4,5,6,7,8]);
+		$allPaginate = ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+			/*->with(['reservationStatus' => function($query)
+            {
+                $query->whereIn('status',[3,8,6])
+                    ->orderBy('reservation_statuses.id','desc')
+                    ->select(DB::raw('reservation_statuses.*, user_id'));
+
+            }])*/
+			->with(['attributesInteger' => function($query){
+				$query->where('reservation_attribute_id',function($q1){
+					$q1->select('id')
+						->from('reservation_attributes')
+						->where('alias','=','order_completed');
+				});
+
+			}])
+			->where('vendor_location_id','!=','0')
+			->where('vendor_location_id','!=','54')
+			->whereIn('id',array_keys($reservationIdArr))
+			->where('created_at','>=','2015-10-12 15:20:00')
+			->orderBy('created_at','desc')->paginate(15);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
@@ -1247,7 +1306,7 @@ class ReservationController extends Controller {
 					 ->where('vendor_location_id','!=','54')
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 ->where('created_at','>=','2015-10-12 15:20:00')
-					 ->orderBy('created_at','desc')->get() as $allbookings)
+					 ->orderBy('created_at','desc')->paginate(15) as $allbookings)
 		{
 
 
@@ -1313,7 +1372,7 @@ class ReservationController extends Controller {
 
 
 		}
-		return view('admin.bookings.list.all')->with('bookings',$bookings);
+		return view('admin.bookings.list.all')->with('bookings',$bookings)->with('all_paginate',$allPaginate);
 
 	}
 
@@ -1327,6 +1386,20 @@ class ReservationController extends Controller {
 			$reservationIdArr[$reservId->reservation_id] = $reservId->user_id;
 		}
 		$reservStatusArr = $this->reservationDetails->getReservationStatus(array_keys($reservationIdArr),[1,2,3,6,7,8]);
+		$todayPaginate = ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
+			/*->with(['reservationStatus' => function($query)
+            {
+                $query->whereIn('status',[1,2,3,6,7,8])
+                    ->orderBy('reservation_statuses.id','desc')
+                    ->select(DB::raw('reservation_statuses.*, user_id'));
+
+            }])*/
+			->where('vendor_location_id','!=','0')
+			->where('vendor_location_id','!=','54')
+			->whereIn('id',array_keys($reservationIdArr))
+			//->whereRaw("reservation_date = '".date('Y-m-d')."'")
+			->where('created_at','>=','2015-10-12 15:20:00')
+			->orderBy('created_at','desc')->paginate(15);
 		foreach (ReservationDetails::with('experience','vendor_location.vendor','vendor_location.address.city_name','attributesDatetime')
 					 /*->with(['reservationStatus' => function($query)
 					 {
@@ -1340,7 +1413,7 @@ class ReservationController extends Controller {
 					 ->whereIn('id',array_keys($reservationIdArr))
 					 //->whereRaw("reservation_date = '".date('Y-m-d')."'")
 					 ->where('created_at','>=','2015-10-12 15:20:00')
-					 ->orderBy('created_at','desc')->get() as $today)
+					 ->orderBy('created_at','desc')->paginate(15) as $today)
 		{
 
 
@@ -1396,7 +1469,7 @@ class ReservationController extends Controller {
 
 			//print_r($today);
 		}
-		return view('admin.bookings.list.today')->with('todaysbookings',$todayBookings);
+		return view('admin.bookings.list.today')->with('todaysbookings',$todayBookings)->with('today_paginate',$todayPaginate);
 
 	}
 

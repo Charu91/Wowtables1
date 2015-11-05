@@ -34,9 +34,17 @@ class Payment {
 		$arrName = explode(" ",$data['guestName']);
 
 		//creating the payhash
-		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') .'|'. $data['reservationID'] .'|'. 
+		/*$payHashString = Config::get('constants.PAYU_MERCHANT_ID') .'|'. $data['reservationID'] .'|'. 
 							$data['amount'] .'|'. $data['shortDescription'] . '|' . $arrName[0] .'|'.
-							$data['email'] .'|'. "||||||||||". Config::get('constants.PAYU_SALT');  
+							$data['email'] .'|'. "||||||||||". Config::get('constants.PAYU_SALT'); */
+
+		//creating the payhash
+		$payHashString = Config::get('constants.PAYU_MERCHANT_ID') . '|' . (string)$data['reservationID'] . '|' 
+							. (string)$data['amount']  . '|' . $data['shortDescription']  . '|' 
+							. $arrName[0] . '|' . $data['email'] . '|' 
+							. '' . '|' . '' . '|' . '' . '|' 
+							. '' . '|' . '' . '||||||' 
+							. Config::get('constants.PAYU_SALT');
 
 		$arrHashes['paymentHash']  = strtolower(hash("sha512", $payHashString));
 

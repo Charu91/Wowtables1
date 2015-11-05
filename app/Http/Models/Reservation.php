@@ -589,7 +589,8 @@ class Reservation {
 									 DB::raw('MAX(IF(pa.alias="short_description", pat.attribute_value,"")) AS product_short_description'),
 									 DB::raw('MAX(IF(va.alias="short_description", vlat.attribute_value, ""))AS vendor_short_description'),
 									 'ploc.name as product_locality','pvla.address as product_address',
-									 'vloc.name as vendor_locality', 'vvla.address as vendor_address', 
+									 'vloc.name as vendor_locality', 'vvla.address as vendor_address',
+									 'pvla.city_id as product_city_id', 'vvla.city_id as vendor_city_id', //Added for city-id
 									 'products.slug as experience_slug', 'vl.slug as alacarte_slug')
 						->orderBy('rd.reservation_date','asc')
 						->orderBy('rd.reservation_time','asc')
@@ -652,7 +653,8 @@ class Reservation {
 					$name = (empty($row->product_name)) ? $row->vendor_name : $row->product_name;
 					$product_id = ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id;
 					$address = (empty($row->product_address)) ? $row->vendor_address : $row->product_address;
-					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;		
+					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;
+					$city = (empty($row->product_city_id)) ? $row->vendor_city_id : $row->product_city_id;		
 
 				}
 
@@ -677,10 +679,11 @@ class Reservation {
 									'day_schedule' => $arrSchedule,
 									'address' => array(
 														'address' => (empty($address)) ? "" : $address,
-														'locality' => (empty($locality)) ? "" : $locality,														
+														'locality' => (empty($locality)) ? "" : $locality,
 													),
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 									'slug' => (empty($slug)) ? "" : $slug,
+									'city_id' => (empty($city)) ? "" : $city,									
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp && $row->reservation_status != 'cancel' ) {
@@ -720,6 +723,8 @@ class Reservation {
 							->whereIn('ravd.reservation_id',$arrReservation)
 							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
 										'ravd.reservation_id')
+							->orderBy('ravd.created_at','desc')
+							->groupBy('ravd.options_id') 
 							->get();
 		
 		//array to store the addons details

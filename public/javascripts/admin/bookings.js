@@ -2,9 +2,11 @@
   'use strict';
     $(document).on('ready', function(){
 
+      $('html').addClass('sidebar-left-collapsed');
+
       $('.nav-tabs').stickyTabs();
 
-      $('#unbookings').DataTable({
+      /*$('#unbookings').DataTable({
         "order": [], //for getting latest on top
         columnDefs: [{ targets: 'no-sort', orderable: false }],
         "scrollX": true,
@@ -12,8 +14,8 @@
           "scrollCollapse": true,
           /*"ajax": {
               "url": "/admin/bookings/unconfirmedbookings"
-          }*/
-      });
+          }
+      });*/
 
         $('#reserv_time').timepicker({
             showSeconds: true,
@@ -125,7 +127,7 @@
 
         });*/
 
-        $('#all_bookings').DataTable({
+        /*$('#all_bookings').DataTable({
             "order": [], //for getting latest on top
             columnDefs: [{ targets: 'no-sort', orderable: false }],
             "scrollX": true,
@@ -147,7 +149,7 @@
             "scrollX": true,
             "scrollY":        "300px",
             "scrollCollapse": true
-        });
+        });*/
 
 
 

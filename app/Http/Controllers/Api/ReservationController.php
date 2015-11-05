@@ -13,6 +13,8 @@ use WowTables\Http\Models\Eloquent\ReservationDetails;
 use WowTables\Http\Models\UserDevices;
 use Validator;
 use Mailchimp;
+use WowTables\Http\Controllers\ConciergeApi\ReservationController as RestaurantManager;
+use WowTables\Http\Models\Eloquent\Reservations\ReservationDetails as ReservationModel;
 
 
 /**
@@ -41,9 +43,10 @@ use Mailchimp;
 	/**
 	 * 
 	 */
-	public function __construct(Request $request, Mailchimp $mailchimp) {
+	public function __construct(Request $request, Mailchimp $mailchimp,RestaurantManager $restaurantapp) {
 		$this->request = $request;
 		$this->mailchimp = $mailchimp;
+		$this->restaurantapp = $restaurantapp;
 	}
 	
 	//-----------------------------------------------------------------
@@ -191,6 +194,12 @@ use Mailchimp;
 					$arrResponse['msg'] = 'Not a valid request.';	
 				}
 			}
+
+		if(isset($arrResponse['data'])){
+			$tokens = ReservationModel::pushToRestaurant($arrResponse['data']['reservation_id']);
+			$this->restaurantapp->push($arrResponse['data']['reservation_id'],$tokens,true);
+		}
+
 				
 		return response()->json($arrResponse,200);
 	}
@@ -217,7 +226,11 @@ use Mailchimp;
 		$reservationID = $this->request->input('reservationID');
 		
 		$arrResponse = ReservationDetails::cancelReservation($reservationID, $this->mailchimp,$userID);
-		
+
+		if(!empty($reservationID)) {
+			$tokens = ReservationModel::pushToRestaurant($reservationID);
+			$this->restaurantapp->push($reservationID, $tokens, true);
+		}
 		return response()->json($arrResponse,200);		
 	}
 	
@@ -272,7 +285,11 @@ use Mailchimp;
 				$arrResponse = ReservationDetails::updateReservationDetail($data);
 			} 
 			 
-		 }				
+		 }
+		if(!empty($data['reservationID'])) {
+			$tokens = ReservationModel::pushToRestaurant($data['reservationID']);
+			$this->restaurantapp->push($data['reservationID'], $tokens, true);
+		}
 		return response()->json($arrResponse,200);		
 	}
 	
