@@ -510,8 +510,6 @@ class ReservationController extends Controller {
 				'message' => 'An application error occured.'
 			], 500);
 		}*/
-
-
 	}
 
 	/**
