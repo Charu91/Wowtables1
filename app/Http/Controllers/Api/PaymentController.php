@@ -62,7 +62,7 @@ class PaymentController extends Controller {
 		}
 		else {
 			
-			$code = Payment::getPayUHash($data);
+			$code = Payment::getHashes($data);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
 			$arrResponse['data'] = $code;			
 		}
