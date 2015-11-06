@@ -301,7 +301,7 @@ agm.cpkbandra@jsmcorp.in
                         
 	   $("#thank_details<?php echo $count;?>").click(function(e) {
        
-	
+	 e.preventDefault();s
         emails = $("#guest_emails<?php echo $count;?>").val();
         content = $("#det_content<?php echo $count;?>").val();
       
@@ -346,7 +346,7 @@ agm.cpkbandra@jsmcorp.in
                     short_description: short_desc,
                 },
                 success: function(e) {
-				
+				alert(e);
                     if (e == 1) {
                         $("#error_email").addClass("hidden");
                         $("#error_content").addClass("hidden");
@@ -356,8 +356,17 @@ agm.cpkbandra@jsmcorp.in
                         $("#det_content").val('');
                     }
 					
+                },
+				 error : function(e) 
+                {
+                alert("ajax error, json: " + e);
+
+                //for (var i = 0, l = json.length; i < l; ++i) 
+                    //{
+                    //  alert (json[i]);
+                    //}
                 }
-            });
+            })
         } else {
 		
             $("#error_email").removeClass("hidden");

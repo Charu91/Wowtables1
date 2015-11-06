@@ -67,7 +67,7 @@
                             <tr>
                                 <td class="title-content" style='float:left; padding:5px 57px 10px 70px; width:408px; background:#eab703; color:#fff; font-size:14px; font-style:italic; font-family:Times New Roman, Times, serif; letter-spacing:1px; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; position:relative; z-index:9;'>
 
-                                    <div style="margin: 5px 0; color: #000"><?php echo $exp_short_desc;?></div>
+                                    <div style="margin: 5px 0; color: #000">{{$share_data['short_description']}}</div>
 
                                  
                                     <div style="margin: 5px 0; color: #000">Restaurent Name :{{$share_data['restaurant_name']}}</div>
