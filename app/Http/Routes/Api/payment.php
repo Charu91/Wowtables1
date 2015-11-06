@@ -37,3 +37,12 @@ Route::post('api/payu_failure',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));
+
+Route::get('api/payuapi',
+	array(
+		'uses' => 'Api\PaymentController@payuApiResponse',
+		'as' => '',
+		//'middleware' => '',
+		'where' => array(),
+		'domain' => env('WEBSITE_URL'),
+));

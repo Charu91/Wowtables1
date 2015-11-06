@@ -175,6 +175,13 @@ class PaymentController extends Controller {
 
 	 }
 
+	/**
+	 * handles payu success and failure. written for testing
+	 */
+
+	public function payuApiResponse(){
+		return view('frontend.pages.payuapi');
+	}
 }
 //end of class PaymentController
 //end of file PaymentController.php
