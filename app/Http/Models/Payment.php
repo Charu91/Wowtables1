@@ -125,16 +125,21 @@ class Payment {
 	/**
 	 *
 	 */
-	function getHashes($arrData) {
+	public static function getHashes($arrData) {
 		
+		$udf1 = (empty($arrData['udf1'])) ? '':$arrData['udf1'];
+		$udf2 = (empty($arrData['udf2'])) ? '':$arrData['udf2'];
+		$udf3 = (empty($arrData['udf3'])) ? '':$arrData['udf3'];
+		$udf4 = (empty($arrData['udf4'])) ? '':$arrData['udf4'];
+		$udf5 = (empty($arrData['udf5'])) ? '':$arrData['udf5'];
 
 		$key = Config::get('constants.PAYU_MERCHANT_ID');
     	$salt = Config::get('constants.PAYU_SALT');
 
     	$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|' 
     				.$arrData['product']  . '|' . $arrData['firstname'] . '|' 
-    				. $arrData['email'] . '|' . checkNull($arrData['udf1']) . '|' . checkNull($arrData['udf2']) . '|' 
-    				. checkNull($arrData['udf3']) . '|' . checkNull($arrData['udf4']) . '|' . checkNull($arrData['udf5']) . '||||||' 
+    				. $arrData['email'] . '|' . $udf1 . '|' . $udf2 . '|' 
+    				. $udf3 . '|' . $udf4 . '|' . $udf5 . '||||||' 
     				. $salt;
 
     	$paymentHash = strtolower(hash('sha512', $payhashStr));
