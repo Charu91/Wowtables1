@@ -62,9 +62,9 @@ class PaymentController extends Controller {
 		}
 		else {
 			
-			$code = Payment::getPayUHash($data);
+			$code = Payment::getHashes($data);
 			$arrResponse['status'] = Config::get('constants.API_SUCCESS');
-			$arrResponse['data'] = array("hash" => $code);			
+			$arrResponse['data'] = $code;			
 		}
 		
 		return response()->json($arrResponse,200);
@@ -175,6 +175,13 @@ class PaymentController extends Controller {
 
 	 }
 
+	/**
+	 * handles payu success and failure. written for testing
+	 */
+
+	public function payuApiResponse(){
+		return view('frontend.pages.payuapi');
+	}
 }
 //end of class PaymentController
 //end of file PaymentController.php
