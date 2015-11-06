@@ -160,29 +160,29 @@ class Payment {
     	$detailsForMobileSdk1 = strtolower(hash('sha512', $detailsForMobileSdk_str1));
     	$arr['payment_related_details_for_mobile_sdk_hash'] = $detailsForMobileSdk1;
 
-    	if($arrData['user_credentials'] != NULL && $arrData['user_credentials'] != '') {
+    	if($arrData['userCredentials'] != NULL && $arrData['userCredentials'] != '') {
     		$cmnNameDeleteCard = 'delete_user_card';
-          	$deleteHash_str = $key  . '|' . $cmnNameDeleteCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$deleteHash_str = $key  . '|' . $cmnNameDeleteCard . '|' . $arrData['userCredentials'] . '|' . $salt ;
           	$deleteHash = strtolower(hash('sha512', $deleteHash_str));
           	$arr['delete_user_card_hash'] = $deleteHash;
           
           	$cmnNameGetUserCard = 'get_user_cards';
-          	$getUserCardHash_str = $key  . '|' . $cmnNameGetUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$getUserCardHash_str = $key  . '|' . $cmnNameGetUserCard . '|' . $arrData['userCredentials'] . '|' . $salt ;
           	$getUserCardHash = strtolower(hash('sha512', $getUserCardHash_str));
           	$arr['get_user_cards_hash'] = $getUserCardHash;
           
           	$cmnNameEditUserCard = 'edit_user_card';
-          	$editUserCardHash_str = $key  . '|' . $cmnNameEditUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$editUserCardHash_str = $key  . '|' . $cmnNameEditUserCard . '|' . $arrData['userCredentials'] . '|' . $salt ;
           	$editUserCardHash = strtolower(hash('sha512', $editUserCardHash_str));
           	$arr['edit_user_card_hash'] = $editUserCardHash;
           
           	$cmnNameSaveUserCard = 'save_user_card';
-          	$saveUserCardHash_str = $key  . '|' . $cmnNameSaveUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$saveUserCardHash_str = $key  . '|' . $cmnNameSaveUserCard . '|' . $arrData['userCredentials'] . '|' . $salt ;
           	$saveUserCardHash = strtolower(hash('sha512', $saveUserCardHash_str));
           	$arr['save_user_card_hash'] = $saveUserCardHash;
           
           	$cmnPaymentRelatedDetailsForMobileSdk = 'payment_related_details_for_mobile_sdk';
-          	$detailsForMobileSdk_str = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$detailsForMobileSdk_str = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk . '|' . $arrData['userCredentials'] . '|' . $salt ;
           	$detailsForMobileSdk = strtolower(hash('sha512', $detailsForMobileSdk_str));
           	$arr['payment_related_details_for_mobile_sdk_hash'] = $detailsForMobileSdk;
     	}
