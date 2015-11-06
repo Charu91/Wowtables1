@@ -137,7 +137,7 @@ class Payment {
     	$salt = Config::get('constants.PAYU_SALT');
 
     	$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|' 
-    				.$arrData['product']  . '|' . $arrData['firstname'] . '|' 
+    				.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|' 
     				. $arrData['email'] . '|' . $udf1 . '|' . $udf2 . '|' 
     				. $udf3 . '|' . $udf4 . '|' . $udf5 . '||||||' 
     				. $salt;
