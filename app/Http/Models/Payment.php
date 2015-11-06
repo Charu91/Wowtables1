@@ -126,7 +126,7 @@ class Payment {
 	 *
 	 */
 	function getHashes($arrData) {
-		if (isset($arrData['txnID'])) {
+		
 
 		$key = Config::get('constants.PAYU_MERCHANT_ID');
     	$salt = Config::get('constants.PAYU_SALT');
