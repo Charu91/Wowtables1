@@ -439,6 +439,12 @@ Route::post('/thankyou/sharedetails', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+Route::post('/thanksyou/sharedetailsfriend', [
+    'uses' => 'Site\SharingController@shareDetailsFriend',
+    'as' => 'shareDetailsFriend',
+    'domain' => env('WEBSITE_URL')
+]);
+
 Route::post('/user/redeem_points', [
     'uses' => 'Site\ProfileController@makeGiftcard',
     'as' => 'makeGiftcard',
