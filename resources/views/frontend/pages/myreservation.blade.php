@@ -48,9 +48,7 @@ exit;*/
 			   foreach ($arrReservation['data']['upcomingReservation'] as $data) {
             ?>
           <div class="panel panel-default">
-		  <?php echo "<pre>";print_r($data);
-		  echo "</pre>";
-		  ?>
+		 
             <div class="panel-heading">
               <div class="row">
                 <span class="lead col-md-8">
