@@ -717,15 +717,17 @@ class Reservation {
 	 * @param	array 	$arrReservation
 	 * @return	array 
 	 */
-	public static function getReservationAddonsDetails($arrReservation) {
-		$queryResult = DB::table('reservation_addons_variants_details as ravd')
-							->join('products as p','p.id','=','ravd.options_id')
-							->whereIn('ravd.reservation_id',$arrReservation)
-							->select('ravd.id','ravd.options_id as prod_id','ravd.no_of_persons as qty',
-										'ravd.reservation_id')
-							->orderBy('ravd.created_at','desc')
-							->groupBy('ravd.options_id') 
-							->get();
+	public static function getReservationAddonsDetails($arrReservation) {		
+		
+		$reservationIDString = implode(",", $arrReservation);
+		$queryResult = DB::select('select * from (    
+						select `ravd`.`id`, `ravd`.`options_id` as `prod_id`, 
+						`ravd`.`no_of_persons` as `qty`, `ravd`.`reservation_id` 
+						from `reservation_addons_variants_details` as `ravd` 
+						inner join `products` as `p` on `p`.`id` = `ravd`.`options_id` 
+						where `ravd`.`reservation_id` in ('.$reservationIDString .') 
+						order by `ravd`.`created_at` desc    
+						) as abcd group by `prod_id`');							
 		
 		//array to store the addons details
 		$arrData = array();
