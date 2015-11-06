@@ -12,9 +12,9 @@ use DB;
 class Payment {
 
 	public  static $arrRules = array(
-										'guestName' 		=> 'required',
-										'reservationID' 	=> 'required|exists:reservation_details,id',									
-										'shortDescription' 	=> 'required',
+										'firstname' 		=> 'required',
+										'txnID' 			=> 'required|exists:reservation_details,id',									
+										'productInfo' 		=> 'required',
 										'amount' 			=> 'required|integer',	
 										'email' 			=> 'required|email|max:255'
 									);
@@ -119,6 +119,96 @@ class Payment {
 
 		return FALSE;
 	}
+
+	//-------------------------------------------------------------------------
+
+	/**
+	 *
+	 */
+	function getHashes($arrData) {
+		if (isset($arrData['txnID'])) {
+
+		$key = Config::get('constants.PAYU_MERCHANT_ID');
+    	$salt = Config::get('constants.PAYU_SALT');
+
+    	$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|' 
+    				.$arrData['product']  . '|' . $arrData['firstname'] . '|' 
+    				. $arrData['email'] . '|' . checkNull($arrData['udf1']) . '|' . checkNull($arrData['udf2']) . '|' 
+    				. checkNull($arrData['udf3']) . '|' . checkNull($arrData['udf4']) . '|' . checkNull($arrData['udf5']) . '||||||' 
+    				. $salt;
+
+    	$paymentHash = strtolower(hash('sha512', $payhashStr));
+    	$arr['payment_hash'] = $paymentHash;
+
+    	$cmnNameMerchantCodes = 'get_merchant_ibibo_codes';
+    	$merchantCodesHash_str = $key . '|' . $cmnNameMerchantCodes . '|default|' . $salt ;
+    	$merchantCodesHash = strtolower(hash('sha512', $merchantCodesHash_str));
+    	$arr['get_merchant_ibibo_codes_hash'] = $merchantCodesHash;
+
+    	$cmnMobileSdk = 'vas_for_mobile_sdk';
+    	$mobileSdk_str = $key . '|' . $cmnMobileSdk . '|default|' . $salt;
+    	$mobileSdk = strtolower(hash('sha512', $mobileSdk_str));
+    	$arr['vas_for_mobile_sdk_hash'] = $mobileSdk;
+
+    	$cmnPaymentRelatedDetailsForMobileSdk1 = 'payment_related_details_for_mobile_sdk';
+    	$detailsForMobileSdk_str1 = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk1 . '|default|' . $salt ;
+    	$detailsForMobileSdk1 = strtolower(hash('sha512', $detailsForMobileSdk_str1));
+    	$arr['payment_related_details_for_mobile_sdk_hash'] = $detailsForMobileSdk1;
+
+    	if($arrData['user_credentials'] != NULL && $arrData['user_credentials'] != '') {
+    		$cmnNameDeleteCard = 'delete_user_card';
+          	$deleteHash_str = $key  . '|' . $cmnNameDeleteCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$deleteHash = strtolower(hash('sha512', $deleteHash_str));
+          	$arr['delete_user_card_hash'] = $deleteHash;
+          
+          	$cmnNameGetUserCard = 'get_user_cards';
+          	$getUserCardHash_str = $key  . '|' . $cmnNameGetUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$getUserCardHash = strtolower(hash('sha512', $getUserCardHash_str));
+          	$arr['get_user_cards_hash'] = $getUserCardHash;
+          
+          	$cmnNameEditUserCard = 'edit_user_card';
+          	$editUserCardHash_str = $key  . '|' . $cmnNameEditUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$editUserCardHash = strtolower(hash('sha512', $editUserCardHash_str));
+          	$arr['edit_user_card_hash'] = $editUserCardHash;
+          
+          	$cmnNameSaveUserCard = 'save_user_card';
+          	$saveUserCardHash_str = $key  . '|' . $cmnNameSaveUserCard . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$saveUserCardHash = strtolower(hash('sha512', $saveUserCardHash_str));
+          	$arr['save_user_card_hash'] = $saveUserCardHash;
+          
+          	$cmnPaymentRelatedDetailsForMobileSdk = 'payment_related_details_for_mobile_sdk';
+          	$detailsForMobileSdk_str = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk . '|' . $arrData['user_credentials'] . '|' . $salt ;
+          	$detailsForMobileSdk = strtolower(hash('sha512', $detailsForMobileSdk_str));
+          	$arr['payment_related_details_for_mobile_sdk_hash'] = $detailsForMobileSdk;
+    	}
+
+    	if ($arrData['offerKey']!=NULL && !empty($arrData['offerKey'])) {
+    		$cmnCheckOfferStatus = 'check_offer_status';
+    		$checkOfferStatus_str = $key  . '|' . $cmnCheckOfferStatus . '|' . $arrData['offerKey'] . '|' . $salt ;
+            $checkOfferStatus = strtolower(hash('sha512', $checkOfferStatus_str));
+      		$arr['check_offer_status_hash']=$checkOfferStatus;
+    	}
+
+    	if ($arrData['cardBin']!=NULL && !empty($arrData['cardBin'])) {
+    		$cmnCheckIsDomestic = 'check_isDomestic';
+            $checkIsDomestic_str = $key  . '|' . $cmnCheckIsDomestic . '|' . $arrData['cardBin'] . '|' . $salt ;
+            $checkIsDomestic = strtolower(hash('sha512', $checkIsDomestic_str));
+      		$arr['check_isDomestic_hash']=$checkIsDomestic;
+    	}
+
+    return $arr;
+  }
+
+  //---------------------------------------------------------------------------
+
+
+  function checkNull($value) {
+    if ($value == null) {
+      return '';
+    } else {
+      return $value;
+    }
+  }
 
 }
 // end of class Payment
