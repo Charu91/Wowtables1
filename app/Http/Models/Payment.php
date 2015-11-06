@@ -15,7 +15,7 @@ class Payment {
 										'firstname' 		=> 'required',
 										'txnID' 			=> 'required|exists:reservation_details,id',									
 										'productInfo' 		=> 'required',
-										'amount' 			=> 'required|integer',	
+										'amount' 			=> 'required|numeric',	
 										'email' 			=> 'required|email|max:255'
 									);
 	//-------------------------------------------------------------------------
