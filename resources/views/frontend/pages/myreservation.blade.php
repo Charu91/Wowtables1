@@ -275,9 +275,9 @@ agm.cpkbandra@jsmcorp.in
                             <input type="hidden" name='reserv_type' value="{{$data['type']}}" id='reserv_type<?php echo $count;?>'>
                             <input type="hidden" name='reservid' value="{{$data['id']}}" id='reservation_id<?php echo $count;?>'>
                             <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>              
-                            <input type="hidden" name='productid' value='<?php echo Session::get('product_id');?>' id='productid'<?php echo $count;?>>              
-                            <input type="hidden" name='vl_id' value='<?php echo Session::get('vl_id');?>' id='vl_id<?php echo $count;?>'>              
-                            <input type="hidden" name='vendor_location_id' value='<?php echo Session::get('vendor_location_id');?>' id='vendor_location_id<?php echo $count;?>'>              
+                            <input type="hidden" name='productid' value="{{$data['product_id']}}" id='productid'<?php echo $count;?>>              
+                            <input type="hidden" name='vl_id' value="{{$data['vl_id']}}" id='vl_id<?php echo $count;?>'>              
+                            <input type="hidden" name='vendor_location_id' value="{{$data['vendor_location_id']}}" id='vendor_location_id<?php echo $count;?>'>              
                             <input type="hidden" name='user_email' value="{{$data['guest_email']}}" id="customer_email<?php echo $count;?>">
                             <input type="hidden" name='full_name' value="{{$data['guest_name']}}" id="customer_name<?php echo $count;?>">
                             <input type="hidden" name="restaurant" value="{{$data['name']}}" id="restaurant<?php echo $count;?>">
