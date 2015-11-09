@@ -164,6 +164,9 @@ class SharingController extends Controller {
 		$guests = Input::get('guests');
 		$short_description = Input::get('short_description');
 		$address = Input::get('address');
+		$product_id = Input::get('product_id');
+		$vl_id = Input::get('vl_id');
+		$vendor_location_id = Input::get('vendor_location_id');
 	
 	
 		//echo $url_product; die;
@@ -202,14 +205,14 @@ class SharingController extends Controller {
 				$sharing->user_id = $userid;
 				$sharing->reservation_id = $reservid;
 				if($reservation_type == "experience"){
-					$sharing->product_id = '';
-					$sharing->product_vendor_location_id = '';
+					$sharing->product_id = $product_id;
+					$sharing->product_vendor_location_id = $vl_id;
 				} else if($reservation_type == "experience_detail"){
-					$sharing->product_id = '';
+					$sharing->product_id = $product_id;
 				}
-				$sharing->restaurant_id = '';
+				$sharing->restaurant_id = $reservid;
 				if($reservation_type == "alacarte"){
-					$sharing->restaurant_location_id = '';
+					$sharing->restaurant_location_id = $vendor_location_id;
 				}
 				$sharing->email_address = $email;
 				$sharing->type = $reservation_type;
