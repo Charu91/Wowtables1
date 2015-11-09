@@ -207,7 +207,7 @@ class SharingController extends Controller {
 				} else if($reservation_type == "experience_detail"){
 					$sharing->product_id = '';
 				}
-				$sharing->restaurant_id = ''
+				$sharing->restaurant_id = '';
 				if($reservation_type == "alacarte"){
 					$sharing->restaurant_location_id = '';
 				}
@@ -222,6 +222,10 @@ class SharingController extends Controller {
 				elseif($reservation_type == "alacarte"){
 				$template='site.pages.share_alacarte';
 				}
+				
+				
+				
+				
 				Mail::send($template,[
 					'share_data'=> $sharearray
 				], function($message) use ($email,$user,$subject)
@@ -231,11 +235,13 @@ class SharingController extends Controller {
 					$message->to($email)->subject($subject);
 					//$message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
 				});
+				
 			}
 			//echo "<pre>"; print_r($sharearray); die;
 			$sharearray['is_admin'] = "yes";
 			$sharearray['emails_list'] = $emails_list;
 			//echo "<pre>"; print_r($sharearray); die;
+			
 			Mail::send($template,[
 				'share_data'=> $sharearray
 			], function($message) use ($sharearray,$static_subject)
@@ -245,6 +251,7 @@ class SharingController extends Controller {
 				$message->to('kunal@wowtables.com')->subject($static_subject);
 				//$message->cc(['kunal@wowtables.com', 'deepa@wowtables.com']);
 			}); //die;
+			
 			echo 1;
 		}
 	}
