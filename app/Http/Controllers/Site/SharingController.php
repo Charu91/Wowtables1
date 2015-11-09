@@ -212,6 +212,8 @@ class SharingController extends Controller {
 				}
 				$sharing->restaurant_id = $reservid;
 				if($reservation_type == "alacarte"){
+					$sharing->product_id = $reservid;
+					
 					$sharing->restaurant_location_id = $vendor_location_id;
 				}
 				$sharing->email_address = $email;
