@@ -579,6 +579,26 @@ class Reservation {
 						->leftJoin('locations as pvlaloc', 'pvlaloc.id','=', 'pvla.city_id')
 						->leftJoin('locations as vvlaloc', 'vvlaloc.id','=', 'vvla.city_id')						
 						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
+						//=======Image Logic Start ================	
+						->leftJoin('product_media_map as pmm','pmm.product_id', '=', 'products.id')						
+						->leftJoin('media_resized_new as mrn3', function($join) {
+												$join->on('mrn3.media_id', '=', 'pmm.media_id')
+													  ->where('mrn3.image_type', '=' , 'mobile_listing_ios_experience');
+						})
+						->leftJoin('media_resized_new as mrn4', function($join) {
+												$join->on('mrn4.media_id', '=', 'pmm.media_id')
+													  ->where('mrn4.image_type', '=', 'mobile_listing_android_experience');
+						})								
+						->leftJoin('vendor_locations_media_map as vlmm', 'vlmm.vendor_location_id','=', 'vl.id')
+						->leftJoin('media_resized_new as mrn1', function($join) {
+												$join->on('mrn1.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn1.image_type', '=' , 'mobile_listing_ios_alacarte');
+						})
+						->leftJoin('media_resized_new as mrn2', function($join) {
+												$join->on('mrn2.media_id', '=', 'vlmm.media_id')
+													  ->where('mrn2.image_type', '=', 'mobile_listing_android_alacarte');
+						})
+						//=======Image Logic End ================
 						->where('rd.user_id', $userID)
 						//->where('pvl.status', 'Active')
 						//->whereIn('reservation_status',array('new','edited'))
@@ -594,13 +614,15 @@ class Reservation {
 									 'vloc.name as vendor_locality', 'vvla.address as vendor_address',
 									 'pvla.city_id as product_city_id', 'vvla.city_id as vendor_city_id', //Added for city-id
 									 'pvlaloc.name as product_city_name', 'vvlaloc.name as vendor_city_name', //Added for city-name
-									 'products.slug as experience_slug', 'vl.slug as alacarte_slug', 'vendors.name as restaurant_name')
+									 'products.slug as experience_slug', 'vl.slug as alacarte_slug', 'vendors.name as restaurant_name',
+									 'mrn1.file as ios_image_alacarte', 'mrn2.file as android_image_alacarte',
+									 'mrn3.file as ios_image_experience', 'mrn4.file as android_image_experience')
 						->orderBy('rd.reservation_date','asc')
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();    
 		//echo $queryResult->toSql(); die(); 
-							
+					
 		//array to store the information
 		$arrData = array();
 		
@@ -690,7 +712,13 @@ class Reservation {
 									'slug' => (empty($slug)) ? "" : $slug,
 									'city_id' => (empty($city)) ? "" : $city,	
 									'city' => (empty($cityName)) ? "" : $cityName,	
-									'restaurant_name' => (empty($row->restaurant_name)) ? "" : $row->restaurant_name,							
+									'restaurant_name' => (empty($row->restaurant_name)) ? "" : $row->restaurant_name,
+									'image' => array(
+													'mobile_listing_ios_alacarte' => (empty($row->ios_image_alacarte))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image_alacarte,
+													'mobile_listing_android_alacarte' => (empty($row->android_image_alacarte))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image_alacarte,
+													'mobile_listing_android_experience' => (empty($row->android_image_experience))? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->android_image_experience,
+													'mobile_listing_ios_experience' => (empty($row->ios_image_experience)) ? "":Config::get('constants.API_MOBILE_IMAGE_URL').$row->ios_image_experience,
+												 ),							
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp && $row->reservation_status != 'cancel' ) {
