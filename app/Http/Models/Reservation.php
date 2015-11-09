@@ -576,6 +576,8 @@ class Reservation {
 						->leftJoin('locations as ploc','ploc.id','=','vl.location_id')
 						->leftJoin('vendor_location_address as pvla','pvla.vendor_location_id','=','rd.vendor_location_id')
 						->leftJoin('vendor_location_address as vvla','vvla.vendor_location_id','=','rd.vendor_location_id')
+						->leftJoin('locations as pvlaloc', 'pvlaloc.id','=', 'pvla.city_id')
+						->leftJoin('locations as vvlaloc', 'vvlaloc.id','=', 'vvla.city_id')						
 						->leftJoin('locations as vloc', 'vloc.id','=', 'vl.location_id')
 						->where('rd.user_id', $userID)
 						//->where('pvl.status', 'Active')
@@ -591,13 +593,14 @@ class Reservation {
 									 'ploc.name as product_locality','pvla.address as product_address',
 									 'vloc.name as vendor_locality', 'vvla.address as vendor_address',
 									 'pvla.city_id as product_city_id', 'vvla.city_id as vendor_city_id', //Added for city-id
-									 'products.slug as experience_slug', 'vl.slug as alacarte_slug')
+									 'pvlaloc.name as product_city_name', 'vvlaloc.name as vendor_city_name', //Added for city-name
+									 'products.slug as experience_slug', 'vl.slug as alacarte_slug', 'vendors.name as restaurant_name')
 						->orderBy('rd.reservation_date','asc')
 						->orderBy('rd.reservation_time','asc')
 						->groupBy('rd.id') 
 						->get();    
 		//echo $queryResult->toSql(); die(); 
-		
+							
 		//array to store the information
 		$arrData = array();
 		
@@ -633,7 +636,7 @@ class Reservation {
 						$day = date('D',strtotime($row->reservation_date));
 						$arrSchedule = Schedules::getExperienceLocationSchedule($row->product_id, NULL,  $day, $row->vendor_location_id);
 						$arrAddOn = Experiences::readExperienceAddOns($row->product_id);
-						$slug = $row->experience_slug;
+						$slug = $row->experience_slug; 	
 					}
 					else if($row->reservation_type == 'alacarte') {
 						$day = date('D',strtotime($row->reservation_date));
@@ -641,7 +644,7 @@ class Reservation {
 						$slug = $row->alacarte_slug;
 					}
 				}
-
+				
 				if( empty($row->vendor_name) && empty($row->product_name) ) {
 					continue;
 					// $name = "";
@@ -654,10 +657,12 @@ class Reservation {
 					$product_id = ($row->product_vendor_location_id == 0) ? $row->vendor_id:$row->product_id;
 					$address = (empty($row->product_address)) ? $row->vendor_address : $row->product_address;
 					$locality = (empty($row->product_locality)) ? $row->vendor_locality : $row->product_locality;
-					$city = (empty($row->product_city_id)) ? $row->vendor_city_id : $row->product_city_id;		
+					$city = (empty($row->product_city_id)) ? $row->vendor_city_id : $row->product_city_id;
+					$cityName = (empty($row->product_city_name)) ? $row->vendor_city_name : $row->product_city_name;		
 
 				}
-
+				
+				
 				$arrDatum = array(
 									'id' => $row->id,
 									'short_description' => (empty($row->product_short_description)) ? $row->vendor_short_description : $row->product_short_description,
@@ -683,7 +688,9 @@ class Reservation {
 													),
 									'addons' => (empty($arrAddOn)) ? [] : $arrAddOn,
 									'slug' => (empty($slug)) ? "" : $slug,
-									'city_id' => (empty($city)) ? "" : $city,									
+									'city_id' => (empty($city)) ? "" : $city,	
+									'city' => (empty($cityName)) ? "" : $cityName,	
+									'restaurant_name' => (empty($row->restaurant_name)) ? "" : $row->restaurant_name,							
 								);
 				
 				if($reservationTimestamp >= $currentTimestamp && $row->reservation_status != 'cancel' ) {
@@ -693,7 +700,7 @@ class Reservation {
 					array_push($arrData['data']['pastReservation'],$arrDatum);
 				}
 				
-			}
+			}  
 			$arrData['data']['pastReservationCount'] = count($arrData['data']['pastReservation']);
 			$arrData['data']['upcomingReservationCount'] = count($arrData['data']['upcomingReservation']);
 			$arrData['status'] = Config::get('constants.API_SUCCESS');
