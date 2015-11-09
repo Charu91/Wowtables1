@@ -59,7 +59,9 @@
                         <p class="text-center">
                             <a type="button" id="send_reservation" data-target="#shareModal" data-toggle="modal" href="javscript:void(0)" class="btn btn-warning">SEND RESERVATION DETAILS TO PARTY</a>
                         </p>
-                    </div>
+						 <p class="text-center">
+                            <a type="button" id="send_reservation" data-target="#shareModal" data-toggle="modal" href="javscript:void(0)" class="btn btn-warning">Share</a>
+                        </p>
                 </div>
 
                 <div class="thankyou-tab">

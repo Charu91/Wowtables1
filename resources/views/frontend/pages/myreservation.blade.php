@@ -48,7 +48,6 @@ exit;*/
 			   foreach ($arrReservation['data']['upcomingReservation'] as $data) {
             ?>
           <div class="panel panel-default">
-		 
             <div class="panel-heading">
               <div class="row">
                 <span class="lead col-md-8">
@@ -276,6 +275,9 @@ agm.cpkbandra@jsmcorp.in
                             <input type="hidden" name='reserv_type' value="{{$data['type']}}" id='reserv_type<?php echo $count;?>'>
                             <input type="hidden" name='reservid' value="{{$data['id']}}" id='reservation_id<?php echo $count;?>'>
                             <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>              
+                            <input type="hidden" name='productid' value='<?php echo Session::get('product_id');?>' id='productid'<?php echo $count;?>>              
+                            <input type="hidden" name='vl_id' value='<?php echo Session::get('vl_id');?>' id='vl_id<?php echo $count;?>'>              
+                            <input type="hidden" name='vendor_location_id' value='<?php echo Session::get('vendor_location_id');?>' id='vendor_location_id<?php echo $count;?>'>              
                             <input type="hidden" name='user_email' value="{{$data['guest_email']}}" id="customer_email<?php echo $count;?>">
                             <input type="hidden" name='full_name' value="{{$data['guest_name']}}" id="customer_name<?php echo $count;?>">
                             <input type="hidden" name="restaurant" value="{{$data['name']}}" id="restaurant<?php echo $count;?>">
@@ -319,6 +321,9 @@ agm.cpkbandra@jsmcorp.in
             customer_mail =  $("#customer_email<?php echo $count;?>").val();
             short_desc =  $("#short_description<?php echo $count;?>").val();
             address =  $("#address<?php echo $count;?>").val();
+            product_id =  $("#product_id<?php echo $count;?>").val();
+            vl_id =  $("#vl_id<?php echo $count;?>").val();
+            vendor_location_id =  $("#vendor_location_id<?php echo $count;?>").val();
             userid =  $("#userid").val();
 		
 			 if (reservType == "alacarte") {
@@ -345,6 +350,9 @@ agm.cpkbandra@jsmcorp.in
                     outlet_name: outlet_name,
                     address: address,
                     short_description: short_desc,
+                    product_id: product_id,
+                    vl_id: vl_id,
+                    vendor_location_id: vendor_location_id,
                 },
                 success: function(e) {
 				//alert(e);
