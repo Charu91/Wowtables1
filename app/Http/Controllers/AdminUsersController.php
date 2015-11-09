@@ -239,7 +239,7 @@ class AdminUsersController extends Controller {
 				$createTableStructure .= '<th>'.$userData->full_name.'</th>';
 				$createTableStructure .= '<th>'.$userData->email.'</th>';
 				$createTableStructure .= '<th>'.$userData->phone_number.'</th>';
-				$createTableStructure .= '<th>'.link_to_route("AdminUserEdit","Edit",$userData->id,["target"=>"_blank","class"=>"btn btn-xs btn-primary","data-user-id"=>$userData->id]).' &nbsp;|&nbsp;<a data-user-id="'.$userData->id.'" class="btn btn-xs btn-danger delete-user-btn">Delete</a>&nbsp;|&nbsp;<a href="/admin/users/'.$userData->id.'/create_reward" data-user-id="'.$userData->id.'" class="btn btn-xs btn-primary">Rewards</a></th>';
+				$createTableStructure .= '<th>'.link_to_route("AdminUserEdit","Edit",$userData->id,["target"=>"_blank","class"=>"btn btn-xs btn-primary","data-user-id"=>$userData->id]).' &nbsp;|&nbsp;<a data-user-id="'.$userData->id.'" class="btn btn-xs btn-danger delete-user-btn">Delete</a>&nbsp;|&nbsp;<a href="/admin/users/'.$userData->id.'/create_reward" data-user-id="'.$userData->id.'" class="btn btn-xs btn-primary">Rewards</a>&nbsp;|&nbsp;<a data-email-id="'.$userData->email.'" class="btn btn-xs btn-primary" id="ad_forgot_password">Reset Password</a></th>';
 				$createTableStructure .= '</tr>';
 			}
 

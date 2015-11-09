@@ -35,6 +35,13 @@
     </div>
 
     <?php echo $unpaginate->render(); ?>
+    <div class="row">
+        <div class="col-md-12">
+                <div class="btn-group btn-group-md" role="group" aria-label="...">
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="window.location.reload(true)">Refresh</a>
+                </div>
+        </div>
+    </div>
 
         <div id="unconfirmed_bookings" class="mt-lg">
             <div class="panel-body">
@@ -53,7 +60,6 @@
                         <th>Gift Card Id</th>
                         <th>Status</th>
                         <th>Zoho Update</th>
-                        <!--<th>Email Ids</th>-->
                     </tr>
                     </thead>
                     <tbody>
@@ -141,8 +147,6 @@
                                     <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $un_booking->id !!}" data-reserv-type="{!! $un_booking->reserv_type !!}" data-status-id="{!! $un_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
-                            <!--<td></td>-->
-
                         </tr>
                     @endforeach
                     </tbody>

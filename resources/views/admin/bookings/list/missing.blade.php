@@ -33,17 +33,22 @@
             </div>
         </div>
     </div>
-
+    <?php echo $missing_paginate->render(); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group btn-group-md" role="group" aria-label="...">
+                <a class="btn btn-primary" href="javascript:void(0);" onclick="window.location.reload(true)">Refresh</a>
+            </div>
+        </div>
+    </div>
 
         <div id="post_bookings" class="mt-lg">
             <div class="panel-body">
-                <table class="table table-striped table-responsive mb-none" id="postbookings">
+                <table class="table table-striped" id="postbookings">
                     <thead>
                     <tr>
                         <th class="no-sort"></th>
                         <th>Cust Name</th>
-                        <th>Date to Visit</th>
-                        <th>Time</th>
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
@@ -53,8 +58,7 @@
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
-                        <th>Zoho Booking Cancelled</th>
-                        <th>Email Ids</th>
+                        <th>Zoho Update</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,9 +113,7 @@
 
 
                             </td>
-                            <td>{!! $post_booking->cust_name !!}</td>
-                            <td>{!! $post_booking->bdate !!}</td>
-                            <td>{!! $post_booking->btime !!}</td>
+                            <td>{!! $post_booking->cust_name !!}<br/><a href="mailto:{!! $post_booking->email !!}">{!! $post_booking->email !!}</a><br/><b>Reservation DateTime:</b><br/>{!! $post_booking->bdate !!} {!! $post_booking->btime !!}</td>
                             <td>{!! $post_booking->name !!}</td>
                             <td>{!! $post_booking->restaurant_name !!}</td>
                             <td>{!! $post_booking->city !!}</td>
@@ -123,7 +125,7 @@
                             <td>{!! $post_booking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $post_booking->reserv_status !!} by {!! $post_booking->lastmodified !!}</span>
-                                <div class="btn-group pull-right">
+                                <div class="btn-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             {!! $post_booking->reserv_status !!}
@@ -144,7 +146,6 @@
                                     <input type="checkbox" class="checkbox" id="zoho_booking_cancelled1" name="attributes[zoho_booking_cancelled1]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" data-status-id="{!! $post_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
-                            <td><a href="mailto:{!! $post_booking->email !!}">{!! $post_booking->email !!}</a></td>
 
                         </tr>
                     @endforeach
@@ -153,7 +154,7 @@
             </div>
         </div>
 
-
+    <?php echo $missing_paginate->render(); ?>
 
     <!-- Modal -->
     <div id="adminComments" class="modal fade" role="dialog" style="top: 20%;left: 20%;outline: none;">

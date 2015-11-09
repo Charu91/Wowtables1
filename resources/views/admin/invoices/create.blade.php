@@ -21,43 +21,30 @@
             </ol>
         </div>
     </header>
-    <section class="panel col-lg-8 col-lg-offset-2">
-        <header class="panel-heading">
-            <h2 class="panel-title">Generate Restaurant Invoices</h2>
-        </header>
+    <div class="row">
         {!! Form::open(['route'=>'GenerateInvoices','class'=>'form-horizontal','novalidate'=>'novalidate']) !!}
-        <div class="panel-body">
-            <div class="form-group">
-                {!! Form::label("from_date","From Date",['class'=>'col-sm-4 control-label']) !!}
-                <div class="col-sm-8">
-                    <div class="input-group">
-										<span class="input-group-addon">
+        {!! Form::label("from_date","From Date",['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-lg-2">
+
+            <div class="input-group">
+                <span class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</span>
-                        <input type="text" name="from_date" id="from_date" data-plugin-datepicker
-                               data-plugin-options='{ "multidate": true }' class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                {!! Form::label('to_date','To Date',['class'=>'col-sm-4 control-label']) !!}
-                <div class="col-sm-8">
-
-                        <div class="input-group">
-										<span class="input-group-addon">
+                <input type="text" name="from_date" id="from_date" data-plugin-datepicker
+                       data-plugin-options='{ "multidate": true }' class="form-control">
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        {!! Form::label('to_date','To Date',['class'=>'col-sm-2 control-label']) !!}
+        <div class="col-lg-2">
+            <div class="input-group">
+            <span class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</span>
-                            <input type="text" name="to_date" id="to_date" data-plugin-datepicker
-                                   data-plugin-options='{ "multidate": true }' class="form-control">
-                        </div>
-
-                </div>
-            </div>
-
-        </div>
-        <footer class="panel-footer">
-            {!! Form::submit('Generate',['class'=>'btn btn-primary']) !!}
-        </footer>
+                <input type="text" name="to_date" id="to_date" data-plugin-datepicker
+                       data-plugin-options='{ "multidate": true }' class="form-control">
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        {!! Form::submit('Generate',['class'=>'btn btn-primary']) !!}
         {!! Form::close() !!}
-    </section>
+    </div>
 @stop

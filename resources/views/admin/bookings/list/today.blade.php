@@ -33,6 +33,14 @@
             </div>
         </div>
     </div>
+    <?php echo $today_paginate->render(); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group btn-group-md" role="group" aria-label="...">
+                <a class="btn btn-primary" href="javascript:void(0);" onclick="window.location.reload(true)">Refresh</a>
+            </div>
+        </div>
+    </div>
 
 
         <div id="todaysbookings" class="mt-lg">
@@ -43,8 +51,6 @@
                     <tr>
                         <th class="no-sort"></th>
                         <th>Cust Name</th>
-                        <th>Date to Visit</th>
-                        <th>Time</th>
                         <th>Experience</th>
                         <th>Venue Name</th>
                         <th>City</th>
@@ -54,7 +60,6 @@
                         <th>Special Request</th>
                         <th>Gift Card Id</th>
                         <th>Status</th>
-                        <th>Email Ids</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,9 +114,7 @@
 
 
                             </td>
-                            <td>{!! $todaysbooking->cust_name !!}</td>
-                            <td>{!! $todaysbooking->bdate !!}</td>
-                            <td>{!! $todaysbooking->btime !!}</td>
+                            <td>{!! $todaysbooking->cust_name !!}<br/> <a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a><br/> <b>Reservation DateTime:</b><br/> {!! $todaysbooking->bdate !!}{!! $todaysbooking->btime !!}</td>
                             <td>{!! $todaysbooking->name !!}</td>
                             <td>{!! $todaysbooking->restaurant_name !!}</td>
                             <td>{!! $todaysbooking->city !!}</td>
@@ -122,7 +125,7 @@
                             <td>{!! $todaysbooking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $todaysbooking->reserv_status !!} by {!! $todaysbooking->lastmodified !!}</span>
-                                <div class="btn-group pull-right">
+                                <div class="btn-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             {!! $todaysbooking->reserv_status !!}
@@ -138,7 +141,6 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><a href="mailto:{!! $todaysbooking->email !!}">{!! $todaysbooking->email !!}</a></td>
 
 
                         </tr>
@@ -149,7 +151,7 @@
                 <h4>No Records</h4>
                 @endif
             </div>
-
+            <?php echo $today_paginate->render(); ?>
     <!-- Modal -->
     <div id="adminComments" class="modal fade" role="dialog" style="top: 20%;left: 20%;outline: none;">
         <div class="modal-dialog modal-lg">

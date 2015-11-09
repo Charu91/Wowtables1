@@ -51,6 +51,9 @@
 								<a data-user-id="{!! $user->id !!}" class="btn btn-xs btn-danger delete-user-btn">Delete</a>
 								&nbsp;|&nbsp;
 								<a href="/admin/users/{!! $user->id !!}/create_reward" data-user-id="{!! $user->id !!}" class="btn btn-xs btn-primary">Rewards</a>
+								&nbsp;|&nbsp;
+								<a data-email-id="{!! $user->email !!}" class="btn btn-xs btn-primary" id="ad_forgot_password">Reset Password</a>
+								
 							</th>
 						</tr>
 					@endforeach
@@ -63,4 +66,23 @@
 		</div>
 	</section>
 
+@stop
+
+@section("bottom-script")
+	<script>
+		$("body").delegate("#ad_forgot_password", "click", function(e) {
+			e.preventDefault();
+			forgotmail = $(this).attr('data-email-id');
+			$.ajax({
+				type: "POST",
+				url: "/users/forgot_password",
+				data: {
+					forgotemail: forgotmail
+				},
+				success: function(e) {
+					alert($(e).text());
+				}
+			});
+		});
+	</script>
 @stop

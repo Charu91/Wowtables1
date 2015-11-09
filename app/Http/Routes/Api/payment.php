@@ -6,7 +6,7 @@ Route::post('api/get_payu_hash',
 				array(
 					'uses' => 'Api\PaymentController@getMobileHash',
 					'as' => '',
-					'middleware' => 'wow.api',
+					//'middleware' => 'wow.api',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));
@@ -37,3 +37,12 @@ Route::post('api/payu_failure',
 					'where' => array(),
     				'domain' => env('WEBSITE_URL'),
     			));
+
+Route::get('api/payuapi',
+	array(
+		'uses' => 'Api\PaymentController@payuApiResponse',
+		'as' => '',
+		//'middleware' => '',
+		'where' => array(),
+		'domain' => env('WEBSITE_URL'),
+));
