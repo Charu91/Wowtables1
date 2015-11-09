@@ -241,11 +241,15 @@ agm.cpkbandra@jsmcorp.in
 		  <div class="modal fade" id="shareModal{{$data['id']}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+			<div id="load_layer" class="cancel_loader">
+              <img src="/images/loading.gif">
+                                 </div>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title text-center" id="myModalLabel">Share Reservation Details</h4>
                 </div>
                 <div class="modal-body" style="min-height: 110px;">
+
                     <div id="email_form">
                         <form>
                             <div class="form-group">
@@ -268,6 +272,7 @@ agm.cpkbandra@jsmcorp.in
                                     <p>The email to your party will include your personal message above as well as details about the date, time, location and experience details.</p>
                                 </div>
                             </div>
+							 
                             <input type="hidden" name='reserv_type' value="{{$data['type']}}" id='reserv_type<?php echo $count;?>'>
                             <input type="hidden" name='reservid' value="{{$data['id']}}" id='reservation_id<?php echo $count;?>'>
                             <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>              
@@ -284,7 +289,7 @@ agm.cpkbandra@jsmcorp.in
                             <button type="submit" name='share' class="btn btn-warning btn-block" id='thank_details<?php echo $count;?>' >Share Details</button>
                         </form>
                     </div>
-                    <div id="email_sent_confirmation" class="hidden">
+                    <div id="email_sent_confirmation<?php echo $count;?>" class="hidden">
                         <div class="col-xs-12 reservation-msg">
                             <p>Your message has been sent</p>
                     <span style="padding: 10px">
@@ -300,13 +305,11 @@ agm.cpkbandra@jsmcorp.in
 		   <script type="text/javascript">
                         
 	   $("#thank_details<?php echo $count;?>").click(function(e) {
-       
-	 e.preventDefault();s
-        emails = $("#guest_emails<?php echo $count;?>").val();
-        content = $("#det_content<?php echo $count;?>").val();
-      
-        reservType = $("#reserv_type<?php echo $count;?>").val();
-		
+			e.preventDefault();
+			$(".cancel_loader").show();
+			emails = $("#guest_emails<?php echo $count;?>").val();
+			content = $("#det_content<?php echo $count;?>").val();
+			reservType = $("#reserv_type<?php echo $count;?>").val();
             reservid = $("#reservation_id<?php echo $count;?>").val();
             guests = $("#number_guests<?php echo $count;?>").val();
             date_reservation = $("#date_reservation<?php echo $count;?>").val();
@@ -319,13 +322,11 @@ agm.cpkbandra@jsmcorp.in
             userid =  $("#userid").val();
 		
 			 if (reservType == "alacarte") {
-             restaurent_name =  $("#vender_name<?php echo $count;?>").val();	
+					restaurent_name =  $("#vender_name<?php echo $count;?>").val();	
         }  else {
-		 restaurent_name =  $("#restaurant<?php echo $count;?>").val();
+					restaurent_name =  $("#restaurant<?php echo $count;?>").val();
 		}
-        if (emails != "" || content != "") {
-
-
+			if (emails != "" || content != "") {
             $.ajax({
                 url: '/thanksyou/sharedetailsfriend',
                 type: "post",
@@ -346,12 +347,13 @@ agm.cpkbandra@jsmcorp.in
                     short_description: short_desc,
                 },
                 success: function(e) {
-				alert(e);
+				//alert(e);
+				$(".cancel_loader").hide();
                     if (e == 1) {
                         $("#error_email").addClass("hidden");
                         $("#error_content").addClass("hidden");
                         $("#email_form").addClass("hidden");
-                        $("#email_sent_confirmation").removeClass("hidden");
+                        $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
                         $("#guest_emails").val('');
                         $("#det_content").val('');
                     }
@@ -359,12 +361,14 @@ agm.cpkbandra@jsmcorp.in
                 },
 				 error : function(e) 
                 {
-                alert("ajax error, json: " + e);
-
-                //for (var i = 0, l = json.length; i < l; ++i) 
-                    //{
-                    //  alert (json[i]);
-                    //}
+				$(".cancel_loader").hide();
+               // alert("ajax error, json: " + e);
+				// $("#error_email").addClass("hidden");
+              //   $("#error_content").addClass("hidden");
+              //   $("#email_form").addClass("hidden");
+              //   $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
+               //  $("#guest_emails").val('');
+               //  $("#det_content").val('');
                 }
             })
         } else {
