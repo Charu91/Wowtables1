@@ -965,7 +965,7 @@ class ReservationController extends Controller {
 				$adminComments = DB::table('reservation_attributes_text')->where('reservation_id',$reservation_id)->where('reservation_attribute_id',17)->select('attribute_value')->first();;
 				$zoho_data = array(
 					'Order_completed' => 'Confirmed with rest & customer',
-					'Satisfaction' => $adminComments
+					'Satisfaction' => $adminComments->attribute_value
 				);
 				if ($reservType == "Experience") {
 					$this->reservationDetails->changeStatusInZoho('E' . sprintf("%06d", $reservation_id), $zoho_data);

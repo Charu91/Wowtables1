@@ -43,7 +43,9 @@ exit;*/
         </div>   
         <div class="col-md-9 col-sm-9 reservations-wrap" id="myres_div">
           <p class="lead wrap-title">Upcoming Reservations:</p>
-               <?php foreach ($arrReservation['data']['upcomingReservation'] as $data) {
+               <?php  
+			   $count=1;
+			   foreach ($arrReservation['data']['upcomingReservation'] as $data) {
             ?>
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -84,6 +86,17 @@ exit;*/
                         }
                   ?>                    
                   <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#cancelModal" id="<?php echo $change_id;?>" data-reserve-type="{{$data['type']}}">Cancel</a>
+                  </li>
+				  <li>
+                  <?php if($data['type'] == "experience"){
+                          $change_id = "cancel_reservation";
+                        } else if($data['type'] == "alacarte"){
+                          $change_id = "ac_cancel_reservation";
+                        }else if($data['type'] == "event"){
+                          $change_id = "event_reservation";
+                        }
+                  ?>                    
+                  <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#shareModal{{$data['id']}}" data-reserve-type="{{$data['type']}}">Share</a>
                   </li>
                   <input type="hidden" value="{{$data['id']}}"> 
                   <input type="hidden" value="{{$data['type']}}" class="reserv_typee"> 
@@ -224,7 +237,161 @@ agm.cpkbandra@jsmcorp.in
               </div>              
             </div>
           </div>
-          <?php }?> 
+		  <div class="modal fade" id="shareModal{{$data['id']}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+			<div id="load_layer" class="cancel_loader">
+              <img src="/images/loading.gif">
+                                 </div>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Share Reservation Details</h4>
+                </div>
+                <div class="modal-body" style="min-height: 110px;">
+
+                    <div id="email_form">
+                        <form>
+                            <div class="form-group">
+                                <label for="">Add Email Addresses</label>
+                                <textarea class="form-control" name='test' rows="3" id='guest_emails<?php echo $count;?>'></textarea>
+                                <div class="row">
+                                    <div class="col-xs-6"><small>seperate with commas (,)</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 error hidden" id="error_email"><small>Please enter a valid email.</small></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" name='test1' placeholder="Enter a personal message here." id='det_content<?php echo $count;?>'></textarea>
+                                <div class="row">
+                                    <div class="col-xs-12 hidden" id="error_content"><small>Please enter your message.</small></div>
+                                </div>
+                                <div class="col-xs-12 reservation-msg">
+                                    <p>The email to your party will include your personal message above as well as details about the date, time, location and experience details.</p>
+                                </div>
+                            </div>
+							 
+                            <input type="hidden" name='reserv_type' value="{{$data['type']}}" id='reserv_type<?php echo $count;?>'>
+                            <input type="hidden" name='reservid' value="{{$data['id']}}" id='reservation_id<?php echo $count;?>'>
+                            <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>              
+                            <input type="hidden" name='productid' value="{{$data['product_id']}}" id='productid<?php echo $count;?>'>              
+                            <input type="hidden" name='vl_id' value="{{$data['vl_id']}}" id='vl_id<?php echo $count;?>'>              
+                            <input type="hidden" name='vendor_location_id' value="{{$data['vendor_location_id']}}" id='vendor_location_id<?php echo $count;?>'>              
+                            <input type="hidden" name='user_email' value="{{$data['guest_email']}}" id="customer_email<?php echo $count;?>">
+                            <input type="hidden" name='full_name' value="{{$data['guest_name']}}" id="customer_name<?php echo $count;?>">
+                            <input type="hidden" name="restaurant" value="{{$data['name']}}" id="restaurant<?php echo $count;?>">
+                            <input type="hidden" name="vender_name" value="{{$data['vendor_name']}}" id="vender_name<?php echo $count;?>">
+                            <input type="hidden" name='number_guests' value="{{$data['no_of_persons']}}" id="number_guests<?php echo $count;?>">
+                            <input type="hidden" name='address' value="{{$data['address']}}" id="address<?php echo $count;?>">
+                            <input type="hidden" name='date_reservation' value="{{ date('m/d/Y',strtotime($data['date']))}}" id="date_reservation<?php echo $count;?>">
+                            <input type="hidden" name='date_seating' value="{{date("g:i A", strtotime($data['time']))}}" id="date_seating<?php echo $count;?>">
+                            <input type="hidden" name='outlet_name' value="{{$data['locality']}}" id="outlet_name<?php echo $count;?>">
+                            <input type="hidden" name='short_description' value="{{$data['short_description']}}" id="short_description<?php echo $count;?>">
+                            <button type="submit" name='share' class="btn btn-warning btn-block" id='thank_details<?php echo $count;?>' >Share Details</button>
+                        </form>
+                    </div>
+                    <div id="email_sent_confirmation<?php echo $count;?>" class="hidden">
+                        <div class="col-xs-12 reservation-msg">
+                            <p>Your message has been sent</p>
+                    <span style="padding: 10px">
+                    <button type="button" class="btn btn-warning btn-block" data-dismiss="modal" aria-hidden="true">Close This</button>
+                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+         
+		   <script type="text/javascript">
+                        
+	   $("#thank_details<?php echo $count;?>").click(function(e) {
+			e.preventDefault();
+			$(".cancel_loader").show();
+			emails = $("#guest_emails<?php echo $count;?>").val();
+			content = $("#det_content<?php echo $count;?>").val();
+			reservType = $("#reserv_type<?php echo $count;?>").val();
+            reservid = $("#reservation_id<?php echo $count;?>").val();
+            guests = $("#number_guests<?php echo $count;?>").val();
+            date_reservation = $("#date_reservation<?php echo $count;?>").val();
+            date_seating = $("#date_seating<?php echo $count;?>").val();
+            outlet_name = $("#outlet_name<?php echo $count;?>").val();
+            customer_name =  $("#customer_name<?php echo $count;?>").val();
+            customer_mail =  $("#customer_email<?php echo $count;?>").val();
+            short_desc =  $("#short_description<?php echo $count;?>").val();
+            address =  $("#address<?php echo $count;?>").val();
+            product_id =  $("#product_id<?php echo $count;?>").val();
+            vl_id =  $("#vl_id<?php echo $count;?>").val();
+            vendor_location_id =  $("#vendor_location_id<?php echo $count;?>").val();
+            userid =  $("#userid").val();
+		
+			 if (reservType == "alacarte") {
+					restaurent_name =  $("#vender_name<?php echo $count;?>").val();	
+        }  else {
+					restaurent_name =  $("#restaurant<?php echo $count;?>").val();
+		}
+			if (emails != "" || content != "") {
+            $.ajax({
+                url: '/thanksyou/sharedetailsfriend',
+                type: "post",
+                data: {
+                    content: content,
+                    emails: emails,
+                    user_mail: customer_mail,
+                    user_name: customer_name,
+                    reservid: reservid,
+                    userid: userid,
+                    reservation_type: reservType,
+                    guests: guests,
+                    date_reservation: date_reservation,
+                    date_seating: date_seating,
+                    restaurant: restaurent_name,
+                    outlet_name: outlet_name,
+                    address: address,
+                    short_description: short_desc,
+                    product_id: product_id,
+                    vl_id: vl_id,
+                    vendor_location_id: vendor_location_id,
+                },
+                success: function(e) {
+				//alert(e);
+				$(".cancel_loader").hide();
+                    if (e == 1) {
+                        $("#error_email").addClass("hidden");
+                        $("#error_content").addClass("hidden");
+                        $("#email_form").addClass("hidden");
+                        $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
+                        $("#guest_emails").val('');
+                        $("#det_content").val('');
+                    }
+					
+                },
+				 error : function(e) 
+                {
+				$(".cancel_loader").hide();
+               // alert("ajax error, json: " + e);
+				// $("#error_email").addClass("hidden");
+              //   $("#error_content").addClass("hidden");
+              //   $("#email_form").addClass("hidden");
+              //   $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
+               //  $("#guest_emails").val('');
+               //  $("#det_content").val('');
+                }
+            })
+        } else {
+		
+            $("#error_email").removeClass("hidden");
+            $("#error_content").removeClass("hidden")
+        }
+    });
+                              
+                    </script>
+					 <?php 
+		  $count++;
+		  ?>
+		  <?php 
+		  }?> 
 
                    <hr>
           <p class="lead wrap-title">Previous Reservations:</p>
@@ -542,7 +709,8 @@ agm.cpkbandra@jsmcorp.in
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-  <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  
+  <!--<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -573,7 +741,7 @@ agm.cpkbandra@jsmcorp.in
                 </div>                
               </div>
               <input type="hidden" id="reservid" name='reservid' value='12'>
-              <input type="hidden" name='userid' value="21330">
+              <input type="hidden" name='userid' value="{{Session::get('id')}}>
               <input type="hidden" id="experienceid" name="experienceid" value="5">  
               <input type="hidden" name='user_email' value="tech@gourmetitup.com">        
               <button type="submit" class="btn btn-warning btn-block" id="thank_details">Share Details</button>

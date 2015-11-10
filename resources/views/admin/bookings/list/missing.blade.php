@@ -125,7 +125,7 @@
                             <td>{!! $post_booking->gift_card_id !!}</td>
                             <td>
                                 <span class="label label-warning">{!! $post_booking->reserv_status !!} by {!! $post_booking->lastmodified !!}</span>
-                                <div class="btn-group pull-right">
+                                <div class="btn-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             {!! $post_booking->reserv_status !!}
