@@ -160,7 +160,7 @@ else{?>
 						if(isset($aladata['flagname']) && $aladata['flagname'] !="") {
 									if($cityname == 'Mumbai' || $cityname == 'mumbai' || $cityname == 'Bangalore' || $cityname == 'bangalore'){
 						?>
-								<div class="flag new alatop" id="flag_alcart_listing" style="background:none;font-weight:800;"><?php echo $aladata['flagname'];?></div>
+								<div class="flag new alatop" id="flag_alcart_listing" style="background:none;font-weight:800;padding:0;"><?php echo $aladata['flagname'];?></div>
 						<?php } else { ?>
 									<div class="flag new alatop" id="flag_alcart_listing" style="background:{{$aladata['color']}}"><?php echo $aladata['flagname'];?></div>
 						<?php  } }?>

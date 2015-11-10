@@ -309,7 +309,7 @@ $(document).ready(function(){
 										if(isset($row['flag_name']) && $row['flag_name'] != "") {
 											if($no_flag_color == 1){
 									?>
-										<div class="flag new alatop" id="flag_alcart_listing" style="background:none;font-weight:800;"><?php echo $row['flag_name']?></div>
+										<div class="flag new alatop" id="flag_alcart_listing" style="background:none;font-weight:800;padding:0;"><?php echo $row['flag_name']?></div>
 									<?php
 											} else {
 									?>
