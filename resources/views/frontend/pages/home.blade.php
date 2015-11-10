@@ -711,6 +711,7 @@
                                     $('#email_error a').on('click', function(e){
                                         $('.form-slide-wrapper').animate({'left': '-320px'});
                                         $("input[name='email']").css('border','0px');
+										$("#signinForm").show();
                                     });
                                     err++;
                                 }

@@ -433,9 +433,16 @@ Route::post('/review/save_user_review', [
     'domain' => env('WEBSITE_URL')
 ]);
 
+
 Route::post('/thankyou/sharedetails', [
     'uses' => 'Site\SharingController@shareDetails',
     'as' => 'shareDetails',
+    'domain' => env('WEBSITE_URL')
+]);
+
+Route::post('/thanksyou/sharedetailsfriend', [
+    'uses' => 'Site\SharingController@shareDetailsFriend',
+    'as' => 'shareDetailsFriend',
     'domain' => env('WEBSITE_URL')
 ]);
 
