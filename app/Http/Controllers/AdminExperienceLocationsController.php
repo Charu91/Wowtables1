@@ -7,6 +7,11 @@ use WowTables\Http\Requests\Admin\UpdateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\DeleteExperienceLocationRequest;
 use WowTables\Http\Models\ExperienceLocation;
 use WowTables\Http\Models\Eloquent\Location;
+use WowTables\Http\Models\ProductReviews;
+use WowTables\Http\Models\VendorLocationsReviews;
+use Request as RequestData;
+use Validator;
+use Redirect;
 use DB;
 use Input;
 
@@ -241,6 +246,149 @@ class AdminExperienceLocationsController extends Controller {
 
     }
 
+	public function expReviewAdd()
+    {	
+		
+		return view('admin.review.experience_review_add');
+		
+		
+    }
+	public function experienceReviewAdd()
+    {	
+		
+	    $data = RequestData::all();
+		$rules = array(
+			'email' => 'required|exists:users,email',
+			'review' => 'required',
+			'rating' => 'required|numeric',
+			'reservid' => 'required|numeric',
+			'experience_id' => 'required|numeric',
+			
+		);		
+
+		$validation = Validator::make($data, $rules);
+
+		if($validation->fails())
+		{
+			return Redirect::to("/admin/expreviewadd")->withInput()->withErrors($validation);
+		}
+		
+		
+		$email = Input::get('email');
+		$user_id = DB::table('users')->where('email', $email)->pluck('id');
+		
+		$reservation_id = DB::select("select user_id from reservation_details where user_id = '$user_id' and reservation_type='experience' order by id desc limit 0,1");
+		if(!$reservation_id){
+			flash()->error('Reservation Detail ID do not match with Email..');
+			return Redirect::to("/admin/expreviewadd")->withInput();
+		}
+		
+		
+		$review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+        $product_id = Input::get('experience_id');
+        
+        $reservid = Input::get('reservid');
+		
+		if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+		
+		
+		$productReviews = new ProductReviews();
+		
+		$productReviews->product_id = $product_id;
+		$productReviews->user_id = $user_id;
+		$productReviews->reserv_id = $reservid;
+		$productReviews->review = $review;
+		$productReviews->rating = $rating;
+		$productReviews->status = $statusUpdate;
+		$productReviews->save();
+        flash()->success('The Experience Review has been successfully Added.');
+        return redirect('admin/review');
+	
+        
+    }
+	
+	
+	
+	public function alaReviewAdd()
+    {	
+		
+		return view('admin.review.alacarte_review_add');
+		
+		
+    }
+	public function alacarteReviewAdd()
+    {	
+		
+	    $data = RequestData::all();
+		$rules = array(
+			'email' => 'required|exists:users,email',
+			'review' => 'required',
+			'rating' => 'required|numeric',
+			'reservid' => 'required|numeric',
+			'experience_id' => 'required|numeric',
+			
+		);		
+
+		$validation = Validator::make($data, $rules);
+
+		if($validation->fails())
+		{
+			return Redirect::to("/admin/alacreviewadd")->withInput()->withErrors($validation);
+		}
+		
+		$review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+        $product_id = Input::get('experience_id');
+        $email = Input::get('email');
+        $reservid = Input::get('reservid');
+    
+		$user_id = DB::table('users')->where('email', $email)->pluck('id');
+		
+		$reservation_id = DB::select("select user_id from reservation_details where user_id = '$user_id' and reservation_type='alacarte' order by id desc limit 0,1");
+		if(!$reservation_id){
+			flash()->error('Reservation Detail ID do not match with Email..');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+		
+		
+		if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+		
+		
+		$vendorLocationReview = new VendorLocationsReviews();
+		
+		$vendorLocationReview->vendor_location_id = $product_id;
+		$vendorLocationReview->user_id = $user_id;
+		$vendorLocationReview->reserv_id = $reservid;
+		$vendorLocationReview->review = $review;
+		$vendorLocationReview->service = "Yes";
+		$vendorLocationReview->rating = $rating;
+		$vendorLocationReview->status = $statusUpdate;
+		$vendorLocationReview->save();
+        flash()->success('The Alacarte Review has been successfully Added.');
+        return redirect('admin/reviewalacarte');
+	       
+    }
+	
+	
+	
+	
         /**
      * Display a expReviewUpdate of the update experience review.
      *
@@ -279,7 +427,7 @@ class AdminExperienceLocationsController extends Controller {
         $update = DB::update("update product_reviews set review ='$review', rating = '$rating', status ='$statusUpdate' where id = $review_id");
 
           flash()->success('The Experience Review has been successfully updated.');
-            return redirect('admin/review');
+          return redirect('admin/review');
     }
 
 
