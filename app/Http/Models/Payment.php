@@ -146,7 +146,7 @@ class Payment {
 			. $arrData['email'] . '|||||||||||'
 			. $salt;
 
-    	$paymentHash = strtolower(hash('sha512', $payhashStr));
+    	$paymentHash = hash('sha512', $payhashStr);
     	$arr['payment_hash'] = $paymentHash;
 
     	$cmnNameMerchantCodes = 'get_merchant_ibibo_codes';
