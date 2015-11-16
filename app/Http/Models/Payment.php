@@ -2,6 +2,7 @@
 
 use Config;
 use DB;
+use Mail;
 
 /**
  * Payment model class.
