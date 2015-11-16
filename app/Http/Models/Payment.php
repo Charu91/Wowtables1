@@ -136,13 +136,17 @@ class Payment {
 		$key = Config::get('constants.PAYU_MERCHANT_ID');
     	$salt = Config::get('constants.PAYU_SALT');
 
-    	$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|' 
+    	/*$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|'
     				.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|' 
     				. $arrData['email'] . '|' . $udf1 . '|' . $udf2 . '|' 
     				. $udf3 . '|' . $udf4 . '|' . $udf5 . '||||||' 
-    				. $salt;
+    				. $salt;*/
+		$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|'
+			.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|'
+			. $arrData['email'] . '|||||||||||'
+			. $salt;
 
-    	$paymentHash = strtolower(hash('sha512', $payhashStr));
+    	$paymentHash = hash('sha512', $payhashStr);
     	$arr['payment_hash'] = $paymentHash;
 
     	$cmnNameMerchantCodes = 'get_merchant_ibibo_codes';
@@ -200,6 +204,14 @@ class Payment {
             $checkIsDomestic = strtolower(hash('sha512', $checkIsDomestic_str));
       		$arr['check_isDomestic_hash']=$checkIsDomestic;
     	}
+
+		Mail::send('templates.codelog',[
+			'variables'=>$arrData,
+			'hashes'=> $arr
+		], function($message){
+			$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+			$message->to('manan@wowtables.com')->subject("Payu hashes");
+		});
 
     return $arr;
   }
