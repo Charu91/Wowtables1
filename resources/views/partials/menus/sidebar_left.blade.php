@@ -190,16 +190,10 @@
                         <ul class="nav nav-children">
                             <li class="{{ (isset($uri) && $uri === 'admin/review')? 'nav-active':'' }}">
                                 <a href="/admin/review">Experience Review</a>
-                            </li>
-							<li class="{{ (isset($uri) && $uri === 'admin/expreviewadd')? 'nav-active':'' }}">
-                                <a href="/admin/expreviewadd">Add Experience Review</a>
-                            </li>
+                            </li>							
                             <li class="{{ (isset($uri) && $uri === 'admin/reviewalacarte')? 'nav-active':'' }}">
                                 <a href="/admin/reviewalacarte">Alacarte Review</a>
-                            </li>
-							<li class="{{ (isset($uri) && $uri === 'admin/alacreviewadd')? 'nav-active':'' }}">
-                                <a href="/admin/alacreviewadd">Add Alacarte Review</a>
-                            </li>
+                            </li>							
                         </ul>
                     </li>
 

@@ -69,7 +69,7 @@ class AdminExperienceLocationsController extends Controller {
                                     MAX(IF(va.alias='short_description', vlat.attribute_value, ''))AS vendor_short_description, `ploc`.`name` as `product_locality`,
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, pr.review,pr.id as review_id, pr.status as review_status
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, pr.review,pr.id as review_id, pr.status as review_status, pr.rating as rating
                                     from `reservation_details` as `rd` 
                                     inner join product_reviews as pr on pr.reserv_id = rd.id
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
@@ -113,6 +113,7 @@ class AdminExperienceLocationsController extends Controller {
                           'review'                    => $row->review,
                           'review_id'                 => $row->review_id,
                           'review_status'             => $row->review_status,
+                          'rating'              	  => $row->rating,
                           'product_locality'          => $row->product_locality,
                            );
             }
@@ -166,7 +167,7 @@ class AdminExperienceLocationsController extends Controller {
                                     MAX(IF(va.alias='short_description', vlat.attribute_value, ''))AS vendor_short_description, `ploc`.`name` as `product_locality`,
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, vlr.review,vlr.id as review_id, vlr.status as review_status
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, vlr.review,vlr.id as review_id, vlr.status as review_status, vlr.rating as rating
                                     from `reservation_details` as `rd` 
                                     inner join vendor_location_reviews as vlr on vlr.reserv_id = rd.id
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
@@ -211,6 +212,7 @@ class AdminExperienceLocationsController extends Controller {
                           'review'                    => $row->review,
                           'review_id'                 => $row->review_id,
                           'review_status'             => $row->review_status,
+                          'rating'             => $row->rating,
                            );
             }
         }
@@ -281,6 +283,13 @@ class AdminExperienceLocationsController extends Controller {
         $product_id = Input::get('experience_id');        
         $reservid = Input::get('reservid');		
 		
+		
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and reservation_type='experience' and id = '$reservid' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/expreviewadd")->withInput();
+		}
+		/*
 		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$product_id' and reservation_type='experience' order by id desc limit 0,1");
 		if(!$reservation_id_row){
 			flash()->error('Reservation Detail ID do not match with Email.');
@@ -289,7 +298,8 @@ class AdminExperienceLocationsController extends Controller {
 		foreach($reservation_id_row as $row1)
 		{
 		  $reservid = $row1->id;
-		}
+		}*/
+		
 		
 		
 		
@@ -357,7 +367,14 @@ class AdminExperienceLocationsController extends Controller {
     
 		$user_id = DB::table('users')->where('email', $email)->pluck('id');
 		
-		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$restaurant_vendor_id' and reservation_type='alacarte' order by id desc limit 0,1");
+		
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id'  and reservation_type='alacarte' and id = '$reservid' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+		
+		/*$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$restaurant_vendor_id' and reservation_type='alacarte' order by id desc limit 0,1");
 		if(!$reservation_id_row){
 			flash()->error('Reservation Detail ID do not match with Email.');
 			return Redirect::to("/admin/alacreviewadd")->withInput();
@@ -365,7 +382,7 @@ class AdminExperienceLocationsController extends Controller {
 		foreach($reservation_id_row as $row1)
 		{
 		  $reservid = $row1->id;
-		}
+		}*/
 	   
 		
 	   $restaurant_vendor_query = DB::select("SELECT vl.id,vl.vendor_id, vl.location_id, vl.slug,l.name as area
