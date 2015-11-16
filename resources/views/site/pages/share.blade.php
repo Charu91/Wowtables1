@@ -9,7 +9,14 @@
 </head>
 
 <body>
-    <p>{{$share_data['user']}} said "{{$share_data['content']}}"</p>
+
+<?php if($share_data['content'] !== '') { ?>
+<p> 
+   {{$share_data['user']}} said "{{$share_data['content']}}"
+</p>
+  <?php } else { }?>
+  
+  
     <?php if($share_data['reservation_type'] == "experience_detail") { ?>
         <p>{{$share_data['user']}} has suggested you view WowTables dining experience at {{$share_data['restaurant_name']}}.</p>
     <?php } else { ?>
