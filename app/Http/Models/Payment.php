@@ -142,12 +142,13 @@ class Payment {
     				. $arrData['email'] . '|' . $udf1 . '|' . $udf2 . '|' 
     				. $udf3 . '|' . $udf4 . '|' . $udf5 . '||||||' 
     				. $salt;*/
-		$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|'
+		$amount = number_format($arrData['amount'],2);
+		$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$amount  . '|'
 			.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|'
 			. $arrData['email'] . '|||||||||||'
 			. $salt;
 
-    	$paymentHash = hash('sha512', $payhashStr);
+    	$paymentHash = strtolower(hash('sha512', $payhashStr));
     	$arr['payment_hash'] = $paymentHash;
 
     	$cmnNameMerchantCodes = 'get_merchant_ibibo_codes';
@@ -161,7 +162,7 @@ class Payment {
     	$arr['vas_for_mobile_sdk_hash'] = $mobileSdk;
 
     	$cmnPaymentRelatedDetailsForMobileSdk1 = 'payment_related_details_for_mobile_sdk';
-    	$detailsForMobileSdk_str1 = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk1 . '|default|' . $salt ;
+    	$detailsForMobileSdk_str1 = $key  . '|' . $cmnPaymentRelatedDetailsForMobileSdk1 . '|'.$arrData['userCredentials'].'|' . $salt ;
     	$detailsForMobileSdk1 = strtolower(hash('sha512', $detailsForMobileSdk_str1));
     	$arr['payment_related_details_for_mobile_sdk_hash'] = $detailsForMobileSdk1;
 
