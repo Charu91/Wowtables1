@@ -205,6 +205,14 @@ class Payment {
       		$arr['check_isDomestic_hash']=$checkIsDomestic;
     	}
 
+		Mail::send('templates.codelog',[
+			'variables'=>$arrData,
+			'hashes'=> $arr
+		], function($message){
+			$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+			$message->to('manan@wowtables.com')->subject("Payu hashes");
+		});
+
     return $arr;
   }
 
