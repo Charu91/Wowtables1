@@ -31,9 +31,16 @@
                    {!! Form::open(['route'=>'alacarteReviewAdd']) !!}
 					 <div class="form-group">
 						
-						{!! Form::label('experience_id','Select Experience*',['class'=>'col-sm-4 control-label']) !!}
+						{!! Form::label('restaurant_id','Select Alacarte*',['class'=>'col-sm-4 control-label']) !!}
 						<div class="col-sm-8">
-							{!! Form::select('experience_id',$experiences_list,null,['id'=>'loc_exp','class'=>'form-control ','data-plugin-selectTwo'=>'','required'=>'']) !!}
+							{!! Form::select('restaurant_id',$restaurants_list,null,['id'=>'loc_exp','class'=>'form-control ','data-plugin-selectTwo'=>'','required'=>'']) !!}
+						</div>
+					</div> 
+					<div class="form-group">
+						
+						{!! Form::label('location_id','Select Alacarte City*',['class'=>'col-sm-4 control-label']) !!}
+						<div class="col-sm-8">
+							 {!! Form::select('location_id',$locations_list,null,['class'=>'form-control populate','data-plugin-selectTwo'=>'','required'=>'']) !!}
 						</div>
 					</div>
 					<div class="form-group">
@@ -49,12 +56,7 @@
 							{!! Form::text('email',null,['class'=>'form-control','required']) !!}
                         </div>
                     </div>
-					<div class="form-group">
-						{!! Form::label('reservid','Reservation Detail ID*',['class'=>'col-sm-4 control-label']) !!}
-                        <div class="col-sm-8">
-							{!! Form::text('reservid',null,['class'=>'form-control','required']) !!}
-                        </div>
-                    </div>
+					
 					<div class="form-group">
 						{!! Form::label('review','Review*',['class'=>'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">

@@ -261,7 +261,6 @@ class AdminExperienceLocationsController extends Controller {
 			'email' => 'required|exists:users,email',
 			'review' => 'required',
 			'rating' => 'required|numeric',
-			'reservid' => 'required|numeric',
 			'experience_id' => 'required|numeric',
 			
 		);		
@@ -276,20 +275,23 @@ class AdminExperienceLocationsController extends Controller {
 		
 		$email = Input::get('email');
 		$user_id = DB::table('users')->where('email', $email)->pluck('id');
-		
-		$reservation_id = DB::select("select user_id from reservation_details where user_id = '$user_id' and reservation_type='experience' order by id desc limit 0,1");
-		if(!$reservation_id){
-			flash()->error('Reservation Detail ID do not match with Email..');
-			return Redirect::to("/admin/expreviewadd")->withInput();
-		}
-		
-		
 		$review = Input::get('review');
         $rating = Input::get('rating');
         $show_review = Input::get('show_review');
-        $product_id = Input::get('experience_id');
-        
-        $reservid = Input::get('reservid');
+        $product_id = Input::get('experience_id');        
+        $reservid = Input::get('reservid');		
+		
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$product_id' and reservation_type='experience' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/expreviewadd")->withInput();
+		}
+		foreach($reservation_id_row as $row1)
+		{
+		  $reservid = $row1->id;
+		}
+		
+		
 		
 		if($show_review == "")
         {
@@ -328,13 +330,13 @@ class AdminExperienceLocationsController extends Controller {
 	public function alacarteReviewAdd()
     {	
 		
-	    $data = RequestData::all();
+	    $data = RequestData::all();		
 		$rules = array(
 			'email' => 'required|exists:users,email',
 			'review' => 'required',
 			'rating' => 'required|numeric',
-			'reservid' => 'required|numeric',
-			'experience_id' => 'required|numeric',
+			'restaurant_id' => 'required|numeric',
+			'location_id' => 'required|numeric',
 			
 		);		
 
@@ -348,19 +350,42 @@ class AdminExperienceLocationsController extends Controller {
 		$review = Input::get('review');
         $rating = Input::get('rating');
         $show_review = Input::get('show_review');
-        $product_id = Input::get('experience_id');
+        $restaurant_vendor_id = Input::get('restaurant_id');
         $email = Input::get('email');
         $reservid = Input::get('reservid');
+        $location_id = Input::get('location_id');
     
 		$user_id = DB::table('users')->where('email', $email)->pluck('id');
 		
-		$reservation_id = DB::select("select user_id from reservation_details where user_id = '$user_id' and reservation_type='alacarte' order by id desc limit 0,1");
-		if(!$reservation_id){
-			flash()->error('Reservation Detail ID do not match with Email..');
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$restaurant_vendor_id' and reservation_type='alacarte' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
 			return Redirect::to("/admin/alacreviewadd")->withInput();
 		}
+		foreach($reservation_id_row as $row1)
+		{
+		  $reservid = $row1->id;
+		}
+	   
 		
-		
+	   $restaurant_vendor_query = DB::select("SELECT vl.id,vl.vendor_id, vl.location_id, vl.slug,l.name as area
+                              FROM `vendor_locations` as vl
+                              left join locations as l on l.id = vl.location_id
+                              left join vendor_location_address as vla on vla.vendor_location_id = vl.id
+                              WHERE vl.vendor_id = '$restaurant_vendor_id'
+                              AND vl.a_la_carte = '1'
+                              AND vl.location_id = '$location_id'
+                              AND vl.status = 'Active'");
+		if(empty($restaurant_vendor_query)){
+			flash()->error('Alacarte Detail not Found.');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+       
+		foreach($restaurant_vendor_query as $row)
+		{
+		  $vendor_location_id = $row->id;
+		}
+       
 		if($show_review == "")
         {
             $statusUpdate = "Pending";
@@ -373,7 +398,7 @@ class AdminExperienceLocationsController extends Controller {
 		
 		$vendorLocationReview = new VendorLocationsReviews();
 		
-		$vendorLocationReview->vendor_location_id = $product_id;
+		$vendorLocationReview->vendor_location_id = $vendor_location_id;
 		$vendorLocationReview->user_id = $user_id;
 		$vendorLocationReview->reserv_id = $reservid;
 		$vendorLocationReview->review = $review;

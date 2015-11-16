@@ -48,12 +48,12 @@
 							{!! Form::text('email',null,['class'=>'form-control','required']) !!}
                         </div>
                     </div>
-					<div class="form-group">
+					<!--<div class="form-group">
 						{!! Form::label('reservid','Reservation Detail ID*',['class'=>'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
 							{!! Form::text('reservid',null,['class'=>'form-control','required']) !!}
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
 						{!! Form::label('review','Review*',['class'=>'col-sm-4 control-label']) !!}
