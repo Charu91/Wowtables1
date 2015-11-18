@@ -127,7 +127,7 @@ class UserController extends Controller {
 						['data'=> $data,], function($message) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 						$message->to('concierge@wowtables.com')->subject('Issue On App Login');
-						$message->cc(['manan@wowtables.com', 'vineet@devzila.com']);
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
 				});
 			}
 		} catch(Exception $e){
@@ -157,7 +157,7 @@ class UserController extends Controller {
 						['data'=> $data,], function($message) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
 						$message->to('concierge@wowtables.com')->subject('Issue On App Login');
-						$message->cc(['manan@wowtables.com', 'vineet@devzila.com']);
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
 				});
 			}
 		} catch(Exception $e){
