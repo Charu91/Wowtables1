@@ -152,9 +152,9 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        
+        $userFbLogin = $this->user->mobileFbLogin($input);
 		try{
-			$userFbLogin = $this->user->mobileFbLogin($input);
+			
 			if($userFbLogin['code'] != 200){
 				$data = array(
 					'email' => isset($input['email'] )? $input['email']: '',
