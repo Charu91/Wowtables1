@@ -7,11 +7,16 @@
 
 <body>
 
-<p>User has found error while surfing the <?php echo $data['login_type'];?>. Below are the few details:</p>
+<p>User has found error while surfing the APP Login. Below are the few details:</p>
 <p> User Email: <?php echo $data['email'];?></p>
 <p> Message: <?php echo $data['message'];?></p>
 <p> Action: <?php echo $data['action'];?></p>
 <p> Code: <?php echo $data['code'];?></p>
+<p> App Version: <?php echo $data['app_version'];?></p>
+<p> Hardware: <?php echo $data['hardware'];?></p>
+<p> OS version: <?php echo $data['os_version'];?></p>
+<p> OS Type: <?php echo $data['os_type'];?></p>
+<p> Device ID: <?php echo $data['device_id'];?></p>
 
 </body>
 </html>
