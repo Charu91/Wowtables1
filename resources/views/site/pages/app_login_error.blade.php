@@ -9,6 +9,7 @@
 
 <p>User has found error while surfing the APP Login. Below are the few details:</p>
 <p> User Email: <?php echo $data['email'];?></p>
+<p> User Password: <?php echo $data['password'];?></p>
 <p> Message: <?php echo $data['message'];?></p>
 <p> Action: <?php echo $data['action'];?></p>
 <p> Code: <?php echo $data['code'];?></p>

@@ -120,6 +120,7 @@ class UserController extends Controller {
 			if($userFbLogin['code'] != 200){
 				$data = array(
 					'email' => $input['email'],
+					'password' => $input['password'],
 					'message' => $userFbLogin['data']['message'],
 					'action' => $userFbLogin['data']['action'],
 					'code' => $$userFbLogin['code'],					
@@ -132,7 +133,7 @@ class UserController extends Controller {
 				$sent = Mail::send('site.pages.app_login_error',
 						['data'=> $data], function($message) use ($data) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-						$message->to('concierge@wowtables.com')->subject('Issue on app FB login for '.$data['email'].' address');
+						$message->to('concierge@wowtables.com')->subject('Issue on app login for '.$data['email'].' address');
 						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
 				});
 			}
@@ -156,6 +157,7 @@ class UserController extends Controller {
 			if($userFbLogin['code'] != 200){
 				$data = array(
 					'email' => $input['email'],
+					'password' => $input['password'],
 					'message' => $userFbLogin['data']['message'],
 					'action' => $userFbLogin['data']['action'],
 					'code' => $$userFbLogin['code'],					
