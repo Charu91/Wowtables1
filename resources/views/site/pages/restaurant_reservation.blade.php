@@ -170,7 +170,9 @@
 
 
                             <tr>
-                                <td class="details-info" STYLE=" float:left; width:494px; padding:7px 20px 9px 21px; background:#ebebeb; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; color:#000; font-size:12px; margin-bottom:9px;"><?php echo $terms_conditions;?>
+                                <td class="details-info" STYLE=" float:left; width:494px; padding:7px 20px 9px 21px; background:#ebebeb; -moz-box-shadow: 0px 1px 1px #848182; -webkit-box-shadow: 0px 1px 1px #848182; box-shadow: 0px 1px 1px #848182; color:#000; font-size:12px; margin-bottom:9px;">
+                                    <p>WowTables Gift Cards are not valid for Classic Reservations</p>
+                                    <?php echo $terms_conditions;?>
 
 
                                 </td>
