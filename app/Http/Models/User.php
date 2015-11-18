@@ -602,9 +602,9 @@ class User {
                         ->select('password', 'old_password', 'id', 'location_id', 'phone_number',
                                 'full_name', 'role_id', 'fb_token', 'type', 'points_earned',
                                 'points_spent')
-                        ->where('email', $data['email'])
+                        ->where('email', trim($data['email']))
                         ->first();
-        if($user) {
+        if(!empty($user)) {
           if($user->type == "old_site" && empty($user->password) && $user->old_password == md5($data['password']) ) {
                
                 //Updating old password to new password
