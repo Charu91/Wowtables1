@@ -118,16 +118,22 @@ class UserController extends Controller {
         $userLogin = $this->user->mobileLogin($input);
 		try{
 			if($userLogin['code'] != 200){
-				$data['email'] = $input['email'];
-				$useremail = $input['email'];
-				$data['message'] = $userLogin['data']['message'];
-				$data['action'] = $userLogin['data']['action'];
-				$data['code'] = $userLogin['code'];
-				$data['login_type'] = "App Simple Login";
+				$data = array(
+					'email' => isset($input['email'] )? $input['email']: '',
+					'password' => isset($input['password'] )? $input['password']: '',
+					'message' => $userLogin['data']['message'],
+					'action' => $userLogin['data']['action'],
+					'code' =>  $userLogin['code'],					
+					'app_version' => isset($input['app_version'] )? $input['app_version']: '',
+					'hardware' => isset($input['hardware'] )? $input['hardware']: '',
+					'os_version' => isset($input['os_version'] )? $input['os_version']: '',
+					'os_type' => isset($input['os_type'] )? $input['os_type']: '',
+					'device_id' => isset($input['device_id'] )? $input['device_id']: '',
+				);
 				$sent = Mail::send('site.pages.app_login_error',
-						['data'=> $data,], function($message) {
+						['data'=> $data], function($message) use ($data) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-						$message->to('concierge@wowtables.com')->subject("Issue on app login for $useremail address");
+						$message->to('concierge@wowtables.com')->subject('Issue on app login for '.$data['email'].' address');
 						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
 				});
 			}
@@ -148,22 +154,29 @@ class UserController extends Controller {
 
         $userFbLogin = $this->user->mobileFbLogin($input);
 		try{
+			
 			if($userFbLogin['code'] != 200){
-				$data['email'] = $input['email'];
-				$useremail = $input['email'];
-				$data['message'] = $userFbLogin['data']['message'];
-				$data['action'] = $userFbLogin['data']['action'];
-				$data['code'] = $userFbLogin['code'];
-				$data['login_type'] = "App FB Login";
+				$data = array(
+					'email' => isset($input['email'] )? $input['email']: '',
+					'password' => isset($input['password'] )? $input['password']: '',
+					'message' => $userFbLogin['data']['message'],
+					'action' => $userFbLogin['data']['action'],
+					'code' =>  $userFbLogin['code'],					
+					'app_version' => isset($input['app_version'] )? $input['app_version']: '',
+					'hardware' => isset($input['hardware'] )? $input['hardware']: '',
+					'os_version' => isset($input['os_version'] )? $input['os_version']: '',
+					'os_type' => isset($input['os_type'] )? $input['os_type']: '',
+					'device_id' => isset($input['device_id'] )? $input['device_id']: '',
+				);
 				$sent = Mail::send('site.pages.app_login_error',
-						['data'=> $data,], function($message) {
+						['data'=> $data], function($message) use ($data) {
 						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
-						$message->to('concierge@wowtables.com')->subject("Issue on app login for $useremail address");
+						$message->to('concierge@wowtables.com')->subject('Issue on app login for '.$data['email'].' address');
 						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
 				});
 			}
 		} catch(Exception $e){
-			
+			//$e->getMessage();
 		}
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
