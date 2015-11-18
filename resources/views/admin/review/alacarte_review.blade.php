@@ -14,7 +14,7 @@
             </ol>
         </div>
     </header>
-
+	<a href="/admin/alacreviewadd"><button class="btn btn-primary mb-lg btn-lg">Add Alacarte Review</button></a>
     <section class="panel panel-featured panel-featured-primary">
         <header class="panel-heading">
             <h2 class="panel-title">
@@ -29,6 +29,7 @@
                     <th>Date of seating</th>
                     <th>restaurant - location</th>
                     <th>Customer name,email</th>
+                    <th>Rating</th>
                     <th>Review paragraph</th>
                     <th>Actions</th>
                     <th>Show review</th>
@@ -42,6 +43,7 @@
                             <td>{{$alacartReview['reservation_date']}}</td>
                             <td>{{$alacartReview['vendor_name']}} - {{$alacartReview['vendor_address']}}</td>
                             <td>{{$alacartReview['guest_name']}} - {{$alacartReview['guest_email']}}</td>
+                            <td>{{$alacartReview['rating']}}</td>
                             <td>{{$alacartReview['review']}}</td>
                             <td>
                                 <a data-experience-id="{!! $alacartReview['review_id'] !!}" href="<?php echo URL::to('/').'/alacartereview/edit/'.$alacartReview['review_id']; ?>" class="btn btn-xs btn-primary">Edit</a>

@@ -10,7 +10,7 @@ use WowTables\Http\Requests\Api\UserFBLoginRequest;
 use Mailchimp;
 use WowTables\Http\Models\Eloquent\Location;
 use DB;
-
+use Mail;
 
 class UserController extends Controller {
 
@@ -116,7 +116,23 @@ class UserController extends Controller {
         $input = $this->request->all();
 
         $userLogin = $this->user->mobileLogin($input);
-
+		try{
+			if($userLogin['code'] != 200){
+				$data['email'] = $input['email'];
+				$data['message'] = $userLogin['data']['message'];
+				$data['action'] = $userLogin['data']['action'];
+				$data['code'] = $userLogin['code'];
+				$data['login_type'] = "App Simple Login";
+				$sent = Mail::send('site.pages.app_login_error',
+						['data'=> $data,], function($message) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+						$message->to('concierge@wowtables.com')->subject('Issue On App Login');
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
+				});
+			}
+		} catch(Exception $e){
+			
+		}
         return response()->json($userLogin['data'], $userLogin['code']);
 	}
 
@@ -130,7 +146,23 @@ class UserController extends Controller {
         $input = $this->request->all();
 
         $userFbLogin = $this->user->mobileFbLogin($input);
-
+		try{
+			if($userFbLogin['code'] != 200){
+				$data['email'] = $input['email'];
+				$data['message'] = $userFbLogin['data']['message'];
+				$data['action'] = $userFbLogin['data']['action'];
+				$data['code'] = $userFbLogin['code'];
+				$data['login_type'] = "App FB Login";
+				$sent = Mail::send('site.pages.app_login_error',
+						['data'=> $data,], function($message) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+						$message->to('concierge@wowtables.com')->subject('Issue On App Login');
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
+				});
+			}
+		} catch(Exception $e){
+			
+		}
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
 

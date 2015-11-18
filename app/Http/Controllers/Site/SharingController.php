@@ -212,7 +212,7 @@ class SharingController extends Controller {
 				}
 				$sharing->restaurant_id = $reservid;
 				if($reservation_type == "alacarte"){
-					$sharing->product_id = $reservid;
+					$sharing->product_id = $product_id;
 					
 					$sharing->restaurant_location_id = $vendor_location_id;
 				}
@@ -221,17 +221,15 @@ class SharingController extends Controller {
 				//echo "<pre>"; print_r($sharing);
 				$sharing->save();
 				//die;
+				/*
 				if($reservation_type == "experience"){
 				$template='site.pages.share_experience';
 				}
 				elseif($reservation_type == "alacarte"){
 				$template='site.pages.share_alacarte';
-				}
-				
-				
-				
-				
-				Mail::send($template,[
+				}	
+				*/
+				Mail::send('site.pages.share_reservation',[
 					'share_data'=> $sharearray
 				], function($message) use ($email,$user,$subject)
 				{
@@ -247,7 +245,7 @@ class SharingController extends Controller {
 			$sharearray['emails_list'] = $emails_list;
 			//echo "<pre>"; print_r($sharearray); die;
 			
-			Mail::send($template,[
+			Mail::send('site.pages.share_reservation',[
 				'share_data'=> $sharearray
 			], function($message) use ($sharearray,$static_subject)
 			{

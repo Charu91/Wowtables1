@@ -159,15 +159,7 @@ exit;*/
                       <address>
                         <strong>{{$data['name']}}</strong><br>
                         {{$data['address']}}<br>
-                        <!--<abbr title="Phone">P:</abbr> CPK at Bandra Kurla Complex  
-Hanif, General Manager: 7738899507 
-gm.cpkbandra@jsmcorp.in
-
-Adesh, Assistant General Manager:7738899506 
-agm.cpkbandra@jsmcorp.in
-022 - 6558 8888-->
-                        <!--lattitude_coordinate
-                        longitude_coordinates-->
+                        
                       </address>
                     </li>
                       <li>
@@ -249,7 +241,7 @@ agm.cpkbandra@jsmcorp.in
                 </div>
                 <div class="modal-body" style="min-height: 110px;">
 
-                    <div id="email_form">
+                    <div class="email_form">
                         <form>
                             <div class="form-group">
                                 <label for="">Add Email Addresses</label>
@@ -360,23 +352,17 @@ agm.cpkbandra@jsmcorp.in
                     if (e == 1) {
                         $("#error_email").addClass("hidden");
                         $("#error_content").addClass("hidden");
-                        $("#email_form").addClass("hidden");
+                        $(".email_form").addClass("hidden");
                         $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
-                        $("#guest_emails").val('');
-                        $("#det_content").val('');
+                        $("#guest_emails<?php echo $count;?>").val('');
+                        $("#det_content<?php echo $count;?>").val('');
                     }
 					
                 },
 				 error : function(e) 
                 {
 				$(".cancel_loader").hide();
-               // alert("ajax error, json: " + e);
-				// $("#error_email").addClass("hidden");
-              //   $("#error_content").addClass("hidden");
-              //   $("#email_form").addClass("hidden");
-              //   $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
-               //  $("#guest_emails").val('');
-               //  $("#det_content").val('');
+	
                 }
             })
         } else {
