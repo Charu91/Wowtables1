@@ -115,8 +115,9 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        $userLogin = $this->user->mobileLogin($input);
+        
 		try{
+			$userLogin = $this->user->mobileLogin($input);
 			if($userLogin['code'] != 200){
 				$data = array(
 					'email' => isset($input['email'] )? $input['email']: '',
@@ -138,7 +139,31 @@ class UserController extends Controller {
 				});
 			}
 		} catch(Exception $e){
-			
+			$data = array(
+					'email' => isset($input['email'] )? $input['email']: '',
+					'password' => isset($input['password'] )? $input['password']: '',
+					'message' => $e->getMessage(),
+					'action' => $e->getMessage(),
+					'code' =>  "",					
+					'app_version' => isset($input['app_version'] )? $input['app_version']: '',
+					'hardware' => isset($input['hardware'] )? $input['hardware']: '',
+					'os_version' => isset($input['os_version'] )? $input['os_version']: '',
+					'os_type' => isset($input['os_type'] )? $input['os_type']: '',
+					'device_id' => isset($input['device_id'] )? $input['device_id']: '',
+				);
+				$sent = Mail::send('site.pages.app_login_error',
+						['data'=> $data], function($message) use ($data) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+						$message->to('concierge@wowtables.com')->subject('Issue on app Code login for '.$data['email'].' address');
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
+				});
+				$userLogin = [
+                    'code' => 500,
+                    'data' => [
+                        'action' => 'Issue in executing Function.',
+                        'message' => 'There was an issue processing your request. Please try again.'
+                    ]
+                ];
 		}
         return response()->json($userLogin['data'], $userLogin['code']);
 	}
@@ -152,9 +177,9 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        $userFbLogin = $this->user->mobileFbLogin($input);
+        
 		try{
-			
+			$userFbLogin = $this->user->mobileFbLogin($input);
 			if($userFbLogin['code'] != 200){
 				$data = array(
 					'email' => isset($input['email'] )? $input['email']: '',
@@ -176,7 +201,31 @@ class UserController extends Controller {
 				});
 			}
 		} catch(Exception $e){
-			//$e->getMessage();
+			$data = array(
+					'email' => isset($input['email'] )? $input['email']: '',
+					'password' => isset($input['password'] )? $input['password']: '',
+					'message' => $e->getMessage(),
+					'action' => $e->getMessage(),
+					'code' =>  '',					
+					'app_version' => isset($input['app_version'] )? $input['app_version']: '',
+					'hardware' => isset($input['hardware'] )? $input['hardware']: '',
+					'os_version' => isset($input['os_version'] )? $input['os_version']: '',
+					'os_type' => isset($input['os_type'] )? $input['os_type']: '',
+					'device_id' => isset($input['device_id'] )? $input['device_id']: '',
+				);
+				$sent = Mail::send('site.pages.app_login_error',
+						['data'=> $data], function($message) use ($data) {
+						$message->from('concierge@wowtables.com', 'WowTables by GourmetItUp');
+						$message->to('concierge@wowtables.com')->subject('Issue on app Code login for '.$data['email'].' address');
+						$message->cc(['manan@wowtables.com', 'vineet@devzila.com','kunal@wowtables.com','drishtychopra@gmail.com']);
+				});	
+				$userFbLogin = [
+                    'code' => 500,
+                    'data' => [
+                        'action' => 'Issue in executing Function.',
+                        'message' => 'There was an issue processing your request. Please try again.'
+                    ]
+                ];
 		}
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
