@@ -117,13 +117,13 @@ class UserController extends Controller {
 
         $userLogin = $this->user->mobileLogin($input);
 		try{
-			if($userFbLogin['code'] != 200){
+			if($userLogin['code'] != 200){
 				$data = array(
 					'email' => isset($input['email'] )? $input['email']: '',
 					'password' => isset($input['password'] )? $input['password']: '',
-					'message' => $userFbLogin['data']['message'],
-					'action' => $userFbLogin['data']['action'],
-					'code' =>  $userFbLogin['code'],					
+					'message' => $userLogin['data']['message'],
+					'action' => $userLogin['data']['action'],
+					'code' =>  $userLogin['code'],					
 					'app_version' => isset($input['app_version'] )? $input['app_version']: '',
 					'hardware' => isset($input['hardware'] )? $input['hardware']: '',
 					'os_version' => isset($input['os_version'] )? $input['os_version']: '',
@@ -152,8 +152,9 @@ class UserController extends Controller {
 	{
         $input = $this->request->all();
 
-        $userFbLogin = $this->user->mobileFbLogin($input);
+        
 		try{
+			$userFbLogin = $this->user->mobileFbLogin($input);
 			if($userFbLogin['code'] != 200){
 				$data = array(
 					'email' => isset($input['email'] )? $input['email']: '',
@@ -175,7 +176,7 @@ class UserController extends Controller {
 				});
 			}
 		} catch(Exception $e){
-			
+			//$e->getMessage();
 		}
         return response()->json($userFbLogin['data'], $userFbLogin['code']);
 	}
