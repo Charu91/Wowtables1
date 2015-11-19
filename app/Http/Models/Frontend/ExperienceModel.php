@@ -319,7 +319,7 @@ class ExperienceModel {
                         $experienceQueryCount->
                      whereIn('locations.id',array($row->location_id));
 				   $experienceResultCount = $experienceQueryCount->get();
-				 $count=count($experienceResult1);
+				 $count=count($experienceResultCount);
           #setting up the value for the location filter
           if( !in_array($row->location_id, $arrLocationId)) {
             $arrLocationId[] = $row->location_id;
