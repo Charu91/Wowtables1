@@ -31,7 +31,7 @@ return [
 	/* DETAILS for PAYU to be used for testing purpose */
 	//"PAYU_MERCHANT_ID" => '0MQaQP',//'gtKFFX',
 	//"PAYU_SALT"        => '13p0PXZk',//'eCwWELxi',
-	/* Details of PAYU to be used for development purpose */
+	/* Details of PAYU to be used for development purpose final */
 	"PAYU_MERCHANT_ID" => "Jvcsd3",
-	"PAYU_SALT" => "U09bo7dx",
+	"PAYU_SALT" => "U09bo7dX",
 ];
