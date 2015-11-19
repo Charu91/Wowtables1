@@ -146,6 +146,7 @@ class ExperienceModel {
      * @version 1.0.0
      */
     public function findMatchingExperience( $arrData ) {
+	$array['city_id']=$arrData['city_id'];
       $experienceQuery = DB::table('products')
                 ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
                 ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
@@ -193,6 +194,9 @@ class ExperienceModel {
                 //->join('locations','locations.id','=','vl.location_id')
                 whereIn('locations.id',$arrData['location']);
                 //->where('pvl.status','Active');
+				//$mySQL = $experienceQuery->toSql();
+				//print_r($mySQL);
+				
       }
 
       //adding filter for tags if tags are present
@@ -252,8 +256,7 @@ class ExperienceModel {
         //array to store location IDs
         $arrLocationId = array();
 
-          //echo "<pre>"; print_r($experienceResult); die;
-        
+   
         foreach($experienceResult as $row) {
           $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
           $this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
@@ -280,21 +283,56 @@ class ExperienceModel {
                           "flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
                           "color" => (is_null($row->flag_color)) ? "#fff":$row->flag_color,
                         );
-                        
-                      
+                   //  echo $row->location_id."</br>"; 
+				$experienceQueryCount = DB::table('products')
+                ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+                ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+                ->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
+                ->leftJoin('media','media.id','=','pmm.media_id')
+                ->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+                ->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
+                ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+                ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+                ->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
+                ->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
+                ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+                ->leftJoin('locations','locations.id','=','vl.location_id')
+                ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
+                ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+                //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
+                //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
+                ->where('pvl.status','Active')
+                ->whereIN('pvl.show_status',array('show_in_all','hide_in_mobile'))
+                //->where('pa1.alias','experience_info')
+                ->where('pa2.alias','short_description')
+                //->orWhere('pa3.alias','cuisines')
+                ->where('vla.city_id',$array['city_id'])
+                ->where('products.visible',1)
+                ->whereIN('products.type',array('simple','complex'))
+                ->groupBy('products.id')
+                ->orderBy('pvl.order_status','asc')
+                ->select('products.id','products.name as title',
+                      'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
+                      'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
+                      'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
+                      'locations.name as location_name','products.slug');
+                        $experienceQueryCount->
+                     whereIn('locations.id',array($row->location_id));
+				   $experienceResultCount = $experienceQueryCount->get();
+				 $count=count($experienceResult1);
           #setting up the value for the location filter
           if( !in_array($row->location_id, $arrLocationId)) {
             $arrLocationId[] = $row->location_id;
             $this->filters['locations'][] = array(
                                 "id" => $row->location_id,
                                 "name" => $row->location_name,
-                                "count" => 1
+                                "count" => $count
                               );
           }
           else {
             foreach($this->filters['locations'] as $key => $value) {
               if($value['id'] == $row->location_id) {
-                $this->filters['locations'][$key]['count']++;
+               // $this->filters['locations'][$key]['count']++;
               }
             }
           }         

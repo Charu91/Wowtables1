@@ -569,6 +569,16 @@ class ExperienceController extends Controller {
 
         }
 
+		if(!empty($time_value))
+        {
+            $arrSubmittedData['start_time'] = $set_start_time;
+            $arrSubmittedData['end_time'] = $set_end_time;
+        }
+		if(!empty($date_value))
+        {
+            $arrSubmittedData['date'] = $date_value;
+           
+        }
         $data['current_city'] = $city;
         $arrSubmittedData['city_id'] = $search_city;
         if(!empty($arrAreasList))
@@ -594,8 +604,6 @@ class ExperienceController extends Controller {
         $arrSubmittedData['minPrice']       = $price_start_range; 
 
         $arrSubmittedData['maxPrice']  = $price_end_with;
-
-        
         $searchResult = $this->experiences_model->findMatchingExperience($arrSubmittedData);       
                 
         if(!empty($searchResult)) {
@@ -618,6 +626,25 @@ class ExperienceController extends Controller {
         
     }
 
+	
+	 public function date_filter()
+	 {
+	 $current_date=Input::get('date');
+      $time = array("12:00"=>"12 pm", "13:00"=>"1 pm", "14:00"=>"2 pm", "15:00"=>"3 pm", "16:00"=>"4 pm"
+						 , "17:00"=>"5 pm", "18:00"=>"6 pm", "19:00"=>"7 pm", "20:00"=>"8 pm", "21:00"=>"9 pm", "22:00"=>"10 pm", "23:00"=>"11 pm" 
+						 );
+	$today_time = date('H:i');
+	 echo " <option value=''>--Select--</option>  
+			<option value='lunch'>Lunch</option>
+		     <option value='dinner'>Dinner</option>";
+	foreach($time as $key => $value ){
+	if($today_time<=$key){
+	 echo "<option value=$key>$value</option>";
+	}                
+	}	
+
+	//print_r($time);
+	 }
     public function new_custom_search()
     {
         //DB::connection()->enableQueryLog();
