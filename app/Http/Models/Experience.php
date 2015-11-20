@@ -64,6 +64,7 @@ class Experience extends Product{
     protected function saveAttributes($productId, $productTypeId, $attributes)
     {
         $attributeAliases = array_keys($attributes);
+        $attributeAliases[] = 'menu_html';
 
         if(count($attributeAliases)){
             $attributeIdMap = $attributeIdMap =  DB::table('product_attributes AS pa')
@@ -118,6 +119,12 @@ class Experience extends Product{
                                         'product_attribute_id' => $attributeIdMap[$attribute],
                                         'attribute_value' => $this->parseMenu($value)
                                         //'attribute_value' => json_encode($value)
+                                    ];
+                                    $attribute_inserts[$typeTableAliasMap[$attributesMap['menu_html']['type']]['table']][] = [
+                                        'product_id' => $productId,
+                                        'product_attribute_id' => $attributeIdMap['menu_html'],
+                                        //'attribute_value' => $this->parseMenu($value)
+                                        'attribute_value' => json_encode($value)
                                     ];
                                 }else{
                                     if($value != "" || $value != " ") {

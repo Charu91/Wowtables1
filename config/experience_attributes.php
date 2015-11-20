@@ -93,6 +93,12 @@ return [
             'value' => 'single'
         ],
 
+        'menu_html' => [
+            'name' => 'Menu HTML',
+            'type' => 'text',
+            'value' => 'single'
+        ],
+
         'seo_title' => [
             'name' => 'SEO Title',
             'type' => 'varchar',
