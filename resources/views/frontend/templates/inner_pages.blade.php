@@ -2248,6 +2248,7 @@ var google_remarketing_only = true;
 
 
       $(".list-group-item").click(function(){
+            /* correcting the route */
               var city_name = $(this).text().toLowerCase();
                 $.ajax({
                   type:'GET',
