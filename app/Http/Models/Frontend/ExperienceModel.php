@@ -146,6 +146,7 @@ class ExperienceModel {
      * @version 1.0.0
      */
     public function findMatchingExperience( $arrData ) {
+	//print_r($arrData);
 	$array['city_id']=$arrData['city_id'];
       $experienceQuery = DB::table('products')
                 ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
@@ -153,6 +154,7 @@ class ExperienceModel {
                 ->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
                 ->leftJoin('media','media.id','=','pmm.media_id')
                 ->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+                ->leftJoin('product_attributes_date as pad','pad.product_id','=','products.id')
                 ->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
                 ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
                 ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
@@ -196,9 +198,6 @@ class ExperienceModel {
                 //->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
                 //->join('locations','locations.id','=','vl.location_id')
                 whereIn('locations.id',$arrData['location']);
-                //->where('pvl.status','Active');
-				//$mySQL = $experienceQuery->toSql();
-				//print_r($mySQL);
 				
       }
 
@@ -232,11 +231,16 @@ class ExperienceModel {
 	   
 		//adding filter for  time  if time has been selected
 		 if(isset($arrData['start_time']) && isset($arrData['end_time'])) {
-        $experienceQuery->whereIN('ts.time',array($arrData['start_time'],$arrData['end_time']));
+		   $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
       }
- //adding filter for date and time  if both have been selected
 		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])) {
-        $experienceQuery->whereIN('ts.time',array($arrData['start_time'],$arrData['end_time']));
+		 $arrData['date']=$arrData['date'].' 00:00:00';
+          $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
+		 // echo $arrData['date'];
+          $experienceQuery->where('pad.attribute_value','>=',$arrData['date']);
+          //$experienceQuery->where('pad.product_attribute_id','=','15');
+		 //== $mysql= $experienceQuery->toSql();
+		 // print_r($mysql);
       }
 	  
 	  
@@ -280,8 +284,6 @@ class ExperienceModel {
         
         //array to store location IDs
         $arrLocationId = array();
-
-   
         foreach($experienceResult as $row) {
           $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
           $this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
@@ -324,6 +326,9 @@ class ExperienceModel {
                 ->leftJoin('locations','locations.id','=','vl.location_id')
                 ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
                 ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+				->leftJoin('product_vendor_location_booking_schedules as pvlbs','pvlbs.product_vendor_location_id','=','pvl.vendor_location_id')
+				->leftJoin('schedules as s','s.id','=','pvlbs.schedule_id')
+				->leftJoin('time_slots as ts','ts.id','=','s.time_slot_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')

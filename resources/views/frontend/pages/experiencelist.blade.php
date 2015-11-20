@@ -433,7 +433,7 @@ $(document).ready(function(){
 		
 			<div class="widget filter-widget-wrap hidden-xs hidden-sm">
           <h3 class="text-center">Refine your search</h3>
-		  <span id="date_error" style="color:red;display:none;padding: 10px;text-align: justify;">Selected date should be greater than or equal to todays date!</span>
+		 <!-- <span id="date_error" style="color:red;display:none;padding: 10px;text-align: justify;">Selected date should be greater than or equal to todays date!</span>-->
             <div class="filter-widget">
               <form role="form" id="custom_refine_search">
                 <div class="form-group">
