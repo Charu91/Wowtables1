@@ -831,7 +831,7 @@
                 $.ajax({
 
                   type:'GET',
-                  url:'fbAddCity/'+city_name,
+                  url:'/fbAddCity/'+city_name,
                   /*data:{city:city_name}, */
                   success:function(data){
                       window.location.href = "{{URL::to('/')}}/"+city_name;
