@@ -4,16 +4,12 @@
 	<script type="text/javascript" >
 		//for Android Success
 		function AndroidSuccess(input) {
-			alert("Inside success");
-			alert(input);
 			PayU.onSuccess(input);
 		}
 		AndroidSuccess("<?php $result=''; foreach($_POST as $key=> $value)$result .= $key . '=' . $value . ','; $result = rtrim($result , ','); echo $result ?>");
 
 		//for Android failure
 		function AndroidFailure(input) {
-			alert("Inside Failure");
-			alert(input);
 			PayU.onFailure(input);
 		}
 		//AndroidFailure("<?php $result=''; foreach($_POST as $key=> $value)$result .= $key . '=' . $value . ','; $result = rtrim($result , ','); echo $result ?>");
