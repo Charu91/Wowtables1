@@ -162,6 +162,9 @@ class ExperienceModel {
                 ->leftJoin('locations','locations.id','=','vl.location_id')
                 ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
                 ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+				->leftJoin('product_vendor_location_booking_schedules as pvlbs','pvlbs.product_vendor_location_id','=','pvl.vendor_location_id')
+				->leftJoin('schedules as s','s.id','=','pvlbs.schedule_id')
+				->leftJoin('time_slots as ts','ts.id','=','s.time_slot_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
@@ -226,7 +229,29 @@ class ExperienceModel {
 
         $experienceQuery->orderBy($arrData['orderby'],$orderType);
       }
+	   
+		//adding filter for  time  if time has been selected
+		 if(isset($arrData['start_time']) && isset($arrData['end_time'])) {
+        $experienceQuery->whereIN('ts.time',array($arrData['start_time'],$arrData['end_time']));
+      }
+ //adding filter for date and time  if both have been selected
+		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])) {
+        $experienceQuery->whereIN('ts.time',array($arrData['start_time'],$arrData['end_time']));
+      }
+	  
+	  
+	  elseif(isset($arrData['date'])) {
+	  $arrData['ordertype']='DESC';
+	  $arrData['orderby']='products.created_at';
+	  $orderType = 'desc';
+        if(isset($arrData['ordertype']))
+        {
+          $orderType = !empty($arrData['ordertype'])?$arrData['ordertype']:'desc';
+        }
 
+        $experienceQuery->orderBy($arrData['orderby'],$orderType);
+      
+      }
       //executing the query
       $experienceResult = $experienceQuery->get();
 
