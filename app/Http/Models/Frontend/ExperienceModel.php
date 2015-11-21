@@ -190,6 +190,7 @@ class ExperienceModel {
         $experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
             ->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
             ->whereIn('paso.id',$arrData['cuisine']);
+			$array['cuisine']=$arrData['cuisine'];
       }
 
       //adding filter for locations if locations are present
@@ -198,6 +199,7 @@ class ExperienceModel {
                 //->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
                 //->join('locations','locations.id','=','vl.location_id')
                 whereIn('locations.id',$arrData['location']);
+				$array['location']=$arrData['location'];
 				
       }
 
@@ -206,16 +208,21 @@ class ExperienceModel {
         $experienceQuery->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
           ->leftJoin('tags','tags.id','=','ptm.tag_id')
           ->whereIn('tags.id',$arrData['tag']);
+		  $array['tag']=$arrData['tag'];
       }
 
       //adding filter for price if price has been selected
       if(isset($arrData['minPrice']) && isset($arrData['maxPrice'])) {
        $experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
+	    $array['minPrice']=$arrData['minPrice'];
+	    $array['maxPrice']=$arrData['maxPrice'];
       }
 
       //adding filter for price if price has been selected
       if(isset($arrData['vendor']) && isset($arrData['vendor'])) {
         $experienceQuery->whereIN('vl.vendor_id',$arrData['vendor']);
+		 $array['vendor']=$arrData['vendor'];
+		
       }
 
       //adding filter for price if price has been selected
@@ -238,6 +245,8 @@ class ExperienceModel {
           $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
 		 // echo $arrData['date'];
           $experienceQuery->where('pad.attribute_value','>=',$arrData['date']);
+		   $array['start_time']=$arrData['start_time'];
+		   $array['end_time']=$arrData['end_time'];
           //$experienceQuery->where('pad.product_attribute_id','=','15');
 		 //== $mysql= $experienceQuery->toSql();
 		 // print_r($mysql);
@@ -351,6 +360,25 @@ class ExperienceModel {
 				   $experienceResultCount = $experienceQueryCount->get();
 				 $count=count($experienceResultCount);
           #setting up the value for the location filter
+   if(isset($array['date']) || isset($array['start_time']) || isset($arrData['end_time'])){
+   if( !in_array($row->location_id, $arrLocationId)) {
+            $arrLocationId[] = $row->location_id;
+            $this->filters['locations'][] = array(
+                                "id" => $row->location_id,
+                                "name" => $row->location_name,
+                                "count" => 1
+                              );
+          }
+          else {
+            foreach($this->filters['locations'] as $key => $value) {
+              if($value['id'] == $row->location_id) {
+               $this->filters['locations'][$key]['count']++;
+              }
+            }
+          }  
+   
+   }
+   else {
           if( !in_array($row->location_id, $arrLocationId)) {
             $arrLocationId[] = $row->location_id;
             $this->filters['locations'][] = array(
@@ -362,10 +390,11 @@ class ExperienceModel {
           else {
             foreach($this->filters['locations'] as $key => $value) {
               if($value['id'] == $row->location_id) {
-               // $this->filters['locations'][$key]['count']++;
+              // $this->filters['locations'][$key]['count']++;
               }
             }
-          }         
+          }  
+}		  
         }
         #setting up remaining filters
         $this->initializeExperienceFilters($arrProduct);
@@ -1490,6 +1519,7 @@ class ExperienceModel {
 
   public function getExperienceBlockDates($expId=0)
   {
+
       $queryResult = DB::table('product_vendor_locations as pvl') 
               ->leftJoin('product_vendor_location_block_schedules as pvlbs', 'pvlbs.product_vendor_location_id','=','pvl.id') 
               ->where('pvl.product_id', $expId) 
