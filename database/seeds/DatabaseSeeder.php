@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
 		Model::unguard();
 
 		//$this->call('RolesSeeder');
-		$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		//$this->call('UsersSeeder');
+		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
 		//$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
@@ -101,13 +101,13 @@ class VendorLocationContactsSeeder extends Seeder{
             array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
 			//array('vendor_location_id'=>136,'name'=>'Mannan','designation'=>'Restaurant Manager','email'=>'mannanbshah@gmail.com','phone_number'=>'9811111111','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>172,'name'=>'Praveen','designation'=>'Restaurant Manager','email'=>'om3.shiromum@jsmcorp.in','phone_number'=>'9833952465','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>172,'name'=>'Sanjeev','designation'=>'Restaurant Manager','email'=>'om2.shiromum@jsmcorp.in','phone_number'=>'9969435199','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>318,'name'=>'Tom','designation'=>'Restaurant Manager','email'=>'om.tbkmumpho@jsmcorp.in','phone_number'=>'9619699465','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>318,'name'=>'Yogesh','designation'=>'Restaurant Manager','email'=>'agm.tbkmumpho@jsmcorp.in','phone_number'=>'7738899514','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>338,'name'=>'Shakil','designation'=>'Restaurant Manager','email'=>'shakilsayyed@gmail.com','phone_number'=>'9930954198','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>338,'name'=>'Chef Melwin','designation'=>'Restaurant Manager','email'=>'chefmelwin@yahoo.co.in','phone_number'=>'9673240107','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
-			array('vendor_location_id'=>339,'name'=>'Prashant','designation'=>'Restaurant Manager','email'=>'prashant.bob87@gmail.com','phone_number'=>'9920760112','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>172,'name'=>'Praveen','designation'=>'Restaurant Manager','email'=>'om3.shiromum@jsmcorp.in','phone_number'=>'9833952465','user_id'=>46790,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>172,'name'=>'Sanjeev','designation'=>'Restaurant Manager','email'=>'om2.shiromum@jsmcorp.in','phone_number'=>'9969435199','user_id'=>46791,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>318,'name'=>'Tom','designation'=>'Restaurant Manager','email'=>'om.tbkmumpho@jsmcorp.in','phone_number'=>'9619699465','user_id'=>46792,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>318,'name'=>'Yogesh','designation'=>'Restaurant Manager','email'=>'agm.tbkmumpho@jsmcorp.in','phone_number'=>'7738899514','user_id'=>46793,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>338,'name'=>'Shakil','designation'=>'Restaurant Manager','email'=>'shakilsayyed@gmail.com','phone_number'=>'9930954198','user_id'=>46794,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>338,'name'=>'Chef Melwin','designation'=>'Restaurant Manager','email'=>'chefmelwin@yahoo.co.in','phone_number'=>'9673240107','user_id'=>46795,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>339,'name'=>'Prashant','designation'=>'Restaurant Manager','email'=>'prashant.bob87@gmail.com','phone_number'=>'9920760112','user_id'=>46796,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 		));
 	}
 }
