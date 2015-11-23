@@ -21,7 +21,7 @@ return [
 	"NEXT_RESERVATION_TIME_RANGE_LIMIT" => 2, //hours after or before an existing reservation, next reservation is allowed to a user for same date
 	"SERVER_TIME_CUTOFF_FOR_RESERVATION" => '20:30:00', //time upto which server will accept the reservation requests
 	"MIN_SUPPORTED_IOS_VERSION" => '1.1.0',
-	"MIN_SUPPORTED_ANDROID_VERSION" => '1.1.7',
+	"MIN_SUPPORTED_ANDROID_VERSION" => '1.1.9',
 	"MIN_SUPPORTED_ANDROID_VERSION_CONCIERGE" => '1.0.1',
 	"API_UPDATE" => 'Update',
 	"API_NEARBY_DISTANCE" => 15,
@@ -31,7 +31,7 @@ return [
 	/* DETAILS for PAYU to be used for testing purpose */
 	//"PAYU_MERCHANT_ID" => '0MQaQP',//'gtKFFX',
 	//"PAYU_SALT"        => '13p0PXZk',//'eCwWELxi',
-	/* Details of PAYU to be used for development purpose */
+	/* Details of PAYU to be used for development purpose final */
 	"PAYU_MERCHANT_ID" => "Jvcsd3",
 	"PAYU_SALT" => "U09bo7dX",
 ];
