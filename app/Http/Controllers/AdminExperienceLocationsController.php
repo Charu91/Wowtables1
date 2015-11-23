@@ -7,6 +7,11 @@ use WowTables\Http\Requests\Admin\UpdateExperienceLocationRequest;
 use WowTables\Http\Requests\Admin\DeleteExperienceLocationRequest;
 use WowTables\Http\Models\ExperienceLocation;
 use WowTables\Http\Models\Eloquent\Location;
+use WowTables\Http\Models\ProductReviews;
+use WowTables\Http\Models\VendorLocationsReviews;
+use Request as RequestData;
+use Validator;
+use Redirect;
 use DB;
 use Input;
 
@@ -64,7 +69,7 @@ class AdminExperienceLocationsController extends Controller {
                                     MAX(IF(va.alias='short_description', vlat.attribute_value, ''))AS vendor_short_description, `ploc`.`name` as `product_locality`,
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, pr.review,pr.id as review_id, pr.status as review_status
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, pr.review,pr.id as review_id, pr.status as review_status, pr.rating as rating
                                     from `reservation_details` as `rd` 
                                     inner join product_reviews as pr on pr.reserv_id = rd.id
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
@@ -108,6 +113,7 @@ class AdminExperienceLocationsController extends Controller {
                           'review'                    => $row->review,
                           'review_id'                 => $row->review_id,
                           'review_status'             => $row->review_status,
+                          'rating'              	  => $row->rating,
                           'product_locality'          => $row->product_locality,
                            );
             }
@@ -161,7 +167,7 @@ class AdminExperienceLocationsController extends Controller {
                                     MAX(IF(va.alias='short_description', vlat.attribute_value, ''))AS vendor_short_description, `ploc`.`name` as `product_locality`,
                                      `pvla`.`address` as `product_address`, `vloc`.`name` as `vendor_locality`,
                                      `vvla`.`address` as `vendor_address`, `products`.`slug` as `product_slug`, `ploc`.`name` as `city`,
-                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, vlr.review,vlr.id as review_id, vlr.status as review_status
+                                       DAYNAME(rd.reservation_date) as dayname,pvl.id as product_vendor_location_id,`vloc1`.name as city_name,`vloc1`.id as city_id, vlr.review,vlr.id as review_id, vlr.status as review_status, vlr.rating as rating
                                     from `reservation_details` as `rd` 
                                     inner join vendor_location_reviews as vlr on vlr.reserv_id = rd.id
                                     left join `vendor_locations` as `vl` on `vl`.`id` = `rd`.`vendor_location_id`
@@ -206,6 +212,7 @@ class AdminExperienceLocationsController extends Controller {
                           'review'                    => $row->review,
                           'review_id'                 => $row->review_id,
                           'review_status'             => $row->review_status,
+                          'rating'             => $row->rating,
                            );
             }
         }
@@ -241,6 +248,189 @@ class AdminExperienceLocationsController extends Controller {
 
     }
 
+	public function expReviewAdd()
+    {	
+		
+		return view('admin.review.experience_review_add');
+		
+		
+    }
+	public function experienceReviewAdd()
+    {	
+		
+	    $data = RequestData::all();
+		$rules = array(
+			'email' => 'required|exists:users,email',
+			'review' => 'required',
+			'rating' => 'required|numeric',
+			'experience_id' => 'required|numeric',
+			
+		);		
+
+		$validation = Validator::make($data, $rules);
+
+		if($validation->fails())
+		{
+			return Redirect::to("/admin/expreviewadd")->withInput()->withErrors($validation);
+		}
+		
+		
+		$email = Input::get('email');
+		$user_id = DB::table('users')->where('email', $email)->pluck('id');
+		$review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+        $product_id = Input::get('experience_id');        
+        $reservid = Input::get('reservid');		
+		
+		
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and reservation_type='experience' and id = '$reservid' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/expreviewadd")->withInput();
+		}
+		/*
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$product_id' and reservation_type='experience' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/expreviewadd")->withInput();
+		}
+		foreach($reservation_id_row as $row1)
+		{
+		  $reservid = $row1->id;
+		}*/
+		
+		
+		
+		
+		if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+		
+		
+		$productReviews = new ProductReviews();
+		
+		$productReviews->product_id = $product_id;
+		$productReviews->user_id = $user_id;
+		$productReviews->reserv_id = $reservid;
+		$productReviews->review = $review;
+		$productReviews->rating = $rating;
+		$productReviews->status = $statusUpdate;
+		$productReviews->save();
+        flash()->success('The Experience Review has been successfully Added.');
+        return redirect('admin/review');
+	
+        
+    }
+	
+	
+	
+	public function alaReviewAdd()
+    {	
+		
+		return view('admin.review.alacarte_review_add');
+		
+		
+    }
+	public function alacarteReviewAdd()
+    {	
+		
+	    $data = RequestData::all();		
+		$rules = array(
+			'email' => 'required|exists:users,email',
+			'review' => 'required',
+			'rating' => 'required|numeric',
+			'restaurant_id' => 'required|numeric',
+			'location_id' => 'required|numeric',
+			
+		);		
+
+		$validation = Validator::make($data, $rules);
+
+		if($validation->fails())
+		{
+			return Redirect::to("/admin/alacreviewadd")->withInput()->withErrors($validation);
+		}
+		
+		$review = Input::get('review');
+        $rating = Input::get('rating');
+        $show_review = Input::get('show_review');
+        $restaurant_vendor_id = Input::get('restaurant_id');
+        $email = Input::get('email');
+        $reservid = Input::get('reservid');
+        $location_id = Input::get('location_id');
+    
+		$user_id = DB::table('users')->where('email', $email)->pluck('id');
+		
+		
+		$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id'  and reservation_type='alacarte' and id = '$reservid' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+		
+		/*$reservation_id_row = DB::select("select id from reservation_details where user_id = '$user_id' and product_id = '$restaurant_vendor_id' and reservation_type='alacarte' order by id desc limit 0,1");
+		if(!$reservation_id_row){
+			flash()->error('Reservation Detail ID do not match with Email.');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+		foreach($reservation_id_row as $row1)
+		{
+		  $reservid = $row1->id;
+		}*/
+	   
+		
+	   $restaurant_vendor_query = DB::select("SELECT vl.id,vl.vendor_id, vl.location_id, vl.slug,l.name as area
+                              FROM `vendor_locations` as vl
+                              left join locations as l on l.id = vl.location_id
+                              left join vendor_location_address as vla on vla.vendor_location_id = vl.id
+                              WHERE vl.vendor_id = '$restaurant_vendor_id'
+                              AND vl.a_la_carte = '1'
+                              AND vl.location_id = '$location_id'
+                              AND vl.status = 'Active'");
+		if(empty($restaurant_vendor_query)){
+			flash()->error('Alacarte Detail not Found.');
+			return Redirect::to("/admin/alacreviewadd")->withInput();
+		}
+       
+		foreach($restaurant_vendor_query as $row)
+		{
+		  $vendor_location_id = $row->id;
+		}
+       
+		if($show_review == "")
+        {
+            $statusUpdate = "Pending";
+        }
+        else
+        {
+            $statusUpdate = "Approved";
+        }
+		
+		
+		$vendorLocationReview = new VendorLocationsReviews();
+		
+		$vendorLocationReview->vendor_location_id = $vendor_location_id;
+		$vendorLocationReview->user_id = $user_id;
+		$vendorLocationReview->reserv_id = $reservid;
+		$vendorLocationReview->review = $review;
+		$vendorLocationReview->service = "Yes";
+		$vendorLocationReview->rating = $rating;
+		$vendorLocationReview->status = $statusUpdate;
+		$vendorLocationReview->save();
+        flash()->success('The Alacarte Review has been successfully Added.');
+        return redirect('admin/reviewalacarte');
+	       
+    }
+	
+	
+	
+	
         /**
      * Display a expReviewUpdate of the update experience review.
      *
@@ -279,7 +469,7 @@ class AdminExperienceLocationsController extends Controller {
         $update = DB::update("update product_reviews set review ='$review', rating = '$rating', status ='$statusUpdate' where id = $review_id");
 
           flash()->success('The Experience Review has been successfully updated.');
-            return redirect('admin/review');
+          return redirect('admin/review');
     }
 
 

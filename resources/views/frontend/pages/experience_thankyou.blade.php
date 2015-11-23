@@ -56,10 +56,12 @@
                         </div>
                     </div>
                     <div class="sendparty">
-                        <p class="text-center">
+                        <!--<p class="text-center">
+                            <a type="button" id="send_reservation" data-target="#shareModal" data-toggle="modal" href="javscript:void(0)" class="btn btn-warning"></a>
+                        </p>-->
+						 <p class="text-center">
                             <a type="button" id="send_reservation" data-target="#shareModal" data-toggle="modal" href="javscript:void(0)" class="btn btn-warning">SEND RESERVATION DETAILS TO PARTY</a>
                         </p>
-                    </div>
                 </div>
 
                 <div class="thankyou-tab">

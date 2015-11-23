@@ -300,13 +300,24 @@ $(document).ready(function(){
 					<?php 
 					if(isset($data) && is_array($data) )
 					{
+							//echo $no_flag_color;die;
 							foreach($data as $row){?>
 							<li class="col-md-6 col-sm-6"> 
 								<div class="deal-img">
 									<img src="<?php echo isset($row['image']['listing'])?$row['image']['listing']:'';?>" alt="" class="img-responsive">
-									<?php if(isset($row['flag_name']) && $row['flag_name'] != "") {?>
+									<?php
+										if(isset($row['flag_name']) && $row['flag_name'] != "") {
+											if($no_flag_color == 1){
+									?>
+										<div class="flag new alatop" id="flag_alcart_listing" style="background:none;font-weight:800;padding:0;"><?php echo $row['flag_name']?></div>
+									<?php
+											} else {
+									?>
 										<div class="flag new alatop" id="flag_alcart_listing"style="background:<?php echo $row['color'];?>"><?php echo $row['flag_name']?></div>
-									<?php } ?>
+									<?php
+										}
+									}
+									?>
 									<!--<div class="bookmark_overlay">
 										<div class="bookmark_plain" onclick="toggleClass(this)"></div>
 									</div>-->

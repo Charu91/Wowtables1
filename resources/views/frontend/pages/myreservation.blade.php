@@ -48,7 +48,6 @@ exit;*/
 			   foreach ($arrReservation['data']['upcomingReservation'] as $data) {
             ?>
           <div class="panel panel-default">
-		 
             <div class="panel-heading">
               <div class="row">
                 <span class="lead col-md-8">
@@ -160,15 +159,7 @@ exit;*/
                       <address>
                         <strong>{{$data['name']}}</strong><br>
                         {{$data['address']}}<br>
-                        <!--<abbr title="Phone">P:</abbr> CPK at Bandra Kurla Complex  
-Hanif, General Manager: 7738899507 
-gm.cpkbandra@jsmcorp.in
-
-Adesh, Assistant General Manager:7738899506 
-agm.cpkbandra@jsmcorp.in
-022 - 6558 8888-->
-                        <!--lattitude_coordinate
-                        longitude_coordinates-->
+                        
                       </address>
                     </li>
                       <li>
@@ -241,12 +232,16 @@ agm.cpkbandra@jsmcorp.in
 		  <div class="modal fade" id="shareModal{{$data['id']}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+			<div id="load_layer" class="cancel_loader">
+              <img src="/images/loading.gif">
+                                 </div>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title text-center" id="myModalLabel">Share Reservation Details</h4>
                 </div>
                 <div class="modal-body" style="min-height: 110px;">
-                    <div id="email_form">
+
+                    <div class="email_form">
                         <form>
                             <div class="form-group">
                                 <label for="">Add Email Addresses</label>
@@ -268,9 +263,13 @@ agm.cpkbandra@jsmcorp.in
                                     <p>The email to your party will include your personal message above as well as details about the date, time, location and experience details.</p>
                                 </div>
                             </div>
+							 
                             <input type="hidden" name='reserv_type' value="{{$data['type']}}" id='reserv_type<?php echo $count;?>'>
                             <input type="hidden" name='reservid' value="{{$data['id']}}" id='reservation_id<?php echo $count;?>'>
                             <input type="hidden" name='userid' value='<?php echo Session::get('id');?>' id='userid'>              
+                            <input type="hidden" name='product_id' value="{{$data['product_id']}}" id='product_id<?php echo $count;?>'>              
+                            <input type="hidden" name='vl_id' value="{{$data['vl_id']}}" id='vl_id<?php echo $count;?>'>              
+                            <input type="hidden" name='vendor_location_id' value="{{$data['vendor_location_id']}}" id='vendor_location_id<?php echo $count;?>'>              
                             <input type="hidden" name='user_email' value="{{$data['guest_email']}}" id="customer_email<?php echo $count;?>">
                             <input type="hidden" name='full_name' value="{{$data['guest_name']}}" id="customer_name<?php echo $count;?>">
                             <input type="hidden" name="restaurant" value="{{$data['name']}}" id="restaurant<?php echo $count;?>">
@@ -284,7 +283,7 @@ agm.cpkbandra@jsmcorp.in
                             <button type="submit" name='share' class="btn btn-warning btn-block" id='thank_details<?php echo $count;?>' >Share Details</button>
                         </form>
                     </div>
-                    <div id="email_sent_confirmation" class="hidden">
+                    <div id="email_sent_confirmation<?php echo $count;?>" class="hidden">
                         <div class="col-xs-12 reservation-msg">
                             <p>Your message has been sent</p>
                     <span style="padding: 10px">
@@ -300,13 +299,11 @@ agm.cpkbandra@jsmcorp.in
 		   <script type="text/javascript">
                         
 	   $("#thank_details<?php echo $count;?>").click(function(e) {
-       
-	 e.preventDefault();s
-        emails = $("#guest_emails<?php echo $count;?>").val();
-        content = $("#det_content<?php echo $count;?>").val();
-      
-        reservType = $("#reserv_type<?php echo $count;?>").val();
-		
+			e.preventDefault();
+			$(".cancel_loader").show();
+			emails = $("#guest_emails<?php echo $count;?>").val();
+			content = $("#det_content<?php echo $count;?>").val();
+			reservType = $("#reserv_type<?php echo $count;?>").val();
             reservid = $("#reservation_id<?php echo $count;?>").val();
             guests = $("#number_guests<?php echo $count;?>").val();
             date_reservation = $("#date_reservation<?php echo $count;?>").val();
@@ -316,16 +313,17 @@ agm.cpkbandra@jsmcorp.in
             customer_mail =  $("#customer_email<?php echo $count;?>").val();
             short_desc =  $("#short_description<?php echo $count;?>").val();
             address =  $("#address<?php echo $count;?>").val();
+            product_id =  $("#product_id<?php echo $count;?>").val();
+            vl_id =  $("#vl_id<?php echo $count;?>").val();
+            vendor_location_id =  $("#vendor_location_id<?php echo $count;?>").val();
             userid =  $("#userid").val();
 		
 			 if (reservType == "alacarte") {
-             restaurent_name =  $("#vender_name<?php echo $count;?>").val();	
+					restaurent_name =  $("#vender_name<?php echo $count;?>").val();	
         }  else {
-		 restaurent_name =  $("#restaurant<?php echo $count;?>").val();
+					restaurent_name =  $("#restaurant<?php echo $count;?>").val();
 		}
-        if (emails != "" || content != "") {
-
-
+			if (emails != "" || content != "") {
             $.ajax({
                 url: '/thanksyou/sharedetailsfriend',
                 type: "post",
@@ -344,27 +342,27 @@ agm.cpkbandra@jsmcorp.in
                     outlet_name: outlet_name,
                     address: address,
                     short_description: short_desc,
+                    product_id: product_id,
+                    vl_id: vl_id,
+                    vendor_location_id: vendor_location_id,
                 },
                 success: function(e) {
-				alert(e);
+				//alert(e);
+				$(".cancel_loader").hide();
                     if (e == 1) {
                         $("#error_email").addClass("hidden");
                         $("#error_content").addClass("hidden");
-                        $("#email_form").addClass("hidden");
-                        $("#email_sent_confirmation").removeClass("hidden");
-                        $("#guest_emails").val('');
-                        $("#det_content").val('');
+                        $(".email_form").addClass("hidden");
+                        $("#email_sent_confirmation<?php echo $count;?>").removeClass("hidden");
+                        $("#guest_emails<?php echo $count;?>").val('');
+                        $("#det_content<?php echo $count;?>").val('');
                     }
 					
                 },
 				 error : function(e) 
                 {
-                alert("ajax error, json: " + e);
-
-                //for (var i = 0, l = json.length; i < l; ++i) 
-                    //{
-                    //  alert (json[i]);
-                    //}
+				$(".cancel_loader").hide();
+	
                 }
             })
         } else {

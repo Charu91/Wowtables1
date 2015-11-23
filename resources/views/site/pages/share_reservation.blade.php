@@ -38,7 +38,7 @@
         Guest:{{$share_data['guests']}}</p>
     <?php } ?>
 
-    <p><a href="{{$share_data['url_product']}}" target="_blank">Click here to view this experience on WowTables.com</a></p>
+   
     <p>Join <a href="http://wowtables.com" target="_blank">WowTables.com</a> to make reservations for exclusive fine dining experiences at the best restaurants.</p><br>
 
     <?php if(isset($share_data['is_admin']) && $share_data['is_admin'] == "yes"){ ?>

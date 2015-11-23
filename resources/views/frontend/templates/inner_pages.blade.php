@@ -2251,7 +2251,7 @@ var google_remarketing_only = true;
               var city_name = $(this).text().toLowerCase();
                 $.ajax({
                   type:'GET',
-                  url:'fbAddCity/'+city_name,
+                  url:'/fbAddCity/'+city_name,
                   data:{city:city_name},
                   success:function(data){
                           window.location.href = "<?php echo $_SERVER['REQUEST_URI'];?>";

@@ -1307,7 +1307,7 @@
                             reservType = $("input[name=reserv_type]").val();
                             if (reservType == "alacarte") {
                                 restid = $("input[name=restaurantid]").val();
-                                url = "/thankyou/ac_sharedetails"
+                                url = "/thankyou/sharedetails"
                             } else {
                                 restid = "";
                                 url = "/thankyou/sharedetails"
