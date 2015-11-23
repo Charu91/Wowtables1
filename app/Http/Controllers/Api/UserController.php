@@ -266,7 +266,7 @@ class UserController extends Controller {
                 'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city])),
                 'SIGNUPTP'  => 'Facebook'
             );
-            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userEmail],$merge_vars,"html",false,true );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userEmail->email],$merge_vars,"html",false,true );
 
             return response()->json($updateUser['data'], $updateUser['code']);
         }
