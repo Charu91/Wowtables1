@@ -715,7 +715,7 @@ class User {
                 'code' => 226,
                 'data' => [
                     'action' => 'Check if email is registered with WowTables',
-                    'message' => 'We can\'t find your email address! Please re-type - or, if you\'re a first time user, click on Sign up to join the family.'
+                    'message' => 'We can\'t find your email address!Please re-type - or, if you\'re a first time user, click on Sign up to join the family.'
                 ]
             ];
         }
