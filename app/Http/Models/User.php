@@ -605,6 +605,10 @@ class User {
                         ->where('email', trim($data['email']))
                         ->first();
         if(!empty($user)) {
+
+          //checking for the password if it matches, when making the first letter of the password lower case.
+          $lowerCased = lcfirst($data['password']);
+
           if($user->type == "old_site" && empty($user->password) && $user->old_password == md5($data['password']) ) {
                
                 //Updating old password to new password
@@ -618,6 +622,8 @@ class User {
             }
             else if($this->hasher->check($data['password'], $user->password)){
               $validUserFlag = TRUE;                
+            } else if(!empty($lowerCased) && $this->hasher->check($lowerCased, $user->password)){
+                $validUserFlag = TRUE;
             }
             else {
                 DB::rollBack();
