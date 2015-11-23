@@ -234,6 +234,12 @@ class UserController extends Controller {
     {
         $input = $this->request->all();
 
+        $userEmail = DB::table('user_devices')
+            ->leftJoin('users','user_devices.user_id','=','users.id')
+            ->where('access_token',$input['access_token'])
+            ->select('users.email')
+            ->first();
+
         if(!isset($input['location_id']) && !isset($input['phone_number'])){
             response()->json([
                 'action' => 'Check for the phone number and the location input',
@@ -260,7 +266,7 @@ class UserController extends Controller {
                 'GROUPINGS' => array(array('id' => 9713, 'groups' => [$city]),array('id' => 9705, 'groups' => [$city])),
                 'SIGNUPTP'  => 'Facebook'
             );
-            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$input['user']->email],$merge_vars,"html",false,true );
+            $this->mailchimp->lists->subscribe($this->listId, ["email"=>$userEmail],$merge_vars,"html",false,true );
 
             return response()->json($updateUser['data'], $updateUser['code']);
         }
