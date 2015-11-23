@@ -33,5 +33,5 @@ return [
 	//"PAYU_SALT"        => '13p0PXZk',//'eCwWELxi',
 	/* Details of PAYU to be used for development purpose */
 	"PAYU_MERCHANT_ID" => "Jvcsd3",
-	"PAYU_SALT" => "U09bo7dx",
+	"PAYU_SALT" => "U09bo7dX",
 ];
