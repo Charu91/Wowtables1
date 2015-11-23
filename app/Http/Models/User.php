@@ -625,7 +625,7 @@ class User {
                     'code' => 227,
                     'data' => [
                         'action' => 'Check if the email address and password match',
-                        'message' => 'There is an email password mismatch. Please check and try again'
+                        'message' => 'Oops! Wrong password. Please re-type - or, if you just can\'t remember, click on Forgot password to set a brand new password!'
                     ]
                 ];
             }
@@ -715,7 +715,7 @@ class User {
                 'code' => 226,
                 'data' => [
                     'action' => 'Check if email is registered with WowTables',
-                    'message' => 'The email you are trying to signin from is not registered with us. Please register first'
+                    'message' => 'We can\'t find your email address! Please re-type - or, if you\'re a first time user, click on Sign up to join the family.'
                 ]
             ];
         }
