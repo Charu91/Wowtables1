@@ -21,6 +21,19 @@ Route::post('admin/generate/invoices', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('admin/invoice/pdf', [
+    'uses' => 'AdminInvoicesController@generatePdf',
+    'as' => 'GeneratePdf',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+Route::get('admin/invoice/pdfview', [
+    'uses' => 'AdminInvoicesController@viewPdf',
+    'as' => 'ViewPdf',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 /*Route::get('admin/bookings/{id}/edit', [
     'uses' => 'ReservationController@edit',
     'as' => 'BookingEdit',

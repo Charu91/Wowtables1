@@ -47,4 +47,7 @@
         {!! Form::submit('Generate',['class'=>'btn btn-primary']) !!}
         {!! Form::close() !!}
     </div>
+    <?php if(isset($closedreserv)){echo $closedreserv->render();} ?>
+    @include('admin.invoices.invoicelist')
+    <?php if(isset($closedreserv)){echo $closedreserv->render();} ?>
 @stop

@@ -537,6 +537,17 @@ class ReservationDetails extends Model {
 
     }
 
+    public function getActualAddonTakers($reservation_id){
+
+        $actual_addons = DB::table('reservation_addons_variants_details');
+        $actual_addons->where('reservation_id',$reservation_id);
+        $actual_addons->where('reservation_status_id',8)
+            ->select('no_of_persons','options_id');
+        $data = $actual_addons->get();
+        return $data;
+
+    }
+
     public function changeStatusInZoho($order_id,$data){
 
         $ch = curl_init();

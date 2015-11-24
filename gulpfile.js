@@ -102,6 +102,7 @@ elixir(function(mix) {
             "javascripts/admin/curator.js",
             "javascripts/admin/career.js",
             "javascripts/admin/bookings.js",
+            "javascripts/admin/invoices.js",
             "javascripts/admin/experiences.js",
             "javascripts/admin/adminreservations.js",
             "vendor/bootstrap-markdown/js/markdown.js",
