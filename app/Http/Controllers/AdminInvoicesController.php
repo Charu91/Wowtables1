@@ -212,8 +212,8 @@ class AdminInvoicesController extends Controller {
 
 	public function generatePdf(){
 
-		$reservation_ids = $this->request->get('reservation_ids');
-		$vendor_id = $this->request->get('vendor_id');
+		$reservation_ids = $this->request->get('finalreserv_ids');
+		$vendor_id = $this->request->get('finalvendor_id');
 		$vendor_id =  str_replace('v','',$vendor_id);
 		//print_r(json_decode($reservation_ids));die;
 
@@ -318,7 +318,7 @@ class AdminInvoicesController extends Controller {
 		//print_r($billingArr);die ;
 		$pdf = App::make('snappy.pdf.wrapper');
 		$pdf->loadView('admin.invoices.invoice',array('finaldata'=>$finalData,'billinginfo'=>$billingArr));
-		return $pdf->stream('invoice.pdf');
+		return $pdf->download('invoice.pdf');
 		//return view('admin.invoices.invoice')->with('finaldata',$finalData)->with('billinginfo',$billingArr);
 		//print_r($finalData);die;
 	}
