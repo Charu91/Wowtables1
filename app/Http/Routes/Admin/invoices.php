@@ -28,7 +28,7 @@ Route::post('admin/invoice/vendor/pdf', [
     'domain' => env('WEBSITE_URL'),
 ]);
 Route::post('admin/invoice/vendor/location/pdf', [
-    'uses' => 'AdminInvoicesController@generatePdf',
+    'uses' => 'AdminInvoicesController@generateVendorLocationPdf',
     'as' => 'GenerateVendorLocationPdf',
     'where' => [],
     'domain' => env('WEBSITE_URL'),
