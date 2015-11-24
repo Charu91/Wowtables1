@@ -9,8 +9,8 @@
         var resevation_ids = JSON.stringify(vendor_reservation_id[vendor_id]);
         var formData = {reservation_ids:resevation_ids,vendor_id:vendor_id}; //Array
         $.post("/admin/invoice/pdf",formData,function(data, status){
-          //var w = window.open();
-          //$(w.document.body).html(data);
+          var w = window.open();
+          $(w.document.body).html(data);
         });
       });
 
