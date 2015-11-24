@@ -42,7 +42,7 @@
     @else
         <h3>No records</h3>
     @endif
-    <form method="POST" action="admin/invoice/pdf" id="finalpdf" name="finalpdf">
+    <form method="POST" action="/admin/invoice/pdf" id="finalpdf" name="finalpdf">
     <input type="hidden" name="vendor_reservation_id" id="vendor_reservation_id" value="@if(isset($vendor_reservation_id)){!! $vendor_reservation_id !!}@endif">
     <input type="hidden" name="vendor_location_reservation_id" id="vendor_location_reservation_id" value="@if(isset($vendor_reservation_id)){!! $vendor_location_reservation_id !!}@endif">
     <input type="hidden" name="finalvendor_id" id="finalvendor_id">
