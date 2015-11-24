@@ -316,7 +316,10 @@ class AdminInvoicesController extends Controller {
 		}
 
 		//print_r($billingArr);die ;
-		return view('admin.invoices.invoice')->with('finaldata',$finalData)->with('billinginfo',$billingArr);
+		$pdf = App::make('snappy.pdf.wrapper');
+		$pdf->loadView('admin.invoices.sample')->with('finaldata',$finalData)->with('billinginfo',$billingArr);
+		return $pdf->download('invoice.pdf');
+		//return view('admin.invoices.invoice')->with('finaldata',$finalData)->with('billinginfo',$billingArr);
 		//print_r($finalData);die;
 	}
 
