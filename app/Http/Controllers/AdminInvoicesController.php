@@ -325,7 +325,8 @@ class AdminInvoicesController extends Controller {
 		//$pdf = App::make('snappy.pdf.wrapper');
 		//$pdf->loadView('admin.invoices.sample');
 		//return $pdf->download('invoice.pdf');
-		$pdf = PdfWrapper::loadView('admin.invoices.sample');
+		$pdfObject = new PdfWrapper();
+		$pdf = $pdfObject::loadView('admin.invoices.sample');
 		return $pdf->download('invoice.pdf');
 
 		//return view('admin.invoices.invoice');
