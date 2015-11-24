@@ -24,7 +24,7 @@
         var vendor_location_id = "vl"+$(this).data('vendor-location-id');
         var vendor_id = "v"+$(this).data('vendor-location-id');
 
-        var vendorLocationReservationIds = decodeURIComponent($("#$vendor_location_reservation_id").val());
+        var vendorLocationReservationIds = decodeURIComponent($("#vendor_location_reservation_id").val());
         var vendorlocation_reservation_id = $.parseJSON(vendorLocationReservationIds);
         var resevation_ids = JSON.stringify(vendorlocation_reservation_id[vendor_location_id]);
 
