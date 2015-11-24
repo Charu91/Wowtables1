@@ -20,7 +20,7 @@
                         <?php $locDetails = explode('-',$loc_name);?>
                         <tr><td style="background: #eeeeee;text-align: center;font-weight: 300;">{!! $locDetails[0] !!}</td>
                             <td>
-                                <button class="btn btn-primary btn-xs" id="vendor_location" data-vendor-location-id ="{!! $locDetails[1] !!}">Generate</button>
+                                <button class="btn btn-primary btn-xs" id="vendor_location" data-vendor-location-id ="{!! $locDetails[1] !!}" data-vendor-id ="{!! $vendorDetails[1] !!}">Generate</button>
                             </td></tr>
                         @foreach($reservDetails as $data)
                             <tr><td>
@@ -44,7 +44,9 @@
     @endif
     <form method="POST" action="/admin/invoice/pdf" id="finalpdf" name="finalpdf">
     <input type="hidden" name="vendor_reservation_id" id="vendor_reservation_id" value="@if(isset($vendor_reservation_id)){!! $vendor_reservation_id !!}@endif">
-    <input type="hidden" name="vendor_location_reservation_id" id="vendor_location_reservation_id" value="@if(isset($vendor_reservation_id)){!! $vendor_location_reservation_id !!}@endif">
+    <input type="hidden" name="vendor_location_reservation_id" id="vendor_location_reservation_id" value="@if(isset($vendor_location_reservation_id)){!! $vendor_location_reservation_id !!}@endif">
     <input type="hidden" name="finalvendor_id" id="finalvendor_id">
+    <input type="hidden" name="finalvendorlocl_id" id="finalvendorlocl_id">
     <input type="hidden" name="finalreserv_ids" id="finalreserv_ids">
+    <input type="hidden" name="finallocreserv_ids" id="finallocreserv_ids">
     </form>

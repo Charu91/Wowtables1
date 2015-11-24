@@ -21,12 +21,19 @@ Route::post('admin/generate/invoices', [
     'domain' => env('WEBSITE_URL'),
 ]);
 
-Route::post('admin/invoice/pdf', [
-    'uses' => 'AdminInvoicesController@generatePdf',
-    'as' => 'GeneratePdf',
+Route::post('admin/invoice/vendor/pdf', [
+    'uses' => 'AdminInvoicesController@generateVendorPdf',
+    'as' => 'GenerateVendorPdf',
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+Route::post('admin/invoice/vendor/location/pdf', [
+    'uses' => 'AdminInvoicesController@generatePdf',
+    'as' => 'GenerateVendorLocationPdf',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('admin/invoice/pdfview', [
     'uses' => 'AdminInvoicesController@viewPdf',
     'as' => 'ViewPdf',
