@@ -11,8 +11,8 @@ use WowTables\Http\Models\Eloquent\User;
 use Illuminate\Support\Facades\DB;
 use WowTables\Core\Repositories\Restaurants\RestaurantLocationsRepository;
 use WowTables\Core\Repositories\Experiences\ExperiencesRepository;
-use Barryvdh\Snappy\PdfWrapper;
-use Knp\Snappy\Pdf;
+use App;
+
 class AdminInvoicesController extends Controller {
 
 
@@ -322,12 +322,11 @@ class AdminInvoicesController extends Controller {
 
 	public function viewPdf(){
 
-		//$pdf = App::make('snappy.pdf.wrapper');
-		//$pdf->loadView('admin.invoices.sample');
-		//return $pdf->download('invoice.pdf');
-		$pdfObject = new PdfWrapper(new Pdf());
-		$pdf = $pdfObject::loadView('admin.invoices.sample');
+		$pdf = App::make('snappy.pdf.wrapper');
+		$pdf->loadView('admin.invoices.sample');
 		return $pdf->download('invoice.pdf');
+		//$pdf = PDF::loadView('admin.invoices.sample');
+		//return $pdf->download('invoice.pdf');
 
 		//return view('admin.invoices.invoice');
 	}
