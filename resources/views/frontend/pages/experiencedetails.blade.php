@@ -369,10 +369,11 @@
                                 <?php
 
                                 //$arrExperience['data']['menu'] ='{"title":"A Modern 4 Course Experience at Yauatcha","menu":[{"heading":"Course 1","sub-menu":[{"heading":"Salad","description":"choose any one","items":[{"title":"Oriental Salad With Bean Curd Chips"},{"title":"Mixed Salad With Lotus Root"}]}]},{"heading":"Course 2","sub-menu":[{"heading":"Dim Sum","description":"choose any two","items":[{"title":"Sato Bean And Cashew Nut Dumpling"},{"title":"Vegetable Ying Yang Dumpling"},{"title":"Baked Vegetarian Puff"},{"title":"Crispy Asparagus, Pumpkin And Corn Roll"},{"title":"Sugarcane Chicken And Prawn Roll"},{"title":"Chicken And Prawn Sui Mai"},{"title":"Charcoal Lamb Bun"}]}]},{"heading":"Course 3","sub-menu":[{"heading":"Main Course","description":"choose any one","items":[{"title":"Szechuan Vegetable And Tofu Clay Pot"},{"title":"Stir-Fried French Beans With Shiitake Mushroom"},{"title":"Stir-Fried Chicken In Hometown Chilli Sauce"},{"title":"Steamed Indian Salmon In Spicy Black Bean Sauce"}]}]},{"heading":"Course 4","sub-menu":[{"heading":"Staple","description":"choose any one ","items":[{"title":"Stir-Fried Spicy Ramen Noodles"},{"title":"Spicy Vegetable Fried Rice With Taro And Spring Onion"},{"title":"Egg White Chicken Fried Rice"}]}]},{"heading":"Course 5","sub-menu":[{"heading":"Dessert","description":"choose any one","items":[{"title":"Chocolate Mandarin Tart"},{"title":"Mango Mascarpone Gateau"},{"title":"Raspberry Delice"}]}]}]}';
-                                $menuData = json_decode($arrExperience['data']['menu'],true) ;
+                                $menuData = json_decode($arrExperience['data']['menu'],true);
                                 //echo '<pre>';
-                                //print_r($menuData);exit;
-                                if(isset($menuData['title']))
+                                // print_r($menuData);exit;
+                                    //echo "yooos".json_decode($arrExperience['data']['menu_html']);die;
+                                if(isset($menuData['title']) && empty($arrExperience['data']['menu_html']))
                                 {
                                 ?>
                                 <ul class="menu-content">
@@ -463,7 +464,8 @@
                                 }
                                 }
                                 } else {
-                                    echo $menuData;
+                                    $menuData = json_decode($arrExperience['data']['menu_html'],true);
+                                        echo $menuData;
                                     }
                                 ?>
                             </div>

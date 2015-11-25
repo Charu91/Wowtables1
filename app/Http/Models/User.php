@@ -602,9 +602,13 @@ class User {
                         ->select('password', 'old_password', 'id', 'location_id', 'phone_number',
                                 'full_name', 'role_id', 'fb_token', 'type', 'points_earned',
                                 'points_spent')
-                        ->where('email', $data['email'])
+                        ->where('email', trim($data['email']))
                         ->first();
-        if($user) {
+        if(!empty($user)) {
+
+          //checking for the password if it matches, when making the first letter of the password lower case.
+          $lowerCased = lcfirst($data['password']);
+
           if($user->type == "old_site" && empty($user->password) && $user->old_password == md5($data['password']) ) {
                
                 //Updating old password to new password
@@ -618,6 +622,8 @@ class User {
             }
             else if($this->hasher->check($data['password'], $user->password)){
               $validUserFlag = TRUE;                
+            } else if(!empty($lowerCased) && $this->hasher->check($lowerCased, $user->password)){
+                $validUserFlag = TRUE;
             }
             else {
                 DB::rollBack();
@@ -625,7 +631,7 @@ class User {
                     'code' => 227,
                     'data' => [
                         'action' => 'Check if the email address and password match',
-                        'message' => 'There is an email password mismatch. Please check and try again'
+                        'message' => 'Oops! Wrong password. Please re-type - or, if you just can\'t remember, click on Forgot password to set a brand new password!'
                     ]
                 ];
             }
@@ -715,7 +721,7 @@ class User {
                 'code' => 226,
                 'data' => [
                     'action' => 'Check if email is registered with WowTables',
-                    'message' => 'The email you are trying to signin from is not registered with us. Please register first'
+                    'message' => 'We can\'t find your email address!Please re-type - or, if you\'re a first time user, click on Sign up to join the family.'
                 ]
             ];
         }

@@ -2,6 +2,7 @@
 
 use Config;
 use DB;
+use Mail;
 
 /**
  * Payment model class.
@@ -126,7 +127,7 @@ class Payment {
 	 *
 	 */
 	public static function getHashes($arrData) {
-		
+
 		$udf1 = (empty($arrData['udf1'])) ? '':$arrData['udf1'];
 		$udf2 = (empty($arrData['udf2'])) ? '':$arrData['udf2'];
 		$udf3 = (empty($arrData['udf3'])) ? '':$arrData['udf3'];
@@ -136,14 +137,23 @@ class Payment {
 		$key = Config::get('constants.PAYU_MERCHANT_ID');
     	$salt = Config::get('constants.PAYU_SALT');
 
-    	$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|' 
+		$payhash_str = $key . '|' . self::checkNull($arrData['txnID']) . '|' .self::checkNull($arrData['amount'])  . '|' .self::checkNull($arrData['productInfo'])  . '|' .self::checkNull($arrData['firstname']) . '|' .self::checkNull($arrData['email']) . '|' .self::checkNull($udf1) . '|' .self::checkNull($udf2) . '|' .self::checkNull($udf3) . '|' .self::checkNull($udf4) . '|' .self::checkNull($udf5) . '||||||' . $salt;
+		$paymentHash = strtolower(hash('sha512', $payhash_str));
+		$arr['payment_hash'] = $paymentHash;
+
+    	/*$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$arrData['amount']  . '|'
     				.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|' 
     				. $arrData['email'] . '|' . $udf1 . '|' . $udf2 . '|' 
     				. $udf3 . '|' . $udf4 . '|' . $udf5 . '||||||' 
-    				. $salt;
+    				. $salt;*/
+		//$amount = number_format($arrData['amount'],2);
+		/*$payhashStr = $key . '|' . $arrData['txnID'] . '|' .$amount  . '|'
+			.$arrData['productInfo']  . '|' . $arrData['firstname'] . '|'
+			. $arrData['email'] . '|||||||||||'
+			. $salt;*/
 
-    	$paymentHash = strtolower(hash('sha512', $payhashStr));
-    	$arr['payment_hash'] = $paymentHash;
+    	//$paymentHash = strtolower(hash('sha512', $payhashStr));
+    	//$arr['payment_hash'] = $paymentHash;
 
     	$cmnNameMerchantCodes = 'get_merchant_ibibo_codes';
     	$merchantCodesHash_str = $key . '|' . $cmnNameMerchantCodes . '|default|' . $salt ;
@@ -200,14 +210,13 @@ class Payment {
             $checkIsDomestic = strtolower(hash('sha512', $checkIsDomestic_str));
       		$arr['check_isDomestic_hash']=$checkIsDomestic;
     	}
-
-    return $arr;
+		return $arr;
   }
 
   //---------------------------------------------------------------------------
 
 
-  function checkNull($value) {
+  static function checkNull($value) {
     if ($value == null) {
       return '';
     } else {

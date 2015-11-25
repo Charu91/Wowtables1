@@ -93,6 +93,13 @@ class AlacarteController extends Controller {
 
         $city_id    = Location::where(['Type' => 'City', 'name' => $city])->first()->id;
 
+        //added to remove the color of flags
+        if($city == 'Mumbai' || $city == 'mumbai' || $city == 'Bangalore' || $city == 'bangalore'){
+            $data['no_flag_color'] = 1;
+        } else {
+            $data['no_flag_color'] = 0;
+        }
+
         $arrSubmittedData['city_id'] = $city_id;
 
         $searchResult = $this->alacarte_model->findMatchingAlacarte($arrSubmittedData);

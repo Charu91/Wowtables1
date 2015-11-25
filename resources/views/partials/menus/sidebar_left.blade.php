@@ -182,7 +182,7 @@
                         </ul>
                     </li>
 
-                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/review') !== false)? 'nav-expanded nav-active':''}}">
+                     <li class="nav-parent {{ (isset($uri) && (strpos($uri,'admin/review') !== false || $uri === 'admin/expreviewadd' || $uri === 'admin/alacreviewadd'))? 'nav-expanded nav-active':''}}">
                         <a>
                             <i class="fa fa-copy" aria-hidden="true"></i>
                             <span>Reviews</span>
@@ -190,10 +190,10 @@
                         <ul class="nav nav-children">
                             <li class="{{ (isset($uri) && $uri === 'admin/review')? 'nav-active':'' }}">
                                 <a href="/admin/review">Experience Review</a>
-                            </li>
+                            </li>							
                             <li class="{{ (isset($uri) && $uri === 'admin/reviewalacarte')? 'nav-active':'' }}">
                                 <a href="/admin/reviewalacarte">Alacarte Review</a>
-                            </li>
+                            </li>							
                         </ul>
                     </li>
 

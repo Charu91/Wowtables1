@@ -14,7 +14,7 @@
             </ol>
         </div>
     </header>
-
+	<a href="/admin/expreviewadd"><button class="btn btn-primary mb-lg btn-lg">Add Experience Review</button></a>
     <section class="panel panel-featured panel-featured-primary">
         <header class="panel-heading">
             <h2 class="panel-title">
@@ -29,6 +29,7 @@
                     <th>Date of seating</th>
                     <th>restaurant - location</th>
                     <th>Customer name,email</th>
+                    <th>Rating</th>
                     <th>Review paragraph</th>
                     <th>Actions</th>
                     <th>Show review</th>
@@ -42,7 +43,8 @@
                             <td>{{$experienceReview['reservation_date']}}</td>
                             <td>{{$experienceReview['product_name']}} - {{$experienceReview['vendor_name']}} - {{$experienceReview['product_locality']}}</td>
                             <td>{{$experienceReview['guest_name']}} - {{$experienceReview['guest_email']}}</td>
-                            <td>{{$experienceReview['review']}}</td>
+                            <td>{{$experienceReview['rating']}}</td>
+							<td>{{$experienceReview['review']}}</td>
                             <td>
                                 <a data-experience-id="{!! $experienceReview['review_id'] !!}" href="<?php echo URL::to('/').'/expreview/edit/'.$experienceReview['review_id']; ?>" class="btn btn-xs btn-primary">Edit</a>
                                 <a data-experience-id="{!! $experienceReview['review_id'] !!}" class="btn btn-xs btn-danger delete-experience">Delete</a></td>
