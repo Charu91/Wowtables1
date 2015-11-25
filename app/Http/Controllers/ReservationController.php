@@ -1128,7 +1128,7 @@ class ReservationController extends Controller {
 			$booking->btime = $reservCarbonDate->format('h:i A');
 			//echo $unconfirmedBookings->id."<pre>".print_r($reservationDetailsAttr['attributes']['zoho_booking_cancelled']);
 			//echo $unconfirmedBookings->id;
-			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_update'])){
+			if(!isset($reservationDetailsAttr['attributes']['zoho_booking_update']) || array_search($reservStatusArr[$unconfirmedBookings->id][1],array(2)) != -1){
 				$un_bookings[$count] = $booking;
 			}
 			//$un_bookings[$count] = $booking;

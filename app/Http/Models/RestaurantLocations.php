@@ -60,7 +60,12 @@ class RestaurantLocations extends VendorLocations{
         if(!$pagenum) $pagenum = 1;
 
         $offset = ($pagenum - 1) * $items_per_page;
-
+		if(!empty($_SERVER['HTTP_X_WOW_TOKEN'])){
+			$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];		
+			$userId = UserDevices::getUserDetailsByAccessToken($access_token);
+		}else{
+			$userId = 0;
+		}
         $select = DB::table('vendor_locations AS vl')
             ->join('vendors AS v', 'v.id', '=', 'vl.vendor_id')
             ->join('vendor_types AS vt', 'vt.id', '=', 'v.vendor_type_id')
@@ -103,7 +108,11 @@ class RestaurantLocations extends VendorLocations{
             ->join('locations as loc2', 'loc2.id', '=', 'vlaa.city_id')
             ->join('locations as loc3', 'loc3.id', '=', 'vlaa.state_id')
             ->join('locations as loc4', 'loc4.id', '=', 'vlaa.country_id')
-            ->join('locations as loc5','loc5.id','=','vl.location_id')            
+            ->join('locations as loc5','loc5.id','=','vl.location_id')
+			->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
+                $join->on('vl.id', '=', 'ub.vendor_location_id')
+                    ->where('ub.user_id','=', $userId);
+            })
             ->select(
                 DB::raw('SQL_CALC_FOUND_ROWS vl.id'),
                 'v.name AS restaurant',
@@ -112,6 +121,7 @@ class RestaurantLocations extends VendorLocations{
                 'la.id as area_id',
                 'vl.pricing_level',
                 'vladd.latitude','vladd.longitude',
+				'ub.id as bookmarked',
                 //'mr.file AS image',
                 //'m.alt AS image_alt',
                 //'m.title AS image_title',                
@@ -424,6 +434,7 @@ class RestaurantLocations extends VendorLocations{
 										'locality' => $row->locality,
 										'area' => $row->area,
 										'pricing_level' => $row->pricing_level,
+										'bookmarked' => (is_null($row->bookmarked)) ? 0:1,
 										'short_description' => (is_null($row->short_description)) ? "": $row->short_description,
 										'off_peak_available' => (is_null($row->off_peak_available)) ? "": $row->off_peak_available,
 										'total_reviews' => $row->total_reviews,

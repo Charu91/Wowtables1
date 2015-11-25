@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
 		//$this->call('RolesSeeder');
 		//$this->call('UsersSeeder');
-		//$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
+		$this->call('VendorLocationContactsSeeder');// for adding to vendor location details table
 		//$this->call('ReservationAttributesSeeder');
 		//$this->call('ReservationStatusesSeeder');
 		//$this->call('ReservationDetailsSeeder');
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
 		//$this->call('ReservationSeatingStatusSeeder');
 		//$this->call('ReservationRejectionReasonSeeder');
 		//$this->call('ReservationAddonsVariantsDetailsSeeder');
-		$this->call('UserAttributesSeeder');
+		//$this->call('UserAttributesSeeder');
 	}
 }
 
@@ -64,14 +64,22 @@ class UsersSeeder extends Seeder{
             array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
             array('role_id'=>6,'location_id'=>3,'email'=>'aditya@binaryveda.com','full_name'=>'Aditya Gokula','phone_number'=>'9811111111','password'=>Hash::make('aditya'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('role_id'=>6,'location_id'=>3,'email'=>'shishir@binaryveda.com','full_name'=>'Shishir Pednekar','phone_number'=>'9811111111','password'=>Hash::make('shishir'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
-            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
-			array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
+            array('role_id'=>6,'location_id'=>3,'email'=>'','full_name'=>'Karishma','phone_number'=>'','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )*/
+			//array('role_id'=>6,'location_id'=>3,'email'=>'karishmaverenkar@gmail.com','full_name'=>'Karishma','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
 			/*array('role_id'=>5,'location_id'=>3,'email'=>'shiro@wowtables.com','full_name'=>'Demo Shiro','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 			array('role_id'=>5,'location_id'=>3,'email'=>'tastingroom@wowtables.com','full_name'=>'Demo The Tasting Room','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 			array('role_id'=>5,'location_id'=>3,'email'=>'bluefrog@wowtables.com','full_name'=>'Demo Bluefrog','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
-			array('role_id'=>5,'location_id'=>3,'email'=>'ohcha@wowtables.com','full_name'=>'Demo Ohcha','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),*/
+			array('role_id'=>5,'location_id'=>3,'email'=>'ohcha@wowtables.com','full_name'=>'Demo Ohcha','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
 			array('role_id'=>5,'location_id'=>3,'email'=>'pz@wowtables.com','full_name'=>'Demo PizzaExpress','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
-			//array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),
+			//array('role_id'=>5,'location_id'=>3,'email'=>'biju@binaryveda.com','full_name'=>'Biju Chandran','phone_number'=>'9811111111','password'=>Hash::make('biju'),'created_at' => Carbon::now(),'updated_at' => Carbon::now()),*/
+			//array('role_id'=>6,'location_id'=>3,'email'=>'mannanbshah@gmail.com','full_name'=>'Mannan','phone_number'=>'9811111111','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
+			array('role_id'=>6,'location_id'=>3,'email'=>'om3.shiromum@jsmcorp.in','full_name'=>'Praveen','phone_number'=>'9833952465','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'om2.shiromum@jsmcorp.in','full_name'=>'Sanjeev','phone_number'=>'9969435199','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'om.tbkmumpho@jsmcorp.in','full_name'=>'Tom','phone_number'=>'9619699465','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'agm.tbkmumpho@jsmcorp.in','full_name'=>'Yogesh','phone_number'=>'7738899514','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'shakilsayyed@gmail.com','full_name'=>'Shakil','phone_number'=>'9930954198','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'chefmelwin@yahoo.co.in','full_name'=>'Chef Melwin','phone_number'=>'9673240107','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('role_id'=>6,'location_id'=>3,'email'=>'prashant.bob87@gmail.com','full_name'=>'Prashant','phone_number'=>'9920760112','password'=>Hash::make('123456'),'created_at' => Carbon::now(),'updated_at' => Carbon::now() )
 
 		));
 	}
@@ -87,11 +95,19 @@ class VendorLocationContactsSeeder extends Seeder{
 			array('vendor_location_id'=>199,'name'=>'Demo The Tasting Room','designation'=>'Restaurant Manager','email'=>'tastingroom@wowtables.com','phone_number'=>'9811111111','user_id'=>44237,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('vendor_location_id'=>191,'name'=>'Demo BlueFrog','designation'=>'Restaurant Manager','email'=>'bluefrog@wowtables.com','phone_number'=>'9811111111','user_id'=>44238,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('vendor_location_id'=>142,'name'=>'Demo OhCha','designation'=>'Restaurant Manager','email'=>'ohcha@wowtables.com','phone_number'=>'9811111111','user_id'=>44239,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
-			array('vendor_location_id'=>136,'name'=>'Demo PizzaExpress','designation'=>'Restaurant Manager','email'=>'pz@wowtables.com','phone_number'=>'9811111111','user_id'=>45652,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			//array('vendor_location_id'=>136,'name'=>'Mannan','designation'=>'Restaurant Manager','email'=>'mannanbshah@gmail.com','phone_number'=>'9811111111','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			/*array('vendor_location_id'=>153,'name'=>'Karishma','designation'=>'Restaurant Manager','email'=>'karishmaverenkar@gmail.com','phone_number'=>'9811111111','user_id'=>44226,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 			array('vendor_location_id'=>203,'name'=>'Shishir Pednekar','designation'=>'Restaurant Executive','email'=>'shishir@binaryveda.com','phone_number'=>'9811111111','user_id'=>43646,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Aditya Gokula','designation'=>'Restaurant Executive','email'=>'aditya@binaryveda.com','phone_number'=>'9811111111','user_id'=>43647,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
             array('vendor_location_id'=>203,'name'=>'Manan Shah','designation'=>'Restaurant Executive','email'=>'manan@wowtables.com','phone_number'=>'9811111111','user_id'=>42964,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),*/
+			//array('vendor_location_id'=>136,'name'=>'Mannan','designation'=>'Restaurant Manager','email'=>'mannanbshah@gmail.com','phone_number'=>'9811111111','user_id'=>46757,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>172,'name'=>'Praveen','designation'=>'Restaurant Manager','email'=>'om3.shiromum@jsmcorp.in','phone_number'=>'9833952465','user_id'=>46790,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>172,'name'=>'Sanjeev','designation'=>'Restaurant Manager','email'=>'om2.shiromum@jsmcorp.in','phone_number'=>'9969435199','user_id'=>46791,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>318,'name'=>'Tom','designation'=>'Restaurant Manager','email'=>'om.tbkmumpho@jsmcorp.in','phone_number'=>'9619699465','user_id'=>46792,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>318,'name'=>'Yogesh','designation'=>'Restaurant Manager','email'=>'agm.tbkmumpho@jsmcorp.in','phone_number'=>'7738899514','user_id'=>46793,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>338,'name'=>'Shakil','designation'=>'Restaurant Manager','email'=>'shakilsayyed@gmail.com','phone_number'=>'9930954198','user_id'=>46794,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>338,'name'=>'Chef Melwin','designation'=>'Restaurant Manager','email'=>'chefmelwin@yahoo.co.in','phone_number'=>'9673240107','user_id'=>46795,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
+			array('vendor_location_id'=>339,'name'=>'Prashant','designation'=>'Restaurant Manager','email'=>'prashant.bob87@gmail.com','phone_number'=>'9920760112','user_id'=>46796,'created_at' => Carbon::now(),'updated_at' => Carbon::now() ),
 		));
 	}
 }

@@ -39,6 +39,7 @@ class ReservationController extends Controller {
 	private static $special_request_acc_attr_id = 30;
 	private static $special_request_resp_attr_id = 31;
 	private static $note_to_wow_attr_id = 32;
+	private static $admin_comments_id = 17;
 	private static $seating_status_attr_id = 33;
 	private static $table_size_attr_id = 12;
 	private static $gift_card_clo_attr_id = 19;
@@ -333,6 +334,15 @@ class ReservationController extends Controller {
 						$noteToWowTablesAttr->reservation_attribute_id = ReservationController::$note_to_wow_attr_id;
 						$noteToWowTablesAttr->attribute_value = $input['note_to_wowtables'];
 						$noteToWowTablesAttr->save();
+					}
+					if ($input['admin_comments']) {
+						$adminCommentsAttr = ReservationAttributesText::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$admin_comments_id])->first();
+						if (!$adminCommentsAttr)
+							$adminCommentsAttr = new ReservationAttributesText();
+						$adminCommentsAttr->reservation_id = $reservationId;
+						$adminCommentsAttr->reservation_attribute_id = ReservationController::$admin_comments_id;
+						$adminCommentsAttr->attribute_value = $input['admin_comments'];
+						$adminCommentsAttr->save();
 					}
 					$statusAttr = ReservationAttributesInteger::where(['reservation_id' => $reservationId, 'reservation_attribute_id' => ReservationController::$status_attr_id])->first();
 					$oldStatusId = $statusAttr->attribute_value;
