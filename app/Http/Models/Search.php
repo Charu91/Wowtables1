@@ -243,7 +243,7 @@
 				$userId = 0;				
 			}
 			$experienceQuery->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
-									$join->on('vl.id', '=', 'ub.vendor_location_id')
+									$join->on('products.id', '=', 'ub.product_id')
 										->where('ub.user_id','=', $userId);
 								});
 			
