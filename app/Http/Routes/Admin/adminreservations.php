@@ -6,6 +6,33 @@ Route::get('/admin/adminreservations', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+Route::get('/admin/admingiftcards', [
+    'uses' => 'AdminGiftCardController@index',
+    'as' => 'AdminGIftCardHome',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/admingiftcards/checkGiftCard', [
+    'uses' => 'AdminGiftCardController@checkGiftCard',
+    'as' => 'AdminGiftCard',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/admingiftcards/addGiftCard', [
+    'uses' => 'AdminGiftCardController@addGiftCard',
+    'as' => 'AdminGiftCardAddGiftCard',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
+
+Route::post('/admin/admingiftcards/detailGiftCard', [
+    'uses' => 'AdminGiftCardController@detailGiftCard',
+    'as' => 'AdminGiftCardDetailGiftCard',
+    'where' => [],
+    'domain' => env('WEBSITE_URL'),
+]);
 
 Route::post('/admin/adminreservations/checkUser', [
     'uses' => 'AdminReservationsController@checkUser',
@@ -13,6 +40,8 @@ Route::post('/admin/adminreservations/checkUser', [
     'where' => [],
     'domain' => env('WEBSITE_URL'),
 ]);
+
+
 
 Route::post('/admin/adminreservations/addmember', [
     'uses' => 'AdminReservationsController@addMember',

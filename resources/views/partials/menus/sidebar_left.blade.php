@@ -104,6 +104,19 @@
                             </li>
                         </ul>
                     </li>
+					<li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/orders') !== false)? 'nav-expanded nav-active':''}}">
+                        <a>
+                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                            <span>Gift Cards</span>
+                        </a>
+                        <ul class="nav nav-children">
+                            <li class="{{ (isset($uri) && $uri === 'admingiftcards')? 'nav-active':'' }}">
+                                <a href="/admin/admingiftcards ">ADD Gift Cards</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+					
                     <li class="nav-parent {{ (isset($uri) && strpos($uri,'admin/restaurants') !== false)? 'nav-expanded nav-active':''}}">
                         <a>
                             <i class="fa fa-users" aria-hidden="true"></i>
