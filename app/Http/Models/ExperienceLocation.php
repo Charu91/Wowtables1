@@ -110,7 +110,13 @@ class ExperienceLocation {
     }
 
     public function update($productVendorLocationId, $data)
-    {
+    {	
+		$vendor_location_details1 = DB::table('product_vendor_locations_limits')->where('product_vendor_location_id', $productVendorLocationId)->get();
+		$old_max_reserve = 0;
+		foreach($vendor_location_details1 as $vendor_location_details2){			
+			$old_max_reserve = $vendor_location_details2->max_reservation_allowed;
+		}
+		
         DB::beginTransaction();
 
         //$q1 = 'SELECT product_id from product_vendor_locations WHERE id = ?';
@@ -202,7 +208,7 @@ class ExperienceLocation {
             $productVendorLocationLastId = DB::table('product_vendor_locations')->where('id',$productVendorLocationId)->update($productVendorLocationInsertData);
 
             if(!empty($data['limits'])){
-                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['limits']);
+                $AttributesSaved = $this->saveReservationLimits($productVendorLocationId, $data['limits'],$old_max_reserve);
 
                 if($AttributesSaved['status'] !== 'success'){
                     $AttributesSaved['message'] = 'Could not create the Experience Location Reservation Limits. Contact the system admin';
@@ -406,7 +412,7 @@ class ExperienceLocation {
         }
     }
 
-    protected function saveReservationLimits($product_vendor_location_id, $limits)
+    protected function saveReservationLimits($product_vendor_location_id, $limits,$old_max_reserve=0)
     {   //dd($attributes);
         $limitData = [];
 
@@ -443,9 +449,22 @@ class ExperienceLocation {
         }
 		
 		if(isset($limits['max_reservation_allowed'])){
-            $limitData['max_reservation_allowed'] = $limits['max_reservation_allowed'];
+			if($limits['max_reservation_allowed'] != $limits['max_reservation_allowed_hide']){				
+				
+				if($old_max_reserve == $limits['max_reservation_allowed_hide'] ){
+					$limitData['max_reservation_allowed'] = $limits['max_reservation_allowed'];
+				}else{
+					DB::rollback();
+					return [
+						'status' => 'failure',
+						'action' => 'Updating the Maximum Reservation Allowed Failure'
+					];
+				}
+				$limitData['max_reservation_allowed'] = $limits['max_reservation_allowed'];
+			}
         }
-
+		$limitData['max_covers_allowed'] = $limits['max_covers_allowed'];
+		
 
         if(count($limitData)){
             $limitData['product_vendor_location_id'] = $product_vendor_location_id;
