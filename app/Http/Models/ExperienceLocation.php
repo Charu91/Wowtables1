@@ -441,6 +441,10 @@ class ExperienceLocation {
         if(isset($limits['max_reservations_per_day'])){
             $limitData['max_reservations_per_day'] = $limits['max_reservations_per_day'];
         }
+		
+		if(isset($limits['max_reservation_allowed'])){
+            $limitData['max_reservation_allowed'] = $limits['max_reservation_allowed'];
+        }
 
 
         if(count($limitData)){

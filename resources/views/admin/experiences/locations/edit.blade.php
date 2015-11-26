@@ -88,6 +88,12 @@
                                     {!! Form::text('limits[min_people_increments_per_reservation]',$productLocationsLimits->min_people_increments,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
+							<div class="form-group">
+                                <label for="limits[max_reservation_allowed]" class="col-sm-6 control-label">Maximum Reservation Allowed </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('limits[max_reservation_allowed]',$productLocationsLimits->max_reservation_allowed,['class'=>'form-control']) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
