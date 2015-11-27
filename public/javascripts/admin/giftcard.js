@@ -1,9 +1,4 @@
-/*
-	Code for Check the GIft Card Exist or Not  
-	
-	Added By Param
-	*/
-	
+(function($){
 	
 	$("#edit_member").click(function() {
        var giftId = $("#gift_id").val();
@@ -264,5 +259,5 @@
             })
         }
     });
-	
+	})(jQuery);
 	// code end here 
