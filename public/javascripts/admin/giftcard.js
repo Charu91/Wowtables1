@@ -3,7 +3,7 @@
 	$("#edit_member").click(function() {
        var giftId = $("#gift_id").val();
         
-       
+        delay(function() {
             $.ajax({
                 url: "/admin/admingiftcards/detailGiftCard",
                 type: "POST",
@@ -30,7 +30,7 @@
                       $("#card_id").val(e.id);
                 }
             })
-       
+        }, 1e3)
     });
 	
 	$( "#expire_date" ).datepicker({
@@ -44,7 +44,7 @@
         $(".show_in_input_no").css('display','none');
         $(".show_in_input_yes").css('display','none');
         var CardId = $(this).val();
-      
+        delay(function() {
             $(".small-ajax-loader").show();
             $("#last_reserv").hide();
             $("#upcomings_reservs").html("");
@@ -96,7 +96,7 @@
                     }
                 }
             })
-        
+        }, 1e3)
     });
 	
 	$("#add_gift_card").click(function() {
