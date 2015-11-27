@@ -1,7 +1,7 @@
 <?php namespace WowTables\Http\Models;
 
 use DB;
-
+use Exception;
 class ExperienceLocation {
 
     public function create($data)
@@ -590,6 +590,59 @@ class ExperienceLocation {
 
         $vendor_location_flags_details = DB::table('product_vendor_location_booking_time_range_limits')->where('product_vendor_location_id', $id);
         return $vendor_location_flags_details->get();
+
+    }
+	
+	public function onReservationMaxResevationAllowed( $product_vendor_location_id )
+    {
+
+		$product_vendor_locations_limits = $this->populateProductLocationLimits($product_vendor_location_id);
+		
+		foreach($product_vendor_locations_limits as $limits){
+			$max_cover_allowed = $limits->max_covers_allowed;
+			$max_reservation_allowed = $limits->max_reservation_allowed;
+		}
+		
+		if($max_cover_allowed == 0){
+			 return ['status' => 'success'];
+		}
+		
+		if($max_reservation_allowed == 0){
+			return [
+                'status' => 'failure',
+                'message' => 'Reservation are Full. Cannot do more Reservations.'
+            ];
+		}		
+		
+		try{
+			$productVendorLocationLastId = DB::table('product_vendor_locations_limits')->where('product_vendor_location_id',$product_vendor_location_id)->decrement('max_reservation_allowed');							
+		}
+		catch(Exception $e){
+			return [
+                'status' => 'failure',
+                'message' => 'Reservation Cannot be completed as Internal System Error Occured.'
+            ];
+		}
+        return ['status' => 'success'];
+
+    }
+	
+	public function onCancelMaxResevationAllowed( $product_vendor_location_id )
+    {
+		
+		$product_vendor_locations_limits = $this->populateProductLocationLimits($product_vendor_location_id);
+		
+		foreach($product_vendor_locations_limits as $limits){
+			$max_cover_allowed = $limits->max_covers_allowed;
+		}
+		
+		if($max_cover_allowed == 0){
+			return ['status' => 'success'];			
+		}
+		
+		$productVendorLocationLastId = DB::table('product_vendor_locations_limits')->where('product_vendor_location_id',$product_vendor_location_id)->increment('max_reservation_allowed');		
+		
+        return ['status' => 'success'];
 
     }
 

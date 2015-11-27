@@ -237,10 +237,11 @@
 								->whereIn('vaso.id',$arrData['cuisine']);
 			}
 			
-			if(isset($arrData['access_token'])) {
-				$userId =  UserDevices::getUserDetailsByAccessToken($arrData['access_token']);				
+			if(!empty($_SERVER['HTTP_X_WOW_TOKEN'])){
+				$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];		
+				$userId = UserDevices::getUserDetailsByAccessToken($access_token);
 			}else{
-				$userId = 0;				
+				$userId = 0;
 			}
 			$experienceQuery->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
 									$join->on('products.id', '=', 'ub.product_id')

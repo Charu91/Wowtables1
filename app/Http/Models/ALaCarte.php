@@ -418,7 +418,7 @@ use Config;
 						->where('vl.a_la_carte','=', 1)
 						//->where('mrn1.image_type','mobile_listing_ios_alacarte')
 						//->where('mrn2.image_type', 'mobile_listing_android_alacarte')
-						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id',
+						->select('v.name', 'vl.pricing_level', 'vl.id as vl_id','ub.id as bookmarked',
 								DB::raw('GROUP_CONCAT(DISTINCT vaso.option separator ", ") as cuisine'),
 								DB::raw(('COUNT(DISTINCT vlr.id) AS total_reviews')),
                 				DB::raw('If(count(DISTINCT vlr.id) = 0, 0, ROUND(AVG(vlr.rating), 2)) AS rating'),                				
@@ -435,6 +435,16 @@ use Config;
 			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
 									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
 		}
+		if(!empty($_SERVER['HTTP_X_WOW_TOKEN'])){
+			$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];		
+			$userId = UserDevices::getUserDetailsByAccessToken($access_token);						
+		}else{
+			$userId = 0;
+		}
+		$queryResult = $queryResult->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
+				$join->on('vl.id', '=', 'ub.vendor_location_id')
+					->where('ub.user_id','=', $userId);
+			});
 		
 		//executing the query
 		$queryResult = $queryResult->get();
@@ -451,6 +461,7 @@ use Config;
 				$data['data']['alacarte'][] = array(
 												'vl_id' 		=> $row->vl_id,
 												'name' 			=> $row->name,
+												'bookmarked' => (is_null($row->bookmarked)) ? 0:1,
 												'cuisine' 		=> (empty($row->cuisine)) ? "" : $row->cuisine,
 												'pricing_level' => (empty($row->pricing_level)) ? "" : $row->pricing_level,
 												'total_reviews' => $row->total_reviews,
@@ -525,7 +536,7 @@ use Config;
 							->where('mrn1.image_type','mobile_listing_ios_experience')
 							->where('mrn2.image_type', 'mobile_listing_android_experience')						
 							->select(
-									'p.id as product_id','p.name', 'pvl.id as pvl_id',
+									'p.id as product_id','p.name', 'pvl.id as pvl_id','ub.id as bookmarked',
 									DB::raw(('COUNT(DISTINCT pr.id) AS total_reviews')),
 									DB::raw('MAX(IF(pa.alias = "short_description", pat.attribute_value, "")) AS short_description'),
 									DB::raw('If(count(DISTINCT pr.id) = 0, 0, ROUND(AVG(pr.rating), 2)) AS rating'),
@@ -543,7 +554,16 @@ use Config;
 			$queryResult = $queryResult->join('vendor_location_address as vla', 'vla.vendor_location_id', '=', 'vl.id')
 									   ->where('vla.city_id','=', $_SERVER["HTTP_X_WOW_CITY"]);
 		}
-
+		if(!empty($_SERVER['HTTP_X_WOW_TOKEN'])){
+			$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];		
+			$userId = UserDevices::getUserDetailsByAccessToken($access_token);						
+		}else{
+			$userId = 0;
+		}
+		$queryResult = $queryResult->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
+			$join->on('p.id', '=', 'ub.product_id')
+				->where('ub.user_id','=', $userId);
+		});
 		//executing the query
 		$queryResult = $queryResult->get();
 							
@@ -555,6 +575,7 @@ use Config;
 											'prod_id' => $row->product_id,
 											'pvl_id' => $row->pvl_id,
 											'name' => $row->name,
+											'bookmarked' => (is_null($row->bookmarked)) ? 0:1,
 											'total_reviews' => $row->total_reviews,
 											'rating' => $row->rating,
 											'price' => $row->price,
