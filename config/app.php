@@ -211,7 +211,7 @@ return [
 		'Socialize' => 'Laravel\Socialite\Facades\Socialite',
 		'PushNotification' => 'Davibennun\LaravelPushNotification\Facades\PushNotification',
 		'PDF' => 'Barryvdh\Snappy\Facades\SnappyPdf',
-		'Image' => 'Barryvdh\Snappy\Facades\SnappyImage'
+		/*'Image' => 'Barryvdh\Snappy\Facades\SnappyImage'*/
 	],
 
 ];

@@ -142,11 +142,10 @@
                                 </div>
                             </td>
                             <td>
-                                @if($post_booking->zoho_cancelled == 1)
-                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled1" name="attributes[zoho_booking_cancelled1]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" data-status-id="{!! $post_booking->reservation_status_id !!}" />
+                                @if($post_booking->zoho_update == 1)
+                                    <input type="checkbox" class="checkbox" id="zoho_booking_cancelled" name="attributes[zoho_booking_cancelled]" data-reserv-id="{!! $post_booking->id !!}" data-reserv-type="{!! $post_booking->reserv_type !!}" data-status-id="{!! $post_booking->reservation_status_id !!}" />
                                 @endif
                             </td>
-
                         </tr>
                     @endforeach
                     </tbody>
