@@ -55,7 +55,26 @@ class ExperienceModel {
     public function getExperienceSearchFilters() {
       return $this->filters;
     }
-    
+   public function objectToArray($d) {
+	if (is_object($d)) {
+	// Gets the properties of the given object
+	// with get_object_vars function
+	$d = get_object_vars($d);
+	}
+	
+	if (is_array($d)) {
+	/*
+	* Return array converted to object
+	* Using __FUNCTION__ (Magic constant)
+	* for recursive call
+	*/
+	return array_map(__FUNCTION__, $d);
+	}
+	else {
+	// Return array
+	return $d;
+	}
+	}
     //-------------------------------------------------------------
 
     
@@ -166,7 +185,7 @@ class ExperienceModel {
                 ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
 				->leftJoin('product_vendor_location_booking_schedules as pvlbs','pvlbs.product_vendor_location_id','=','pvl.vendor_location_id')
 				->leftJoin('schedules as s','s.id','=','pvlbs.schedule_id')
-				->Join('time_slots as ts','ts.id','=','s.time_slot_id')
+				->leftJoin('time_slots as ts','ts.id','=','s.time_slot_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
@@ -179,7 +198,7 @@ class ExperienceModel {
                 ->whereIN('products.type',array('simple','complex'))
                 ->groupBy('products.id')
                 ->orderBy('pvl.order_status','asc')
-                ->select('products.id','products.name as title',
+                ->select('products.id','products.name as title','s.day','s.time_slot_id','s.day',
                       'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
                       'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
                       'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
@@ -239,23 +258,26 @@ class ExperienceModel {
 		//adding filter for  time  if time has been selected
 		 if(isset($arrData['start_time']) && isset($arrData['end_time'])) {
 		   $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
-		   
+		  // $mysql= $experienceQuery->toSql();
+		 // print_r($mysql);
 		   
       }
 		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])) {
 		 $arrData['date']=$arrData['date'].' 00:00:00';
-          $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
-		 // echo $arrData['date'];
-          $experienceQuery->where('pad.attribute_value','>=',$arrData['date']);
+		 $date = $arrData['date'];
+         $day_name= date('l', strtotime($date));
+          $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']))
+          ->where('pad.attribute_value','>=',$arrData['date'])
+          ->where('s.day','=',$day_name);
 		   $array['start_time']=$arrData['start_time'];
 		   $array['end_time']=$arrData['end_time'];
           //$experienceQuery->where('pad.product_attribute_id','=','15');
-		 //== $mysql= $experienceQuery->toSql();
+		// $mysql= $experienceQuery->toSql();
 		 // print_r($mysql);
       }
 	  
 	  
-	  elseif(isset($arrData['date'])) {
+	  if(isset($arrData['date'])) {
 	  $arrData['ordertype']='DESC';
 	  $arrData['orderby']='products.created_at';
 	  $orderType = 'desc';
@@ -263,19 +285,78 @@ class ExperienceModel {
         {
           $orderType = !empty($arrData['ordertype'])?$arrData['ordertype']:'desc';
         }
-
-        $experienceQuery->orderBy($arrData['orderby'],$orderType);
+          $date = $arrData['date'];
+         $day_name= date('l', strtotime($date));
+         $experienceQuery->where('s.day','=',$day_name)
+        ->orderBy($arrData['orderby'],$orderType);
       
       }
       //executing the query
       $experienceResult = $experienceQuery->get();
+//echo "<pre>";print_r($experienceResult);
+	//	 die;
+	 
+	
+		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])){
+		
+		 
+	     foreach($experienceResult as $row) {
+         $data['block_dates'] 			= $this->getExperienceBlockDates($row->id);
+		 $data['scheduleDays'] 			= $this->getExperienceLocationScheduleDay1($row->id);
+		 $data['availableDates']        = $this->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+        //print_r($data['scheduleDays']);
+		$array1=array();
+		foreach($data['scheduleDays'] as $day_schedule){
+		$date = $arrData['date'];
+	//	echo "<pre>"; print_r($day_schedule);
+         $day_name= strtolower(date('D', strtotime($date)));
+		 
+				if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+        }
+		if(isset($array1['id'])){
+		$experienceResult1[]=(object) $array1;
+		}
+		
+		}
+	
+		} 
+	//echo "<pre>";	print_r(array_filter($experienceResult1));
 
+if(isset($experienceResult1)){
+unset($experienceResult);
+$experienceResult=array_filter($experienceResult1);
+$experienceResult =  $experienceResult;
+}
+
+	//  getExperienceLocationScheduleDay
       //array to store the product ids
       $arrProduct = array();
       //array to store final result
       $arrData = array();
 
-    
+  //  print_r($experienceResult);
 
       #query executed successfully
       if($experienceResult) {
@@ -1651,6 +1732,32 @@ class ExperienceModel {
       foreach($schedules as $row) {
             //echo "<prE>"; print_r($row);
         $arrData[$row->vendor_location_id][$row->day_short] = $row->day_numeric;
+
+      }
+    }
+    return $arrData;
+  }
+  
+   public static function getExperienceLocationScheduleDay1($productID, $productVendorLocationID = NULL,  $day=NULL) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID)
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.day_numeric','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+
+    #array to hold information
+    $arrData = array();
+
+    if($schedules) {
+      foreach($schedules as $row) {
+            //echo "<prE>"; print_r($row);
+        $arrData[$row->vendor_location_id][$row->day_numeric] = $row->day_short; 
 
       }
     }
