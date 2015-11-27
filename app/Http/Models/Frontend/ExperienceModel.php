@@ -301,16 +301,97 @@ class ExperienceModel {
 		
 		 
 	     foreach($experienceResult as $row) {
+		 
+		
          $data['block_dates'] 			= $this->getExperienceBlockDates($row->id);
 		 $data['scheduleDays'] 			= $this->getExperienceLocationScheduleDay1($row->id);
 		 $data['availableDates']        = $this->getAvailableDates($data['block_dates'],$data['scheduleDays']);
-        //print_r($data['scheduleDays']);
+         $data['schedule']               = $this->getExperienceLocationSchedule($row->id);
+		
 		$array1=array();
+		$day_name= strtolower(date('D', strtotime($date)));
 		foreach($data['scheduleDays'] as $day_schedule){
-		$date = $arrData['date'];
-	//	echo "<pre>"; print_r($day_schedule);
-         $day_name= strtolower(date('D', strtotime($date)));
+		foreach($data['schedule'] as $schedule){
+		if(isset($schedule[$day_name])){
+		if($arrData['start_time'] <='17:30:00'){
 		 
+		
+		if(isset($schedule[$day_name]['Lunch'])){
+		$lunch_start_time= date('g:i A',strtotime($arrData['start_time']));
+		 $lunch_end_time =date('g:i A',strtotime($arrData['end_time']));
+		if(!in_array($lunch_start_time ,$schedule[$day_name] ['Lunch']) || !in_array($lunch_end_time ,$schedule[$day_name] ['Lunch'])){
+		if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+		}
+		}
+		}
+		else {
+		
+		if(isset($schedule[$day_name] ['Dinner'])){
+		$dinner_start_time= date('g:i A',strtotime($arrData['start_time']));
+		 $dinner_end_time= date('g:i A',strtotime($arrData['end_time']));
+	//	echo "<pre>"; echo "s";print_r($schedule[$day_name]['Dinner']);
+		if(!in_array($dinner_start_time ,$schedule[$day_name] ['Dinner']) || !in_array($dinner_end_time ,$schedule[$day_name] ['Dinner'])){
+		if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+		}
+		
+	
+		}
+		}
+		}
+		
+		
+		
+		}
+		
+		
+		//$date = $arrData['date'];
+	//	echo "<pre>"; print_r($day_schedule);
+         
+		 /*
 				if(!in_array($day_name ,$day_schedule))
 						{
 				
@@ -334,6 +415,7 @@ class ExperienceModel {
 				$array1['location_name']=$row->location_name;
 				$array1['slug']=$row->slug;
 					}
+					*/
         }
 		if(isset($array1['id'])){
 		$experienceResult1[]=(object) $array1;
