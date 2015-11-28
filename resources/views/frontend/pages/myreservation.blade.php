@@ -1089,6 +1089,7 @@ agm.cpkbandra@jsmcorp.in
        user_id =$('#change_user_id').val();
        added_by =$('#added_by').val();
        last_reservation_giftcard_id =$('#last_reservation_giftcard_id').val();
+       res_id = $("#res_id").val();
 
         var addonsArray = {};
         $('.myaddonselect').each(function(){
@@ -1098,6 +1099,7 @@ agm.cpkbandra@jsmcorp.in
             addonsArray[prod_id]= select_val;
             return addonsArray;
         });
+        //console.log(addonsArray);
         var giftcard_id = $("#giftcard_id").val();
         var special_request = $("#special_request").val();
 
