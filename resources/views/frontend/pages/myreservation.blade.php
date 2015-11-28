@@ -98,7 +98,7 @@ exit;*/
                   ?>                    
                   <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#shareModal{{$data['id']}}" data-reserve-type="{{$data['type']}}">Share</a>
                   </li>
-                  <input type="hidden" value="{{$data['id']}}"> 
+                  <input type="hidden" id="my_reserv_id" name="my_reserv_id" value="{{$data['id']}}">
                   <input type="hidden" value="{{$data['type']}}" class="reserv_typee"> 
                 </ul>
               </div>              
