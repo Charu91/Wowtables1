@@ -88,6 +88,19 @@
                                     {!! Form::text('limits[min_people_increments_per_reservation]',$productLocationsLimits->min_people_increments,['class'=>'form-control','required'=>'']) !!}
                                 </div>
                             </div>
+							<div class="form-group">
+                                <label for="limits[max_reservation_allowed]" class="col-sm-6 control-label">Maximum Reservation Allowed </label>
+                                <div class="col-sm-6">
+                                    {!! Form::text('limits[max_reservation_allowed]',$productLocationsLimits->max_reservation_allowed,['class'=>'form-control']) !!}
+									{!! Form::hidden('limits[max_reservation_allowed_hide]',$productLocationsLimits->max_reservation_allowed,['class'=>'form-control']) !!}
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label for="limits[max_covers_allowed]'," class="col-sm-6 control-label">Use Max Covers </label>
+                                <div class="col-sm-6">                                    
+									{!! Form::select('limits[max_covers_allowed]', ['0' => 'No', '1' => 'Yes'],$productLocationsLimits->max_covers_allowed,['class'=>'form-control populate']) !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6">

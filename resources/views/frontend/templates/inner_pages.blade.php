@@ -2628,16 +2628,27 @@ var google_remarketing_only = true;
           var end_with = final_amount[4];
           var c = $("#uri_city_id").val();
           var today = new Date();
-          today.setHours(0);
-          today.setMinutes(0);
-          today.setSeconds(0);
+		  var month = today.getMonth()+1;
+		  var day = today.getDate();
+		  var today_date = today.getFullYear() + '/' +
+           ((''+month).length<2 ? '0' : '') + month + '/' +
+           ((''+day).length<2 ? '0' : '') + day;
+         var select_month = selectedDate.getMonth()+1;
+		  var select_day = selectedDate.getDate();
+		  var select_date = selectedDate.getFullYear() + '/' +
+           ((''+select_month).length<2 ? '0' : '') + select_month + '/' +
+           ((''+select_day).length<2 ? '0' : '') + select_day;
+
+       
+		  
+		  
           if(today || selectedDate) {
             //ajax call brings results according to date selected and accordingly area,cuisine and tags results is selected date is future date
             if (Date.parse(today) < Date.parse(selectedDate)) {
               
               $("#date_error").css("display","none");
               $('#datepicker').css("border","");
-              
+              $(".form-control1").html('<option value="">--Select--</option>  <option value="lunch">Lunch</option> <option value="dinner">Dinner</option><option value="">----</option><option value="12:00">12 pm</option> <option value="13:00">1 pm</option><option value="14:00">2 pm</option><option value="15:00">3 pm</option> <option value="16:00">4 pm</option><option value="18:00">6 pm</option><option value="19:00">7 pm</option><option value="20:00">8 pm</option><option value="21:00">9 pm</option><option value="22:00">10 pm</option><option value="23:00">11 pm</option>');
               $.ajax({
                 //url: "custom_search/search_future_date_restaurant",
                 url: "custom_search/search_filter",
@@ -2760,6 +2771,22 @@ var google_remarketing_only = true;
 
             $("#date_error").css("display","block");
             $('#datepicker').css("border","1px solid red");
+			console.log();
+			   $.ajax
+					({
+					type: "POST",
+					url: "/custom_search/date_filter",
+					data: {date : select_date},
+					cache: false,
+					success: function(html)
+					{
+					$(".form-control1").html(html);
+					//console.log('hiuii');
+					//console.log(html);
+					} 
+					});
+			  
+			  
             }
           }
       });
@@ -2924,8 +2951,11 @@ var google_remarketing_only = true;
         var start_from = final_amount[1];
         var end_with = final_amount[4];
         var c = $("#uri_city_id").val();
+		 console.log('date = '+date_val);
+		 console.log('time = '+time_val);
+		 
         //console.log('final amount split = '+final_amount);
-        console.log(" first amount =="+final_amount[1]+" , second amount == "+final_amount[4]);
+        //console.log(" first amount =="+final_amount[1]+" , second amount == "+final_amount[4]);
         //console.log("time value == "+time_val+" , date value = "+date_val+" , rest val = "+rest_val+" , start_from = "+start_from+" , end_with = "+end_with);
         if(time_val != "") {
           $.ajax({
@@ -2938,8 +2968,8 @@ var google_remarketing_only = true;
                 $('#exp_list_load_layer').removeClass('hidden');
             },
             success: function(d) {
-              //$("#results").append(d);
-              //console.log(d);
+              $("#results").append(d);
+              console.log(d);
               var area_replace = '';
                 $.each(d.area_count,function(index, valueData){
                   area_replace += '<div class="checkbox"><label><input class="search_by_place" type="checkbox" value="'+valueData.id+'">'+valueData.name+'<span class="badge">'+valueData.count+'</span></label></div>'

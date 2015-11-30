@@ -227,7 +227,7 @@
 											'products.type as product_type', 'flags.name as flag_name', 'locations.id as location_id', 
 											'locations.name as location_name', 'vla.latitude','vla.longitude', 'vla.address',
 											'loc1.name as area', 'loc1.id as area_id', 'loc2.name as city', 'loc3.name as state_name',
-                                			'loc4.name as country', 'vla.pin_code', 'loc5.name as locality');
+                                			'loc4.name as country', 'vla.pin_code', 'loc5.name as locality','ub.id as bookmarked');
 
 			//echo $experienceQuery->toSql();
 			//adding filter for cuisines if cuisines are present
@@ -236,7 +236,18 @@
 								->join('vendor_attributes_select_options as vaso','vaso.id','=','pam.product_attributes_select_option_id')
 								->whereIn('vaso.id',$arrData['cuisine']);
 			}
-
+			
+			if(!empty($_SERVER['HTTP_X_WOW_TOKEN'])){
+				$access_token=$_SERVER['HTTP_X_WOW_TOKEN'];		
+				$userId = UserDevices::getUserDetailsByAccessToken($access_token);
+			}else{
+				$userId = 0;
+			}
+			$experienceQuery->leftJoin('user_bookmarks as ub', function($join) use ($userId) {				
+									$join->on('products.id', '=', 'ub.product_id')
+										->where('ub.user_id','=', $userId);
+								});
+			
 			//adding filter for locations if locations are present
 			if(isset($arrData['area'])) {
 				$experienceQuery->whereIn('locations.id',$arrData['area']);								
@@ -299,6 +310,7 @@
 													'type' => $row->product_type,
 													'name' => $row->title,
 													'description' => $row->description,
+													'bookmarked' => (is_null($row->bookmarked)) ? 0:1,
 													'short_description' => $row->short_description,
 													'price' => $row->price,
 													'taxes' => $row->taxes,

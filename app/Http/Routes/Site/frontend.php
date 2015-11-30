@@ -139,6 +139,12 @@ Route::post('/custom_search/search_filter',[
     'domain' => env('WEBSITE_URL'),
 ]);
 
+Route::post('/custom_search/date_filter',[
+    'uses' => 'Site\ExperienceController@date_filter',
+    'as' => 'experience.date_filter',
+    'domain' => env('WEBSITE_URL'),
+]);
+
 Route::get('/custom_search/new_custom_search',[
     'uses' => 'Site\ExperienceController@new_custom_search',
     'as' => 'experience.new_custom_search',

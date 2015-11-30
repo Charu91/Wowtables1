@@ -62,6 +62,7 @@ use WowTables\Http\Models\RestaurantLocations;
 		if(array_key_exists('filters', $input)) {
 			
 			$arrSubmittedData = $input['filters'];  
+			$arrSubmittedData['access_token'] = $_SERVER['HTTP_X_WOW_TOKEN'];
 			
 			//validating the input data
 			$arrReturn = Search::validateExperienceSearchData($arrSubmittedData);

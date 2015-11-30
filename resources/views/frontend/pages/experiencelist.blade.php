@@ -199,19 +199,18 @@ $(document).ready(function(){
                           <option value="">--Select--</option>  
 						  <option value="lunch">Lunch</option>
 						  <option value="dinner">Dinner</option>
+						  <?php 
+						 $time = array("12:00"=>"12 pm", "13:00"=>"1 pm", "14:00"=>"2 pm", "15:00"=>"3 pm", "16:00"=>"4 pm"
+						 , "17:00"=>"2 pm", "18:00"=>"6 pm", "19:00"=>"7 pm", "20:00"=>"8 pm", "21:00"=>"9 pm", "22:00"=>"10 pm", "23:00"=>"11 pm" 
+						 );
+						  
+						  ?>
 						  <option value="">----</option>
-						  <option value="12:00">12 pm</option>
-						  <option value="13:00">1 pm</option>
-						  <option value="14:00">2 pm</option>
-						  <option value="15:00">3 pm</option>
-						  <option value="16:00">4 pm</option>
-						  <option value="17:00">5 pm</option>
-						  <option value="18:00">6 pm</option>
-						  <option value="19:00">7 pm</option>
-						  <option value="20:00">8 pm</option>
-						  <option value="21:00">9 pm</option>
-						  <option value="22:00">10 pm</option>
-						  <option value="23:00">11 pm</option>
+						  <?php foreach($time as $key => $value ){
+                            echo "<option value=$key>$value</option>";
+												}					
+												?>
+						  
                         </select>
                     </div>
                     <div class="form-group">
@@ -434,7 +433,7 @@ $(document).ready(function(){
 		
 			<div class="widget filter-widget-wrap hidden-xs hidden-sm">
           <h3 class="text-center">Refine your search</h3>
-		  <span id="date_error" style="color:red;display:none;padding: 10px;text-align: justify;">Selected date should be greater than or equal to todays date!</span>
+		 <!-- <span id="date_error" style="color:red;display:none;padding: 10px;text-align: justify;">Selected date should be greater than or equal to todays date!</span>-->
             <div class="filter-widget">
               <form role="form" id="custom_refine_search">
                 <div class="form-group">
@@ -456,7 +455,7 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group time-group">
                   <label for="">Select a Time</label>
-                    <select class="form-control" id="search_by_time" placeholder="Choose a time">
+                    <select class="form-control1" id="search_by_time" placeholder="Choose a time">
                       <option value="">--Select--</option>  
                       <option value="lunch">Lunch</option>
                       <option value="dinner">Dinner</option>
@@ -500,6 +499,7 @@ $(document).ready(function(){
 								if(isset($filters['locations']))
 								{
 									foreach($filters['locations'] as $key => $allAreasData){  ?>
+
 									<div class="checkbox">
 									  <label>
 										<input class="search_by_place" type="checkbox" value="<?php echo $allAreasData['id'];?>">

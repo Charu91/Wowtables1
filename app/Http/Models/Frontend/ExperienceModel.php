@@ -55,7 +55,26 @@ class ExperienceModel {
     public function getExperienceSearchFilters() {
       return $this->filters;
     }
-    
+   public function objectToArray($d) {
+	if (is_object($d)) {
+	// Gets the properties of the given object
+	// with get_object_vars function
+	$d = get_object_vars($d);
+	}
+	
+	if (is_array($d)) {
+	/*
+	* Return array converted to object
+	* Using __FUNCTION__ (Magic constant)
+	* for recursive call
+	*/
+	return array_map(__FUNCTION__, $d);
+	}
+	else {
+	// Return array
+	return $d;
+	}
+	}
     //-------------------------------------------------------------
 
     
@@ -146,12 +165,15 @@ class ExperienceModel {
      * @version 1.0.0
      */
     public function findMatchingExperience( $arrData ) {
+	//print_r($arrData);
+	$array['city_id']=$arrData['city_id'];
       $experienceQuery = DB::table('products')
                 ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
                 ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
                 ->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
                 ->leftJoin('media','media.id','=','pmm.media_id')
                 ->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+                ->leftJoin('product_attributes_date as pad','pad.product_id','=','products.id')
                 ->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
                 ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
                 ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
@@ -161,6 +183,9 @@ class ExperienceModel {
                 ->leftJoin('locations','locations.id','=','vl.location_id')
                 ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
                 ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+				->leftJoin('product_vendor_location_booking_schedules as pvlbs','pvlbs.product_vendor_location_id','=','pvl.vendor_location_id')
+				->leftJoin('schedules as s','s.id','=','pvlbs.schedule_id')
+				->leftJoin('time_slots as ts','ts.id','=','s.time_slot_id')
                 //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
                 //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
                 ->where('pvl.status','Active')
@@ -173,7 +198,7 @@ class ExperienceModel {
                 ->whereIN('products.type',array('simple','complex'))
                 ->groupBy('products.id')
                 ->orderBy('pvl.order_status','asc')
-                ->select('products.id','products.name as title',
+                ->select('products.id','products.name as title','s.day','s.time_slot_id','s.day',
                       'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
                       'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
                       'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
@@ -184,6 +209,7 @@ class ExperienceModel {
         $experienceQuery->join(DB::raw('product_attributes_multiselect as pam'),'pam.product_id','=','products.id')
             ->join(DB::raw('product_attributes_select_options as paso'),'paso.id','=','pam.product_attributes_select_option_id')
             ->whereIn('paso.id',$arrData['cuisine']);
+			$array['cuisine']=$arrData['cuisine'];
       }
 
       //adding filter for locations if locations are present
@@ -192,7 +218,8 @@ class ExperienceModel {
                 //->join(DB::raw('vendor_locations as vl'),'vl.id','=','pvl.vendor_location_id')
                 //->join('locations','locations.id','=','vl.location_id')
                 whereIn('locations.id',$arrData['location']);
-                //->where('pvl.status','Active');
+				$array['location']=$arrData['location'];
+				
       }
 
       //adding filter for tags if tags are present
@@ -200,16 +227,21 @@ class ExperienceModel {
         $experienceQuery->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
           ->leftJoin('tags','tags.id','=','ptm.tag_id')
           ->whereIn('tags.id',$arrData['tag']);
+		  $array['tag']=$arrData['tag'];
       }
 
       //adding filter for price if price has been selected
       if(isset($arrData['minPrice']) && isset($arrData['maxPrice'])) {
        $experienceQuery->whereBetween('pp.price',array($arrData['minPrice'], $arrData['maxPrice']));
+	    $array['minPrice']=$arrData['minPrice'];
+	    $array['maxPrice']=$arrData['maxPrice'];
       }
 
       //adding filter for price if price has been selected
       if(isset($arrData['vendor']) && isset($arrData['vendor'])) {
         $experienceQuery->whereIN('vl.vendor_id',$arrData['vendor']);
+		 $array['vendor']=$arrData['vendor'];
+		
       }
 
       //adding filter for price if price has been selected
@@ -222,16 +254,191 @@ class ExperienceModel {
 
         $experienceQuery->orderBy($arrData['orderby'],$orderType);
       }
-
+	   
+		//adding filter for  time  if time has been selected
+		 if(isset($arrData['start_time']) && isset($arrData['end_time'])) {
+		   $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']));
+		  // $mysql= $experienceQuery->toSql();
+		 // print_r($mysql);
+		   
+      }
+		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])) {
+		 $arrData['date']=$arrData['date'].' 00:00:00';
+		 $date = $arrData['date'];
+         $day_name= date('l', strtotime($date));
+          $experienceQuery->whereBetween('ts.time',array($arrData['start_time'], $arrData['end_time']))
+          ->where('pad.attribute_value','>=',$arrData['date'])
+          ->where('s.day','=',$day_name);
+		   $array['start_time']=$arrData['start_time'];
+		   $array['end_time']=$arrData['end_time'];
+          //$experienceQuery->where('pad.product_attribute_id','=','15');
+		// $mysql= $experienceQuery->toSql();
+		 // print_r($mysql);
+      }
+	  
+	  
+	  if(isset($arrData['date'])) {
+	  $arrData['ordertype']='DESC';
+	  $arrData['orderby']='products.created_at';
+	  $orderType = 'desc';
+        if(isset($arrData['ordertype']))
+        {
+          $orderType = !empty($arrData['ordertype'])?$arrData['ordertype']:'desc';
+        }
+          $date = $arrData['date'];
+         $day_name= date('l', strtotime($date));
+         $experienceQuery->where('s.day','=',$day_name)
+        ->orderBy($arrData['orderby'],$orderType);
+      
+      }
       //executing the query
       $experienceResult = $experienceQuery->get();
+//echo "<pre>";print_r($experienceResult);
+	//	 die;
+	 
+	
+		 if(isset($arrData['date']) && isset($arrData['start_time']) && isset($arrData['end_time'])){
+		
+		 
+	     foreach($experienceResult as $row) {
+		 
+		
+         $data['block_dates'] 			= $this->getExperienceBlockDates($row->id);
+		 $data['scheduleDays'] 			= $this->getExperienceLocationScheduleDay1($row->id);
+		 $data['availableDates']        = $this->getAvailableDates($data['block_dates'],$data['scheduleDays']);
+         $data['schedule']               = $this->getExperienceLocationSchedule($row->id);
+		
+		$array1=array();
+		$day_name= strtolower(date('D', strtotime($date)));
+		foreach($data['scheduleDays'] as $day_schedule){
+		foreach($data['schedule'] as $schedule){
+		if(isset($schedule[$day_name])){
+		if($arrData['start_time'] <='17:30:00'){
+		 
+		
+		if(isset($schedule[$day_name]['Lunch'])){
+		$lunch_start_time= date('g:i A',strtotime($arrData['start_time']));
+		 $lunch_end_time =date('g:i A',strtotime($arrData['end_time']));
+		if(!in_array($lunch_start_time ,$schedule[$day_name] ['Lunch']) || !in_array($lunch_end_time ,$schedule[$day_name] ['Lunch'])){
+		if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+		}
+		}
+		}
+		else {
+		
+		if(isset($schedule[$day_name] ['Dinner'])){
+		$dinner_start_time= date('g:i A',strtotime($arrData['start_time']));
+		 $dinner_end_time= date('g:i A',strtotime($arrData['end_time']));
+	//	echo "<pre>"; echo "s";print_r($schedule[$day_name]['Dinner']);
+		if(!in_array($dinner_start_time ,$schedule[$day_name] ['Dinner']) || !in_array($dinner_end_time ,$schedule[$day_name] ['Dinner'])){
+		if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+		}
+		
+	
+		}
+		}
+		}
+		
+		
+		
+		}
+		
+		
+		//$date = $arrData['date'];
+	//	echo "<pre>"; print_r($day_schedule);
+         
+		 /*
+				if(!in_array($day_name ,$day_schedule))
+						{
+				
+						}
+				else 
+					{
+				$array1['id']=$row->id;
+				$array1['title']=$row->title;
+				$array1['short_description']=$row->short_description;
+				$array1['price']=$row->price;
+				$array1['price_type']=$row->price_type;
+				$array1['is_variable']=$row->is_variable;
+				$array1['post_tax_price']=$row->post_tax_price;
+				$array1['tax']=$row->tax;
+				$array1['image']=$row->image;
+				$array1['product_type']=$row->product_type;
+				$array1['flag_name']=$row->flag_name;
+				$array1['flag_color']=$row->flag_color;
+				$array1['flag_name']=$row->flag_name;
+				$array1['location_id']=$row->location_id;
+				$array1['location_name']=$row->location_name;
+				$array1['slug']=$row->slug;
+					}
+					*/
+        }
+		if(isset($array1['id'])){
+		$experienceResult1[]=(object) $array1;
+		}
+		
+		}
+	
+		} 
+	//echo "<pre>";	print_r(array_filter($experienceResult1));
 
+if(isset($experienceResult1)){
+unset($experienceResult);
+$experienceResult=array_filter($experienceResult1);
+$experienceResult =  $experienceResult;
+}
+
+	//  getExperienceLocationScheduleDay
       //array to store the product ids
       $arrProduct = array();
       //array to store final result
       $arrData = array();
 
-    
+  //  print_r($experienceResult);
 
       #query executed successfully
       if($experienceResult) {
@@ -251,9 +458,6 @@ class ExperienceModel {
         
         //array to store location IDs
         $arrLocationId = array();
-
-          //echo "<pre>"; print_r($experienceResult); die;
-        
         foreach($experienceResult as $row) {
           $this->minPrice = ($this->minPrice > $row->price || $this->minPrice == 0) ? $row->price : $this->minPrice;
           $this->maxPrice = ($this->maxPrice < $row->price || $this->maxPrice == 0) ? $row->price : $this->maxPrice;
@@ -280,10 +484,49 @@ class ExperienceModel {
                           "flag" => (is_null($row->flag_name)) ? "":$row->flag_name,
                           "color" => (is_null($row->flag_color)) ? "#fff":$row->flag_color,
                         );
-                        
-                      
+                   //  echo $row->location_id."</br>"; 
+				$experienceQueryCount = DB::table('products')
+                ->leftJoin('product_attributes_text as pat','pat.product_id','=','products.id')
+                ->leftJoin('product_attributes_text as pat2','pat2.product_id','=','products.id')
+                ->leftJoin('product_media_map as pmm', 'pmm.product_id','=','products.id')
+                ->leftJoin('media','media.id','=','pmm.media_id')
+                ->leftJoin('product_pricing as pp','pp.product_id','=','products.id')
+                ->leftJoin('price_types as pt', 'pt.id','=','pp.price_type')
+                ->join('product_vendor_locations as pvl','pvl.product_id','=','products.id')
+                ->leftJoin('vendor_location_address as vla','vla.vendor_location_id','=','pvl.vendor_location_id')
+                ->leftJoin('product_flag_map as pfm','pfm.product_id','=','products.id')
+                ->leftJoin('flags', 'flags.id', '=', 'pfm.flag_id')
+                ->leftJoin('vendor_locations as vl','vl.id','=','pvl.vendor_location_id')
+                ->leftJoin('locations','locations.id','=','vl.location_id')
+                ->leftJoin('product_attributes as pa1','pa1.id','=','pat.product_attribute_id')
+                ->leftJoin('product_attributes as pa2','pa2.id','=','pat2.product_attribute_id')
+				->leftJoin('product_vendor_location_booking_schedules as pvlbs','pvlbs.product_vendor_location_id','=','pvl.vendor_location_id')
+				->leftJoin('schedules as s','s.id','=','pvlbs.schedule_id')
+				->leftJoin('time_slots as ts','ts.id','=','s.time_slot_id')
+                //->leftJoin(DB::raw('product_tag_map as ptm'),'ptm.product_id','=','products.id')
+                //->leftJoin('vendors','vendors.id','=','vl.vendor_id')
+                ->where('pvl.status','Active')
+                ->whereIN('pvl.show_status',array('show_in_all','hide_in_mobile'))
+                //->where('pa1.alias','experience_info')
+                ->where('pa2.alias','short_description')
+                //->orWhere('pa3.alias','cuisines')
+                ->where('vla.city_id',$array['city_id'])
+                ->where('products.visible',1)
+                ->whereIN('products.type',array('simple','complex'))
+                ->groupBy('products.id')
+                ->orderBy('pvl.order_status','asc')
+                ->select('products.id','products.name as title',
+                      'pat2.attribute_value as short_description', 'pp.price', 'pt.type_name as price_type',
+                      'pp.is_variable', 'pp.tax', 'pp.post_tax_price', 'media.file as image', 
+                      'products.type as product_type', 'flags.name as flag_name','flags.color as flag_color', 'locations.id as location_id', 
+                      'locations.name as location_name','products.slug');
+                        $experienceQueryCount->
+                     whereIn('locations.id',array($row->location_id));
+				   $experienceResultCount = $experienceQueryCount->get();
+				 $count=count($experienceResultCount);
           #setting up the value for the location filter
-          if( !in_array($row->location_id, $arrLocationId)) {
+   if(isset($array['date']) || isset($array['start_time']) || isset($arrData['end_time'])){
+   if( !in_array($row->location_id, $arrLocationId)) {
             $arrLocationId[] = $row->location_id;
             $this->filters['locations'][] = array(
                                 "id" => $row->location_id,
@@ -294,10 +537,29 @@ class ExperienceModel {
           else {
             foreach($this->filters['locations'] as $key => $value) {
               if($value['id'] == $row->location_id) {
-                $this->filters['locations'][$key]['count']++;
+               $this->filters['locations'][$key]['count']++;
               }
             }
-          }         
+          }  
+   
+   }
+   else {
+          if( !in_array($row->location_id, $arrLocationId)) {
+            $arrLocationId[] = $row->location_id;
+            $this->filters['locations'][] = array(
+                                "id" => $row->location_id,
+                                "name" => $row->location_name,
+                                "count" => $count
+                              );
+          }
+          else {
+            foreach($this->filters['locations'] as $key => $value) {
+              if($value['id'] == $row->location_id) {
+              // $this->filters['locations'][$key]['count']++;
+              }
+            }
+          }  
+}		  
         }
         #setting up remaining filters
         $this->initializeExperienceFilters($arrProduct);
@@ -1552,6 +1814,32 @@ class ExperienceModel {
       foreach($schedules as $row) {
             //echo "<prE>"; print_r($row);
         $arrData[$row->vendor_location_id][$row->day_short] = $row->day_numeric;
+
+      }
+    }
+    return $arrData;
+  }
+  
+   public static function getExperienceLocationScheduleDay1($productID, $productVendorLocationID = NULL,  $day=NULL) {
+    //initializing the value of day
+    //$day = (is_null($day)) ? strtolower(date("D")) : strtolower($day);
+
+     $schedules = DB::table('schedules')
+            ->join(DB::raw('time_slots as ts'),'ts.id','=','schedules.time_slot_id')
+            ->join(DB::raw('product_vendor_location_booking_schedules as pvlbs'),'pvlbs.schedule_id','=','schedules.id')
+            ->join(DB::raw('product_vendor_locations as pvl'),'pvlbs.product_vendor_location_id','=','pvl.id')
+            ->where('pvl.product_id', $productID)
+            ->select('pvl.id as vendor_location_id','schedules.day_short','schedules.day_numeric','schedules.id','ts.time','ts.slot_type')
+            ->get();
+
+
+    #array to hold information
+    $arrData = array();
+
+    if($schedules) {
+      foreach($schedules as $row) {
+            //echo "<prE>"; print_r($row);
+        $arrData[$row->vendor_location_id][$row->day_numeric] = $row->day_short; 
 
       }
     }
