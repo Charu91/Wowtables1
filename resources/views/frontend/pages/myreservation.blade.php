@@ -98,7 +98,7 @@ exit;*/
                   ?>                    
                   <a href="javascript:" class="btn btn-default btn-sm" data-toggle="modal" data-keyboard="false" data-backdrop="static" data-target="#shareModal{{$data['id']}}" data-reserve-type="{{$data['type']}}">Share</a>
                   </li>
-                  <input type="hidden" value="{{$data['id']}}"> 
+                  <input type="hidden" id="my_reserv_id" name="my_reserv_id" value="{{$data['id']}}">
                   <input type="hidden" value="{{$data['type']}}" class="reserv_typee"> 
                 </ul>
               </div>              
@@ -1089,6 +1089,7 @@ agm.cpkbandra@jsmcorp.in
        user_id =$('#change_user_id').val();
        added_by =$('#added_by').val();
        last_reservation_giftcard_id =$('#last_reservation_giftcard_id').val();
+       res_id = $("#res_id").val();
 
         var addonsArray = {};
         $('.myaddonselect').each(function(){
@@ -1098,6 +1099,7 @@ agm.cpkbandra@jsmcorp.in
             addonsArray[prod_id]= select_val;
             return addonsArray;
         });
+        //console.log(addonsArray);
         var giftcard_id = $("#giftcard_id").val();
         var special_request = $("#special_request").val();
 

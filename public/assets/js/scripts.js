@@ -476,7 +476,8 @@ $(document).ready(function() {
         var bd_dates = new Array;
         var bd_time = new Array;
         var bd_time_end = new Array;
-        res_id = $(this).parent().next().next().val();
+        //res_id = $(this).parent().next().next().val();
+        var res_id = $("#my_reserv_id").val();
        // alert(res_id);
         var vendor_id = $(this).attr('href');
         $('#vendor_id').val(vendor_id);
